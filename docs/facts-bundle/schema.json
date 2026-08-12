@@ -1,0 +1,583 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/jackhp95/elm-cem-workspace/docs/facts-bundle/schema.json",
+  "title": "elm-cem facts bundle (Face B + Face C)",
+  "description": "The canonical facts bundle emitted by elm-cem. Face B (`cem-facts.json`) carries the primitive, .d.ts-resolved CEM facts. Face C (`elm-api-facts.json`) carries the generated-Elm API projection. Both carry a provenance stamp. Face A (generated Elm source) is not a JSON artifact and is out of this schema's scope. This document is the schema for the bundle as a whole; a producer MAY emit the two faces as two files, in which case each file is the corresponding sub-object.",
+  "type": "object",
+  "required": ["schemaVersion", "faceB", "faceC"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Version of THIS bundle schema. Bumped on any breaking change to either face."
+    },
+    "faceB": { "$ref": "#/definitions/faceB" },
+    "faceC": { "$ref": "#/definitions/faceC" }
+  },
+
+  "definitions": {
+    "faceB": {
+      "type": "object",
+      "title": "cem-facts.json — the primitive CEM facts, .d.ts-resolved",
+      "required": ["schemaVersion", "provenance", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "type": "integer", "const": 1 },
+        "provenance": { "$ref": "#/definitions/faceBProvenance" },
+        "cem": {
+          "type": "object",
+          "description": "Facts about the input manifest itself, copied verbatim from its own top-level fields.",
+          "additionalProperties": false,
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "description": "The custom-elements-manifest schema version the input manifest declares (its own `schemaVersion`)."
+            },
+            "readme": { "type": ["string", "null"] },
+            "package": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "version": { "type": "string" },
+                "description": { "type": ["string", "null"] }
+              }
+            }
+          }
+        },
+        "tagReconciliation": { "$ref": "#/definitions/tagReconciliation" },
+        "duplicates": {
+          "type": "array",
+          "description": "Declarations dropped because another declaration already claimed the same authoritative tag. Emitted so a consumer never has to re-derive a dedupe decision (and can see what was dropped) instead of silently losing an element.",
+          "items": {
+            "type": "object",
+            "required": ["tag", "declarationName", "modulePath"],
+            "additionalProperties": false,
+            "properties": {
+              "tag": { "type": "string" },
+              "declarationName": { "type": "string" },
+              "modulePath": { "type": "string" },
+              "keptDeclarationName": { "type": "string" }
+            }
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Every literal-union type alias harvested from the package's shipped `.d.ts` tree (or from an equivalent TypeScript source root), with whether the union is CLOSED. An OPEN union (one whose members include `(string & {})` or a bare `string`) is recorded but must NOT be treated as an enum.",
+          "items": {
+            "type": "object",
+            "required": ["name", "union", "closed", "source"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "The TypeScript alias name, e.g. `ButtonVariant`, `LinkTarget`." },
+              "union": { "type": "string", "description": "The alias body, whitespace-normalised, double-quoted, leading `|` dropped." },
+              "values": {
+                "type": "array",
+                "items": { "type": ["string", "number"] },
+                "description": "The literal members, unquoted, in declaration order. Present for both closed and open unions (for an open union these are the KNOWN members, not the whole value space)."
+              },
+              "closed": { "type": "boolean" },
+              "source": {
+                "type": "string",
+                "enum": ["dts", "ts-source", "const-object", "config"],
+                "description": "Where the alias body came from. `dts` = a `.d.ts` literal-union alias; `const-object` = a FAST/Fluent-style `declare const X: { readonly a: \"a\" }` harvested into a union; `ts-source` = a non-published TypeScript source root; `config` = supplied by producer config."
+              },
+              "file": { "type": ["string", "null"], "description": "Path (relative to the scanned root) of the declaring file." }
+            }
+          }
+        },
+        "components": {
+          "type": "array",
+          "description": "One entry per unique, authoritatively-tagged custom element, sorted by `tag`.",
+          "items": { "$ref": "#/definitions/faceBComponent" }
+        },
+        "stats": {
+          "type": "object",
+          "description": "Producer-side counts. These exist so a consumer (or a gate) can assert the bundle did not silently degrade — e.g. `enumAttributes` collapsing to ~0 is the signature of a `@m3e/web` publish that ships no `.d.ts` at all.",
+          "additionalProperties": false,
+          "properties": {
+            "declarations": { "type": "integer" },
+            "components": { "type": "integer" },
+            "attributes": { "type": "integer" },
+            "enumAttributes": { "type": "integer" },
+            "openUnionAttributes": { "type": "integer" },
+            "aliasesCollected": { "type": "integer" },
+            "attributesResolvedFromAlias": { "type": "integer" },
+            "cssProperties": { "type": "integer" },
+            "dtsFilesScanned": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "faceBProvenance": {
+      "type": "object",
+      "description": "The Face-B provenance stamp: exactly what upstream artifact these facts were read from. Replaces m3e-okf's `data/sources.json` SHA pin, cem-figma-connect's fixture version, and tailwind's declared-vs-installed @m3e/web version.",
+      "required": ["generator", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "generator": {
+          "type": "object",
+          "required": ["name", "version"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "description": "e.g. `elm-cem`." },
+            "version": { "type": "string" },
+            "commit": { "type": ["string", "null"] }
+          }
+        },
+        "source": {
+          "type": "object",
+          "description": "The upstream component library the CEM came from.",
+          "required": ["package", "version", "sha", "manifestPath"],
+          "additionalProperties": false,
+          "properties": {
+            "package": { "type": "string", "description": "e.g. `@m3e/web`." },
+            "version": { "type": "string", "description": "The RESOLVED installed version (not a range) — `2.7.0`, never `^2.5.14`." },
+            "sha": {
+              "type": ["string", "null"],
+              "description": "The upstream VCS commit the artifact corresponds to (`matraic/m3e` HEAD when generated from a clone), or null when only an npm version is known. Both are stamped so a git-SHA pin and a semver pin become comparable in one place."
+            },
+            "manifestPath": { "type": "string", "description": "Path of the manifest read, relative to the workspace root." },
+            "upstreamRepo": { "type": ["string", "null"] },
+            "integrity": { "type": ["string", "null"], "description": "The lockfile integrity hash of the resolved package, when available." }
+          }
+        },
+        "dts": {
+          "type": "object",
+          "description": "The TypeScript declaration root that enum unions were resolved from.",
+          "additionalProperties": false,
+          "properties": {
+            "dir": { "type": ["string", "null"] },
+            "fileCount": { "type": "integer" },
+            "aliasCount": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "tagReconciliation": {
+      "type": "object",
+      "description": "The result of reconciling each class declaration's jsdoc `tagName` against the authoritative `custom-element-definition` export (`customElements.define(name, Class)`). Face B is emitted POST-reconciliation, so no consumer re-implements this; the mismatch list is published so a consumer that wants to report on analyzer bugs (m3e-okf's CEM-TAG-MISMATCH) can, without parsing the CEM.",
+      "required": ["definitionCount", "mismatches"],
+      "additionalProperties": false,
+      "properties": {
+        "definitionCount": { "type": "integer", "description": "Number of `custom-element-definition` exports found." },
+        "mismatches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["declarationName", "declaredTagName", "registrationTag"],
+            "additionalProperties": false,
+            "properties": {
+              "declarationName": { "type": "string", "description": "e.g. `M3eStepperNextElement`." },
+              "declarationModule": { "type": ["string", "null"] },
+              "declaredTagName": { "type": ["string", "null"], "description": "The (wrong) `decl.tagName` the analyzer emitted." },
+              "registrationTag": { "type": "string", "description": "The authoritative tag from the registration export — this is what the bundle uses." },
+              "componentDir": { "type": ["string", "null"], "description": "First path segment under the source root, so a consumer can key the finding to a component section." }
+            }
+          }
+        }
+      }
+    },
+
+    "faceBComponent": {
+      "type": "object",
+      "required": ["tag", "declarationName", "modulePath", "attributes", "slots", "events", "cssProperties"],
+      "additionalProperties": false,
+      "properties": {
+        "tag": { "type": "string", "description": "The AUTHORITATIVE tag (registration export). Never the raw `decl.tagName`." },
+        "declarationName": { "type": "string", "description": "The class declaration name, e.g. `M3eButtonElement`." },
+        "modulePath": { "type": "string", "description": "The CEM module path, verbatim (e.g. `src/button/ButtonElement.js`)." },
+        "sourceFile": { "type": ["string", "null"], "description": "The module path prefixed with the package's source root, as a consumer-quotable file reference (e.g. `packages/web/src/button/ButtonElement.js`)." },
+        "componentDir": { "type": ["string", "null"], "description": "The grouping directory (`button`, `app-bar`) — the second path segment of `modulePath`. m3e-okf groups its cards by this." },
+        "description": { "type": ["string", "null"], "description": "The declaration's full description, verbatim." },
+        "summary": { "type": ["string", "null"], "description": "First line of `description`, precomputed." },
+        "deprecated": { "type": ["boolean", "string", "null"] },
+        "superclass": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "module": { "type": ["string", "null"] },
+            "package": { "type": ["string", "null"] }
+          }
+        },
+        "attributes": { "type": "array", "items": { "$ref": "#/definitions/faceBAttribute" } },
+        "properties": {
+          "type": "array",
+          "description": "Public, documentable class FIELDS. Includes those that back an attribute (`attribute` names it) so a consumer can filter either way rather than re-deriving the attribute/field split.",
+          "items": { "$ref": "#/definitions/faceBProperty" }
+        },
+        "slots": { "type": "array", "items": { "$ref": "#/definitions/faceBSlot" } },
+        "events": { "type": "array", "items": { "$ref": "#/definitions/faceBEvent" } },
+        "cssProperties": { "type": "array", "items": { "$ref": "#/definitions/faceBCssProperty" } },
+        "cssParts": { "type": "array", "items": { "$ref": "#/definitions/faceBCssPart" } },
+        "cssStates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+
+    "faceBAttribute": {
+      "type": "object",
+      "required": ["name", "kind", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "The content-attribute name, verbatim (kebab as declared)." },
+        "fieldName": { "type": ["string", "null"], "description": "The backing IDL property name the CEM declares, when any." },
+        "description": { "type": ["string", "null"] },
+        "default": {
+          "type": ["string", "null"],
+          "description": "The CEM's declared default, VERBATIM including its surrounding quotes (`\"\\\"filled\\\"\"`). Consumers that want the bare value strip the quotes themselves; keeping it verbatim is what lets m3e-okf compare a README default against the manifest without re-reading the manifest."
+        },
+        "deprecated": { "type": ["boolean", "string", "null"] },
+        "kind": {
+          "type": "string",
+          "enum": ["boolean", "enum", "enumNumeric", "number", "string", "none", "other"],
+          "description": "The post-resolution classification. `none` = the CEM declares no `type` at all. `other` = a function type or an array shape. An OPEN union (see `enum.open`) classifies as `string`, deliberately: any frame name is legal for `LinkTarget`, so it is not a closed value space."
+        },
+        "type": { "$ref": "#/definitions/faceBTypeInfo" },
+        "enum": {
+          "type": ["object", "null"],
+          "description": "Present whenever the resolved type contributes literal members — for a CLOSED union (`kind: \"enum\"`) and also for an OPEN one (`kind: \"string\"`, `open: true`). Two consumers need the two readings: the matcher must not treat an open union as an enum axis; m3e-okf's cards want the documented member list either way.",
+          "required": ["values", "open"],
+          "additionalProperties": false,
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": { "type": ["string", "number"] },
+              "description": "The literal members, unquoted/parsed, in DECLARATION order (the `.d.ts` alias order, or the inline union's order)."
+            },
+            "open": {
+              "type": "boolean",
+              "description": "True when the union admits values outside `values` (`(string & {})`, a bare `string`, or an unresolved identifier member)."
+            }
+          }
+        }
+      }
+    },
+
+    "faceBTypeInfo": {
+      "type": "object",
+      "description": "An attribute/property/event type in every form a consumer needs: as the manifest declared it, as resolved, and where the resolution came from.",
+      "required": ["raw", "resolved", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "raw": { "type": ["string", "null"], "description": "`type.text` exactly as the manifest declared it (`\"ButtonVariant\"`, `\"boolean\"`, `\"LinkTarget\"`)." },
+        "resolved": { "type": ["string", "null"], "description": "The type after alias inlining and after preferring the analyzer's expanded `parsedType.text` where present. Equal to `raw` when nothing resolved." },
+        "parsed": { "type": ["string", "null"], "description": "The analyzer's own `parsedType.text`, when the manifest carries one — kept distinct from `resolved` so a consumer can tell an analyzer expansion from a producer-side `.d.ts` inline." },
+        "aliasName": { "type": ["string", "null"], "description": "The TypeScript alias the raw text named, when resolution fired (`ButtonVariant`). Docs provenance; also the join key into `faceB.aliases`." },
+        "source": {
+          "type": "string",
+          "enum": ["cem", "cem-parsedType", "dts-alias", "ts-source", "config"],
+          "description": "Which reading produced `resolved`. A consumer that wants to report on resolution quality reads this instead of guessing from the shape of the string."
+        }
+      }
+    },
+
+    "faceBProperty": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "type": "string", "enum": ["field", "method"] },
+        "privacy": { "type": ["string", "null"], "enum": ["public", "protected", "private", null] },
+        "static": { "type": ["boolean", "null"] },
+        "readonly": { "type": ["boolean", "null"] },
+        "description": { "type": ["string", "null"] },
+        "default": { "type": ["string", "null"] },
+        "type": { "$ref": "#/definitions/faceBTypeInfo" },
+        "attribute": { "type": ["string", "null"], "description": "The content attribute this field backs, when it backs one. Null/absent means JS-only." },
+        "inheritedFrom": { "type": ["string", "null"] }
+      }
+    },
+
+    "faceBSlot": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "The slot name VERBATIM — the empty string for the default slot. A consumer that wants to render `(default)` does so itself." },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+
+    "faceBEvent": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Events with no resolvable name are DROPPED by the producer, so a consumer never has to filter a nameless entry." },
+        "description": { "type": ["string", "null"] },
+        "type": { "$ref": "#/definitions/faceBTypeInfo" }
+      }
+    },
+
+    "faceBCssProperty": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "The custom-property name including the leading `--`." },
+        "description": { "type": ["string", "null"] },
+        "default": { "type": ["string", "null"] },
+        "syntax": { "type": ["string", "null"] }
+      }
+    },
+
+    "faceBCssPart": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+
+    "faceC": {
+      "type": "object",
+      "title": "elm-api-facts.json — the generated-Elm API projection",
+      "description": "What the producer EXPOSED, handed over directly. Every name here is emitted by elm-cem, not re-measured from its output.",
+      "required": ["schemaVersion", "provenance", "lib", "surfaceKeys", "defaultSurface", "facets", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "type": "integer", "const": 1 },
+        "provenance": { "$ref": "#/definitions/faceCProvenance" },
+        "lib": { "type": "string", "description": "The brand's root Elm namespace (`M3e`) — `Brand.lib`." },
+        "surfaceKeys": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["top", "raw", "html", "record", "build"] },
+          "description": "The surface keys this bundle populates, i.e. exactly the keys that appear in some component's `surfaces`."
+        },
+        "defaultSurface": { "type": "string", "description": "The surface key a consumer should use when none is configured." },
+        "facets": {
+          "type": "array",
+          "description": "The facet table: for each surface key, the Cem.Facts facet constructor and the CALL SHAPE of its entry. Emitted as data (not hardcoded in a consumer) because the shape is a property of what the generator emitted.",
+          "items": {
+            "type": "object",
+            "required": ["key", "facet", "form"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string", "enum": ["top", "raw", "html", "record", "build"] },
+              "facet": { "type": "string", "enum": ["Raw", "Html", "Standard", "Record", "Build"] },
+              "form": { "type": "string", "enum": ["double-list", "record-double-list", "pipeline"] },
+              "finalizer": { "type": ["string", "null"], "description": "The function that closes a pipeline form (`toElement`), or null for the list forms." }
+            }
+          }
+        },
+        "components": {
+          "type": "object",
+          "description": "Keyed by CEM tag, so a consumer joins Face B and Face C on the tag with no name derivation. Group VARIANTS appear as their own entries under their real tags.",
+          "additionalProperties": { "$ref": "#/definitions/faceCComponent" }
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "components": { "type": "integer" },
+            "surfacesEmitted": { "type": "integer" },
+            "settersUnexposed": { "type": "integer" },
+            "tokensUnexposed": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "faceCProvenance": {
+      "type": "object",
+      "description": "The Face-C provenance stamp. Supersedes cem-figma-connect's `elmM3eCommit` + `elmM3eSentinel`: staleness is now a stamp mismatch, not a re-parse of generated Elm.",
+      "required": ["producer", "brand", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "producer": {
+          "type": "object",
+          "description": "The generator that emitted Face A and therefore knows Face C.",
+          "required": ["elmCem"],
+          "additionalProperties": false,
+          "properties": {
+            "elmCem": {
+              "type": "object",
+              "required": ["version", "commit"],
+              "additionalProperties": false,
+              "properties": {
+                "version": { "type": "string" },
+                "commit": { "type": ["string", "null"], "description": "The elm-cem generation commit. Null only when generated outside a VCS checkout." }
+              }
+            }
+          }
+        },
+        "brand": {
+          "type": "object",
+          "description": "The brand Face A was generated INTO (elm-m3e).",
+          "required": ["name", "commit"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "description": "e.g. `elm-m3e`." },
+            "lib": { "type": ["string", "null"], "description": "The brand's Elm root namespace, e.g. `M3e`." },
+            "commit": { "type": ["string", "null"], "description": "The brand checkout commit at generation time — the replacement for `elmM3eCommit`." },
+            "configFiles": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "The `--config-from` inputs (in merge order) that shaped the projection. A Face-C fact can change from config alone, so the config identity belongs in the stamp."
+            }
+          }
+        },
+        "source": {
+          "type": "object",
+          "description": "The same upstream stamp Face B carries, repeated so Face C is self-describing when read alone.",
+          "required": ["package", "version", "sha"],
+          "additionalProperties": false,
+          "properties": {
+            "package": { "type": "string" },
+            "version": { "type": "string" },
+            "sha": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+
+    "faceCComponent": {
+      "type": "object",
+      "required": ["cemTag", "component", "module", "rootNamespace", "setters", "enums", "surfaces"],
+      "additionalProperties": false,
+      "properties": {
+        "cemTag": { "type": "string", "description": "The authoritative CEM tag (same value as the map key, and as `faceB.components[].tag`)." },
+        "component": { "type": "string", "description": "The camelCase component noun (`button`) — `Cem.Facts.Fact.component`." },
+        "module": { "type": "string", "description": "The component's Standard/top module, fully qualified (`M3e.Button`) — `Cem.Facts.Fact.module_`. For a home-grouped member this is the HOME module, which is why it cannot be derived from the tag." },
+        "rootNamespace": { "type": "string", "description": "The brand root (`M3e`)." },
+        "memberPrefix": { "type": ["string", "null"], "description": "The alias prefix a home-grouped member's types carry inside its home module (`\"\"` for a single-member home). elm-cem's `memberRef.prefix`." },
+        "tokenModule": { "type": ["string", "null"], "description": "The module exposing enum value tokens (`M3e.Values`). Null when the brand mints no unions (elm-cem omits the module entirely in that case)." },
+        "actionModule": { "type": ["string", "null"], "description": "The module exposing the action constructors (`M3e.Action`), or null when the brand has no action roster." },
+        "usesAction": { "type": "boolean", "description": "Whether the component's record shape carries an `action` field — `Cem.Facts.Fact.usesAction`." },
+        "actionMap": {
+          "type": "object",
+          "description": "Action attribute name → action constructor name. `Cem.Facts.Fact.actionMap`.",
+          "additionalProperties": { "type": "string" }
+        },
+        "setters": {
+          "type": "object",
+          "description": "Attribute/slot-independent setter map: CEM attribute name → the exposed Elm setter name, or null when the producer did not expose one. Null is a first-class value: a consumer must refuse to emit rather than guess.",
+          "additionalProperties": { "type": ["string", "null"] }
+        },
+        "setterArgTypes": {
+          "type": "object",
+          "description": "Setter name → the Elm argument kind, so a consumer formats literals correctly (a `float` renders bare `70`, never `\"70\"`). Projected from elm-cem's `Attr.AttrType`.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["bool", "string", "float", "int", "enum", "opaque"]
+          }
+        },
+        "enums": {
+          "type": "object",
+          "description": "Setter name → its token set.",
+          "additionalProperties": { "$ref": "#/definitions/faceCEnum" }
+        },
+        "pipeSetters": {
+          "type": "object",
+          "description": "Attribute or slot name → the PIPELINE setter name (`variant` → `withVariant`, `icon` → `withIcon`, and the `…Slot`-suffixed form when the plain name would collide). Required to emit the `build`/pipeline form at all; no consumer reads it today because no consumer can currently reach that surface. elm-cem computes these as `attrPipeNames`/`slotPipeNameOf`, including the collision rule.",
+          "additionalProperties": { "type": "string" }
+        },
+        "eventHandlers": {
+          "type": "object",
+          "description": "CEM event name → the exposed Elm handler name (`input` → `onInput`), after the brand's prefix-strip and collision resolution (`Brand.resolvedEventHandlers`). Kept separate from `setters` because an event handler is not a settable attribute — a distinction the re-measuring builder has to reconstruct with an `/^on[A-Z]/` regex.",
+          "additionalProperties": { "type": "string" }
+        },
+        "slotSetters": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "The per-component content-setter names for named slots (`Cem.Facts.Fact.slotRewrites`' setter side). A name here is a slot function, NOT a settable attribute."
+        },
+        "slotSetterMap": {
+          "type": "object",
+          "description": "Raw CEM slot name → the Elm content-setter name — the full `slotRewrites` pairing, so a consumer can go from a slot in Face B to its setter without re-casing.",
+          "additionalProperties": { "type": "string" }
+        },
+        "slotUpgrades": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Component-specific upgrades of a generic barrel slot setter — `Cem.Facts.Fact.slotUpgrades`' setter side."
+        },
+        "requiredSlots": { "type": "array", "items": { "type": "string" } },
+        "multiSlots": { "type": "array", "items": { "type": "string" } },
+        "slotKinds": {
+          "type": "object",
+          "description": "Raw slot name → the child kinds the slot accepts. Absent/empty means unconstrained.",
+          "additionalProperties": { "type": "array", "items": { "type": "string" } }
+        },
+        "requiredAttrs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "HTML attribute names the record/pipeline forms REQUIRE — they become mandatory record fields, so a consumer emitting those forms must supply them."
+        },
+        "group": {
+          "type": ["object", "null"],
+          "description": "Set when this entry is a member of a variant-group module (e.g. the `circular`/`linear` members of `M3e.Progress`). Null for an ordinary component.",
+          "additionalProperties": false,
+          "properties": {
+            "module": { "type": "string" },
+            "constructor": { "type": "string" }
+          }
+        },
+        "groupConstructors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "On a group PARENT entry: its member constructor names. Empty for an ordinary component."
+        },
+        "surfaces": {
+          "type": "object",
+          "description": "Surface key → the addressable entry point at that surface. Only keys the producer actually emitted appear.",
+          "additionalProperties": { "$ref": "#/definitions/faceCSurface" }
+        }
+      }
+    },
+
+    "faceCEnum": {
+      "type": "object",
+      "required": ["values"],
+      "additionalProperties": false,
+      "properties": {
+        "aliasName": { "type": ["string", "null"], "description": "The generated Elm type-alias name for this enum, and (via Face B's `type.aliasName`) its upstream TypeScript provenance." },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["elm", "key", "token", "raw"],
+            "additionalProperties": false,
+            "properties": {
+              "elm": { "type": "string", "description": "The Elm identifier (`extraSmall`)." },
+              "key": { "type": "string", "description": "A canonical join key (lowercased, non-alphanumerics stripped) so a CEM value `extra-small` and the Elm `extraSmall` match without either side re-canonicalising." },
+              "token": { "type": ["string", "null"], "description": "The fully-qualified token reference (`M3e.Values.extraSmall`), or null when the producer did not expose it." },
+              "raw": { "type": "string", "description": "The HTML attribute value this token renders to — elm-cem's `Brand.tokenValues`. Usually identical to the CEM literal, but a config `attrTypes` MAP override can make them differ, and only the producer knows." }
+            }
+          }
+        }
+      }
+    },
+
+    "faceCSurface": {
+      "type": "object",
+      "required": ["facet", "module", "entry", "form"],
+      "additionalProperties": false,
+      "properties": {
+        "facet": { "type": "string", "enum": ["Raw", "Html", "Standard", "Record", "Build"] },
+        "module": { "type": "string", "description": "The module that actually holds the entry — NOT derived from a path convention. For the Html facet of the current emitter this is the single per-brand `M3e.Html`; for Standard/Record/Build it is the component (or home) module." },
+        "entry": { "type": "string", "description": "The exposed entry function at this surface: `view` (Standard), `el` (Record), `build` (Build seed), or the component constructor (`button`, in `M3e.Html`)." },
+        "form": { "type": "string", "enum": ["double-list", "record-double-list", "pipeline"] },
+        "finalizer": { "type": ["string", "null"], "description": "The function that closes the pipeline form. For the current emitter this is `toElement` (re-exported per component from `M3e.Build`) — NOT `build`, which is the seed." }
+      }
+    }
+  }
+}

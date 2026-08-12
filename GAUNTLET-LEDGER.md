@@ -212,6 +212,34 @@ Structural facts confirmed at bootstrap (bind M1.d):
   non-existent paths.** Inherited from the source repo, NOT introduced by the migration (the file is
   byte-identical). Harmless but rotting; a natural M6 deep-clean candidate.
 
+- **R-004 (M1.b critic) — an UNLISTED SIXTH CEM reader: `cem-figma-connect/src/tokens/derive.mjs:290`.**
+  `parseFallbacks` regex-scans the raw manifest TEXT for `var(--md-sys-*, ...)` — the critic measured
+  380 occurrences / 190 distinct token names — and they live entirely in five NON-custom-element
+  `kind: "variable"` declarations (Color/Elevation/Shape/State/TypescaleToken under
+  `src/core/shared/tokens/`), which **Face B excludes by construction**. It was outside M1.b's
+  five audited files and does not block the four parser deletions. It DOES matter at **M3.a**,
+  because `check:tokens` (`node src/tokens/derive.mjs --check`) is part of cem-figma-connect's gate.
+  M1.c must decide explicitly: either Face B gains a token-declarations section, or derive.mjs keeps
+  its own manifest read as a documented, honest exception. Do not let it be discovered by a red gate.
+- **R-005 (M1.b critic) — Face C will CORRECT measured-wrong facts, so M3.a's byte-identity bar
+  needs qualifying.** The audit found, and the critic independently confirmed against
+  `packages/elm-cem/codegen/Generate/Phantom/Emit.elm`, that cem-figma-connect's committed
+  `elm-facts.json` is WRONG in ways Face C will fix: the per-facet `src/M3e/<Facet>/<Comp>.elm` path
+  convention is fiction (elm-cem emits one compModule plus a brand-wide `M3e.Html`/`M3e.Build`);
+  consequently all 129 committed components have only a `top` surface; and the committed
+  `finalizer: "build"` is measured backwards (`build` is the SEED, `toElement` closes the pipeline —
+  Emit.elm:2351/2536). This is the project working as intended: re-measured facts were wrong, and
+  producer-emitted facts are right. But it means **M3.a cannot demand blind byte-identity of
+  `generated/**`**. Its bar becomes: byte-identical EXCEPT for an enumerated, reviewed set of
+  corrections, each traced to a specific producer fact proven correct — with the critic verifying
+  every diff is a genuine correction and not a regression. Recorded now so M3.a is designed for it
+  rather than ambushed by it.
+- **R-006 (M1.b critic, minor) — citation line drift in `coverage-map.json`.** Field claims were
+  55/55 correct, but exact-line accuracy was ~40/55: a systematic off-by-one where multi-line object
+  literals were anchored at the opening `{`. Not disqualifying (the critic verified it is
+  transcription drift, not assumption-writing — every producer-side citation was exact), but the map
+  is meant to be navigable evidence. Fix opportunistically; not worth a dedicated round.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -242,3 +270,18 @@ Structural facts confirmed at bootstrap (bind M1.d):
   live emitter literal -> RED); R-001 CONFIRMED RESOLVED IN-WORKSPACE (symlink-spy shows staging
   from packages/elm-cem/facts/src and packages/elm-html-intermediate-representation/src, with the
   old-sibling fallbacks unreachable)`
+- `M1.b: pass (gate node tools/check-coverage-map.mjs green — 145 entries, 131 mapped / 14 exception,
+  per-consumer 53/12/39/41; critic VERDICT: PASS as the designated gate, builder claude/opus,
+  critic claude/opus, loop af5385dd, 1 iteration, 0 escalations)`
+- `M1.b critic evidence: independently re-derived the field set from all five consumer files and
+  found 0 missing (incl. indirect reads via destructuring/helpers/3-call-deep defaults); ~55
+  citations spot-checked, 55/55 field-claims correct; both pre-flagged high-risk items verified
+  CONCRETELY not accepted (.d.ts open-union handled as kind:string + enum.open:true + values, the
+  only representation serving both consumers; README-drift provenance implementable on the bundle,
+  cross-checked against m3e-okf's own data: cem=525 ts=19 readme=0); every Face-C claim verified
+  line-by-line against packages/elm-cem (all exact); no fabricated coverage — pipeSetters is
+  forward-looking schema referenced by NO mapped entry, so the checker was not gamed; checker
+  proven to bite 5/5 on mutated copies`
+- `M1.b: ANSWER TO THE LINCHPIN QUESTION — YES. All four consumers can fully drop their own CEM
+  parsers on the specified bundle. Schema recorded at docs/facts-bundle/schema.json (draft-07,
+  Face B + Face C separated, provenance stamps on both faces, userland seams correctly excluded).`
