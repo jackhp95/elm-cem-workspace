@@ -201,6 +201,17 @@ Structural facts confirmed at bootstrap (bind M1.d):
   `packages/_probe/`. Standing rule for the rest of Phase 0: **commit the ledger before dispatching
   any loop.**
 
+- **R-002 (raised by the M1.a critic) — `tools/ab-elm-cem.sh` is machine-specific and will go
+  stale at M2.** It hardcodes absolute defaults `/Users/jhp/code/jackhp95/elm-cem` (env-overridable
+  via `PRISTINE_ELM_CEM`) and `/Users/jhp/code/jackhp95/elm-m3e` (**not** overridable). The second
+  one is the real hazard: **M2 moves elm-m3e into the workspace**, at which point the harness would
+  silently keep A/B-ing against the OLD sibling elm-m3e config and report a meaningless green.
+  M2.a MUST parameterize `ELM_M3E` (and re-point it at the in-workspace copy) before its A/B bar is
+  trusted. Recorded now so it cannot be forgotten.
+- **R-003 (raised by the M1.a critic) — 31 of 65 `.neutrality-allowlist` entries point at
+  non-existent paths.** Inherited from the source repo, NOT introduced by the migration (the file is
+  byte-identical). Harmless but rotting; a natural M6 deep-clean candidate.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -220,3 +231,14 @@ Structural facts confirmed at bootstrap (bind M1.d):
   test suite, registry-check, all four source repos clean; failed ONLY on the integrity check,
   which fired on the manager's own uncommitted 33-line D-008 ledger edit, not on any builder
   change; strategy: see D-009; builder claude/sonnet, loop 22ce4a1c, 4 iterations)`
+- `M1.a: pass (11/11 verify-checks green — A/B 143 files byte-identical, elm-cem check+test green,
+  registry-check green, all four source repos clean; critic VERDICT: PASS, builder claude/sonnet,
+  critic claude/opus, loops cb0508c4 -> 22ce4a1c -> 2b036ac6, 3 rounds, 0 model escalations —
+  both earlier rounds failed on manager-authored bar defects D-008/D-009, never on builder work)`
+- `M1.a critic evidence: copy faithful by recursive diff (294/294, 74/74, 49/49, 79/78 files — the
+  one delta is a gitignored docs.json build artifact); exactly 5 differences, all authorized;
+  neutrality gate proven to still bite (injected token -> RED, restored -> GREEN, 295 files scanned,
+  all package-relative); waiver has exactly 1 key; A/B harness proven to discriminate (mutated a
+  live emitter literal -> RED); R-001 CONFIRMED RESOLVED IN-WORKSPACE (symlink-spy shows staging
+  from packages/elm-cem/facts/src and packages/elm-html-intermediate-representation/src, with the
+  old-sibling fallbacks unreachable)`
