@@ -1,7 +1,7 @@
 module Generate.Phantom.Model exposing
     ( Brand, Comp, Controlled, EnumSpec, KindField, Marker(..), ResolvedSlot, SetAlias, SlotContent(..)
     , Variant, VariantInput(..)
-    , decodePhantomFlag, resolve
+    , decodePhantomFlag, decodeEmitFactsBundleFlag, resolve
     , knownSharedRole, sharedRoleOf, sharedRoleOfField, kindFieldOfSpelling, unknownSharedRoleError, unknownSharedFieldError
     )
 
@@ -579,6 +579,16 @@ type alias RawRenames =
 decodePhantomFlag : D.Value -> Bool
 decodePhantomFlag flags =
     D.decodeValue (D.at [ "_config", "_phantom" ] D.bool) flags
+        |> Result.withDefault False
+
+
+{-| Is the M1.c facts-bundle Face C emission requested? (`_config._emitFactsBundle == true`)
+Off by default, so `files`' byte output — and therefore the A/B reference bar —
+is unaffected by any caller that does not ask for it.
+-}
+decodeEmitFactsBundleFlag : D.Value -> Bool
+decodeEmitFactsBundleFlag flags =
+    D.decodeValue (D.at [ "_config", "_emitFactsBundle" ] D.bool) flags
         |> Result.withDefault False
 
 

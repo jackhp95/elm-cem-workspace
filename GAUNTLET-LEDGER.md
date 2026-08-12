@@ -240,6 +240,19 @@ Structural facts confirmed at bootstrap (bind M1.d):
   transcription drift, not assumption-writing — every producer-side citation was exact), but the map
   is meant to be navigable evidence. Fix opportunistically; not worth a dedicated round.
 
+- **D-010 (M1.c post-mortem) — a deterministic gate must be able to FAIL ON ABSENCE.** M1.c
+  iterations 1 and 2 produced *nothing at all* — the tree stayed byte-identical to the M1.b commit —
+  and **all nine deterministic verify-checks passed anyway**, because every one of them was already
+  satisfied by the M1.b tree. The gate was structurally blind to "no work was done"; only the Opus
+  critic caught it, twice, and refused to award partial credit for vacuous non-violations. Iteration
+  3 then built it properly.
+  **Rule for every remaining part:** at least one verify-check must exercise the NEW artifact so it
+  fails when that artifact is missing (e.g. "generate the bundle and validate it", not merely "the
+  existing suite is still green"). A bar composed only of pre-existing green checks measures nothing.
+  Also noted: the manager must exercise a new tool through its REAL interface — I first "tested" the
+  validator by invoking a library module as a CLI, which silently did nothing and looked like a
+  no-op validator; through its actual API it rejects all five corruptions precisely.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -285,3 +298,23 @@ Structural facts confirmed at bootstrap (bind M1.d):
 - `M1.b: ANSWER TO THE LINCHPIN QUESTION — YES. All four consumers can fully drop their own CEM
   parsers on the specified bundle. Schema recorded at docs/facts-bundle/schema.json (draft-07,
   Face B + Face C separated, provenance stamps on both faces, userland seams correctly excluded).`
+- `M1.c: pass (9/9 verify-checks green + manager-verified real bundle; critic VERDICT: PASS on
+  iteration 3 after FAILing iterations 1-2 for non-implementation; builder claude/sonnet,
+  critic claude/opus, loop aaf6bfe3, 3 iterations, 0 model escalations)`
+- `M1.c manager verification (independent of the loop): generated a REAL bundle from elm-m3e's exact
+  config -> Face B 130 components / 583 attributes, Face C 130 components; Face A UNPERTURBED at
+  exactly 143 files; .d.ts resolution genuinely working (124 attributes carry resolved enum value
+  sets, e.g. m3e-button.variant = elevated,filled,tonal,outlined,text); the high-risk OPEN-union
+  case is correct (m3e-button.target = _self,_blank,_parent,_top with open=true, 14 open unions
+  carrying values); validator accepts both real faces and rejects all 5 corruptions with precise
+  messages (missing provenance, wrong type, missing required, unexpected property, faceC provenance)`
+- `M1.c: Face C tells the TRUTH per R-005 — finalizer is "toElement" (130 surfaces), NOT the
+  measured-wrong "build"; surfaces are the real Build/Html/Record/Standard set, not the fictional
+  per-facet path convention; m3e-button -> module M3e.Button, actionModule M3e.Action, 4 surfaces`
+- `M1.c: R-004 DECIDED — option (b), derive.mjs keeps its own manifest read as a documented
+  exception (coverage-audit.md section 11 + 2 coverage-map entries). Rationale: the 190 --md-sys-*
+  fallbacks live in five kind:"variable" declarations that register no custom element, so they are
+  outside Face B's "one entry per authoritatively-tagged custom element" contract by construction,
+  not merely omitted; widening the shared schema for one reader of a non-element fact is the exact
+  anti-pattern the audit warns against. Verified non-regression: cem-figma-connect check:tokens
+  reads the manifest directly today and still will.`

@@ -44,6 +44,7 @@
   "scripts": {
     "test:elm": "elm-test-rs --project tests tests/src/*.elm",
     "test:phantom": "node tests/phantom/gate.mjs",
+    "test:facts-bundle-schema": "node tests/facts-bundle-schema.test.mjs",
     "test:exclude-cli": "node tests/exclude-cli.test.mjs",
     "test:renames-cli": "node tests/renames-cli.test.mjs",
     "test:split": "node tests/split.test.mjs",

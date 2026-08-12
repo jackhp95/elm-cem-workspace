@@ -112,7 +112,20 @@ generatePhantom flags manifest =
                             -- Thread K2/K3 collapse notes through the info channel (stdout).
                             -- Notes are deterministic (stable order from Model.resolve).
                             -- Emitted file bytes are unaffected by notes.
-                            Ok { info = brand.collapseNotes, files = emittedFiles }
+                            --
+                            -- M1.c facts bundle (Face C): purely additive, gated on
+                            -- `_config._emitFactsBundle` (default off), so `emittedFiles`
+                            -- — and therefore the A/B reference bar — never changes for a
+                            -- caller that does not ask for it.
+                            let
+                                allFiles =
+                                    if Generate.Phantom.Model.decodeEmitFactsBundleFlag flags then
+                                        emittedFiles ++ [ Generate.Phantom.Emit.factsBundleFile brand ]
+
+                                    else
+                                        emittedFiles
+                            in
+                            Ok { info = brand.collapseNotes, files = allFiles }
 
                         Err collisionErrors ->
                             Err (List.map (\e -> { title = "phantom collision error", description = e }) collisionErrors)

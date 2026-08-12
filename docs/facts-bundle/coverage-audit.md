@@ -437,3 +437,36 @@ between the evidence and the schema — not a proof of truth.
 5. Correct two statements in the spine design when it is next touched: tailwind's density tokens are
    not CEM-derived (§5.4), and m3e-okf keeps an upstream TypeScript-source layer for `display`
    (§5.3).
+
+## 11. R-004 resolution: `derive.mjs`'s sixth CEM read
+
+`cem-figma-connect/src/tokens/derive.mjs:290` (`parseFallbacks`) regex-scans the raw manifest
+**text** for `var(--md-sys-*, …)` fallbacks — measured at the 2.7.0 fixture: **380 occurrences,
+190 distinct token names.** This was not in the design spec's consumer list; M1.c's implementation
+pass found it while building Face B and had to decide whether it is representable.
+
+The tokens live entirely in five declarations that are `kind: "variable"`, **not**
+`kind: "class"`/`customElement: true` — `ColorToken`, `ElevationToken`, `ShapeToken`, `StateToken`,
+`TypescaleToken`, all under `src/core/shared/tokens/`. Each one's `type.text` is the TypeScript
+source of a nested object literal (`{ primary: unsafeCSS("var(--md-sys-color-primary, #6750A4)"),
+… }`), which is where every `var(--md-sys-*, …)` fallback the regex finds actually lives. Face B's
+`components[]` is keyed by custom-element tag by construction (§3) — these five declarations
+register no element, so they are outside Face B's shape entirely, not merely omitted from it.
+
+**Decision: (b) — `derive.mjs` keeps its own manifest read, as a documented, honest exception.**
+Not (a): growing Face B a `tokenDeclarations` section for this would mean widening the schema (a
+new top-level `faceB` property) to serve exactly one reader, of exactly one manifest shape
+(a handful of design-token barrel modules), for a fact Face B's own contract — "one entry per
+unique, authoritatively-tagged custom element" — explicitly excludes. That is the shape of change
+the audit's own method warns against: reshaping the shared artifact around one consumer's
+non-CEM-element read, rather than the reverse. `derive.mjs`'s regex-over-text approach is also
+_already_ agnostic to which declaration a token fallback lives in (it does not care about
+`kind: "variable"` vs `kind: "class"`), so replacing it with a bundle read would not simplify it —
+it would still need to walk a nested object literal's source text to recover each fallback's
+associated token name, just from a new field instead of the manifest it already has open.
+
+**Verified not a regression:** `cem-figma-connect`'s `check:tokens` gate reads the manifest
+directly today and continues to after this decision — nothing about the M1.c bundle changes what
+that gate reads or how. Recorded in `coverage-map.json` as one `exception` entry (consumer
+`cem-figma-connect-matcher`, `bundleField: null`, note citing this section);
+`tools/check-coverage-map.mjs` stays green (146 entries; 131 mapped, 15 exception).

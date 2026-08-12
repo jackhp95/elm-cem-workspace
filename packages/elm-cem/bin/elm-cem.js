@@ -5,6 +5,7 @@ const os = require("os");
 const path = require("path");
 const { execFileSync } = require("child_process");
 const familyDeps = require("./family-deps");
+const factsBundle = require("./facts-bundle");
 
 const generateElm = path.resolve(__dirname, "..", "codegen", "Generate.elm");
 
@@ -61,6 +62,7 @@ process.on("exit", cleanupTempFiles);
         "  --output=<dir>         directory to write generated modules to (required).",
         "                         WARNING: existing .elm files in <dir> are DELETED first.",
         "  --config-from=<path>   optional per-component config; may be repeated (deep-merged)",
+        "  --facts-bundle=<dir>   also write the M1.c facts bundle (cem-facts.json + elm-api-facts.json) to <dir>",
         "  -h, --help             show this help",
         "  -v, --version          print the elm-cem version",
         "",
@@ -157,10 +159,23 @@ process.on("exit", cleanupTempFiles);
   }
 }
 
+// M1.c facts bundle: `--facts-bundle=<dir>` is elm-cem's own flag (elm-codegen
+// doesn't understand it), so it is stripped before anything else touches argv
+// — same treatment as `--config-from`.
+const { argv: rawArgvNoFactsFlag, factsBundleDir } = extractFactsBundleDir(process.argv.slice(2));
+
 // Resolve named TS string-literal aliases (e.g. `type ButtonVariant =
 // "filled" | "tonal"`) into the CEM before codegen, so attributes typed as a
 // bare alias name become real Elm enums instead of falling back to String.
-const args = injectNativeAttrs(injectConfig(recordTypeAliases(reconcileTagNames(process.argv.slice(2)))));
+//
+// Named (rather than one nested expression) so the facts-bundle wiring below
+// can read the CEM at the RECONCILED-but-not-yet-alias-inlined stage — the
+// state Face B wants (authoritative tags, still-raw `type.text`).
+const afterReconcile = reconcileTagNames(rawArgvNoFactsFlag);
+const afterAliases = recordTypeAliases(afterReconcile);
+const afterConfig = injectConfig(afterAliases);
+const afterNativeAttrs = injectNativeAttrs(afterConfig);
+const args = injectFactsBundleFlag(afterNativeAttrs, Boolean(factsBundleDir));
 const outputDir = parseOutput(args);
 const publishShape = readPublishShape(process.argv.slice(2));
 
@@ -233,6 +248,15 @@ function resolveElmCodegen() {
 // rewrite its `exposed-modules` from the emitted `.elm` files.
 if (outputDir) {
   syncExposedModules(outputDir, publishShape);
+}
+
+// M1.c facts bundle: Face B (`cem-facts.json`) built here in JS from the
+// reconciled-but-not-yet-alias-inlined CEM; Face C (`elm-api-facts.json`)
+// relocated from the intermediate file Generate.Phantom.Emit.factsBundleFile
+// wrote into --output (see Generate.elm's `_config._emitFactsBundle` gate),
+// stamped with the provenance only the CLI wrapper knows.
+if (factsBundleDir) {
+  writeFactsBundle({ factsBundleDir, outputDir, rawArgvNoFactsFlag, afterReconcile });
 }
 
 // Reconcile each custom-element class declaration's `tagName` against the
@@ -456,6 +480,168 @@ function parseOutput(argv) {
     if (a === "--output" && argv[i + 1]) return argv[i + 1];
   }
   return null;
+}
+
+// --- M1.c facts bundle -------------------------------------------------
+
+function getFlagValue(argv, name) {
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith(`${name}=`)) return a.slice(name.length + 1);
+    if (a === name && argv[i + 1] !== undefined) return argv[i + 1];
+  }
+  return null;
+}
+
+// Strip `--facts-bundle=<dir>` (elm-codegen doesn't understand it, same
+// treatment as `--config-from`), returning both the cleaned argv and the dir.
+function extractFactsBundleDir(argv) {
+  const dir = getFlagValue(argv, "--facts-bundle");
+  const out = [];
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith("--facts-bundle=")) continue;
+    if (a === "--facts-bundle") {
+      i++; // also skip its value
+      continue;
+    }
+    out.push(a);
+  }
+  return { argv: out, factsBundleDir: dir };
+}
+
+// Merge `_config._emitFactsBundle = true` into the CEM flags so
+// Generate.elm's decodeEmitFactsBundleFlag gate fires — the trigger for
+// Generate.Phantom.Emit.factsBundleFile (Face C). A no-op (argv unchanged)
+// when `enabled` is false, so a caller that never asks for the bundle also
+// never pays for an extra temp-file rewrite.
+function injectFactsBundleFlag(argv, enabled) {
+  if (!enabled) return argv;
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  if (flagIdx === -1) return argv;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return argv;
+  }
+  cem._config = cem._config || {};
+  cem._config._emitFactsBundle = true;
+  const tmp = writeTemp("elm-cem-facts-flag", JSON.stringify(cem));
+  const out = argv.slice();
+  if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
+  else out[flagIdx + 1] = tmp;
+  return out;
+}
+
+// Best-effort git HEAD commit of `dir` (or null). Resolves one level of
+// symbolic ref (`ref: refs/heads/main`); never throws.
+function tryGitHead(dir) {
+  try {
+    const headPath = path.join(dir, ".git", "HEAD");
+    const head = fs.readFileSync(headPath, "utf8").trim();
+    const m = head.match(/^ref:\s*(.+)$/);
+    if (!m) return head || null;
+    const refPath = path.join(dir, ".git", m[1]);
+    return fs.readFileSync(refPath, "utf8").trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+// Walk upward from `dir` looking for the nearest `package.json` — used to
+// find the upstream component library's own package.json (name/version/
+// repository) from the directory its manifest/`.d.ts` tree was scanned in.
+function findPackageJsonUp(dir, maxLevels = 6) {
+  let cur = path.resolve(dir);
+  for (let i = 0; i < maxLevels; i++) {
+    const candidate = path.join(cur, "package.json");
+    if (fs.existsSync(candidate)) {
+      try {
+        return JSON.parse(fs.readFileSync(candidate, "utf8"));
+      } catch {
+        return null;
+      }
+    }
+    const parent = path.dirname(cur);
+    if (parent === cur) break;
+    cur = parent;
+  }
+  return null;
+}
+
+function writeFactsBundle({ factsBundleDir, outputDir, rawArgvNoFactsFlag, afterReconcile }) {
+  const absFactsBundleDir = path.resolve(process.cwd(), factsBundleDir);
+  fs.mkdirSync(absFactsBundleDir, { recursive: true });
+
+  const origFlagsFrom = getFlagValue(rawArgvNoFactsFlag, "--flags-from");
+  const origManifestPath = path.resolve(process.cwd(), origFlagsFrom);
+  const origCem = JSON.parse(fs.readFileSync(origManifestPath, "utf8"));
+
+  const reconciledFlagsFrom = getFlagValue(afterReconcile, "--flags-from") || origFlagsFrom;
+  const reconciledCem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), reconciledFlagsFrom), "utf8"));
+
+  const dtsDir = path.dirname(origManifestPath);
+  const pkg = findPackageJsonUp(dtsDir);
+  const generatorVersion = require("../package.json").version;
+  const generatorCommit = tryGitHead(path.resolve(__dirname, ".."));
+
+  const faceBProvenance = {
+    generator: { name: "elm-cem", version: generatorVersion, commit: generatorCommit },
+    source: {
+      package: pkg && pkg.name ? pkg.name : "unknown",
+      version: pkg && pkg.version ? pkg.version : "unknown",
+      sha: null,
+      manifestPath: path.relative(process.cwd(), origManifestPath),
+      upstreamRepo: pkg && pkg.repository ? pkg.repository.url || pkg.repository : null,
+      integrity: null,
+    },
+    dts: { dir: path.relative(process.cwd(), dtsDir), fileCount: factsBundle.dtsFiles(dtsDir).length, aliasCount: 0 },
+  };
+
+  const faceB = factsBundle.buildFaceB(reconciledCem, origCem, { dtsDir, provenance: faceBProvenance });
+  faceBProvenance.dts.aliasCount = faceB.stats.aliasesCollected; // patch in place (shared reference)
+
+  fs.writeFileSync(path.join(absFactsBundleDir, "cem-facts.json"), JSON.stringify(faceB, null, 2) + "\n");
+  console.log(
+    `elm-cem: wrote facts bundle Face B (${faceB.components.length} components, ${faceB.stats.attributes} attributes) to ${path.join(absFactsBundleDir, "cem-facts.json")}`
+  );
+
+  const intermediatePath = path.resolve(process.cwd(), outputDir, "elm-api-facts.generated.json");
+  if (!fs.existsSync(intermediatePath)) {
+    console.error(
+      `elm-cem: --facts-bundle requested but ${intermediatePath} was not emitted — Face C was not written.`
+    );
+    return;
+  }
+  const faceC = JSON.parse(fs.readFileSync(intermediatePath, "utf8"));
+  fs.rmSync(intermediatePath);
+
+  const configFiles = [];
+  for (let i = 0; i < rawArgvNoFactsFlag.length; i++) {
+    const a = rawArgvNoFactsFlag[i];
+    if (a.startsWith("--config-from=")) configFiles.push(a.slice("--config-from=".length));
+    else if (a === "--config-from" && rawArgvNoFactsFlag[i + 1]) configFiles.push(rawArgvNoFactsFlag[++i]);
+  }
+
+  faceC.provenance = {
+    producer: { elmCem: { version: generatorVersion, commit: generatorCommit } },
+    brand: {
+      name: path.basename(process.cwd()),
+      lib: faceC.lib || null,
+      commit: tryGitHead(process.cwd()),
+      configFiles,
+    },
+    source: { package: faceBProvenance.source.package, version: faceBProvenance.source.version, sha: null },
+  };
+
+  fs.writeFileSync(path.join(absFactsBundleDir, "elm-api-facts.json"), JSON.stringify(faceC, null, 2) + "\n");
+  console.log(
+    `elm-cem: wrote facts bundle Face C (${Object.keys(faceC.components).length} components) to ${path.join(absFactsBundleDir, "elm-api-facts.json")}`
+  );
 }
 
 // Read the publish shape from --config-from JSON files (raw, so it is independent
