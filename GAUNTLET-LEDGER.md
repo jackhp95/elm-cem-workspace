@@ -8,7 +8,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 
 ## Milestone checklist
 
-- [ ] **M0** Workspace shell — 0.a skeleton, 0.b Elm-in-JS convention
+- [x] **M0** Workspace shell — 0.a skeleton, 0.b Elm-in-JS convention
 - [ ] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
 - [ ] **M2** elm-m3e onto workspace elm-cem — 2.a
 - [ ] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
@@ -99,6 +99,32 @@ Structural facts confirmed at bootstrap (bind M1.d):
   This preserves the actual guarantee (the builder never judges its own work) while respecting the
   prefs. Revisit if a second audit-grade provider becomes available.
 
+- **D-005 (M0) — M0 integrator run by the manager, not a separate agent.** The plan calls for a
+  fresh Opus integrator per milestone. M0 has exactly one build part, and the fresh Opus critic in
+  the loop already ran the whole-milestone gate end to end (and broke it to prove it real). The
+  manager (Opus, independent of the builder) re-ran the full gate itself instead of spawning a
+  redundant integrator. From M1 on — where a milestone has multiple parts and real seams — a
+  separate integrator agent is used as the plan specifies.
+- **R-001 (risk raised by the M0 critic) — package→package in-workspace Elm resolution is
+  unhandled.** D-003 rule 4 covers app→package only. Elm forbids `source-directories` in a
+  `type: package` `elm.json`, so a `type: package` can express deps ONLY as registry constraints
+  resolved from the `~/.elm` cache. This bites in M1: `elm-m3e`'s `elm.json` is `type: package`
+  and depends on `jackhp95/elm-cem-facts` and
+  `jackhp95/elm-html-intermediate-representation` — both of which become in-workspace packages,
+  and M1.d *changes* `elm-cem-facts`. An unpublished in-workspace change to `elm-cem-facts` is
+  therefore invisible to `elm-m3e`'s package-level build. **Not a blocker for M0** (nothing is
+  migrated yet); it MUST be resolved as part of M1 before M1.d's `Cem.Facts` consolidation is
+  gated. Candidate devices: publish-first ordering, an `ELM_HOME` staging shim (elm-cem's existing
+  `check:gates` already stages family deps — see its `gates-test` output), or an application-level
+  test harness. Decide it in M1 with an Opus critic on the call.
+
 ## Progress
 
-<!-- one deterministic line per part, appended below -->
+- `M0.a: pass (gate \`pnpm install && pnpm run gate\` + 5 verify-checks green, critic VERDICT: PASS,
+  builder claude/sonnet, critic claude/opus, loop 955dfbd8, 1 iteration, 0 escalations)`
+- `M0.b: pass (convention D-003 recorded pre-build; critic verified item 4 — a probe package is
+  publishable as it sits, zero monorepo state in any published artifact — with R-001 recorded as an
+  explicit stated limitation rather than glossed as a pass)`
+- `M0: integrated (whole-milestone gate green: pnpm install exit 0; pnpm run gate GATE GREEN;
+  probe.js compiled and contains probeAnswer; tasks enumerates both graphs; git diff HEAD empty —
+  no pre-existing tracked file touched; untracked set == the 12 authorized files exactly)`

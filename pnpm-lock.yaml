@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.15.1
+        version: 1.20.0
+
+packages:
+
+  elm-tooling@1.20.0:
+    resolution: {integrity: sha512-mEuth6pm5Sd+uZNfyXJS6OgjT0UG1N6zdUf0j1pTl9SiEkvpB2bx454dAS8GKB8wi6c2+hq1u8AFSTeR0nuK9Q==}
+    hasBin: true
+
+snapshots:
+
+  elm-tooling@1.20.0: {}
