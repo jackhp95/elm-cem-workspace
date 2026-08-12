@@ -1,0 +1,27 @@
+{
+  "name": "elm-html-intermediate-representation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Phantom-typed HTML IR: the shared Tier-0 substrate for elm-cem generated UI libraries.",
+  "license": "BSD-3-Clause",
+  "author": "jackhp95",
+  "scripts": {
+    "postinstall": "elm-tooling install",
+    "format": "elm-format src --yes",
+    "check:format": "elm-format src --validate",
+    "check:review": "elm-review --config review",
+    "check:validate": "elm make --docs /tmp/ir-docs.json",
+    "check:acid": "bash verify/run.sh",
+    "check": "run-p \"check:*\"",
+    "test": "ELM_HOME=\"${ELM_HOME:-$HOME/.elm}\" \"${ELM_TEST_RS:-./node_modules/.bin/elm-test-rs}\" --compiler \"${ELM:-./node_modules/.bin/elm}\"",
+    "bench": "bash bench/run.sh",
+    "gate": "run-s check test",
+    "hooks:install": "git config core.hooksPath hooks"
+  },
+  "devDependencies": {
+    "elm-format": "0.8.7",
+    "elm-review": "^2.13.5",
+    "elm-tooling": "^1.20.0",
+    "npm-run-all2": "^9.0.3"
+  }
+}

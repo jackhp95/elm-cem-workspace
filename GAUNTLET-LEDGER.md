@@ -156,7 +156,57 @@ Structural facts confirmed at bootstrap (bind M1.d):
   package. The elm-m3e `review/` compile is verified at **M2.a**, where it is a natural part of
   that milestone's gate. No coverage is lost; only the ordering changes.
 
+- **D-008 (M1.a round 1 post-mortem) — the bar was unsatisfiable; MY bug, not the builder's.**
+  Round 1 burned all 4 iterations failing the same check, `pnpm --filter elm-cem run check`. The
+  builder could not have passed it, because I wrote two mutually contradictory requirements:
+  I ordered `hooks:install` neutralized AND made `[ -z "$(git config --get core.hooksPath)" ]` a
+  gate check — while elm-cem's own `check:gates` **requires** `core.hooksPath` to be set and to
+  point at its `hooks/`. Both cannot hold. The A/B bar (the part that actually matters) was GREEN in
+  all four iterations, as were install, `pnpm run gate`, and the hooks check. Lesson for the
+  remaining milestones: when a moved package brings its own repo-scoped meta-gates, reconcile them
+  against the monorepo BEFORE writing the bar. Re-dispatched on **Sonnet again** — escalating the
+  model would have been wrong, since capability was never the constraint.
+  Two migration artifacts surfaced, both genuine, both now authorized adaptations:
+  1. **`check:gates` / `hooks#core.hooksPath`.** One git repo has exactly one `core.hooksPath`, so
+     per-package hook wiring cannot work in a monorepo; that is why the `postinstall` neutralization
+     was right. Resolution: use elm-cem's own documented escape hatch — a `gate-waivers.json` entry
+     keyed `hooks#core.hooksPath` with an honest reason. The workspace-level pre-push hook (which
+     will run the family drift gate) is wired in **M4**, and the waiver reason says so, so this
+     stays greppable rather than silently lost.
+  2. **`check:neutrality`.** The script does `cd "$(git rev-parse --show-toplevel)"` + `git ls-files`
+     — repo-scoped by design. Inside the monorepo that scans the whole workspace, so it flags the
+     ledger, the plan, the spec, and `pnpm-lock.yaml` for saying "m3e". The invariant it protects
+     (elm-cem the *engine* stays design-system agnostic — load-bearing for Phase-5 upstreaming) is
+     worth keeping intact. Resolution: **scope the scan to the package directory** instead of the
+     git root. This preserves the invariant exactly, fixes only the path assumption the move broke,
+     keeps the existing package-relative allowlist entries valid, and behaves identically if
+     elm-cem is ever split back out (package dir == git root). Rejected the alternative of
+     allowlisting the four offending files: that is whack-a-mole which grows with the monorepo and
+     would silently erode the invariant.
+
+- **D-009 (M1.a round 2 post-mortem) — the integrity check must not police the manager's own file.**
+  Round 2 went 10-for-10 on every functional check (both previously-red meta-gates now green, A/B
+  green, elm-cem's full test suite green, registry-check green, all four source repos untouched)
+  and failed ONLY on
+  `[ -z "$(git diff --stat HEAD -- docs GAUNTLET-LEDGER.md ...)" ]` — because I had written D-008
+  into `GAUNTLET-LEDGER.md` and dispatched WITHOUT committing it. The builder never touched the
+  ledger; my own in-flight edit tripped my own gate, and the loop then burned four iterations on a
+  condition no builder action could clear (the second time I have made this class of mistake, after
+  D-008).
+  **Structural fix:** `GAUNTLET-LEDGER.md` is the MANAGER's file and is legitimately written
+  mid-milestone, so it is removed from the deterministic integrity check. "The builder did not
+  touch the ledger" is now verified by the CRITIC, which reads the real diff and can tell
+  manager-authored from builder-authored changes. The deterministic check keeps policing what
+  builders genuinely must not touch: `docs/`, `tools/gate.mjs`, `tools/tasks.mjs`,
+  `packages/_probe/`. Standing rule for the rest of Phase 0: **commit the ledger before dispatching
+  any loop.**
+
 ## Progress
+
+- `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
+  while the brief demanded it unset; check:neutrality scans the whole monorepo; A/B GREEN throughout;
+  strategy: manager-side bar fix — waive hooks#core.hooksPath per elm-cem's own mechanism, scope
+  neutrality to the package dir; builder claude/sonnet, loop cb0508c4, 4 iterations)`
 
 - `M0.a: pass (gate \`pnpm install && pnpm run gate\` + 5 verify-checks green, critic VERDICT: PASS,
   builder claude/sonnet, critic claude/opus, loop 955dfbd8, 1 iteration, 0 escalations)`
@@ -166,3 +216,7 @@ Structural facts confirmed at bootstrap (bind M1.d):
 - `M0: integrated (whole-milestone gate green: pnpm install exit 0; pnpm run gate GATE GREEN;
   probe.js compiled and contains probeAnswer; tasks enumerates both graphs; git diff HEAD empty —
   no pre-existing tracked file touched; untracked set == the 12 authorized files exactly)`
+- `M1.a: round 2 (all 10 functional checks GREEN — check:gates, check:neutrality, A/B, elm-cem
+  test suite, registry-check, all four source repos clean; failed ONLY on the integrity check,
+  which fired on the manager's own uncommitted 33-line D-008 ledger edit, not on any builder
+  change; strategy: see D-009; builder claude/sonnet, loop 22ce4a1c, 4 iterations)`

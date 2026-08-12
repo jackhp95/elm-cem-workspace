@@ -1,0 +1,50 @@
+# CI for elm-cem — an npm package with an embedded elm-codegen Elm app.
+# Runs the npm test suite (elm-test-rs + compile-gate + exclude-cli), a format
+# check over tests/src/ (hand-written Elm; codegen/ is the frozen generator and
+# is excluded — see CONTRIBUTING.md), the skills frontmatter/link guard, and the
+# permanent neutrality gate.
+#
+# Tools (elm / elm-format / elm-test-rs) are pinned in elm-tooling.json and
+# installed via elm-tooling, which caches ELM_HOME (~/.elm).
+name: ci
+
+# MANUAL ONLY — `hooks/pre-push` runs this same `npm test` locally before
+# anything reaches origin, so re-running it here is a slower duplicate. Kept
+# dispatchable for a clean-checkout or ubuntu-vs-macOS reproduction.
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install npm deps
+        run: npm ci
+
+      # Install elm / elm-format / elm-test-rs into node_modules/.bin per
+      # elm-tooling.json. Uses the latest elm-tooling (knows elm-format 0.8.8; the
+      # old elm-tooling-action@v1.7 bundled a stale registry capped at 0.8.7).
+      # npm scripts (npm test / npm run format) auto-add node_modules/.bin to PATH.
+      - name: Install Elm tools
+        run: npx --yes elm-tooling@latest install
+
+      # One step, deliberately: `gate` is the same contract hooks/pre-push
+      # enforces locally (check:* in parallel, then test:*). Enumerating the
+      # steps again here would let CI and the hook drift apart, and the hook is
+      # the gate that actually runs on every push.
+      # Covers: check:format (tests/src only — codegen/ is the frozen generator
+      # and intentionally excluded), check:neutrality, and all 11 test:* suites.
+      - name: Gate (check:* + test:*)
+        run: npm run gate
+
+      # Skills guard: frontmatter lint (name/description) + intra-repo link
+      # resolution over skills/. Dep-free node script, not part of gate.
+      - name: Skills check
+        run: node skills/check-skills.mjs

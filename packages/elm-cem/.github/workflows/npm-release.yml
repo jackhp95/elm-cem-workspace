@@ -1,0 +1,48 @@
+# npm release via trusted publishing (OIDC) — no NPM_TOKEN stored.
+#
+# Prereq: on npmjs.com, configure this repo + this workflow as a Trusted Publisher
+# for the `elm-cem` package. Provenance is generated automatically for public
+# packages on npm >= 11.5.1.
+#
+# This workflow does NOT run on ordinary pushes/PRs. It fires only on a pushed
+# version tag (e.g. v0.4.0, created by `npm version`) or a manual dispatch, so it
+# can never publish from routine branch activity.
+name: npm-release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # REQUIRED for OIDC trusted publishing + provenance
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+
+      # Ensure a modern npm that supports OIDC trusted publishing + auto-provenance.
+      - run: npm install -g npm@latest
+
+      - name: Install npm deps
+        run: npm ci
+
+      # Install elm / elm-format / elm-test-rs into node_modules/.bin per
+      # elm-tooling.json. Mirrors the approach in ci.yml.
+      - name: Install Elm tools
+        run: npx --yes elm-tooling@latest install
+
+      - run: npm test
+      - run: bash .github/neutrality-check.sh
+
+      # No --provenance flag and no NODE_AUTH_TOKEN needed with trusted publishing.
+      - run: npm publish --access public

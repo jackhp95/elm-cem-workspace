@@ -1,0 +1,14 @@
+{
+  "build": "complete coverage: 113 elements + 21 composition families + 557 attributes (386 element-scoped + 171 universal)",
+  "emittedModules": 504,
+  "perFacetDocsBytes": {
+    "markup-core": 56835,
+    "markup-raw": 192640,
+    "markup-html": 219890,
+    "markup-build": 345064,
+    "markup": 326907
+  },
+  "gatePerFacet": 700000,
+  "maxFacetUtilization": "markup-build 49.3%",
+  "verdict": "ALL facets pass the 700,000 B/facet gate with headroom; no finer slicing needed."
+}

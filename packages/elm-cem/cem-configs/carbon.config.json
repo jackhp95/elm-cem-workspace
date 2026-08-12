@@ -1,0 +1,17 @@
+{
+  "globs": [
+    "src/components/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts", 
+    "**/test/**/*",
+    "**/tests/**/*",
+    "**/*.stories.ts",
+    "**/story/**/*",
+    "**/stories/**/*"
+  ],
+  "outdir": ".",
+  "litelement": true,
+  "plugins": []
+}

@@ -1,0 +1,1611 @@
+{
+  "coverage": {
+    "elements": 113,
+    "obsolete": 29,
+    "attrsTotal": 1742,
+    "prunedTotal": 22,
+    "globals": 30,
+    "aria": 52,
+    "universalTotal": 70
+  },
+  "prose": {
+    "elemProse": 113,
+    "elemGeneric": 0,
+    "attrProse": 416,
+    "attrWhatwg": 0,
+    "attrGeneric": 0
+  },
+  "typing": {
+    "enum": 1410,
+    "bool": 43,
+    "int": 39,
+    "float": 11,
+    "string": 239,
+    "noWhatwgRow": 115,
+    "byTag": {
+      "a": 29,
+      "abbr": 12,
+      "address": 12,
+      "area": 26,
+      "article": 12,
+      "aside": 12,
+      "audio": 22,
+      "b": 12,
+      "base": 14,
+      "bdi": 12,
+      "bdo": 12,
+      "blockquote": 13,
+      "body": 22,
+      "br": 13,
+      "button": 27,
+      "canvas": 14,
+      "caption": 13,
+      "cite": 12,
+      "code": 12,
+      "col": 18,
+      "colgroup": 18,
+      "data": 13,
+      "datalist": 12,
+      "dd": 12,
+      "del": 14,
+      "details": 14,
+      "dfn": 12,
+      "dialog": 14,
+      "div": 13,
+      "dl": 12,
+      "dt": 12,
+      "em": 12,
+      "embed": 18,
+      "fieldset": 15,
+      "figcaption": 12,
+      "figure": 12,
+      "footer": 12,
+      "form": 21,
+      "h1": 12,
+      "h2": 12,
+      "h3": 12,
+      "h4": 12,
+      "h5": 12,
+      "h6": 12,
+      "head": 12,
+      "header": 12,
+      "hgroup": 12,
+      "hr": 17,
+      "html": 14,
+      "i": 12,
+      "iframe": 33,
+      "img": 32,
+      "input": 47,
+      "ins": 14,
+      "kbd": 12,
+      "label": 13,
+      "legend": 13,
+      "li": 14,
+      "link": 30,
+      "main": 12,
+      "map": 13,
+      "mark": 12,
+      "menu": 12,
+      "meta": 17,
+      "meter": 18,
+      "nav": 12,
+      "noscript": 12,
+      "object": 26,
+      "ol": 16,
+      "optgroup": 14,
+      "option": 16,
+      "output": 15,
+      "p": 12,
+      "picture": 12,
+      "pre": 13,
+      "progress": 14,
+      "q": 13,
+      "rp": 12,
+      "rt": 12,
+      "ruby": 12,
+      "s": 12,
+      "samp": 12,
+      "script": 23,
+      "search": 12,
+      "section": 12,
+      "select": 19,
+      "selectedcontent": 12,
+      "slot": 13,
+      "small": 12,
+      "source": 19,
+      "span": 12,
+      "strong": 12,
+      "style": 15,
+      "sub": 12,
+      "summary": 12,
+      "sup": 12,
+      "table": 21,
+      "tbody": 17,
+      "td": 24,
+      "template": 19,
+      "textarea": 25,
+      "tfoot": 17,
+      "th": 24,
+      "thead": 17,
+      "time": 13,
+      "title": 12,
+      "tr": 17,
+      "track": 17,
+      "u": 12,
+      "ul": 14,
+      "var": 12,
+      "video": 27,
+      "wbr": 12
+    },
+    "typedTotal": 1503,
+    "stringFallback": 239,
+    "typedRatio": 86.3
+  },
+  "typingGap": [
+    {
+      "element": "a",
+      "attr": "attributionsourceid",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "a",
+      "attr": "attributionsrc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "a",
+      "attr": "download",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "a",
+      "attr": "href",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "a",
+      "attr": "hreflang",
+      "whatwg": "Valid BCP 47 language tag",
+      "why": "bcp47"
+    },
+    {
+      "element": "a",
+      "attr": "hreftranslate",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "a",
+      "attr": "interestfor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "a",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "a",
+      "attr": "ping",
+      "whatwg": "Set of space-separated tokens consisting of valid non-empty URLs",
+      "why": "url"
+    },
+    {
+      "element": "a",
+      "attr": "rel",
+      "whatwg": "Unordered set of unique space-separated tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "a",
+      "attr": "rev",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "a",
+      "attr": "target",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "a",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "area",
+      "attr": "alt",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "area",
+      "attr": "attributionsrc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "area",
+      "attr": "download",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "area",
+      "attr": "href",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "area",
+      "attr": "hreflang",
+      "whatwg": "Valid BCP 47 language tag",
+      "why": "bcp47"
+    },
+    {
+      "element": "area",
+      "attr": "interestfor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "area",
+      "attr": "nohref",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "area",
+      "attr": "ping",
+      "whatwg": "Set of space-separated tokens consisting of valid non-empty URLs",
+      "why": "url"
+    },
+    {
+      "element": "area",
+      "attr": "rel",
+      "whatwg": "Unordered set of unique space-separated tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "area",
+      "attr": "target",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "area",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "audio",
+      "attr": "controlslist",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "audio",
+      "attr": "disableremoteplayback",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "audio",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "base",
+      "attr": "href",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "base",
+      "attr": "target",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "blockquote",
+      "attr": "cite",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "body",
+      "attr": "alink",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "background",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "bottommargin",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "leftmargin",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "link",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "rightmargin",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "text",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "topmargin",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "body",
+      "attr": "vlink",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "br",
+      "attr": "clear",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "button",
+      "attr": "commandfor",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "button",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "button",
+      "attr": "formaction",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "button",
+      "attr": "formtarget",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "button",
+      "attr": "interestfor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "button",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "button",
+      "attr": "popovertarget",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "button",
+      "attr": "value",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "caption",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "col",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "col",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "col",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "col",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "colgroup",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "colgroup",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "colgroup",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "colgroup",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "data",
+      "attr": "value",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "del",
+      "attr": "cite",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "del",
+      "attr": "datetime",
+      "whatwg": "Valid date string with optional time",
+      "why": "datetime"
+    },
+    {
+      "element": "details",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "div",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "embed",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "embed",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "embed",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "embed",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "fieldset",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "fieldset",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "form",
+      "attr": "accept-charset",
+      "whatwg": "ASCII case-insensitive match for \"UTF-8\"",
+      "why": "charset"
+    },
+    {
+      "element": "form",
+      "attr": "action",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "form",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "form",
+      "attr": "rel",
+      "whatwg": "Unordered set of unique space-separated tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "form",
+      "attr": "target",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "hr",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "hr",
+      "attr": "color",
+      "whatwg": "CSS &lt;color>",
+      "why": "unclassified"
+    },
+    {
+      "element": "hr",
+      "attr": "noshade",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "html",
+      "attr": "version",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "html",
+      "attr": "xmlns",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "allow",
+      "whatwg": "Serialized permissions policy",
+      "why": "permissionspolicy"
+    },
+    {
+      "element": "iframe",
+      "attr": "allowpaymentrequest",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "browsingtopics",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "credentialless",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "csp",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "frameborder",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "longdesc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "marginheight",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "marginwidth",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "name",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "iframe",
+      "attr": "privateToken",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "scrolling",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "iframe",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "iframe",
+      "attr": "srcdoc",
+      "whatwg": "The source of an iframe srcdoc document*",
+      "why": "unclassified"
+    },
+    {
+      "element": "img",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "img",
+      "attr": "alt",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "img",
+      "attr": "attributionsrc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "img",
+      "attr": "border",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "img",
+      "attr": "hspace",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "img",
+      "attr": "longdesc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "img",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "img",
+      "attr": "sizes",
+      "whatwg": "Valid source size list",
+      "why": "sizes"
+    },
+    {
+      "element": "img",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "img",
+      "attr": "srcset",
+      "whatwg": "Comma-separated list of image candidate strings",
+      "why": "datetime"
+    },
+    {
+      "element": "img",
+      "attr": "usemap",
+      "whatwg": "Valid hash-name reference*",
+      "why": "idref"
+    },
+    {
+      "element": "img",
+      "attr": "vspace",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "input",
+      "attr": "accept",
+      "whatwg": "Set of comma-separated tokens* consisting of valid MIME type strings with no parameters or audio/*, video/*, or image/*",
+      "why": "tokens"
+    },
+    {
+      "element": "input",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "input",
+      "attr": "alt",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "input",
+      "attr": "autocomplete",
+      "whatwg": "Autofill field name and related tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "input",
+      "attr": "capture",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "input",
+      "attr": "dirname",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "input",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "input",
+      "attr": "formaction",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "input",
+      "attr": "formtarget",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "input",
+      "attr": "max",
+      "whatwg": "Varies*",
+      "why": "varies"
+    },
+    {
+      "element": "input",
+      "attr": "min",
+      "whatwg": "Varies*",
+      "why": "varies"
+    },
+    {
+      "element": "input",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "input",
+      "attr": "pattern",
+      "whatwg": "Regular expression matching the JavaScript Pattern production",
+      "why": "regex"
+    },
+    {
+      "element": "input",
+      "attr": "placeholder",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "input",
+      "attr": "popovertarget",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "input",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "input",
+      "attr": "switch",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "input",
+      "attr": "usemap",
+      "whatwg": "Valid hash-name reference*",
+      "why": "idref"
+    },
+    {
+      "element": "input",
+      "attr": "webkitdirectory",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "ins",
+      "attr": "cite",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "ins",
+      "attr": "datetime",
+      "whatwg": "Valid date string with optional time",
+      "why": "datetime"
+    },
+    {
+      "element": "label",
+      "attr": "for",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "legend",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "li",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "link",
+      "attr": "href",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "link",
+      "attr": "hreflang",
+      "whatwg": "Valid BCP 47 language tag",
+      "why": "bcp47"
+    },
+    {
+      "element": "link",
+      "attr": "imagesizes",
+      "whatwg": "Valid source size list",
+      "why": "sizes"
+    },
+    {
+      "element": "link",
+      "attr": "imagesrcset",
+      "whatwg": "Comma-separated list of image candidate strings",
+      "why": "datetime"
+    },
+    {
+      "element": "link",
+      "attr": "integrity",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "link",
+      "attr": "media",
+      "whatwg": "Valid media query list",
+      "why": "mediaquery"
+    },
+    {
+      "element": "link",
+      "attr": "rel",
+      "whatwg": "Unordered set of unique space-separated tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "link",
+      "attr": "rev",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "link",
+      "attr": "sizes",
+      "whatwg": "Unordered set of unique space-separated tokens, ASCII case-insensitive, consisting of sizes*",
+      "why": "tokens"
+    },
+    {
+      "element": "link",
+      "attr": "target",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "link",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "map",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "meta",
+      "attr": "content",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "meta",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "meta",
+      "attr": "scheme",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "archive",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "border",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "classid",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "codebase",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "codetype",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "data",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "object",
+      "attr": "declare",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "object",
+      "attr": "name",
+      "whatwg": "Valid navigable target name or keyword",
+      "why": "target"
+    },
+    {
+      "element": "object",
+      "attr": "standby",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "object",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "object",
+      "attr": "usemap",
+      "whatwg": "Valid hash-name reference*",
+      "why": "idref"
+    },
+    {
+      "element": "ol",
+      "attr": "compact",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "optgroup",
+      "attr": "label",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "option",
+      "attr": "label",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "option",
+      "attr": "value",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "output",
+      "attr": "for",
+      "whatwg": "Unordered set of unique space-separated tokens consisting of IDs*",
+      "why": "tokens"
+    },
+    {
+      "element": "output",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "output",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "q",
+      "attr": "cite",
+      "whatwg": "Valid URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "script",
+      "attr": "attributionsrc",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "script",
+      "attr": "integrity",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "script",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "select",
+      "attr": "autocomplete",
+      "whatwg": "Autofill field name and related tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "select",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "select",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "slot",
+      "attr": "name",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "source",
+      "attr": "media",
+      "whatwg": "Valid media query list",
+      "why": "mediaquery"
+    },
+    {
+      "element": "source",
+      "attr": "sizes",
+      "whatwg": "Valid source size list",
+      "why": "sizes"
+    },
+    {
+      "element": "source",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "source",
+      "attr": "srcset",
+      "whatwg": "Comma-separated list of image candidate strings",
+      "why": "datetime"
+    },
+    {
+      "element": "source",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "style",
+      "attr": "media",
+      "whatwg": "Valid media query list",
+      "why": "mediaquery"
+    },
+    {
+      "element": "style",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "table",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "border",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "cellpadding",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "cellspacing",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "frame",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "rules",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "table",
+      "attr": "summary",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tbody",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tbody",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tbody",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tbody",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tbody",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "abbr",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "td",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "axis",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "td",
+      "attr": "headers",
+      "whatwg": "Unordered set of unique space-separated tokens consisting of IDs*",
+      "why": "tokens"
+    },
+    {
+      "element": "td",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "template",
+      "attr": "shadowrootreferencetarget",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "textarea",
+      "attr": "autocomplete",
+      "whatwg": "Autofill field name and related tokens*",
+      "why": "tokens"
+    },
+    {
+      "element": "textarea",
+      "attr": "dirname",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "textarea",
+      "attr": "form",
+      "whatwg": "ID*",
+      "why": "idref"
+    },
+    {
+      "element": "textarea",
+      "attr": "name",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "textarea",
+      "attr": "placeholder",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "tfoot",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tfoot",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tfoot",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tfoot",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tfoot",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "abbr",
+      "whatwg": "Text*",
+      "why": "text"
+    },
+    {
+      "element": "th",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "axis",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "th",
+      "attr": "headers",
+      "whatwg": "Unordered set of unique space-separated tokens consisting of IDs*",
+      "why": "tokens"
+    },
+    {
+      "element": "th",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "thead",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "thead",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "thead",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "thead",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "thead",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tr",
+      "attr": "align",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tr",
+      "attr": "bgcolor",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tr",
+      "attr": "char",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tr",
+      "attr": "charoff",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "tr",
+      "attr": "valign",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "track",
+      "attr": "label",
+      "whatwg": "Text",
+      "why": "text"
+    },
+    {
+      "element": "track",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "track",
+      "attr": "srclang",
+      "whatwg": "Valid BCP 47 language tag",
+      "why": "bcp47"
+    },
+    {
+      "element": "ul",
+      "attr": "compact",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "ul",
+      "attr": "type",
+      "whatwg": "Valid MIME type string",
+      "why": "mime"
+    },
+    {
+      "element": "video",
+      "attr": "controlslist",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "video",
+      "attr": "disablepictureinpicture",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "video",
+      "attr": "disableremoteplayback",
+      "whatwg": null,
+      "why": "no-whatwg-row"
+    },
+    {
+      "element": "video",
+      "attr": "poster",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    },
+    {
+      "element": "video",
+      "attr": "src",
+      "whatwg": "Valid non-empty URL potentially surrounded by spaces",
+      "why": "url"
+    }
+  ],
+  "obsoleteExcluded": [
+    "acronym",
+    "applet",
+    "basefont",
+    "bgsound",
+    "big",
+    "blink",
+    "center",
+    "dir",
+    "font",
+    "frame",
+    "frameset",
+    "isindex",
+    "keygen",
+    "listing",
+    "marquee",
+    "menuitem",
+    "multicol",
+    "nextid",
+    "nobr",
+    "noembed",
+    "noframes",
+    "param",
+    "plaintext",
+    "rb",
+    "rtc",
+    "spacer",
+    "strike",
+    "tt",
+    "xmp"
+  ]
+}

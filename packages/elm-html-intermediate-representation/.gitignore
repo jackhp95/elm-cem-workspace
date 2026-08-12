@@ -1,0 +1,5 @@
+elm-stuff/
+docs.json
+node_modules/
+verify/out/
+bench/bench.js

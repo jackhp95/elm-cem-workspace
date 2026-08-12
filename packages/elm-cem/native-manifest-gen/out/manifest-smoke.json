@@ -1,0 +1,957 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "jackhp95/markup",
+    "description": "Type-safe HTML surface for elm-cem generated component libraries.",
+    "version": "1.0.0",
+    "license": "BSD-3-Clause"
+  },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "markup-elements.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-a",
+          "name": "MarkupA",
+          "summary": "The <a> element.",
+          "description": "Native HTML element (prototype).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "attributionsourceid",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "charset",
+              "type": {
+                "text": "'utf-8'"
+              },
+              "description": "Character encoding declaration",
+              "deprecated": true
+            },
+            {
+              "name": "coords",
+              "type": {
+                "text": "number"
+              },
+              "description": "Coordinates for the shape to be created in an image map",
+              "deprecated": true
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "hreftranslate",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API",
+              "deprecated": true
+            },
+            {
+              "name": "ping",
+              "type": {
+                "text": "string"
+              },
+              "description": "URLs to ping"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "rev",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'default' | 'poly' | 'rect'"
+              },
+              "description": "The kind of shape to be created in an image map",
+              "deprecated": true
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-div",
+          "name": "MarkupDiv",
+          "summary": "The <div> element.",
+          "description": "Native HTML element (prototype).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-img",
+          "name": "MarkupImg",
+          "summary": "The <img> element.",
+          "description": "Native HTML element (prototype).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "border",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "decoding",
+              "type": {
+                "text": "'sync' | 'async' | 'auto'"
+              },
+              "description": "Decoding hint to use when processing this image for presentation"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "hspace",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "ismap",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the image is a server-side image map"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "longdesc",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API",
+              "deprecated": true
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use"
+            },
+            {
+              "name": "vspace",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-input",
+          "name": "MarkupInput",
+          "summary": "The <input> element.",
+          "description": "Native HTML element (prototype).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for expected file type in file upload controls"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow the color's alpha component to be set"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "capture",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is checked"
+            },
+            {
+              "name": "colorspace",
+              "type": {
+                "text": "'limited-srgb' | 'display-p3'"
+              },
+              "description": "The color space of the serialized color"
+            },
+            {
+              "name": "dirname",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form control to use for sending the element's directionality in form submission"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "formaction",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "formenctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "formmethod",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "formnovalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "formtarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "description": "Maximum value"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum length of value"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "description": "Minimum value"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Minimum length of value"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow multiple values"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pattern to be matched by the form control's value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label to be placed within the form control"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets a popover element to toggle, show, or hide"
+            },
+            {
+              "name": "popovertargetaction",
+              "type": {
+                "text": "'toggle' | 'show' | 'hide'"
+              },
+              "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the value to be edited by the user"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "description": "Size of the control"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "description": "Granularity to be matched by the form control's value"
+            },
+            {
+              "name": "switch",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'"
+              },
+              "description": "Type of form control"
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use",
+              "deprecated": true
+            },
+            {
+              "name": "webkitdirectory",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-td",
+          "name": "MarkupTd",
+          "summary": "The <td> element.",
+          "description": "Native HTML element (prototype).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "abbr",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative label to use for the header cell when referencing the cell in other contexts",
+              "deprecated": true
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "axis",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "colspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of columns that the cell is to span"
+            },
+            {
+              "name": "headers",
+              "type": {
+                "text": "string"
+              },
+              "description": "The header cells for this cell"
+            },
+            {
+              "name": "rowspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of rows that the cell is to span"
+            },
+            {
+              "name": "scope",
+              "type": {
+                "text": "'row' | 'col' | 'rowgroup' | 'colgroup'"
+              },
+              "description": "Specifies which cells the header cell applies to",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        }
+      ],
+      "exports": null
+    },
+    {
+      "kind": "javascript-module",
+      "path": "markup-global.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "customElement": false,
+          "tagName": null,
+          "name": "GlobalAttributes",
+          "summary": "HTML global attributes — valid on every element; factored once.",
+          "description": "",
+          "attributes": [
+            {
+              "name": "accesskey",
+              "type": {
+                "text": "string"
+              },
+              "description": "Keyboard shortcut to activate or focus element"
+            },
+            {
+              "name": "anchor",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "autocapitalize",
+              "type": {
+                "text": "'on' | 'off' | 'none' | 'sentences' | 'words' | 'characters'"
+              },
+              "description": "Recommended autocapitalization behavior (for supported input methods)"
+            },
+            {
+              "name": "autocorrect",
+              "type": {
+                "text": "'on' | 'off' | ''"
+              },
+              "description": "Recommended autocorrection behavior (for supported input methods)"
+            },
+            {
+              "name": "autofocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Automatically focus the element when the page is loaded"
+            },
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "description": "Classes to which the element belongs"
+            },
+            {
+              "name": "contenteditable",
+              "type": {
+                "text": "'true' | 'false' | 'plaintext-only' | ''"
+              },
+              "description": "Whether the element is editable"
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "description": "The text directionality of the element"
+            },
+            {
+              "name": "draggable",
+              "type": {
+                "text": "'true' | 'false'"
+              },
+              "description": "Whether the element is draggable"
+            },
+            {
+              "name": "enterkeyhint",
+              "type": {
+                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              },
+              "description": "Hint for selecting an enter key action"
+            },
+            {
+              "name": "exportparts",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "headingoffset",
+              "type": {
+                "text": "number"
+              },
+              "description": "Offsets heading levels for descendants"
+            },
+            {
+              "name": "headingreset",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Prevents a heading offset computation from traversing beyond the element with the attribute"
+            },
+            {
+              "name": "hidden",
+              "type": {
+                "text": "'until-found' | 'hidden' | ''"
+              },
+              "description": "Whether the element is relevant"
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "description": "The element's ID"
+            },
+            {
+              "name": "inert",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the element is inert."
+            },
+            {
+              "name": "inputmode",
+              "type": {
+                "text": "'none' | 'text' | 'tel' | 'email' | 'url' | 'numeric' | 'decimal' | 'search'"
+              },
+              "description": "Hint for selecting an input modality"
+            },
+            {
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "description": "Creates a customized built-in element"
+            },
+            {
+              "name": "lang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the element"
+            },
+            {
+              "name": "nonce",
+              "type": {
+                "text": "string"
+              },
+              "description": "Cryptographic nonce used in Content Security Policy checks [CSP]"
+            },
+            {
+              "name": "part",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "popover",
+              "type": {
+                "text": "'auto' | 'manual' | 'hint' | ''"
+              },
+              "description": "Makes the element a popover element"
+            },
+            {
+              "name": "slot",
+              "type": {
+                "text": "string"
+              },
+              "description": "The element's desired slot"
+            },
+            {
+              "name": "spellcheck",
+              "type": {
+                "text": "'true' | 'false' | ''"
+              },
+              "description": "Whether the element is to have its spelling and grammar checked"
+            },
+            {
+              "name": "style",
+              "type": {
+                "text": "string"
+              },
+              "description": "Presentational and formatting instructions"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "description": "Whether the element is focusable and sequentially focusable, and the relative order of the element for the purposes of sequential focus navigation"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "Advisory information for the element"
+            },
+            {
+              "name": "translate",
+              "type": {
+                "text": "'yes' | 'no' | ''"
+              },
+              "description": "Whether the element is to be translated when the page is localized"
+            },
+            {
+              "name": "virtualkeyboardpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "writingsuggestions",
+              "type": {
+                "text": "'true' | 'false' | ''"
+              },
+              "description": "Whether the element can offer writing suggestions or not."
+            }
+          ],
+          "members": [],
+          "events": [],
+          "slots": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        }
+      ],
+      "exports": null
+    }
+  ]
+}

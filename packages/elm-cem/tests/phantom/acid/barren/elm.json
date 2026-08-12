@@ -1,0 +1,25 @@
+{
+    "type": "application",
+    "elm-version": "0.19.1",
+    "version": "1.0.0",
+    "summary": "Acid test for barren collision suite",
+    "description": "Tests K6: no enum implies no Values module",
+    "source-directories": [
+        "src",
+        "bad"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "direct": {
+            "elm/core": "1.0.5",
+            "elm/html": "1.0.0",
+            "elm/json": "1.1.4",
+            "elm/virtual-dom": "1.0.3"
+        },
+        "indirect": {}
+    },
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
+}

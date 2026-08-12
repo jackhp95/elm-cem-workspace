@@ -1,0 +1,4847 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "jackhp95/markup",
+    "description": "Type-safe HTML surface for elm-cem generated component libraries.",
+    "version": "1.0.0",
+    "license": "BSD-3-Clause"
+  },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "markup-elements.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-a",
+          "name": "MarkupA",
+          "summary": "The `<a>` HTML element (or anchor element), with its `href` attribute, creates a hyperlink to web pages, files, email addresses, locations in the same page, or anything else a URL can address.",
+          "description": "Native HTML `<a>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "attributionsourceid",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `attributionsourceid` attribute."
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `attributionsrc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charset",
+              "type": {
+                "text": "'utf-8'"
+              },
+              "description": "Character encoding declaration",
+              "deprecated": true
+            },
+            {
+              "name": "coords",
+              "type": {
+                "text": "number"
+              },
+              "description": "Coordinates for the shape to be created in an image map",
+              "deprecated": true
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "hreftranslate",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `hreftranslate` attribute."
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `interestfor` attribute."
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API",
+              "deprecated": true
+            },
+            {
+              "name": "ping",
+              "type": {
+                "text": "string"
+              },
+              "description": "URLs to ping"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "rev",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `rev` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'default' | 'poly' | 'rect'"
+              },
+              "description": "The kind of shape to be created in an image map",
+              "deprecated": true
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-abbr",
+          "name": "MarkupAbbr",
+          "summary": "The `<abbr>` HTML element.",
+          "description": "Native HTML `<abbr>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-address",
+          "name": "MarkupAddress",
+          "summary": "The `<address>` HTML element.",
+          "description": "Native HTML `<address>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-area",
+          "name": "MarkupArea",
+          "summary": "The `<area>` HTML element.",
+          "description": "Native HTML `<area>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `attributionsrc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "coords",
+              "type": {
+                "text": "number"
+              },
+              "description": "Coordinates for the shape to be created in an image map"
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `interestfor` attribute."
+            },
+            {
+              "name": "nohref",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `nohref` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "ping",
+              "type": {
+                "text": "string"
+              },
+              "description": "URLs to ping"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'default' | 'poly' | 'rect'"
+              },
+              "description": "The kind of shape to be created in an image map"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-article",
+          "name": "MarkupArticle",
+          "summary": "The `<article>` HTML element.",
+          "description": "Native HTML `<article>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-aside",
+          "name": "MarkupAside",
+          "summary": "The `<aside>` HTML element.",
+          "description": "Native HTML `<aside>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-audio",
+          "name": "MarkupAudio",
+          "summary": "The `<audio>` HTML element.",
+          "description": "Native HTML `<audio>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hint that the media resource can be started automatically when the page is loaded"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show user agent controls"
+            },
+            {
+              "name": "controlslist",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `controlslist` attribute."
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "disableremoteplayback",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `disableremoteplayback` attribute."
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to loop the media resource"
+            },
+            {
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to mute the media resource by default"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "'none' | 'metadata' | 'auto' | ''"
+              },
+              "description": "Hints how much buffering the media resource will likely need"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-b",
+          "name": "MarkupB",
+          "summary": "The `<b>` HTML element.",
+          "description": "Native HTML `<b>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-base",
+          "name": "MarkupBase",
+          "summary": "The `<base>` HTML element.",
+          "description": "Native HTML `<base>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Document base URL"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Default navigable for hyperlink navigation and form submission"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-bdi",
+          "name": "MarkupBdi",
+          "summary": "The `<bdi>` HTML element.",
+          "description": "Native HTML `<bdi>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-bdo",
+          "name": "MarkupBdo",
+          "summary": "The `<bdo>` HTML element.",
+          "description": "Native HTML `<bdo>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-blockquote",
+          "name": "MarkupBlockquote",
+          "summary": "The `<blockquote>` HTML element.",
+          "description": "Native HTML `<blockquote>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-body",
+          "name": "MarkupBody",
+          "summary": "The `<body>` HTML element.",
+          "description": "Native HTML `<body>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "alink",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `alink` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "background",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `background` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bottommargin",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bottommargin` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "leftmargin",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `leftmargin` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "link",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `link` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "rightmargin",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `rightmargin` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `text` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "topmargin",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `topmargin` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "vlink",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `vlink` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-br",
+          "name": "MarkupBr",
+          "summary": "The `<br>` HTML element.",
+          "description": "Native HTML `<br>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "clear",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `clear` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-button",
+          "name": "MarkupButton",
+          "summary": "The `<button>` HTML element is an interactive element activated by a user with a mouse, keyboard, finger, voice command, or other assistive technology. Once activated, it then performs an action, such as submitting a form or opening a dialog.",
+          "description": "Native HTML `<button>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "command",
+              "type": {
+                "text": "'toggle-popover' | 'show-popover' | 'hide-popover' | 'close' | 'request-close' | 'show-modal'"
+              },
+              "description": "Indicates to the targeted element which action to take."
+            },
+            {
+              "name": "commandfor",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets another element to be invoked."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "formaction",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "formenctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "formmethod",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "formnovalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "formtarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `interestfor` attribute."
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets a popover element to toggle, show, or hide"
+            },
+            {
+              "name": "popovertargetaction",
+              "type": {
+                "text": "'toggle' | 'show' | 'hide'"
+              },
+              "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'submit' | 'reset' | 'button'"
+              },
+              "description": "Type of button"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value to be used for form submission"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-canvas",
+          "name": "MarkupCanvas",
+          "summary": "The `<canvas>` HTML element.",
+          "description": "Native HTML `<canvas>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-caption",
+          "name": "MarkupCaption",
+          "summary": "The `<caption>` HTML element.",
+          "description": "Native HTML `<caption>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-cite",
+          "name": "MarkupCite",
+          "summary": "The `<cite>` HTML element.",
+          "description": "Native HTML `<cite>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-code",
+          "name": "MarkupCode",
+          "summary": "The `<code>` HTML element.",
+          "description": "Native HTML `<code>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-col",
+          "name": "MarkupCol",
+          "summary": "The `<col>` HTML element.",
+          "description": "Native HTML `<col>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "span",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of columns spanned by the element"
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-colgroup",
+          "name": "MarkupColgroup",
+          "summary": "The `<colgroup>` HTML element.",
+          "description": "Native HTML `<colgroup>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "span",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of columns spanned by the element"
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-data",
+          "name": "MarkupData",
+          "summary": "The `<data>` HTML element.",
+          "description": "Native HTML `<data>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Machine-readable value"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-datalist",
+          "name": "MarkupDatalist",
+          "summary": "The `<datalist>` HTML element.",
+          "description": "Native HTML `<datalist>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-dd",
+          "name": "MarkupDd",
+          "summary": "The `<dd>` HTML element.",
+          "description": "Native HTML `<dd>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-del",
+          "name": "MarkupDel",
+          "summary": "The `<del>` HTML element.",
+          "description": "Native HTML `<del>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            },
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string"
+              },
+              "description": "Date and (optionally) time of the change"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-details",
+          "name": "MarkupDetails",
+          "summary": "The `<details>` HTML element.",
+          "description": "Native HTML `<details>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of group of mutually-exclusive details elements"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the details are visible"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-dfn",
+          "name": "MarkupDfn",
+          "summary": "The `<dfn>` HTML element.",
+          "description": "Native HTML `<dfn>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-dialog",
+          "name": "MarkupDialog",
+          "summary": "The `<dialog>` HTML element.",
+          "description": "Native HTML `<dialog>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "closedby",
+              "type": {
+                "text": "'any' | 'closerequest' | 'none'"
+              },
+              "description": "Which user actions will close the dialog"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the dialog box is showing"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-div",
+          "name": "MarkupDiv",
+          "summary": "The `<div>` HTML element is the generic container for flow content. It has no effect on the content or layout until styled in some way using CSS (e.g., styling is directly applied to it, or some kind of layout model like Flexbox is applied to its parent element).",
+          "description": "Native HTML `<div>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-dl",
+          "name": "MarkupDl",
+          "summary": "The `<dl>` HTML element.",
+          "description": "Native HTML `<dl>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-dt",
+          "name": "MarkupDt",
+          "summary": "The `<dt>` HTML element.",
+          "description": "Native HTML `<dt>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-em",
+          "name": "MarkupEm",
+          "summary": "The `<em>` HTML element.",
+          "description": "Native HTML `<em>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-embed",
+          "name": "MarkupEmbed",
+          "summary": "The `<embed>` HTML element.",
+          "description": "Native HTML `<embed>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API",
+              "deprecated": true
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of embedded resource"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-fieldset",
+          "name": "MarkupFieldset",
+          "summary": "The `<fieldset>` HTML element.",
+          "description": "Native HTML `<fieldset>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the descendant form controls, except any inside legend, are disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-figcaption",
+          "name": "MarkupFigcaption",
+          "summary": "The `<figcaption>` HTML element.",
+          "description": "Native HTML `<figcaption>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-figure",
+          "name": "MarkupFigure",
+          "summary": "The `<figure>` HTML element.",
+          "description": "Native HTML `<figure>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-footer",
+          "name": "MarkupFooter",
+          "summary": "The `<footer>` HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element. A `<footer>` typically contains information about the author of the section, copyright data or links to related documents.",
+          "description": "Native HTML `<footer>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-form",
+          "name": "MarkupForm",
+          "summary": "The `<form>` HTML element.",
+          "description": "Native HTML `<form>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "accept-charset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Character encodings to use for form submission"
+            },
+            {
+              "name": "action",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "'on' | 'off'"
+              },
+              "description": "Default setting for autofill feature for controls in the form"
+            },
+            {
+              "name": "enctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "method",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form to use in the document.forms API"
+            },
+            {
+              "name": "novalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h1",
+          "name": "MarkupH1",
+          "summary": "The `<h1>` HTML element.",
+          "description": "Native HTML `<h1>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h2",
+          "name": "MarkupH2",
+          "summary": "The `<h2>` HTML element.",
+          "description": "Native HTML `<h2>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h3",
+          "name": "MarkupH3",
+          "summary": "The `<h3>` HTML element.",
+          "description": "Native HTML `<h3>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h4",
+          "name": "MarkupH4",
+          "summary": "The `<h4>` HTML element.",
+          "description": "Native HTML `<h4>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h5",
+          "name": "MarkupH5",
+          "summary": "The `<h5>` HTML element.",
+          "description": "Native HTML `<h5>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-h6",
+          "name": "MarkupH6",
+          "summary": "The `<h6>` HTML element.",
+          "description": "Native HTML `<h6>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-head",
+          "name": "MarkupHead",
+          "summary": "The `<head>` HTML element.",
+          "description": "Native HTML `<head>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-header",
+          "name": "MarkupHeader",
+          "summary": "The `<header>` HTML element represents introductory content, typically a group of introductory or navigational aids. It may contain some heading elements but also a logo, a search form, an author name, and other elements.",
+          "description": "Native HTML `<header>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-hgroup",
+          "name": "MarkupHgroup",
+          "summary": "The `<hgroup>` HTML element.",
+          "description": "Native HTML `<hgroup>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-hr",
+          "name": "MarkupHr",
+          "summary": "The `<hr>` HTML element.",
+          "description": "Native HTML `<hr>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "description": "Color to use when customizing a site's icon (for rel=\"mask-icon\")",
+              "deprecated": true
+            },
+            {
+              "name": "noshade",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `noshade` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "description": "Size of the control",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-html",
+          "name": "MarkupHtml",
+          "summary": "The `<html>` HTML element.",
+          "description": "Native HTML `<html>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `version` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "xmlns",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `xmlns` attribute."
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-i",
+          "name": "MarkupI",
+          "summary": "The `<i>` HTML element.",
+          "description": "Native HTML `<i>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-iframe",
+          "name": "MarkupIframe",
+          "summary": "The `<iframe>` HTML element.",
+          "description": "Native HTML `<iframe>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "allow",
+              "type": {
+                "text": "string"
+              },
+              "description": "Permissions policy to be applied to the iframe's contents"
+            },
+            {
+              "name": "allowfullscreen",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the iframe's contents to use requestFullscreen()"
+            },
+            {
+              "name": "allowpaymentrequest",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `allowpaymentrequest` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "browsingtopics",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `browsingtopics` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "credentialless",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `credentialless` attribute."
+            },
+            {
+              "name": "csp",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `csp` attribute."
+            },
+            {
+              "name": "frameborder",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `frameborder` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "longdesc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `longdesc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "marginheight",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `marginheight` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "marginwidth",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `marginwidth` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of content navigable"
+            },
+            {
+              "name": "privateToken",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `privateToken` attribute."
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "sandbox",
+              "type": {
+                "text": "string"
+              },
+              "description": "Security rules for nested content"
+            },
+            {
+              "name": "scrolling",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `scrolling` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcdoc",
+              "type": {
+                "text": "string"
+              },
+              "description": "A document to render in the iframe"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-img",
+          "name": "MarkupImg",
+          "summary": "The `<img>` HTML element embeds an image into the document.",
+          "description": "Native HTML `<img>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `attributionsrc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "border",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `border` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "decoding",
+              "type": {
+                "text": "'sync' | 'async' | 'auto'"
+              },
+              "description": "Decoding hint to use when processing this image for presentation"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "hspace",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `hspace` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "ismap",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the image is a server-side image map"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "longdesc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `longdesc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API",
+              "deprecated": true
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use"
+            },
+            {
+              "name": "vspace",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `vspace` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-input",
+          "name": "MarkupInput",
+          "summary": "The `<input>` HTML element is used to create interactive controls for web-based forms in order to accept data from the user; a wide variety of types of input data and control widgets are available, depending on the device and user agent. The `<input>` element is one of the most powerful and complex in all of HTML due to the sheer number of combinations of input types and attributes.",
+          "description": "Native HTML `<input>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for expected file type in file upload controls"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow the color's alpha component to be set"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "capture",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `capture` attribute."
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is checked"
+            },
+            {
+              "name": "colorspace",
+              "type": {
+                "text": "'limited-srgb' | 'display-p3'"
+              },
+              "description": "The color space of the serialized color"
+            },
+            {
+              "name": "dirname",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form control to use for sending the element's directionality in form submission"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "formaction",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "formenctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "formmethod",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "formnovalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "formtarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "description": "Maximum value"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum length of value"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "description": "Minimum value"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Minimum length of value"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow multiple values"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pattern to be matched by the form control's value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label to be placed within the form control"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets a popover element to toggle, show, or hide"
+            },
+            {
+              "name": "popovertargetaction",
+              "type": {
+                "text": "'toggle' | 'show' | 'hide'"
+              },
+              "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the value to be edited by the user"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "description": "Size of the control"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "description": "Granularity to be matched by the form control's value"
+            },
+            {
+              "name": "switch",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `switch` attribute."
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'"
+              },
+              "description": "Type of form control"
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use",
+              "deprecated": true
+            },
+            {
+              "name": "webkitdirectory",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `webkitdirectory` attribute."
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-ins",
+          "name": "MarkupIns",
+          "summary": "The `<ins>` HTML element.",
+          "description": "Native HTML `<ins>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            },
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string"
+              },
+              "description": "Date and (optionally) time of the change"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-kbd",
+          "name": "MarkupKbd",
+          "summary": "The `<kbd>` HTML element.",
+          "description": "Native HTML `<kbd>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-label",
+          "name": "MarkupLabel",
+          "summary": "The `<label>` HTML element represents a caption for an item in a user interface.",
+          "description": "Native HTML `<label>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associate the label with form control"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-legend",
+          "name": "MarkupLegend",
+          "summary": "The `<legend>` HTML element.",
+          "description": "Native HTML `<legend>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-li",
+          "name": "MarkupLi",
+          "summary": "The `<li>` HTML element is used to represent an item in a list. It must be contained in a parent element: an ordered list (<ol>), an unordered list (<ul>), or a menu (<menu>). In menus and unordered lists, list items are usually displayed using bullet points. In ordered lists, they are usually displayed with an ascending counter on the left, such as a number or letter.",
+          "description": "Native HTML `<li>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource",
+              "deprecated": true
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Ordinal value of the list item"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-link",
+          "name": "MarkupLink",
+          "summary": "The `<link>` HTML element.",
+          "description": "Native HTML `<link>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "as",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination for a preload request (for rel=\"preload\" and rel=\"modulepreload\")"
+            },
+            {
+              "name": "blocking",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether the element is potentially render-blocking"
+            },
+            {
+              "name": "charset",
+              "type": {
+                "text": "'utf-8'"
+              },
+              "description": "Character encoding declaration",
+              "deprecated": true
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the link is disabled"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "imagesizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts (for rel=\"preload\")"
+            },
+            {
+              "name": "imagesrcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel=\"preload\")"
+            },
+            {
+              "name": "integrity",
+              "type": {
+                "text": "string"
+              },
+              "description": "Integrity metadata used in Subresource Integrity checks [SRI]"
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "rev",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `rev` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Sizes of the icons (for rel=\"icon\")"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation",
+              "deprecated": true
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-map",
+          "name": "MarkupMap",
+          "summary": "The `<map>` HTML element.",
+          "description": "Native HTML `<map>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to reference from the usemap attribute"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-mark",
+          "name": "MarkupMark",
+          "summary": "The `<mark>` HTML element.",
+          "description": "Native HTML `<mark>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-menu",
+          "name": "MarkupMenu",
+          "summary": "The `<menu>` HTML element.",
+          "description": "Native HTML `<menu>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-meta",
+          "name": "MarkupMeta",
+          "summary": "The `<meta>` HTML element.",
+          "description": "Native HTML `<meta>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "charset",
+              "type": {
+                "text": "'utf-8'"
+              },
+              "description": "Character encoding declaration"
+            },
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value of the element"
+            },
+            {
+              "name": "http-equiv",
+              "type": {
+                "text": "'content-type' | 'default-style' | 'refresh' | 'x-ua-compatible' | 'content-security-policy'"
+              },
+              "description": "Pragma directive"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Metadata name"
+            },
+            {
+              "name": "scheme",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `scheme` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-meter",
+          "name": "MarkupMeter",
+          "summary": "The `<meter>` HTML element.",
+          "description": "Native HTML `<meter>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "high",
+              "type": {
+                "text": "number"
+              },
+              "description": "Low limit of high range"
+            },
+            {
+              "name": "low",
+              "type": {
+                "text": "number"
+              },
+              "description": "High limit of low range"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "description": "Upper bound of range"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "description": "Lower bound of range"
+            },
+            {
+              "name": "optimum",
+              "type": {
+                "text": "number"
+              },
+              "description": "Optimum value in gauge"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Current value of the element"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-nav",
+          "name": "MarkupNav",
+          "summary": "The `<nav>` HTML element represents a section of a page whose purpose is to provide navigation links, either within the current document or to other documents. Common examples of navigation sections are menus, tables of contents, and indexes.",
+          "description": "Native HTML `<nav>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-noscript",
+          "name": "MarkupNoscript",
+          "summary": "The `<noscript>` HTML element.",
+          "description": "Native HTML `<noscript>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-object",
+          "name": "MarkupObject",
+          "summary": "The `<object>` HTML element.",
+          "description": "Native HTML `<object>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "archive",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `archive` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "border",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `border` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "classid",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `classid` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "codebase",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `codebase` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "codetype",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `codetype` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "data",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "declare",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `declare` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of content navigable"
+            },
+            {
+              "name": "standby",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `standby` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of embedded resource"
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-ol",
+          "name": "MarkupOl",
+          "summary": "The `<ol>` HTML element.",
+          "description": "Native HTML `<ol>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "compact",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `compact` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "reversed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Number the list backwards"
+            },
+            {
+              "name": "start",
+              "type": {
+                "text": "number"
+              },
+              "description": "Starting value of the list"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'1' | 'a' | 'A' | 'i' | 'I'"
+              },
+              "description": "Kind of list marker"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-optgroup",
+          "name": "MarkupOptgroup",
+          "summary": "The `<optgroup>` HTML element.",
+          "description": "Native HTML `<optgroup>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-option",
+          "name": "MarkupOption",
+          "summary": "The `<option>` HTML element.",
+          "description": "Native HTML `<option>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the option is selected by default"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value to be used for form submission"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-output",
+          "name": "MarkupOutput",
+          "summary": "The `<output>` HTML element.",
+          "description": "Native HTML `<output>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies controls from which the output was calculated"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-p",
+          "name": "MarkupP",
+          "summary": "The `<p>` HTML element represents a paragraph. Paragraphs are usually represented in visual media as blocks of text separated from adjacent blocks by blank lines and/or first-line indentation, but HTML paragraphs can be any structural grouping of related content, such as images or form fields.",
+          "description": "Native HTML `<p>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-picture",
+          "name": "MarkupPicture",
+          "summary": "The `<picture>` HTML element.",
+          "description": "Native HTML `<picture>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-pre",
+          "name": "MarkupPre",
+          "summary": "The `<pre>` HTML element.",
+          "description": "Native HTML `<pre>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-progress",
+          "name": "MarkupProgress",
+          "summary": "The `<progress>` HTML element.",
+          "description": "Native HTML `<progress>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "description": "Upper bound of range"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Current value of the element"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-q",
+          "name": "MarkupQ",
+          "summary": "The `<q>` HTML element.",
+          "description": "Native HTML `<q>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-rp",
+          "name": "MarkupRp",
+          "summary": "The `<rp>` HTML element.",
+          "description": "Native HTML `<rp>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-rt",
+          "name": "MarkupRt",
+          "summary": "The `<rt>` HTML element.",
+          "description": "Native HTML `<rt>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-ruby",
+          "name": "MarkupRuby",
+          "summary": "The `<ruby>` HTML element.",
+          "description": "Native HTML `<ruby>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-s",
+          "name": "MarkupS",
+          "summary": "The `<s>` HTML element.",
+          "description": "Native HTML `<s>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-samp",
+          "name": "MarkupSamp",
+          "summary": "The `<samp>` HTML element.",
+          "description": "Native HTML `<samp>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-script",
+          "name": "MarkupScript",
+          "summary": "The `<script>` HTML element.",
+          "description": "Native HTML `<script>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "async",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Execute script when available, without blocking while fetching"
+            },
+            {
+              "name": "attributionsrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `attributionsrc` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "blocking",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether the element is potentially render-blocking"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "defer",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Defer script execution"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "integrity",
+              "type": {
+                "text": "string"
+              },
+              "description": "Integrity metadata used in Subresource Integrity checks [SRI]"
+            },
+            {
+              "name": "nomodule",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Prevents execution in user agents that support module scripts"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'module' | 'importmap' | 'speculationrules'"
+              },
+              "description": "Type of script"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-search",
+          "name": "MarkupSearch",
+          "summary": "The `<search>` HTML element.",
+          "description": "Native HTML `<search>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-section",
+          "name": "MarkupSection",
+          "summary": "The `<section>` HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it. Sections should always have a heading, with very few exceptions.",
+          "description": "Native HTML `<section>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-select",
+          "name": "MarkupSelect",
+          "summary": "The `<select>` HTML element represents a control that provides a menu of options.",
+          "description": "Native HTML `<select>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow multiple values"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "description": "Size of the control"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-selectedcontent",
+          "name": "MarkupSelectedcontent",
+          "summary": "The `<selectedcontent>` HTML element.",
+          "description": "Native HTML `<selectedcontent>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-small",
+          "name": "MarkupSmall",
+          "summary": "The `<small>` HTML element.",
+          "description": "Native HTML `<small>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-source",
+          "name": "MarkupSource",
+          "summary": "The `<source>` HTML element.",
+          "description": "Native HTML `<source>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of embedded resource"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-span",
+          "name": "MarkupSpan",
+          "summary": "The `<span>` HTML element is a generic inline container for phrasing content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the `class` or `id` attributes), or because they share attribute values, such as `lang`. It should be used only when no other semantic element is appropriate. `<span>` is very much like a <div> element, but <div> is a block-level element whereas a `<span>` is an inline-level element.",
+          "description": "Native HTML `<span>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-strong",
+          "name": "MarkupStrong",
+          "summary": "The `<strong>` HTML element.",
+          "description": "Native HTML `<strong>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-sub",
+          "name": "MarkupSub",
+          "summary": "The `<sub>` HTML element.",
+          "description": "Native HTML `<sub>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-summary",
+          "name": "MarkupSummary",
+          "summary": "The `<summary>` HTML element.",
+          "description": "Native HTML `<summary>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-sup",
+          "name": "MarkupSup",
+          "summary": "The `<sup>` HTML element.",
+          "description": "Native HTML `<sup>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-table",
+          "name": "MarkupTable",
+          "summary": "The `<table>` HTML element.",
+          "description": "Native HTML `<table>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "border",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `border` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "cellpadding",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `cellpadding` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "cellspacing",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `cellspacing` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "frame",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `frame` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `rules` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "summary",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `summary` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-tbody",
+          "name": "MarkupTbody",
+          "summary": "The `<tbody>` HTML element.",
+          "description": "Native HTML `<tbody>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-td",
+          "name": "MarkupTd",
+          "summary": "The `<td>` HTML element.",
+          "description": "Native HTML `<td>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "abbr",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative label to use for the header cell when referencing the cell in other contexts",
+              "deprecated": true
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "axis",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `axis` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "colspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of columns that the cell is to span"
+            },
+            {
+              "name": "headers",
+              "type": {
+                "text": "string"
+              },
+              "description": "The header cells for this cell"
+            },
+            {
+              "name": "rowspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of rows that the cell is to span"
+            },
+            {
+              "name": "scope",
+              "type": {
+                "text": "'row' | 'col' | 'rowgroup' | 'colgroup'"
+              },
+              "description": "Specifies which cells the header cell applies to",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-template",
+          "name": "MarkupTemplate",
+          "summary": "The `<template>` HTML element.",
+          "description": "Native HTML `<template>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "shadowrootclonable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets clonable on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootcustomelementregistry",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enables declarative shadow roots to indicate they will use a custom element registry"
+            },
+            {
+              "name": "shadowrootdelegatesfocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets delegates focus on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootmode",
+              "type": {
+                "text": "'open' | 'closed'"
+              },
+              "description": "Enables streaming declarative shadow roots"
+            },
+            {
+              "name": "shadowrootreferencetarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `shadowrootreferencetarget` attribute."
+            },
+            {
+              "name": "shadowrootserializable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets serializable on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootslotassignment",
+              "type": {
+                "text": "'named' | 'manual'"
+              },
+              "description": "Sets slot assignment on a declarative shadow root"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-textarea",
+          "name": "MarkupTextarea",
+          "summary": "The `<textarea>` HTML element represents a multi-line plain-text editing control, useful when you want to allow users to enter a sizeable amount of free-form text, for example a comment on a review or feedback form.",
+          "description": "Native HTML `<textarea>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "cols",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum number of characters per line"
+            },
+            {
+              "name": "dirname",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form control to use for sending the element's directionality in form submission"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum length of value"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "Minimum length of value"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label to be placed within the form control"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the value to be edited by the user"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of lines to show"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "'soft' | 'hard'"
+              },
+              "description": "How the value of the form control is to be wrapped for form submission"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-tfoot",
+          "name": "MarkupTfoot",
+          "summary": "The `<tfoot>` HTML element.",
+          "description": "Native HTML `<tfoot>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-th",
+          "name": "MarkupTh",
+          "summary": "The `<th>` HTML element.",
+          "description": "Native HTML `<th>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "abbr",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative label to use for the header cell when referencing the cell in other contexts"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "axis",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `axis` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "colspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of columns that the cell is to span"
+            },
+            {
+              "name": "headers",
+              "type": {
+                "text": "string"
+              },
+              "description": "The header cells for this cell"
+            },
+            {
+              "name": "rowspan",
+              "type": {
+                "text": "number"
+              },
+              "description": "Number of rows that the cell is to span"
+            },
+            {
+              "name": "scope",
+              "type": {
+                "text": "'row' | 'col' | 'rowgroup' | 'colgroup'"
+              },
+              "description": "Specifies which cells the header cell applies to"
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-thead",
+          "name": "MarkupThead",
+          "summary": "The `<thead>` HTML element.",
+          "description": "Native HTML `<thead>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-time",
+          "name": "MarkupTime",
+          "summary": "The `<time>` HTML element.",
+          "description": "Native HTML `<time>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "datetime",
+              "type": {
+                "text": "number"
+              },
+              "description": "Machine-readable value"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-tr",
+          "name": "MarkupTr",
+          "summary": "The `<tr>` HTML element.",
+          "description": "Native HTML `<tr>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "align",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `align` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "bgcolor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `bgcolor` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `char` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "charoff",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `charoff` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "valign",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `valign` attribute.",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-track",
+          "name": "MarkupTrack",
+          "summary": "The `<track>` HTML element.",
+          "description": "Native HTML `<track>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "default",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enable the track if no other text track is more suitable"
+            },
+            {
+              "name": "kind",
+              "type": {
+                "text": "'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata'"
+              },
+              "description": "The type of text track"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srclang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the text track"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-u",
+          "name": "MarkupU",
+          "summary": "The `<u>` HTML element.",
+          "description": "Native HTML `<u>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-ul",
+          "name": "MarkupUl",
+          "summary": "The `<ul>` HTML element represents an unordered list of items, typically rendered as a bulleted list.",
+          "description": "Native HTML `<ul>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "compact",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `compact` attribute.",
+              "deprecated": true
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for the type of the referenced resource",
+              "deprecated": true
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-var",
+          "name": "MarkupVar",
+          "summary": "The `<var>` HTML element.",
+          "description": "Native HTML `<var>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-video",
+          "name": "MarkupVideo",
+          "summary": "The `<video>` HTML element.",
+          "description": "Native HTML `<video>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hint that the media resource can be started automatically when the page is loaded"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show user agent controls"
+            },
+            {
+              "name": "controlslist",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `controlslist` attribute."
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "disablepictureinpicture",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `disablepictureinpicture` attribute."
+            },
+            {
+              "name": "disableremoteplayback",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `disableremoteplayback` attribute."
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to loop the media resource"
+            },
+            {
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to mute the media resource by default"
+            },
+            {
+              "name": "playsinline",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Encourage the user agent to display video content within the element's playback area"
+            },
+            {
+              "name": "poster",
+              "type": {
+                "text": "string"
+              },
+              "description": "Poster frame to show prior to video playback"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "'none' | 'metadata' | 'auto' | ''"
+              },
+              "description": "Hints how much buffering the media resource will likely need"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Horizontal dimension"
+            }
+          ],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        },
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "markup-wbr",
+          "name": "MarkupWbr",
+          "summary": "The `<wbr>` HTML element.",
+          "description": "Native HTML `<wbr>` element (full-coverage prototype surface).",
+          "slots": [],
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        }
+      ],
+      "exports": null
+    },
+    {
+      "kind": "javascript-module",
+      "path": "markup-global.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "customElement": false,
+          "tagName": null,
+          "name": "GlobalAttributes",
+          "summary": "HTML global attributes — valid on every element; factored once.",
+          "description": "",
+          "attributes": [
+            {
+              "name": "accesskey",
+              "type": {
+                "text": "string"
+              },
+              "description": "Keyboard shortcut to activate or focus element"
+            },
+            {
+              "name": "anchor",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `anchor` attribute."
+            },
+            {
+              "name": "autocapitalize",
+              "type": {
+                "text": "'on' | 'off' | 'none' | 'sentences' | 'words' | 'characters'"
+              },
+              "description": "Recommended autocapitalization behavior (for supported input methods)"
+            },
+            {
+              "name": "autocorrect",
+              "type": {
+                "text": "'on' | 'off' | ''"
+              },
+              "description": "Recommended autocorrection behavior (for supported input methods)"
+            },
+            {
+              "name": "autofocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Automatically focus the element when the page is loaded"
+            },
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "description": "Classes to which the element belongs"
+            },
+            {
+              "name": "contenteditable",
+              "type": {
+                "text": "'true' | 'false' | 'plaintext-only' | ''"
+              },
+              "description": "Whether the element is editable"
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "description": "The text directionality of the element"
+            },
+            {
+              "name": "draggable",
+              "type": {
+                "text": "'true' | 'false'"
+              },
+              "description": "Whether the element is draggable"
+            },
+            {
+              "name": "enterkeyhint",
+              "type": {
+                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              },
+              "description": "Hint for selecting an enter key action"
+            },
+            {
+              "name": "exportparts",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `exportparts` attribute."
+            },
+            {
+              "name": "headingoffset",
+              "type": {
+                "text": "number"
+              },
+              "description": "Offsets heading levels for descendants"
+            },
+            {
+              "name": "headingreset",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Prevents a heading offset computation from traversing beyond the element with the attribute"
+            },
+            {
+              "name": "hidden",
+              "type": {
+                "text": "'until-found' | 'hidden' | ''"
+              },
+              "description": "Whether the element is relevant"
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "description": "The element's ID"
+            },
+            {
+              "name": "inert",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the element is inert."
+            },
+            {
+              "name": "inputmode",
+              "type": {
+                "text": "'none' | 'text' | 'tel' | 'email' | 'url' | 'numeric' | 'decimal' | 'search'"
+              },
+              "description": "Hint for selecting an input modality"
+            },
+            {
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "description": "Creates a customized built-in element"
+            },
+            {
+              "name": "lang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the element"
+            },
+            {
+              "name": "nonce",
+              "type": {
+                "text": "string"
+              },
+              "description": "Cryptographic nonce used in Content Security Policy checks [CSP]"
+            },
+            {
+              "name": "part",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `part` attribute."
+            },
+            {
+              "name": "popover",
+              "type": {
+                "text": "'auto' | 'manual' | 'hint' | ''"
+              },
+              "description": "Makes the element a popover element"
+            },
+            {
+              "name": "slot",
+              "type": {
+                "text": "string"
+              },
+              "description": "The element's desired slot"
+            },
+            {
+              "name": "spellcheck",
+              "type": {
+                "text": "'true' | 'false' | ''"
+              },
+              "description": "Whether the element is to have its spelling and grammar checked"
+            },
+            {
+              "name": "style",
+              "type": {
+                "text": "string"
+              },
+              "description": "Presentational and formatting instructions"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "description": "Whether the element is focusable and sequentially focusable, and the relative order of the element for the purposes of sequential focus navigation"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "Advisory information for the element"
+            },
+            {
+              "name": "translate",
+              "type": {
+                "text": "'yes' | 'no' | ''"
+              },
+              "description": "Whether the element is to be translated when the page is localized"
+            },
+            {
+              "name": "virtualkeyboardpolicy",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `virtualkeyboardpolicy` attribute."
+            },
+            {
+              "name": "writingsuggestions",
+              "type": {
+                "text": "'true' | 'false' | ''"
+              },
+              "description": "Whether the element can offer writing suggestions or not."
+            }
+          ],
+          "members": [],
+          "events": [],
+          "slots": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "dependencies": []
+        }
+      ],
+      "exports": null
+    }
+  ]
+}

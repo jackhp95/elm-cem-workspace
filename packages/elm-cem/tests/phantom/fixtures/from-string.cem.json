@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": { "name": "jackhp95/elm-from-string-probe", "version": "1.0.0" },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "probe.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "Probe",
+          "tagName": "fx-probe",
+          "customElement": true,
+          "description": "Two free-string attributes, constrained by `attrTypes` MAP overrides in from-string-config.json. Both hazards `fromString` has to survive live here: an ident that differs from its wire string, and two distinct tokens sharing one wire string.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "presence",
+              "type": { "text": "string" },
+              "description": "The MAP form where every ident differs from its wire string. `presenceFromString` must case on \"true\"/\"false\", never on \"always\"/\"never\"."
+            },
+            {
+              "name": "fallback",
+              "type": { "text": "string" },
+              "description": "The MAP form with a FAN-IN: `always` and `yes` both write \"true\". `tokenValues` accepts it (each token still writes one string), so the dedup lives in the emitter."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

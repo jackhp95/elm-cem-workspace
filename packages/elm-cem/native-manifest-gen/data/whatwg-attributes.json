@@ -1,0 +1,1552 @@
+{
+  "source": "https://html.spec.whatwg.org/multipage/indices.html",
+  "fetchedFrom": "multipage/indices.html",
+  "rowCount": 179,
+  "rows": [
+    {
+      "attr": "abbr",
+      "elements": [
+        "th"
+      ],
+      "description": "Alternative label to use for the header cell when referencing the cell in other contexts",
+      "value": "Text*"
+    },
+    {
+      "attr": "accept",
+      "elements": [
+        "input"
+      ],
+      "description": "Hint for expected file type in file upload controls",
+      "value": "Set of comma-separated tokens* consisting of valid MIME type strings with no parameters or audio/*, video/*, or image/*"
+    },
+    {
+      "attr": "accept-charset",
+      "elements": [
+        "form"
+      ],
+      "description": "Character encodings to use for form submission",
+      "value": "ASCII case-insensitive match for \"UTF-8\""
+    },
+    {
+      "attr": "accesskey",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Keyboard shortcut to activate or focus element",
+      "value": "Ordered set of unique space-separated tokens, none of which are identical to another, each consisting of one code point in length"
+    },
+    {
+      "attr": "action",
+      "elements": [
+        "form"
+      ],
+      "description": "URL to use for form submission",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "allow",
+      "elements": [
+        "iframe"
+      ],
+      "description": "Permissions policy to be applied to the iframe's contents",
+      "value": "Serialized permissions policy"
+    },
+    {
+      "attr": "allowfullscreen",
+      "elements": [
+        "iframe"
+      ],
+      "description": "Whether to allow the iframe's contents to use requestFullscreen()",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "alpha",
+      "elements": [
+        "input"
+      ],
+      "description": "Allow the color's alpha component to be set",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "alt",
+      "elements": [
+        "area",
+        "img",
+        "input"
+      ],
+      "description": "Replacement text for use when images are not available",
+      "value": "Text*"
+    },
+    {
+      "attr": "as",
+      "elements": [
+        "link"
+      ],
+      "description": "Destination for a preload request (for rel=\"preload\" and rel=\"modulepreload\")",
+      "value": "Preload destination, for rel=\"preload\"; module preload destination, for rel=\"modulepreload\""
+    },
+    {
+      "attr": "async",
+      "elements": [
+        "script"
+      ],
+      "description": "Execute script when available, without blocking while fetching",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "autocapitalize",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Recommended autocapitalization behavior (for supported input methods)",
+      "value": "\"on\"; \"off\"; \"none\"; \"sentences\"; \"words\"; \"characters\""
+    },
+    {
+      "attr": "autocomplete",
+      "elements": [
+        "form"
+      ],
+      "description": "Default setting for autofill feature for controls in the form",
+      "value": "\"on\"; \"off\""
+    },
+    {
+      "attr": "autocomplete",
+      "elements": [
+        "input",
+        "select",
+        "textarea"
+      ],
+      "description": "Hint for form autofill feature",
+      "value": "Autofill field name and related tokens*"
+    },
+    {
+      "attr": "autocorrect",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Recommended autocorrection behavior (for supported input methods)",
+      "value": "\"on\"; \"off\"; the empty string"
+    },
+    {
+      "attr": "autofocus",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Automatically focus the element when the page is loaded",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "autoplay",
+      "elements": [
+        "audio",
+        "video"
+      ],
+      "description": "Hint that the media resource can be started automatically when the page is loaded",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "blocking",
+      "elements": [
+        "link",
+        "script",
+        "style"
+      ],
+      "description": "Whether the element is potentially render-blocking",
+      "value": "Unordered set of unique space-separated tokens*"
+    },
+    {
+      "attr": "charset",
+      "elements": [
+        "meta"
+      ],
+      "description": "Character encoding declaration",
+      "value": "\"utf-8\""
+    },
+    {
+      "attr": "checked",
+      "elements": [
+        "input"
+      ],
+      "description": "Whether the control is checked",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "cite",
+      "elements": [
+        "blockquote",
+        "del",
+        "ins",
+        "q"
+      ],
+      "description": "Link to the source of the quotation or more information about the edit",
+      "value": "Valid URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "class",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Classes to which the element belongs",
+      "value": "Set of space-separated tokens"
+    },
+    {
+      "attr": "closedby",
+      "elements": [
+        "dialog"
+      ],
+      "description": "Which user actions will close the dialog",
+      "value": "\"any\"; \"closerequest\"; \"none\";"
+    },
+    {
+      "attr": "color",
+      "elements": [
+        "link"
+      ],
+      "description": "Color to use when customizing a site's icon (for rel=\"mask-icon\")",
+      "value": "CSS &lt;color>"
+    },
+    {
+      "attr": "colorspace",
+      "elements": [
+        "input"
+      ],
+      "description": "The color space of the serialized color",
+      "value": "\"limited-srgb\"; \"display-p3\""
+    },
+    {
+      "attr": "cols",
+      "elements": [
+        "textarea"
+      ],
+      "description": "Maximum number of characters per line",
+      "value": "Valid non-negative integer greater than zero"
+    },
+    {
+      "attr": "colspan",
+      "elements": [
+        "td",
+        "th"
+      ],
+      "description": "Number of columns that the cell is to span",
+      "value": "Valid non-negative integer greater than zero"
+    },
+    {
+      "attr": "command",
+      "elements": [
+        "button"
+      ],
+      "description": "Indicates to the targeted element which action to take.",
+      "value": "\"toggle-popover\"; \"show-popover\"; \"hide-popover\"; \"close\"; \"request-close\"; \"show-modal\"; a custom command keyword"
+    },
+    {
+      "attr": "commandfor",
+      "elements": [
+        "button"
+      ],
+      "description": "Targets another element to be invoked.",
+      "value": "ID*"
+    },
+    {
+      "attr": "content",
+      "elements": [
+        "meta"
+      ],
+      "description": "Value of the element",
+      "value": "Text*"
+    },
+    {
+      "attr": "contenteditable",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is editable",
+      "value": "\"true\"; \"false\"; \"plaintext-only\"; the empty string"
+    },
+    {
+      "attr": "controls",
+      "elements": [
+        "audio",
+        "video img"
+      ],
+      "description": "Show user agent controls",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "coords",
+      "elements": [
+        "area"
+      ],
+      "description": "Coordinates for the shape to be created in an image map",
+      "value": "Valid list of floating-point numbers*"
+    },
+    {
+      "attr": "crossorigin",
+      "elements": [
+        "audio",
+        "img",
+        "link",
+        "script",
+        "video"
+      ],
+      "description": "How the element handles crossorigin requests",
+      "value": "\"anonymous\"; \"use-credentials\"; the empty string"
+    },
+    {
+      "attr": "data",
+      "elements": [
+        "object"
+      ],
+      "description": "Address of the resource",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "datetime",
+      "elements": [
+        "del",
+        "ins"
+      ],
+      "description": "Date and (optionally) time of the change",
+      "value": "Valid date string with optional time"
+    },
+    {
+      "attr": "datetime",
+      "elements": [
+        "time"
+      ],
+      "description": "Machine-readable value",
+      "value": "Valid month string, valid date string, valid yearless date string, valid time string, valid local date and time string, valid time-zone offset string, valid global date and time string, valid week string, valid non-negative integer, or valid duration string"
+    },
+    {
+      "attr": "decoding",
+      "elements": [
+        "img"
+      ],
+      "description": "Decoding hint to use when processing this image for presentation",
+      "value": "\"sync\"; \"async\"; \"auto\""
+    },
+    {
+      "attr": "default",
+      "elements": [
+        "track"
+      ],
+      "description": "Enable the track if no other text track is more suitable",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "defer",
+      "elements": [
+        "script"
+      ],
+      "description": "Defer script execution",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "dir",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "The text directionality of the element",
+      "value": "\"ltr\"; \"rtl\"; \"auto\""
+    },
+    {
+      "attr": "dir",
+      "elements": [
+        "bdo"
+      ],
+      "description": "The text directionality of the element",
+      "value": "\"ltr\"; \"rtl\""
+    },
+    {
+      "attr": "dirname",
+      "elements": [
+        "input",
+        "textarea"
+      ],
+      "description": "Name of form control to use for sending the element's directionality in form submission",
+      "value": "Text*"
+    },
+    {
+      "attr": "disabled",
+      "elements": [
+        "button",
+        "input",
+        "optgroup",
+        "option",
+        "select",
+        "textarea",
+        "form-associated custom elements"
+      ],
+      "description": "Whether the form control is disabled",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "disabled",
+      "elements": [
+        "fieldset"
+      ],
+      "description": "Whether the descendant form controls, except any inside legend, are disabled",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "disabled",
+      "elements": [
+        "link"
+      ],
+      "description": "Whether the link is disabled",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "download",
+      "elements": [
+        "a",
+        "area"
+      ],
+      "description": "Whether to download the resource instead of navigating to it, and its filename if so",
+      "value": "Text"
+    },
+    {
+      "attr": "draggable",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is draggable",
+      "value": "\"true\"; \"false\""
+    },
+    {
+      "attr": "enctype",
+      "elements": [
+        "form"
+      ],
+      "description": "Entry list encoding type to use for form submission",
+      "value": "\"application/x-www-form-urlencoded\"; \"multipart/form-data\"; \"text/plain\""
+    },
+    {
+      "attr": "enterkeyhint",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Hint for selecting an enter key action",
+      "value": "\"enter\"; \"done\"; \"go\"; \"next\"; \"previous\"; \"search\"; \"send\""
+    },
+    {
+      "attr": "fetchpriority",
+      "elements": [
+        "img",
+        "link",
+        "script"
+      ],
+      "description": "Sets the priority for fetches initiated by the element",
+      "value": "\"auto\"; \"high\"; \"low\""
+    },
+    {
+      "attr": "for",
+      "elements": [
+        "label"
+      ],
+      "description": "Associate the label with form control",
+      "value": "ID*"
+    },
+    {
+      "attr": "for",
+      "elements": [
+        "output"
+      ],
+      "description": "Specifies controls from which the output was calculated",
+      "value": "Unordered set of unique space-separated tokens consisting of IDs*"
+    },
+    {
+      "attr": "form",
+      "elements": [
+        "button",
+        "fieldset",
+        "input",
+        "object",
+        "output",
+        "select",
+        "textarea",
+        "form-associated custom elements"
+      ],
+      "description": "Associates the element with a form element",
+      "value": "ID*"
+    },
+    {
+      "attr": "formaction",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "URL to use for form submission",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "formenctype",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Entry list encoding type to use for form submission",
+      "value": "\"application/x-www-form-urlencoded\"; \"multipart/form-data\"; \"text/plain\""
+    },
+    {
+      "attr": "formmethod",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Variant to use for form submission",
+      "value": "\"get\"; \"post\"; \"dialog\""
+    },
+    {
+      "attr": "formnovalidate",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Bypass form control validation for form submission",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "formtarget",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Navigable for form submission",
+      "value": "Valid navigable target name or keyword"
+    },
+    {
+      "attr": "headers",
+      "elements": [
+        "td",
+        "th"
+      ],
+      "description": "The header cells for this cell",
+      "value": "Unordered set of unique space-separated tokens consisting of IDs*"
+    },
+    {
+      "attr": "headingoffset",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Offsets heading levels for descendants",
+      "value": "Valid non-negative integer between 0 and 8"
+    },
+    {
+      "attr": "headingreset",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Prevents a heading offset computation from traversing beyond the element with the attribute",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "height",
+      "elements": [
+        "canvas",
+        "embed",
+        "iframe",
+        "img",
+        "input",
+        "object",
+        "source (in picture)",
+        "video"
+      ],
+      "description": "Vertical dimension",
+      "value": "Valid non-negative integer"
+    },
+    {
+      "attr": "hidden",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is relevant",
+      "value": "\"until-found\"; \"hidden\"; the empty string"
+    },
+    {
+      "attr": "high",
+      "elements": [
+        "meter"
+      ],
+      "description": "Low limit of high range",
+      "value": "Valid floating-point number*"
+    },
+    {
+      "attr": "href",
+      "elements": [
+        "a",
+        "area"
+      ],
+      "description": "Address of the hyperlink",
+      "value": "Valid URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "href",
+      "elements": [
+        "link"
+      ],
+      "description": "Address of the hyperlink",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "href",
+      "elements": [
+        "base"
+      ],
+      "description": "Document base URL",
+      "value": "Valid URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "hreflang",
+      "elements": [
+        "a",
+        "link"
+      ],
+      "description": "Language of the linked resource",
+      "value": "Valid BCP 47 language tag"
+    },
+    {
+      "attr": "http-equiv",
+      "elements": [
+        "meta"
+      ],
+      "description": "Pragma directive",
+      "value": "\"content-type\"; \"default-style\"; \"refresh\"; \"x-ua-compatible\"; \"content-security-policy\""
+    },
+    {
+      "attr": "id",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "The element's ID",
+      "value": "Text*"
+    },
+    {
+      "attr": "imagesizes",
+      "elements": [
+        "link"
+      ],
+      "description": "Image sizes for different page layouts (for rel=\"preload\")",
+      "value": "Valid source size list"
+    },
+    {
+      "attr": "imagesrcset",
+      "elements": [
+        "link"
+      ],
+      "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel=\"preload\")",
+      "value": "Comma-separated list of image candidate strings"
+    },
+    {
+      "attr": "inert",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is inert.",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "inputmode",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Hint for selecting an input modality",
+      "value": "\"none\"; \"text\"; \"tel\"; \"email\"; \"url\"; \"numeric\"; \"decimal\"; \"search\""
+    },
+    {
+      "attr": "integrity",
+      "elements": [
+        "link",
+        "script"
+      ],
+      "description": "Integrity metadata used in Subresource Integrity checks [SRI]",
+      "value": "Text"
+    },
+    {
+      "attr": "is",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Creates a customized built-in element",
+      "value": "Valid custom element name of a defined customized built-in element"
+    },
+    {
+      "attr": "ismap",
+      "elements": [
+        "img"
+      ],
+      "description": "Whether the image is a server-side image map",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "itemid",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Global identifier for a microdata item",
+      "value": "Valid URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "itemprop",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Property names of a microdata item",
+      "value": "Unordered set of unique space-separated tokens consisting of valid absolute URLs, defined property names, or text*"
+    },
+    {
+      "attr": "itemref",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Referenced elements",
+      "value": "Unordered set of unique space-separated tokens consisting of IDs*"
+    },
+    {
+      "attr": "itemscope",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Introduces a microdata item",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "itemtype",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Item types of a microdata item",
+      "value": "Unordered set of unique space-separated tokens consisting of valid absolute URLs*"
+    },
+    {
+      "attr": "kind",
+      "elements": [
+        "track"
+      ],
+      "description": "The type of text track",
+      "value": "\"subtitles\"; \"captions\"; \"descriptions\"; \"chapters\"; \"metadata\""
+    },
+    {
+      "attr": "label",
+      "elements": [
+        "optgroup",
+        "option",
+        "track"
+      ],
+      "description": "User-visible label",
+      "value": "Text"
+    },
+    {
+      "attr": "lang",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Language of the element",
+      "value": "Valid BCP 47 language tag or the empty string"
+    },
+    {
+      "attr": "list",
+      "elements": [
+        "input"
+      ],
+      "description": "List of autocomplete options",
+      "value": "ID*"
+    },
+    {
+      "attr": "loading",
+      "elements": [
+        "iframe",
+        "img",
+        "audio",
+        "video"
+      ],
+      "description": "Used when determining loading deferral",
+      "value": "\"lazy\"; \"eager\""
+    },
+    {
+      "attr": "loop",
+      "elements": [
+        "audio",
+        "video"
+      ],
+      "description": "Whether to loop the media resource",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "low",
+      "elements": [
+        "meter"
+      ],
+      "description": "High limit of low range",
+      "value": "Valid floating-point number*"
+    },
+    {
+      "attr": "max",
+      "elements": [
+        "input"
+      ],
+      "description": "Maximum value",
+      "value": "Varies*"
+    },
+    {
+      "attr": "max",
+      "elements": [
+        "meter",
+        "progress"
+      ],
+      "description": "Upper bound of range",
+      "value": "Valid floating-point number*"
+    },
+    {
+      "attr": "maxlength",
+      "elements": [
+        "input",
+        "textarea"
+      ],
+      "description": "Maximum length of value",
+      "value": "Valid non-negative integer"
+    },
+    {
+      "attr": "media",
+      "elements": [
+        "link",
+        "meta",
+        "source",
+        "style"
+      ],
+      "description": "Applicable media",
+      "value": "Valid media query list"
+    },
+    {
+      "attr": "method",
+      "elements": [
+        "form"
+      ],
+      "description": "Variant to use for form submission",
+      "value": "\"get\"; \"post\"; \"dialog\""
+    },
+    {
+      "attr": "min",
+      "elements": [
+        "input"
+      ],
+      "description": "Minimum value",
+      "value": "Varies*"
+    },
+    {
+      "attr": "min",
+      "elements": [
+        "meter"
+      ],
+      "description": "Lower bound of range",
+      "value": "Valid floating-point number*"
+    },
+    {
+      "attr": "minlength",
+      "elements": [
+        "input",
+        "textarea"
+      ],
+      "description": "Minimum length of value",
+      "value": "Valid non-negative integer"
+    },
+    {
+      "attr": "multiple",
+      "elements": [
+        "input",
+        "select"
+      ],
+      "description": "Whether to allow multiple values",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "muted",
+      "elements": [
+        "audio",
+        "video"
+      ],
+      "description": "Whether to mute the media resource by default",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "button",
+        "fieldset",
+        "input",
+        "output",
+        "select",
+        "textarea",
+        "form-associated custom elements"
+      ],
+      "description": "Name of the element to use for form submission and in the form.elements API",
+      "value": "Text*"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "details"
+      ],
+      "description": "Name of group of mutually-exclusive details elements",
+      "value": "Text*"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "form"
+      ],
+      "description": "Name of form to use in the document.forms API",
+      "value": "Text*"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "iframe",
+        "object"
+      ],
+      "description": "Name of content navigable",
+      "value": "Valid navigable target name or keyword"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "map"
+      ],
+      "description": "Name of image map to reference from the usemap attribute",
+      "value": "Text*"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "meta"
+      ],
+      "description": "Metadata name",
+      "value": "Text*"
+    },
+    {
+      "attr": "name",
+      "elements": [
+        "slot"
+      ],
+      "description": "Name of shadow tree slot",
+      "value": "Text"
+    },
+    {
+      "attr": "nomodule",
+      "elements": [
+        "script"
+      ],
+      "description": "Prevents execution in user agents that support module scripts",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "nonce",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Cryptographic nonce used in Content Security Policy checks [CSP]",
+      "value": "Text"
+    },
+    {
+      "attr": "novalidate",
+      "elements": [
+        "form"
+      ],
+      "description": "Bypass form control validation for form submission",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "open",
+      "elements": [
+        "details"
+      ],
+      "description": "Whether the details are visible",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "open",
+      "elements": [
+        "dialog"
+      ],
+      "description": "Whether the dialog box is showing",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "optimum",
+      "elements": [
+        "meter"
+      ],
+      "description": "Optimum value in gauge",
+      "value": "Valid floating-point number*"
+    },
+    {
+      "attr": "pattern",
+      "elements": [
+        "input"
+      ],
+      "description": "Pattern to be matched by the form control's value",
+      "value": "Regular expression matching the JavaScript Pattern production"
+    },
+    {
+      "attr": "ping",
+      "elements": [
+        "a",
+        "area"
+      ],
+      "description": "URLs to ping",
+      "value": "Set of space-separated tokens consisting of valid non-empty URLs"
+    },
+    {
+      "attr": "placeholder",
+      "elements": [
+        "input",
+        "textarea"
+      ],
+      "description": "User-visible label to be placed within the form control",
+      "value": "Text*"
+    },
+    {
+      "attr": "playsinline",
+      "elements": [
+        "video"
+      ],
+      "description": "Encourage the user agent to display video content within the element's playback area",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "popover",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Makes the element a popover element",
+      "value": "\"auto\"; \"manual\"; \"hint\"; the empty string"
+    },
+    {
+      "attr": "popovertarget",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Targets a popover element to toggle, show, or hide",
+      "value": "ID*"
+    },
+    {
+      "attr": "popovertargetaction",
+      "elements": [
+        "button",
+        "input"
+      ],
+      "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden",
+      "value": "\"toggle\"; \"show\"; \"hide\""
+    },
+    {
+      "attr": "poster",
+      "elements": [
+        "video"
+      ],
+      "description": "Poster frame to show prior to video playback",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "preload",
+      "elements": [
+        "audio",
+        "video"
+      ],
+      "description": "Hints how much buffering the media resource will likely need",
+      "value": "\"none\"; \"metadata\"; \"auto\"; the empty string"
+    },
+    {
+      "attr": "readonly",
+      "elements": [
+        "input",
+        "textarea"
+      ],
+      "description": "Whether to allow the value to be edited by the user",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "readonly",
+      "elements": [
+        "form-associated custom elements"
+      ],
+      "description": "Affects willValidate, plus any behavior added by the custom element author",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "referrerpolicy",
+      "elements": [
+        "a",
+        "area",
+        "iframe",
+        "img",
+        "link",
+        "script"
+      ],
+      "description": "Referrer policy for fetches initiated by the element",
+      "value": "Referrer policy"
+    },
+    {
+      "attr": "rel",
+      "elements": [
+        "a",
+        "area"
+      ],
+      "description": "Relationship between the location in the document containing the hyperlink and the destination resource",
+      "value": "Unordered set of unique space-separated tokens*"
+    },
+    {
+      "attr": "rel",
+      "elements": [
+        "link"
+      ],
+      "description": "Relationship between the document containing the hyperlink and the destination resource",
+      "value": "Unordered set of unique space-separated tokens*"
+    },
+    {
+      "attr": "required",
+      "elements": [
+        "input",
+        "select",
+        "textarea"
+      ],
+      "description": "Whether the control is required for form submission",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "reversed",
+      "elements": [
+        "ol"
+      ],
+      "description": "Number the list backwards",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "rows",
+      "elements": [
+        "textarea"
+      ],
+      "description": "Number of lines to show",
+      "value": "Valid non-negative integer greater than zero"
+    },
+    {
+      "attr": "rowspan",
+      "elements": [
+        "td",
+        "th"
+      ],
+      "description": "Number of rows that the cell is to span",
+      "value": "Valid non-negative integer"
+    },
+    {
+      "attr": "sandbox",
+      "elements": [
+        "iframe"
+      ],
+      "description": "Security rules for nested content",
+      "value": "Unordered set of unique space-separated tokens, ASCII case-insensitive, consisting of \"allow-downloads\"\"allow-forms\"\"allow-modals\"\"allow-orientation-lock\"\"allow-pointer-lock\"\"allow-popups\"\"allow-popups-to-escape-sandbox\"\"allow-presentation\"\"allow-same-origin\"\"allow-scripts\"\"allow-top-navigation\"\"allow-top-navigation-by-user-activation\"\"allow-top-navigation-to-custom-protocols\""
+    },
+    {
+      "attr": "scope",
+      "elements": [
+        "th"
+      ],
+      "description": "Specifies which cells the header cell applies to",
+      "value": "\"row\"; \"col\"; \"rowgroup\"; \"colgroup\""
+    },
+    {
+      "attr": "selected",
+      "elements": [
+        "option"
+      ],
+      "description": "Whether the option is selected by default",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "shadowrootclonable",
+      "elements": [
+        "template"
+      ],
+      "description": "Sets clonable on a declarative shadow root",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "shadowrootcustomelementregistry",
+      "elements": [
+        "template"
+      ],
+      "description": "Enables declarative shadow roots to indicate they will use a custom element registry",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "shadowrootdelegatesfocus",
+      "elements": [
+        "template"
+      ],
+      "description": "Sets delegates focus on a declarative shadow root",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "shadowrootmode",
+      "elements": [
+        "template"
+      ],
+      "description": "Enables streaming declarative shadow roots",
+      "value": "\"open\"; \"closed\""
+    },
+    {
+      "attr": "shadowrootserializable",
+      "elements": [
+        "template"
+      ],
+      "description": "Sets serializable on a declarative shadow root",
+      "value": "Boolean attribute"
+    },
+    {
+      "attr": "shadowrootslotassignment",
+      "elements": [
+        "template"
+      ],
+      "description": "Sets slot assignment on a declarative shadow root",
+      "value": "\"named\"; \"manual\""
+    },
+    {
+      "attr": "shape",
+      "elements": [
+        "area"
+      ],
+      "description": "The kind of shape to be created in an image map",
+      "value": "\"circle\"; \"default\"; \"poly\"; \"rect\""
+    },
+    {
+      "attr": "size",
+      "elements": [
+        "input",
+        "select"
+      ],
+      "description": "Size of the control",
+      "value": "Valid non-negative integer greater than zero"
+    },
+    {
+      "attr": "sizes",
+      "elements": [
+        "link"
+      ],
+      "description": "Sizes of the icons (for rel=\"icon\")",
+      "value": "Unordered set of unique space-separated tokens, ASCII case-insensitive, consisting of sizes*"
+    },
+    {
+      "attr": "sizes",
+      "elements": [
+        "img",
+        "source"
+      ],
+      "description": "Image sizes for different page layouts",
+      "value": "Valid source size list"
+    },
+    {
+      "attr": "slot",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "The element's desired slot",
+      "value": "Text"
+    },
+    {
+      "attr": "span",
+      "elements": [
+        "col",
+        "colgroup"
+      ],
+      "description": "Number of columns spanned by the element",
+      "value": "Valid non-negative integer greater than zero"
+    },
+    {
+      "attr": "spellcheck",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is to have its spelling and grammar checked",
+      "value": "\"true\"; \"false\"; the empty string"
+    },
+    {
+      "attr": "src",
+      "elements": [
+        "audio",
+        "embed",
+        "iframe",
+        "img",
+        "input",
+        "script",
+        "source (in video or audio)",
+        "track",
+        "video"
+      ],
+      "description": "Address of the resource",
+      "value": "Valid non-empty URL potentially surrounded by spaces"
+    },
+    {
+      "attr": "srcdoc",
+      "elements": [
+        "iframe"
+      ],
+      "description": "A document to render in the iframe",
+      "value": "The source of an iframe srcdoc document*"
+    },
+    {
+      "attr": "srclang",
+      "elements": [
+        "track"
+      ],
+      "description": "Language of the text track",
+      "value": "Valid BCP 47 language tag"
+    },
+    {
+      "attr": "srcset",
+      "elements": [
+        "img",
+        "source"
+      ],
+      "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc.",
+      "value": "Comma-separated list of image candidate strings"
+    },
+    {
+      "attr": "start",
+      "elements": [
+        "ol"
+      ],
+      "description": "Starting value of the list",
+      "value": "Valid integer"
+    },
+    {
+      "attr": "step",
+      "elements": [
+        "input"
+      ],
+      "description": "Granularity to be matched by the form control's value",
+      "value": "Valid floating-point number greater than zero, or \"any\""
+    },
+    {
+      "attr": "style",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Presentational and formatting instructions",
+      "value": "CSS declarations*"
+    },
+    {
+      "attr": "tabindex",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is focusable and sequentially focusable, and the relative order of the element for the purposes of sequential focus navigation",
+      "value": "Valid integer"
+    },
+    {
+      "attr": "target",
+      "elements": [
+        "a",
+        "area"
+      ],
+      "description": "Navigable for hyperlink navigation",
+      "value": "Valid navigable target name or keyword"
+    },
+    {
+      "attr": "target",
+      "elements": [
+        "base"
+      ],
+      "description": "Default navigable for hyperlink navigation and form submission",
+      "value": "Valid navigable target name or keyword"
+    },
+    {
+      "attr": "target",
+      "elements": [
+        "form"
+      ],
+      "description": "Navigable for form submission",
+      "value": "Valid navigable target name or keyword"
+    },
+    {
+      "attr": "title",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Advisory information for the element",
+      "value": "Text"
+    },
+    {
+      "attr": "title",
+      "elements": [
+        "abbr",
+        "dfn"
+      ],
+      "description": "Full term or expansion of abbreviation",
+      "value": "Text"
+    },
+    {
+      "attr": "title",
+      "elements": [
+        "input"
+      ],
+      "description": "Description of pattern (when used with pattern attribute)",
+      "value": "Text"
+    },
+    {
+      "attr": "title",
+      "elements": [
+        "link"
+      ],
+      "description": "Title of the link",
+      "value": "Text"
+    },
+    {
+      "attr": "title",
+      "elements": [
+        "link",
+        "style"
+      ],
+      "description": "CSS style sheet set name",
+      "value": "Text"
+    },
+    {
+      "attr": "translate",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element is to be translated when the page is localized",
+      "value": "\"yes\"; \"no\"; the empty string"
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "a",
+        "link"
+      ],
+      "description": "Hint for the type of the referenced resource",
+      "value": "Valid MIME type string"
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "button"
+      ],
+      "description": "Type of button",
+      "value": "\"submit\"; \"reset\"; \"button\""
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "embed",
+        "object",
+        "source"
+      ],
+      "description": "Type of embedded resource",
+      "value": "Valid MIME type string"
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "input"
+      ],
+      "description": "Type of form control",
+      "value": "input type keyword"
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "ol"
+      ],
+      "description": "Kind of list marker",
+      "value": "\"1\"; \"a\"; \"A\"; \"i\"; \"I\""
+    },
+    {
+      "attr": "type",
+      "elements": [
+        "script"
+      ],
+      "description": "Type of script",
+      "value": "\"module\"; \"importmap\"; \"speculationrules\"; a valid MIME type string that is not a JavaScript MIME type essence match"
+    },
+    {
+      "attr": "usemap",
+      "elements": [
+        "img"
+      ],
+      "description": "Name of image map to use",
+      "value": "Valid hash-name reference*"
+    },
+    {
+      "attr": "value",
+      "elements": [
+        "button",
+        "option"
+      ],
+      "description": "Value to be used for form submission",
+      "value": "Text"
+    },
+    {
+      "attr": "value",
+      "elements": [
+        "data"
+      ],
+      "description": "Machine-readable value",
+      "value": "Text*"
+    },
+    {
+      "attr": "value",
+      "elements": [
+        "input"
+      ],
+      "description": "Value of the form control",
+      "value": "Varies*"
+    },
+    {
+      "attr": "value",
+      "elements": [
+        "li"
+      ],
+      "description": "Ordinal value of the list item",
+      "value": "Valid integer"
+    },
+    {
+      "attr": "value",
+      "elements": [
+        "meter",
+        "progress"
+      ],
+      "description": "Current value of the element",
+      "value": "Valid floating-point number"
+    },
+    {
+      "attr": "width",
+      "elements": [
+        "canvas",
+        "embed",
+        "iframe",
+        "img",
+        "input",
+        "object",
+        "source (in picture)",
+        "video"
+      ],
+      "description": "Horizontal dimension",
+      "value": "Valid non-negative integer"
+    },
+    {
+      "attr": "wrap",
+      "elements": [
+        "textarea"
+      ],
+      "description": "How the value of the form control is to be wrapped for form submission",
+      "value": "\"soft\"; \"hard\""
+    },
+    {
+      "attr": "writingsuggestions",
+      "elements": [
+        "HTML elements"
+      ],
+      "description": "Whether the element can offer writing suggestions or not.",
+      "value": "\"true\"; \"false\"; the empty string"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "_phantom": true,
+  "_brand": "Or",
+  "_comment_globals": [
+    "The `row` axis, in MATCHED PAIRS. `oflag`/`cflag` are the same bool and",
+    "`odir`/`cdir` the same three-token enum; the only difference within each pair",
+    "is `row`. So the emitted `Or/Attributes.elm` carries both shapes side by side",
+    "and the golden pins the difference to exactly the row string — an open entry",
+    "that silently changed its argument type, body, or doc would diff too.",
+    "",
+    "`class` is here as the untouched bare-string baseline: the four-item",
+    "`defaultGlobals` roster stays closed, and this suite would catch a change that",
+    "opened it.",
+    "",
+    "An `_globals` entry with no `row` key MUST mean exactly what it meant before",
+    "the key existed, which is what `cflag`/`cdir`/`class` assert."
+  ],
+  "_globals": [
+    "class",
+    { "name": "cflag", "type": "bool" },
+    { "name": "cdir", "type": ["ltr", "rtl", "auto"] },
+    { "name": "oflag", "type": "bool", "row": "open" },
+    { "name": "odir", "type": ["ltr", "rtl", "auto"], "row": "open" }
+  ],
+  "Widget": {
+    "admits": {
+      "unnamed": { "kinds": [], "multi": true }
+    }
+  },
+  "Plain": {
+    "admits": {
+      "unnamed": { "kinds": [], "multi": true }
+    }
+  }
+}

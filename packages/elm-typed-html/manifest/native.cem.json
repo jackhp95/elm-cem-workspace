@@ -1,0 +1,3833 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "jackhp95/elm-typed-html",
+    "version": "1.0.0"
+  },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "native.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "A",
+          "tagName": "a",
+          "customElement": true,
+          "description": "Anchor link. Transparent content model.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "download",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "ping",
+              "type": {
+                "text": "string"
+              },
+              "description": "URLs to ping"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Abbr",
+          "tagName": "abbr",
+          "customElement": true,
+          "description": "Abbreviation or acronym.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Address",
+          "tagName": "address",
+          "customElement": true,
+          "description": "Contact information for the nearest article or body.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Area",
+          "tagName": "area",
+          "customElement": true,
+          "description": "Image map area. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "coords",
+              "type": {
+                "text": "string"
+              },
+              "description": "Coordinates for the shape to be created in an image map. A COMMA-SEPARATED LIST of integers (`0,0,82,126`), so no single number is ever a valid value; `coordsAsInts` builds one from a `List Int`."
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string"
+              },
+              "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "ping",
+              "type": {
+                "text": "string"
+              },
+              "description": "URLs to ping"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'default' | 'poly' | 'rect'"
+              },
+              "description": "The kind of shape to be created in an image map"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for hyperlink navigation"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Article",
+          "tagName": "article",
+          "customElement": true,
+          "description": "Self-contained content composition.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Aside",
+          "tagName": "aside",
+          "customElement": true,
+          "description": "Content tangentially related to surrounding content.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Audio",
+          "tagName": "audio",
+          "customElement": true,
+          "description": "Audio playback.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hint that the media resource can be started automatically when the page is loaded"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show user agent controls"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to loop the media resource"
+            },
+            {
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to mute the media resource by default"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "'none' | 'metadata' | 'auto' | ''"
+              },
+              "description": "Hints how much buffering the media resource will likely need"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "B",
+          "tagName": "b",
+          "customElement": true,
+          "description": "Bold text with no extra importance.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Base",
+          "tagName": "base",
+          "customElement": true,
+          "description": "Base URL and/or default target. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Document base URL"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Default navigable for hyperlink navigation and form submission"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Bdi",
+          "tagName": "bdi",
+          "customElement": true,
+          "description": "Text isolated from surrounding bidirectional formatting.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Bdo",
+          "tagName": "bdo",
+          "customElement": true,
+          "description": "Override text directionality.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Blockquote",
+          "tagName": "blockquote",
+          "customElement": true,
+          "description": "Extended quotation.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Body",
+          "tagName": "body",
+          "customElement": true,
+          "description": "Document body.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Br",
+          "tagName": "br",
+          "customElement": true,
+          "description": "Line break. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Button",
+          "tagName": "button",
+          "customElement": true,
+          "description": "Interactive button control.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "commandfor",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets another element to be invoked."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "formaction",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "formenctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "formmethod",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "formnovalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "formtarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets a popover element to toggle, show, or hide"
+            },
+            {
+              "name": "popovertargetaction",
+              "type": {
+                "text": "'toggle' | 'show' | 'hide'"
+              },
+              "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Affects willValidate, plus any behavior added by the custom element author"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of button: submit (default), reset, or button"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value to be used for form submission"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Canvas",
+          "tagName": "canvas",
+          "customElement": true,
+          "description": "Scriptable bitmap canvas.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Caption",
+          "tagName": "caption",
+          "customElement": true,
+          "description": "Table caption. Only valid under table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Cite",
+          "tagName": "cite",
+          "customElement": true,
+          "description": "Reference to a cited work.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Code",
+          "tagName": "code",
+          "customElement": true,
+          "description": "Fragment of computer code.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Col",
+          "tagName": "col",
+          "customElement": true,
+          "description": "Column in a colgroup. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "span",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of columns spanned by the element"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Colgroup",
+          "tagName": "colgroup",
+          "customElement": true,
+          "description": "Group of columns. Only valid under table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "span",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of columns spanned by the element"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Data",
+          "tagName": "data",
+          "customElement": true,
+          "description": "Machine-readable value with human-readable label.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Machine-readable value"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Datalist",
+          "tagName": "datalist",
+          "customElement": true,
+          "description": "Pre-defined options for input controls.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Dd",
+          "tagName": "dd",
+          "customElement": true,
+          "description": "Description in a description list.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Del",
+          "tagName": "del",
+          "customElement": true,
+          "description": "Deleted text. Transparent content model.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            },
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string"
+              },
+              "description": "Date and (optionally) time of the change"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Details",
+          "tagName": "details",
+          "customElement": true,
+          "description": "Disclosure widget.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of group of mutually-exclusive details elements"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the details are visible"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Dfn",
+          "tagName": "dfn",
+          "customElement": true,
+          "description": "Term being defined.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Dialog",
+          "tagName": "dialog",
+          "customElement": true,
+          "description": "Dialog box or other interactive component.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "closedby",
+              "type": {
+                "text": "'any' | 'closerequest' | 'none'"
+              },
+              "description": "Which user actions will close the dialog"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the dialog box is showing"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Div",
+          "tagName": "div",
+          "customElement": true,
+          "description": "Generic flow container.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Dl",
+          "tagName": "dl",
+          "customElement": true,
+          "description": "Description list.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Dt",
+          "tagName": "dt",
+          "customElement": true,
+          "description": "Term in a description list.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Em",
+          "tagName": "em",
+          "customElement": true,
+          "description": "Emphasis.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Embed",
+          "tagName": "embed",
+          "customElement": true,
+          "description": "External application or interactive content. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Fieldset",
+          "tagName": "fieldset",
+          "customElement": true,
+          "description": "Form field grouping.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Affects willValidate, plus any behavior added by the custom element author"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Figcaption",
+          "tagName": "figcaption",
+          "customElement": true,
+          "description": "Caption for a figure.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Figure",
+          "tagName": "figure",
+          "customElement": true,
+          "description": "Self-contained content with optional caption.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Footer",
+          "tagName": "footer",
+          "customElement": true,
+          "description": "Footer for its nearest sectioning content.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Form",
+          "tagName": "form",
+          "customElement": true,
+          "description": "Form for user input.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accept-charset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Character encodings to use for form submission"
+            },
+            {
+              "name": "action",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Default setting for autofill feature for controls in the form"
+            },
+            {
+              "name": "enctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "method",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form to use in the document.forms API"
+            },
+            {
+              "name": "novalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "H1",
+          "tagName": "h1",
+          "customElement": true,
+          "description": "Heading level 1.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "H2",
+          "tagName": "h2",
+          "customElement": true,
+          "description": "Heading level 2.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "H3",
+          "tagName": "h3",
+          "customElement": true,
+          "description": "Heading level 3.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "H4",
+          "tagName": "h4",
+          "customElement": true,
+          "description": "Heading level 4.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "H5",
+          "tagName": "h5",
+          "customElement": true,
+          "description": "Heading level 5.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "H6",
+          "tagName": "h6",
+          "customElement": true,
+          "description": "Heading level 6.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Head",
+          "tagName": "head",
+          "customElement": true,
+          "description": "Document metadata container.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Header",
+          "tagName": "header",
+          "customElement": true,
+          "description": "Introductory content for its nearest sectioning content.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Hgroup",
+          "tagName": "hgroup",
+          "customElement": true,
+          "description": "Heading with optional subtitle.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Hr",
+          "tagName": "hr",
+          "customElement": true,
+          "description": "Thematic break (paragraph-level). Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "I",
+          "tagName": "i",
+          "customElement": true,
+          "description": "Alternate voice or mood (italics).",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Iframe",
+          "tagName": "iframe",
+          "customElement": true,
+          "description": "Nested browsing context.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "allow",
+              "type": {
+                "text": "string"
+              },
+              "description": "Permissions policy to be applied to the iframe's contents"
+            },
+            {
+              "name": "allowfullscreen",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the iframe's contents to use requestFullscreen()"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of content navigable"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "sandbox",
+              "type": {
+                "text": "'allow-downloads' | 'allow-forms' | 'allow-modals' | 'allow-orientation-lock' | 'allow-pointer-lock' | 'allow-popups' | 'allow-popups-to-escape-sandbox' | 'allow-presentation' | 'allow-same-origin' | 'allow-scripts' | 'allow-top-navigation' | 'allow-top-navigation-by-user-activation' | 'allow-top-navigation-to-custom-protocols'"
+              },
+              "description": "Security rules for nested content"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcdoc",
+              "type": {
+                "text": "string"
+              },
+              "description": "A document to render in the iframe"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Img",
+          "tagName": "img",
+          "customElement": true,
+          "description": "Image. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "decoding",
+              "type": {
+                "text": "'sync' | 'async' | 'auto'"
+              },
+              "description": "Decoding hint to use when processing this image for presentation"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "ismap",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the image is a server-side image map"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+            },
+            {
+              "name": "usemap",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to use"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Input",
+          "tagName": "input",
+          "customElement": true,
+          "description": "Interactive form control. Void element.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            },
+            {
+              "name": "input",
+              "description": "User changed the control's value."
+            },
+            {
+              "name": "change",
+              "description": "User committed a change to the control's value."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for expected file type in file upload controls"
+            },
+            {
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow the color's alpha component to be set"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replacement text for use when images are not available"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is checked"
+            },
+            {
+              "name": "colorspace",
+              "type": {
+                "text": "'limited-srgb' | 'display-p3'"
+              },
+              "description": "The color space of the serialized color"
+            },
+            {
+              "name": "dirname",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form control to use for sending the element's directionality in form submission"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "formaction",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL to use for form submission"
+            },
+            {
+              "name": "formenctype",
+              "type": {
+                "text": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'"
+              },
+              "description": "Entry list encoding type to use for form submission"
+            },
+            {
+              "name": "formmethod",
+              "type": {
+                "text": "'get' | 'post' | 'dialog'"
+              },
+              "description": "Variant to use for form submission"
+            },
+            {
+              "name": "formnovalidate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bypass form control validation for form submission"
+            },
+            {
+              "name": "formtarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigable for form submission"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "list",
+              "type": {
+                "text": "string"
+              },
+              "description": "List of autocomplete options"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "description": "Maximum value"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Maximum length of value"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "description": "Minimum value"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Minimum length of value"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow multiple values"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pattern to be matched by the form control's value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label to be placed within the form control"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string"
+              },
+              "description": "Targets a popover element to toggle, show, or hide"
+            },
+            {
+              "name": "popovertargetaction",
+              "type": {
+                "text": "'toggle' | 'show' | 'hide'"
+              },
+              "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the value to be edited by the user"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Size of the control"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "string"
+              },
+              "description": "Granularity to be matched by the form control's value. A valid floating-point number OR the keyword `any` (which disables step-matching), so this cannot be a `Float`; `stepAsNumber` takes one when the keyword is not wanted."
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of form control (text, checkbox, radio, email, number, date, file, submit, etc.)"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value of the form control"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Ins",
+          "tagName": "ins",
+          "customElement": true,
+          "description": "Inserted text. Transparent content model.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            },
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string"
+              },
+              "description": "Date and (optionally) time of the change"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Kbd",
+          "tagName": "kbd",
+          "customElement": true,
+          "description": "User keyboard input.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Label",
+          "tagName": "label",
+          "customElement": true,
+          "description": "Label for a form control.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associate the label with form control"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Legend",
+          "tagName": "legend",
+          "customElement": true,
+          "description": "Caption for a fieldset.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Li",
+          "tagName": "li",
+          "customElement": true,
+          "description": "List item.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Ordinal value of the list item"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Link",
+          "tagName": "link",
+          "customElement": true,
+          "description": "Relationship between document and external resource. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "blocking",
+              "type": {
+                "text": "'render'"
+              },
+              "description": "Whether the element is potentially render-blocking"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "description": "Color to use when customizing a site's icon (for rel=\"mask-icon\")"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the link is disabled"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the hyperlink"
+            },
+            {
+              "name": "hreflang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the linked resource"
+            },
+            {
+              "name": "imagesizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts (for rel=\"preload\")"
+            },
+            {
+              "name": "imagesrcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel=\"preload\")"
+            },
+            {
+              "name": "integrity",
+              "type": {
+                "text": "string"
+              },
+              "description": "Integrity metadata used in Subresource Integrity checks [SRI]"
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relationship between the document containing the hyperlink and the destination resource"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Sizes of the icons (for rel=\"icon\")"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Main",
+          "tagName": "main",
+          "customElement": true,
+          "description": "Primary content of the document.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Map",
+          "tagName": "map",
+          "customElement": true,
+          "description": "Image map.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of image map to reference from the usemap attribute"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Mark",
+          "tagName": "mark",
+          "customElement": true,
+          "description": "Highlighted/marked text.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Menu",
+          "tagName": "menu",
+          "customElement": true,
+          "description": "Unordered list of commands.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Meta",
+          "tagName": "meta",
+          "customElement": true,
+          "description": "Machine-readable metadata. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "charset",
+              "type": {
+                "text": "'utf-8'"
+              },
+              "description": "Character encoding declaration"
+            },
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value of the element"
+            },
+            {
+              "name": "http-equiv",
+              "type": {
+                "text": "'content-type' | 'default-style' | 'refresh' | 'x-ua-compatible' | 'content-security-policy'"
+              },
+              "description": "Pragma directive"
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Metadata name"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Meter",
+          "tagName": "meter",
+          "customElement": true,
+          "description": "Scalar measurement within a known range.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "high",
+              "type": {
+                "text": "number"
+              },
+              "description": "Low limit of high range"
+            },
+            {
+              "name": "low",
+              "type": {
+                "text": "number"
+              },
+              "description": "High limit of low range"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "description": "Upper bound of range"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "description": "Lower bound of range"
+            },
+            {
+              "name": "optimum",
+              "type": {
+                "text": "number"
+              },
+              "description": "Optimum value in gauge"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Current value of the element"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Nav",
+          "tagName": "nav",
+          "customElement": true,
+          "description": "Navigation links.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Noscript",
+          "tagName": "noscript",
+          "customElement": true,
+          "description": "Fallback for no-script environments.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Object",
+          "tagName": "object",
+          "customElement": true,
+          "description": "Embedded object.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of content navigable"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Ol",
+          "tagName": "ol",
+          "customElement": true,
+          "description": "Ordered list.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "reversed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Number the list backwards"
+            },
+            {
+              "name": "start",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Starting value of the list"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Optgroup",
+          "tagName": "optgroup",
+          "customElement": true,
+          "description": "Group of options in a select.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Option",
+          "tagName": "option",
+          "customElement": true,
+          "description": "Option in a select or datalist.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the option is selected by default"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value to be used for form submission"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Output",
+          "tagName": "output",
+          "customElement": true,
+          "description": "Result of a calculation.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies controls from which the output was calculated"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Affects willValidate, plus any behavior added by the custom element author"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "P",
+          "tagName": "p",
+          "customElement": true,
+          "description": "Paragraph.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Picture",
+          "tagName": "picture",
+          "customElement": true,
+          "description": "Responsive image container.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Pre",
+          "tagName": "pre",
+          "customElement": true,
+          "description": "Preformatted text.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Progress",
+          "tagName": "progress",
+          "customElement": true,
+          "description": "Task progress indicator.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "description": "Upper bound of range"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Current value of the element"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Q",
+          "tagName": "q",
+          "customElement": true,
+          "description": "Inline quotation.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link to the source of the quotation or more information about the edit"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Rp",
+          "tagName": "rp",
+          "customElement": true,
+          "description": "Parentheses for ruby fallback.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Rt",
+          "tagName": "rt",
+          "customElement": true,
+          "description": "Ruby annotation.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Ruby",
+          "tagName": "ruby",
+          "customElement": true,
+          "description": "Ruby annotation base.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "S",
+          "tagName": "s",
+          "customElement": true,
+          "description": "Strikethrough text.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Samp",
+          "tagName": "samp",
+          "customElement": true,
+          "description": "Sample computer output.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Script",
+          "tagName": "script",
+          "customElement": true,
+          "description": "Embedded script.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "async",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Execute script when available, without blocking while fetching"
+            },
+            {
+              "name": "blocking",
+              "type": {
+                "text": "'render'"
+              },
+              "description": "Whether the element is potentially render-blocking"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "defer",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Defer script execution"
+            },
+            {
+              "name": "fetchpriority",
+              "type": {
+                "text": "'auto' | 'high' | 'low'"
+              },
+              "description": "Sets the priority for fetches initiated by the element"
+            },
+            {
+              "name": "integrity",
+              "type": {
+                "text": "string"
+              },
+              "description": "Integrity metadata used in Subresource Integrity checks [SRI]"
+            },
+            {
+              "name": "nomodule",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Prevents execution in user agents that support module scripts"
+            },
+            {
+              "name": "referrerpolicy",
+              "type": {
+                "text": "'' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'"
+              },
+              "description": "Referrer policy for fetches initiated by the element"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "description": "Type of script: a MIME type, or 'module' for an ES module, or 'importmap'"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Search",
+          "tagName": "search",
+          "customElement": true,
+          "description": "Search-related content.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Section",
+          "tagName": "section",
+          "customElement": true,
+          "description": "Generic section of a document.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Select",
+          "tagName": "select",
+          "customElement": true,
+          "description": "Option list control.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            },
+            {
+              "name": "input",
+              "description": "User changed the control's value."
+            },
+            {
+              "name": "change",
+              "description": "User committed a change to the control's value."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow multiple values"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Affects willValidate, plus any behavior added by the custom element author"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Size of the control"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Slot",
+          "tagName": "slot",
+          "customElement": true,
+          "description": "Web component slot placeholder.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of shadow tree slot"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Small",
+          "tagName": "small",
+          "customElement": true,
+          "description": "Side comments (small print).",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Source",
+          "tagName": "source",
+          "customElement": true,
+          "description": "Media source (audio/video context). Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image sizes for different page layouts"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Span",
+          "tagName": "span",
+          "customElement": true,
+          "description": "Generic phrasing container.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Strong",
+          "tagName": "strong",
+          "customElement": true,
+          "description": "Strong importance, seriousness, or urgency.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Style",
+          "tagName": "style",
+          "customElement": true,
+          "description": "Embedded CSS styles.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "blocking",
+              "type": {
+                "text": "'render'"
+              },
+              "description": "Whether the element is potentially render-blocking"
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Applicable media"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Sub",
+          "tagName": "sub",
+          "customElement": true,
+          "description": "Subscript text.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Summary",
+          "tagName": "summary",
+          "customElement": true,
+          "description": "Visible heading for a details element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Sup",
+          "tagName": "sup",
+          "customElement": true,
+          "description": "Superscript text.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Table",
+          "tagName": "table",
+          "customElement": true,
+          "description": "Table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Tbody",
+          "tagName": "tbody",
+          "customElement": true,
+          "description": "Body rows of a table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Td",
+          "tagName": "td",
+          "customElement": true,
+          "description": "Data cell in a table. Only valid under tr.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "colspan",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of columns that the cell is to span"
+            },
+            {
+              "name": "headers",
+              "type": {
+                "text": "string"
+              },
+              "description": "The header cells for this cell"
+            },
+            {
+              "name": "rowspan",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of rows that the cell is to span"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Template",
+          "tagName": "template",
+          "customElement": true,
+          "description": "Inert content template.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "shadowrootclonable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets clonable on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootcustomelementregistry",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enables declarative shadow roots to indicate they will use a custom element registry"
+            },
+            {
+              "name": "shadowrootdelegatesfocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets delegates focus on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootmode",
+              "type": {
+                "text": "'open' | 'closed'"
+              },
+              "description": "Enables streaming declarative shadow roots"
+            },
+            {
+              "name": "shadowrootserializable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sets serializable on a declarative shadow root"
+            },
+            {
+              "name": "shadowrootslotassignment",
+              "type": {
+                "text": "'named' | 'manual'"
+              },
+              "description": "Sets slot assignment on a declarative shadow root"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Textarea",
+          "tagName": "textarea",
+          "customElement": true,
+          "description": "Multiline text input.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            },
+            {
+              "name": "input",
+              "description": "User changed the control's value."
+            },
+            {
+              "name": "change",
+              "description": "User committed a change to the control's value."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint for form autofill feature"
+            },
+            {
+              "name": "cols",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Maximum number of characters per line"
+            },
+            {
+              "name": "dirname",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of form control to use for sending the element's directionality in form submission"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the form control is disabled"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "Associates the element with a form element"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Maximum length of value"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Minimum length of value"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the element to use for form submission and in the form.elements API"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label to be placed within the form control"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to allow the value to be edited by the user"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the control is required for form submission"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of lines to show"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "'soft' | 'hard'"
+              },
+              "description": "How the value of the form control is to be wrapped for form submission"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Tfoot",
+          "tagName": "tfoot",
+          "customElement": true,
+          "description": "Footer rows of a table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Th",
+          "tagName": "th",
+          "customElement": true,
+          "description": "Header cell in a table. Only valid under tr.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "abbr",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative label to use for the header cell when referencing the cell in other contexts"
+            },
+            {
+              "name": "colspan",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of columns that the cell is to span"
+            },
+            {
+              "name": "headers",
+              "type": {
+                "text": "string"
+              },
+              "description": "The header cells for this cell"
+            },
+            {
+              "name": "rowspan",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Number of rows that the cell is to span"
+            },
+            {
+              "name": "scope",
+              "type": {
+                "text": "'row' | 'col' | 'rowgroup' | 'colgroup'"
+              },
+              "description": "Specifies which cells the header cell applies to"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Thead",
+          "tagName": "thead",
+          "customElement": true,
+          "description": "Header rows of a table.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Time",
+          "tagName": "time",
+          "customElement": true,
+          "description": "Machine-readable date or time.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string"
+              },
+              "description": "Machine-readable value. A date/time string (a valid date, time, local/global date-and-time, month, week, yearless date, time-zone offset, or duration string), never a bare number."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Title",
+          "tagName": "title",
+          "customElement": true,
+          "description": "Document title.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Tr",
+          "tagName": "tr",
+          "customElement": true,
+          "description": "Table row.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Track",
+          "tagName": "track",
+          "customElement": true,
+          "description": "Timed text track. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "default",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enable the track if no other text track is more suitable"
+            },
+            {
+              "name": "kind",
+              "type": {
+                "text": "'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata'"
+              },
+              "description": "The type of text track"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "User-visible label"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "srclang",
+              "type": {
+                "text": "string"
+              },
+              "description": "Language of the text track"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "U",
+          "tagName": "u",
+          "customElement": true,
+          "description": "Unarticulated annotation (underline).",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Ul",
+          "tagName": "ul",
+          "customElement": true,
+          "description": "Unordered list.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Var",
+          "tagName": "var",
+          "customElement": true,
+          "description": "Variable in math or programming.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Video",
+          "tagName": "video",
+          "customElement": true,
+          "description": "Video playback.",
+          "members": [],
+          "events": [
+            {
+              "name": "click",
+              "description": "User activated the element."
+            }
+          ],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [
+            {
+              "name": "unnamed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hint that the media resource can be started automatically when the page is loaded"
+            },
+            {
+              "name": "crossorigin",
+              "type": {
+                "text": "'anonymous' | 'use-credentials' | ''"
+              },
+              "description": "How the element handles crossorigin requests"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Vertical dimension"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "'lazy' | 'eager'"
+              },
+              "description": "Used when determining loading deferral"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to loop the media resource"
+            },
+            {
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to mute the media resource by default"
+            },
+            {
+              "name": "playsinline",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Encourage the user agent to display video content within the element's playback area"
+            },
+            {
+              "name": "poster",
+              "type": {
+                "text": "string"
+              },
+              "description": "Poster frame to show prior to video playback"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "'none' | 'metadata' | 'auto' | ''"
+              },
+              "description": "Hints how much buffering the media resource will likely need"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Address of the resource"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Horizontal dimension"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Wbr",
+          "tagName": "wbr",
+          "customElement": true,
+          "description": "Line-break opportunity. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "PictureSource",
+          "tagName": "source",
+          "customElement": true,
+          "description": "Media source (picture context) — R2 split of <source>. Void element.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Height of the source."
+            },
+            {
+              "name": "media",
+              "type": {
+                "text": "string"
+              },
+              "description": "Media condition for this source."
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "string"
+              },
+              "description": "Sizes attribute for responsive images."
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image candidates."
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "integer"
+              },
+              "description": "Width of the source."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

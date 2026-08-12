@@ -1,0 +1,50 @@
+name: CI
+
+# MANUAL ONLY — `hooks/pre-push` runs this repo's gate locally before anything
+# reaches origin, so re-running it here is a slower duplicate. Kept dispatchable
+# for a clean-checkout or ubuntu-vs-macOS reproduction.
+on:
+  workflow_dispatch:
+
+env:
+  ELM_VERSION: "0.19.1"
+  NODE_VERSION: "22"
+
+jobs:
+  ci:
+    name: Format · Review · Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: elm-stuff
+          key: ${{ runner.os }}-elm-${{ env.ELM_VERSION }}-${{ hashFiles('elm.json') }}
+
+      - name: Cache review elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: review/elm-stuff
+          key: ${{ runner.os }}-elm-review-${{ hashFiles('review/elm.json', 'review/src/**/*.elm') }}
+
+      - name: Install deps
+        run: npm ci
+
+      # All of src/ is hand-written — format:check runs on the full src/.
+      - name: elm-format --validate src/
+        run: npm run check:format
+
+      - name: elm-review
+        run: npm run check:review
+
+      # check:validate = elm make --docs: proves all exposed modules compile and docs
+      # are well-formed. Parameterized via ELM_VERSION above (future bump = one line).
+      - name: validate (elm make --docs)
+        run: npm run check:validate

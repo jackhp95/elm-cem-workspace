@@ -1,0 +1,25 @@
+{
+    "type": "application",
+    "elm-version": "0.19.1",
+    "version": "1.0.0",
+    "summary": "Acid test for the open-row globals suite",
+    "description": "Tests that an `_globals` entry marked \"row\": \"open\" composes onto every element without appearing in any element's closed Attrs row, while a matching entry with no `row` key stays gated exactly as before.",
+    "source-directories": [
+        "src",
+        "bad"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "direct": {
+            "elm/core": "1.0.5",
+            "elm/html": "1.0.0",
+            "elm/json": "1.1.4",
+            "elm/virtual-dom": "1.0.3"
+        },
+        "indirect": {}
+    },
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
+}

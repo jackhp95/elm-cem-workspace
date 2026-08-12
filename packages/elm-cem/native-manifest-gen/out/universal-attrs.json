@@ -1,0 +1,514 @@
+{
+  "globals": [
+    {
+      "name": "accesskey",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Keyboard shortcut to activate or focus element"
+    },
+    {
+      "name": "anchor",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Associates the element with an anchor element for CSS anchor positioning."
+    },
+    {
+      "name": "autofocus",
+      "kind": "bool",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Automatically focus the element when the page is loaded"
+    },
+    {
+      "name": "class",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Classes to which the element belongs"
+    },
+    {
+      "name": "exportparts",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Re-exports named shadow parts of a nested shadow tree to the outer tree for ::part() styling."
+    },
+    {
+      "name": "headingoffset",
+      "kind": "int",
+      "type": {
+        "text": "number"
+      },
+      "description": "Offsets heading levels for descendants"
+    },
+    {
+      "name": "headingreset",
+      "kind": "bool",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Prevents a heading offset computation from traversing beyond the element with the attribute"
+    },
+    {
+      "name": "id",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "The element's ID"
+    },
+    {
+      "name": "inert",
+      "kind": "bool",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether the element is inert."
+    },
+    {
+      "name": "is",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Creates a customized built-in element"
+    },
+    {
+      "name": "lang",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Language of the element"
+    },
+    {
+      "name": "nonce",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Cryptographic nonce used in Content Security Policy checks [CSP]"
+    },
+    {
+      "name": "part",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Names the element so it can be targeted by the ::part() pseudo-element from outside its shadow tree."
+    },
+    {
+      "name": "slot",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "The element's desired slot"
+    },
+    {
+      "name": "style",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Presentational and formatting instructions"
+    },
+    {
+      "name": "tabindex",
+      "kind": "int",
+      "type": {
+        "text": "number"
+      },
+      "description": "Whether the element is focusable and sequentially focusable, and the relative order of the element for the purposes of sequential focus navigation"
+    },
+    {
+      "name": "title",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Advisory information for the element"
+    },
+    {
+      "name": "virtualkeyboardpolicy",
+      "kind": "string",
+      "type": {
+        "text": "string"
+      },
+      "description": "Controls whether the on-screen virtual keyboard shows automatically on focus."
+    }
+  ],
+  "aria": [
+    {
+      "name": "role",
+      "type": {
+        "text": "'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'blockquote' | 'button' | 'caption' | 'cell' | 'checkbox' | 'code' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'deletion' | 'dialog' | 'directory' | 'doc-abstract' | 'doc-acknowledgments' | 'doc-afterword' | 'doc-appendix' | 'doc-backlink' | 'doc-biblioentry' | 'doc-bibliography' | 'doc-biblioref' | 'doc-chapter' | 'doc-colophon' | 'doc-conclusion' | 'doc-cover' | 'doc-credit' | 'doc-credits' | 'doc-dedication' | 'doc-endnote' | 'doc-endnotes' | 'doc-epigraph' | 'doc-epilogue' | 'doc-errata' | 'doc-example' | 'doc-footnote' | 'doc-foreword' | 'doc-glossary' | 'doc-glossref' | 'doc-index' | 'doc-introduction' | 'doc-noteref' | 'doc-notice' | 'doc-pagebreak' | 'doc-pagefooter' | 'doc-pageheader' | 'doc-pagelist' | 'doc-part' | 'doc-preface' | 'doc-prologue' | 'doc-pullquote' | 'doc-qna' | 'doc-subtitle' | 'doc-tip' | 'doc-toc' | 'document' | 'emphasis' | 'feed' | 'figure' | 'form' | 'generic' | 'graphics-document' | 'graphics-object' | 'graphics-symbol' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'insertion' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'mark' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'meter' | 'navigation' | 'none' | 'note' | 'option' | 'paragraph' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'strong' | 'subscript' | 'superscript' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'time' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'"
+      },
+      "description": "The WAI-ARIA role that defines the type of this element for assistive technologies."
+    },
+    {
+      "name": "aria-activedescendant",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the currently active descendant of a composite widget."
+    },
+    {
+      "name": "aria-atomic",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether assistive technologies present the entire changed live region as a whole."
+    },
+    {
+      "name": "aria-autocomplete",
+      "type": {
+        "text": "'inline' | 'list' | 'both' | 'none'"
+      },
+      "description": "What kind of user-input completion suggestions the widget provides."
+    },
+    {
+      "name": "aria-braillelabel",
+      "type": {
+        "text": "string"
+      },
+      "description": "A braille label overriding the accessible name for braille displays."
+    },
+    {
+      "name": "aria-brailleroledescription",
+      "type": {
+        "text": "string"
+      },
+      "description": "A human-readable braille description of the element role."
+    },
+    {
+      "name": "aria-busy",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether an element and its subtree are currently being updated."
+    },
+    {
+      "name": "aria-checked",
+      "type": {
+        "text": "'true' | 'false' | 'mixed'"
+      },
+      "description": "The checked state of checkboxes, radio buttons and other toggle widgets."
+    },
+    {
+      "name": "aria-colcount",
+      "type": {
+        "text": "number"
+      },
+      "description": "The total number of columns in a table, grid or treegrid."
+    },
+    {
+      "name": "aria-colindex",
+      "type": {
+        "text": "number"
+      },
+      "description": "The column index of an element relative to the total number of columns."
+    },
+    {
+      "name": "aria-colspan",
+      "type": {
+        "text": "number"
+      },
+      "description": "The number of columns spanned by a cell or gridcell."
+    },
+    {
+      "name": "aria-controls",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the element(s) whose contents or presence this element controls."
+    },
+    {
+      "name": "aria-current",
+      "type": {
+        "text": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'"
+      },
+      "description": "The current item within a set of related elements."
+    },
+    {
+      "name": "aria-describedby",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the element(s) that describe this element."
+    },
+    {
+      "name": "aria-description",
+      "type": {
+        "text": "string"
+      },
+      "description": "A string value that describes or annotates the current element."
+    },
+    {
+      "name": "aria-details",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the element that provides a detailed, extended description."
+    },
+    {
+      "name": "aria-disabled",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether the element is perceivable but disabled and not editable or operable."
+    },
+    {
+      "name": "aria-dropeffect",
+      "type": {
+        "text": "'copy' | 'execute' | 'link' | 'move' | 'none' | 'popup'"
+      },
+      "description": "What functions can be performed when a dragged object is released (deprecated)."
+    },
+    {
+      "name": "aria-errormessage",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the element that provides an error message for this element."
+    },
+    {
+      "name": "aria-expanded",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether a grouping element owned or controlled by this element is expanded."
+    },
+    {
+      "name": "aria-flowto",
+      "type": {
+        "text": "string"
+      },
+      "description": "The next element(s) in an alternate reading order of content."
+    },
+    {
+      "name": "aria-grabbed",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "The grabbed state of an element in a drag-and-drop operation (deprecated)."
+    },
+    {
+      "name": "aria-haspopup",
+      "type": {
+        "text": "'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'"
+      },
+      "description": "Whether the element has a popup, and the type of popup it triggers."
+    },
+    {
+      "name": "aria-hidden",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether the element is exposed to the accessibility API."
+    },
+    {
+      "name": "aria-invalid",
+      "type": {
+        "text": "'grammar' | 'false' | 'spelling' | 'true'"
+      },
+      "description": "Whether the entered value does not conform to the expected format."
+    },
+    {
+      "name": "aria-keyshortcuts",
+      "type": {
+        "text": "string"
+      },
+      "description": "Keyboard shortcuts that activate or focus the element."
+    },
+    {
+      "name": "aria-label",
+      "type": {
+        "text": "string"
+      },
+      "description": "A string value that labels the current element."
+    },
+    {
+      "name": "aria-labelledby",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies the element(s) that label this element."
+    },
+    {
+      "name": "aria-level",
+      "type": {
+        "text": "number"
+      },
+      "description": "The hierarchical level of an element within a structure."
+    },
+    {
+      "name": "aria-live",
+      "type": {
+        "text": "'assertive' | 'off' | 'polite'"
+      },
+      "description": "How assistive technologies should announce updates to a live region."
+    },
+    {
+      "name": "aria-modal",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether an element is modal when displayed."
+    },
+    {
+      "name": "aria-multiline",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether a text box accepts multiple lines of input."
+    },
+    {
+      "name": "aria-multiselectable",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether the user may select more than one item from the current selectable descendants."
+    },
+    {
+      "name": "aria-orientation",
+      "type": {
+        "text": "'vertical' | 'undefined' | 'horizontal'"
+      },
+      "description": "Whether the element's orientation is horizontal, vertical or unknown."
+    },
+    {
+      "name": "aria-owns",
+      "type": {
+        "text": "string"
+      },
+      "description": "Identifies child element(s) to define a parent/child relationship the DOM cannot."
+    },
+    {
+      "name": "aria-placeholder",
+      "type": {
+        "text": "string"
+      },
+      "description": "A short hint intended to aid the user with data entry when the control has no value."
+    },
+    {
+      "name": "aria-posinset",
+      "type": {
+        "text": "number"
+      },
+      "description": "An element's number or position in the current set of listitems or treeitems."
+    },
+    {
+      "name": "aria-pressed",
+      "type": {
+        "text": "'true' | 'false' | 'mixed'"
+      },
+      "description": "The pressed state of a toggle button."
+    },
+    {
+      "name": "aria-readonly",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether the element is not editable but is otherwise operable."
+    },
+    {
+      "name": "aria-relevant",
+      "type": {
+        "text": "'additions' | 'all' | 'removals' | 'text'"
+      },
+      "description": "What notifications the user agent triggers when a live region changes."
+    },
+    {
+      "name": "aria-required",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "Whether user input is required on the element before form submission."
+    },
+    {
+      "name": "aria-roledescription",
+      "type": {
+        "text": "string"
+      },
+      "description": "A human-readable, author-localized description for the role of an element."
+    },
+    {
+      "name": "aria-rowcount",
+      "type": {
+        "text": "number"
+      },
+      "description": "The total number of rows in a table, grid or treegrid."
+    },
+    {
+      "name": "aria-rowindex",
+      "type": {
+        "text": "number"
+      },
+      "description": "The row index of an element relative to the total number of rows."
+    },
+    {
+      "name": "aria-rowspan",
+      "type": {
+        "text": "number"
+      },
+      "description": "The number of rows spanned by a cell or gridcell."
+    },
+    {
+      "name": "aria-selected",
+      "type": {
+        "text": "boolean"
+      },
+      "description": "The selected state of a selectable element."
+    },
+    {
+      "name": "aria-setsize",
+      "type": {
+        "text": "number"
+      },
+      "description": "The number of items in the current set of listitems or treeitems."
+    },
+    {
+      "name": "aria-sort",
+      "type": {
+        "text": "'ascending' | 'descending' | 'none' | 'other'"
+      },
+      "description": "Whether items in a table or grid are sorted in ascending or descending order."
+    },
+    {
+      "name": "aria-valuemax",
+      "type": {
+        "text": "number"
+      },
+      "description": "The maximum allowed value for a range widget."
+    },
+    {
+      "name": "aria-valuemin",
+      "type": {
+        "text": "number"
+      },
+      "description": "The minimum allowed value for a range widget."
+    },
+    {
+      "name": "aria-valuenow",
+      "type": {
+        "text": "number"
+      },
+      "description": "The current value for a range widget."
+    },
+    {
+      "name": "aria-valuetext",
+      "type": {
+        "text": "string"
+      },
+      "description": "A human-readable text alternative of the current value of a range widget."
+    }
+  ]
+}

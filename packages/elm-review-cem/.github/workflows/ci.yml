@@ -1,0 +1,62 @@
+# elm-review-cem CI: check:format + check:review + test + docs + neutrality + skills guard.
+#
+# Tools are split between npm devDependencies (elm-review) and elm-tooling.json
+# (elm, elm-format, elm-test-rs). `npm ci` installs the former; `npx elm-tooling install`
+# installs the latter into node_modules/.bin, which is then added to PATH.
+#
+# Publishing is intentionally NOT automated — the first 1.0.0 publish is manual.
+name: ci
+# MANUAL ONLY — `hooks/pre-push` runs this repo's gate locally before anything
+# reaches origin, so re-running it here is a slower duplicate. Kept dispatchable
+# for a clean-checkout or ubuntu-vs-macOS reproduction.
+on:
+  workflow_dispatch:
+
+env:
+  ELM_VERSION: "0.19.1"
+  NODE_VERSION: "22"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install npm devDependencies (elm-review, elm-tooling)
+        run: npm ci
+
+      - name: Install Elm tools (elm ${{ env.ELM_VERSION }}, elm-format, elm-test-rs via elm-tooling.json)
+        run: npx elm-tooling install
+
+      - name: Add Elm tools to PATH
+        run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
+
+      # Validate hand-written src/, tests/, review/src/ are clean.
+      - name: Format check
+        run: npm run check:format
+
+      # Dogfood the repo's own review/ config over src/ + tests/.
+      - name: elm-review
+        run: npm run check:review
+
+      # 180 tests; must stay 180/0.
+      - name: Tests
+        run: npm test
+
+      # Publish gate: `elm publish` refuses a package whose docs don't build.
+      - name: Docs compile (publish gate)
+        run: elm make --docs docs.json
+
+      # Fails on any un-allow-listed design-system mention (keeps the package neutral).
+      # Also runs locally as part of `npm run check` / `npm run gate` (hooks/pre-push).
+      - name: Neutrality gate
+        run: npm run check:neutrality
+
+      # Frontmatter lint + intra-repo link resolution for skills/.
+      - name: Skills guard
+        run: node skills/check-skills.mjs

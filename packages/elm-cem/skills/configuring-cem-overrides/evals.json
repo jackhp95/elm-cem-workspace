@@ -1,0 +1,41 @@
+{
+  "skill": "configuring-cem-overrides",
+  "cases": [
+    {
+      "id": "open-attr-should-be-bool",
+      "prompt": "The `open` attribute on my x-dialog generates as a String setter, but it's really a presence boolean. Fix it.",
+      "expect": {
+        "reaches_attrtypes": "reaches for the `attrTypes` config key with `\"open\": \"bool\"`",
+        "config_not_generated": "puts the fix in a --config-from JSON file, NOT by editing the generated Elm",
+        "regen": "notes to re-run generation (npm run gen) after the config change"
+      },
+      "reject": [
+        "hand-editing the generated Dialog module",
+        "suggesting `requiredAttrs` or `slots` for a type fix"
+      ]
+    },
+    {
+      "id": "leaked-base-class",
+      "prompt": "An abstract XBaseElement is showing up as a generated module but it's not a real component. How do I stop it?",
+      "expect": {
+        "uses_exclude": "uses the reserved `_exclude` config key listing the base class name",
+        "not_delete_file": "does NOT tell the user to delete the generated .elm file"
+      }
+    },
+    {
+      "id": "typed-event-payload",
+      "prompt": "My x-select fires x-change with the selected value in event.detail.value. I want a typed String payload in the handler.",
+      "expect": {
+        "uses_events": "uses the `events` config key",
+        "path_shorthand": "uses `detail: \"value\"` (or path [\"detail\",\"value\"]) with type \"string\""
+      }
+    },
+    {
+      "id": "required-vs-requiredattrs",
+      "prompt": "The `variant` attribute already exists in the CEM but should be mandatory. Which key?",
+      "expect": {
+        "requiredattrs": "chooses `requiredAttrs` (existing CEM attribute) over `required` (new non-attribute field)"
+      }
+    }
+  ]
+}

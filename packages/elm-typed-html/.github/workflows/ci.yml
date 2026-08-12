@@ -1,0 +1,73 @@
+name: CI
+
+# MANUAL ONLY — `hooks/pre-push` runs this repo's gate locally before anything
+# reaches origin, so re-running it here is a slower duplicate. Kept dispatchable
+# for a clean-checkout or ubuntu-vs-macOS reproduction.
+on:
+  workflow_dispatch:
+
+env:
+  ELM_VERSION: "0.19.1"
+  NODE_VERSION: "22"
+
+jobs:
+  ci:
+    name: Format · Review · Validate · Acid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # elm-review-cem rules are not yet on the registry; pull them from the
+      # public sibling repo. Must land at $GITHUB_WORKSPACE/../elm-review-cem
+      # to match the source-directory in review/elm.json.
+      - name: Fetch elm-review-cem (sibling)
+        run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"
+
+      # TypedHtml.Review.Facts (generated, in src/) references HtmlIr.* from
+      # the IR package, which is also unpublished. Pull it as a sibling too.
+      # PRIVATE repo — authenticated clone. ELM_CEM_TOKEN is a PAT (classic:
+      # `repo` scope, or fine-grained: Contents:read) that can read the private
+      # jackhp95 sibling repos; set it as a repo/org Actions secret.
+      - name: Fetch elm-html-intermediate-representation (sibling, private)
+        env:
+          ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
+        run: git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-html-intermediate-representation.git" "$GITHUB_WORKSPACE/../elm-html-intermediate-representation"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: elm-stuff
+          key: ${{ runner.os }}-elm-${{ env.ELM_VERSION }}-${{ hashFiles('elm.json') }}
+
+      - name: Cache review elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: review/elm-stuff
+          key: ${{ runner.os }}-elm-review-${{ hashFiles('review/elm.json', 'review/src/**/*.elm') }}
+
+      - name: Install deps
+        run: npm ci
+
+      # Format check on hand-written files only (verify/src/ and verify/bad/).
+      # Generated src/ is excluded — it is formatted by elm-cem at gen time.
+      - name: elm-format --validate (hand-written verify/)
+        run: npm run check:format
+
+      - name: elm-review
+        run: npm run check:review
+
+      # check:validate = elm make --docs (proves all exposed modules compile).
+      # The IR package is unpublished; scripts/validate.mjs resolves it via the
+      # sibling clone that was already fetched above.
+      - name: validate (elm make --docs)
+        run: npm run check:validate
+
+      # check:acid = verify/run.sh (good must compile, bad must fail).
+      # run.sh self-resolves elm from ../node_modules/.bin/elm (set by npm ci above).
+      - name: acid (verify/run.sh)
+        run: npm run check:acid

@@ -1,0 +1,38 @@
+{
+  "skill": "generating-elm-bindings",
+  "cases": [
+    {
+      "id": "shoelace-generate",
+      "prompt": "Here's a Shoelace custom-elements.json excerpt with sl-button and sl-dialog. Generate Elm bindings for my project.",
+      "expect": {
+        "invokes_cli": "runs `elm-cem --flags-from=<cem.json> --output=<dir>` (npx/node form ok)",
+        "output_dir_dedicated": "points --output at a dedicated generated dir (e.g. src/Generated), not a hand-written source dir",
+        "no_handwritten_elm": "does NOT hand-author any <Lib>.elm / Sl.Button module by hand",
+        "mentions_output_delete_footgun": "warns that --output deletes existing .elm files first",
+        "validates": "suggests `elm make src/Generated/<Lib>.elm --output=/dev/null` (or --docs) to validate"
+      },
+      "reject": [
+        "writing Elm binding modules by hand",
+        "pointing --output at src/ or an existing hand-written dir"
+      ]
+    },
+    {
+      "id": "no-manifest-library",
+      "prompt": "My component library doesn't ship a custom-elements.json. How do I still generate bindings?",
+      "expect": {
+        "analyzer": "directs to @custom-elements-manifest/analyzer to produce a manifest upstream",
+        "cem_configs": "mentions the shipped cem-configs/ analyzer configs (Carbon/Ionic/Spectrum) as starting points",
+        "distinguishes": "clarifies cem-configs are analyzer configs, NOT elm-cem --config-from configs"
+      }
+    },
+    {
+      "id": "regen-convention",
+      "prompt": "Should I commit the generated Elm to git or gitignore it?",
+      "expect": {
+        "commit": "recommends committing the generated tree so downstream consumers don't need the toolchain",
+        "gen_script": "suggests a `gen` npm script for one-command regeneration",
+        "diff_review": "notes the generated-tree diff is the review surface after a regen"
+      }
+    }
+  ]
+}

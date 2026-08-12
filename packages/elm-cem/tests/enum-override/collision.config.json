@@ -1,0 +1,23 @@
+{
+  "_phantom": true,
+  "_brand": "Eo",
+  "_comment": [
+    "The token-payload COLLISION case, run against the same probe CEM.",
+    "",
+    "`<Lib>.Values` mints ONE value per token identifier, so a token that two attributes",
+    "want to render differently is unrepresentable — exactly like the identifier collision",
+    "`Emit.guardValuesModule` already fails on. Here `Bar.mode`'s CEM enum mints the pair",
+    "( \"auto\", \"auto\" ) and this override asks for ( \"auto\", \"automatic\" ).",
+    "",
+    "Letting `Dict.insert` pick a winner would corrupt the loser silently: `Values.auto`",
+    "would write one attribute's string into the other's DOM attribute, past a type checker",
+    "that sees one legal `Value` row and has nothing to object to. So the run FAILS, and the",
+    "error names the token, both strings, and the fix (give one a distinct token NAME — the",
+    "map form's key and value need not match, which is the whole reason it exists)."
+  ],
+  "Gate": {
+    "attrTypes": {
+      "strict": { "auto": "automatic" }
+    }
+  }
+}

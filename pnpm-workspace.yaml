@@ -3,3 +3,4 @@ packages:
   - "packages/*/*"
   - "!**/node_modules"
   - "!**/elm-stuff"
+  - "!packages/*/elm-html-intermediate-representation"

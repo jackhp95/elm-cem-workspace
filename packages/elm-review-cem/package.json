@@ -1,0 +1,27 @@
+{
+  "name": "elm-review-cem",
+  "version": "1.0.0",
+  "description": "elm-review rules for elm-cem-generated component libraries (namespace-agnostic, facts-driven)",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "format": "elm-format src/ tests/ review/src/ --yes",
+    "check:format": "elm-format src/ tests/ review/src/ --validate",
+    "check:review": "elm-review --compiler node_modules/.bin/elm",
+    "check:facts-sync": "node bin/check-facts-sync.mjs",
+    "check:neutrality": "bash .github/neutrality-check.sh",
+    "check": "run-p \"check:*\"",
+    "test:elm": "elm-test-rs --compiler node_modules/.bin/elm",
+    "test": "run-p \"test:*\"",
+    "hooks:install": "git config core.hooksPath hooks",
+    "gate": "run-s check test"
+  },
+  "devDependencies": {
+    "elm-review": "^2.13.5",
+    "elm-tooling": "^1.20.0",
+    "npm-run-all2": "^9.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

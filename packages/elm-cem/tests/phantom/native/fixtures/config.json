@@ -1,0 +1,95 @@
+{
+  "_phantom": true,
+  "_brand": "TypedHtml",
+  "_atoms": { "text": {} },
+  "_comment_globals": "Typed globals: a bare string still means String (back-compat), and this brand's ONLY enums are globals — so it also covers the case where <Lib>.Values exists purely because of _globals (K6) and <Lib>.Attributes has to import it without any shared enum attr.",
+  "_globals": [
+    "class",
+    "id",
+    "slot",
+    "style",
+    { "name": "autofocus", "type": "bool" },
+    { "name": "tabindex", "type": "int" },
+    { "name": "hidden", "type": ["hidden", "until-found"] },
+    { "name": "dir", "type": ["ltr", "rtl", "auto"] }
+  ],
+  "_comment_variants": [
+    "`_variants` on the HOME-module shape, over a CONTROLLED base. `value` is in the",
+    "default `_controlled` roster, so it emits as a DOM property — and `valueAsNumber`",
+    "must therefore write the same property with the same JS type (a string), or",
+    "virtual-dom's identity diff and its `value`/`checked` resync special-case break."
+  ],
+  "_variants": {
+    "value": [{ "name": "valueAsNumber", "type": "float" }]
+  },
+  "_sets": {
+    "flow": ["div", "p", "select", "fieldset", "video", "picture", "a"],
+    "phrasing": ["span", "a"]
+  },
+  "_aria": {
+    "roles": ["navigation", "presentation", "tab"],
+    "states": { "checked": ["true", "false", "mixed"] },
+    "universal": ["label", "labelledby"]
+  },
+  "Div": {
+    "home": "Grouping",
+    "roles": ["navigation", "presentation"],
+    "admits": { "unnamed": { "kinds": ["any"], "multi": true } }
+  },
+  "P": {
+    "home": "Grouping",
+    "admits": { "unnamed": { "kinds": ["@phrasing", "shared:text"], "multi": true } }
+  },
+  "Span": {
+    "home": "Grouping",
+    "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } }
+  },
+  "Select": {
+    "home": "Select",
+    "eventPayloads": { "change": { "setter": "onChange", "payload": "targetValue" } },
+    "admits": { "unnamed": { "kinds": ["option", "optgroup"], "multi": true } }
+  },
+  "Option": {
+    "home": "Select",
+    "parents": ["select", "optgroup"],
+    "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } }
+  },
+  "Optgroup": {
+    "home": "Select",
+    "parents": ["select", "optgroup"],
+    "admits": { "unnamed": { "kinds": ["option"], "multi": true } }
+  },
+  "Fieldset": {
+    "home": "Form",
+    "admits": { "unnamed": { "kinds": ["legend", "div", "p"], "multi": true } }
+  },
+  "Legend": {
+    "home": "Form",
+    "parents": ["fieldset"],
+    "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } }
+  },
+  "A": {
+    "home": "A",
+    "transparent": true
+  },
+  "Video": {
+    "home": "Media",
+    "admits": { "unnamed": { "kinds": ["source", "track", "shared:text"], "multi": true } }
+  },
+  "Picture": {
+    "home": "Media",
+    "admits": { "unnamed": { "kinds": ["pictureSource"], "multi": true } }
+  },
+  "Source": {
+    "home": "Media",
+    "parents": ["video"]
+  },
+  "PictureSource": {
+    "home": "Media",
+    "parents": ["picture"]
+  },
+  "Track": {
+    "home": "Media",
+    "parents": ["video"]
+  }
+}

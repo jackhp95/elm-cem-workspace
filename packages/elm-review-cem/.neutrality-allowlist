@@ -1,0 +1,165 @@
+# Neutrality allow-list — curated by `.github/neutrality-check.sh`.
+#
+# Every entry here is a REVIEWED, legitimate occurrence of `material`/`m3e`/`md3`
+# in a package that must otherwise stay design-system neutral. A hit NOT covered
+# here fails CI. Two entry kinds:
+#
+#   file:<path>          allow every hit in that file (exact path)
+#   file:<dir>/          allow every hit anywhere under that directory
+#   <path>::<content>    allow one specific line (path + trimmed line content;
+#                        line number is deliberately NOT part of the key, so
+#                        reformatting a file doesn't break the gate)
+#
+# Lines starting with `#` and blank lines are ignored.
+
+# --- Whole-file allowances -------------------------------------------------
+
+# Test fixtures and round-trip corpora need a CONCRETE example namespace to
+# exercise the namespace-agnostic rules; `M3e.*` is that stand-in throughout.
+# None of it is baked into rule logic — it only lives in test strings/fixtures.
+file:tests/
+
+# The design-decisions record documents that these rules were EXTRACTED from the
+# elm-m3e review sources and made namespace-agnostic. Its M3e references are
+# historical cross-references, not assumptions in shipping code. (Authored file;
+# do not edit for neutrality.)
+file:docs/decisions.md
+
+# --- Line-level allowances -------------------------------------------------
+
+# README: the two-line framing that these rules target elm-cem-generated
+# component libraries, of which Material 3 (M3e) is the motivating example.
+README.md::rules for [`elm-cem`](https://github.com/jackhp95/elm-cem)-generated Material 3
+README.md::(M3e) component libraries. These are the machine-checkable *guarantee layer*
+
+# README: further `M3e`-as-worked-example spots in the usage walkthrough (the
+# `Cem.fences` config sample, the facts-concatenation note, and the
+# `redundantElementEscape` table row's inline examples). Same category as the
+# framing lines above — illustrative, not hardcoded in rule logic.
+README.md::(`M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts`); the rules group them
+README.md::Cem.all M3e.Review.Facts.facts
+README.md::{ brandRoots = [ "M3e" ]
+README.md::| `Cem.redundantElementEscape` | The consumer-side "drop to plain Html" reflex: an escape (`<Lib>.toHtml`, `<Lib>.Unsafe.coerce`/`coerceAll`/`fromHtml`, or a configured `Seam.*` escape) wrapping a value a **known family producer** already returned as a typed `Element` — `toHtml (M3e.button …)`, `Unsafe.coerce (M3e.heading …)`. Also: an Html-accepting escape wrapping a hand-written **covered raw tag** (`Unsafe.fromHtml (Html.a …)`), and `Unsafe.customElement` pointed at a covered tag or at an element expression. Advisory (no autofix). |
+
+# CHANGELOG: historical entry describing the per-namespace fact-grouping change,
+# illustrated with the same `M3e … ++ TypedHtml …` concatenation example as the
+# README/src docs. Same bucket as the README framing above.
+CHANGELOG.md::(`M3e … ++ TypedHtml …`) by namespace and resolve call sites against every
+
+# Pedagogical `M3e.*` examples in src/ doc-comments and a sample default arg.
+# `M3e` here is an illustrative namespace, never hardcoded in rule logic.
+src/Cem/Facts.elm::- `groupConstructors` — for a VARIANT-GROUP module (e.g. `M3e.Progress`, whose
+src/ExtractToSeam.elm::- **Config-blessed coercions** (WS6 / CX5, e.g. `M3e.Coerce.asButton`) — named
+src/Cem/MissingRequiredAttribute.elm::-- (e.g. `M3e.slotLabel`).
+src/Cem/MissingRequiredAttribute.elm::-- re-export `<root>.aria<X>` (`M3e.ariaLabel`).
+src/Cem/ValidSlotKind.elm::list (e.g. `M3e.Card.view [] [ M3e.iconButton [] [] ]`) targets the default
+src/Cem/ValidSlotKind.elm::(e.g. `M3e.Card.actions (M3e.iconButton [] [])`) targets the slot the setter
+src/Cem/ValidSlotKind.elm::`<root>.*` component literal (e.g. `M3e.iconButton [] []`). Anything else is
+src/Cem/ValidSlotKind.elm::barrel value (`M3e.text "x"`). In a constrained slot:
+src/Cem/ValidSlotKind.elm::component in the facts index. A non-component barrel helper (`M3e.text`,
+src/Cem/ValidSlotKind.elm::`M3e.none`, …) resolves via `callSite` but is NOT a component, so its kind is
+src/Cem/ValidSlotKind.elm::NOTE: `containerModuleParts` is the STANDARD component module (e.g. `M3e.Card`).
+src/Cem/ValidSlotKind.elm::written `M3e.Card.actions …` whether the parent call is Standard or Record —
+src/Cem/ValidSlotKind.elm::this recognises both. A hypothetical `M3e.Record.Card.<slot>` child would fall
+src/NoInternalImportOutsideAllowed.elm::`M3e.Element` literally cannot mint an `Element` from raw.
+src/NoInternalImportOutsideAllowed.elm::allow-list prefixes — the generated `M3e.*` namespace (trusted, produced by the
+src/NoInternalImportOutsideAllowed.elm::[ "M3e", "Seam", "Native", "Kit", "Layout" ]
+src/NoInternalImportOutsideAllowed.elm::An allow-list entry is a dotted module-name prefix: `"M3e"` matches `M3e`,
+src/NoInternalImportOutsideAllowed.elm::`M3e.Button`, `M3e.Html.Attr.Internal`, …; `"Kit"` matches `Kit` and
+src/NoInternalImportOutsideAllowed.elm::`import M3e.Element.Internal` is gated, but `import M3e.Element` is not).
+
+# src/Cem.elm — the facade module's doc comments walk through every rule with
+# `M3e.Review.Facts.facts` / `M3e.Button` style worked examples (incl. the
+# `Cem.fences` config sample and the `elm-m3e`-extraction note in `fences`'
+# doc-comment). The `fences`/`all`/etc. functions themselves take `brandRoots`
+# etc. as arguments — nothing here is a literal default.
+src/Cem.elm::be concatenated (`M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts`); every
+src/Cem.elm::Cem.all M3e.Review.Facts.facts
+src/Cem.elm::(M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts)
+src/Cem.elm::++ [ Cem.requireFormFieldLabel M3e.Review.Facts.facts ]
+src/Cem.elm::++ [ Cem.requireFabLabel M3e.Review.Facts.facts ]
+src/Cem.elm::module (and drifts on: elm-m3e's MIGRATION.md hand-rolled the allow-list without
+src/Cem.elm::- `brandRoots` — the generated library root namespaces (e.g. `[ "M3e" ]`).
+src/Cem.elm::{ brandRoots = [ "M3e" ]
+
+# src/Cem/Internal/Facts.elm — namespace-derivation helper doc-comments explain
+# the multi-library-concatenation behaviour (`rootParts`/`namespaces`/`factKey`)
+# using `M3e`/`TypedHtml` as the two-library worked example. The functions
+# themselves take `List Fact` and derive namespaces at runtime; nothing literal.
+src/Cem/Internal/Facts.elm::(`M3e … ++ TypedHtml …`) would have the second library silently ignored. Rules
+src/Cem/Internal/Facts.elm::(`M3e.Button … ++ TypedHtml.Div …` → `[ ["M3e"], ["TypedHtml"] ]`). This is what
+src/Cem/Internal/Facts.elm::{-| A namespace-qualified index key for a fact (`"M3e.Button"` fact →
+src/Cem/Internal/Facts.elm::`"M3e\u{0000}button"`). Keying rule indices on this instead of the bare component
+src/Cem/Internal/Facts.elm::noun keeps two libraries' same-noun components (`M3e`'s `button` and `TypedHtml`'s
+src/Cem/Internal/Facts.elm::matching namespace prefix among `roots` (`M3e.Token` under `[["M3e"]]` →
+
+# src/NoRedundantElementEscape.elm — the escape-reflex doc-comment's worked
+# examples (`toHtml (M3e.button …)`, the `Cem.redundantElementEscape` config
+# sample, the "must NOT flag" precision list). Detection itself resolves the
+# argument's head against the passed-in facts (`Facts.callSite`); no brand name
+# is compared in code.
+src/NoRedundantElementEscape.elm::toHtml (M3e.button [ … ] [ … ])
+src/NoRedundantElementEscape.elm::Unsafe.coerce (M3e.heading …)
+src/NoRedundantElementEscape.elm::(M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts)
+src/NoRedundantElementEscape.elm::(`M3e.button …`, `M3e.Button.view …`, a barrel or Record shorthand) whose
+src/NoRedundantElementEscape.elm::(M3e.text "hi")` when `text` is not a component fact) — unresolvable or not a
+
+# src/NoUnsafeImportOutsideAllowed.elm — the `*.Unsafe` escape-surface fence's
+# doc-comment, worded almost identically to the already-allowed
+# NoInternalImportOutsideAllowed.elm above (its brand-level companion rule). The
+# config sample and allow-list-prefix explanation use `M3e` as the worked
+# example; `rule`/`isAllowed`/`isUnsafeModule`/`brandRoot` all take the allowed
+# prefixes as a `List String` argument — no default, nothing hardcoded.
+src/NoUnsafeImportOutsideAllowed.elm::name matches one of the configured allow-list prefixes — the generated `M3e.*`
+src/NoUnsafeImportOutsideAllowed.elm::[ "M3e", "Seam", "Native", "Kit", "Layout" ]
+src/NoUnsafeImportOutsideAllowed.elm::An allow-list entry is a dotted module-name prefix: `"M3e"` matches `M3e`,
+src/NoUnsafeImportOutsideAllowed.elm::`M3e.Button`, …; `"Kit"` matches `Kit` and `Kit.Surface`. An empty list gates
+src/NoUnsafeImportOutsideAllowed.elm::so `import M3e.Unsafe` and `import TypedHtml.Unsafe.Attributes` are gated, but
+src/NoUnsafeImportOutsideAllowed.elm::`import M3e.Unsafely.Fine` is not.
+src/NoUnsafeImportOutsideAllowed.elm::(e.g. `M3e.Unsafe`) or whose second-to-last segment is `Unsafe` (e.g.
+src/NoUnsafeImportOutsideAllowed.elm::`Unsafe` segment. `M3e.Unsafe` -> `M3e`; `TypedHtml.Unsafe.Attributes` -> `TypedHtml`.
+
+# src/Cem/RequireFabLabel.elm + RequireFormFieldLabel.elm — doc-comments give the
+# ETYMOLOGY of the elm-cem-generated noun the rule actually matches on (the
+# recognition constant is the plain string `"fab"` / `"formField"` — see
+# `fabNoun`/`formFieldNoun` below each doc-comment; `m3e-fab`/`m3e-form-field`
+# name the *custom-element tag* those nouns were derived from, for a reader's
+# context, and are never compared against in the rule logic itself).
+src/Cem/RequireFabLabel.elm::{-| Flag a FAB (`m3e-fab` / `<root>.Fab`) that has no accessible name.
+src/Cem/RequireFabLabel.elm::the elm-cem/m3e model a FAB is named either by its **extended label** (the
+src/Cem/RequireFabLabel.elm::elm-cem-generated noun (`fab`, from the `m3e-fab` tag) and reads the `label` slot
+src/Cem/RequireFabLabel.elm::{-| The elm-cem noun for `m3e-fab`. Kept as the single recognition point so the
+src/Cem/RequireFormFieldLabel.elm::it. In the elm-cem/m3e model, `m3e-form-field` (`<root>.FormField`) is a styled
+src/Cem/RequireFormFieldLabel.elm::by its elm-cem-generated noun (`formField`, from the `m3e-form-field` tag) and
+src/Cem/RequireFormFieldLabel.elm::{-| The elm-cem noun for `m3e-form-field`. Kept as the single recognition point
+
+# src/Cem/TranslateToBuild.elm + TranslateToRecord.elm — doc-comments cite real
+# elm-m3e component/facet counts (128 components; 29 with the Record facet) as a
+# concrete illustration of how broadly each translator applies. Historical/
+# informational, like docs/decisions.md's cross-references — not a dependency.
+src/Cem/TranslateToBuild.elm::applies to all of them (128 in elm-m3e) — unlike `TranslateToRecord`.
+src/Cem/TranslateToRecord.elm::`facts` list the `Record` facet — 29 in elm-m3e). It is a clean no-op for every
+
+# skills/ — the maintainer skill TEACHES the neutral-message convention by citing
+# the just-completed neutrality fix's REMOVED strings ("Material 3 spec", "typed
+# M3e API") and the gate's own token list (material/m3e/md3). These are reviewed
+# meta-references about neutrality, not design-system assumptions in shipping code.
+skills/authoring-cem-review-rules/SKILL.md::fix in this repo: the neutrality pass rewrote `"The Material 3 spec … treats
+skills/authoring-cem-review-rules/SKILL.md::`X`…"` → `"The component declares `X`…"` and `"typed M3e API"` → `"typed
+skills/authoring-cem-review-rules/SKILL.md::`.github/neutrality-check.sh` gate enforces this — any new `material`/`m3e`/`md3`
+skills/authoring-cem-review-rules/SKILL.md::concatenate libraries' facts (`M3e … ++ TypedHtml …`). Never derive a single
+skills/authoring-cem-review-rules/evals.json::"expected_behavior": "Produces a concise one-sentence message plus a NON-EMPTY details list, both sourced from the component's declared facts (e.g. 'The component declares X as required') rather than any design-system assumption. Avoids the tokens material/m3e/md3 so it passes .github/neutrality-check.sh without an allowlist entry. Cites the neutral-message convention."
+
+# skills/configuring-cem-review-rules/SKILL.md — the CONSUMER-facing config skill
+# (how a project wires `Cem.all`/`Cem.fences` into its review/ config), same
+# `M3e`-as-worked-example usage as the README it mirrors.
+skills/configuring-cem-review-rules/SKILL.md::(`M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts`) — the rules group them
+skills/configuring-cem-review-rules/SKILL.md::Cem.all M3e.Review.Facts.facts
+skills/configuring-cem-review-rules/SKILL.md::{ brandRoots = [ "M3e" ]
+
+# skills/working-with-seams/ — the seam-discipline skill and its lift-mechanics
+# reference use "M3E"/`M3e.Values` as the worked example design system / import
+# a seam might lift from. Same pedagogical bucket as the rest of skills/.
+skills/working-with-seams/SKILL.md::needs and what the typed design system (M3E) offers is gathered so a maintainer
+skills/working-with-seams/SKILL.md::1. **Develop a new typed pattern.** The escape recurs → build the missing M3E /
+skills/working-with-seams/reference/lift-mechanics.md::| **External ref** the seam does not yet import | **Carry the import** (preserving its alias); keep the ref qualified. | `Value.large "card"` → seam gains `import M3e.Values as Value` |

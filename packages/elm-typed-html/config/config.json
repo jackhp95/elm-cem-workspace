@@ -1,0 +1,2250 @@
+{
+  "_phantom": true,
+  "_brand": "TypedHtml",
+  "_atoms": {
+    "text": {}
+  },
+  "_comment_globals": [
+    "The WHATWG global attributes. A bare entry is a free string; an entry with a `type` is",
+    "typed (`bool` / `int` / `float` / `string`, or a token list for an enum).",
+    "",
+    "`row` is the second axis, independent of `type`. It defaults to `\"closed\"`, which emits",
+    "`Attr { c | <name> : Supported } msg` and puts the name in every element's closed `Attrs`",
+    "alias. `\"open\"` emits `Attr c msg` and puts it in NO element's alias, so the setter",
+    "composes onto anything structurally.",
+    "",
+    "Five entries are open: `dir`, `lang`, `tabindex`, `hidden`, `title`. The test is whether",
+    "an attribute's VALIDITY depends on the element, which is the same line `TypedHtml.Aria`",
+    "already draws between `label : String -> Attr c msg` (open — a label is never invalid)",
+    "and `role : Value tags -> Attr { c | role : tags } msg` (closed — `role=\"tab\"` on a bare",
+    "<div> should be rejected). These five have `label`'s shape: no element restricts what",
+    "value they may carry, so a closed row on them only ever rejects a correct call.",
+    "",
+    "Opening them HERE is what makes them work everywhere. An open setter needs no row",
+    "membership to compose, so every brand elm-cem generates (elm-m3e, elm-calcite,",
+    "elm-shoelace, elm-fluent-ui, elm-web-awesome) picks these up by ordinary structural",
+    "unification, with no config edit of its own and no duplicate per-brand `Dir` type. The",
+    "motivating case: elm-m3e's docs could not put `dir` on `m3e-theme`, because m3e's config",
+    "never populated `_globals` and inherited elm-cem's four-item default, so `M3e.Theme.Attrs`",
+    "had no `dir` field — an absence nobody ever decided on.",
+    "",
+    "Deliberately still CLOSED: `class`/`id`/`slot`/`style` (already reach every element that",
+    "needs them, and `class`/`style` carry bespoke merging companions — a separate cleanup),",
+    "and `popover`/`contenteditable`/`is` plus the text-editing hints (`autocapitalize`,",
+    "`autocorrect`, `enterkeyhint`, `inputmode`, `writingsuggestions`), which interact with a",
+    "component's own behaviour (top-layer stacking, rich editing) in ways the i18n/a11y core",
+    "does not. Those deserve individual review, not a blanket include.",
+    "",
+    "Every one of these used to be a bare string, which INVERTED four of them: `hidden \"false\"`",
+    "HID the element and `inert \"false\"` made it inert, because these are boolean CONTENT",
+    "attributes \u2014 any value at all (except `hidden=\"until-found\"`) is the true state.",
+    "",
+    "Which shape each one gets, and why it is not the other shape:",
+    "  - bool  \u2014 `autofocus` / `inert` / `itemscope` are pure presence booleans.",
+    "  - enum  \u2014 `hidden` is NOT a bool: `hidden=\"until-found\"` keeps the element findable by",
+    "            find-in-page and is what reveals it, so the value is load-bearing.",
+    "            `draggable` / `contenteditable` / `spellcheck` / `writingsuggestions` are NOT",
+    "            bools either: their literal \"false\" is a real, distinct state \u2014 absence means",
+    "            `auto` / inherit-from-ancestor, `\"false\"` means explicitly off.",
+    "  - int   \u2014 `tabindex` must admit NEGATIVE values (`-1` = focusable by script only,",
+    "            not by sequential navigation), so it cannot be a natural or a string.",
+    "  - string \u2014 free text (`accesskey`, `id`, `lang`, `title`, the microdata `item*` set,",
+    "            `nonce`, `slot`, `is`) plus `class`/`style`, which have bespoke merging",
+    "            setters (`classList` / `style p v` / `styleList`) in the emitter.",
+    "",
+    "`is` STAYS in this roster and gets NO setter, and the two facts are not in conflict.",
+    "This roster is a description of HTML, where `is` is a global attribute; the generator",
+    "then omits it, because elm/virtual-dom cannot write it. Customized built-in elements",
+    "are opted in only at CREATION time \u2014 `document.createElement(tag, { is })` \u2014 and",
+    "`_VirtualDom_render` creates every node with `_VirtualDom_doc.createElement(vNode.__tag)`,",
+    "no options argument. By the time virtual-dom applies any attribute fact the element",
+    "already exists as its plain built-in self, so `setAttribute(\"is\", \u2026)` cannot upgrade it;",
+    "and there is no `is` IDL attribute, so a property write is an inert expando either.",
+    "",
+    "Do NOT delete the entry to 'match' the emitted surface. Removing it would make the",
+    "curation drift below the spec, which `scripts/check-whatwg.mjs` gate 1 exists to catch,",
+    "and would erase the record of a decided fact. The gate's KERNEL_BLOCKED table holds the",
+    "reason and asserts the omission actually happened; see `Attr.kernelBlockedReason` in",
+    "elm-cem for every blocked name and the kernel source behind it."
+  ],
+  "_globals": [
+    "accesskey",
+    {
+      "name": "autocapitalize",
+      "type": [
+        "off",
+        "none",
+        "sentences",
+        "words",
+        "characters"
+      ]
+    },
+    {
+      "name": "autocorrect",
+      "type": [
+        "on",
+        "off"
+      ]
+    },
+    {
+      "name": "autofocus",
+      "type": "bool"
+    },
+    "class",
+    {
+      "name": "contenteditable",
+      "type": [
+        "true",
+        "false",
+        "plaintext-only"
+      ]
+    },
+    {
+      "name": "dir",
+      "type": [
+        "ltr",
+        "rtl",
+        "auto"
+      ],
+      "row": "open"
+    },
+    {
+      "name": "draggable",
+      "type": [
+        "true",
+        "false"
+      ]
+    },
+    {
+      "name": "enterkeyhint",
+      "type": [
+        "enter",
+        "done",
+        "go",
+        "next",
+        "previous",
+        "search",
+        "send"
+      ]
+    },
+    {
+      "name": "hidden",
+      "type": [
+        "hidden",
+        "until-found"
+      ],
+      "row": "open"
+    },
+    "id",
+    {
+      "name": "inert",
+      "type": "bool"
+    },
+    {
+      "name": "inputmode",
+      "type": [
+        "none",
+        "text",
+        "tel",
+        "url",
+        "email",
+        "numeric",
+        "decimal",
+        "search"
+      ]
+    },
+    "is",
+    "itemid",
+    "itemprop",
+    "itemref",
+    {
+      "name": "itemscope",
+      "type": "bool"
+    },
+    "itemtype",
+    {
+      "name": "lang",
+      "row": "open"
+    },
+    "nonce",
+    {
+      "name": "popover",
+      "type": [
+        "auto",
+        "manual",
+        "hint"
+      ]
+    },
+    "slot",
+    {
+      "name": "spellcheck",
+      "type": [
+        "true",
+        "false"
+      ]
+    },
+    "style",
+    {
+      "name": "tabindex",
+      "type": "int",
+      "row": "open"
+    },
+    {
+      "name": "title",
+      "row": "open"
+    },
+    {
+      "name": "translate",
+      "type": [
+        "yes",
+        "no"
+      ]
+    },
+    {
+      "name": "writingsuggestions",
+      "type": [
+        "true",
+        "false"
+      ]
+    }
+  ],
+  "_comment_controlled": [
+    "The CONTROLLED attributes: those whose LIVE state is a DOM property, and whose content",
+    "attribute only ever sets the DEFAULT/initial state. Each gets TWO setters \u2014 the plain name",
+    "writes the property, `default<Name>` writes the content attribute \u2014 mirroring HTML's own IDL",
+    "split (`value`/`defaultValue`, `checked`/`defaultChecked`, `selected`/`defaultSelected`,",
+    "`muted`/`defaultMuted`). The companion shares the base capability row, so no element's",
+    "`Attrs` record grows a field.",
+    "",
+    "Every entry carries an `elements` SCOPE, and that is not optional bookkeeping \u2014 the roster",
+    "used to be keyed by attribute NAME alone, which is a claim about `HTMLElement`, and `value`",
+    "is not one attribute. Seven elements declare a `value` content attribute in",
+    "manifest/native.cem.json (button, data, input, li, meter, option, progress) at THREE",
+    "different IDL types: `DOMString` on button/data/option, `long` on li, and `double` on",
+    "meter/progress. `Ir.property \"value\" (Json.Encode.string \"abc\")` against a `double` is a",
+    "Web IDL TypeError \u2014 thrown inside `_VirtualDom_applyFacts`, i.e. mid-patch, where it takes",
+    "down the whole Elm render loop rather than one node. `TypedHtml.Text.value \"abc\"` on a",
+    "<progress> was that crash. Measured in a real app: the exception escapes the",
+    "animation-frame draw callback, Elm re-schedules the frame, and it re-throws about 60 times",
+    "a second, forever, on a page that is otherwise idle \u2014 a frozen DOM with no Elm crash",
+    "screen and no error in the model.",
+    "",
+    "Scoping is HALF the fix, and on its own it is the wrong half. It makes each element's OWN",
+    "module correct \u2014 `TypedHtml.Input.value` live, `TypedHtml.Text.value` a content attribute",
+    "\u2014 but `TypedHtml.Attributes` is the LOOSE surface, one open producer admitted by every",
+    "element whose row carries the field. So the question `elements` cannot answer is which",
+    "form THAT setter takes, and the answer is the PROPERTY form (elm-cem",
+    "`Model.sharedAttrs` breaks the tie there, deliberately): `TypedHtml.Attributes.value",
+    "model.text` on a text input is the single most-used call in the library, and the content",
+    "attribute silently pins it once the input is dirty (issue #41). Publishing the attribute",
+    "form here traded a rare crash for common silent staleness on the hottest path.",
+    "",
+    "Which leaves the crash to be made UNREPRESENTABLE instead of merely avoided. That is a",
+    "capability-ROW job, not a form job \u2014 see `_comment_renames` below. <progress>, <meter> and",
+    "<li> leave the `value` row entirely, so `TypedHtml.Attributes.value` applied to one of them",
+    "does not compile. The three elements that KEEP the row (button, data, option) all have a",
+    "reflected `DOMString value`, so the shared property write is not merely survivable there,",
+    "it reaches the content attribute anyway.",
+    "",
+    "Why each entry is scoped the way it is (each verified against manifest/native.cem.json):",
+    "  - value    \u2014 declared by 7 elements; only <input> has a live value that DIVERGES from the",
+    "               content attribute (the dirty-value flag), which is issue #41 / NB2c. Of the",
+    "               other six, three reflect and stay on the row; three have a numeric IDL type",
+    "               and leave it.",
+    "  - checked  \u2014 declared by <input> only, so the scope is documentation rather than a change.",
+    "               Stated anyway: the name-only form is what let `value` go wrong, and an entry",
+    "               that looks global invites the next element to be swept in silently.",
+    "  - selected \u2014 declared by <option> only. The `selected` content attribute is",
+    "               `defaultSelected`; the live selection is the IDL property.",
+    "  - muted    \u2014 declared by <audio> and <video>, both of which need it. This is the BUG the",
+    "               roster was originally extended for: the `muted` content attribute sets only",
+    "               `defaultMuted`, so `Ir.attribute \"muted\" \"\"` is inert after first render and",
+    "               `muted True` never muted a playing <video>.",
+    "",
+    "Consequences of the split form, stated so they are not a surprise:",
+    "  - `TypedHtml.Attributes.value` writes the DOM property, and `TypedHtml.Attributes.",
+    "    defaultValue` is its serializing companion (the content attribute \u2014 what SSR and",
+    "    `outerHTML` show, and what a form reset restores to). Both claim `value : Supported`,",
+    "    so no `Attrs` row grows a field.",
+    "  - button, data and option keep a LOCAL content-attribute `value` in their own home",
+    "    modules (`TypedHtml.Button.value`, `TypedHtml.Text.value`, `TypedHtml.Select.value`),",
+    "    because that is the form those elements actually want and delegating to the shared",
+    "    property setter would quietly stop serializing. Their generated docs name",
+    "    `TypedHtml.Input.value` as the live one.",
+    "",
+    "`resyncs: false` is not a preference \u2014 it is a fact about elm/virtual-dom. Its controlled-input",
+    "machinery is hardcoded to two NAMES: `_VirtualDom_diffFacts` re-emits an unchanged fact, and",
+    "`_VirtualDom_applyFacts` writes-when-the-DOM-differs, only for `value` and `checked`. PROP facts",
+    "are organized as raw JS values, so for any other name `true === true` skips the write forever.",
+    "The property form therefore fixes INERTNESS but not RESYNC for `selected`/`muted`, and the",
+    "generated docs must say so and name the event to listen to.",
+    "",
+    "Not listed, and why: `<textarea>`'s default value is its CHILD TEXT (there is no `value` content",
+    "attribute on textarea) and `<output>`'s `defaultValue` is a property with no backing content",
+    "attribute at all. Neither declares a `value` attribute in manifest/native.cem.json, so neither",
+    "earns a companion here. Were one added, add that element to `value`'s `elements` scope and mark",
+    "it `\"propertyOnly\": [\"value\"]` \u2014 the generator then emits the property setter and suppresses",
+    "the dishonest `default*` one. (`propertyOnly` outside the scope is rejected: there is no live",
+    "property there to keep.)"
+  ],
+  "_controlled": {
+    "value": {
+      "companion": "defaultValue",
+      "elements": [
+        "input"
+      ]
+    },
+    "checked": {
+      "companion": "defaultChecked",
+      "elements": [
+        "input"
+      ]
+    },
+    "selected": {
+      "companion": "defaultSelected",
+      "elements": [
+        "option"
+      ],
+      "resyncs": false,
+      "resyncWith": "change"
+    },
+    "muted": {
+      "companion": "defaultMuted",
+      "elements": [
+        "audio",
+        "video"
+      ],
+      "resyncs": false,
+      "resyncWith": "volumechange"
+    }
+  },
+  "_comment_variants": [
+    "Ergonomic ALTERNATIVE setters for attributes whose spec-correct type is a string.",
+    "",
+    "This follows HTML's own convention rather than inventing one: `HTMLInputElement` has",
+    "`value`, `valueAsNumber` and `valueAsDate`. The BASE setter keeps the type the spec",
+    "demands and the variant sits beside it, claiming the SAME capability row \u2014 so no",
+    "element's `Attrs` record grows a field and an element that admits `step` admits every",
+    "way of writing it.",
+    "",
+    "Why each base must stay a String, and why the variant cannot replace it:",
+    "  - step   \u2014 `step=\"any\"` is a legal keyword that disables step-matching. No `Float`",
+    "             expresses it, so `step` is a String and `stepAsNumber` is the convenience.",
+    "  - coords \u2014 `coords=\"0,0,82,126\"` is a COMMA-SEPARATED LIST. No single number is ever",
+    "             a valid value; it was typed `number` (a native-manifest-gen mis-read of the",
+    "             WHATWG cell 'Valid list of floating-point numbers'), which made every",
+    "             <area> unaddressable. `coordsAsInts` comma-joins a `List Int`.",
+    "  - value  \u2014 a String submission value on button, data, input and option. This is HTML's",
+    "             own `HTMLInputElement.value` / `valueAsNumber` pair, and it exists for the",
+    "             numeric-typed <input>s (`type=\"number\"`, `type=\"range\"`). A variant always",
+    "             writes the SAME fact as its base, so it follows `value`'s per-element form",
+    "             (see `_comment_controlled`): where `value` is the live property (<input>, and",
+    "             the shared `TypedHtml.Attributes`) `valueAsNumber` renders through",
+    "             `String.fromFloat` and then `Json.Encode.string`, so it writes the same JS",
+    "             TYPE as `value` \u2014 a property fact alternating between number and string",
+    "             would defeat virtual-dom's identity diff and its `value`/`checked` resync",
+    "             special-case. Where `value` is a content attribute (button, data, option)",
+    "             there is no JS value to keep consistent and `valueAsNumber` is a plain",
+    "             `Ir.attribute` write.",
+    "",
+    "`base` names a SETTER, not a DOM attribute, and that is why <progress>, <meter> and <li>",
+    "get no `valueAsNumber`: `_comment_renames` moves their `value` to a different setter name,",
+    "so they are no longer part of the `value` vocabulary. Nothing is lost \u2014 their renamed",
+    "setters are ALREADY numeric (Float and Int respectively), so a Float variant beside them",
+    "would be a second name for one fact, and on <li> a wrong one (an ordinal is an integer).",
+    "",
+    "NOT here, deliberately: a `valueAsDate` / Posix variant. HTML's `valueAsDate` takes a",
+    "JS `Date` OBJECT, and `Json.Encode` cannot construct one \u2014 the setter would be",
+    "unreachable from Elm at any type. Format the string in Elm instead."
+  ],
+  "_variants": {
+    "step": [
+      {
+        "name": "stepAsNumber",
+        "type": "float"
+      }
+    ],
+    "coords": [
+      {
+        "name": "coordsAsInts",
+        "type": "ints",
+        "separator": ","
+      }
+    ],
+    "value": [
+      {
+        "name": "valueAsNumber",
+        "type": "float"
+      }
+    ]
+  },
+  "_comment_renames": [
+    "The `value` attribute is FOUR different value spaces wearing one HTML name, and the phantom",
+    "capability row is where that has to be admitted. A row is a claim about which elements ADMIT",
+    "a setter, so two elements sharing the `value` row are asserting that one body is right for",
+    "both. For <input> and <progress> that assertion is false in the strongest possible way:",
+    "`TypedHtml.Attributes.value` writes the DOM property (see `_comment_controlled` for why it",
+    "must), `HTMLProgressElement.value` is a restricted IDL `double`, and Web IDL answers",
+    "`progress.value = \"abc\"` with a TypeError thrown mid-patch \u2014 which kills the Elm render",
+    "loop, not one node.",
+    "",
+    "So the three elements whose `value` is NUMERIC leave the row. `_renames` moves an",
+    "attribute's setter name, and elm-cem moves the capability row with it (`elmName` and",
+    "`capName` together), so a renamed attribute is a genuinely different capability:",
+    "<progress>/<meter>/<li> `Attrs` records have no `value` field at all, and",
+    "`TypedHtml.Attributes.value` applied to one is a COMPILE error. That is the difference",
+    "between avoiding the crash and making it unrepresentable, and only the second one survives",
+    "the next refactor.",
+    "",
+    "Why the NAME has to diverge and not just the row: <data>, <meter> and <progress> all live in",
+    "the `Text` home module, and <data>'s value is a reflected DOMString. One Elm module cannot",
+    "expose one name at two types \u2014 elm-cem's `guardHomeAttrTypes` refuses the run rather than",
+    "silently publishing one of them (that guard exists because the `datetime` regression did",
+    "exactly that). A distinct name resolves it: `TypedHtml.Text` exposes `value : String` for",
+    "<data> AND `valueNumeric : Float` for <meter>/<progress>.",
+    "",
+    "The names, and why not others:",
+    "  - valueNumeric : Float \u2014 <meter> and <progress>. `HTMLMeterElement.value` and",
+    "    `HTMLProgressElement.value` are both `attribute double value`, and there is no keyword",
+    "    in either value space that a Float cannot express, so unlike `step` the numeric type is",
+    "    the whole story rather than a variant of a String one.",
+    "  - valueOrdinal : Int \u2014 <li>. `HTMLLIElement.value` is `attribute long value`: the list",
+    "    item's ordinal position. Int, not Float, because \"item 3.5\" is not a thing; the manifest",
+    "    description already calls it an ordinal. It gets its own name rather than sharing",
+    "    `valueNumeric` because <li> is in the `Grouping` home and <meter>/<progress> are in",
+    "    `Text` \u2014 sharing the name would put an Int and a Float on ONE shared capability row, and",
+    "    elm-cem would then publish one of the two types on `TypedHtml.Attributes` and leave the",
+    "    other as a local setter. That is the `datetime` shape again, just below the guard's",
+    "    threshold. Two names, two rows, no choice to get wrong.",
+    "  - NOT `valueAsFloat`/`valueAsInt`: the `As<Type>` suffix is this config's `_variants`",
+    "    convention, and a variant SHARES its base's capability row (`stepAsNumber` claims",
+    "    `step`). These do the opposite \u2014 they exist to leave the row \u2014 so borrowing that suffix",
+    "    would signal precisely the wrong thing.",
+    "  - NOT `valueFloat`/`valueInt`: that is the spelling of the abandoned suffix-the-loser",
+    "    scheme elm-cem's `Generate.SharedAttrs` documents as dead code and a decoy. Reusing it",
+    "    invites the reader to look for a mechanism that does not exist.",
+    "",
+    "`attrTypes` below is the other half and is not optional. Without it the renamed setters are",
+    "still `String -> Attr`, which is the same lie under a new name: the manifest types all seven",
+    "`value` attributes as `string` (correct for a CONTENT attribute, which is always a string),",
+    "so the numeric IDL type has to come from config. With it, `<progress>` takes a Float and",
+    "`String.fromFloat` guarantees the serialized attribute is a valid floating-point number \u2014",
+    "the non-finite string that started all this is now unconstructible."
+  ],
+  "_renames": {
+    "Progress": {
+      "attr:value": "valueNumeric"
+    },
+    "Meter": {
+      "attr:value": "valueNumeric"
+    },
+    "Li": {
+      "attr:value": "valueOrdinal"
+    }
+  },
+  "_sets": {
+    "flow": [
+      "a",
+      "abbr",
+      "address",
+      "area",
+      "article",
+      "aside",
+      "audio",
+      "b",
+      "bdi",
+      "bdo",
+      "blockquote",
+      "br",
+      "button",
+      "canvas",
+      "cite",
+      "code",
+      "data",
+      "datalist",
+      "del",
+      "details",
+      "dfn",
+      "dialog",
+      "div",
+      "dl",
+      "em",
+      "embed",
+      "fieldset",
+      "figure",
+      "footer",
+      "form",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "header",
+      "hgroup",
+      "hr",
+      "i",
+      "iframe",
+      "img",
+      "input",
+      "ins",
+      "kbd",
+      "label",
+      "link",
+      "main",
+      "map",
+      "mark",
+      "menu",
+      "meta",
+      "meter",
+      "nav",
+      "noscript",
+      "object",
+      "ol",
+      "output",
+      "p",
+      "picture",
+      "pre",
+      "progress",
+      "q",
+      "ruby",
+      "s",
+      "samp",
+      "script",
+      "search",
+      "section",
+      "select",
+      "slot",
+      "small",
+      "span",
+      "strong",
+      "sub",
+      "sup",
+      "table",
+      "template",
+      "textarea",
+      "time",
+      "u",
+      "ul",
+      "var",
+      "video",
+      "wbr"
+    ],
+    "phrasing": [
+      "a",
+      "abbr",
+      "area",
+      "audio",
+      "b",
+      "bdi",
+      "bdo",
+      "br",
+      "button",
+      "canvas",
+      "cite",
+      "code",
+      "data",
+      "datalist",
+      "del",
+      "dfn",
+      "em",
+      "embed",
+      "i",
+      "iframe",
+      "img",
+      "input",
+      "ins",
+      "kbd",
+      "label",
+      "link",
+      "map",
+      "mark",
+      "meta",
+      "meter",
+      "noscript",
+      "object",
+      "output",
+      "picture",
+      "progress",
+      "q",
+      "ruby",
+      "s",
+      "samp",
+      "script",
+      "select",
+      "slot",
+      "small",
+      "span",
+      "strong",
+      "sub",
+      "sup",
+      "template",
+      "textarea",
+      "time",
+      "u",
+      "var",
+      "video",
+      "wbr"
+    ],
+    "interactive": [
+      "a",
+      "audio",
+      "button",
+      "details",
+      "embed",
+      "iframe",
+      "img",
+      "input",
+      "label",
+      "object",
+      "select",
+      "textarea",
+      "th",
+      "video"
+    ],
+    "heading": [
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    "sectioning": [
+      "article",
+      "aside",
+      "nav",
+      "section"
+    ],
+    "metadata": [
+      "base",
+      "link",
+      "meta",
+      "noscript",
+      "script",
+      "style",
+      "template",
+      "title"
+    ],
+    "embedded": [
+      "audio",
+      "canvas",
+      "embed",
+      "iframe",
+      "img",
+      "object",
+      "picture",
+      "video"
+    ]
+  },
+  "_aria": {
+    "roles": [
+      "alert",
+      "alertdialog",
+      "application",
+      "banner",
+      "button",
+      "cell",
+      "checkbox",
+      "columnheader",
+      "combobox",
+      "complementary",
+      "contentinfo",
+      "definition",
+      "dialog",
+      "directory",
+      "document",
+      "feed",
+      "figure",
+      "form",
+      "generic",
+      "grid",
+      "gridcell",
+      "group",
+      "heading",
+      "img",
+      "link",
+      "list",
+      "listbox",
+      "listitem",
+      "log",
+      "main",
+      "marquee",
+      "math",
+      "menu",
+      "menubar",
+      "menuitem",
+      "menuitemcheckbox",
+      "menuitemradio",
+      "meter",
+      "navigation",
+      "none",
+      "note",
+      "option",
+      "presentation",
+      "progressbar",
+      "radio",
+      "radiogroup",
+      "region",
+      "row",
+      "rowgroup",
+      "rowheader",
+      "scrollbar",
+      "search",
+      "searchbox",
+      "separator",
+      "slider",
+      "spinbutton",
+      "status",
+      "switch",
+      "tab",
+      "table",
+      "tablist",
+      "tabpanel",
+      "term",
+      "textbox",
+      "timer",
+      "toolbar",
+      "tooltip",
+      "tree",
+      "treegrid",
+      "treeitem"
+    ],
+    "states": {
+      "checked": [
+        "true",
+        "false",
+        "mixed"
+      ],
+      "pressed": [
+        "true",
+        "false",
+        "mixed"
+      ],
+      "current": [
+        "true",
+        "false",
+        "page",
+        "step",
+        "location",
+        "date",
+        "time"
+      ],
+      "expanded": [
+        "true",
+        "false"
+      ],
+      "hidden": [
+        "true",
+        "false",
+        "undefined"
+      ],
+      "autocomplete": [
+        "none",
+        "inline",
+        "list",
+        "both"
+      ],
+      "haspopup": [
+        "false",
+        "true",
+        "menu",
+        "listbox",
+        "tree",
+        "grid",
+        "dialog"
+      ],
+      "invalid": [
+        "false",
+        "true",
+        "grammar",
+        "spelling"
+      ],
+      "orientation": [
+        "horizontal",
+        "vertical",
+        "undefined"
+      ],
+      "sort": [
+        "ascending",
+        "descending",
+        "none",
+        "other"
+      ],
+      "live": [
+        "assertive",
+        "off",
+        "polite"
+      ],
+      "relevant": [
+        "additions",
+        "all",
+        "removals",
+        "text"
+      ]
+    },
+    "universal": [
+      "label",
+      "labelledby",
+      "describedby",
+      "description"
+    ]
+  },
+  "A": {
+    "kind": "shared:phrasing",
+    "home": "A",
+    "transparent": true,
+    "roles": [
+      "button",
+      "checkbox",
+      "link",
+      "menuitem",
+      "menuitemcheckbox",
+      "menuitemradio",
+      "none",
+      "option",
+      "presentation",
+      "radio",
+      "switch",
+      "tab",
+      "treeitem"
+    ]
+  },
+  "Abbr": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Address": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Area": {
+    "home": "Embedded"
+  },
+  "Article": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Aside": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Audio": {
+    "kind": "shared:phrasing",
+    "home": "Media",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "source",
+          "track",
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "B": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Base": {
+    "home": "Metadata"
+  },
+  "Bdi": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Bdo": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Blockquote": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Body": {
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Br": {
+    "kind": "shared:phrasing",
+    "home": "Text"
+  },
+  "Button": {
+    "kind": "shared:phrasing",
+    "home": "Button",
+    "roles": [
+      "checkbox",
+      "combobox",
+      "link",
+      "menuitem",
+      "menuitemcheckbox",
+      "menuitemradio",
+      "none",
+      "option",
+      "presentation",
+      "radio",
+      "switch",
+      "tab"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Canvas": {
+    "kind": "shared:phrasing",
+    "home": "Embedded",
+    "transparent": true
+  },
+  "Caption": {
+    "home": "Table",
+    "parents": [
+      "table"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Cite": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Code": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Col": {
+    "home": "Table",
+    "parents": [
+      "colgroup"
+    ]
+  },
+  "Colgroup": {
+    "home": "Table",
+    "parents": [
+      "table"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "col"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Data": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Datalist": {
+    "kind": "shared:phrasing",
+    "home": "Select",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "option",
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Dd": {
+    "home": "Grouping",
+    "parents": [
+      "dl"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Del": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "transparent": true
+  },
+  "Details": {
+    "kind": "shared:flow",
+    "home": "Details",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Dfn": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Dialog": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Div": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "roles": [
+      "banner",
+      "complementary",
+      "contentinfo",
+      "form",
+      "group",
+      "list",
+      "log",
+      "main",
+      "navigation",
+      "none",
+      "note",
+      "presentation",
+      "region",
+      "search",
+      "separator",
+      "status",
+      "timer",
+      "toolbar",
+      "tooltip"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Dl": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "dt",
+          "dd",
+          "shared:flow"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Dt": {
+    "home": "Grouping",
+    "parents": [
+      "dl"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Em": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Embed": {
+    "kind": "shared:phrasing",
+    "home": "Embedded"
+  },
+  "Fieldset": {
+    "kind": "shared:flow",
+    "home": "Form",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Figcaption": {
+    "home": "Grouping",
+    "parents": [
+      "figure"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Figure": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Footer": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Form": {
+    "kind": "shared:flow",
+    "home": "Form",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H1": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H2": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H3": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H4": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H5": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "H6": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Head": {
+    "home": "Metadata",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@metadata"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Header": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Hgroup": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Hr": {
+    "kind": "shared:flow",
+    "home": "Grouping"
+  },
+  "I": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Iframe": {
+    "kind": "shared:phrasing",
+    "home": "Embedded"
+  },
+  "Img": {
+    "home": "Img"
+  },
+  "Input": {
+    "kind": "shared:phrasing",
+    "home": "Input",
+    "eventPayloads": {
+      "input": {
+        "setter": "onInput",
+        "payload": "targetValue"
+      },
+      "change": {
+        "setter": "onCheck",
+        "payload": "targetChecked"
+      }
+    }
+  },
+  "Ins": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "transparent": true
+  },
+  "Kbd": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Label": {
+    "kind": "shared:phrasing",
+    "home": "Form",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Legend": {
+    "home": "Form",
+    "parents": [
+      "fieldset"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Li": {
+    "home": "Grouping",
+    "_comment_attrTypes": "`HTMLLIElement.value` is `attribute long value` \u2014 the ordinal position of the item. See `_comment_renames`: renamed to `valueOrdinal` so it leaves the shared `value` capability row, and typed `int` so the setter matches the value space rather than accepting any string and silently coercing to 0 through ToInt32.",
+    "attrTypes": {
+      "value": "int"
+    },
+    "parents": [
+      "ul",
+      "ol",
+      "menu"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Link": {
+    "home": "Metadata"
+  },
+  "Main": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Map": {
+    "kind": "shared:phrasing",
+    "home": "Embedded",
+    "transparent": true,
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "area"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Mark": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Menu": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "li"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Meta": {
+    "home": "Metadata"
+  },
+  "Meter": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "_comment_attrTypes": "`HTMLMeterElement.value` is `attribute double value`, a RESTRICTED double: Web IDL rejects a non-finite value with a TypeError. See `_comment_renames` \u2014 renamed to `valueNumeric` so it leaves the shared `value` row, and typed `float` so `String.fromFloat` is the only way to produce the attribute string.",
+    "attrTypes": {
+      "value": "float"
+    },
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Nav": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "roles": [
+      "menu",
+      "menubar",
+      "navigation",
+      "none",
+      "presentation",
+      "tablist"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Noscript": {
+    "home": "Scripting",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Object": {
+    "kind": "shared:phrasing",
+    "home": "Embedded",
+    "transparent": true
+  },
+  "Ol": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "li"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Optgroup": {
+    "home": "Select",
+    "parents": [
+      "select",
+      "optgroup"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "option"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Option": {
+    "home": "Select",
+    "parents": [
+      "select",
+      "optgroup"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Output": {
+    "kind": "shared:phrasing",
+    "home": "Form",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "P": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Picture": {
+    "kind": "shared:phrasing",
+    "home": "Media",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "pictureSource",
+          "img"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Pre": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Progress": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "_comment_attrTypes": "`HTMLProgressElement.value` is `attribute double value`, a RESTRICTED double. `progress.value = \"abc\"` and `progress.value = \"1e999\"` are both TypeErrors \u2014 verified in a browser \u2014 and thrown mid-patch they spin the Elm render loop at ~60 exceptions/second indefinitely. See `_comment_renames`: renamed to `valueNumeric` so it leaves the shared `value` row, and typed `float` so the non-finite string is unconstructible.",
+    "attrTypes": {
+      "value": "float"
+    },
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Q": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Rp": {
+    "home": "Text",
+    "parents": [
+      "ruby"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Rt": {
+    "home": "Text",
+    "parents": [
+      "ruby"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Ruby": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "rt",
+          "rp",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "S": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Samp": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Script": {
+    "home": "Scripting",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Search": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Section": {
+    "kind": "shared:flow",
+    "home": "Sectioning",
+    "roles": [
+      "alert",
+      "alertdialog",
+      "application",
+      "banner",
+      "complementary",
+      "contentinfo",
+      "dialog",
+      "document",
+      "feed",
+      "group",
+      "log",
+      "main",
+      "marquee",
+      "navigation",
+      "none",
+      "note",
+      "presentation",
+      "region",
+      "search",
+      "status",
+      "timer",
+      "toolbar",
+      "tooltip"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "any"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Select": {
+    "kind": "shared:phrasing",
+    "home": "Select",
+    "eventPayloads": {
+      "change": {
+        "setter": "onChange",
+        "payload": "targetValue"
+      }
+    },
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "option",
+          "optgroup"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Slot": {
+    "kind": "shared:phrasing",
+    "home": "Scripting",
+    "transparent": true
+  },
+  "Small": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Source": {
+    "home": "Media",
+    "parents": [
+      "audio",
+      "video"
+    ]
+  },
+  "Span": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "roles": [
+      "generic",
+      "group",
+      "listitem",
+      "none",
+      "note",
+      "presentation",
+      "tooltip"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Strong": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Style": {
+    "home": "Metadata",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Sub": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Summary": {
+    "home": "Details",
+    "parents": [
+      "details"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Sup": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Table": {
+    "kind": "shared:flow",
+    "home": "Table",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "caption",
+          "colgroup",
+          "thead",
+          "tbody",
+          "tfoot"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Tbody": {
+    "home": "Table",
+    "parents": [
+      "table"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "tr"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Td": {
+    "home": "Table",
+    "parents": [
+      "tr"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Template": {
+    "home": "Scripting"
+  },
+  "Textarea": {
+    "kind": "shared:phrasing",
+    "home": "Textarea",
+    "eventPayloads": {
+      "input": {
+        "setter": "onInput",
+        "payload": "targetValue"
+      }
+    },
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Tfoot": {
+    "home": "Table",
+    "parents": [
+      "table"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "tr"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Th": {
+    "home": "Table",
+    "parents": [
+      "tr"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@flow",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Thead": {
+    "home": "Table",
+    "parents": [
+      "table"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "tr"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Time": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Title": {
+    "home": "Metadata",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Tr": {
+    "home": "Table",
+    "parents": [
+      "thead",
+      "tbody",
+      "tfoot"
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "td",
+          "th"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Track": {
+    "home": "Media",
+    "parents": [
+      "audio",
+      "video"
+    ]
+  },
+  "U": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Ul": {
+    "kind": "shared:flow",
+    "home": "Grouping",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "li"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Var": {
+    "kind": "shared:phrasing",
+    "home": "Text",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Video": {
+    "kind": "shared:phrasing",
+    "home": "Media",
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "source",
+          "track",
+          "shared:text"
+        ],
+        "multi": true
+      }
+    }
+  },
+  "Wbr": {
+    "kind": "shared:phrasing",
+    "home": "Text"
+  },
+  "PictureSource": {
+    "home": "Media",
+    "parents": [
+      "picture"
+    ]
+  },
+  "_legacyHtml": true
+}

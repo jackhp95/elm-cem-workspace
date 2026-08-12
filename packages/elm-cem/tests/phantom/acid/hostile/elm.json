@@ -1,0 +1,25 @@
+{
+    "type": "application",
+    "elm-version": "0.19.1",
+    "version": "1.0.0",
+    "summary": "Acid test for hostile collision suite",
+    "description": "Tests the disambiguation of K1-K7 collision classes",
+    "source-directories": [
+        "src",
+        "bad"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "direct": {
+            "elm/core": "1.0.5",
+            "elm/html": "1.0.0",
+            "elm/json": "1.1.4",
+            "elm/virtual-dom": "1.0.3"
+        },
+        "indirect": {}
+    },
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
+}

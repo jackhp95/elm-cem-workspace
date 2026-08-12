@@ -1,0 +1,80 @@
+{
+  "_phantom": true,
+  "_sets": {
+    "actions": ["button", "chip"]
+  },
+  "_atoms": {
+    "text": {}
+  },
+  "_comment_globals": "Typed globals on the RICH (per-component) shape: the only suite that emits `with<Global>` builder pipes, so it is what proves a pipe echoes its global's real input type (Bool / Int / Value Dir) instead of String.",
+  "_globals": [
+    "class",
+    "id",
+    "slot",
+    "style",
+    { "name": "inert", "type": "bool" },
+    { "name": "tabindex", "type": "int" },
+    { "name": "dir", "type": ["ltr", "rtl", "auto"] }
+  ],
+  "_comment_variants": [
+    "`_variants` on the RICH (per-component) shape. Both renderers and a NON-default",
+    "separator, so a hardcoded comma would show up as a golden diff.",
+    "",
+    "Each variant claims its BASE attribute's capability row (`weightAsNumber` claims",
+    "`weight`), so no component's `Attrs` record grows a field — the same discipline as a",
+    "`_controlled` `default*` companion. This is HTML's own convention: the base keeps the",
+    "spec-correct type and the variant is the ergonomic alternative, exactly as",
+    "`HTMLInputElement` has both `value` and `valueAsNumber`."
+  ],
+  "_variants": {
+    "weight": [{ "name": "weightAsNumber", "type": "float" }],
+    "grid": [{ "name": "gridAsInts", "type": "ints", "separator": "x" }]
+  },
+  "_coerce": [
+    {
+      "from": "Chip",
+      "fromKind": "chip",
+      "to": "button",
+      "name": "asButton",
+      "_comment": "A Chip admitted where a button kind is expected."
+    }
+  ],
+  "Button": {
+    "admits": {
+      "unnamed": { "kinds": ["shared:text", "shared:icon"], "multi": true, "required": true },
+      "icon": { "kinds": ["shared:icon"], "multi": false }
+    }
+  },
+  "Icon": {
+    "kind": "shared:icon",
+    "admits": {
+      "unnamed": { "kinds": ["shared:text"], "multi": false }
+    }
+  },
+  "Chip": {
+    "admits": {
+      "unnamed": { "kinds": ["shared:text"], "multi": true }
+    }
+  },
+  "Surface": {
+    "admits": {
+      "unnamed": { "kinds": ["any"], "multi": true }
+    }
+  },
+  "Tabs": {
+    "admits": {
+      "unnamed": { "kinds": ["tab"], "multi": true }
+    }
+  },
+  "Tab": {
+    "parents": ["tabs"],
+    "admits": {
+      "unnamed": { "kinds": ["shared:text"], "multi": true }
+    }
+  },
+  "Toolbar": {
+    "admits": {
+      "unnamed": { "kinds": ["@actions"], "multi": true }
+    }
+  }
+}

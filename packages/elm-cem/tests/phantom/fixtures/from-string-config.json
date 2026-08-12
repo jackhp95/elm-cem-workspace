@@ -1,0 +1,32 @@
+{
+  "_phantom": true,
+  "_brand": "Fx",
+  "_comment": [
+    "The two hazards `<enum>FromString` / `<enum>Values` must survive, in one brand.",
+    "",
+    "`presence` is the MAP form where the Elm IDENT differs from the WIRE STRING for",
+    "every token: `always` mints `Ir.token \"true\"`. `presenceFromString` must case on",
+    "\"true\", not on \"always\" — casing on the ident would make it disagree with",
+    "`toString` for exactly these tokens, silently and in one direction only.",
+    "",
+    "`fallback` adds the FAN-IN: `always` and `yes` both write \"true\". Nothing rejects",
+    "this — `Model.tokenValues` guards token -> one string (each of these has one), and",
+    "`guardValuesModule` guards two raw tokens -> one ident (these are two idents). Both",
+    "evaluate to the SAME `Ir.token \"true\"`, so dropping one is lossless; emitting both",
+    "would produce a duplicate `case` branch (a compiler warning at best) and a",
+    "duplicated `fallbackValues` entry.",
+    "",
+    "`always` is shared by BOTH overrides and writes \"true\" in each, so the brand-wide",
+    "token pool mints it once — asking it to write two strings is a separate hard error",
+    "already covered by tests/enum-override.test.mjs."
+  ],
+  "Probe": {
+    "attrTypes": {
+      "presence": { "always": "true", "never": "false" },
+      "fallback": { "always": "true", "yes": "true", "off": "false" }
+    },
+    "admits": {
+      "unnamed": { "kinds": [], "multi": false }
+    }
+  }
+}

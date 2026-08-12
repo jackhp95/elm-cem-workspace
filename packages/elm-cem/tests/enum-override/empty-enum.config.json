@@ -1,0 +1,25 @@
+{
+  "_phantom": true,
+  "_brand": "Eo",
+  "_comment": [
+    "An EMPTY enum override. An enum that admits nothing is a typo, not a request, so the",
+    "config decoder rejects it — the same policy as the unknown scalar kind beside it.",
+    "",
+    "It was harmless before only by accident: `AEnumMap []` matched nothing in the phantom",
+    "emitters and fell through to a plain `String` setter, i.e. it was swallowed by the very",
+    "bug that made every enum override a no-op. Now that an all-identity override IS an",
+    "`AEnum`, an empty one would mint `type alias Strict = {}` and a `Value {}` setter that",
+    "no token can satisfy — dead code, emitted in silence.",
+    "",
+    "This fixture also pins the arm that made the rejection REACHABLE. `Generate.elm` used",
+    "to answer a config decode error by falling back to the raw manifest declarations,",
+    "which discarded the entire legacy front-end (`_exclude`, every `attrTypes` override,",
+    "every synthetic attr) from one typo, with a zero exit code and no diagnostic. Every",
+    "fail-loud branch in the config decoder returned an `Err` that arm threw away."
+  ],
+  "Gate": {
+    "attrTypes": {
+      "strict": []
+    }
+  }
+}

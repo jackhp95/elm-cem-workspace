@@ -1,0 +1,92 @@
+name: CI
+
+# MANUAL ONLY — local verification is the primary gate for this family.
+#
+# `hooks/pre-push` runs `npm run gate` before anything reaches origin, so a red
+# tree cannot be pushed in the first place. Running the same checks again on
+# every push would be a slower, more fragile duplicate: this workflow clones
+# three sibling repos (two of them private, behind ELM_CEM_TOKEN), so it breaks
+# whenever that PAT rotates — while the pre-push hook just works.
+#
+# Kept dispatchable for the cases local runs cannot cover: verifying a clean
+# checkout, or reproducing a failure on ubuntu rather than macOS.
+on:
+  workflow_dispatch:
+
+env:
+  ELM_VERSION: "0.19.1"
+  NODE_VERSION: "22"
+
+jobs:
+  ci:
+    name: Format · Review · Gate · Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # elm-review-cem rules are not yet on the registry; pull them from the
+      # public sibling repo. Must land at $GITHUB_WORKSPACE/../elm-review-cem
+      # to match the source-directory in review/elm.json.
+      - name: Fetch elm-review-cem (sibling)
+        run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"
+
+      # The generated <Brand>.Review.Facts module (in src/) references HtmlIr.*
+      # from the IR package, which is also unpublished. Pull it as a sibling too.
+      # The registry-check gate stages this src to prove the package compiles
+      # against its declared IR dependency.
+      # PRIVATE repo — authenticated clone. ELM_CEM_TOKEN is a PAT (classic:
+      # `repo` scope, or fine-grained: Contents:read) that can read the private
+      # jackhp95 sibling repos; set it as a repo/org Actions secret.
+      - name: Fetch elm-html-intermediate-representation (sibling, private)
+        env:
+          ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
+        run: git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-html-intermediate-representation.git" "$GITHUB_WORKSPACE/../elm-html-intermediate-representation"
+
+      # The elm-cem generator provides the gate subcommands
+      # (regen-drift / registry-check / acid / validate) and the facts/src staged
+      # by registry-check. ELM_CEM_BIN defaults to ../elm-cem/bin/elm-cem.js.
+      # PRIVATE repo — authenticated clone (same ELM_CEM_TOKEN as above).
+      - name: Fetch elm-cem generator (sibling, private)
+        env:
+          ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-cem.git" "$GITHUB_WORKSPACE/../elm-cem"
+          cd "$GITHUB_WORKSPACE/../elm-cem" && npm ci
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: elm-stuff
+          key: ${{ runner.os }}-elm-${{ env.ELM_VERSION }}-${{ hashFiles('elm.json') }}
+
+      - name: Cache review elm-stuff
+        uses: actions/cache@v4
+        with:
+          path: review/elm-stuff
+          key: ${{ runner.os }}-elm-review-${{ hashFiles('review/elm.json', 'review/src/**/*.elm') }}
+
+      - name: Install deps
+        run: npm ci
+
+      # Format check on hand-written files only (tests/).
+      # Generated src/ is excluded — it is formatted by elm-cem at gen time.
+      - name: elm-format --validate (hand-written tests/)
+        run: npm run format:check
+
+      - name: elm-review
+        run: npm run review
+
+      # Release gate (elm-cem #49/#50): regen-drift (committed src/ + elm.json
+      # match a fresh regen — NB5), registry-check (compiles registry-faithfully
+      # from declared deps — NB1/B2), and acid (phantom-type probes).
+      - name: elm-cem gate (drift + registry + acid)
+        run: npm run gate
+
+      # docs-size gate: docs.json <= 700 KB (single-package, or per split-package).
+      - name: elm-cem validate (docs-size)
+        run: npm run validate

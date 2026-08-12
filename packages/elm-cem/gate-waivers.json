@@ -1,0 +1,3 @@
+{
+  "hooks#core.hooksPath": "elm-cem is now a package inside the elm-cem-workspace monorepo, not its own git repository. A single git repository has exactly one core.hooksPath, so wiring it to this package's own hooks/ directory would break hook enforcement for every other package sharing the repo — per-package hook wiring is not possible in a monorepo. The workspace-level pre-push hook that runs the family drift gate across all packages is wired up in Milestone 4; until then this rule is intentionally unenforced by git push, and is covered here instead."
+}

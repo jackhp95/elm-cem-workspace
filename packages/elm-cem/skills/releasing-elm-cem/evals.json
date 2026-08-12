@@ -1,0 +1,27 @@
+{
+  "skill": "releasing-elm-cem",
+  "cases": [
+    {
+      "id": "downstream-gate-before-tag",
+      "prompt": "I'm ready to release elm-cem. Walk me through it.",
+      "expect": {
+        "green_first": "confirms npm test + format --validate + neutrality gate green",
+        "downstream_regen_gate": "regenerates the downstream generated-atoms consumer and requires ZERO golden drift BEFORE tagging",
+        "pack_dry_run": "runs npm pack --dry-run to audit the tarball (codegen/ + data/ + native-manifest-gen/ included, elm-stuff excluded)",
+        "oidc_publish": "publishes via the tag-triggered trusted-publishing (OIDC) workflow, not a local token",
+        "changelog": "renames CHANGELOG Unreleased to the versioned section"
+      },
+      "reject": [
+        "tagging before the downstream zero-diff regen check",
+        "running npm publish locally with a stored NPM_TOKEN"
+      ]
+    },
+    {
+      "id": "semver-two-surfaces",
+      "prompt": "My change renames a phantom-row field in the generated output. Is that a patch, minor, or major?",
+      "expect": {
+        "major": "classifies it as MAJOR — the generated-output contract is a public surface even though it lives in another repo"
+      }
+    }
+  ]
+}

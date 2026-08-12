@@ -1,0 +1,146 @@
+# Neutrality-gate allowlist — files with LEGITIMATE design-system token hits.
+# One repo-relative path per line. See .github/neutrality-check.sh.
+#
+# Each entry below is a curated, reviewed hit. A NEW file appearing as a gate
+# violation should be neutralized, not reflexively added here.
+
+# --- Docs: ecosystem links + downstream-consumer references ---
+# README lists the elm-cem-m3e / elm-m3e ecosystem repos; the layout example is
+# neutral (Shoelace), but the ecosystem section names the sibling repos.
+README.md
+# CHANGELOG documents the two public surfaces (naming elm-cem-m3e / elm-m3e as the
+# downstream contract) and cites m3e-form-field / m3e-toc-ignore as motivating cases.
+CHANGELOG.md
+# CONTRIBUTING references the downstream consumers (elm-cem-m3e / elm-m3e) and the
+# m3e-toc-ignore motivating case for syntheticAttrs.
+CONTRIBUTING.md
+# RELEASE-CHECKLIST names the downstream consumer to regenerate against.
+RELEASE-CHECKLIST.md
+# cem-configs README mentions material-web as one shipped analyzer config.
+cem-configs/README.md
+
+# --- Generator source: pedagogical comment examples (do not touch) ---
+# These reference M3e.* / m3e-* tags purely as illustrative examples in docstrings
+# and comments (e.g. slot-dedup with `leading-icon`, the m3e-toc-ignore setter,
+# the shipped @m3e/web tag-collision reconciliation in the CLI).
+bin/elm-cem.js
+codegen/Attr.elm
+codegen/Cem.elm
+codegen/Generate.elm
+codegen/Generate/Action.elm
+codegen/Generate/Barrel.elm
+codegen/Generate/Bottom.elm
+codegen/Generate/BuildForm.elm
+codegen/Generate/Config.elm
+codegen/Generate/Facts.elm
+codegen/Generate/Native.elm
+codegen/Generate/Normalize.elm
+codegen/Generate/RecordForm.elm
+codegen/Generate/Top.elm
+codegen/Generate/Types.elm
+
+# --- Tests: m3e-like manifests / golden fixtures ---
+tests/compile-gate.mjs
+tests/exclude-cli.test.mjs
+tests/src/ExampleDocsTest.elm
+tests/src/GoldenTest.elm
+tests/src/NativeTest.elm
+tests/src/NormalizeAttrTypesTest.elm
+tests/src/SeamTest.elm
+tests/src/ShapesForTest.elm
+tests/src/SyntheticAttrTest.elm
+tests/src/TypeOverrideTest.elm
+
+# --- Family eject tooling (published-primitives → vendored-full-brand) ---
+# eject DETECTS the family by module namespace (via family-deps.js) and names the
+# jackhp95/elm-m3e brand + `M3e` namespace as load-bearing literals (the bundled
+# brand registry + the pin example) — the successor to the retired swap, not brand
+# advocacy. The test uses `M3e` as its example brand fixture.
+bin/family-deps.js
+bin/eject.js
+tests/eject.test.mjs
+
+# --- False positive: base64 integrity hashes coincidentally match "md3" ---
+package-lock.json
+
+# --- The gate itself: its PATTERN and doc comments name the tokens it hunts ---
+.github/neutrality-check.sh
+
+# ============================================================================
+# issue #43 — phantom-world files reconciled after the refactor.
+# Each hit below was individually reviewed; every one is a legitimate mention
+# (pedagogical example, downstream-consumer reference, or an audit/dev record
+# that names the m3e family because that IS its subject). Source files with a
+# baked-in m3e example or a machine-path hardcode were NEUTRALIZED instead, so
+# they are absent here (prose.mjs, build.mjs, split.test.mjs).
+
+# --- Generator source: pedagogical comment examples (new; same class as above) ---
+# Single illustrative m3e mention in a comment/docstring only (behavioural-action
+# roster; the "aria attr on a component" example). Not touched — generator source.
+codegen/Generate/Phantom/Emit.elm
+codegen/Generate/Phantom/Model.elm
+codegen/Generate/SharedAttrs.elm
+
+# --- Docs: pedagogical reference using m3e as the worked example ---
+# config-primitives.md is the accurate config-primitives reference; it teaches the
+# neutral pipeline using the real elm-m3e config as its running worked example.
+docs/config-primitives.md
+# configuring-cem-overrides skill cites `M3e.Coerce.asButton` as an illustrative
+# override example.
+skills/configuring-cem-overrides/SKILL.md
+
+# --- Release-audit records: name the m3e family because it IS the audit subject ---
+# The handoff doc + the 2026-07-22 re-audit + its digests and pinned source files
+# are historical audit artifacts describing/auditing the m3e phantom family; the
+# m3e mentions are the subject matter and must stay verbatim.
+RELEASE-AUDIT-HANDOFF.md
+docs/release-audit/BURN-DOWN-PLAN.md
+docs/release-audit/RELEASE-AUDIT-2026-07-22.md
+docs/release-audit/digests/audit-summary.txt
+docs/release-audit/digests/boundary-notes.txt
+docs/release-audit/digests/clean-bills.txt
+docs/release-audit/digests/frictions.txt
+docs/release-audit/digests/verified-key-final.txt
+docs/release-audit/digests/verified-new-final.txt
+docs/release-audit/source/thermo-nuclear-findings-2026-07-15.json
+docs/release-audit/source/thermo-nuclear-panel-outcomes-2026-07-15.json
+docs/release-audit/source/thermo-nuclear-review-2026-07-15-audit-gaps.md
+docs/release-audit/source/thermo-nuclear-review-2026-07-15.md
+
+# --- native-manifest-gen dev notes: historical findings/results records ---
+# Prose dev-notes that reference the m3e context the tool was built in (regression
+# note, MDN data source provenance, "matching the m3e design"). Records, not code —
+# the tool's code was neutralized separately.
+native-manifest-gen/COMPLETE-COVERAGE.md
+native-manifest-gen/PHASE-0-FINDINGS.md
+native-manifest-gen/RESULTS.md
+
+# --- release-work files added after the initial neutrality reconcile (#43) ---
+# distribution-model.md documents the publish/eject model using the real elm-m3e
+# brand as its worked example — a legitimate reference, not coupling.
+docs/distribution-model.md
+# depstamp.test.mjs uses the deliberately-neutral `nonm3e` fixture (a NON-m3e brand);
+# the token is the substring "m3e" inside "nonm3e". Dev test, not shipped.
+tests/depstamp.test.mjs
+# gates.test.mjs likewise builds its throwaway brand from the `nonm3e` fixture
+# (token is "m3e" inside "nonm3e"). Dev test for the regen-drift + registry gates.
+tests/gates.test.mjs
+# Stage-F handoff docs — discuss the m3e family as their subject (like the other release-audit docs); swept pre-squash.
+docs/release-audit/STAGE-F-RUNBOOK.md
+docs/release-audit/VENDOR-SWAP-MAP.md
+# 2026-08-05 Value round-trip primitives spec + plan. Both discuss the DOWNSTREAM
+# consumers by name because the change is only observable there: the emitter is
+# brand-neutral, but Task 5 regenerates elm-m3e and elm-typed-html, and the
+# motivating call site is elm-m3e's docs Shared.elm. Consumer references, not
+# coupling — the generator itself gained no Material knowledge.
+specs/2026-08-05-value-primitives-codegen-design.md
+plans/2026-08-05-value-primitives-codegen.md
+# 2026-08-05 open (unconstrained-row) global attributes spec + plan. Same class as
+# the pair above: the `row` axis is brand-neutral (elm-cem gained no Material
+# knowledge — `defaultGlobals` is untouched and no elm-cem-side config declares
+# `"row": "open"`), but the change is only OBSERVABLE downstream. The motivating
+# call site is elm-m3e's docs `Shared.elm`, which could not put `dir` on
+# `m3e-theme`, and the fix ships in elm-typed-html's config, so both docs name
+# those repos to state the problem and the acceptance test at all.
+specs/2026-08-05-open-global-attributes-design.md
+plans/2026-08-05-open-global-attributes.md

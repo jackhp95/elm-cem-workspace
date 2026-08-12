@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": { "name": "jackhp95/elm-probe", "version": "1.0.0" },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "probe.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "Widget",
+          "tagName": "wc-widget",
+          "customElement": true,
+          "description": "Attribute-space probe component.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "handle",
+              "type": { "text": "boolean" },
+              "description": "Plain boolean, no backing property (NB2a)."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": { "text": "boolean" },
+              "description": "Reflected boolean the web component observes (NB2b)."
+            },
+            {
+              "name": "value",
+              "type": { "text": "string" },
+              "description": "Controlled form value (NB2c)."
+            },
+            {
+              "name": "checked",
+              "fieldName": "checked",
+              "type": { "text": "boolean" },
+              "description": "Controlled checkbox state (NB2c)."
+            },
+            {
+              "name": "selected",
+              "type": { "text": "boolean" },
+              "description": "Controlled option selection (NB2c)."
+            },
+            {
+              "name": "muted",
+              "type": { "text": "boolean" },
+              "description": "Controlled media mute (NB2e): the content attribute only ever sets defaultMuted."
+            },
+            {
+              "name": "count",
+              "fieldName": "count",
+              "type": { "text": "number" },
+              "description": "Reflected numeric property (sanity: stays a property)."
+            },
+            {
+              "name": "reading",
+              "type": { "text": "string" },
+              "description": "Controlled on THIS element only (NB2h): its live reading diverges from the content attribute."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Output",
+          "tagName": "wc-output",
+          "customElement": true,
+          "description": "Probe for `propertyOnly` (NB2f): a live value property with NO backing content attribute — the <output> irregularity.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "value",
+              "type": { "text": "string" },
+              "description": "Live value property; no content attribute backs it on this element."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Knob",
+          "tagName": "wc-knob",
+          "customElement": true,
+          "description": "Probe for the per-component `attrForm` opt-OUT of the brand controlled roster (NB2g).",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "pressed",
+              "type": { "text": "boolean" },
+              "description": "In `_controlled`, but opted back out to the attribute form on this element."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Gauge",
+          "tagName": "wc-gauge",
+          "customElement": true,
+          "description": "Probe for the `_controlled` ELEMENT SCOPE (NB2h): declares `reading` but is OUTSIDE the roster entry's scope, so `reading` REFLECTS here — the <button>/<data>/<option> case, where the IDL attribute is a reflected DOMString and the content attribute is both correct and SSR-visible.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "reading",
+              "type": { "text": "string" },
+              "description": "Reflected content attribute on this element; the live property belongs to wc-widget alone."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Dial",
+          "tagName": "wc-dial",
+          "customElement": true,
+          "description": "Probe for CAPABILITY-ROW DIVERGENCE (NB2i): declares the same `reading` HTML attribute, but its value SPACE is a number, so it must not share the `reading` row at all — config `_renames` + `attrTypes` give it `readingNumeric : Float`. The <progress>/<meter> case, whose IDL `value` is a restricted `double` that answers a non-finite string with a TypeError.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            {
+              "name": "reading",
+              "type": { "text": "string" },
+              "description": "Numeric reading. A string property write against this element's `double` IDL attribute is a Web IDL TypeError, so this element leaves the shared `reading` row."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

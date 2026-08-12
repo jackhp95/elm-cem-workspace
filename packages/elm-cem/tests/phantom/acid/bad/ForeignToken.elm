@@ -1,0 +1,13 @@
+module ForeignToken exposing (broken)
+
+{-| Narrowing failure: `small` is a real Mini token, but Button's narrowed
+Variant row { filled, tonal } excludes it. MUST FAIL.
+-}
+
+import Mini
+import Mini.Button
+import Mini.Values
+
+
+broken =
+    Mini.button [ Mini.Button.variant Mini.Values.small ] [ Mini.text "x" ]
