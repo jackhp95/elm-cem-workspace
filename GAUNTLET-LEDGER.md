@@ -55,10 +55,22 @@ Structural facts confirmed at bootstrap (bind M1.d):
 
 ## Decisions (autonomous — recorded for review/revert)
 
-- **D-001 (bootstrap):** cem-figma-connect's `main` is the M3.a base per the manager brief; a
-  separate agent is landing `coverage-remediation`. Its checkout is currently ON that branch, so
-  the baseline above is branch-state, not `main`. M3.a will re-baseline against `main` at the time
-  it runs and record whether the wrap-up had landed.
+- **D-001 (bootstrap; SUPERSEDED by D-001a):** cem-figma-connect's `main` is the M3.a base per the
+  manager brief; a separate agent is landing `coverage-remediation`. Its checkout was ON that
+  branch at bootstrap, so the baseline table above is branch-state, not `main`.
+- **D-001a (human correction, post-M0) — cem-figma-connect wrap-up HAS landed; two M3.a changes.**
+  1. `coverage-remediation` is merged. `main` is clean at **`6294992`** (merge `5d32ed5` + a
+     STATUS/hygiene commit), full gate green. M3.a **re-baselines against `main` at the time it
+     runs** — the branch-state row in the baseline table above is superseded and must NOT be used
+     as the byte-identity reference.
+  2. **Its scripts were RENAMED on `main`.** The old single `check` is split into `check:drift` +
+     `check:tokens` + `check:render`, and there is a new `pnpm run gate` (= check + test) plus a
+     pre-push hook. M3.a's reference bar uses the **current** names — `pnpm run gate` (or the
+     `check:*` set) — NOT the old `pnpm check`. The plan's M3.a text ("`pnpm check` green (0 drift
+     / 0 orphan)") is stale on this point; the intent (byte-deterministic emit proves parity) is
+     unchanged.
+- **D-002a (human confirmation, post-M0):** D-002 stands — Sonnet for all builders. If the human
+  later restores Haiku for low-risk parts, it applies to REMAINING parts only, not retroactively.
 - **D-002 (bootstrap):** `~/.paseo/orchestration-preferences.json` says *"claude/haiku is for tests
   only — do not use it for production work"*, which is stricter than the plan's "Haiku permitted
   for low-risk fully-specified parts". **Prefs win** (they are the machine's standing policy and
@@ -117,6 +129,32 @@ Structural facts confirmed at bootstrap (bind M1.d):
   gated. Candidate devices: publish-first ordering, an `ELM_HOME` staging shim (elm-cem's existing
   `check:gates` already stages family deps — see its `gates-test` output), or an application-level
   test harness. Decide it in M1 with an Opus critic on the call.
+
+- **D-006 (M1) — R-001 RESOLVED: adopt elm-cem's existing `registry-check` staging; no new
+  mechanism, and no change to the D-003 layout.** Investigating before building found that elm-cem
+  already implements exactly the package→package device R-001 asked for, in
+  `bin/registry-check.js` + `bin/family-deps.js`:
+  - `family-deps.js` is the single source of truth for the family's **unpublished** deps
+    (`jackhp95/elm-html-intermediate-representation` → `HtmlIr.*`,
+    `jackhp95/elm-cem-facts` → `Cem.Facts`) and derives the required dep set **from imports**.
+  - `registry-check.js` symlink-stages each **declared** unpublished dep's `src/` into a hermetic
+    scratch package `src/`, writes a registry-shaped `elm.json` whose `dependencies` are only base
+    `elm/*`, and runs `elm make --docs docs.json` — which is what `elm publish` itself runs.
+  Why this beats the `ELM_HOME` shim I floated: it mutates no global state, is hermetic per run,
+  and is registry-faithful **by construction**. Critically, staging is gated by *declaration*, not
+  by imports — so an undeclared family import stays unresolvable and the NB1 class of bug is still
+  caught rather than papered over.
+  **The D-003 sibling layout satisfies it with ZERO path edits.** `registry-check`'s existing
+  resolution candidates are `<elm-cem>/facts/src` and `<elm-cem>/../elm-html-intermediate-representation/src`;
+  under `packages/elm-cem/` + `packages/elm-html-intermediate-representation/` both resolve
+  unchanged. (Independent evidence the layout was the right call.) M1.a's gate proves this by
+  running `registry-check` in-workspace; `FACTS_SRC`/`IR_SRC` env overrides remain as escape hatches.
+- **D-007 (M1) — M1.d's reference bar is re-scoped to the in-workspace graph.** The plan's M1.d bar
+  names "elm-m3e's `review/` config compiles", but elm-m3e does not enter the workspace until M2.
+  M1.d is therefore gated on what exists at M1: exactly one `Cem.Facts` in the workspace graph
+  (manifest check), `elm-review-cem`'s own gate green, and `registry-check` green for the facts
+  package. The elm-m3e `review/` compile is verified at **M2.a**, where it is a natural part of
+  that milestone's gate. No coverage is lost; only the ordering changes.
 
 ## Progress
 
