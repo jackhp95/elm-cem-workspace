@@ -324,6 +324,38 @@ Structural facts confirmed at bootstrap (bind M1.d):
   **Escalating this round Sonnet -> Opus**: making the checker precise without weakening it is a
   judgment call, and the round-1 failure mode was a shortcut rather than a capability gap.
 
+- **D-015 (M2.a round 2 post-mortem) — `gate-all` is too SLOW to be a loop verify-check.**
+  Round 2 (escalated to Opus) also exhausted 5 iterations, 4 of them red on `node tools/gate-all.mjs`
+  — yet that command passes for me consistently, exit 0, **15/15**. Measured: **197 seconds**. The
+  loop's verify-check evidently will not wait that long, so the bar was unpassable for reasons no
+  builder could see or fix, exactly like D-008. Two full rounds (Sonnet then Opus) were burned on a
+  bar defect, not on the work.
+  **Fix:** `gate-all` is the MANAGER/INTEGRATOR gate — I run it. Per-part loops get a fast bar: the
+  part's own checks plus the specific sibling checks in its blast radius (the D-011 lesson kept,
+  without the 197s cost). Recorded as a standing rule for M3-M6.
+- **D-016 (M2.a) — my `copy-fidelity` check compared the wrong thing; I fixed the instrument.**
+  As specified it compared DIRECTORY CONTENTS, so it flagged 7747 gitignored build artifacts
+  (`docs/elm-stuff` 4510, `docs/dist` 377, `tests/elm-stuff` 591, ...) as "pollution". Those were
+  never committed — normal post-build state. The corrected script compares **git-tracked sets**
+  (tracked + untracked-but-not-ignored, each required to exist on disk), which is the property that
+  actually matters. Verified against reality: **0 missing, 1 extra**, and the one extra is a genuine
+  monorepo adaptation now explicitly allowlisted with its reason —
+  `docs/scripts/fix-native-bins.mjs`, needed because pnpm 10 wraps every bin in an `exec node` shim
+  that breaks the native Mach-O `elm`/`elm-format`/`lamdera` binaries (`docs/` was npm-managed with
+  its own lockfile before the migration). Proven to bite on all three real cases: a tracked file
+  deleted from disk, the actual D-014 `editor/stub/Cem/Facts.elm` case, and an untracked extra.
+  (First version missed the deleted-from-disk case because `git ls-files` reads the INDEX — fixed by
+  requiring on-disk existence.)
+- **R-008 (M2.a) — `docs/.elm-pages/Pages.elm` is a TRACKED file containing a build TIMESTAMP.**
+  It holds `builtAt = Time.millisToPosix <epoch-ms>`, so every docs build rewrites it and dirties
+  the tree. This is a genuine determinism hole and it will make M4's "regenerate and diff against
+  committed" drift gate red on every run for a reason that means nothing. M4 must either exclude
+  this file from the drift comparison or normalize the timestamp. Recorded now so M4 designs for it.
+- **R-009 (M2.a, minor) — `packages/elm-m3e/editor/README.md` is now factually stale.** Restoring the
+  editor stub also restored the pre-M1.d README text, which says the canonical `Cem.Facts` lives in
+  `jackhp95/elm-review-cem`. After M1.d it lives in `jackhp95/elm-cem-facts`. Harmless to the build;
+  fix in the M6 deep clean.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -422,3 +454,7 @@ Structural facts confirmed at bootstrap (bind M1.d):
   build artifacts; NOT accepted; strategy: see D-014, restore + make the checker precise + add a
   copy-fidelity check to the bar; builder claude/sonnet)`
 - `M2.a: escalated claude/sonnet -> claude/opus (checker-precision judgment call; D-014)`
+- `M2.a: round 2 (loop 001ee161, builder claude/opus, 5 iterations, 4 red on gate-all + 1 on
+  copy-fidelity; BOTH failing checks were manager-authored defects — see D-015 and D-016 — not
+  builder error. Substantive repair landed correctly: editor/stub/Cem/Facts.elm restored
+  byte-identical, check-single-cem-facts narrowed, .gitignore updated)`

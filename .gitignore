@@ -2,3 +2,28 @@ node_modules/
 elm-stuff/
 .gate-out/
 .DS_Store
+
+# elm-m3e build output — a workspace-level backstop.
+#
+# packages/elm-m3e/.gitignore and packages/elm-m3e/docs/.gitignore (both copied
+# from the source repo, both tracked) already cover every path below. They are
+# repeated here because those two files are VENDORED: they travel with elm-m3e
+# and can change out from under this workspace, and the M2.a round-1 defect was
+# 7747 files of docs/dist/** landing in this tree. This block keeps them out of
+# version control regardless of what the vendored ignore files say.
+#
+# tools/copy-fidelity-elm-m3e.sh is the active check (it fails on these files
+# being PRESENT, not merely tracked); this is the passive one.
+packages/elm-m3e/dist/
+packages/elm-m3e/dist-packages/
+packages/elm-m3e/docs.json
+packages/elm-m3e/docs/dist/
+packages/elm-m3e/docs/functions/
+packages/elm-m3e/docs/test-results/
+packages/elm-m3e/docs/playwright-report/
+packages/elm-m3e/docs/.playwright/
+packages/elm-m3e/docs/data/reference.json
+packages/elm-m3e/docs/data/rule-roundtrip-report.json
+packages/elm-m3e/docs/public/style.css
+packages/elm-m3e/docs/public/m3e.js
+packages/elm-m3e/docs/app/Route/RoundtripHarness.elm
