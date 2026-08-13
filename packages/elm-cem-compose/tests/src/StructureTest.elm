@@ -209,4 +209,55 @@ all =
                         |> List.map cleared
                         |> Expect.equal (List.repeat 7 Nothing)
             ]
+        , describe "determinism"
+            [ test "the same Msg list applied to two inits yields equal models" <|
+                \_ ->
+                    let
+                        msgs =
+                            [ C.AddChild [] "unnamed" "widget"
+                            , C.AddChild [] "unnamed" "container"
+                            , C.SetAttr [ C.IntoSlot "unnamed" 0 ] "label" (C.AttrString "a")
+                            , C.SetAttr [ C.IntoSlot "unnamed" 0 ] "disabled" (C.AttrBool True)
+                            , C.AddChild [ C.IntoSlot "unnamed" 1 ] "unnamed" "widget"
+                            ]
+                    in
+                    apply msgs (start "container")
+                        |> Expect.equal (apply msgs (start "container"))
+            , test "attrsOf ordering is stable regardless of insertion order" <|
+                \_ ->
+                    let
+                        forward =
+                            start "widget"
+                                |> apply
+                                    [ C.SetAttr [] "label" (C.AttrString "a")
+                                    , C.SetAttr [] "count" (C.AttrInt "1")
+                                    ]
+
+                        backward =
+                            start "widget"
+                                |> apply
+                                    [ C.SetAttr [] "count" (C.AttrInt "1")
+                                    , C.SetAttr [] "label" (C.AttrString "a")
+                                    ]
+                    in
+                    C.attrsOf forward.root
+                        |> Expect.equal (C.attrsOf backward.root)
+            , test "unbounded depth: a self-recursive component nests with no cap" <|
+                \_ ->
+                    let
+                        path n =
+                            List.repeat n (C.IntoSlot "unnamed" 0)
+
+                        nest n model =
+                            if n <= 0 then
+                                model
+
+                            else
+                                nest (n - 1) (C.update (C.AddChild (path (10 - n)) "unnamed" "container") model)
+                    in
+                    nest 10 (start "container")
+                        |> C.nodeAt (path 10)
+                        |> Maybe.map C.componentOf
+                        |> Expect.equal (Just "container")
+            ]
         ]
