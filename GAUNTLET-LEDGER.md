@@ -1013,3 +1013,21 @@ Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 co
   `elm-tooling install` per package (reproducing today's working state deterministically, and
   respecting each package's own pin) or unify the version and prove all four `check:format` gates
   still pass. **Do not resolve it by relaxing a format check.**
+
+- **D-031b (Move 2) — the proposed 3-way cut is a CLEAN DAG, and the components are fully
+  independent.** The previous split died on two back-edges (130 barrel imports of `M3e.Component`,
+  130 component files importing the unexposed `M3e.Build.Internal`) — it was a labelling of one
+  mutually-recursive graph, not a partition. I built the import graph of the canonical 143-module
+  tree and mapped it onto the measured cut:
+  - **Cross-package edges: `P3 -> P2`, `P3 -> P1`, `P2 -> P1`. Nothing else. No back-edge, no cycle.**
+  - **component -> component imports: ZERO.** The 130 per-component modules do not reference each
+    other at all; each depends only on the primitives.
+  Two consequences. First, the canonical tree is *genuinely partitionable*, unlike the committed
+  split — the acyclicity is a property of the generator's flat namespace, not of a lucky grouping.
+  Second, because no component imports another, **any** partition of the components is legal, so
+  the split can be chosen purely to balance bytes. The greedy byte-balanced grouping recorded in
+  D-031a is therefore not a compromise against structure; it is free.
+  Caveat, stated rather than glossed: each surface was compiled from the full source tree with only
+  the exposed set varying (the spike's method, which isolates the cap question from the cycle
+  question). A true standalone per-package compile — P2 resolving P1 as a real registry dependency
+  — has NOT been performed, and remains part of Move 2's acceptance.
