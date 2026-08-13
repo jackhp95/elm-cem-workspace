@@ -96,4 +96,104 @@ all =
             \_ ->
                 C.slotChips [ C.IntoSlot "nope" 0 ] (start "container")
                     |> Expect.equal []
+        , describe "slot menu options"
+            [ test "a mixed slot enumerates text, icon, then components in order" <|
+                \_ ->
+                    C.slotMenuOptions [] "any" (start "mixed")
+                        |> Expect.equal
+                            [ C.OptionText, C.OptionIcon, C.OptionComponent "widget" ]
+            , test "ghost is omitted because it is absent from facts" <|
+                \_ ->
+                    C.slotMenuOptions [] "any" (start "mixed")
+                        |> List.member (C.OptionComponent "ghost")
+                        |> Expect.equal False
+            , test "a components-only slot offers no text" <|
+                \_ ->
+                    C.slotMenuOptions [] "unnamed" (start "container")
+                        |> Expect.equal
+                            [ C.OptionComponent "widget", C.OptionComponent "container" ]
+            , test "a text-only slot offers exactly OptionText" <|
+                \_ ->
+                    C.slotMenuOptions [] "headline" (start "labelled")
+                        |> Expect.equal [ C.OptionText ]
+            , test "an unknown slot offers nothing" <|
+                \_ ->
+                    C.slotMenuOptions [] "nope" (start "labelled")
+                        |> Expect.equal []
+            , test "the option order is stable across repeated calls" <|
+                \_ ->
+                    let
+                        model =
+                            start "mixed"
+                    in
+                    C.slotMenuOptions [] "any" model
+                        |> Expect.equal (C.slotMenuOptions [] "any" model)
+            ]
+        , describe "menu and update agree"
+            [ test "every offered option changes the model when applied" <|
+                \_ ->
+                    let
+                        msgFor slot option =
+                            case option of
+                                C.OptionText ->
+                                    C.AddTextChild [] slot
+
+                                C.OptionIcon ->
+                                    C.AddIconChild [] slot
+
+                                C.OptionComponent name ->
+                                    C.AddChild [] slot name
+
+                        checkSlot root slot =
+                            let
+                                model =
+                                    start root
+                            in
+                            C.slotMenuOptions [] slot model
+                                |> List.map
+                                    (\option ->
+                                        C.update (msgFor slot option) model /= model
+                                    )
+
+                        results =
+                            List.concat
+                                [ checkSlot "mixed" "any"
+                                , checkSlot "mixed" "flowy"
+                                , checkSlot "mixed" "unconstrained"
+                                , checkSlot "container" "unnamed"
+                                , checkSlot "labelled" "headline"
+                                , checkSlot "iconic" "lead"
+                                , checkSlot "single" "only"
+                                ]
+                    in
+                    results
+                        |> Expect.equal (List.repeat (List.length results) True)
+            , test "AddTextChild on a components-only slot is a no-op" <|
+                \_ ->
+                    let
+                        model =
+                            start "container"
+                    in
+                    C.update (C.AddTextChild [] "unnamed") model
+                        |> .root
+                        |> C.slotsOf
+                        |> Expect.equal []
+            , test "AddIconChild on a text-only slot is a no-op" <|
+                \_ ->
+                    let
+                        model =
+                            start "labelled"
+                    in
+                    C.update (C.AddIconChild [] "headline") model
+                        |> .root
+                        |> C.slotsOf
+                        |> Expect.equal []
+            , test "AddChild of a component the slot does not name is a no-op" <|
+                \_ ->
+                    start "container"
+                        |> C.update (C.AddChild [] "unnamed" "labelled")
+                        |> .root
+                        |> C.slotsOf
+                        |> Expect.equal []
+            ]
         ]

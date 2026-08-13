@@ -5,6 +5,7 @@ module Cem.Compose exposing
     , nodeAt, factAt
     , componentOf, attrsOf, slotsOf
     , SlotAffordances, SlotChipInfo, slotChips
+    , SlotOption(..), slotMenuOptions
     )
 
 {-| A headless, type-directed editor for building a valid tree of custom
@@ -20,6 +21,7 @@ every pixel.
 @docs nodeAt, factAt
 @docs componentOf, attrsOf, slotsOf
 @docs SlotAffordances, SlotChipInfo, slotChips
+@docs SlotOption, slotMenuOptions
 
 -}
 
@@ -171,17 +173,13 @@ update msg model =
             edit path (removeAttr name) model
 
         AddChild path slot component ->
-            if Dict.member component model.facts then
-                edit path (insertChild model slot (ChildNode (emptyNode component))) model
-
-            else
-                closeMenu model
+            addIfAfforded path slot (\a -> List.member component a.components) (ChildNode (emptyNode component)) model
 
         AddTextChild path slot ->
-            edit path (insertChild model slot (ChildText "")) model
+            addIfAfforded path slot .text (ChildText "") model
 
         AddIconChild path slot ->
-            edit path (insertChild model slot (ChildIcon "star")) model
+            addIfAfforded path slot .icon (ChildIcon "star") model
 
         SetChildContent path slot index text ->
             edit path (setChildContent slot index text) model
@@ -200,6 +198,24 @@ edit path f model =
 closeMenu : Model -> Model
 closeMenu model =
     { model | openMenu = Nothing }
+
+
+{-| Insert a child only if the slot's affordances permit that kind. This is the
+other half of "no menu ever offers an option that produces no effect": what the
+menu does not offer, the core does not do.
+-}
+addIfAfforded : Path -> String -> (SlotAffordances -> Bool) -> Child -> Model -> Model
+addIfAfforded path slot permitted child model =
+    case affordancesAt path slot model of
+        Just affordances ->
+            if permitted affordances then
+                edit path (insertChild model slot child) model
+
+            else
+                closeMenu model
+
+        Nothing ->
+            closeMenu model
 
 
 setAttr : String -> AttrValue -> Node -> Node
@@ -489,3 +505,54 @@ slotChips path model =
 childrenIn : String -> Node -> List Child
 childrenIn slot (Node n) =
     Dict.get slot n.children |> Maybe.withDefault []
+
+
+{-| One way to fill a slot. Each maps to exactly one message:
+`OptionText` → `AddTextChild`, `OptionIcon` → `AddIconChild`,
+`OptionComponent n` → `AddChild … n`.
+-}
+type SlotOption
+    = OptionText
+    | OptionIcon
+    | OptionComponent String
+
+
+{-| The full menu for a slot: every valid way to fill it, in one list.
+
+Order is fixed so the menu does not reshuffle between renders — text and icon
+first (the cheap, terminal choices), then the component list (the branch into
+recursion). Returns `[]` only when the slot affords nothing at all.
+
+No option in this list is ever a no-op.
+
+-}
+slotMenuOptions : Path -> String -> Model -> List SlotOption
+slotMenuOptions path slot model =
+    affordancesAt path slot model
+        |> Maybe.map optionsOf
+        |> Maybe.withDefault []
+
+
+affordancesAt : Path -> String -> Model -> Maybe SlotAffordances
+affordancesAt path slot model =
+    slotChips path model
+        |> List.filter (\c -> c.name == slot)
+        |> List.head
+        |> Maybe.map .affordances
+
+
+optionsOf : SlotAffordances -> List SlotOption
+optionsOf a =
+    List.concat
+        [ if a.text then
+            [ OptionText ]
+
+          else
+            []
+        , if a.icon then
+            [ OptionIcon ]
+
+          else
+            []
+        , List.map OptionComponent a.components
+        ]

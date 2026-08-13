@@ -154,12 +154,12 @@ all =
                 start "container"
                     |> apply
                         [ C.AddChild [] "unnamed" "widget"
-                        , C.AddChild [] "unnamed" "single"
+                        , C.AddChild [] "unnamed" "container"
                         , C.RemoveChild [] "unnamed" 0
                         ]
                     |> C.nodeAt [ C.IntoSlot "unnamed" 0 ]
                     |> Maybe.map C.componentOf
-                    |> Expect.equal (Just "single")
+                    |> Expect.equal (Just "container")
         , test "RemoveChild drops the whole subtree" <|
             \_ ->
                 start "container"
