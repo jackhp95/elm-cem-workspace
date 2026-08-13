@@ -12,7 +12,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 - [x] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
 - [x] **M2** elm-m3e onto workspace elm-cem — 2.a
 - [x] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
-- [ ] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
+- [x] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
 - [ ] **M5** Retire migration dead weight — 5.a
 - [ ] **M6** Deep clean (separate commit) — 6.a, 6.b
 
@@ -560,6 +560,19 @@ Structural facts confirmed at bootstrap (bind M1.d):
   tests part of it; REMOVE everything else; **when in doubt about uniqueness, keep and flag rather
   than delete**. The M6 commit must stay self-contained and revertible on its own.
 
+- **R-017 (M4) — verify prompts have a practical ceiling near 7KB.** The M4 critic failed TWICE with
+  `Agent response did not match the required JSON schema` — a harness error, not a judgment. Every
+  verify prompt that rendered a verdict successfully was <= 6.7KB (m1a2 6084, m3int 5464, m4 6690);
+  the one that failed was ~8.8KB (m4-verify plus four appended round-3 items). Rewritten at **3.4KB**
+  and focused on six items, it passed first try with the most detailed verdict of the effort. Keep
+  critic briefs tight: past roughly 7KB the response stops validating, and a long brief buys nothing
+  if it never renders.
+- **R-018 (M4 critic, residual) — four m3e-okf tracked intermediates are OUTSIDE the drift
+  comparison:** `data/sources.json`, `data/report.md`, `data/guidance.json`, `data/examples.json`.
+  Drift in `guidance.json`/`examples.json` would in practice propagate into the covered `knowledge/`
+  and `skills/m3e` outputs, and `report.md`/`sources.json` are a drift report and a SHA manifest — so
+  this is not a hole of the D-023 kind. Recorded so a later pass can widen `paths` if wanted.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -741,3 +754,18 @@ Structural facts confirmed at bootstrap (bind M1.d):
   not just its bundle copy. Manager-verified all three bite, each naming the offending file:
   tailwind generated/utilities.css -> RED; cem-figma-connect generated/m3-kit/elm/MANIFEST.json ->
   RED; m3e-okf data/components.json -> RED. Clean tree -> GREEN, gate-all 30/30.`
+- `M4.a: pass (bump is one gated command and IDEMPOTENT — clean tree, exit 0, zero files changed;
+  runs the full tools/gate-all.mjs rather than a subset; a red gate exits nonzero; zero executable
+  push/publish/tag hits, the only match is a prose comment saying it never does)`
+- `M4.b: pass (cross-cutting drift gate; D-023 hole CLOSED — consumer OUTPUT is regenerated and
+  byte-compared, not just bundle copies)`
+- `M4: integrated (loop 2ab5dd25, critic claude/opus, 1 iteration, VERDICT: PASS; gate-all 30/30,
+  check-drift 9/9, check-drift.test 11/11)`
+- `M4 critic evidence: all THREE consumers proven to bite on the REAL committed artifacts, each
+  naming the exact offending file — tailwind generated/utilities.css; cem-figma-connect
+  generated/m3-kit/elm/m3e-badge-badges-elm.figma.ts (names the file INSIDE the directory); m3e-okf
+  data/components.json caught from a SINGLE TRAILING NEWLINE, the weakest possible perturbation.
+  Closed by widening, not narrowing: raw Buffer.equals plus only-on-one-side reporting, with
+  exclude/symlink options applying to the rsync INPUT copy and never to compared outputs.
+  Non-destructive: regeneration happens in a mkdtemp rsync copy; git status empty after every probe.
+  Nothing deleted across the whole M4 range (git diff --diff-filter=D returns nothing).`
