@@ -1,0 +1,18 @@
+[
+  {
+    "query": "I have an m3e icon button that's just a back arrow icon. Is that fine?",
+    "expected_behavior": "Flags it as the nameless-icon-only pattern that cannot ship: an icon-only control announces nothing to assistive tech and needs an explicit accessible name. Adds M3e.ariaLabel \"Back\" (or M3e.Aria.label on the Html layer). Notes that elm-review's missingRequiredAttribute will refuse it in CI when aria-label is a required attr for that component."
+  },
+  {
+    "query": "These Switch toggles in my list rows already have a visible label next to them, so they don't need aria-labels, right?",
+    "expected_behavior": "Corrects the assumption: the visible label is a sibling ListItem text, not the Switch's own accessible name, so the Switch/Radio still needs M3e.ariaLabel label. Cites the Settings example's switchRow/themeRow passing M3e.ariaLabel on every control. Does not accept 'nearby text is enough'."
+  },
+  {
+    "query": "elm-review passes clean, so my m3e UI is accessible. Anything else?",
+    "expected_behavior": "Explains the review rules are advisory/report-only for cases they cannot statically resolve (dynamic/List.map content), so a green run is necessary but not sufficient. Recommends a Playwright accessibility-tree spot-check (assert non-empty accessible names, sensible tab order, dialog focus return) and warns that inter-component focus management and grouping are the author's responsibility, not @m3e/web's."
+  },
+  {
+    "query": "When I open my m3e dialog, does keyboard focus and escape-to-close just work?",
+    "expected_behavior": "Draws the boundary: @m3e/web owns intra-component keyboard/focus and the dialog's own escape/backdrop/focus-trap, but the author must move focus INTO the dialog on open and return it to the trigger on close (inter-component focus). Suggests verifying with the Playwright recipe. Does not claim the Elm binding handles cross-route focus automatically."
+  }
+]

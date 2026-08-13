@@ -1,0 +1,16 @@
+Vendored, committed Elm source for the two UNPUBLISHED foundation packages the
+docs app compiles against. Regenerate with `pnpm run build:vendor` (which runs
+scripts/vendor-foundation.mjs) after changing either sibling, then commit.
+
+  HtmlIr.*     <- jackhp95/elm-html-intermediate-representation (PRIVATE, not on
+                 a package registry) src/HtmlIr/, version 1.0.0
+  TypedHtml.*  <- jackhp95/elm-typed-html (PRIVATE, not on a package registry)
+                 src/TypedHtml.elm + src/TypedHtml/, version 1.0.0
+                 EXCLUDES TypedHtml/Review/* (elm-review rule facts that import
+                 Cem.Facts, an elm-review-only module; unexposed + unimported).
+
+Why vendored: docs import M3e.* (../src), which depends on HtmlIr.*, and the
+Examples/Guide routes import TypedHtml.Attributes / TypedHtml.Aria. Netlify
+clones only elm-m3e, so the old `../../elm-*/src` source-dirs were absent on CI.
+This committed copy is a docs/elm.json source-directory (vendor/elm-foundation),
+making `pnpm run build:ci` self-contained.

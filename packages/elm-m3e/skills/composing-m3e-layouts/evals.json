@@ -1,0 +1,18 @@
+[
+  {
+    "query": "Make my m3e app navigation responsive — one nav on desktop, one on phones.",
+    "expected_behavior": "Recommends a NavRail shown at md: and up (`hidden md:flex`) and a NavBar pinned to the bottom below md: (`md:hidden fixed inset-x-0 bottom-0`), driven by responsive visibility classes, with a shared destination list and a single navItem producer and M3e.attrSelected marking the active item — matching the Mail/Settings examples. Ties nav choice to window size class and references the m3e knowledge base's navigation pattern for the neutral rationale. Does not hand-roll a bespoke nav from divs."
+  },
+  {
+    "query": "Build a two-pane list-detail mail view that collapses to a single column on phones.",
+    "expected_behavior": "Composes a reflowing body: list in a fixed-width column beside a filling detail pane on md: (`flex flex-1 flex-col md:flex-row`, list `md:w-96`), stacking below md:. Uses M3e.List/ListItem for the list and paints the selected row with a surfaceContainer background. Uses Tailwind for the flex/width/stacking only. Cross-references the knowledge base's list-detail pattern. Mirrors docs/app/Route/Examples/Mail.elm."
+  },
+  {
+    "query": "I want to give these cards a rounded look and a container tint — add rounded-3xl bg-primary-container classes.",
+    "expected_behavior": "Redirects the visual choices off utility classes: corner radius via Kit.Shape.corner (Shape.large), container tint via Kit.Surface (surfaceContainer), keeping only layout (flex/gap/padding) on classes. Cites the layout/visual boundary and the NoProprietaryDsClasses rule, and the re-skin-through-tokens principle. Does not endorse a bg-*/rounded-* class doing a visual job."
+  },
+  {
+    "query": "How do I make my whole app more compact without editing every component's margins?",
+    "expected_behavior": "Sets density globally through the theme (M3e.Theme density, e.g. -3..0) rather than per-component margins or spacing classes, and warns that touch targets must stay >=48dp regardless of density (deferring the a11y detail to making-m3e-accessible). Does not suggest shrinking padding classes screen-by-screen."
+  }
+]

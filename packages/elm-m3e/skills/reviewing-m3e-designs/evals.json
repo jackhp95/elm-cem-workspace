@@ -1,0 +1,26 @@
+[
+  {
+    "query": "Review this settings screen: it has a FAB wired to 'Delete account' with an error variant.",
+    "expected_behavior": "Flags V1 — a FAB is the single most important constructive action per screen; a destructive/secondary action must not be a FAB. Recommends a text/outlined button or menu item with confirmation. Names the fab-for-non-primary-actions anti-pattern. Does not pass it."
+  },
+  {
+    "query": "Review this: a 'Saved!' confirmation shown as a modal M3e.dialog the user must dismiss.",
+    "expected_behavior": "Flags V2 — a dialog blocks and a transient confirmation should not; recommends an M3e.Snackbar or inline status. Names the dialog-for-non-blocking-info anti-pattern."
+  },
+  {
+    "query": "Review this theme picker: three AssistChips for Light / Dark / System, single choice.",
+    "expected_behavior": "Flags V3 — an assist-chip set does not express single mutually-exclusive selection; recommends a Radio group sharing one name (or a SegmentedButton), matching the Settings themeRow. Cites the chips vs radio choosing guidance in the knowledge base."
+  },
+  {
+    "query": "Review this: the selected list row is distinguished only by a colored (primary) background.",
+    "expected_behavior": "Flags V4 — color-only state signaling fails color-blind/low-contrast users; recommends pairing with a non-color cue (check icon, aria-selected/attrSelected) and using a surface role (surfaceContainer) not primary for a selected row. Names color-only-state-signaling."
+  },
+  {
+    "query": "Review this card: three stacked lines all using Kit.headline (large, medium, small).",
+    "expected_behavior": "Flags V5 — too many emphasis levels collapse the hierarchy; recommends one leading headline and the rest as title/body at onSurfaceVariant, one emphasis channel per moment. Names too-many-emphasis-levels and cites expressive/emphasized-type."
+  },
+  {
+    "query": "Review my elm-m3e app; elm-review already passes clean.",
+    "expected_behavior": "Treats the clean elm-review as necessary-not-sufficient table stakes, and runs the design pass: component choice, deliberate expressive use, density/touch targets, anti-patterns, color roles. Notes validSlotKind stays silent on dynamic content so slot kinds still need eyeballing. Produces file:function -> problem -> fix -> knowledge-base findings, separating blocking from advisory. Does not declare the design fine just because the linter is green."
+  }
+]

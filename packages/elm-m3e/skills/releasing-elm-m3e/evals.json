@@ -1,0 +1,18 @@
+[
+  {
+    "query": "Cut a new release of elm-m3e to the Elm registry.",
+    "expected_behavior": "Confirms all three CI jobs (library / docs / harness) are green, runs `elm make src/M3e.elm --docs docs.json` as the publish gate (EXIT 0, every exposed value documented), lets `elm bump` compute the version from the API diff (does NOT hand-set version), reconciles CHANGELOG.md, then from the repo root tags exactly matching elm.json version and runs elm publish. Treats publishing and tags as permanent/irreversible. Follows RELEASE-CHECKLIST.md order."
+  },
+  {
+    "query": "elm make --docs is failing because a generated exposed value has no doc comment. Just add the comment to src/M3e/Foo.elm and publish.",
+    "expected_behavior": "Refuses to hand-edit the generated src/ (it will be overwritten on regen); fixes the missing doc comment upstream in the generator/config and regenerates, then re-runs elm make --docs to EXIT 0 before publishing. Cross-references regenerating-elm-m3e."
+  },
+  {
+    "query": "A @m3e/web bump regenerated src and renamed a phantom capability. What version do I release?",
+    "expected_behavior": "Recognizes a renamed/removed exposed value or type is a MAJOR change and lets `elm bump` set the number from the API diff rather than choosing it manually; updates CHANGELOG.md to match. Notes the tag must exactly equal elm.json's version and publishing is permanent. Does not hand-set the version or treat a breaking API change as a minor/patch."
+  },
+  {
+    "query": "Should I publish elm-m3e 1.0.0 now that the code compiles?",
+    "expected_behavior": "Notes the library is deliberately prerelease and 1.0.0 should only be tagged when the owner is ready to freeze the API, because Elm versions are permanent. Does not rush an irreversible publish, and defers the tag decision to the owner rather than automating it."
+  }
+]

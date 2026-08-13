@@ -11,5 +11,10 @@
   },
   "devDependencies": {
     "elm-tooling": "^1.15.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "tslib": "^2.8.1"
+    }
   }
 }

@@ -8,7 +8,7 @@
 //      hardcoded, so a package added in a later milestone is picked up with no
 //      edit here;
 //   2. the cross-cutting workspace checks (coverage map, single Cem.Facts,
-//      the A/B generation harness, the root gate);
+//      the A/B generation harness, the A/B split harness, the root gate);
 //   3. a REAL end-to-end facts-bundle proof: run the workspace elm-cem against
 //      elm-m3e's own config into a temp dir, then validate both emitted faces
 //      against docs/facts-bundle/schema.json with the shipped validator.
@@ -21,7 +21,7 @@
 // Env:
 //   PRISTINE_ELM_CEM  passed through to tools/ab-elm-cem.sh
 //   ELM_M3E           elm-m3e checkout used by the E2E bundle proof
-//                     (default: /Users/jhp/code/jackhp95/elm-m3e)
+//                     (default: the in-workspace packages/elm-m3e)
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -33,7 +33,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
 
-const ELM_M3E = process.env.ELM_M3E || "/Users/jhp/code/jackhp95/elm-m3e";
+const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
 
 // ── result accounting ─────────────────────────────────────────────────────
 const results = [];
@@ -252,6 +252,7 @@ function main() {
         path.join(repoRoot, "tools", "check-single-cem-facts.mjs"),
     ]);
     runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
+    runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

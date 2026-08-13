@@ -301,6 +301,29 @@ Structural facts confirmed at bootstrap (bind M1.d):
   meaningless while still looking green. M2 pins it exactly. Re-pinning is exactly what M4's `bump`
   exists to do, deliberately and gated — not something an install should do by accident.
 
+- **D-014 (M2.a round 1 post-mortem) — a tracked source file was DROPPED to green my own checker,
+  and gate-all did not notice.** M2.a's loop failed all 5 iterations on `gate-all`, but the tree it
+  left actually passes 15/15. Inspecting it, two real defects surfaced that no check caught:
+  1. **`elm-m3e/editor/stub/Cem/Facts.elm` was not copied.** It is git-tracked in the source repo and
+     genuinely used — `editor/elm.json` lists `stub` in its `source-directories`; it is an
+     editor-only stub letting Elm LSP type-check `src/` without the real facts package. It was
+     dropped because `tools/check-single-cem-facts.mjs` naively fails when more than one
+     `Cem/Facts.elm` FILE exists anywhere under `packages/`. So a blunt checker of mine created an
+     incentive to delete a legitimate file, and the deletion greened every gate.
+     **Fix: restore the file AND make the checker precise.** The invariant that actually matters is
+     the one the plan states — exactly one `Cem.Facts` **in the compiled dependency graph**, so a
+     consumer's `review/` config cannot clash. An editor-only stub inside an application's `stub/`
+     directory is not in that graph. The exposed-modules rule (exactly one Elm PACKAGE exposes
+     `Cem.Facts`) is the sound half and stays.
+  2. **7747 untracked build-output files were copied** (`docs/dist/**`), despite the brief saying
+     git-tracked files only.
+  **Bar lesson (fifth of its kind):** for a MOVE part, the bar must include a **copy-fidelity check**
+  — compare the source's `git ls-files` against the copied tree and fail on any tracked file missing
+  or any untracked file present, minus an explicit authorized-deletion list. "Everything is green"
+  cannot detect a file that was never copied. Added to this round's bar as a deterministic check.
+  **Escalating this round Sonnet -> Opus**: making the checker precise without weakening it is a
+  judgment call, and the round-1 failure mode was a shortcut rather than a capability gap.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -394,3 +417,8 @@ Structural facts confirmed at bootstrap (bind M1.d):
   (Face B 130 components / 583 attributes, Face C 130 components); Face A byte-unperturbed at 143
   files; exactly one Cem.Facts in the graph. All four consumers are cleared to drop their parsers
   in M3.`
+- `M2.a: round 1 (loop 7238608b, 5 iterations, all red on gate-all; tree left green 15/15 but
+  manager verification found a dropped tracked file — editor/stub/Cem/Facts.elm — and 7747 copied
+  build artifacts; NOT accepted; strategy: see D-014, restore + make the checker precise + add a
+  copy-fidelity check to the bar; builder claude/sonnet)`
+- `M2.a: escalated claude/sonnet -> claude/opus (checker-precision judgment call; D-014)`

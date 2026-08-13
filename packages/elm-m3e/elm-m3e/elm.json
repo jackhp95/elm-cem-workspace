@@ -1,0 +1,27 @@
+{
+    "type": "package",
+    "name": "jackhp95/elm-m3e",
+    "summary": "Material 3 Expressive — thin core: generic combinators (Element, text, toHtml), Attributes, Kind, Values",
+    "license": "BSD-3-Clause",
+    "version": "1.0.0",
+    "exposed-modules": [
+        "M3e",
+        "M3e.Action",
+        "M3e.Attributes",
+        "M3e.Events",
+        "M3e.Kind",
+        "M3e.Unsafe",
+        "M3e.Unsafe.Attributes",
+        "M3e.Values"
+    ],
+    "elm-version": "0.19.0 <= v < 0.20.0",
+    "dependencies": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0"
+    },
+    "test-dependencies": {}
+}

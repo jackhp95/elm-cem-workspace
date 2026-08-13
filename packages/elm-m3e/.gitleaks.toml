@@ -1,0 +1,45 @@
+# gitleaks allowlist for elm-m3e (friction F-05)
+#
+# The full-history secret scan flags Material Design 3 *design-token* and
+# *component identifier* references — e.g. `M3e.Heading.emphasized`,
+# `M3e.Record.Heading.size`, `M3e.Token.large` — as `generic-api-key` hits.
+# gitleaks' entropy heuristic sees a dotted, high-entropy-ish token after a
+# `key`-ish word and guesses "credential". They are not secrets: they are Elm
+# module-qualified names quoted inside doc-examples and the JSON example corpus
+# the docs/skills mine.
+#
+# This is an ALLOWLIST-ONLY config: gitleaks still applies its full default
+# ruleset (extend the built-ins) and only suppresses the known false positives
+# below. It changes NOTHING about the code — it is pure CI plumbing.
+#
+# Verify:
+#   gitleaks detect --source . --no-git         # scan the working tree
+#   gitleaks git    --source .                  # scan committed history
+# Both should report 0 leaks in tracked files with this file present.
+
+title = "elm-m3e gitleaks config"
+
+# Pull in gitleaks' default rules so real secrets are still caught.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "M3e Material Design token / component references are not secrets"
+
+# The example corpus mined by the docs and skills. 1.3 MB of Elm-source
+# snippets full of `M3e.*` identifiers — every one a false positive.
+paths = [
+  '''config/examples\..*\.json''',
+]
+
+# Doc-example / snippet occurrences of dotted `M3e.*` identifiers anywhere
+# (covers the generated `src/M3e/*.elm` doc comments and any stray JSON match
+# the path rule doesn't cover). These are module-qualified Elm names, not keys.
+regexes = [
+  '''M3e\.(Token|Record\.)?[A-Z][A-Za-z0-9]*\.[a-z][A-Za-z0-9]*''',
+]
+
+# Match the allowlist regex against the raw matched secret (not the whole line),
+# so it reliably cancels the generic-api-key finding whose captured secret IS
+# the `M3e....` identifier.
+regexTarget = "match"

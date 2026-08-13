@@ -1,0 +1,55 @@
+# Fully static site: every route is RouteBuilder.single / preRender (no serverRender),
+# so the elm-pages Netlify functions (render/server-render) are unused. We do NOT
+# declare `functions` here — Netlify's default functions dir is netlify/functions, so
+# it ignores the elm-pages `functions/` output and skips the (heavy, failing) bundle.
+[build]
+  publish = "dist/"
+  # build:ci regenerates only the gitignored reference.json (elm make --docs, no rules)
+  # and runs elm-pages against the COMMITTED examples data. It skips build:assets'
+  # rule-driven harness (gen-record-build/gen-barrel), whose rules live in the
+  # sibling jackhp95/elm-review-cem package that isn't present on CI (or published yet).
+  # Regenerate examples locally with `pnpm run build:assets` and commit before deploying.
+  #
+  # SELF-CONTAINED on CI: the docs app imports HtmlIr.* (via ../src M3e.*) and
+  # TypedHtml.* (Examples/Guide routes). Those two packages are unpublished sibling
+  # repos, so their source is VENDORED into docs/vendor/elm-foundation (a committed
+  # source-directory in elm.json) instead of the old `../../elm-*/src` paths that
+  # don't exist on Netlify. After changing HtmlIr or TypedHtml upstream, run
+  # `pnpm run build:vendor` and commit the refreshed vendor/elm-foundation.
+  command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && corepack enable && pnpm install --frozen-lockfile && pnpm run build:ci"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[dev]
+  command = "pnpm start"
+  targetPort = 1234
+  autoLaunch = true
+  framework = "#custom"
+
+# /getting-started/overview was merged into the Guide (its every link already
+# lived in the Guide's chapter list). Redirect the old URL so external links and
+# bookmarks land on the canonical page.
+[[redirects]]
+  from = "/getting-started/overview"
+  to = "/guide"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/reference"
+  to = "/guide/reference"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/roundtrip"
+  to = "/guide/roundtrip"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/"
+  to = "/getting-started/welcome"
+  status = 301
+  force = true

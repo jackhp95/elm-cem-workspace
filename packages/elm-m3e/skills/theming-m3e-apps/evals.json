@@ -1,0 +1,18 @@
+[
+  {
+    "query": "Set my elm-m3e app's brand color to #4285F4 and add a dark mode toggle.",
+    "expected_behavior": "Wraps the app in M3e.Theme.view with Theme.color \"#4285F4\" and a Theme.scheme held in the model, toggled between M3e.Token.light and M3e.Token.dark. Frames dark mode as a scheme swap (one attribute) not a second stylesheet, and dynamic color as a seed swap that re-derives the whole palette. Mirrors docs/app/Shared.elm. Does not hand-author a dark palette or add a duplicate CSS file."
+  },
+  {
+    "query": "This selected card should look highlighted — I'll add a bg-primary-container class.",
+    "expected_behavior": "Redirects to a color-role / surface-role swap (surface -> surfaceContainer via Kit.Surface) rather than a background class, citing the re-skin-don't-restyle principle and NoProprietaryDsClasses. Notes classes are for layout only. Does not paint with a raw color or a bg-* utility for a visual role."
+  },
+  {
+    "query": "How do I rebrand the whole app to a new color and a more compact, higher-contrast look?",
+    "expected_behavior": "Changes Theme inputs only: a new Theme.color seed, Theme.density (down toward -3), and Theme.contrast high — a handful of Theme attributes, not per-component overrides. Explains the seed re-derives every color role automatically. Warns compact density must not break >=48dp touch targets. Does not propose overriding shadow-part styles."
+  },
+  {
+    "query": "Can I just use Tailwind classes to style my m3e components' colors and corners?",
+    "expected_behavior": "Draws the boundary: Tailwind is for layout only (flex/grid/gap/padding/positioning/responsive visibility); color/typography/shape/elevation come through tokens (color roles, Kit.Shape.corner, Theme). Notes the enforced NoProprietaryDsClasses rule and the audited Seam/Tailwind bridge in CodegenReviewConfig. Does not endorse utility classes for visual tokens."
+  }
+]

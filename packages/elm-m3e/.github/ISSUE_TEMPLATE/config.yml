@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/jackhp95/elm-m3e/security/advisories/new
+    about: Please report security issues privately (see SECURITY.md), not as public issues.
+  - name: Documentation & usage
+    url: https://github.com/jackhp95/elm-m3e/blob/main/README.md
+    about: Usage questions? Check the README and docs first, then search existing issues.

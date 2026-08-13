@@ -1,0 +1,18 @@
+[
+  {
+    "query": "A @m3e/web bump changed the generated output — a slot that was arbitrary is now a closed kind set, and there's whitespace churn everywhere.",
+    "expected_behavior": "Regenerates via the elm-cem command (never hand-edits src/M3e/), elm-formats to kill the whitespace churn (the churn means the format step was skipped), and treats the arbitrary->closed narrowing as SUSPICIOUS: confirm it matches the upstream manifest before merging. Verifies elm make src/M3e.elm is EXIT 0. Understands regen-on-bump.yml already does this on the PR."
+  },
+  {
+    "query": "I want a Card's body slot to accept any element kind. Where do I edit — the generated M3e/Card.elm?",
+    "expected_behavior": "Refuses to hand-edit the generated module: sets the slot's kinds to the bare string \"arbitrary\" (not \"any\", not []) in config/slots.json under the Card key's slots, then reruns the regen command so the change flows into src. Notes an absent component already defaults permissive. Confirms the change appears in the regen diff and compiles."
+  },
+  {
+    "query": "Someone hand-fixed a typo in a doc comment directly in src/M3e/Button.elm. Ship it?",
+    "expected_behavior": "Says no — src/M3e/ is generated and the edit will be overwritten on the next regen. Reverts the file, makes the real fix upstream (config/native-mdn.json for native summaries, or config/elm-cem for component doc text), regenerates, and confirms the intended text appears in the diff. Distinguishes the hand-written IR core (Node.elm/Element.elm) as the only editable src files."
+  },
+  {
+    "query": "I bumped the elm-cem generator but expect no output change. How do I confirm?",
+    "expected_behavior": "Runs the regen command + elm-format, then checks `git diff --stat src` is empty (zero-diff verification). A non-empty diff means the toolchain change was not behavior-preserving and must be inspected. Verifies elm make stays EXIT 0. Does not assume no-change without regenerating."
+  }
+]

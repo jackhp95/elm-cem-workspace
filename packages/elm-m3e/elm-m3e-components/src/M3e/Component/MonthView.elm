@@ -1,0 +1,123 @@
+module M3e.Component.MonthView exposing
+    ( view
+    , Is, Attrs, ChildAdmittedBy
+    , active, activeDate, date, maxDate, minDate, rangeEnd, rangeStart, today, onChange, onActiveChange
+    )
+
+{-| The `m3e-month-view` component — strict per-component surface.
+
+An internal component used to display a single month in a calendar.
+
+@docs view
+@docs Is, Attrs, ChildAdmittedBy
+@docs active, activeDate, date, maxDate, minDate, rangeEnd, rangeStart, today, onChange, onActiveChange
+
+-}
+
+import HtmlIr.Attribute exposing (Attr)
+import HtmlIr.Element as El exposing (Element)
+import HtmlIr.Internal as Ir
+import HtmlIr.Kind exposing (Supported)
+import M3e.Attributes as A
+import M3e.Events as Ev
+import M3e.Html as H
+import M3e.Internal.Types.MonthView
+import M3e.Kind exposing (Available, Brand, Ctx, Used)
+
+
+{-| The kind row `m3e-month-view` produces (open — composes into any slot naming it).
+-}
+type alias Is s =
+    M3e.Internal.Types.MonthView.Is s
+
+
+{-| The closed attribute-capability row.
+-}
+type alias Attrs =
+    M3e.Internal.Types.MonthView.Attrs
+
+
+{-| The context demand this container injects into each child's admittedBy row.
+-}
+type alias ChildAdmittedBy childAdm =
+    M3e.Internal.Types.MonthView.ChildAdmittedBy childAdm
+
+
+{-| Standard constructor: `[attributes] [children]`.
+-}
+view :
+    List (Attr Attrs msg)
+    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> Element (Is s) admittedBy msg
+view =
+    H.monthView
+
+
+{-| See `M3e.Attributes.active`.
+-}
+active : Bool -> Attr { c | active : Supported } msg
+active =
+    A.active
+
+
+{-| See `M3e.Attributes.activeDate`.
+-}
+activeDate : String -> Attr { c | activeDate : Supported } msg
+activeDate =
+    A.activeDate
+
+
+{-| See `M3e.Attributes.date`.
+-}
+date : String -> Attr { c | date : Supported } msg
+date =
+    A.date
+
+
+{-| See `M3e.Attributes.maxDate`.
+-}
+maxDate : String -> Attr { c | maxDate : Supported } msg
+maxDate =
+    A.maxDate
+
+
+{-| See `M3e.Attributes.minDate`.
+-}
+minDate : String -> Attr { c | minDate : Supported } msg
+minDate =
+    A.minDate
+
+
+{-| See `M3e.Attributes.rangeEnd`.
+-}
+rangeEnd : String -> Attr { c | rangeEnd : Supported } msg
+rangeEnd =
+    A.rangeEnd
+
+
+{-| See `M3e.Attributes.rangeStart`.
+-}
+rangeStart : String -> Attr { c | rangeStart : Supported } msg
+rangeStart =
+    A.rangeStart
+
+
+{-| See `M3e.Attributes.today`.
+-}
+today : String -> Attr { c | today : Supported } msg
+today =
+    A.today
+
+
+{-| See `M3e.Events.onChange`.
+-}
+onChange : msg -> Attr { c | onChange : Supported } msg
+onChange =
+    Ev.onChange
+
+
+{-| See `M3e.Events.onActiveChange`.
+-}
+onActiveChange : msg -> Attr { c | onActiveChange : Supported } msg
+onActiveChange =
+    Ev.onActiveChange

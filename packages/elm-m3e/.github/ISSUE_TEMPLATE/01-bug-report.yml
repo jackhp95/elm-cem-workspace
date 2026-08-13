@@ -1,0 +1,53 @@
+name: Bug report
+description: Something in the generated library, Kit, or docs behaves incorrectly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill out the sections below so it can be reproduced.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: A clear description of the bug, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Smallest Elm snippet or steps to reproduce.
+      render: elm
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which surface?
+      description: Which API layer did you use?
+      options:
+        - "M3e.* (barrel)"
+        - "M3e.<Comp>.view (per-component)"
+        - "M3e.Record.*"
+        - "M3e.Build.*"
+        - "M3e.Cem.*"
+        - "M3e.Cem.Html.*"
+        - "Not sure / N/A"
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: elm-m3e / @m3e/web version, Elm version, and browser if it's a rendering issue.
+      placeholder: "elm-m3e main · @m3e/web 2.5.13 · Elm 0.19.1 · Chrome 126"
+    validations:
+      required: false
+  - type: checkboxes
+    id: generated
+    attributes:
+      label: Generated code
+      options:
+        - label: I understand that `src/M3e/*` is generated — if the bug is there, the fix likely belongs in the generator (elm-cem) or config.
+          required: false

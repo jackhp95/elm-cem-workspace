@@ -6,12 +6,14 @@
 # Env:
 #   PRISTINE_ELM_CEM  path to the pristine (pre-migration) elm-cem checkout
 #                     (default: /Users/jhp/code/jackhp95/elm-cem)
+#   ELM_M3E           elm-m3e config/checkout to generate against
+#                     (default: the in-workspace packages/elm-m3e)
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-/Users/jhp/code/jackhp95/elm-cem}"
 WORKSPACE_ELM_CEM="$REPO_ROOT/packages/elm-cem"
-ELM_M3E="/Users/jhp/code/jackhp95/elm-m3e"
+ELM_M3E="${ELM_M3E:-$REPO_ROOT/packages/elm-m3e}"
 
 if [ ! -d "$PRISTINE_ELM_CEM" ]; then
     echo "ERROR: pristine elm-cem not found at $PRISTINE_ELM_CEM" >&2

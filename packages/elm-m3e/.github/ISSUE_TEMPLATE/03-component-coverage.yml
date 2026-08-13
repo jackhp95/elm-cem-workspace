@@ -1,0 +1,26 @@
+name: Component / coverage request
+description: A @m3e/web component or attribute/slot/event isn't covered, or is covered wrong
+labels: ["coverage"]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component / surface
+      description: Which @m3e/web custom element (e.g. <m3e-...>) or which attribute/slot/event?
+      placeholder: "<m3e-...> · attribute / slot / event name"
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: What's missing or wrong
+      description: Missing entirely · a slot/attr/event not exposed · wrong kind/optionality/type · degrades in the example pipeline.
+    validations:
+      required: true
+  - type: input
+    id: upstream
+    attributes:
+      label: Upstream reference
+      description: Link the @m3e/web docs or Custom Elements Manifest entry if you have it — coverage is driven from that manifest + config/slots.json.
+    validations:
+      required: false

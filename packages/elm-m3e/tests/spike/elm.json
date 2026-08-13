@@ -1,0 +1,23 @@
+{
+    "type": "application",
+    "source-directories": [
+        "../../elm-m3e/src",
+        "../../elm-m3e-components/src",
+        "../../elm-m3e-builder/src",
+        "../../docs/vendor/elm-foundation"
+    ],
+    "elm-version": "0.19.1",
+    "dependencies": {
+        "direct": {
+            "elm/core": "1.0.5",
+            "elm/html": "1.0.1",
+            "elm/json": "1.1.4",
+            "elm/virtual-dom": "1.0.5"
+        },
+        "indirect": {}
+    },
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
+}

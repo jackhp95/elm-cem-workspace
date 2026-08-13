@@ -1,0 +1,24 @@
+# Normalize line endings across platforms.
+* text=auto eol=lf
+
+# Keep dev-only paths out of `git archive` / GitHub source tarballs. The package
+# is the repo root (elm.json + src/); everything below is generator/docs/tooling.
+/docs                 export-ignore
+/tests                export-ignore
+/review               export-ignore
+/scripts              export-ignore
+/config               export-ignore
+/elm-cem              export-ignore
+/.github              export-ignore
+/.gitattributes       export-ignore
+/.gitignore           export-ignore
+/CONTRIBUTING.md      export-ignore
+/CODE_OF_CONDUCT.md   export-ignore
+/SECURITY.md          export-ignore
+/SUPPORT.md           export-ignore
+/CONTEXT.md           export-ignore
+/RELEASE-CHECKLIST.md export-ignore
+
+# Mark generated/lock files so diffs and language stats treat them as generated.
+package-lock.json     linguist-generated=true
+src/**                linguist-generated=true

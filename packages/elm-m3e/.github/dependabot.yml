@@ -1,0 +1,40 @@
+version: 2
+updates:
+  # The docs workspace holds @m3e/web (the upstream web components the library is
+  # generated from). @m3e/web is deliberately excluded from the grouped PR so it
+  # arrives as its OWN pull request — the regen-on-bump workflow keys off that.
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(docs)"
+    labels:
+      - "dependencies"
+    groups:
+      docs-deps:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "@m3e/web"
+
+  # Root dev tooling (elm, elm-format, elm-test).
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
+
+  # Keep the GitHub Actions used by the workflows current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"

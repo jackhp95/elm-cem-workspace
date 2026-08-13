@@ -1,0 +1,103 @@
+name: Regenerate on @m3e/web bump
+
+# When Dependabot (or anyone) bumps @m3e/web, regenerate src from the new
+# Custom Elements Manifest and commit the diff back onto the PR, so the generated
+# library and the upstream web components never drift. The regen command is
+# deterministic — a no-op bump produces no commit. The existing CI workflow then
+# re-runs on the pushed commit and proves the regenerated output still compiles.
+
+on:
+  pull_request:
+    paths:
+      - "docs/package.json"
+      - "docs/pnpm-lock.yaml"
+
+# Needed to push the regenerated output back onto the PR branch.
+permissions:
+  contents: write
+
+jobs:
+  regen:
+    name: Regenerate src
+    # Only same-repo PR branches (Dependabot pushes in-repo) — we can't push to forks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          # ELM_CEM_TOKEN is REQUIRED: the generator jackhp95/elm-cem is PRIVATE,
+          # so the clone step below needs an authenticated token (a PAT — classic
+          # `repo` scope, or fine-grained Contents:read on the private jackhp95
+          # sibling repos). It doubles as the push token here: a commit pushed with
+          # the default GITHUB_TOKEN does NOT re-trigger CI, so pushing the regen
+          # commit with the PAT (WRITE contents on this repo) lets CI auto-run on
+          # the PR. Falls back to github.token for the checkout/push, but the clone
+          # step will fail without a PAT that can read the private generator.
+          token: ${{ secrets.ELM_CEM_TOKEN || github.token }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: docs/package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Detect whether @m3e/web actually changed
+        id: changed
+        run: |
+          if git diff "origin/${{ github.event.pull_request.base.ref }}...HEAD" -- \
+               docs/pnpm-lock.yaml docs/package.json | grep -q '@m3e/web'; then
+            echo "m3e=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "m3e=false" >> "$GITHUB_OUTPUT"
+            echo "@m3e/web unchanged in this PR — skipping regen."
+          fi
+
+      - name: Install docs deps (materializes @m3e/web/dist/custom-elements.json)
+        if: steps.changed.outputs.m3e == 'true'
+        run: cd docs && pnpm install --frozen-lockfile
+
+      - name: Fetch the elm-cem generator (private, gitignored in this repo)
+        if: steps.changed.outputs.m3e == 'true'
+        # jackhp95/elm-cem is PRIVATE — authenticated clone, mirroring how ci.yml
+        # fetches the private siblings. Uses the same ELM_CEM_TOKEN PAT.
+        env:
+          ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-cem.git" elm-cem
+          cd elm-cem && npm ci
+
+      - name: Regenerate src
+        if: steps.changed.outputs.m3e == 'true'
+        run: |
+          node elm-cem/bin/elm-cem.js \
+            --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json \
+            --config-from=config/slots.json \
+            --config-from=config/native-mdn.json \
+            --config-from=config/examples.generated.json \
+            --output=src
+
+      - name: Format the generated output
+        if: steps.changed.outputs.m3e == 'true'
+        # The generator's raw output is NOT elm-formatted. Committing it raw
+        # introduces large, spurious formatting churn on every bump (line-wrapping
+        # differences that swamp the real API diff). elm-cem ships elm-format in
+        # its node_modules (installed by `npm ci` above); run it over src so the
+        # committed output stays canonically formatted and the diff is minimal.
+        run: elm-cem/node_modules/.bin/elm-format src --yes
+
+      - name: Commit regenerated output to the PR
+        if: steps.changed.outputs.m3e == 'true'
+        run: |
+          # elm-cem/ is gitignored, so only the generated src diff is staged.
+          if git diff --quiet -- src; then
+            echo "No regen diff — generated output already matches the bumped @m3e/web."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src
+            git commit -m "regen(m3e): sync generated output to bumped @m3e/web"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          fi

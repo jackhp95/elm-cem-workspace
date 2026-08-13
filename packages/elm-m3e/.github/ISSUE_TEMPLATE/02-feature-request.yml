@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an API, ergonomic, or docs improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that's hard or impossible today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed direction
+      description: What would good look like? Note that the library is generated and favors uniformity over per-component special-casing.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer(s)?
+      multiple: true
+      options:
+        - "Barrel (M3e.*)"
+        - "Per-component (M3e.<Comp>)"
+        - "Record"
+        - "Build"
+        - "Cem / Cem.Html"
+        - "Docs"
+        - "Generator (elm-cem)"
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false

@@ -1,0 +1,22 @@
+[
+  {
+    "query": "Build a settings screen with m3e — sectioned toggles, a theme radio group, a density slider.",
+    "expected_behavior": "Picks the standard form (M3e barrel / per-component view), because the screen is ordinary content with no compiler-required parts. Wires JS custom-element registration (import \"@m3e/web\" before Elm.Main.init) or names it as a prerequisite. Uses Kit.text for labels (not a library text). Does NOT reach for M3e.Build/Record without cause, does NOT hand-write M3e.Raw, and does NOT try to silence a phantom-type error with Seam.recast. Renders via Element.toNode at the top of view. Matches the real docs/app/Route/Examples/Settings.elm shape."
+  },
+  {
+    "query": "My m3e-button shows up as a plain box with no styling and clicking does nothing.",
+    "expected_behavior": "Diagnoses the missing @m3e/web JS registration as the first and most likely cause: the custom elements are inert until `import \"@m3e/web\"` runs at startup, before the Elm app mounts. Does NOT assume the Elm code is wrong or start editing src/. Only after registration is confirmed considers other causes."
+  },
+  {
+    "query": "The compiler rejects M3e.Button.variant M3e.Token.square. How do I make it accept square?",
+    "expected_behavior": "Explains that `square` is not in the variant value row — the composition is invalid by design, not a library bug. Directs to a real variant token (filled/outlined/tonal/text/elevated) rather than dropping to M3e.Raw or Seam.recast to bypass the phantom row. Frames the phantom rows as guidance to obey, not obstacles to defeat."
+  },
+  {
+    "query": "Where do I import `text` and `link` from in elm-m3e?",
+    "expected_behavior": "Explains that text/link are userland seams, not library-defined: they live in the copyable Kit (docs/kit/, NOT part of the published package). Instructs to copy Kit/Native/Seam into the app and use Kit.text / Kit.link. Does not claim M3e exposes a `text` function."
+  },
+  {
+    "query": "I have a snackbar/dialog that must always carry a label and an action. Which layer/form?",
+    "expected_behavior": "Recommends M3e.Record.* (the Record form) so missing-required is a compile error rather than a lint, passing { content = …, action = … } as the required record. Notes Record modules exist only for components with required parts. Does not claim the plain standard form compiler-enforces required content (it defers to the linter there)."
+  }
+]

@@ -1,0 +1,239 @@
+[
+  {
+    "page": "Accessibility",
+    "sample": "focusCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Accessibility.FocusCode",
+    "file": "good/Sample/Accessibility/FocusCode.elm"
+  },
+  {
+    "page": "Accessibility",
+    "sample": "nameCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Accessibility.NameCode",
+    "file": "good/Sample/Accessibility/NameCode.elm"
+  },
+  {
+    "page": "AccessibleByConstruction",
+    "sample": "guideHelpButton",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "AccessibleByConstruction",
+    "sample": "namelessCode",
+    "disposition": "expect-review",
+    "reason": "the page's claim, in one line. It compiles — that is the point — and the linter is what refuses it, so the rule name below is checked against the real elm-review run.",
+    "module": "Sample.AccessibleByConstruction.NamelessCode",
+    "file": "good/Sample/AccessibleByConstruction/NamelessCode.elm",
+    "rule": "MissingRequiredAttribute"
+  },
+  {
+    "page": "CheatSheet",
+    "sample": "barrelVsSpecificCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.CheatSheet.BarrelVsSpecificCode",
+    "file": "good/Sample/CheatSheet/BarrelVsSpecificCode.elm"
+  },
+  {
+    "page": "CheatSheet",
+    "sample": "shapesCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.CheatSheet.ShapesCode",
+    "file": "good/Sample/CheatSheet/ShapesCode.elm"
+  },
+  {
+    "page": "CompositionTextField",
+    "sample": "guideEmailField",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "FirstComponent",
+    "sample": "source",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.FirstComponent.Source",
+    "file": "good/Sample/FirstComponent/Source.elm"
+  },
+  {
+    "page": "GeneratedAndInspectable",
+    "sample": "rootCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.GeneratedAndInspectable.RootCode",
+    "file": "good/Sample/GeneratedAndInspectable/RootCode.elm"
+  },
+  {
+    "page": "Installation",
+    "sample": "mainModule",
+    "disposition": "expect-review",
+    "reason": "`Browser.sandbox` requires `Html`, so the app root has to leave the typed tree exactly once. That is the same documented exemption `app/Shared.elm` carries in the docs review config — recorded here rather than hidden, so a SECOND toHtml would still be caught.",
+    "module": "Main",
+    "file": "good/Main.elm",
+    "rule": "NoRedundantElementEscape"
+  },
+  {
+    "page": "InvalidStates",
+    "sample": "brokenCode",
+    "disposition": "expect-compile-error",
+    "reason": "this page's subject. The `icon` slot admits the `icon` kind and a Chip does not name it, so the compiler refuses this call — which is exactly what the page tells the reader, and now proves.",
+    "module": "Sample.InvalidStates.BrokenCode",
+    "file": "bad/Sample/InvalidStates/BrokenCode.elm"
+  },
+  {
+    "page": "InvalidStates",
+    "sample": "guideSavedButton",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "Motion",
+    "sample": "shippedCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Motion.ShippedCode",
+    "file": "good/Sample/Motion/ShippedCode.elm"
+  },
+  {
+    "page": "Motion",
+    "sample": "snackbarCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Motion.SnackbarCode",
+    "file": "good/Sample/Motion/SnackbarCode.elm"
+  },
+  {
+    "page": "Seams",
+    "sample": "oneWayAccepted",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Seams.OneWayAccepted",
+    "file": "good/Sample/Seams/OneWayAccepted.elm"
+  },
+  {
+    "page": "Seams",
+    "sample": "oneWayRejected",
+    "disposition": "expect-compile-error",
+    "reason": "the whole point of the block — `span`'s content row has no field for `heading`, and this page says so. Verified to be rejected.",
+    "module": "Sample.Seams.OneWayRejected",
+    "file": "bad/Sample/Seams/OneWayRejected.elm"
+  },
+  {
+    "page": "Seams",
+    "sample": "seamsHtmlInSlot",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "Seams",
+    "sample": "seamsLinkNav",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "Seams",
+    "sample": "seamsModelViewer",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "Seams",
+    "sample": "seamsTwoColumn",
+    "disposition": "derived",
+    "reason": "source text of a live, compiled declaration in the route module"
+  },
+  {
+    "page": "Strictness",
+    "sample": "shapesCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Strictness.ShapesCode",
+    "file": "good/Sample/Strictness/ShapesCode.elm"
+  },
+  {
+    "page": "TheLayers",
+    "sample": "descentCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.TheLayers.DescentCode",
+    "file": "good/Sample/TheLayers/DescentCode.elm"
+  },
+  {
+    "page": "Theming",
+    "sample": "bridgeCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Theming.BridgeCode",
+    "file": "good/Sample/Theming/BridgeCode.elm"
+  },
+  {
+    "page": "Theming",
+    "sample": "darkCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Theming.DarkCode",
+    "file": "good/Sample/Theming/DarkCode.elm"
+  },
+  {
+    "page": "Theming",
+    "sample": "reskinCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Theming.ReskinCode",
+    "file": "good/Sample/Theming/ReskinCode.elm"
+  },
+  {
+    "page": "Theming",
+    "sample": "rolesCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Theming.RolesCode",
+    "file": "good/Sample/Theming/RolesCode.elm"
+  },
+  {
+    "page": "Theming",
+    "sample": "rootCode",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.Theming.RootCode",
+    "file": "good/Sample/Theming/RootCode.elm"
+  },
+  {
+    "page": "ToolingRefactors",
+    "sample": "convertAfter",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.ToolingRefactors.ConvertAfter",
+    "file": "good/Sample/ToolingRefactors/ConvertAfter.elm"
+  },
+  {
+    "page": "ToolingRefactors",
+    "sample": "convertBefore",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.ToolingRefactors.ConvertBefore",
+    "file": "good/Sample/ToolingRefactors/ConvertBefore.elm"
+  },
+  {
+    "page": "ToolingRefactors",
+    "sample": "extractAfter",
+    "disposition": "verify",
+    "reason": "",
+    "module": "Sample.ToolingRefactors.ExtractAfter",
+    "file": "good/Sample/ToolingRefactors/ExtractAfter.elm"
+  },
+  {
+    "page": "ToolingRefactors",
+    "sample": "extractBefore",
+    "disposition": "expect-review",
+    "reason": "this IS the finding the section is about. Verified to be flagged by the named rule, so the \"before\" can never quietly become something the linter would accept.",
+    "module": "Sample.ToolingRefactors.ExtractBefore",
+    "file": "good/Sample/ToolingRefactors/ExtractBefore.elm",
+    "rule": "NoRedundantAttributeEscape"
+  }
+]
