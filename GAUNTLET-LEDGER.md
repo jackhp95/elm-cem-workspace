@@ -364,6 +364,24 @@ Structural facts confirmed at bootstrap (bind M1.d):
   restore this check under A/B semantics or record why it stays off. Do not let it quietly persist
   as a permanently disabled gate.
 
+- **D-017 (M3) — running the three consumer migrations SEQUENTIALLY, not in parallel worktrees.**
+  The plan names M3 as the one parallelizable milestone ("these three depend only on the bundle, not
+  on each other"). That is true of their *source* changes but NOT of their *integration*: all three
+  must add a package to the SAME pnpm workspace, so each rewrites `pnpm-lock.yaml`, and each lands
+  in the same `tools/gate-all.mjs` sweep and the same bundle-emission path. Three worktrees would
+  therefore produce a guaranteed three-way lockfile conflict that I would have to hand-resolve —
+  precisely the "agent collision" anti-pattern the method warns about, and a hand-merged lockfile is
+  exactly the kind of artifact no gate would catch me getting wrong.
+  Sequential costs roughly 3x wall-clock and buys: no lockfile merge, each consumer independently
+  gated against a bundle that already absorbed the previous one, and a clean bisect if one breaks.
+  Given that six of this effort's failures so far have been bar/coordination defects rather than
+  builder capability, I am spending wall-clock to buy coordination simplicity. Order follows the
+  spec's own reasoning (§8 Step 3): **cem-figma-connect -> m3e-okf -> tailwind-m3e-web** — biggest
+  win first (it deletes the ~995-line re-parser and its committed facts), and its byte-deterministic
+  emit is the strongest parity proof of the three.
+  This is a deliberate, recorded deviation from the plan's parallelization suggestion; revert by
+  running the remaining two in worktrees if the wall-clock matters more than the merge risk.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
