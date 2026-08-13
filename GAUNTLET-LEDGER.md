@@ -515,6 +515,31 @@ Structural facts confirmed at bootstrap (bind M1.d):
   ledger is not the same as applying it; for M5 and M6 I check the bar against D-015 and D-022
   before dispatching.
 
+- **D-025 (post-M4) — the recurring bar defects are now MECHANIZED, not just recorded.**
+  Eleven loop rounds were lost to defective bars and zero to builder capability. Writing each lesson
+  into this ledger did not stop repeats — D-015 was recorded and then violated four rounds later by
+  D-024. Root cause: I was treating a reference bar as instructions to write, when it is really a
+  program to test. I would never ship an untested test; I dispatched eleven untested bars.
+  **`tools/preflight-bar.sh` now runs the bar against the CURRENT tree before dispatch** and tags
+  each check. It catches 8 of the 11 recorded defects mechanically:
+  - `PASSES-NOW` on a part-specific check -> **VACUOUS** (D-010: two iterations produced nothing and
+    all nine checks still passed);
+  - `fails-now` that no builder action can clear -> **UNSATISFIABLE** (D-008 contradicted a package's
+    own gate; D-009 fired on my own ledger edit; D-022 required a commit I had forbidden);
+  - `SLOW(>120s)` -> belongs on the manager side (D-015, D-024);
+  - `NONDETERMINISTIC` (differs across two runs on an unchanged tree) -> D-020's build timestamp.
+  A second mode, `bites <check> <break> <restore>`, asserts green->red->green — the mechanical half
+  of "does this measure what I think it measures" (D-014's copy-fidelity script reported RED on a
+  clean tree and would have been caught).
+  **It does NOT catch** "measures a proxy instead of the property" (D-014) or "blind to the blast
+  radius" (D-011); those need judgment, and `gate-all` is the structural answer to the second.
+  **Validated against the real failures:** run on M4's bar it reported `gate-all` **SLOW(353s)** —
+  nearly 3x the threshold — which is exactly D-024. It also exposed a bug in ITSELF: `eval` inside a
+  `while read` loop consumed stdin and silently ran 2 of 3 checks. Fixed by slurping the bar first
+  and running each check with stdin closed. A tool for catching silent-drop defects that silently
+  dropped checks is the sharpest possible argument for "prove it bites" before trusting anything.
+  Cost: a full bar run (minutes) before each dispatch. Cheap against eleven wasted rounds.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
