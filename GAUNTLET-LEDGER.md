@@ -508,6 +508,13 @@ Structural facts confirmed at bootstrap (bind M1.d):
   M4 is NOT done until each consumer's generated output is regenerated and byte-compared, with a
   per-consumer negative test proving each one bites.
 
+- **D-024 (M4.b round 2) — I broke my OWN rule: `gate-all` back in a loop bar (11th bar defect).**
+  D-015 established that `node tools/gate-all.mjs` (~200s) exceeds the loop's verify-check tolerance
+  and must be run by the MANAGER, not placed in a per-part bar. I then put it straight back into
+  M4.b's bar and burned all 4 iterations on it. The work underneath was fine. Writing a rule in the
+  ledger is not the same as applying it; for M5 and M6 I check the bar against D-015 and D-022
+  before dispatching.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -684,3 +691,8 @@ Structural facts confirmed at bootstrap (bind M1.d):
   (2.7.3, exact, 4 declarations), one bundle vintage read by three consumers. Deleted across M3:
   cem-figma-connect's ~995-line elm-facts.build.mjs + elm-facts.json + vendored CEM/tailwind
   fixtures; m3e-okf's reconcileTagNames + TS alias scanner; tailwind's CEM parse.`
+- `M4.b: round 2 (loop e5989c22, 4 iterations, all red on gate-all — D-024, my bar defect, not the
+  work). The HOLE IS CLOSED: check-drift now regenerates and byte-compares each consumer's OUTPUT,
+  not just its bundle copy. Manager-verified all three bite, each naming the offending file:
+  tailwind generated/utilities.css -> RED; cem-figma-connect generated/m3-kit/elm/MANIFEST.json ->
+  RED; m3e-okf data/components.json -> RED. Clean tree -> GREEN, gate-all 30/30.`

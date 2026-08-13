@@ -32,6 +32,7 @@ import os from "node:os";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { runFactsGenerator } from "./lib/regen.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
@@ -125,26 +126,9 @@ function factsBundleE2E() {
     try {
         const outDir = path.join(work, "out");
         const bundleDir = path.join(work, "bundle");
-        const cli = path.join(repoRoot, "packages", "elm-cem", "bin", "elm-cem.js");
 
-        console.log(`$ node ${cli} --facts-bundle=${bundleDir}  (cwd: ${ELM_M3E})`);
-        const gen = spawnSync(
-            process.execPath,
-            [
-                cli,
-                "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
-                "--config-from=config/slots.json",
-                "--config-from=config/native-mdn.json",
-                "--config-from=config/examples.generated.json",
-                `--output=${outDir}`,
-                `--facts-bundle=${bundleDir}`,
-            ],
-            {
-                cwd: ELM_M3E,
-                encoding: "utf8",
-                env: { ...process.env, PATH: `${path.join(ELM_M3E, "node_modules", ".bin")}:${process.env.PATH}` },
-            },
-        );
+        console.log(`$ node elm-cem.js --facts-bundle=${bundleDir}  (cwd: ${ELM_M3E})`);
+        const gen = runFactsGenerator({ repoRoot, elmM3e: ELM_M3E, output: outDir, factsBundle: bundleDir });
         if (gen.stdout) process.stdout.write(gen.stdout);
         if (gen.stderr) process.stderr.write(gen.stderr);
         if (gen.status !== 0) {

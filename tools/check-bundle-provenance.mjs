@@ -24,12 +24,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { runFactsGenerator } from "./lib/regen.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const pkgDir = path.join(repoRoot, "packages", "cem-figma-connect");
 const factsDir = path.join(pkgDir, "profiles", "m3-kit", "facts");
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
-const cli = path.join(repoRoot, "packages", "elm-cem", "bin", "elm-cem.js");
 
 const FILES = ["cem-facts.json", "elm-api-facts.json"];
 
@@ -45,23 +45,7 @@ function regenerateBundle(outDir) {
     fs.mkdirSync(outputDir, { recursive: true });
     fs.mkdirSync(bundleDir, { recursive: true });
 
-    const result = spawnSync(
-        process.execPath,
-        [
-            cli,
-            "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
-            "--config-from=config/slots.json",
-            "--config-from=config/native-mdn.json",
-            "--config-from=config/examples.generated.json",
-            `--output=${outputDir}`,
-            `--facts-bundle=${bundleDir}`,
-        ],
-        {
-            cwd: ELM_M3E,
-            encoding: "utf8",
-            env: { ...process.env, PATH: `${path.join(ELM_M3E, "node_modules", ".bin")}:${process.env.PATH}` },
-        },
-    );
+    const result = runFactsGenerator({ repoRoot, elmM3e: ELM_M3E, output: outputDir, factsBundle: bundleDir });
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
     if (result.status !== 0) {

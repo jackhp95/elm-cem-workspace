@@ -20,6 +20,154 @@ function diffSummary(committedPath, freshPath) {
     }
 }
 
+// listFilesRecursive(dir) -> sorted relative paths, so directory-listing
+// order differences never masquerade as content differences.
+function listFilesRecursive(dir) {
+    const out = [];
+    const walk = (d, rel) => {
+        for (const entry of fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+            const full = path.join(d, entry.name);
+            const relPath = rel ? `${rel}/${entry.name}` : entry.name;
+            if (entry.isDirectory()) walk(full, relPath);
+            else out.push(relPath);
+        }
+    };
+    if (fs.existsSync(dir)) walk(dir, "");
+    return out;
+}
+
+// ── M4.b (round 2): a consumer's committed GENERATED OUTPUT (not just its
+// bundle copy) can drift from what the producer's full pipeline emits today,
+// and nothing previously caught that (verified by hand: appending a line to
+// packages/tailwind-m3e-web/generated/utilities.css left check-drift green).
+// These two helpers close that hole for any consumer, generically:
+//
+//   regeneratePackageOutput — copies a package to a scratch temp dir (so the
+//   real tracked tree is NEVER touched or mutated in place) and runs its own
+//   generation pipeline there.
+//
+//   compareGeneratedPaths — byte-compares a set of relative paths (files or
+//   whole directories) between the committed tree and a fresh regeneration.
+//
+// Zero pre-existing staleness applies to these three consumers (unlike
+// elm-m3e's src/, see R-010 above) — see the M4 spec — so a plain
+// regenerate-and-diff is correct and simplest here too.
+
+/**
+ * Copy `pkgDir` into a fresh scratch temp directory, optionally symlinking
+ * read-only inputs that were excluded from the copy (e.g. a large upstream
+ * checkout under .cache/ that the generator only reads), then run `generate`
+ * with the scratch copy's root as its argument.
+ *
+ * @param {object} opts
+ * @param {string} opts.pkgDir - the real, tracked package directory (read-only)
+ * @param {string[]} [opts.exclude] - extra rsync --exclude patterns beyond node_modules/.git
+ * @param {string[]} [opts.symlinks] - relative paths to symlink from pkgDir into the copy after rsync
+ * @param {(scratchPkgDir: string) => void} opts.generate - runs the generation pipeline in-place inside the copy; throws on failure
+ * @returns {{root: string, cleanup: () => void}}
+ */
+export function regeneratePackageOutput({ pkgDir, exclude = [], symlinks = [], generate }) {
+    const parent = fs.mkdtempSync(path.join(os.tmpdir(), "check-drift-regen-"));
+    const dest = path.join(parent, path.basename(pkgDir));
+    fs.mkdirSync(dest, { recursive: true });
+    const cleanup = () => fs.rmSync(parent, { recursive: true, force: true });
+
+    const excludeArgs = ["node_modules", ".git", ...exclude].flatMap((e) => ["--exclude", e]);
+    const rsync = execFileSyncSafe("rsync", ["-a", ...excludeArgs, `${pkgDir}/`, `${dest}/`]);
+    if (!rsync.ok) {
+        cleanup();
+        throw new Error(`rsync copy of ${pkgDir} failed: ${rsync.error}`);
+    }
+    for (const link of symlinks) {
+        fs.symlinkSync(path.join(pkgDir, link), path.join(dest, link));
+    }
+    try {
+        generate(dest);
+    } catch (e) {
+        cleanup();
+        throw e;
+    }
+    return { root: dest, cleanup };
+}
+
+function execFileSyncSafe(cmd, args) {
+    try {
+        execFileSync(cmd, args, { encoding: "utf8" });
+        return { ok: true };
+    } catch (e) {
+        return { ok: false, error: e.stderr || e.message };
+    }
+}
+
+/**
+ * Byte-compare a set of relative paths (files or whole directories) between
+ * a committed tree and a fresh regeneration. Missing files on either side,
+ * extra files on either side, and byte differences are all reported as
+ * failures — never silently ignored.
+ *
+ * @param {object} opts
+ * @param {string} opts.label
+ * @param {string} opts.committedRoot - directory to treat as "committed" (normally the real package dir; a scratch copy in tests)
+ * @param {string} opts.freshRoot - directory holding a fresh regeneration (normally a regeneratePackageOutput() result)
+ * @param {string[]} opts.paths - paths relative to both roots; each may be a file or a directory
+ * @returns {{ok: boolean, failures: string[]}}
+ */
+export function compareGeneratedPaths({ label, committedRoot, freshRoot, paths }) {
+    const failures = [];
+
+    for (const rel of paths) {
+        const committedPath = path.join(committedRoot, rel);
+        const freshPath = path.join(freshRoot, rel);
+        const committedExists = fs.existsSync(committedPath);
+        const freshExists = fs.existsSync(freshPath);
+
+        if (!committedExists && !freshExists) continue;
+        if (!committedExists) {
+            failures.push(`${label}: ${rel} is missing from the committed tree but the fresh regeneration produced it.`);
+            continue;
+        }
+        if (!freshExists) {
+            failures.push(`${label}: ${rel} is missing from the fresh regeneration but exists in the committed tree.`);
+            continue;
+        }
+
+        if (fs.statSync(committedPath).isDirectory()) {
+            const committedFiles = listFilesRecursive(committedPath);
+            const freshFiles = listFilesRecursive(freshPath);
+            const onlyCommitted = committedFiles.filter((f) => !freshFiles.includes(f));
+            const onlyFresh = freshFiles.filter((f) => !committedFiles.includes(f));
+            if (onlyCommitted.length > 0) {
+                failures.push(`${label}: ${rel} has file(s) only in the committed tree: ${onlyCommitted.join(", ")}`);
+            }
+            if (onlyFresh.length > 0) {
+                failures.push(`${label}: ${rel} has file(s) only in the fresh regeneration: ${onlyFresh.join(", ")}`);
+            }
+            const diffs = [];
+            for (const f of committedFiles) {
+                if (!freshFiles.includes(f)) continue;
+                const a = fs.readFileSync(path.join(committedPath, f));
+                const b = fs.readFileSync(path.join(freshPath, f));
+                if (!a.equals(b)) diffs.push(f);
+            }
+            if (diffs.length > 0) {
+                failures.push(
+                    `${label}: ${rel} — ${diffs.length} file(s) DRIFTED from a fresh regeneration: ${diffs.slice(0, 20).join(", ")}${diffs.length > 20 ? ` … (+${diffs.length - 20} more)` : ""}`,
+                );
+            }
+        } else {
+            const committedBytes = fs.readFileSync(committedPath);
+            const freshBytes = fs.readFileSync(freshPath);
+            if (!committedBytes.equals(freshBytes)) {
+                const summary = diffSummary(committedPath, freshPath);
+                const lines = summary.split("\n").slice(0, 40).join("\n");
+                failures.push(`${label}: ${rel} DRIFTED from a fresh regeneration. First diff lines:\n${lines}`);
+            }
+        }
+    }
+
+    return { ok: failures.length === 0, failures };
+}
+
 /**
  * Compare one or more committed bundle-copy files against a fresh
  * regeneration of the producer's output, byte for byte.

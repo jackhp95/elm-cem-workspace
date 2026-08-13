@@ -3,10 +3,14 @@
 // elm-m3e's own config. Before this existed, this exact argv was duplicated
 // across eight sites (three consumer `scripts/gen-facts.mjs`,
 // `tools/ab-elm-cem.sh`, `tools/ab-elm-m3e-split.sh`, `tools/gate-all.mjs`,
-// and the three `check-bundle-provenance*.mjs` scripts). `tools/bump.mjs` and
-// the consumer `gen-facts.mjs` scripts use this module; the rest are
-// untouched (refactoring them is optional per the M4 spec and each is
-// already independently correct).
+// and the three `check-bundle-provenance*.mjs` scripts). `tools/bump.mjs`,
+// `tools/gate-all.mjs`, the three consumer `gen-facts.mjs` scripts, and the
+// three `check-bundle-provenance*.mjs` scripts now all route through this
+// module (down to two remaining sites). `tools/ab-elm-cem.sh` and
+// `tools/ab-elm-m3e-split.sh` are bash, not Node — routing them through this
+// module would mean shelling out to a Node helper for a single argv list,
+// which is more moving parts than the duplication it removes, and both are
+// A/B harnesses the M4.b spec says not to touch. Left as-is.
 //
 // Zero dependencies (plain Node ESM).
 

@@ -28,6 +28,16 @@
 // sync by its own `check-bundle-provenance*.mjs` gate already — so a naive
 // regenerate-and-diff is the correct, and simplest, check for them.
 //
+// M4.b (round 2): the bundle-copy checks above only cover each consumer's
+// intake of the facts bundle — they never regenerated a consumer's own
+// GENERATED OUTPUT and diffed it against committed. That was a real hole
+// (verified by hand: appending a line to
+// packages/tailwind-m3e-web/generated/utilities.css left this gate green).
+// checkConsumerOutputs() below closes it: each consumer's full pipeline runs
+// in a scratch COPY of the package (tools/lib/consumer-output-drift.mjs,
+// tools/lib/check-drift-core.mjs's regeneratePackageOutput) — never in
+// place — and its output is byte-compared against committed.
+//
 // Zero dependencies. Exits 0 on success, 1 on any failure.
 
 import { spawnSync } from "node:child_process";
@@ -38,6 +48,7 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { generateBundleToTemp } from "./lib/regen.mjs";
 import { checkConsumerBundleDrift, comparePagesElmIgnoringTimestamp } from "./lib/check-drift-core.mjs";
+import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consumer-output-drift.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
@@ -118,7 +129,19 @@ function checkConsumers() {
     }
 }
 
-// ── 4. R-008: Pages.elm — normalize the build timestamp before comparing ──
+// ── 4. consumers: GENERATED OUTPUT drift (not just the bundle-copy intake) ──
+function checkConsumerOutputs() {
+    for (const descriptor of consumerOutputDescriptors(repoRoot)) {
+        try {
+            const { ok, failures } = checkConsumerOutputDrift(descriptor);
+            record(descriptor.label, ok, ok ? "byte-identical to a fresh regeneration" : failures.join(" | "));
+        } catch (e) {
+            record(descriptor.label, false, `regeneration threw: ${e.message}`);
+        }
+    }
+}
+
+// ── 5. R-008: Pages.elm — normalize the build timestamp before comparing ──
 function checkPagesElm() {
     const name = "check-drift: Pages.elm (R-008, timestamp-normalized)";
     const relPath = "packages/elm-m3e/docs/.elm-pages/Pages.elm";
@@ -140,6 +163,7 @@ function main() {
     checkProducer();
     checkBrand();
     checkConsumers();
+    checkConsumerOutputs();
     checkPagesElm();
 
     const failed = results.filter((r) => !r.ok);
