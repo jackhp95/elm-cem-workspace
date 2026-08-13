@@ -524,3 +524,20 @@ Structural facts confirmed at bootstrap (bind M1.d):
   @m3e/web version skew 2.7.0 vs 2.7.3, and an untracked unregenerable bundle. NOT accepted.
   The main prize DID land: elm-facts.build.mjs (~995 lines) and elm-facts.json deleted, and a
   10KB correction doc written. Strategy: see D-018; builder claude/sonnet)`
+- `M3.a: pass (10/10 round-2 checks green, critic VERDICT: PASS — loop c76a24e9, builder
+  claude/sonnet, critic claude/opus, 1 iteration; gate-all 22/22 GREEN)`
+- `M3.a delivered: cem-figma-connect reads the bundle. DELETED the ~995-line re-parser
+  profiles/m3-kit/emitters/elm-facts.build.mjs + its committed elm-facts.json + the vendored CEM and
+  tailwind fixtures. src/ingest/cem.mjs reads Face B (.d.ts-resolved, so dts-inline re-derivation is
+  gone); profiles/m3-kit/emitters/elm.mjs reads Face C. 698 tests pass. Emitted-output changes are
+  enumerated and justified as CORRECTIONS in docs/facts-bundle/m3a-generated-diff.md (per R-005).`
+- `M3.a: ONE @m3e/web PIN ACHIEVED (D-018 fix) — cem-figma-connect moved 2.7.0 -> 2.7.3, matching
+  elm-m3e. tools/check-single-m3e-web-pin.mjs enforces it and is PROVEN to bite on both failure
+  modes: a second distinct version -> RED, and a caret RANGE -> RED. This closes the spec §2
+  "four different pins in two version clusters" defect for the two packages migrated so far.`
+- `M3.a: bundle delivery is now REPRODUCIBLE AND POLICED (D-018 fix) — the facts bundle is
+  git-tracked in the consumer, regenerable via packages/cem-figma-connect/scripts/gen-facts.mjs
+  against the WORKSPACE producer, and tools/check-bundle-provenance.mjs regenerates into a temp dir
+  and asserts byte-identity with the committed copy. PROVEN to bite: tampering one component tag ->
+  RED with a diff. This is spec section 9 drift-gate semantics applied to one consumer, and it
+  prefigures M4.`

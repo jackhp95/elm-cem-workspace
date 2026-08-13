@@ -102,6 +102,7 @@ AUTHORIZED_EXTRA=$(cat <<'EOF'
 profiles/m3-kit/facts/cem-facts.json
 profiles/m3-kit/facts/elm-api-facts.json
 test/fixtures/cem-facts.m3e-web-2.5.14.json
+scripts/gen-facts.mjs
 EOF
 )
 # profiles/m3-kit/facts/{cem-facts,elm-api-facts}.json — the real elm-cem
@@ -109,8 +110,25 @@ EOF
 #   `elm-cem --facts-bundle=<dir>` against elm-m3e's own @m3e/web 2.7.3
 #   manifest (130 components, 583 attributes — matches the task brief's
 #   measured figures exactly).
+#   (M3.a round 2 / defect 2): these two are git-tracked (not merely
+#   untracked-but-visible), reproducible via `pnpm --filter cem-figma-connect
+#   run gen:facts` (scripts/gen-facts.mjs, which calls the workspace producer
+#   packages/elm-cem against elm-m3e's own config), and policed by
+#   tools/check-bundle-provenance.mjs (regenerates into a temp dir and diffs
+#   byte-for-byte against the committed copy — part of gate-all). They stay
+#   on THIS allowlist because the source repo (SOURCE_CFC) has no
+#   profiles/m3-kit/facts/ directory at all — that comparison is orthogonal
+#   to whether the workspace copy itself is tracked, current, or gated; the
+#   provenance check is what actually proves the bundle isn't stale/loose
+#   state, not this allowlist entry.
 # test/fixtures/cem-facts.m3e-web-2.5.14.json — the Face-B conversion of the
 #   (still-present) vendored 2.5.14 fixture, described above.
+# scripts/gen-facts.mjs — (M3.a round 2 / defect 2) the ONLY writer of the
+#   facts bundle above: regenerates profiles/m3-kit/facts/{cem-facts,
+#   elm-api-facts}.json from the workspace producer (packages/elm-cem)
+#   against elm-m3e's own config, via `pnpm --filter cem-figma-connect run
+#   gen:facts`. tools/check-bundle-provenance.mjs calls the same generation
+#   logic to police drift.
 
 if [ ! -d "$SOURCE_CFC" ]; then
     echo "ERROR: source cem-figma-connect not found at $SOURCE_CFC" >&2

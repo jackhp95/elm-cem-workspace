@@ -8,9 +8,10 @@
 //      hardcoded, so a package added in a later milestone is picked up with no
 //      edit here;
 //   2. the cross-cutting workspace checks (coverage map, single Cem.Facts,
-//      the A/B generation harness, the A/B split harness, copy-fidelity for
-//      the migrated elm-m3e AND cem-figma-connect, cem-figma-connect's
-//      gen:emit determinism proof, the root gate);
+//      single @m3e/web pin, the A/B generation harness, the A/B split
+//      harness, copy-fidelity for the migrated elm-m3e AND cem-figma-connect,
+//      cem-figma-connect's gen:emit determinism proof, cem-figma-connect's
+//      facts-bundle provenance, the root gate);
 //   3. a REAL end-to-end facts-bundle proof: run the workspace elm-cem against
 //      elm-m3e's own config into a temp dir, then validate both emitted faces
 //      against docs/facts-bundle/schema.json with the shipped validator.
@@ -252,6 +253,12 @@ function main() {
     runItem("workspace: check-coverage-map", process.execPath, [path.join(repoRoot, "tools", "check-coverage-map.mjs")]);
     runItem("workspace: check-single-cem-facts", process.execPath, [
         path.join(repoRoot, "tools", "check-single-cem-facts.mjs"),
+    ]);
+    runItem("workspace: check-single-m3e-web-pin", process.execPath, [
+        path.join(repoRoot, "tools", "check-single-m3e-web-pin.mjs"),
+    ]);
+    runItem("workspace: check-bundle-provenance cem-figma-connect", process.execPath, [
+        path.join(repoRoot, "tools", "check-bundle-provenance.mjs"),
     ]);
     runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
     runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);

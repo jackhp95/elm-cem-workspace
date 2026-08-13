@@ -26,7 +26,7 @@
   "devDependencies": {
     "@fontsource-variable/material-symbols-outlined": "^5.2.45",
     "@fontsource/roboto": "^5.2.10",
-    "@m3e/web": "2.7.0",
+    "@m3e/web": "2.7.3",
     "culori": "4.0.2",
     "esbuild": "^0.28.1",
     "npm-run-all2": "^9.0.3",
