@@ -1265,3 +1265,33 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   SKIP messages name the real provisioning action instead. If a future CI wants full coverage it
   provisions the docs pipeline + browsers + `.cache/m3e`, then runs `REQUIRE_CLONE_GATES=1` (and
   `REQUIRE_SNAPSHOT_GATES=1` for the six snapshot gates).
+
+- **D-035 (Move 2) — the 3-way re-cut is PROVEN end-to-end (structure + standalone compile + size);
+  cut config committed at `tools/move2/`. Not yet adopted into the live workspace.** Extends the
+  previous manager's analysis with the acceptance step it explicitly left open — a true standalone
+  per-package compile.
+  **The cut** (byte-balanced partition of the canonical flat 143 tree; barrel `M3e` re-exports all
+  130 components so the A/B split is location-invisible at import sites and only affects the elm.json
+  dependency list — hence a derivable, DX-acceptable default, decided autonomously not escalated):
+  | Package | contents | exposed | docs.json | % 768k cap | % 700k soft |
+  |---|---|---:|---:|---:|---:|
+  | `jackhp95/elm-m3e` | primitives + `M3e.Build`(+Internal) + `M3e.Review.Facts` | 11 | 213,247 B | 27.8% | 30.5% |
+  | `jackhp95/elm-m3e-components-a` | 65 per-component modules | 65 | 545,535 B | 71.0% | 77.9% |
+  | `jackhp95/elm-m3e-components-b` | 65 per-component modules + `M3e` barrel | 66 | 584,075 B | 76.1% | 83.4% |
+  **Proofs run on this machine:**
+  - `elm-cem split` on the flat 143 tree with `tools/move2/split-packages.json`: **totality OK
+    (143 placed), disjointness OK, DAG-respect OK** (P3→P2→P1, no back-edge/cycle).
+  - `tools/move2/measure-split-standalone.mjs` compiled EACH emitted package from its real split
+    `src/` (family deps vendored unexposed) → all **exit 0**, all **under the hard cap AND the soft
+    gate**. components-b = 584,075 B, exact to D-031a.
+  - `M3e.Review.Facts` (994 B, imports zero M3e modules) placed in the core package — a free leaf.
+  This is stronger than D-031a/D-031b, which compiled every surface from the FULL tree with only the
+  exposed set varying; here each package's OWN emitted tree compiles against its declared deps.
+  **REMAINING Move 2 work to the pre-publish boundary (NOT done):** (1) adopt the flat 143 tree as
+  the committed `src/` (replaces the stale 402 tree — the D-012 refresh, now authorized by Move 2);
+  (2) migrate the ~7 app/test files + 131 `M3e.Component.<X>`→`M3e.<X>` imports (V-C9); (3) commit
+  the split trees / wire `split-packages.json` into `ab-elm-m3e-split.sh` + a standalone-compile &
+  size gate in `gate-all`; (4) keep `gate-all` green and Face A A/B at 143 byte-identical.
+  These change committed source broadly and are best done as discrete, gated parts. **DO NOT
+  PUBLISH — stop and report at that boundary** (the brief's hard rule). Revert `tools/move2/` with
+  `git revert`; nothing there is wired into a gate yet. Next free IDs: **D-036**, **R-024**.

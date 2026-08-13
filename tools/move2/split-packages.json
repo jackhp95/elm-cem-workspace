@@ -1,0 +1,475 @@
+{
+  "family": "elm-m3e",
+  "devRepo": "jackhp95/elm-m3e",
+  "licenseText": "BSD-3-Clause",
+  "packages": [
+    {
+      "name": "jackhp95/elm-m3e",
+      "summary": "M3e brand primitives, shared builder, and review facts",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.Action"
+        },
+        {
+          "exact": "M3e.Attributes"
+        },
+        {
+          "exact": "M3e.Coerce"
+        },
+        {
+          "exact": "M3e.Events"
+        },
+        {
+          "exact": "M3e.Html"
+        },
+        {
+          "exact": "M3e.Kind"
+        },
+        {
+          "exact": "M3e.Unsafe"
+        },
+        {
+          "exact": "M3e.Unsafe.Attributes"
+        },
+        {
+          "exact": "M3e.Values"
+        },
+        {
+          "exact": "M3e.Build"
+        },
+        {
+          "exact": "M3e.Review.Facts"
+        },
+        {
+          "prefix": "M3e.Build."
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-components-a",
+      "summary": "M3e per-component API (group A)",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.Accordion"
+        },
+        {
+          "exact": "M3e.AppBar"
+        },
+        {
+          "exact": "M3e.Avatar"
+        },
+        {
+          "exact": "M3e.BottomSheetAction"
+        },
+        {
+          "exact": "M3e.BottomSheetTrigger"
+        },
+        {
+          "exact": "M3e.Breadcrumb"
+        },
+        {
+          "exact": "M3e.BreadcrumbItem"
+        },
+        {
+          "exact": "M3e.BreadcrumbItemButton"
+        },
+        {
+          "exact": "M3e.Button"
+        },
+        {
+          "exact": "M3e.ButtonGroup"
+        },
+        {
+          "exact": "M3e.Calendar"
+        },
+        {
+          "exact": "M3e.Card"
+        },
+        {
+          "exact": "M3e.Checkbox"
+        },
+        {
+          "exact": "M3e.CircularProgressIndicator"
+        },
+        {
+          "exact": "M3e.DialogTrigger"
+        },
+        {
+          "exact": "M3e.Divider"
+        },
+        {
+          "exact": "M3e.Elevation"
+        },
+        {
+          "exact": "M3e.ExpandableListItem"
+        },
+        {
+          "exact": "M3e.Fab"
+        },
+        {
+          "exact": "M3e.FabMenu"
+        },
+        {
+          "exact": "M3e.FabMenuItem"
+        },
+        {
+          "exact": "M3e.FabMenuTrigger"
+        },
+        {
+          "exact": "M3e.FilterChip"
+        },
+        {
+          "exact": "M3e.FocusTrap"
+        },
+        {
+          "exact": "M3e.FormField"
+        },
+        {
+          "exact": "M3e.InputChip"
+        },
+        {
+          "exact": "M3e.List"
+        },
+        {
+          "exact": "M3e.ListItem"
+        },
+        {
+          "exact": "M3e.ListItemButton"
+        },
+        {
+          "exact": "M3e.MenuItemCheckbox"
+        },
+        {
+          "exact": "M3e.MenuItemGroup"
+        },
+        {
+          "exact": "M3e.MenuItemRadio"
+        },
+        {
+          "exact": "M3e.MonthView"
+        },
+        {
+          "exact": "M3e.MultiYearView"
+        },
+        {
+          "exact": "M3e.NavBar"
+        },
+        {
+          "exact": "M3e.NavItem"
+        },
+        {
+          "exact": "M3e.NavMenu"
+        },
+        {
+          "exact": "M3e.Option"
+        },
+        {
+          "exact": "M3e.OptionPanel"
+        },
+        {
+          "exact": "M3e.PseudoCheckbox"
+        },
+        {
+          "exact": "M3e.RadioGroup"
+        },
+        {
+          "exact": "M3e.RichTooltipAction"
+        },
+        {
+          "exact": "M3e.SearchView"
+        },
+        {
+          "exact": "M3e.Slide"
+        },
+        {
+          "exact": "M3e.SlideGroup"
+        },
+        {
+          "exact": "M3e.SliderThumb"
+        },
+        {
+          "exact": "M3e.Snackbar"
+        },
+        {
+          "exact": "M3e.SplitPane"
+        },
+        {
+          "exact": "M3e.StepPanel"
+        },
+        {
+          "exact": "M3e.Stepper"
+        },
+        {
+          "exact": "M3e.StepperNext"
+        },
+        {
+          "exact": "M3e.StepperPrevious"
+        },
+        {
+          "exact": "M3e.SuggestionChip"
+        },
+        {
+          "exact": "M3e.Switch"
+        },
+        {
+          "exact": "M3e.Tab"
+        },
+        {
+          "exact": "M3e.Tabs"
+        },
+        {
+          "exact": "M3e.TextHighlight"
+        },
+        {
+          "exact": "M3e.TextOverflow"
+        },
+        {
+          "exact": "M3e.TextareaAutosize"
+        },
+        {
+          "exact": "M3e.ThemeIcon"
+        },
+        {
+          "exact": "M3e.Timepicker"
+        },
+        {
+          "exact": "M3e.TimepickerInput"
+        },
+        {
+          "exact": "M3e.Toc"
+        },
+        {
+          "exact": "M3e.TocItem"
+        },
+        {
+          "exact": "M3e.YearView"
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-components-b",
+      "summary": "M3e per-component API (group B) + the M3e general-surface barrel",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-components-a": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.ActionList"
+        },
+        {
+          "exact": "M3e.AssistChip"
+        },
+        {
+          "exact": "M3e.Autocomplete"
+        },
+        {
+          "exact": "M3e.Badge"
+        },
+        {
+          "exact": "M3e.BottomSheet"
+        },
+        {
+          "exact": "M3e.ButtonSegment"
+        },
+        {
+          "exact": "M3e.Chip"
+        },
+        {
+          "exact": "M3e.ChipSet"
+        },
+        {
+          "exact": "M3e.Collapsible"
+        },
+        {
+          "exact": "M3e.ContentPane"
+        },
+        {
+          "exact": "M3e.DateInput"
+        },
+        {
+          "exact": "M3e.Datepicker"
+        },
+        {
+          "exact": "M3e.DatepickerToggle"
+        },
+        {
+          "exact": "M3e.Dialog"
+        },
+        {
+          "exact": "M3e.DialogAction"
+        },
+        {
+          "exact": "M3e.DrawerContainer"
+        },
+        {
+          "exact": "M3e.DrawerToggle"
+        },
+        {
+          "exact": "M3e.ExpansionHeader"
+        },
+        {
+          "exact": "M3e.ExpansionPanel"
+        },
+        {
+          "exact": "M3e.FilterChipSet"
+        },
+        {
+          "exact": "M3e.FloatingPanel"
+        },
+        {
+          "exact": "M3e.FocusRing"
+        },
+        {
+          "exact": "M3e.Heading"
+        },
+        {
+          "exact": "M3e.Icon"
+        },
+        {
+          "exact": "M3e.IconButton"
+        },
+        {
+          "exact": "M3e.InputChipSet"
+        },
+        {
+          "exact": "M3e.LinearProgressIndicator"
+        },
+        {
+          "exact": "M3e.ListAction"
+        },
+        {
+          "exact": "M3e.ListOption"
+        },
+        {
+          "exact": "M3e.LoadingIndicator"
+        },
+        {
+          "exact": "M3e.Menu"
+        },
+        {
+          "exact": "M3e.MenuItem"
+        },
+        {
+          "exact": "M3e.MenuTrigger"
+        },
+        {
+          "exact": "M3e.NavMenuItem"
+        },
+        {
+          "exact": "M3e.NavMenuItemGroup"
+        },
+        {
+          "exact": "M3e.NavRail"
+        },
+        {
+          "exact": "M3e.NavRailToggle"
+        },
+        {
+          "exact": "M3e.Optgroup"
+        },
+        {
+          "exact": "M3e.Paginator"
+        },
+        {
+          "exact": "M3e.PseudoRadio"
+        },
+        {
+          "exact": "M3e.Radio"
+        },
+        {
+          "exact": "M3e.RichTooltip"
+        },
+        {
+          "exact": "M3e.Ripple"
+        },
+        {
+          "exact": "M3e.ScrollContainer"
+        },
+        {
+          "exact": "M3e.SearchBar"
+        },
+        {
+          "exact": "M3e.SegmentedButton"
+        },
+        {
+          "exact": "M3e.Select"
+        },
+        {
+          "exact": "M3e.SelectionIndicator"
+        },
+        {
+          "exact": "M3e.SelectionList"
+        },
+        {
+          "exact": "M3e.Shape"
+        },
+        {
+          "exact": "M3e.Skeleton"
+        },
+        {
+          "exact": "M3e.Slider"
+        },
+        {
+          "exact": "M3e.SplitButton"
+        },
+        {
+          "exact": "M3e.StateLayer"
+        },
+        {
+          "exact": "M3e.Step"
+        },
+        {
+          "exact": "M3e.StepperReset"
+        },
+        {
+          "exact": "M3e.TabPanel"
+        },
+        {
+          "exact": "M3e.Theme"
+        },
+        {
+          "exact": "M3e.TimepickerDial"
+        },
+        {
+          "exact": "M3e.TimepickerInputPeriodToggle"
+        },
+        {
+          "exact": "M3e.TimepickerToggle"
+        },
+        {
+          "exact": "M3e.Toolbar"
+        },
+        {
+          "exact": "M3e.Tooltip"
+        },
+        {
+          "exact": "M3e.Tree"
+        },
+        {
+          "exact": "M3e.TreeItem"
+        },
+        {
+          "exact": "M3e"
+        }
+      ]
+    }
+  ]
+}
