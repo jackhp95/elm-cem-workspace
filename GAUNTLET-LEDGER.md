@@ -1307,3 +1307,10 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   Opus critic confirmed the "every offered option changes the model" property test (7 slots) + 3 no-op tests are
   real/unweakened, tightening is genuine, and the StructureTest change is EXACTLY the 2 authorized lines → PASS.
 
+- **A5: pass** (test:elm 51/51, critic clean, builder claude/sonnet). Commit `8ad4342`. `AttrChipKind`
+  (`EnumChip`/`PlainChip`), `AttrChipInfo`, `attrChips` — enum chips in fact order, then plain chips (attrRewrites
+  values minus enum names, deduped, sorted, filtered to attrKinds-present). Genuine unset state (`isSet = current
+  /= Nothing`), NO always-first-token fallback (the deliberate Builder.elm divergence). Integrity: 2 files. Fresh
+  Opus critic confirmed the ordered load-bearing assertion `[variant,count,disabled,label,ratio]` + isSet/Clear
+  tests are full-value equals, unweakened → PASS.
+
