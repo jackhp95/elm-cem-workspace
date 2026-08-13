@@ -6,6 +6,7 @@
   "scripts": {
     "tasks": "node tools/tasks.mjs",
     "gate": "node tools/gate.mjs",
+    "gate:all": "node tools/gate-all.mjs",
     "postinstall": "elm-tooling install"
   },
   "devDependencies": {

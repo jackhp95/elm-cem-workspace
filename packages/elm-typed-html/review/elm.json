@@ -4,6 +4,7 @@
         "src",
         "../src",
         "../../elm-review-cem/src",
+        "../../elm-cem/facts/src",
         "../../elm-html-intermediate-representation/src"
     ],
     "elm-version": "0.19.1",

@@ -9,7 +9,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 ## Milestone checklist
 
 - [x] **M0** Workspace shell — 0.a skeleton, 0.b Elm-in-JS convention
-- [ ] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
+- [x] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
 - [ ] **M2** elm-m3e onto workspace elm-cem — 2.a
 - [ ] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
 - [ ] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
@@ -355,3 +355,26 @@ Structural facts confirmed at bootstrap (bind M1.d):
   critic had correctly failed iterations 1-3, incl. catching a checker that missed a symlinked
   duplicate; NOT accepted as pass; strategy: see D-011, integrator fixes the seam + builds a
   workspace-wide gate; builder claude/sonnet, 4 iterations)`
+- `M1.d: pass (after the D-011 seam fix landed in the M1 integrator pass — exactly one Cem.Facts in
+  the graph, elm-review-cem 280 tests green, registry-check stages the declared facts dep from
+  inside packages/, all 22 rule tests verified byte-identical after the move; builder claude/sonnet,
+  critic claude/opus, loop 305d0761)`
+- `M1: integrated (whole-milestone gate green — loop f2461234, integrator claude/opus, critic
+  claude/opus, 1 iteration, VERDICT: PASS)`
+- `M1 integrator deliverables: (1) fixed the D-011 seam with ONE line — added
+  "../../elm-cem/facts/src" to packages/elm-typed-html/review/elm.json's source-directories, the
+  D-003 rule-4 application-layer convention, no re-vendoring and no symlink; (2) built
+  tools/gate-all.mjs (root script gate:all), the workspace-wide gate that DISCOVERS packages via
+  pnpm ls -r rather than hardcoding, runs every package check+test plus the cross-cutting checks,
+  and runs a REAL end-to-end bundle generate+validate so it cannot pass vacuously; it reports all
+  failures rather than stopping at the first`
+- `M1 manager verification (independent): gate-all 12/12 GREEN. Proved it BITES on two distinct
+  failures — (1) reintroduced a duplicate Cem/Facts.elm -> 4 items RED incl. check-single-cem-facts;
+  (2) removed the facts source-directories line from elm-typed-html/review/elm.json -> 11/12,
+  FAIL elm-typed-html: check. Test (2) is EXACTLY the D-011 regression that previously slipped
+  through a green loop, so the structural fix is proven against the real failure it was built for.
+  Tree restored byte-clean after both tests; gate-all GREEN again.`
+- `M1: LINCHPIN CLEARED. One producer emits a schema-valid, provenance-stamped facts bundle
+  (Face B 130 components / 583 attributes, Face C 130 components); Face A byte-unperturbed at 143
+  files; exactly one Cem.Facts in the graph. All four consumers are cleared to drop their parsers
+  in M3.`
