@@ -41,7 +41,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -324,27 +323,23 @@
           {
             "name": "options",
             "type": "readonly M3eOptionElement[]",
-            "default": null,
             "readonly": true,
             "description": "The options that can be selected."
           },
           {
             "name": "selected",
             "type": "M3eOptionElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected option."
           },
           {
             "name": "value",
             "type": "string | null",
-            "default": null,
             "readonly": true,
             "description": "The selected (enabled) value."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -538,7 +533,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -962,7 +956,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -1302,8 +1295,7 @@
         "events": [
           {
             "name": "click",
-            "type": "MouseEvent",
-            "description": null
+            "type": "MouseEvent"
           }
         ],
         "css": {
@@ -1444,7 +1436,6 @@
         "properties": [
           {
             "name": "grouped",
-            "default": null,
             "readonly": true,
             "description": "Whether the button is contained by a button group."
           },
@@ -2475,7 +2466,6 @@
           {
             "name": "buttons",
             "type": "ReadonlyArray<M3eButtonElement | M3eIconButtonElement>",
-            "default": null,
             "readonly": true,
             "description": "The buttons contained by the group."
           }
@@ -2655,21 +2645,18 @@
           {
             "name": "periodLabel",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The label to present for the current period."
           },
           {
             "name": "canMovePreviousPeriod",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the calendar can move to the previous period."
           },
           {
             "name": "canMoveNextPeriod",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the calendar can move to the next period."
           }
@@ -2959,13 +2946,11 @@
         "events": [
           {
             "name": "change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           },
           {
             "name": "active-change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           }
         ],
         "css": {
@@ -3032,13 +3017,11 @@
         "events": [
           {
             "name": "change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           },
           {
             "name": "active-change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           }
         ],
         "css": {
@@ -3105,13 +3088,11 @@
         "events": [
           {
             "name": "change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           },
           {
             "name": "active-change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           }
         ],
         "css": {
@@ -3532,76 +3513,65 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "optional",
-            "default": null,
             "readonly": true,
             "description": "Whether a value is not required for the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -3795,7 +3765,7 @@
   },
   {
     "name": "chips",
-    "primaryTag": "m3e-assist-chip",
+    "primaryTag": "m3e-chip",
     "summary": "The `@m3e/web/chips` module provides expressive, accessible chip components for actions, input, filtering, and suggestions, each supporting two appearance variants—`outlined` and `elevated`. Use `outl",
     "description": "The `@m3e/web/chips` module provides expressive, accessible chip components for actions, input, filtering, and suggestions, each supporting two appearance variants—`outlined` and `elevated`. Use `outlined` for lightweight, unobtrusive chips such as tags or filters, and `elevated` for chips that require stronger visual affordance, like assist actions or selected states. These variants help convey interaction weight, visual hierarchy, and contextual emphasis across static and interactive use cases.",
     "import": "import \"@m3e/web/chips\";",
@@ -3888,7 +3858,6 @@
           },
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the chip."
           }
@@ -4087,7 +4056,6 @@
         "properties": [
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the chip."
           },
@@ -4307,7 +4275,6 @@
           },
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the chip."
           }
@@ -4628,21 +4595,18 @@
           {
             "name": "chips",
             "type": "readonly M3eFilterChipElement[]",
-            "default": null,
             "readonly": true,
             "description": "The chips of the set."
           },
           {
             "name": "selected",
             "type": "readonly M3eFilterChipElement[]",
-            "default": null,
             "readonly": true,
             "description": "The selected chip(s) of the set."
           },
           {
             "name": "value",
             "type": "string | readonly string[] | null",
-            "default": null,
             "readonly": true,
             "description": "The selected (enabled) value(s) of the set."
           },
@@ -4656,42 +4620,36 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -4791,20 +4749,17 @@
           {
             "name": "cell",
             "type": "HTMLSpanElement",
-            "default": null,
             "readonly": true,
             "description": "A reference to the grid cell of the chip."
           },
           {
             "name": "removeButton",
             "type": "M3eIconButtonElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the button used to remove the chip."
           },
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the chip."
           }
@@ -5076,76 +5031,65 @@
           {
             "name": "chips",
             "type": "readonly M3eInputChipElement[]",
-            "default": null,
             "readonly": true,
             "description": "The chips of the set."
           },
           {
             "name": "value",
             "type": "readonly string[] | null",
-            "default": null,
             "readonly": true,
             "description": "The values of the set."
           },
           {
             "name": "optional",
-            "default": null,
             "readonly": true,
             "description": "Whether a value is not required for the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
@@ -5159,7 +5103,6 @@
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -5281,7 +5224,6 @@
           },
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the chip."
           }
@@ -5707,68 +5649,58 @@
           {
             "name": "blackoutTimes",
             "type": "(time: TimeParts) => boolean | undefined",
-            "default": null,
             "description": "A function used to determine whether a time cannot be selected."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "optional",
-            "default": null,
             "readonly": true,
             "description": "Whether a value is not required for the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
@@ -5782,7 +5714,6 @@
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -6036,20 +5967,17 @@
           },
           {
             "name": "isOpen",
-            "default": null,
             "readonly": true,
             "description": "Whether the picker is open."
           },
           {
             "name": "currentVariant",
             "type": "Exclude<DatepickerVariant, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current variant applied to the picker."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -6219,7 +6147,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -6511,7 +6438,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -6800,7 +6726,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -6859,7 +6784,6 @@
         "properties": [
           {
             "name": "panels",
-            "default": null,
             "readonly": true,
             "description": "The panels of the accordion."
           }
@@ -8759,7 +8683,6 @@
         "properties": [
           {
             "name": "isOpen",
-            "default": null,
             "readonly": true,
             "description": "Whether the menu is open."
           },
@@ -8929,7 +8852,6 @@
           {
             "name": "menu",
             "type": "M3eFabMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The floating action button (FAB) menu to which this item belongs."
           },
@@ -9036,13 +8958,11 @@
           {
             "name": "menu",
             "type": "M3eFabMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The menu triggered by the element."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -9130,13 +9050,11 @@
         "properties": [
           {
             "name": "menuAnchor",
-            "default": null,
             "readonly": true,
             "description": "A reference to the element used to anchor dropdown menus."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "A reference to the hosted form field control."
           },
@@ -9784,7 +9702,6 @@
         "properties": [
           {
             "name": "grouped",
-            "default": null,
             "readonly": true,
             "description": "Whether the button is contained by a button group."
           },
@@ -10525,21 +10442,18 @@
           {
             "name": "items",
             "type": "ReadonlyArray<M3eListItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The items of the list."
           },
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -10637,7 +10551,6 @@
           {
             "name": "items",
             "type": "ReadonlyArray<M3eListItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The direct child items of this item."
           },
@@ -10650,14 +10563,12 @@
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -11109,21 +11020,18 @@
           {
             "name": "items",
             "type": "ReadonlyArray<M3eListItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The items of the list."
           },
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           },
@@ -11255,14 +11163,12 @@
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -11646,14 +11552,12 @@
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           },
@@ -11985,14 +11889,12 @@
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -12022,8 +11924,7 @@
         "events": [
           {
             "name": "click",
-            "type": "MouseEvent",
-            "description": null
+            "type": "MouseEvent"
           }
         ],
         "css": {
@@ -12308,14 +12209,12 @@
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -12824,21 +12723,18 @@
           {
             "name": "options",
             "type": "readonly M3eListOptionElement[]",
-            "default": null,
             "readonly": true,
             "description": "The options of the list."
           },
           {
             "name": "selected",
             "type": "readonly M3eListOptionElement[]",
-            "default": null,
             "readonly": true,
             "description": "The selected option(s) of the list."
           },
           {
             "name": "value",
             "type": "string | readonly string[] | null",
-            "default": null,
             "readonly": true,
             "description": "The selected (enabled) value(s) of the set."
           },
@@ -12852,63 +12748,54 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           },
           {
             "name": "items",
             "type": "ReadonlyArray<M3eListItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The items of the list."
           },
           {
             "name": "leadingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of leading content."
           },
           {
             "name": "trailingContentType",
             "type": "\"video\" | \"image\" | \"avatar\" | \"icon\" | \"text\" | undefined",
-            "default": null,
             "readonly": true,
             "description": "The type of trailing content."
           }
@@ -13135,13 +13022,11 @@
           {
             "name": "items",
             "type": "ReadonlyArray<MenuItemElementBase>",
-            "default": null,
             "readonly": true,
             "description": "The items of the menu."
           },
           {
             "name": "isOpen",
-            "default": null,
             "readonly": true,
             "description": "A value indicating whether the menu is open."
           },
@@ -13286,7 +13171,6 @@
           {
             "name": "submenu",
             "type": "M3eMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The submenu triggered by the item."
           },
@@ -13299,7 +13183,6 @@
           {
             "name": "menu",
             "type": "M3eMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The menu to which this item belongs."
           }
@@ -13552,7 +13435,6 @@
           {
             "name": "menu",
             "type": "M3eMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The menu to which this item belongs."
           }
@@ -13834,7 +13716,6 @@
           {
             "name": "menu",
             "type": "M3eMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The menu to which this item belongs."
           }
@@ -14079,13 +13960,11 @@
           {
             "name": "menu",
             "type": "M3eMenuElement | null",
-            "default": null,
             "readonly": true,
             "description": "The menu triggered by the element."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -14151,21 +14030,18 @@
           {
             "name": "items",
             "type": "readonly M3eNavItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "The items of the bar."
           },
           {
             "name": "selected",
             "type": "M3eNavItemElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected item."
           },
           {
             "name": "currentMode",
             "type": "Exclude<NavBarMode, \"auto\">",
-            "default": null,
             "description": "The current mode applied to the bar."
           },
           {
@@ -14300,7 +14176,6 @@
           {
             "name": "navBar",
             "type": "M3eNavBarElement | null",
-            "default": null,
             "readonly": true,
             "description": "The navigation bar to which this item belongs."
           },
@@ -14530,14 +14405,12 @@
           {
             "name": "selected",
             "type": "M3eNavMenuItemElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected item of the menu."
           },
           {
             "name": "items",
             "type": "readonly M3eNavMenuItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "All the items of the menu."
           }
@@ -14627,56 +14500,48 @@
           {
             "name": "link",
             "type": "HTMLAnchorElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the nested `HTMLAnchorElement`."
           },
           {
             "name": "label",
             "type": "HTMLElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the element used to present the label of the item."
           },
           {
             "name": "visible",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the item is visible."
           },
           {
             "name": "path",
             "type": "ReadonlyArray<M3eNavMenuItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The full path of the item, starting with the top-most ancestor, including this item."
           },
           {
             "name": "hasChildItems",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the item has child items."
           },
           {
             "name": "parentItem",
             "type": "M3eNavMenuItemElement | null",
-            "default": null,
             "readonly": true,
             "description": "The parenting item."
           },
           {
             "name": "childItems",
             "type": "readonly M3eNavMenuItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "The items that immediately descend from this item."
           },
           {
             "name": "level",
             "type": "number",
-            "default": null,
             "readonly": true,
             "description": "The one-based level of the item."
           },
@@ -14994,21 +14859,18 @@
           {
             "name": "items",
             "type": "readonly M3eNavItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "The items of the bar."
           },
           {
             "name": "selected",
             "type": "M3eNavItemElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected item."
           },
           {
             "name": "currentMode",
             "type": "Exclude<NavBarMode, \"auto\">",
-            "default": null,
             "description": "The current mode applied to the bar."
           }
         ],
@@ -15146,7 +15008,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -15305,13 +15166,11 @@
         "properties": [
           {
             "name": "label",
-            "default": null,
             "readonly": true,
             "description": "The textual label of the option."
           },
           {
             "name": "isEmpty",
-            "default": null,
             "readonly": true,
             "description": "Whether the option represents an empty option."
           },
@@ -15509,14 +15368,12 @@
           },
           {
             "name": "isOpen",
-            "default": null,
             "readonly": true,
             "description": "Whether the panel is open."
           },
           {
             "name": "trigger",
             "type": "HTMLElement | null",
-            "default": null,
             "readonly": true,
             "description": "The element that triggered the panel to open."
           }
@@ -15781,28 +15638,24 @@
           {
             "name": "pageCount",
             "type": "number",
-            "default": null,
             "readonly": true,
             "description": "The total number of pages."
           },
           {
             "name": "hasPreviousPage",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether a previous page can be displayed."
           },
           {
             "name": "hasNextPage",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether a next page can be displayed."
           },
           {
             "name": "rangeLabelFormatter",
             "type": "(pageIndex: number, pageSize: number | \"all\", length: number) => string | undefined",
-            "default": null,
             "description": "A function used to format the range label."
           }
         ],
@@ -16150,42 +16003,36 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -16307,8 +16154,7 @@
         "attributes": [
           {
             "name": "aria-invalid",
-            "typeSource": "cem",
-            "description": null
+            "typeSource": "cem"
           },
           {
             "name": "disabled",
@@ -16340,21 +16186,18 @@
           {
             "name": "radios",
             "type": "readonly M3eRadioElement[]",
-            "default": null,
             "readonly": true,
             "description": "The radios in the group."
           },
           {
             "name": "selected",
             "type": "M3eRadioElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected radio."
           },
           {
             "name": "value",
             "type": "string | null",
-            "default": null,
             "readonly": true,
             "description": "The selected value of the radio group."
           },
@@ -16368,76 +16211,65 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "optional",
-            "default": null,
             "readonly": true,
             "description": "Whether a value is not required for the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -16728,7 +16560,6 @@
           {
             "name": "currentMode",
             "type": "Exclude<SearchViewMode, \"auto\">",
-            "default": null,
             "description": "The current mode applied to the view."
           },
           {
@@ -16976,28 +16807,24 @@
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
@@ -17232,21 +17059,18 @@
           {
             "name": "segments",
             "type": "readonly M3eButtonSegmentElement[]",
-            "default": null,
             "readonly": true,
             "description": "The segments of the button."
           },
           {
             "name": "selected",
             "type": "readonly M3eButtonSegmentElement[]",
-            "default": null,
             "readonly": true,
             "description": "The selected segment(s) of the button."
           },
           {
             "name": "value",
             "type": "string | readonly string[] | null",
-            "default": null,
             "readonly": true,
             "description": "The selected (enabled) value(s) of the button."
           },
@@ -17260,42 +17084,36 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -17422,21 +17240,18 @@
           {
             "name": "options",
             "type": "readonly M3eOptionElement[]",
-            "default": null,
             "readonly": true,
             "description": "The options that can be selected."
           },
           {
             "name": "selected",
             "type": "readonly M3eOptionElement[]",
-            "default": null,
             "readonly": true,
             "description": "The selected option(s)."
           },
           {
             "name": "value",
             "type": "string | readonly string[] | null",
-            "default": null,
             "readonly": true,
             "description": "The selected (enabled) value(s)."
           },
@@ -17450,76 +17265,65 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "optional",
-            "default": null,
             "readonly": true,
             "description": "Whether a value is not required for the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -17546,8 +17350,7 @@
           },
           {
             "name": "toggle",
-            "type": "ToggleEvent",
-            "description": null
+            "type": "ToggleEvent"
           },
           {
             "name": "beforeinput",
@@ -17994,35 +17797,30 @@
           {
             "name": "thumbs",
             "type": "readonly M3eSliderThumbElement[]",
-            "default": null,
             "readonly": true,
             "description": "The thumbs used to select values."
           },
           {
             "name": "isRange",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the slider is a range slider."
           },
           {
             "name": "thumb",
             "type": "M3eSliderThumbElement | null",
-            "default": null,
             "readonly": true,
             "description": "The thumb used to select a value."
           },
           {
             "name": "lowerThumb",
             "type": "M3eSliderThumbElement | null",
-            "default": null,
             "readonly": true,
             "description": "The thumb used to select the lower value of a range slider."
           },
           {
             "name": "upperThumb",
             "type": "M3eSliderThumbElement | null",
-            "default": null,
             "readonly": true,
             "description": "The thumb used to select the upper value of a range slider."
           },
@@ -18184,28 +17982,24 @@
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
@@ -18219,7 +18013,6 @@
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -18228,8 +18021,7 @@
         "events": [
           {
             "name": "value-change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           },
           {
             "name": "beforeinput",
@@ -18386,14 +18178,12 @@
           {
             "name": "current",
             "type": "M3eSnackbarElement | null",
-            "default": null,
             "readonly": true,
             "description": "The currently open snackbar."
           },
           {
             "name": "isActionTaken",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user clicked the action."
           }
@@ -18667,13 +18457,11 @@
           {
             "name": "valueFormatter",
             "type": "(\r\n    value: number,\r\n    orientation: Omit<SplitPaneOrientation, \"auto\">,\r\n    dir: Direction,\r\n  ) => string | undefined | undefined",
-            "default": null,
             "description": "A function used to generates human readable text for the accessible value (`aria-valuetext`) of the drag handle."
           },
           {
             "name": "currentOrientation",
             "type": "Exclude<SplitPaneOrientation, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current orientation of the split."
           },
@@ -18687,7 +18475,6 @@
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -18880,20 +18667,17 @@
           {
             "name": "panel",
             "type": "M3eStepPanelElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the panel controlled by the step."
           },
           {
             "name": "stepper",
             "type": "M3eStepperElement | null",
-            "default": null,
             "readonly": true,
             "description": "The stepper to which this step belongs."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -19185,21 +18969,18 @@
           {
             "name": "steps",
             "type": "readonly M3eStepElement[]",
-            "default": null,
             "readonly": true,
             "description": "The steps."
           },
           {
             "name": "selectedStep",
             "type": "M3eStepElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected step."
           },
           {
             "name": "selectedIndex",
             "type": "number",
-            "default": null,
             "readonly": true,
             "description": "The zero-based index of the selected step."
           },
@@ -19412,70 +19193,60 @@
           {
             "name": "labels",
             "type": "NodeListOf<HTMLLabelElement>",
-            "default": null,
             "readonly": true,
             "description": "The label elements that the element is associated with."
           },
           {
             "name": "dirty",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has modified the value of the element."
           },
           {
             "name": "pristine",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not modified the value of the element."
           },
           {
             "name": "touched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has interacted when the element."
           },
           {
             "name": "untouched",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the user has not interacted when the element."
           },
           {
             "name": "willValidate",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the element is a submittable element that is a candidate for constraint validation."
           },
           {
             "name": "validity",
             "type": "ValidityState",
-            "default": null,
             "readonly": true,
             "description": "The validity state of the element."
           },
           {
             "name": "validationMessage",
             "type": "string",
-            "default": null,
             "readonly": true,
             "description": "The error message that would be displayed if the user submits the form, or an empty string if no error message."
           },
           {
             "name": "[defaultValidationMessages]",
             "type": "Readonly<ValidationMessages>",
-            "default": null,
             "readonly": true,
             "description": "Default validation messages mapped to individual error types."
           },
           {
             "name": "form",
             "type": "HTMLFormElement | null",
-            "default": null,
             "readonly": true,
             "description": "The `HTMLFormElement` associated with this element."
           }
@@ -19916,7 +19687,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -20146,21 +19916,18 @@
           {
             "name": "tabs",
             "type": "readonly M3eTabElement[]",
-            "default": null,
             "readonly": true,
             "description": "The tabs."
           },
           {
             "name": "selectedTab",
             "type": "M3eTabElement | null",
-            "default": null,
             "readonly": true,
             "description": "The selected tab."
           },
           {
             "name": "selectedIndex",
             "type": "number",
-            "default": null,
             "description": "The zero-based index of the selected tab."
           },
           {
@@ -20307,7 +20074,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -20404,7 +20170,6 @@
           {
             "name": "isDark",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether a dark theme is applied."
           }
@@ -20464,7 +20229,6 @@
           {
             "name": "isDark",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether a dark theme is applied."
           }
@@ -20681,39 +20445,33 @@
           {
             "name": "blackoutTimes",
             "type": "(time: TimeParts) => boolean | undefined",
-            "default": null,
             "description": "A function used to determine whether a time cannot be selected."
           },
           {
             "name": "isOpen",
-            "default": null,
             "readonly": true,
             "description": "Whether the picker is open."
           },
           {
             "name": "currentVariant",
             "type": "Exclude<TimepickerVariant, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current variant applied to the picker."
           },
           {
             "name": "currentOrientation",
             "type": "Exclude<TimepickerOrientation, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current orientation applied to the picker."
           },
           {
             "name": "currentMode",
             "type": "Exclude<TimepickerMode, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current input mode applied to the picker."
           },
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -21216,19 +20974,16 @@
           {
             "name": "blackoutTimes",
             "type": "(time: TimeParts) => boolean | undefined",
-            "default": null,
             "description": "A function used to determine whether a time cannot be selected."
           },
           {
             "name": "hourOfPeriod",
             "type": "number | null",
-            "default": null,
             "description": "The hour in 12‑hour time from 1..12."
           },
           {
             "name": "currentFormat",
             "type": "Exclude<TimepickerFormat, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current time format."
           }
@@ -21509,26 +21264,22 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
           {
             "name": "blackoutTimes",
             "type": "(time: TimeParts) => boolean | undefined",
-            "default": null,
             "description": "A function used to determine whether a time cannot be selected."
           },
           {
             "name": "hourOfPeriod",
             "type": "number | null",
-            "default": null,
             "description": "The hour in 12‑hour time from 1..12."
           },
           {
             "name": "currentFormat",
             "type": "Exclude<TimepickerFormat, \"auto\">",
-            "default": null,
             "readonly": true,
             "description": "The current time format."
           }
@@ -21752,8 +21503,7 @@
         "events": [
           {
             "name": "change",
-            "type": "Event",
-            "description": null
+            "type": "Event"
           }
         ],
         "css": {
@@ -21783,7 +21533,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           }
@@ -21844,7 +21593,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -22294,7 +22042,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -22307,7 +22054,6 @@
           {
             "name": "isOpen",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the tooltip is currently open."
           }
@@ -22533,7 +22279,6 @@
         "properties": [
           {
             "name": "control",
-            "default": null,
             "readonly": true,
             "description": "The interactive element to which this element is attached."
           },
@@ -22546,7 +22291,6 @@
           {
             "name": "isOpen",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the tooltip is currently open."
           }
@@ -22680,14 +22424,12 @@
           {
             "name": "selected",
             "type": "readonly M3eTreeItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "The selected items of the tree."
           },
           {
             "name": "items",
             "type": "readonly M3eTreeItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "All the items of the tree."
           }
@@ -22765,56 +22507,48 @@
           {
             "name": "link",
             "type": "HTMLAnchorElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the nested `HTMLAnchorElement`."
           },
           {
             "name": "label",
             "type": "HTMLElement | null",
-            "default": null,
             "readonly": true,
             "description": "A reference to the element used to present the label of the item."
           },
           {
             "name": "visible",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the item is visible."
           },
           {
             "name": "path",
             "type": "ReadonlyArray<M3eTreeItemElement>",
-            "default": null,
             "readonly": true,
             "description": "The full path of the item, starting with the top-most ancestor, including this item."
           },
           {
             "name": "hasChildItems",
             "type": "boolean",
-            "default": null,
             "readonly": true,
             "description": "Whether the item has child items."
           },
           {
             "name": "parentItem",
             "type": "M3eTreeItemElement | null",
-            "default": null,
             "readonly": true,
             "description": "The parenting item."
           },
           {
             "name": "childItems",
             "type": "readonly M3eTreeItemElement[]",
-            "default": null,
             "readonly": true,
             "description": "The items that immediately descend from this item."
           },
           {
             "name": "level",
             "type": "number",
-            "default": null,
             "readonly": true,
             "description": "The one-based level of the item."
           },

@@ -99,7 +99,24 @@ function isLiteralUnion(t) {
 /** Face B preserves the source's own line endings verbatim; the old CEM
  *  analyzer normalised to `\n`. Match that so description text is comparable. */
 function normalizeNewlines(s) {
+  if (s == null) return undefined;
   return typeof s === "string" ? s.replace(/\r\n/g, "\n") : s;
+}
+
+/** The dir's canonical element: an exact `m3e-<dir>` tag match, or — when no
+ *  element carries that tag (e.g. dir "chips" vs singular tag `m3e-chip`) —
+ *  the alphabetically-first element that isn't a subclass of a sibling in
+ *  this dir (a "root": chip and chip-set are both roots of their own
+ *  inheritance family; assist-chip etc. subclass chip and are excluded).
+ *  Root-then-alphabetical is deterministic regardless of the bundle's
+ *  component order (verified against all 55 baseline dirs). */
+function primaryTagOf(dir, els) {
+  const exact = els.find((e) => e.tag === `m3e-${dir}`);
+  if (exact) return exact.tag;
+  const declNames = new Set(els.map((e) => e.decl.declarationName));
+  const roots = els.filter((e) => !declNames.has(e.decl.superclass?.name));
+  const pool = roots.length ? roots : els;
+  return pool.map((e) => e.tag).sort()[0];
 }
 
 // ---------------------------------------------------------------------------
@@ -246,7 +263,7 @@ function propsOf(decl) {
     .map((m) => ({
       name: m.name,
       type: typeOf(m),
-      default: m.default,
+      default: m.default ?? undefined,
       readonly: m.readonly || undefined,
       description: normalizeNewlines(m.description),
     }));
@@ -463,7 +480,7 @@ for (const dir of dirs) {
 
   components.push({
     name: dir,
-    primaryTag: elements.find((e) => e.tag === `m3e-${dir}`)?.tag || elements[0]?.tag,
+    primaryTag: primaryTagOf(dir, els),
     summary: readme?.description?.split("\n")[0]?.slice(0, 200),
     description: readme?.description,
     import: readme?.import || `import "@m3e/web/${dir}";`,

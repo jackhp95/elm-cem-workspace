@@ -572,3 +572,18 @@ Structural facts confirmed at bootstrap (bind M1.d):
   shipped into skills/m3e/SKILL.md:65 — plus 2 unenumerated diff classes the doc denied;
   iterations 2-4 red on the manager's isolation check via R-008. NOT accepted. Strategy: D-019/D-020;
   builder claude/sonnet, critic claude/opus)`
+- `M3.b: pass (11/11 checks green, critic VERDICT: PASS — loop facc292a, builder claude/sonnet,
+  critic claude/opus, 1 iteration after the D-019 regression brief)`
+- `M3.b delivered: m3e-okf (package m3e-docs) reads Face B. DELETED its hand-ported
+  reconcileTagNames and its TypeScript alias scanner — Face B's tagReconciliation and aliases are
+  now the single source. The README-drift audit survives as a thin layer over the bundle and its
+  finding counts are IDENTICAL to baseline (CEM-TAG-MISMATCH 3, DEFAULT-MISMATCH 13,
+  DEFAULT-UNDOCUMENTED 43, EXAMPLE-DRIFT 1, UNDOCUMENTED 46), which proves the quote-preserving
+  verbatim-default comparison did not silently break. 33 tests pass. data/sources.json's old
+  matraic/m3e SHA no longer drives behaviour — it derives from the bundle provenance stamp.`
+- `M3.b: D-019 regression FIXED AT SOURCE. primaryTagOf() replaced the fragile positional fallback
+  (elements[0]) with a meaningful, ordering-robust rule: exact m3e-<dir> match, else the
+  alphabetically-first ROOT element (one whose superclass is not another element in the set).
+  Verified independently: all 55 primaryTags match baseline, 0 mismatches; SKILL.md:65 is back to
+  "m3e-chip +7" BY REGENERATION, not by hand-edit. Null-key classes now match baseline exactly
+  (default:null 0 vs 0, description:null 0 vs 0, was 254 and 12).`

@@ -62,7 +62,7 @@ Form controls for choosing values.
 | [radio-group](components/radio-group.md) | `m3e-radio-group +1` | Enable single-choice selection within a set of mutually exclusive options. |
 | [switch](components/switch.md) | `m3e-switch` | Semantic, accessible toggle control that reflects a binary state. |
 | [slider](components/slider.md) | `m3e-slider +1` | Enables users to select a numeric value from a continuous or discrete range. |
-| [chips](components/chips.md) | `m3e-assist-chip +7` | The `@m3e/web/chips` module provides expressive, accessible chip components for actions, input, filtering, and suggestions, each supporting two… |
+| [chips](components/chips.md) | `m3e-chip +7` | The `@m3e/web/chips` module provides expressive, accessible chip components for actions, input, filtering, and suggestions, each supporting two… |
 
 ### Text input & forms
 

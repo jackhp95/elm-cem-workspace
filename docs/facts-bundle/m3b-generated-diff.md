@@ -131,20 +131,57 @@ Two more resolver differences were found and normalised away in
 faithfully fixable in code:
 
 - **`default: null` vs. an omitted key.** The old baseline omits the
-  `default` key entirely when a CEM attribute has no default (the raw
-  manifest's `default` was `undefined`, and `JSON.stringify` drops
+  `default` key entirely when a CEM attribute or property has no default
+  (the raw manifest's `default` was `undefined`, and `JSON.stringify` drops
   `undefined` values). Face B always emits `default: null` explicitly
-  (`faceB.components[].attributes[].default`). `extract.mjs` now maps
-  Face B's `null` back to `undefined` before serializing, reproducing the
-  old omitted-key shape exactly — verified: zero `"default": null` diffs
-  remain.
+  (`faceB.components[].attributes[].default` and `…properties[].default`).
+  `extract.mjs` maps Face B's `null` back to `undefined` before serializing
+  for **both** `attributes[]` and `properties[]` (the first pass only
+  applied this to `attributes[]`, via `propsOf()` reading `m.default`
+  unmapped — leaving 254 undocumented `"default": null` keys on
+  `properties[]`; fixed by applying the same `?? undefined` in `propsOf()`)
+  — verified: zero `"default": null` diffs remain, on either array.
+- **`description: null` vs. an omitted key.** Same shape mismatch, for
+  `description`: Face B emits `description: null` wherever a declaration
+  carries no JSDoc comment (e.g. `breadcrumb`'s
+  `m3e-breadcrumb-item-button` `click` event, `radio-group`'s
+  `m3e-radio-group` `aria-invalid` attribute, 7 `calendar-view` events);
+  the old baseline omitted the key. `normalizeNewlines()` (the function
+  every `description`/`summary` field is piped through) now maps `null` to
+  `undefined` in addition to normalising `\r\n` → `\n`, so this is fixed at
+  the one shared chokepoint rather than per call site — verified: zero
+  `"description": null` diffs remain.
 - **`\r\n` vs `\n` in multi-line descriptions.** Face B preserves a
   declaration's JSDoc comment text verbatim, including whatever line
   endings the source file used; the old analyzer normalised to `\n`. One
   description (`m3e-bottom-sheet`'s `dragHandle` attribute) carries CRLF in
-  the source. `extract.mjs` now normalises `\r\n` → `\n` on every
+  the source. `extract.mjs` normalises `\r\n` → `\n` on every
   description/summary field it reads from the bundle, matching the old
   behaviour exactly.
+
+## `components[].primaryTag` — a regression, fixed at the resolver, not by reordering
+
+The original rule (`elements.find(e => e.tag === 'm3e-' + dir)?.tag || elements[0]?.tag`)
+is unchanged, but its `elements[0]` fallback silently depended on whatever
+order elements arrived in. The old `@custom-elements-manifest/analyzer` build
+happened to put `m3e-chip` first for the `chips` dir; Face B is sorted by
+`tag` ascending (§5), which puts `m3e-assist-chip` first instead — so
+`chips.primaryTag` regenerated as `m3e-assist-chip` and that wrong value
+shipped into `skills/m3e/SKILL.md`'s `chips` row.
+
+Fixed by replacing the order-dependent fallback with `primaryTagOf()`: when
+no element's tag is an exact `m3e-<dir>` match, pick the alphabetically-first
+**root** element — one whose declared superclass isn't another element
+declared in the same dir (so `m3e-assist-chip`, which subclasses
+`M3eChipElement`, is excluded in favor of `m3e-chip` and `m3e-chip-set`,
+which both extend `LitElement` directly; alphabetically, `chip` < `chip-set`).
+This is deterministic regardless of Face B's array order, and was verified
+by computing it against all 55 directories and diffing against the
+baseline's `primaryTag` for each: **0 mismatches** (`chips` → `m3e-chip`,
+`progress-indicator` → `m3e-circular-progress-indicator`,
+`search` → `m3e-search-bar` — the three dirs where the exact-match branch
+doesn't fire — and all other 52 dirs via the exact match, unaffected by this
+change).
 
 ## 5. Element order within a multi-element component directory
 
