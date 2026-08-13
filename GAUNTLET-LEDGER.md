@@ -285,6 +285,22 @@ Structural facts confirmed at bootstrap (bind M1.d):
   uses the hermetic application-layer convention instead (`tests/elm.json` with
   `source-directories: ["src", "../src", "../../elm-cem/facts/src"]`).
 
+- **D-012 (M2) — M2 does NOT refresh elm-m3e's committed generated output.** elm-m3e's committed
+  `src/` is ALREADY STALE relative to a fresh generation from the pinned CEM (measured at bootstrap:
+  272 differing paths; a fresh run emits 143 files while `src/` holds 402). Regenerating it to the
+  current CEM would be a large content change that Phase 0 never authorized, and it would make
+  "byte-identical to pre-change" unverifiable. M2 changes only **where generation runs** (the
+  workspace elm-cem instead of `../elm-cem`) and proves that switch is a **no-op by A/B generation**.
+  The pre-existing staleness is left exactly as-is; it becomes a visible signal at M4, which is
+  where the drift gate belongs. Elm package boundaries (`core`/`components`/`builder`) are retained
+  untouched per the plan.
+- **D-013 (M2) — `@m3e/web` must be pinned to EXACTLY 2.7.3 in the workspace.** elm-m3e's
+  `docs/package.json` declares `^2.7.3` and currently resolves to **2.7.3** installed; that installed
+  artifact is the CEM every byte-identity claim in Phase 0 is anchored to. A caret range in a fresh
+  workspace install could resolve to 2.7.4+, silently changing the CEM and making A/B comparisons
+  meaningless while still looking green. M2 pins it exactly. Re-pinning is exactly what M4's `bump`
+  exists to do, deliberately and gated — not something an install should do by accident.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
