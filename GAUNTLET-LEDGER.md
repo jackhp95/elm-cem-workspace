@@ -1228,6 +1228,15 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   copy (invisible to copy-fidelity, which checks presence); recorded here as a deliberate divergence
   from the inert source snapshot. Revert any piece with `git revert`. **Move 1 (R-020/R-021) is
   CLOSED.** Next free IDs: **D-035**, **R-023**.
+  **Follow-up fix (found by the AUTHORITATIVE clone, exactly why the brief mandates "prove by
+  cloning"):** the first `install-toolchains.mjs` ran `elm-tooling install` in EVERY package with
+  an `elm-tooling.json`, including IR and elm-typed-html which run it in their OWN `postinstall`.
+  pnpm runs those concurrently with the root postinstall, so both raced to create the same
+  `node_modules/.bin` symlink → `EEXIST` → IR's postinstall exited 1 → `pnpm install` aborted. My
+  hand-synced ws2 test missed it (I had run the per-package installs manually, out of band). Fixed:
+  the script now SKIPS any package whose own `postinstall` already runs `elm-tooling install`, so it
+  installs only the root + elm-cem + elm-review-cem (the two that self-install nothing). Re-proven by
+  a clean clone of the committed HEAD.
 
 - **R-023 (Move 1, residual) — a bare clone cannot reach FULL green for the docs/browser/external
   gates, by design, not by defect.** `examples.json` is documented (in check-data-drift.mjs) as not

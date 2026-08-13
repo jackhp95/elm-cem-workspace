@@ -17,20 +17,34 @@
 // hard-fails the install: a genuinely broken toolchain is caught by the gates,
 // and aborting `pnpm install` here would be worse than a warning.
 
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-// The root, then each packages/<name> that has an elm-tooling.json.
+// A package that ALREADY runs `elm-tooling install` in its own `postinstall`
+// (IR, elm-typed-html) is installed by pnpm directly — running it a SECOND time
+// from here races that install and both try to create the same
+// node_modules/.bin symlink, which fails EEXIST and aborts `pnpm install`.
+// Install only for packages that do NOT self-install (elm-cem, elm-review-cem);
+// the root is this very postinstall, so it installs itself once here.
+function selfInstalls(dir) {
+    try {
+        const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));
+        return /elm-tooling\s+install/.test(pkg.scripts?.postinstall || "");
+    } catch {
+        return false;
+    }
+}
+
 const dirs = [repoRoot];
 const pkgsDir = path.join(repoRoot, "packages");
 if (existsSync(pkgsDir)) {
     for (const name of readdirSync(pkgsDir)) {
         const dir = path.join(pkgsDir, name);
-        if (existsSync(path.join(dir, "elm-tooling.json"))) dirs.push(dir);
+        if (existsSync(path.join(dir, "elm-tooling.json")) && !selfInstalls(dir)) dirs.push(dir);
     }
 }
 
