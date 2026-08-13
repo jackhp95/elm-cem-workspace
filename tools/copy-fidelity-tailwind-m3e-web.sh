@@ -17,10 +17,21 @@
 #   is correctly invisible here — its presence on disk after `pnpm install` is
 #   normal and is NOT pollution. Comparing raw directory contents instead would
 #   flag it as thousands of spurious extras and train the reader to ignore this gate.
+#
+# Env:
+#   SOURCE_TAILWIND_M3E_WEB  path to the source tailwind-m3e-web checkout
+#                       (default: $SNAPSHOT_ROOT/tailwind-m3e-web)
+#   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
+#                       checkouts (default: the workspace's parent directory)
+#   REQUIRE_SNAPSHOT_GATES=1  make a missing SOURCE_TAILWIND_M3E_WEB a hard
+#                       failure instead of a SKIP
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_TAILWIND_M3E_WEB="${SOURCE_TAILWIND_M3E_WEB:-/Users/jhp/code/jackhp95/tailwind-m3e-web}"
+source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
+
+SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
+SOURCE_TAILWIND_M3E_WEB="${SOURCE_TAILWIND_M3E_WEB:-$SNAPSHOT_ROOT/tailwind-m3e-web}"
 PKG_REL="packages/tailwind-m3e-web"
 
 # Source-tracked paths that are DELIBERATELY absent from the workspace copy.
@@ -62,10 +73,8 @@ EOF
 #   packages/m3e-okf/data/cem-facts.json is policed by
 #   tools/check-bundle-provenance-m3e-okf.mjs.
 
-if [ ! -d "$SOURCE_TAILWIND_M3E_WEB" ]; then
-    echo "ERROR: source tailwind-m3e-web not found at $SOURCE_TAILWIND_M3E_WEB" >&2
-    exit 1
-fi
+require_snapshot_or_skip "copy-fidelity-tailwind-m3e-web" "$SOURCE_TAILWIND_M3E_WEB" "SOURCE_TAILWIND_M3E_WEB"
+
 if [ ! -d "$REPO_ROOT/$PKG_REL" ]; then
     echo "ERROR: workspace copy not found at $REPO_ROOT/$PKG_REL" >&2
     exit 1

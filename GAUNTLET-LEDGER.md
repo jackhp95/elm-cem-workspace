@@ -1094,3 +1094,85 @@ Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 co
   which I called this bigger than the brief scoped, and on the measured numbers that claim is much
   weaker. (`M3e.Internally.Fine` in `NoInternalImportOutsideAllowedTest.elm` is an elm-review
   fixture module name, not a real import — excluded from all counts.)
+
+## Manager handoff — independent verification pass (new manager, `claude-opus-4-8`)
+
+The human handed this off flagging the previous manager (an Opus 5 agent) as "consistently
+wrong" and instructed that every claim C1-C9 be re-run from scratch. This session's manager is
+`claude-opus-4-8` (so D-032's "the manager is itself Opus 5, cannot self-correct" no longer
+applies). Every claim was independently re-run on this machine. **Result: all nine measured
+claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, not the error.**
+
+- **V-C1 — HOLDS exactly.** Fresh `git clone` of the committed HEAD + `pnpm install` +
+  `node tools/gate-all.mjs` = **24/30, 6 failed**, and the six are precisely `elm-cem: test`,
+  `elm-m3e: check`, `elm-m3e: test`, `elm-review-cem: check`, `elm-review-cem: test`,
+  `workspace: check-drift`. Matches R-021.
+- **V-C2 — HOLDS.** In that clone the six absolute-sibling-path gates all PASSED (they are among
+  the 24), because the committed hardcoded `/Users/jhp/code/jackhp95/...` defaults still resolve
+  on this machine. Latent CI failure, never observed as red. Confirmed.
+- **V-C3 (R-022, load-bearing) — HOLDS in full.** Root `elm-tooling.json` pins elm-format 0.8.7 /
+  elm-test-rs **1.0.0**; every package wants 3.0.0 (elm-cem/elm-review-cem also want format 0.8.8).
+  `packages/elm-cem/node_modules/.bin/` holds `elm-test-rs -> 3.0.0` and `elm-format -> 0.8.8`
+  symlinks dated **Aug 12 17:06**; `packages/elm-review-cem/node_modules/.bin/` similarly, plus a
+  leftover `elm` symlink dated Aug 12 18:55. Root binaries actually resolve to elm-test-rs **1.0.0**
+  / elm-format **0.8.7** (the wrong pins); the package-local resolve to 3.0.0. So a clone gets the
+  wrong root pins and `elm-test-rs 1.0.0`'s `mpizenberg/elm-test-runner 4.0.4` (needs
+  `elm-explorations/test <2.0.0`) collides with the tests' pinned 2.2.0. Mechanism confirmed exactly.
+- **V-C4 — HOLDS.** `packages/elm-m3e/docs/data/reference.json` is git-ignored (736 KB, ENOENT in a
+  clone). `packages/m3e-okf/.cache/m3e` is a matraic/m3e checkout at tag **v2.7.3**. elm-review-cem's
+  `check:review`/`test:elm` pass `--compiler node_modules/.bin/elm` (package-local; absent in a clone).
+- **V-C5 — HOLDS.** Running the committed `gen:src` command (identical flags, only `--output`
+  differs) emits **143** flat `M3e.<Component>` `.elm` files; committed `src/` holds **402** in the
+  old `M3e/Build/*` + `M3e/Component/*` + `M3e/Internal/Types/*` shape.
+- **V-C6 — HOLDS.** Workspace: 0 tags, 0 remotes. `package.elm-lang.org/.../jackhp95/elm-m3e/...`
+  → "does not exist". Source repo elm-m3e has a GitHub remote but 0 tags. Nothing ever published.
+- **V-C8 — HOLDS.** Built the import graph of the fresh 143-module tree: of the 130 flat component
+  modules, **zero** import another component module. Any partition of the components is legal.
+- **V-C9 — HOLDS (D-031d's correction confirmed).** Excluding the generated `**/src/**` trees:
+  **127** `import M3e.Component.<X>` (mechanical rename), **3** `import M3e.Build` barrel (survive),
+  **8** `import M3e.Build.<X>` across 6 files — plus `elm-review-cem/tests/src/PreferBarrelTest.elm`
+  (under a `tests/src/` path, excluded by the glob) makes **7 files / ~9** builder-specific imports.
+  Within rounding of D-031d (131/7/9). "66 files break" was indeed an overstatement.
+- **V-C7 — NOT yet independently re-measured.** The exact `docs.json` byte figures (174.9% of cap,
+  the 3-way cut table) require re-running the spike's assemble-and-`elm make --docs` harness; that
+  is deferred to Move 2 execution and will be re-derived by an independent critic there. The
+  QUALITATIVE conclusion is corroborated (130 components dominate; a single components package
+  exceeds cap; a 3-way split is required) but the precise numbers are carried as unverified.
+
+- **FRAMING VERDICT — the generator-is-canonical decision (D-031c) is CORRECT.** I traced the full
+  generation topology, which resolves the human's concern that the 402 tree might be regenerable
+  and thus wrongly "retired":
+  1. `elm-m3e` `gen:src` runs `elm-cem ... --output=src` → the **flat 143-module** tree. Verified:
+     re-running it today produces 143, not 402. The committed 402 `src/` is NOT what `gen:src` emits.
+  2. `tools/ab-elm-m3e-split.sh` shows the SECOND step: `elm-cem split --packages=packages.json`
+     partitions a **fresh** flat tree into the three published packages (core/builder/components)
+     via buckets keyed on the FLAT names (`M3e.Build.*`, `M3e.<Component>`). Its byte-identity A/B
+     proves the split STEP is unchanged — it splits the 143 tree, never the committed 402.
+  3. Therefore BOTH committed layouts — the merged `src/` (402) AND the three committed split trees
+     (`elm-m3e/src` 9 + `elm-m3e-builder/src` 132 + `elm-m3e-components/src` 261 = 402) — are the
+     old per-component `M3e/Build/*`/`M3e/Component/*` architecture, and NOTHING in the workspace
+     regenerates that shape. `gen:src` overwrites `src/` with 143 flat; `gen`+`split` produces the
+     143 flat shape partitioned. This independently re-confirms R-005 (M1.b) and D-012 (M2).
+  The previous manager WOBBLED on the way to this answer (escalated then reversed D-031c; revised
+  the cost D-031d; retracted the "renames the published API" framing) — which is what the human is
+  reacting to — but the destination is right. Note this is a decision made BEFORE first publish
+  (C6), so it breaks no shipped API; it is choosing the shape, not breaking one.
+
+- **D-033 (Move 1) — the M7.a snapshot-gate portability work (loop 43079f1d) is VERIFIED and
+  committed.** The loop passed on iteration 1 (opus-4.8 verifier PASS); per D-023 I did not trust
+  the green and re-verified all four points the outgoing manager flagged, on this machine:
+  1. **No silent skip here.** All six gates resolve their snapshot dir to
+     `$SNAPSHOT_ROOT/<repo>` with `SNAPSHOT_ROOT` defaulting to `$REPO_ROOT/..` = the real siblings
+     at `/Users/jhp/code/jackhp95`, so they RUN. Full `node tools/gate-all.mjs` = **30/30 passed,
+     0 skipped, 0 failed** with all six showing PASS (not SKIP).
+  2. **Gates still bite.** The diff touches ONLY the missing-snapshot guard, never the comparison
+     logic; independently re-proved copy-fidelity-elm-m3e bites (remove `config/slots.json` → RED
+     naming it → restore → GREEN); the loop's verifier proved ab-elm-cem + copy-fidelity-tailwind.
+  3. **gate-all end-to-end 30/30 GREEN** (~350 s) with the new pass|skip|fail summary logic.
+  4. **`REQUIRE_SNAPSHOT_GATES=1` hard-fails all six** (exit 1 each); default with a missing
+     snapshot SKIPs all six (exit 0, with a WHY message). Tested by pointing `SNAPSHOT_ROOT` at a
+     nonexistent dir.
+  This closes R-020 item (2) / C2: off-machine the six gates now SKIP-with-reason instead of being
+  latently red. Revert with `git revert` of the commit — the six gates return to hardcoded
+  absolute defaults. Does NOT fix the five real clone failures (V-C1's six red items) — those are
+  the remaining Move 1 work. Next free IDs: **D-034**, **R-023**.

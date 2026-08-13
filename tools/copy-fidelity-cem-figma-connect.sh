@@ -16,10 +16,21 @@
 #   Locally-generated build output (node_modules/, render-cache/, profiles/*/
 #   captures/, ...) is gitignored and therefore correctly invisible here —
 #   comparing raw directory contents would flag legitimate build artifacts.
+#
+# Env:
+#   SOURCE_CFC          path to the source cem-figma-connect checkout
+#                       (default: $SNAPSHOT_ROOT/cem-figma-connect)
+#   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
+#                       checkouts (default: the workspace's parent directory)
+#   REQUIRE_SNAPSHOT_GATES=1  make a missing SOURCE_CFC a hard failure
+#                       instead of a SKIP
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_CFC="${SOURCE_CFC:-/Users/jhp/code/jackhp95/cem-figma-connect}"
+source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
+
+SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
+SOURCE_CFC="${SOURCE_CFC:-$SNAPSHOT_ROOT/cem-figma-connect}"
 PKG_REL="packages/cem-figma-connect"
 
 # Source-tracked paths DELIBERATELY absent from the workspace copy.
@@ -202,10 +213,8 @@ research/spikes/inline-coverage.js
 M6EOF
 )
 
-if [ ! -d "$SOURCE_CFC" ]; then
-    echo "ERROR: source cem-figma-connect not found at $SOURCE_CFC" >&2
-    exit 1
-fi
+require_snapshot_or_skip "copy-fidelity-cem-figma-connect" "$SOURCE_CFC" "SOURCE_CFC"
+
 if [ ! -d "$REPO_ROOT/$PKG_REL" ]; then
     echo "ERROR: workspace copy not found at $REPO_ROOT/$PKG_REL" >&2
     exit 1

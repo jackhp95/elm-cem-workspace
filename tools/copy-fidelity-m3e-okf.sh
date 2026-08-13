@@ -18,10 +18,21 @@
 #   gen:extract is normal and is NOT pollution. Comparing raw directory
 #   contents instead would flag that clone (and node_modules/) as thousands of
 #   spurious extras and train the reader to ignore this gate.
+#
+# Env:
+#   SOURCE_M3E_OKF      path to the source m3e-okf checkout
+#                       (default: $SNAPSHOT_ROOT/m3e-okf)
+#   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
+#                       checkouts (default: the workspace's parent directory)
+#   REQUIRE_SNAPSHOT_GATES=1  make a missing SOURCE_M3E_OKF a hard failure
+#                       instead of a SKIP
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_M3E_OKF="${SOURCE_M3E_OKF:-/Users/jhp/code/jackhp95/m3e-okf}"
+source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
+
+SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
+SOURCE_M3E_OKF="${SOURCE_M3E_OKF:-$SNAPSHOT_ROOT/m3e-okf}"
 PKG_REL="packages/m3e-okf"
 
 # Source-tracked paths that are DELIBERATELY absent from the workspace copy.
@@ -58,10 +69,8 @@ AUTHORIZED_ABSENT_M6=$(cat <<'M6EOF'
 M6EOF
 )
 
-if [ ! -d "$SOURCE_M3E_OKF" ]; then
-    echo "ERROR: source m3e-okf not found at $SOURCE_M3E_OKF" >&2
-    exit 1
-fi
+require_snapshot_or_skip "copy-fidelity-m3e-okf" "$SOURCE_M3E_OKF" "SOURCE_M3E_OKF"
+
 if [ ! -d "$REPO_ROOT/$PKG_REL" ]; then
     echo "ERROR: workspace copy not found at $REPO_ROOT/$PKG_REL" >&2
     exit 1

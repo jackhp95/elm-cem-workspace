@@ -40,23 +40,38 @@ const require = createRequire(import.meta.url);
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
 
 // ── result accounting ─────────────────────────────────────────────────────
+// Status is one of "pass" | "fail" | "skip". A SKIP is a gate that exited 0
+// because its snapshot dependency was absent (see tools/lib/snapshot-gate.sh)
+// — it must never be counted as a pass, but it also must not turn the whole
+// sweep red, since it ran zero real comparisons.
 const results = [];
 
-function record(name, ok, detail) {
-    results.push({ name, ok, detail: detail || "" });
-    console.log(`\n${ok ? "PASS" : "FAIL"}  ${name}${detail ? `  — ${detail}` : ""}`);
+function record(name, status, detail) {
+    // Accept booleans too, for callers written before "skip" existed.
+    if (status === true) status = "pass";
+    if (status === false) status = "fail";
+    results.push({ name, status, detail: detail || "" });
+    const label = status === "pass" ? "PASS" : status === "skip" ? "SKIP" : "FAIL";
+    console.log(`\n${label}  ${name}${detail ? `  — ${detail}` : ""}`);
 }
 
 /** Run a command to completion, streaming its output. Never throws. */
 function runItem(name, command, args, options = {}) {
     console.log(`\n${"─".repeat(72)}\n▶ ${name}\n$ ${command} ${args.join(" ")}${options.cwd ? `  (cwd: ${options.cwd})` : ""}`);
-    const result = spawnSync(command, args, { stdio: "inherit", cwd: repoRoot, ...options });
+    const result = spawnSync(command, args, { stdio: "pipe", encoding: "utf8", cwd: repoRoot, ...options });
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
     if (result.error) {
-        record(name, false, `failed to spawn: ${result.error.message}`);
+        record(name, "fail", `failed to spawn: ${result.error.message}`);
         return false;
     }
+    if (result.status === 0 && /(^|\n)SKIP[:\s]/.test(result.stdout || "")) {
+        const reason = (result.stdout.match(/^SKIP.*$/m) || [])[0] || "skipped";
+        record(name, "skip", reason);
+        return true;
+    }
     const ok = result.status === 0;
-    record(name, ok, ok ? "" : `exit code ${result.status ?? "signal " + result.signal}`);
+    record(name, ok ? "pass" : "fail", ok ? "" : `exit code ${result.status ?? "signal " + result.signal}`);
     return ok;
 }
 
@@ -277,14 +292,22 @@ function main() {
     factsBundleE2E();
 
     // ── summary ───────────────────────────────────────────────────────────
-    const failed = results.filter((r) => !r.ok);
+    const failed = results.filter((r) => r.status === "fail");
+    const skipped = results.filter((r) => r.status === "skip");
+    const passed = results.filter((r) => r.status === "pass");
     const width = Math.max(...results.map((r) => r.name.length));
     console.log(`\n${"═".repeat(72)}\nGATE-ALL SUMMARY\n${"═".repeat(72)}`);
     for (const r of results) {
-        console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.name.padEnd(width)}${r.detail ? `  ${r.detail}` : ""}`);
+        const label = r.status === "pass" ? "PASS" : r.status === "skip" ? "SKIP" : "FAIL";
+        console.log(`${label}  ${r.name.padEnd(width)}${r.detail ? `  ${r.detail}` : ""}`);
     }
     console.log("─".repeat(72));
-    console.log(`${results.length - failed.length}/${results.length} passed, ${failed.length} failed`);
+    console.log(`${passed.length}/${results.length} passed, ${skipped.length} skipped, ${failed.length} failed`);
+
+    if (skipped.length > 0) {
+        console.log("\nSKIPPED ITEMS:");
+        for (const r of skipped) console.log(`  - ${r.name}${r.detail ? `  (${r.detail})` : ""}`);
+    }
 
     if (failed.length > 0) {
         console.log("\nFAILED ITEMS:");

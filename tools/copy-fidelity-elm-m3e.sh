@@ -18,10 +18,21 @@
 #   normal after a build and is NOT pollution. Comparing raw directory contents
 #   instead would flag thousands of legitimate build artifacts and train the
 #   reader to ignore this gate.
+#
+# Env:
+#   SOURCE_ELM_M3E      path to the source elm-m3e checkout
+#                       (default: $SNAPSHOT_ROOT/elm-m3e)
+#   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
+#                       checkouts (default: the workspace's parent directory)
+#   REQUIRE_SNAPSHOT_GATES=1  make a missing SOURCE_ELM_M3E a hard failure
+#                       instead of a SKIP
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_ELM_M3E="${SOURCE_ELM_M3E:-/Users/jhp/code/jackhp95/elm-m3e}"
+source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
+
+SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
+SOURCE_ELM_M3E="${SOURCE_ELM_M3E:-$SNAPSHOT_ROOT/elm-m3e}"
 PKG_REL="packages/elm-m3e"
 
 # Source-tracked paths that are DELIBERATELY absent from the workspace copy:
@@ -93,10 +104,8 @@ EOF
 #   the migration, so this only became necessary once the root pnpm workspace
 #   took over installing it. The script restores direct symlinks post-install.
 
-if [ ! -d "$SOURCE_ELM_M3E" ]; then
-    echo "ERROR: source elm-m3e not found at $SOURCE_ELM_M3E" >&2
-    exit 1
-fi
+require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
+
 if [ ! -d "$REPO_ROOT/$PKG_REL" ]; then
     echo "ERROR: workspace copy not found at $REPO_ROOT/$PKG_REL" >&2
     exit 1

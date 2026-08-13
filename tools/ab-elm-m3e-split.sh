@@ -22,21 +22,26 @@
 #
 # Usage: bash tools/ab-elm-m3e-split.sh
 # Env:
-#   PRISTINE_ELM_CEM  path to the pristine (pre-migration) elm-cem checkout
-#                     (default: /Users/jhp/code/jackhp95/elm-cem)
-#   ELM_M3E           elm-m3e config/checkout to generate the src/ tree from
-#                     (default: the in-workspace packages/elm-m3e)
+#   PRISTINE_ELM_CEM   path to the pristine (pre-migration) elm-cem checkout
+#                       (default: $SNAPSHOT_ROOT/elm-cem)
+#   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
+#                       checkouts (default: the workspace's parent directory)
+#   ELM_M3E             elm-m3e config/checkout to generate the src/ tree from
+#                       (default: the in-workspace packages/elm-m3e)
+#   REQUIRE_SNAPSHOT_GATES=1  make a missing PRISTINE_ELM_CEM a hard failure
+#                       instead of a SKIP
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-/Users/jhp/code/jackhp95/elm-cem}"
+source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
+
+SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
+PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$SNAPSHOT_ROOT/elm-cem}"
 WORKSPACE_ELM_CEM="$REPO_ROOT/packages/elm-cem"
 ELM_M3E="${ELM_M3E:-$REPO_ROOT/packages/elm-m3e}"
 
-if [ ! -d "$PRISTINE_ELM_CEM" ]; then
-    echo "ERROR: pristine elm-cem not found at $PRISTINE_ELM_CEM" >&2
-    exit 1
-fi
+require_snapshot_or_skip "ab-elm-m3e-split" "$PRISTINE_ELM_CEM" "PRISTINE_ELM_CEM"
+
 if [ ! -d "$WORKSPACE_ELM_CEM" ]; then
     echo "ERROR: workspace elm-cem not found at $WORKSPACE_ELM_CEM" >&2
     exit 1
