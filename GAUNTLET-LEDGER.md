@@ -608,6 +608,52 @@ Structural facts confirmed at bootstrap (bind M1.d):
   "docs that are now factually WRONG are worse than cruft", so I corrected all four rather than
   leaving them; `evals.json` re-validated as JSON afterwards.
 
+- **SPIKE (post-Phase-0, human-requested) — the elm-m3e package boundary is MEASURED; both prior
+  claims were wrong.** `docs/superpowers/spikes/2026-08-13-elm-package-boundary-spike.md`.
+  The registry cap is **768,000 bytes of UNCOMPRESSED `docs.json`**, a literal in
+  `elm/package.elm-lang.org` `src/backend/Package/Register.hs` (the bound is applied upstream of the
+  gzipper, so it is pre-compression). The critic cloned that repo and `elm/compiler` itself and
+  reproduced every number **exactly to the byte**.
+  - **Claim B (liaison: "a monolith is registry-faithful today") is WRONG on the number:** the
+    monolith emits **1,450,795 B = 189% of cap**.
+  - **Claim A (the split exists for the size limit) is right that a ceiling exists, but does NOT
+    vindicate the current split:** `jackhp95/elm-m3e-builder` ALONE is **810,420 B = 105.5% of cap**,
+    and **two of the three split packages do not compile at all** — the declared
+    `core <- components <- builder` DAG is contradicted by two back-edges (130 barrel imports of
+    `M3e.Component`, 130 component files importing `M3e.Build.Internal`, which is not exposed), so
+    it is a *labelling of one mutually-recursive module graph*, not a partition. All three dirs also
+    lack `README.md`/`LICENSE` and would fail publish before ever reaching the cap.
+  - **A valid cut exists and is measured:** primitives + `M3e.Component.*` = **640,376 B (83.4%)`,
+    leaving `M3e.Build.*` to be divided again. Bytes are wildly non-uniform (`M3e.Values` alone is
+    94,865 B, 45x the median), so any re-cut must be validated by re-running the harness, never by
+    counting modules.
+  - **Publish pipeline:** verified against `elm/compiler` `terminal/src/Publish.hs`. Non-obvious
+    correction to the common assumption — **there is NO `origin` remote inspection**; resolution is
+    from the `elm.json` NAME and the git checks are purely local. The **mirror step is forced
+    regardless of folder depth** (the zipball must carry `elm.json` at top level), so **dev-folder
+    layout is ERGONOMICS, not necessity**.
+  - **Recommendation (ergonomic, not forced):** one folder per published package, and stop keeping a
+    fourth merged tree — the 402-file/278-differing drift between `packages/elm-m3e/src/` and the
+    split trees is a direct cost of maintaining two layouts for the same generated code.
+  - **`elm-m3e-icons` is ABSENT** from this workspace (the upstream split postdates the `0cd7f486`
+    snapshot). A future fourth package argues for a layout that scales to N.
+  - **Stated open questions (honest, and one is material):** no end-to-end publish was performed, so
+    the 400-at-cap is inferred from server source rather than observed; `768000` was read from
+    `master` and whether the deployed registry runs `master` is unverified; and **which source tree
+    is canonical was not determined — a 15% / 220,553-byte swing in the headline figure.**
+  **This does not change Phase 0** (which deliberately touched no boundaries); it is the
+  verify-then-decide input Phase 5 was waiting on.
+- **R-020 (post-Phase-0) — the workspace is NOT PORTABLE yet; a fresh clone is partially red.**
+  Tested by actually cloning: `pnpm install` works out of the box (7.8s), the producer generates and
+  schema-validates, all three bundle copies are byte-identical, and cem-figma-connect + tailwind
+  regenerate byte-identical. **Two gaps:** (1) `packages/m3e-okf` drifts because its `.cache/m3e`
+  TypeScript checkout (the documented `:host` display exception) is absent in a clone — needs a
+  bootstrap step or a skip-when-absent; (2) **six gates default to absolute sibling paths**
+  (`/Users/jhp/code/jackhp95/...`) — both A/B harnesses and all four copy-fidelity scripts. They
+  passed in my clone ONLY because those siblings exist on this machine; pointed at a nonexistent
+  path they fail immediately, so CI on any other machine would be red. Both are env-overridable and
+  cheap to fix; neither is fixed yet.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
