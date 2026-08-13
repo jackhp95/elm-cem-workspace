@@ -887,3 +887,96 @@ Structural facts confirmed at bootstrap (bind M1.d):
   reads any deleted whatwg-*.json. The load-bearing conclusion survives in
   elm-typed-html/scripts/check-whatwg.mjs:244-258 and elm-cem/codegen/Attr.elm:35-55,955-975.`
 - `M6: integrated (gate-all 30/30 GREEN after the deep clean; A/B still 143 byte-identical files)`
+
+---
+
+# PHASE 0.5 — portability (Move 1) and the Elm package re-cut (Move 2)
+
+Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 complete and
+`node tools/gate-all.mjs` 30/30 green on this machine. Next free IDs at takeover: D-031, R-021.
+
+## Decisions and risks
+
+- **R-021 (Move 1 baseline) — R-020 UNDERSTATES the problem: a fresh clone is 24/30, not 28/30,
+  and the six sibling-path gates are NOT among the failures.** I re-ran the R-020 experiment
+  properly — `git clone` to `/tmp/m1-clone/ws`, `pnpm install` (exit 0), `node tools/gate-all.mjs`
+  — and got **24/30 with SIX failed items**, from **five distinct causes**, only one of which
+  R-020 names:
+  1. **`elm-cem: test`** — `packages/elm-cem/tests/elm.json` pins `elm-explorations/test 2.2.0`,
+     while `elm-test-rs`'s injected `mpizenberg/elm-test-runner 4.0.4` requires
+     `1.0.0 <= v < 2.0.0`. Unsatisfiable on a cold solve. It passes on this machine ONLY because
+     `packages/elm-cem/tests/elm-stuff/` (gitignored) holds a previously-solved plan.
+  2. **`elm-m3e: check`** — `check:nav` reads `packages/elm-m3e/docs/data/reference.json`, a
+     GENERATED, gitignored artifact. `ENOENT` in a clone. No bootstrap step produces it.
+  3. **`elm-m3e: test`** — `test:browser`'s Playwright `config.webServer` cannot start, for the
+     same reason: the docs site's generated inputs are absent.
+  4. **`elm-review-cem: check` and `test`** — `check:review` runs
+     `elm-review --compiler node_modules/.bin/elm`, a PACKAGE-LOCAL path. On this machine
+     `packages/elm-review-cem/node_modules/.bin/elm` exists as a leftover symlink from the
+     pre-migration checkout; in a clone that directory holds only `elm-review` and `elm-tooling`,
+     so elm-review reports `ELM NOT FOUND`. The workspace's real compiler is at the ROOT
+     `node_modules/.bin/elm`.
+  5. **`check-drift`** — the `packages/m3e-okf/.cache/m3e` gap, i.e. R-020 item (1). Confirmed.
+  **The six absolute-sibling-path gates all PASSED in the clone** — because their hardcoded
+  defaults `/Users/jhp/code/jackhp95/...` still resolve on this machine no matter where the clone
+  lives. R-020 item (2) is therefore real but was never actually exercised by R-020's experiment;
+  it is a latent CI failure, not an observed one. Every one of these five causes is the same
+  species: **a gate depending on local, gitignored, or machine-global state that a clone lacks.**
+
+- **D-031 (Move 2, canonical source tree) — the spike's material open question is ANSWERED, and
+  the answer is NEITHER of the two candidates it offered.** The spike asked whether
+  `packages/elm-m3e/src/` or the three split trees is canonical (a 220,553-byte / 15% swing).
+  I measured the third possibility it did not consider: **what the workspace generator emits
+  today.** Running elm-cem with elm-m3e's exact committed config into a scratch dir:
+  - fresh generation = **143 `.elm` files**; both committed trees = **402 files**;
+  - and the ARCHITECTURE differs, not just the content. Fresh output is a flat
+    `M3e.<Component>` namespace (139 modules directly under `M3e/`, plus `M3e.elm`,
+    `M3e.Build`, `M3e.Build.Internal`, `M3e.Review.Facts`, `M3e.Unsafe.*`). The committed trees
+    are the superseded shape: `M3e/Build/*` (131) + `M3e/Component/*` (130) +
+    `M3e/Internal/Types/*` (130) + 8 primitives.
+  This independently confirms R-005, recorded at M1.b: *"the per-facet `src/M3e/<Facet>/<Comp>.elm`
+  path convention is fiction — elm-cem emits one compModule plus a brand-wide `M3e.Html`/`M3e.Build`."*
+  **Decision: the GENERATOR is canonical, and its current 143-module output is the one true output
+  shape.** Derived from the family's standing rule (*"generated code is the specification; never
+  hand-edit an emitted file — change source/config and regenerate"*), from the spike's own §6.2
+  recommendation (*"the generator should own exactly one output shape"*), and from the fact that a
+  tree no generator can reproduce can never be covered by the M4 drift gate. Both committed
+  402-file trees are output of a superseded generator architecture that nothing in this workspace
+  regenerates. Revert by declaring one of the committed trees canonical and pinning the generator
+  back — but note that no such generator exists in the workspace.
+  **CONSEQUENCE, and why this goes to the human rather than straight into a re-cut:** adopting the
+  canonical answer replaces the entire published module surface. `M3e.Build.Button` and
+  `M3e.Component.Accordion` cease to exist; `M3e.Button` and `M3e.Accordion` replace them. That is
+  a total breaking change to the published Elm API — a product decision, not a mechanical one —
+  and D-012 explicitly recorded that Phase 0 never authorized refreshing this output. The Move 2
+  brief anticipated a re-cut might change generated Elm and said to **report it, not absorb it**.
+  Reported. See the Move 2 measurements below.
+
+- **D-031a (Move 2 measurements — the re-cut, measured on the CANONICAL tree).** Re-ran the
+  spike's harness method (`elm make --docs docs.json` with the pinned
+  `node_modules/.bin/elm`, workspace deps vendored unexposed so they contribute zero bytes)
+  against the 143-module canonical tree. Cap = 768,000 B hard; the project's self-imposed gate is
+  700,000 B.
+  - **Full canonical surface (142 exposed, all but `M3e.Build.Internal`) = 1,342,855 B = 174.9% of
+    cap.** A split is still required — but every byte figure in the spike measured the STALE trees.
+  - Byte distribution is even more concentrated than the spike found: the 130 per-component
+    modules are **1,142,021 B (85%)**; primitives 161,740 B; the `M3e` barrel 38,078 B;
+    `M3e.Build` 873 B. Largest single modules: `M3e.Values` 94,244 · `M3e.Html` 50,077 ·
+    `M3e.Attributes` 48,559 · `M3e` 38,078 · `M3e.Button` 19,848.
+  - The spike's `Build` vs `Component` seam **no longer exists** in the canonical tree — that was
+    an artifact of the superseded architecture. A cut must partition the flat component namespace.
+  - **A measured, compiling 3-way cut that fits with margin** (greedy byte-balanced partition of
+    the components, primitives kept upstream, the all-importing `M3e` barrel placed downstream):
+    | Package | Exposed | `docs.json` | % hard cap | % 700k gate |
+    |---|---:|---:|---:|---:|
+    | primitives + `M3e.Html` + `M3e.Build` | 10 | **212,701 B** | 27.7% | 30.4% |
+    | components group A | 66 | **546,081 B** | 71.1% | 78.0% |
+    | components group B + `M3e` barrel | 66 | **584,075 B** | 76.1% | 83.4% |
+    All three compile (exit 0). Group membership recorded at `/tmp/m2-cut-groups.json` during
+    measurement; it must be regenerated and committed if this cut is adopted.
+  - **2 packages is NOT reachable**: the best 2-way cut is 758,781 B (98.8% of hard cap, 108.4% of
+    the 700k gate) + 584,075 B. Under the hard cap by 9,219 B, but over the project's own gate and
+    with no room for a single new component. **3 is the answer**, same conclusion as the spike but
+    for a different tree and a different seam.
+  - Not yet done, pending the D-031 decision: no `README.md`/`LICENSE` exist for any package, the
+    cut is not committed, and no standalone-compile/size gate is wired.
