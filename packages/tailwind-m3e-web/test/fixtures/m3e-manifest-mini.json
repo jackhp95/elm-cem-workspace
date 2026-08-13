@@ -1,0 +1,24 @@
+{
+  "components": [
+    {
+      "tag": "m3e-button",
+      "description": "Material 3 button.",
+      "cssProperties": [
+        { "name": "--m3e-button-container-color", "description": "Container fill colour." },
+        { "name": "--m3e-button-label-text-color", "description": "Label colour." },
+        { "name": "--m3e-button-shape", "description": "Corner radius." },
+        { "name": "--m3e-button-elevation", "description": "Shadow elevation." },
+        { "name": "--m3e-button-duration", "description": "State-change duration." },
+        { "name": "--m3e-button-container-color-on-scroll", "description": "Container colour during scroll state." }
+      ]
+    },
+    {
+      "tag": "m3e-icon",
+      "description": "Material 3 icon.",
+      "cssProperties": [
+        { "name": "--m3e-icon-size", "description": "Glyph size." },
+        { "name": "--m3e-icon-color", "description": "Glyph colour." }
+      ]
+    }
+  ]
+}

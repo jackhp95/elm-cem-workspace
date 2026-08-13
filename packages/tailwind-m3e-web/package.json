@@ -1,0 +1,74 @@
+{
+  "name": "tailwind-m3e-web",
+  "version": "0.1.0",
+  "description": "Tailwind v4 utility surface for matraic's @m3e/web — Material 3 Expressive web components.",
+  "license": "MIT",
+  "author": "Jack H Peterson",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackhp95/tailwind-m3e-web.git"
+  },
+  "homepage": "https://github.com/jackhp95/tailwind-m3e-web#readme",
+  "bugs": {
+    "url": "https://github.com/jackhp95/tailwind-m3e-web/issues"
+  },
+  "keywords": [
+    "tailwindcss",
+    "tailwindcss-plugin",
+    "tailwindcss-v4",
+    "material-3",
+    "m3",
+    "m3e",
+    "m3e-web",
+    "matraic",
+    "web-components",
+    "design-tokens",
+    "design-system"
+  ],
+  "bin": {
+    "tailwind-m3e-web-check-privates": "./bin/check-privates.mjs"
+  },
+  "files": [
+    "src/**/*.css",
+    "generated/**/*.css",
+    "generated/**/*.md",
+    "utilities-private.template.css",
+    "bin/check-privates.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./src/index.css",
+    "./utilities": "./generated/utilities.css",
+    "./roles-extended": "./src/roles-extended.css"
+  },
+  "peerDependencies": {
+    "@m3e/web": "2.7.3"
+  },
+  "peerDependenciesMeta": {
+    "@m3e/web": { "optional": true }
+  },
+  "devDependencies": {
+    "@m3e/web": "2.7.3",
+    "@material/material-color-utilities": "^0.3.0",
+    "@tailwindcss/cli": "^4.3.2",
+    "@changesets/cli": "^2.31.0",
+    "culori": "^4.0.2",
+    "tailwindcss": "^4.3.2",
+    "vitest": "^4.1.9"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate:tones": "node bin/calibrate-tones.mjs",
+    "generate:utilities": "node bin/generate-component-utilities.mjs",
+    "generate": "pnpm run generate:tones && pnpm run generate:utilities",
+    "gen:facts": "node scripts/gen-facts.mjs",
+    "check:privates": "node bin/check-privates.mjs",
+    "prepublishOnly": "pnpm run generate && git diff --exit-code -- generated/ && pnpm test",
+    "release:version": "changeset version",
+    "release:publish": "changeset publish"
+  }
+}

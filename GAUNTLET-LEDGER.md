@@ -429,6 +429,20 @@ Structural facts confirmed at bootstrap (bind M1.d):
   isolation check. M4's drift gate must handle the same file — the exclusion is a workaround, and
   normalizing or untracking that timestamp is the real fix.
 
+- **R-011 (M3.c) — FIRST GENUINE HARNESS HANG: `paseo loop run` does not enforce `--max-time`
+  while a worker is mid-iteration.** M3.c's loop started 2026-08-13T08:41:26Z with
+  `--max-time 150m`, so it should have stopped by ~11:11Z. At 13:03Z it was still reporting
+  `iter 1: running`, with **zero files written workspace-wide in the preceding 3 hours** (checked at
+  5/15/60/180-minute windows). The worker had in fact finished its work — the package was copied and
+  staged, both new tools written, the diff doc produced — and then hung, almost certainly during its
+  own verification phase. `paseo loop stop` cleared it immediately.
+  **Operational lesson for the remaining milestones:** loop liveness must be judged by
+  **filesystem write recency**, not by loop status — a hung worker reports `running` indefinitely and
+  `--max-time` will not rescue it. Wall-clock alone is not evidence of a hang (M3.a's legitimate
+  worker ran ~24 min); *no writes for 30+ minutes while status is `running`* is. Credit to the human
+  for questioning the elapsed time; I had been treating "still running" as progress.
+  Nothing was lost: I ran M3.c's full bar by hand and all six checks passed.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -587,3 +601,6 @@ Structural facts confirmed at bootstrap (bind M1.d):
   Verified independently: all 55 primaryTags match baseline, 0 mismatches; SKILL.md:65 is back to
   "m3e-chip +7" BY REGENERATION, not by hand-edit. Null-key classes now match baseline exactly
   (default:null 0 vs 0, description:null 0 vs 0, was 254 and 12).`
+- `M3.c: work complete but loop HUNG (R-011) — loop 411c8a28 stopped manually after 4h22m in one
+  iteration with no writes for 3h; all 6 bar checks verified green by the manager afterwards.
+  Critic verdict pending in a separate pass.`

@@ -263,6 +263,9 @@ function main() {
     runItem("workspace: check-bundle-provenance m3e-okf", process.execPath, [
         path.join(repoRoot, "tools", "check-bundle-provenance-m3e-okf.mjs"),
     ]);
+    runItem("workspace: check-bundle-provenance tailwind-m3e-web", process.execPath, [
+        path.join(repoRoot, "tools", "check-bundle-provenance-tailwind.mjs"),
+    ]);
     runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
     runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);
 
@@ -276,6 +279,9 @@ function main() {
         path.join(repoRoot, "tools", "copy-fidelity-cem-figma-connect.sh"),
     ]);
     runItem("workspace: copy-fidelity m3e-okf", "bash", [path.join(repoRoot, "tools", "copy-fidelity-m3e-okf.sh")]);
+    runItem("workspace: copy-fidelity tailwind-m3e-web", "bash", [
+        path.join(repoRoot, "tools", "copy-fidelity-tailwind-m3e-web.sh"),
+    ]);
     runItem("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
         path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
     ]);

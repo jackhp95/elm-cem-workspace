@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import "../../src/index.css";
+@import "../../src/roles-extended.css";
+@import "../../generated/utilities.css";
+
+@source "./sample.html";
