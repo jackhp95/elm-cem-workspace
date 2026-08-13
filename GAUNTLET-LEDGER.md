@@ -442,6 +442,16 @@ Structural facts confirmed at bootstrap (bind M1.d):
   worker ran ~24 min); *no writes for 30+ minutes while status is `running`* is. Credit to the human
   for questioning the elapsed time; I had been treating "still running" as progress.
   Nothing was lost: I ran M3.c's full bar by hand and all six checks passed.
+  **Detection is harder than it first looks — my first heuristic was wrong twice.**
+  "No filesystem writes" false-alarms in BOTH directions: (a) during a compute-bound sweep,
+  `gate-all` writes only to temp dirs and `.gate-out`, so a busy worker looks idle; (b) during model
+  inference there is no local process AND no write at all, so a healthy thinking agent is
+  indistinguishable from a hung one by that signal. A live-process check (`pgrep` for the harness
+  tools) resolves (a) but not (b).
+  **Calibrated rule adopted:** declare a hang only on **60+ minutes of write-silence after 45+
+  minutes of watching**. The real M3.c hang had ~3 HOURS of silence, so that threshold has a wide
+  margin; normal inference gaps observed here are ~10-25 minutes. Do not kill a loop on 20 minutes of
+  quiet.
 
 ## Progress
 
