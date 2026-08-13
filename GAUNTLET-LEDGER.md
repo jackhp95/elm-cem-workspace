@@ -1176,3 +1176,97 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   latently red. Revert with `git revert` of the commit — the six gates return to hardcoded
   absolute defaults. Does NOT fix the five real clone failures (V-C1's six red items) — those are
   the remaining Move 1 work. Next free IDs: **D-034**, **R-023**.
+
+---
+
+# COMPOSE GAUNTLET — branch `compose-poc` (worktree `/Users/jhp/.paseo/worktrees/358ycm5n/compose-poc`)
+
+Isolated effort: implement `docs/superpowers/plans/2026-08-13-compose-implementation.md` (Phase A Tasks 1–7,
+Phase B Tasks 8–14). Manager = Opus 4.8 (this context). Builder = `claude/sonnet`. Critic/Integrator =
+`claude/claude-opus-4-8`. Entries below are scoped to this branch and do NOT touch main's ledger until a
+human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
+
+### Bootstrap decisions
+
+- **D-034 (Phase 0 boundary, human-pre-resolved — recorded, not re-litigated).** The manager brief carries the
+  human's answer verbatim: *"All of the layers are swap-able with elm review rules"* — i.e. whichever module
+  spelling is live and compiling in `packages/elm-m3e/src` right now IS the Phase B target. Verified on disk
+  2026-08-13: `packages/elm-m3e/src/M3e/Component/Card.elm` exists and `M3e/Component/` + `M3e/Build/` are the
+  committed layout — the D-031c/Move-2 flat `M3e.<Component>` cut has NOT landed. **Phase B therefore uses the
+  `M3e.Component.Card` spelling.** If `origin/main`'s 4-package layout or the flat cut merges later, the rename
+  is accepted rename debt (mechanical, elm-review-driven), not blocking. The remaining §11.1 "which boundary
+  story wins" question stays a human decision but is NOT a Phase-B blocker per the human's answer. Phase A is
+  boundary-independent (imports only `Cem.Facts`) and starts immediately.
+
+- **D-035 (provider/model resolution).** Resolved fresh from `~/.paseo/orchestration-preferences.json`:
+  builder=`claude/sonnet`, critic/integrator/controller=`claude/claude-opus-4-8` (NEVER bare `claude/opus`
+  → resolves to banned opus-5). **Decision: builder stays on Sonnet for ALL parts, no Haiku.** The manager
+  brief allows Haiku for "the most mechanical fully-specified sub-parts under an integrity gate," but the prefs
+  file states `claude/haiku` is "for tests only — do not use it for production work." Prefs win; Sonnet is
+  cheap enough and the risk of Haiku on production Elm is not worth it. Reversible: revisit if Sonnet proves
+  slow/expensive on the transcription-heavy tasks.
+
+- **BASELINE.** Fresh worktree had no `node_modules` → first `gate:all` was RED purely environmentally
+  (`run-p: command not found`). Ran `pnpm install` (exit 0), then re-baselined `gate:all` on the pristine
+  branch point (no Compose changes yet). Result: **18/30 passed, 6 skipped, 6 failed.** The 6 skipped are the
+  off-machine snapshot gates (D-033, expected). The **6 pre-existing FAILURES are the reference fingerprint**:
+    1. `elm-cem: test`
+    2. `elm-m3e: check`
+    3. `elm-m3e: test`
+    4. `elm-review-cem: check`
+    5. `elm-review-cem: test`
+    6. `workspace: check-drift (M4.b cross-cutting drift gate)`
+  These are pre-existing Move-1 migration debt on `main` (ledger D-033: "the five real clone failures … the
+  remaining Move 1 work"), NOT caused by Compose and explicitly out of this effort's scope to fix. Note
+  `m3e-builder-docs` (the package Phase B gates on) is NOT in the failing set — it passes at baseline.
+
+- **D-036 (gate:all acceptance reinterpreted — autonomous, reversible).** Plan Task 7 & Task 14 say "`pnpm
+  gate:all` green." That absolute-green target is unattainable on this branch because of the 6 pre-existing
+  unrelated failures above. **Reinterpreted acceptance: gate:all shows NO NEW failures beyond the 6-item
+  baseline fingerprint, the 6 skipped stay skipped, AND all Compose-owned items are green** — i.e.
+  `elm-cem-compose: check` + `elm-cem-compose: test` (Phase A) and `m3e-builder-docs: check` (Phase B) pass, and
+  no 7th failure appears. A regression in any baseline-passing item counts as mine. This is recorded so the
+  human can override; the alternative (fixing unrelated Move-1 debt) is out of scope and a rabbit hole.
+  Next free IDs: **D-037**, **R-023**.
+
+### Phase A parts
+
+- **D-037 (Task 1 reference-bar defect — corrected autonomously, verified). PLAN DEFECT.** Plan Task 1 Step 3
+  specifies `check:compile: "node bin/stage-facts-elm-home.mjs && elm make --docs=/dev/null"`. This CANNOT pass
+  and is architecturally impossible on this repo. The A1 builder (Sonnet) correctly diagnosed it and STOPPED
+  without committing (good discipline). I independently reproduced + confirmed the root cause:
+  - Raw `elm make` on a `type: package` elm.json resolves version-range deps against the **live registry**, not
+    the ELM_HOME cache. `jackhp95/elm-cem-facts` is unpublished → `INCOMPATIBLE DEPENDENCIES`, staging notwith-
+    standing. Reproduced directly (facts cache present, still fails). The boundary spike (§3 step 2) confirms:
+    unpublished workspace deps must be **vendored as unexposed source**, never declared — but our manifest MUST
+    declare `elm-cem-facts` (registry-faithful is a hard requirement gated by check-headless). Irreconcilable
+    for raw `elm make`.
+  - The precedent Task 1 copies from, `packages/elm-review-cem`, has **NO raw `elm make` anywhere**; it proves
+    compilation registry-free via `elm-review --compiler` + its `tests/` application. Confirmed
+    `pnpm --filter elm-review-cem run check` is GREEN with that strategy.
+  **Correction (elm-review-cem-style, no new deps):** removed `check:compile` from `elm-cem-compose/package.json`.
+  Standalone-compile proof = `test:elm` — the `tests/` application compiles `../src/Cem/Compose.elm` against the
+  real `Cem.Facts` (`../../elm-cem/facts/src`) via source-directories + exact pins, no registry. It runs under
+  `gate` (`run-s check test`). Verified: `pnpm --filter elm-cem-compose run gate` → GREEN (check:format []`,
+  check:headless OK, test:elm 1 passed). Consequence: **ELM_HOME staging is no longer load-bearing for the
+  compose gate** (test:elm uses source-directories); the `stage-facts-elm-home.mjs` script is kept present (the
+  documented pattern, harmless, future publish/elm-review may use it) but vestigial-for-now.
+  **Phase A acceptance criterion 2 (spec §15 / plan Task 7) reinterpreted:** "the package compiles standalone"
+  is proven by the tests application (test:elm) against the real facts, NOT by raw `elm make --docs` (impossible
+  for a registry-faithful manifest declaring an unpublished dep). Reversible: restore the line if the facts
+  package is ever published. Task 7's headless gate + the 3-dep check-headless still fully enforce the "no
+  view / no brand / registry-faithful" invariants.
+  Also validated the builder's two necessary deviations: (1) added `elm-tooling.json` (elm 0.19.1, elm-format
+  0.8.7, elm-test-rs 3.0.0) + `postinstall: elm-tooling install`, matching the
+  elm-html-intermediate-representation / elm-typed-html / elm-review-cem precedent — required because workspace-
+  root elm-test-rs 1.0.0 bundles a test-runner needing `elm-explorations/test 1.x` while tests pin 2.2.1;
+  3.0.0 is the repo-consistent version. Accepted. (2) the `/tmp` docs path is moot (line removed).
+  Next free IDs: **D-038**, **R-023**.
+
+- **A1: pass** (gate green, critic clean, builder claude/sonnet). Commit `9064dd2`. Scaffold: elm.json (3 deps
+  only), package.json (check:compile removed per D-037), stage-facts script, check-headless placeholder,
+  Cem/Compose.elm exposing only `version`, tests/elm.json + SmokeTest, README, LICENSE, elm-tooling.json.
+  Round 1 stopped on the D-037 plan defect (builder correct); round 2 committed against the corrected bar.
+  Integrity: 11 files / +254 / -0, only compose/* + pnpm-lock.yaml, no golden/test mutated elsewhere. Fresh
+  Opus critic independently re-ran all gates + reproduced the INCOMPATIBLE DEPENDENCIES root cause → PASS.
+
