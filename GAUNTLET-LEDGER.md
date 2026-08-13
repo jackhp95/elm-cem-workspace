@@ -1285,3 +1285,25 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   critic confirmed the decisive coexistence assertions (mixed.any text+icon+widget; mixed.flowy; unconstrained
   text-only; container components-only) are full-record equals, unaltered → PASS.
 
+- **D-038 (Task 2/Task 4 cross-task defect — corrected autonomously). PLAN DEFECT.** A4's affordance-gated
+  `addIfAfforded` (correctly transcribed from Task 4 Step 4) broke a *pre-existing* StructureTest case committed
+  in A2: "RemoveChild at index 0 shifts the former index 1 down" seeds the second child with `C.AddChild []
+  "unnamed" "single"`, but `container.unnamed` names `["widget","ghost","container"]` — `"single"` is a fact yet
+  NOT afforded by that slot. Under A2/A3's loose `Dict.member … facts` guard the add succeeded (exploiting the
+  gap §8.7 exists to close); under A4's correct guard it is a no-op, so `RemoveChild 0` empties the slot and the
+  test's `Just "single"` assertion fails. The A4 builder (Sonnet) caught this and STOPPED rather than touch the
+  test unilaterally — good discipline. **Decision: option 1** — change the probe's second child from `"single"`
+  to `"container"` (a component the slot DOES name) and the expected value to `Just "container"`. The test's
+  INTENT (removal shifts the former index-1 child down to index 0, keeping its identity) is preserved exactly;
+  it now uses a validly-nestable component, consistent with §8.7. NOT test-weakening — the assertion is still a
+  full identity check. Rejected option 2 (widening the fixture) because Task 3's committed "components-only slot"
+  test asserts container.unnamed's afforded set is exactly `["widget","container"]` and would ripple. This edit
+  lands in the A4 commit alongside the slotMenuOptions work. Reversible. Next free IDs: **D-039**, **R-023**.
+
+- **A4: pass** (test:elm 42/42, critic clean, builder claude/sonnet). Commit `4b66551`. `SlotOption`,
+  `slotMenuOptions`, and `update` tightened so all three `Add*` route through `addIfAfforded` (insert iff the
+  slot's affordances permit; old `Dict.member … facts` guard deleted). Includes the D-038 2-line StructureTest
+  probe correction. Round 1 stopped on D-038 (builder correct); round 2 committed. Integrity: 3 files. Fresh
+  Opus critic confirmed the "every offered option changes the model" property test (7 slots) + 3 no-op tests are
+  real/unweakened, tightening is genuine, and the StructureTest change is EXACTLY the 2 authorized lines → PASS.
+
