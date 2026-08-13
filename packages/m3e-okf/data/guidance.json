@@ -1,0 +1,242 @@
+{
+  "sha": "v2.7.3",
+  "concepts": [
+    {
+      "slug": "color",
+      "title": "Color & theming",
+      "source": "docs/styles/color.html",
+      "markdown": "## Color\n\nM3E applies the [Material Design 3 color system](https://m3.material.io/styles/color/system/overview) allowing you to create accessible and personalized color schemes that cascade to every component.\n\n### Design tokens\n\nThe [Material Design 3 design tokens](https://m3.material.io/foundations/design-tokens/overview) are implemented as custom CSS properties. Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.\n\nColor tokens are surfaced using the standardized prefix `--md-sys-color-*` supporting use of the [Material Theme Builder](https://material-foundation.github.io/material-theme-builder/).\n\n### Static color\n\nStatic colors refer to predefined, spec-aligned colors that do not automatically adapt to system settings. The `--md-sys-color-*` custom CSS properties default to the **baseline** values for light mode.\n\n### Dynamic color\n\nDynamic color refers to runtime-generated color schemes derived from a single source color, allowing personalized theming that adapts to system settings.\n\nM3E provides the [Theme](../components/theme.md) component which applies dynamic color, expressive motion, density, and strong focus indicators to nested, theme-aware elements. This component leverages the `@material/material-color-utilities` library to generate light and dark variants based on the content strategy—mapping perceptually tuned tones to standard Material Design 3 roles like _primary_, _surface_, and _outline_.\n\n### Forced colors\n\nM3E honors `forced-colors` mode by dynamically adapting component styles to ensure legibility, contrast, and semantic clarity in high-contrast environments."
+    },
+    {
+      "slug": "density",
+      "title": "Density",
+      "source": "docs/styles/density.html",
+      "markdown": "## Density\n\nDensity refers to the spatial compactness of UI elements—how tightly components are arranged, how much padding surrounds them, and how much content fits within a given layout. M3E applies the [Material Design 3 density system](https://m3.material.io/foundations/layout/understanding-layout/density) to adapt component layout, spacing, and touch targets across varied contexts—from spacious, touch-friendly surfaces to compact, information-dense environments.\n\n### Design tokens\n\nThe [Material Design 3 design tokens](https://m3.material.io/foundations/design-tokens/overview) are implemented as custom CSS properties. Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.\n\nDensity tokens are surfaced using the standardized `--md-sys-density-scale` and `--md-sys-density-size` custom CSS properties. M3E provides the [Theme](../components/theme.md) component which can be used to systematically control `--md-sys-density-scale` using its `density` attribute.\n\n### Density-aware components\n\nThe following components support density scaling: `autocomplete`, `breadcrumb`, `button-group`, `button`, `checkbox`, `chips`, `fab`, `form-field`, `icon button`, `list`, `menu`, `nav menu`, `paginator`, `radio-group`, `segmented button`, `select`, `split-button`, `switch`, `tabs`, `toolbar`, and `tree`. Each component adapts its layout, spacing, and touch targets based on the active density scale. Refer to the component's documentation for usage examples.\n\n### Touch surfaces\n\nTouch surfaces maintain a minimum size of `48dp x 48dp`, ensuring accessible, tap-friendly targets across all density settings. This threshold aligns with Material Design 3 guidelines and is enforced even in compact layouts, preserving interaction clarity and usability for both mouse and touch input."
+    },
+    {
+      "slug": "motion",
+      "title": "Motion",
+      "source": "docs/styles/motion.html",
+      "markdown": "## Motion\n\nM3E primarily applies the [Material Design 3 easing and duration](https://m3.material.io/styles/motion/easing-and-duration/applying-easing-and-duration) system to provide consistent, emotionally tuned transitions across components. A subset—including buttons, loading indicators, and switches—have adopted a spring-based motion physics system — an m3e implementation of Material's [motion physics](https://m3.material.io/styles/motion/overview/how-it-works). Exactly which components use physics-based motion (buttons, loading indicators, switches) is library behavior, not stated by the cited spec page. (m3e behavior)\n\n### Design tokens\n\nThe [Material Design 3 design tokens](https://m3.material.io/foundations/design-tokens/overview) are implemented as custom CSS properties. Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.\n\nMotion tokens are surfaced using the standardized prefix `--md-sys-motion-*` and are defaulted to spec-aligned values. M3E provides the [Theme](../components/theme.md) component which can be used to systematically control whether **standard** or **expressive** motion schemes are used through its `motion` attribute.\n\n### Reduced motion\n\nM3E honors reduced motion system settings by dynamically disabling or simplifying transitions for users who prefer minimal motion. Components respond to the `prefers-reduced-motion` media query, ensuring that expressive motion never compromises comfort or accessibility."
+    },
+    {
+      "slug": "typography",
+      "title": "Typography",
+      "source": "docs/styles/typography.html",
+      "markdown": "## Typography\n\nM3E applies the [Material Design 3 typography system](https://m3.material.io/styles/typography/overview) to encode visual hierarchy, editorial tone, and spatial rhythm across components. The system defines the 15 baseline type roles; m3e also surfaces the **emphasized** tier introduced in Material 3 Expressive, for a 30-style scale (15 baseline + 15 emphasized). The emphasized styles and their `--md-sys-typescale-emphasized-*` tokens are an M3 Expressive / m3e convention, not part of the classic baseline type scale. (m3e behavior)\n\nTypography tokens follow the prefix `--md-sys-typescale-*` for the **standard** typescale and `--md-sys-typescale-emphasized-*` for **emphasized**. Each typescale variant encodes font size, line height, weight, and tracking (or letter spacing).\n\nFor example, `body-large` is encoded using `--md-sys-typescale-body-large-font-size`, `--md-sys-typescale-body-large-font-weight`, `--md-sys-typescale-body-large-line-height`, and `--md-sys-typescale-body-large-tracking`.\n\nM3E components support the full semantic range of the Material 3 type system, including **standard** and **emphasized** variants of: `display-large`, `display-medium`, `display-small`, `headline-large`, `headline-medium`, `headline-small`, `title-large`, `title-medium`, `title-small`, `body-large`, `body-medium`, `body-small`, `label-large`, `label-medium`, and `label-small`.\n\nEach role is mapped to a tokenized style and applied contextually—for example, `label-large` for buttons, `body-large` for list items, and `body-small` for form-field hints."
+    },
+    {
+      "slug": "getting-started",
+      "title": "Getting started",
+      "source": "docs/getting-started/overview.html",
+      "markdown": "## Overview\n\nWelcome to M3E, a modern, from-scratch implementation of [Material Design 3](https://m3.material.io/), built entirely with [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components). It provides a complete, spec-aligned component suite with dynamic color, expressive motion, and full accessibility.\n\nLeverages Material 3's design tokens, dynamic color, shape and motion systems for highly customizable UI elements.\n\nESM-first with modular entry points and tree-shaking for minimal bundles.\n\nBuilt-in support for accessibility standards, ensuring inclusive experiences for all users.\n\nEffortlessly adapt components to your brand or user preferences with Material 3's advanced theming capabilities.\n\nLightweight, fast-loading components designed for modern web platforms.\n\nBuilt with secure-by-default patterns, including XSS-safe templating, Trusted Types compatibility, and support for strong Content Security Policies (CSP)."
+    },
+    {
+      "slug": "installation",
+      "title": "Installation",
+      "source": "docs/getting-started/installation.html",
+      "markdown": "## Installation\n\nThe M3E Web Component library is distributed as a single package under the **@m3e/web** namespace.\n\n```sh\nnpm i @m3e/web\n```\n\nAfter installing the package, each component can be imported individually through its own module.\n\nFor example:\n\n```ts\nimport \"@m3e/web/button\";\n```\n\n**Alternatively, import the `@m3e/web/all` module to load every component at once.** This option is convenient when you want full access to the M3E ecosystem without managing individual modules.\n\n```ts\nimport \"@m3e/web/all\";\n```\n\n### Native module support\n\nEach package uses [JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#module_specifiers) and documents their native module support. To use a module directly in a browser without a bundler, use a module script similar to the following.\n\n```html\n<script type=\"module\" src=\"/node_modules/@m3e/web/dist/button.js\"></script>\n```\n\nIn addition, you must also use an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) to include dependencies. The following is an example import map that imports all entry points for `@m3e/web/core`.\n\n```html\n<script type=\"importmap\">\n  {\n    \"imports\": {\n      \"tslib\": \"https://cdn.jsdelivr.net/npm/tslib@2.8.1/+esm\",\n      \"lit\": \"https://cdn.jsdelivr.net/npm/lit@3.3.0/+esm\",\n      \"lit/\": \"https://cdn.jsdelivr.net/npm/lit@3.3.0/\",\n      \"lit-html\": \"https://cdn.jsdelivr.net/npm/lit-html@3.3.0/+esm\",\n      \"lit-html/directive.js\": \"https://cdn.jsdelivr.net/npm/lit-html@3.3.0/directive.js\",\n      \"lit-html/directives/if-defined.js\": \"https://cdn.jsdelivr.net/npm/lit-html@3.3.0/directives/if-defined.js\",\n      \"lit-html/directives/class-map.js\": \"https://cdn.jsdelivr.net/npm/lit-html@3.3.0/directives/class-map.js\",\n      \"@lit/reactive-element\": \"https://cdn.jsdelivr.net/npm/@lit/reactive-element@2.0.4/+esm\",\n      \"@lit/reactive-element/\": \"https://cdn.jsdelivr.net/npm/@lit/reactive-element@2.0.4/\",\n      \"@m3e/web/core\": \"/node_modules/@m3e/web/dist/core.js\",\n      \"@m3e/web/core/a11y\": \"/node_modules/@m3e/web/dist/core-a11y.js\",\n      \"@m3e/web/core/anchoring\": \"/node_modules/@m3e/web/dist/core-anchoring.js\",\n      \"@m3e/web/core/bidi\": \"/node_modules/@m3e/web/dist/core-bidi.js\",\n      \"@m3e/web/core/layout\": \"/node_modules/@m3e/web/dist/core-layout.js\",\n      \"@m3e/web/core/platform\": \"/node_modules/@m3e/web/dist/core-platform.js\"\n    }\n  }\n</script>\n```\n\nFor production builds, use the minified files to ensure optimal load performance.\n\n### Editor integration\n\nThe `@m3e/web` package includes a [Custom Elements Manifest](https://github.com/webcomponents/custom-elements-manifest) to support enhanced editor tooling and developer experience.\n\n#### Visual Studio Code\n\nTo enable autocomplete and hover documentation, install the [Custom Elements Manifest Language Server](https://marketplace.visualstudio.com/items?itemName=pwrs.cem-language-server-vscode) extension. It will automatically detect the manifest bundled with this package and surface tag names, attributes, slots, and events in supported files.\n\nAlternatively, you can explicitly reference the `html-custom-data.json` and `css-custom-data.json` in your workspace settings.\n\n```json\n{\n  \"html.customData\": [\"./node_modules/@m3e/web/dist/html-custom-data.json\"],\n  \"css.customData\": [\"./node_modules/@m3e/web/dist/css-custom-data.json\"]\n}\n```"
+    },
+    {
+      "slug": "frameworks-react",
+      "title": "React",
+      "source": "docs/frameworks/react.html",
+      "markdown": "## React\n\nThe **@m3e/react** package provides idiomatic React bindings for all M3E Web Components. Each component is exposed as its own React module, offering typed props, event mappings, and seamless integration with the React rendering model. However, the React bindings are **client-only**. In Next.js, you **must** use them inside a `\"use client\"` boundary.\n\n```sh\nnpm i @m3e/react\n```\n\nAfter installation, import the React module for any component you want to use. Each module wraps the corresponding `@m3e/web` module and exposes a familiar React component API.\n\nFor example:\n\n```ts\nimport { M3eButton } from \"@m3e/react/button\";\n```\n\nReact modules automatically register their underlying Web Component, so no additional side-effect imports from `@m3e/web` are required.\n\n**Alternatively, import the `@m3e/react/all` module to load every React binding at once.** This option is convenient when you want full access to the M3E component suite without managing individual modules.\n\n```ts\nimport \"@m3e/react/all\";\n```\n\nEach React module mirrors the structure of its Web Component counterpart, ensuring a consistent mental model across both ecosystems. Use individual modules for tree-shaking and minimal bundles, or the aggregated module for rapid prototyping and full-suite development."
+    },
+    {
+      "slug": "frameworks-vue",
+      "title": "Vue",
+      "source": "docs/frameworks/vue.html",
+      "markdown": "## Vue\n\nM3E does not require a dedicated Vue bindings package. Vue provides first-class support for Web Components, allowing all M3E components to be used directly in Vue templates without additional wrappers.\n\nSee [Vue and Web Components](https://vuejs.org/guide/extras/web-components.html) for more information."
+    },
+    {
+      "slug": "frameworks-angular",
+      "title": "Angular",
+      "source": "docs/frameworks/angular.html",
+      "markdown": "## Angular\n\nM3E does not require a dedicated Angular bindings package. Angular provides first-class support for Web Components, allowing all M3E components to be used directly in Angular templates without additional wrappers.\n\nHowever, Angular requires the `CUSTOM_ELEMENTS_SCHEMA` to recognize custom elements. Add it to your module definition:\n\n```ts\nimport { NgModule, CUSTOM_ELEMENTS_SCHEMA } from \"@angular/core\";\n\n@NgModule({\n  declarations: [...],\n  imports: [...],\n  schemas: [CUSTOM_ELEMENTS_SCHEMA],\n})\nexport class AppModule {}\n```"
+    },
+    {
+      "slug": "forms",
+      "title": "Forms & validation",
+      "authored": true,
+      "markdown": "M3E form controls are **form-associated custom elements**: dropped inside a native\n`<form>`, they submit, validate, and reset just like built-in inputs. Wire them with\nthe standard attributes — `name` (the submitted key), `value`, and `required` — then\nread them back with `FormData` or the form's `submit` event. No custom JS plumbing.\n\n## A complete form\n\n```html\n<form>\n  <m3e-form-field variant=\"outlined\">\n    <label slot=\"label\" for=\"full-name\">Full name</label>\n    <input id=\"full-name\" name=\"fullName\" type=\"text\" required />\n    <span slot=\"hint\">Your first and last name.</span>\n  </m3e-form-field>\n\n  <m3e-form-field variant=\"outlined\">\n    <label for=\"email\">Email</label>\n    <m3e-icon slot=\"prefix\" name=\"mail\"></m3e-icon>\n    <input id=\"email\" name=\"email\" type=\"email\" required />\n  </m3e-form-field>\n\n  <label for=\"plan\">Plan</label>\n  <m3e-select id=\"plan\" name=\"plan\" required>\n    <m3e-option value=\"free\">Free</m3e-option>\n    <m3e-option value=\"pro\">Pro</m3e-option>\n    <m3e-option value=\"team\">Team</m3e-option>\n  </m3e-select>\n\n  <m3e-radio-group name=\"billing\" required>\n    <label><m3e-radio value=\"monthly\" checked></m3e-radio> Monthly</label>\n    <label><m3e-radio value=\"yearly\"></m3e-radio> Yearly</label>\n  </m3e-radio-group>\n\n  <label>\n    <m3e-switch name=\"newsletter\" value=\"subscribed\"></m3e-switch>\n    Email me product news\n  </label>\n\n  <label>\n    <m3e-checkbox name=\"terms\" value=\"accepted\" required></m3e-checkbox>\n    I accept the terms of service\n  </label>\n\n  <div>\n    <m3e-button type=\"reset\" variant=\"text\">Reset</m3e-button>\n    <m3e-button type=\"submit\" variant=\"filled\">Create account</m3e-button>\n  </div>\n</form>\n```\n\n## How the wiring works\n\n- **Submission** — each control contributes its `name=value` pair to the form's\n  `FormData`, exactly like a native input. `<m3e-button type=\"submit\">` submits the\n  form; `type=\"reset\"` returns every control to its default state.\n- **Labels** — give the form-field its floating label via `<label slot=\"label\">`, and\n  associate it to the control with `for`=<control id> — the component does no id-wiring.\n  (A `<label for>` placed in the default slot also works.) For standalone controls, wrap\n  the control in a `<label>`, or point a `<label for>` at the control's `id`.\n- **Required & validation** — `required` participates in native constraint validation,\n  so `form.checkValidity()`, the `submit` event's validity gating, and `:invalid`\n  styling all work. Surface a message through the form-field's `error` slot:\n\n```html\n<m3e-form-field variant=\"outlined\">\n  <label for=\"user\">Username</label>\n  <input id=\"user\" name=\"username\" type=\"text\" required />\n  <span slot=\"error\">This field is required.</span>\n</m3e-form-field>\n```\n\n- **Multiple / numeric values** — `<m3e-select multi>` submits each selected option\n  under the same `name`; a `<m3e-slider>` submits its thumb's `value` under the\n  thumb's `name`:\n\n```html\n<m3e-slider labelled min=\"0\" max=\"1000\" step=\"50\">\n  <m3e-slider-thumb name=\"budget\" value=\"400\"></m3e-slider-thumb>\n</m3e-slider>\n```\n\n## Form-capable elements\n\n`form-field` (wrapping `input`/`textarea`), `select`, `checkbox`, `radio-group`,\n`switch`, `slider`, and `datepicker` are all form-associated. Each participates in\nthe enclosing `<form>` via `name`/`value`/`required` — see the component card for its\nexact attributes."
+    },
+    {
+      "slug": "accessibility",
+      "title": "Accessibility",
+      "authored": true,
+      "markdown": "Accessibility is a construction concern, not a finishing pass. M3E components ship\naccessible roles, keyboard handling, and focus indicators, but the markup you write\nstill has to supply **names**, respect **target sizes**, and pair **colors** by role.\nThe rules below follow Material's accessibility guidance; the token specifics are m3e.\n\n## Accessible names on icon-only controls\n\nAn icon-only control has no visible text, so it needs an explicit accessible name.\nYou should give every icon-only `m3e-icon-button` / `m3e-fab` an `aria-label`\n([assistive technology guidance](https://m3.material.io/foundations/overview/assistive-technology)) —\nthe icon glyph is decorative and is not announced.\n\n```html\n<m3e-icon-button aria-label=\"Delete item\" variant=\"standard\">\n  <m3e-icon name=\"delete\"></m3e-icon>\n</m3e-icon-button>\n\n<m3e-fab aria-label=\"Compose message\" variant=\"primary\">\n  <m3e-icon name=\"edit\"></m3e-icon>\n</m3e-fab>\n```\n\nA control that already shows a text label (a standard `m3e-button`, an extended FAB)\ndoes not need `aria-label` — prefer the visible text as the name\n([assistive technology guidance](https://m3.material.io/foundations/overview/assistive-technology)).\n\n## Touch targets\n\nInteractive targets should be at least **48×48dp** even when the visible glyph is\nsmaller ([usability guidance](https://m3.material.io/foundations/usability/overview)).\nm3e controls reserve this minimum through their container tokens, so avoid shrinking\na control's height below it with custom CSS\n([usability guidance](https://m3.material.io/foundations/usability/overview)). (m3e behavior)\n\n## Focus indicators\n\nA visible focus indicator must never be removed\n([usability guidance](https://m3.material.io/foundations/usability/overview)). M3E draws\na focus ring on every focusable control; the `m3e-theme` component's `strong-focus`\nattribute makes it heavier for high-visibility contexts. (m3e behavior)\n\n```html\n<m3e-theme scheme=\"auto\" strong-focus>\n  <m3e-icon-button aria-label=\"Settings\" variant=\"tonal\">\n    <m3e-icon name=\"settings\"></m3e-icon>\n  </m3e-icon-button>\n</m3e-theme>\n```\n\n## Color & contrast pairing\n\nText and its background must meet contrast minimums\n([color-contrast guidance](https://m3.material.io/foundations/designing/color-contrast)).\nAlways pair a container color token with its matching `on-*` token — put\n`--md-sys-color-on-primary` text on a `--md-sys-color-primary` surface, never a raw\nhex ([color-contrast guidance](https://m3.material.io/foundations/designing/color-contrast)).\nThe role pairs are contrast-tuned by construction, so prefer them over hand-picked\ncolors ([color-contrast guidance](https://m3.material.io/foundations/designing/color-contrast)). (m3e behavior)\n\n## Checklist\n\n- Every icon-only control has an `aria-label`.\n- Nothing removes the focus ring; `strong-focus` where visibility matters.\n- Text uses `on-*` tokens paired to their container role.\n- Interactive targets stay ≥48dp — no CSS that shrinks control height below it.\n\n---\n_See also: [Interaction states](interaction-states.md) · [Color & theming](color.md) · [Design tokens](design-tokens.md)._"
+    },
+    {
+      "slug": "layout",
+      "title": "Layout & adaptive design",
+      "authored": true,
+      "markdown": "M3E layout follows Material's adaptive model: pick navigation and pane structure by\nthe **window size class**, not the device. The size classes and canonical layouts are\nMaterial's; the components that realize them (`m3e-nav-bar`, `m3e-nav-rail`,\n`m3e-drawer-container`, panes) are m3e.\n\n## Window size classes\n\nMaterial defines width breakpoints — compact, medium, expanded, large, extra-large\n([breakpoints](https://m3.material.io/foundations/layout/breakpoints/overview)). Choose\nthe layout for the class, then let it adapt\n([adaptive design](https://m3.material.io/foundations/layout/layout-overview/adaptive-design)).\n\n## Navigation: bar vs rail vs drawer\n\nThe responsive navigation trio maps to size classes\n([layout overview](https://m3.material.io/foundations/layout/layout-overview/overview)):\n\n- **Compact** (phones) → use `m3e-nav-bar` (bottom bar)\n  ([canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)).\n- **Medium** (small tablets) → prefer `m3e-nav-rail` (side rail)\n  ([canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)).\n- **Expanded and up** → prefer `m3e-drawer-container` (persistent side drawer)\n  ([canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)).\n\n`m3e-nav-bar` and `m3e-nav-rail` take a `mode` (`auto` | `compact` | `expanded`); leave\nit `auto` to let the component respond to its container. (m3e behavior)\n\n```html\n<m3e-nav-bar mode=\"auto\">\n  <m3e-nav-item href=\"/home\" selected>\n    <m3e-icon slot=\"icon\" name=\"home\"></m3e-icon>\n    Home\n  </m3e-nav-item>\n  <m3e-nav-item href=\"/library\">\n    <m3e-icon slot=\"icon\" name=\"library_books\"></m3e-icon>\n    Library\n  </m3e-nav-item>\n</m3e-nav-bar>\n```\n\nThe drawer container hosts start/end drawers with a `mode`\n(`auto` | `over` | `push` | `side`) per side; `over` floats above content on small\nscreens, `side` docks it on large ones. (m3e behavior)\n\n```html\n<m3e-drawer-container start start-mode=\"side\">\n  <m3e-content-pane slot=\"start\">\n    <m3e-nav-item href=\"/inbox\">Inbox</m3e-nav-item>\n  </m3e-content-pane>\n  <m3e-content-pane>Main content</m3e-content-pane>\n</m3e-drawer-container>\n```\n\n## Panes & canonical layouts\n\nMaterial's canonical layouts (list-detail, supporting pane, feed) are built from panes\n([canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)).\nIn m3e, `m3e-content-pane` is a shaped padded surface and `m3e-split-pane` is a resizable\ntwo-pane region — use `m3e-split-pane` for a list-detail split\n([scaffold panes](https://m3.material.io/foundations/layout/scaffold/panes)). (m3e behavior)\n\n```html\n<m3e-split-pane orientation=\"horizontal\">\n  <m3e-content-pane slot=\"start\">List</m3e-content-pane>\n  <m3e-content-pane slot=\"end\">Detail</m3e-content-pane>\n</m3e-split-pane>\n```\n\n## Spacing\n\nMaterial's spacing scale drives gaps and margins between layout regions\n([spacing](https://m3.material.io/styles/spacing/overview)); m3e surfaces spacing through\nits density system — see [Density](density.md).\n\n---\n_See also: [Choosing components](choosing-components.md) · [Density](density.md) · [Accessibility](accessibility.md)._"
+    },
+    {
+      "slug": "interaction-states",
+      "title": "Interaction states",
+      "authored": true,
+      "markdown": "Every interactive Material component expresses the same set of visual states through a\n**state layer** — a translucent overlay tinted by a color role. The state model is\nMaterial's; the CSS tokens that implement it are m3e.\n\n## The states\n\nMaterial defines enabled, hover, focus, pressed, dragged, and disabled states\n([interaction states](https://m3.material.io/foundations/interaction/states/overview)).\nHover/focus/pressed are drawn as a **state layer** at role-specific opacities\n([state layers](https://m3.material.io/foundations/interaction/states/state-layers)); you\nshould not hand-build these overlays — m3e applies them automatically to its controls\n([applying states](https://m3.material.io/foundations/interaction/states/applying-states)). (m3e behavior)\n\nThe state layer color and opacity come from `--md-sys-state-*` tokens (e.g.\n`--md-sys-state-hover-state-layer-opacity`) tinted by the component's color role. (m3e behavior)\n\n## Disabled vs disabled-interactive\n\nA plain `disabled` control is inert and skipped by the tab order. When you need a\ncontrol that still receives focus and shows a tooltip explaining *why* it is\nunavailable, prefer `disabled-interactive` — it keeps the control reachable for\nassistive technology ([interaction states](https://m3.material.io/foundations/interaction/states/overview)). (m3e behavior)\n\n```html\n<m3e-button variant=\"filled\" disabled>Unavailable</m3e-button>\n\n<m3e-button variant=\"filled\" disabled-interactive>\n  Not yet\n</m3e-button>\n```\n\n## Selected state\n\nToggleable controls carry a distinct **selected** state layered on top of the base\nstates ([interaction states](https://m3.material.io/foundations/interaction/states/overview)).\nIn m3e, toggle controls expose a `selected` attribute and, where relevant, a slot\nfor the selected glyph — on `m3e-icon-button` that slot is `selected` (button and\nnav/tree items name it `selected-icon`). (m3e behavior)\n\n```html\n<m3e-icon-button toggle selected aria-label=\"Bookmark\" variant=\"tonal\">\n  <m3e-icon name=\"bookmark_border\"></m3e-icon>\n  <m3e-icon slot=\"selected\" name=\"bookmark\"></m3e-icon>\n</m3e-icon-button>\n```\n\n## Reduced motion\n\nState transitions honor the user's motion preference — components respond to\n`prefers-reduced-motion` and simplify or drop the animation\n([interaction states](https://m3.material.io/foundations/interaction/states/overview)). (m3e behavior)\n\n---\n_See also: [Accessibility](accessibility.md) · [Motion](motion.md) · [Design tokens](design-tokens.md)._"
+    },
+    {
+      "slug": "design-tokens",
+      "title": "Design tokens",
+      "authored": true,
+      "markdown": "Design tokens are named variables for visual decisions — color, type, shape, motion,\nelevation — so a value is set once and referenced everywhere. Material defines the token\nsystem; m3e implements it as CSS custom properties you can read and override.\n\n## The token chain: ref → sys → component\n\nMaterial tokens flow through three tiers\n([design tokens](https://m3.material.io/foundations/design-tokens/overview)):\n\n- **Reference** (`--md-ref-*`) — the raw palette/type primitives.\n- **System** (`--md-sys-*`) — role-based, semantic tokens: this is the tier you use.\n- **Component** (`--m3e-*`) — per-component values wired to system tokens. (m3e behavior)\n\nYou should theme against the **system** tier, not reference or component tokens\n([how to use tokens](https://m3.material.io/foundations/design-tokens/how-to-use-tokens)) —\nsystem tokens are the stable, role-named contract; component tokens are for fine-tuning\none element ([how to use tokens](https://m3.material.io/foundations/design-tokens/how-to-use-tokens)). (m3e behavior)\n\n## Reading the common system tokens\n\n| Prefix | Covers |\n| --- | --- |\n| `--md-sys-color-*` | color roles (`primary`, `on-primary`, `surface`, `outline`, …) |\n| `--md-sys-typescale-*` | type roles (`body-large`, `label-large`, …) |\n| `--md-sys-shape-*` | corner radii |\n| `--md-sys-motion-*` | easing + duration |\n| `--md-sys-elevation-*` | elevation levels |\n| `--md-sys-state-*` | state-layer opacities |\n\n## Setting tokens with the theme component\n\nPrefer the `m3e-theme` component over writing `--md-sys-*` values by hand — it generates\na full, contrast-correct token set from one source color and applies it to its subtree\n([how to use tokens](https://m3.material.io/foundations/design-tokens/how-to-use-tokens)). (m3e behavior)\n\n```html\n<m3e-theme color=\"#6750A4\" scheme=\"auto\" variant=\"expressive\">\n  <m3e-button variant=\"filled\">Themed</m3e-button>\n</m3e-theme>\n```\n\nFor a one-off override, set a component (`--m3e-*`) token in scope rather than editing a\nsystem token globally ([how to use tokens](https://m3.material.io/foundations/design-tokens/how-to-use-tokens)). (m3e behavior)\n\n---\n_See also: [Color & theming](color.md) · [Elevation](elevation.md) · [Shape](shape.md) · [Typography](typography.md)._"
+    },
+    {
+      "slug": "elevation",
+      "title": "Elevation",
+      "authored": true,
+      "markdown": "Elevation expresses hierarchy and layering. In Material 3 it is drawn with **tonal\ncolor** (a surface tint that grows with height) plus a shadow. The level system is\nMaterial's; m3e realizes it through surface tokens — there is no `elevation` attribute.\n\n## The six levels\n\nMaterial defines elevation levels 0–5, each a dp height mapped to a tonal-surface and\nshadow pairing ([elevation](https://m3.material.io/styles/elevation/overview)). Higher is\ncloser to the user; you should raise a surface only to signal that it floats above its\nneighbors ([applying elevation](https://m3.material.io/styles/elevation/applying-elevation)).\n\n| Level | Typical surface |\n| --- | --- |\n| 0 | background, filled buttons at rest |\n| 1 | cards, resting FAB, elevated buttons |\n| 2 | resting search bar |\n| 3 | menus, dialogs, resting nav drawer |\n| 4–5 | transient/pressed peaks |\n\n## How m3e sets it\n\nm3e components carry their level through `--md-sys-elevation-*` and per-component\nsurface tokens rather than an attribute — so you change elevation by choosing the right\ncomponent/variant, not by setting a number\n([elevation tokens](https://m3.material.io/styles/elevation/tokens)). (m3e behavior)\n\nThe clearest lever is a component's **variant**: an `elevated` card or button sits at a\nresting level, a `filled` one is flat at level 0\n([applying elevation](https://m3.material.io/styles/elevation/applying-elevation)). (m3e behavior)\n\n```html\n<m3e-card variant=\"elevated\">\n  <span slot=\"header\">Floats above the page</span>\n  Elevated surfaces use tonal color plus a shadow.\n</m3e-card>\n\n<m3e-card variant=\"filled\">\n  <span slot=\"header\">Flat</span>\n  Filled surfaces sit at level 0 — no shadow.\n</m3e-card>\n```\n\nAvoid faking elevation with a custom `box-shadow`; it will not carry the tonal tint and\nwill drift from the token scale ([elevation](https://m3.material.io/styles/elevation/overview)). (m3e behavior)\n\n---\n_See also: [Design tokens](design-tokens.md) · [Shape](shape.md) · [Color & theming](color.md)._"
+    },
+    {
+      "slug": "shape",
+      "title": "Shape",
+      "authored": true,
+      "markdown": "Shape carries brand and hierarchy through corner rounding. Material 3 defines a corner-\nradius scale and, in Expressive, shape **morphing** between states. The scale is\nMaterial's; the `shape` attribute and `m3e-shape` element are m3e.\n\n## The corner-radius scale\n\nMaterial's shape scale runs from none through extra-small, small, medium, large,\nextra-large, to full (pill) ([corner-radius scale](https://m3.material.io/styles/shape/corner-radius-scale)).\nEach step is a `--md-sys-shape-corner-*` token; you should size a component's corners\nfrom the scale rather than an arbitrary radius so shapes stay consistent\n([shape principles](https://m3.material.io/styles/shape/overview-principles)). (m3e behavior)\n\n## The `shape` attribute\n\nButtons, icon buttons, and toolbars expose a `shape` attribute\n(`rounded` | `square`) — prefer `rounded` for standard actions and reserve `square`\nfor grouped or utilitarian controls\n([shape principles](https://m3.material.io/styles/shape/overview-principles)). (m3e behavior)\n\n```html\n<m3e-button variant=\"filled\" shape=\"rounded\">Rounded</m3e-button>\n<m3e-button variant=\"outlined\" shape=\"square\">Square</m3e-button>\n\n<m3e-icon-button shape=\"square\" variant=\"tonal\" aria-label=\"Grid view\">\n  <m3e-icon name=\"grid_view\"></m3e-icon>\n</m3e-icon-button>\n```\n\n## Applying a Material shape to arbitrary content\n\nThe `m3e-shape` element clips its content to a named Material shape — use it to give a\nnon-Material surface (an image, a custom block) a spec shape instead of a hand-written\n`clip-path` ([shape principles](https://m3.material.io/styles/shape/overview-principles)). (m3e behavior)\n\n```html\n<m3e-shape name=\"4-leaf-clover\">\n  <m3e-avatar>AB</m3e-avatar>\n</m3e-shape>\n```\n\n## Shape morphing (Expressive)\n\nIn Material 3 Expressive, some controls **morph** their shape between rest, hover, and\npressed states ([shape morph](https://m3.material.io/styles/shape/shape-morph)). m3e drives\nthis from the shape tokens; you should not animate corner radius yourself — let the\ncomponent morph ([shape morph](https://m3.material.io/styles/shape/shape-morph)). (m3e behavior)\n\n---\n_See also: [Design tokens](design-tokens.md) · [Elevation](elevation.md) · [Interaction states](interaction-states.md)._"
+    },
+    {
+      "slug": "icons",
+      "title": "Icons",
+      "authored": true,
+      "markdown": "M3E renders icons with **Material Symbols** through the `m3e-icon` element. Material\nSymbols are variable-font icons controlled by four axes; the axes are Material's, and\n`m3e-icon` maps each to an attribute.\n\n## The four axes\n\nMaterial Symbols vary along fill, weight, grade, and optical size\n([icons](https://m3.material.io/styles/icons/overview)). `m3e-icon` maps them:\n\n| Axis | Attribute | Values |\n| --- | --- | --- |\n| Fill | `filled` | boolean (present = filled) |\n| Weight | `weight` | `100`–`700` |\n| Grade | `grade` | `low` \\| `medium` \\| `high` |\n| Optical size | `optical-size` | number (dp) |\n| Style | `variant` | `outlined` \\| `rounded` \\| `sharp` |\n\n```html\n<m3e-icon name=\"favorite\"></m3e-icon>\n<m3e-icon name=\"favorite\" filled weight=\"600\"></m3e-icon>\n<m3e-icon name=\"settings\" variant=\"rounded\" optical-size=\"24\"></m3e-icon>\n```\n\n## Choosing values\n\nYou should keep one icon **style** (`variant`) across a screen so the set reads as one\nfamily ([applying icons](https://m3.material.io/styles/icons/applying-icons)). Prefer the\n**filled** state to signal a selected/active toggle and the outlined state for its rest\nstate ([applying icons](https://m3.material.io/styles/icons/applying-icons)). (m3e behavior)\n\nMatch `optical-size` to the rendered size and let `weight` track the surrounding text\nweight for optical balance ([applying icons](https://m3.material.io/styles/icons/applying-icons)). (m3e behavior)\n\n## Icons inside controls\n\nMost controls take their icon in a named slot rather than as content — an\n`m3e-icon-button` holds it in the default slot, a `m3e-button` in its `icon` slot\n([designing icons](https://m3.material.io/styles/icons/designing-icons)). (m3e behavior)\n\n```html\n<m3e-button variant=\"filled\">\n  <m3e-icon slot=\"icon\" name=\"download\"></m3e-icon>\n  Download\n</m3e-button>\n```\n\nAn icon-only control still needs an accessible name — see [Accessibility](accessibility.md).\n\n---\n_See also: [Accessibility](accessibility.md) · [icon component card](../components/icon.md) · [Shape](shape.md)._"
+    },
+    {
+      "slug": "content-design",
+      "title": "Content design",
+      "authored": true,
+      "markdown": "The words in a UI are part of the design. Material's content-design guidance covers alt\ntext, component microcopy (labels, errors, hints), and general writing style. All of the\nguidance below is Material's; where a control supplies the text, the slot/attribute is m3e.\n\n## Alt text\n\nEvery meaningful image needs a text alternative; decorative images take an empty one\n([alt text](https://m3.material.io/foundations/content-design/alt-text)). You should\nwrite alt text that conveys the image's purpose, not its appearance\n([alt text](https://m3.material.io/foundations/content-design/alt-text)). For an\nimage `m3e-avatar`, put the `alt` on the `<img>` you slot in; for an initials avatar the\nvisible text is the name.\n\n```html\n<m3e-avatar>\n  <img src=\"/u/ada.jpg\" alt=\"Ada Lovelace\" />\n</m3e-avatar>\n\n<m3e-avatar>AL</m3e-avatar>\n```\n\n## Writing for components\n\nLabels should be short and action-oriented — a button says what happens\n([UX writing](https://m3.material.io/foundations/content-design/style-guide/ux-writing-best-practices)).\nError text should state what went wrong and how to fix it, not just that it is invalid\n([UX writing](https://m3.material.io/foundations/content-design/style-guide/ux-writing-best-practices)).\nSurface it through the form-field `error` slot, and keep hints in the `hint` slot. (m3e behavior)\n\n```html\n<m3e-form-field variant=\"outlined\">\n  <label for=\"pw\">Password</label>\n  <input id=\"pw\" name=\"password\" type=\"password\" required />\n  <span slot=\"hint\">At least 8 characters.</span>\n  <span slot=\"error\">Password must be at least 8 characters.</span>\n</m3e-form-field>\n```\n\n## Global writing basics\n\nPrefer sentence case for labels, buttons, and headings\n([content design](https://m3.material.io/foundations/content-design/overview)). You should\nwrite in the second person and active voice, and avoid jargon the user would not use\n([global writing](https://m3.material.io/foundations/content-design/global-writing/overview)).\nKeep terminology consistent — one action, one name across the whole product\n([content design](https://m3.material.io/foundations/content-design/overview)).\n\n---\n_See also: [Forms & validation](forms.md) · [Accessibility](accessibility.md)._"
+    }
+  ],
+  "families": [
+    {
+      "slug": "actions",
+      "title": "Actions & buttons",
+      "blurb": "Elements users click to perform an action.",
+      "members": [
+        "button",
+        "icon-button",
+        "fab",
+        "fab-menu",
+        "split-button",
+        "button-group",
+        "segmented-button"
+      ],
+      "choosing": "Use **button** for standard labeled actions. Drop to **icon-button** when space is tight and the icon is unambiguous. **fab** is the single most important screen action (one per screen); **fab-menu** expands a FAB into related actions. **split-button** pairs a default action with a dropdown of alternates. **button-group** visually unifies several related buttons; **segmented-button** is for picking among 2–5 mutually-exclusive options (closer to a control than an action — for on/off prefer **switch**, for many options prefer **select** or **chips**)."
+    },
+    {
+      "slug": "selection-inputs",
+      "title": "Selection controls",
+      "blurb": "Form controls for choosing values.",
+      "members": [
+        "checkbox",
+        "radio-group",
+        "switch",
+        "slider",
+        "chips"
+      ],
+      "choosing": "**checkbox** = select zero-or-more from a list. **switch** = a single immediate on/off toggle (applies instantly, no Save). **slider** = a number within a range. **chips** = compact, often dynamic choices: filter-chips for multi-select filtering, input-chips for tokenized entry, suggestion/assist chips for prompts.\n\n_One-of-many — the key fork:_ use **radio-group** when all options should stay **visible** at once and there are only a few (2–5); use **[select](../components/select.md)** (a closed dropdown menu) when the list is **long or should stay collapsed** until opened. Phrases like \"closed list\", \"dropdown\", or \"pick from a menu\" → select. \"Choose one\" with a handful of always-visible options → radio-group. For an inline horizontal one-of-many that reads as a control, **[segmented-button](../components/segmented-button.md)** is a third option."
+    },
+    {
+      "slug": "text-inputs",
+      "title": "Text input & forms",
+      "blurb": "Fields for entering and selecting text.",
+      "members": [
+        "form-field",
+        "select",
+        "autocomplete",
+        "search",
+        "textarea-autosize",
+        "option"
+      ],
+      "choosing": "Wrap text inputs in **form-field** for labels, supporting text, and validation styling. **select** = pick one value from a **closed dropdown menu** (the one-of-many control when options stay collapsed; compare with radio-group under Selection controls). **autocomplete** = a text field where the user types and filters live suggestions. **search** = a dedicated search bar/view pattern. **textarea-autosize** grows a multiline field with its content. **option** supplies the items inside select/autocomplete listboxes."
+    },
+    {
+      "slug": "navigation",
+      "title": "Navigation",
+      "blurb": "Moving between destinations and through content.",
+      "members": [
+        "app-bar",
+        "toolbar",
+        "nav-bar",
+        "nav-rail",
+        "nav-menu",
+        "drawer-container",
+        "tabs",
+        "breadcrumb",
+        "toc",
+        "paginator",
+        "stepper",
+        "slide-group"
+      ],
+      "choosing": "Top-level destinations: **nav-bar** (bottom, compact/mobile), **nav-rail** (side, medium widths), **drawer-container** (expanded side drawer, large screens) — these are the responsive trio. **nav-menu** is a hierarchical nav tree. Within a page: **tabs** switch peer views; **breadcrumb** shows hierarchy depth; **toc** links to in-page sections; **stepper** walks an ordered multi-step flow; **paginator** moves through pages of data; **slide-group** is directional content paging. **app-bar** is the top header surface; **toolbar** holds contextual actions."
+    },
+    {
+      "slug": "containers",
+      "title": "Containers & surfaces",
+      "blurb": "Surfaces that group or reveal content.",
+      "members": [
+        "card",
+        "content-pane",
+        "dialog",
+        "bottom-sheet",
+        "split-pane",
+        "expansion-panel",
+        "divider",
+        "menu"
+      ],
+      "choosing": "**card** groups related content/actions about one subject. **content-pane** is a plain shaped padded surface. For transient focus: **dialog** (modal prompt/decision, blocks the page), **bottom-sheet** (sheet from the bottom, mobile-friendly, supports detents), **menu** (a small contextual list of actions/commands anchored to a trigger). **expansion-panel** shows/hides sections in place. **split-pane** is a resizable two-pane layout. **divider** is a thin rule between items."
+    },
+    {
+      "slug": "data-display",
+      "title": "Data & collections",
+      "blurb": "Showing structured or hierarchical data.",
+      "members": [
+        "list",
+        "tree",
+        "calendar",
+        "datepicker",
+        "date-input",
+        "timepicker"
+      ],
+      "choosing": "**list** renders rows of items (optionally selectable/expandable/actionable). **tree** renders nested hierarchy. **calendar** is an inline month/year date surface; **datepicker** is the text-field + popup calendar for forms; **date-input** is the segmented date/time text field (date-only, time-only, or combined) that a datepicker/timepicker wraps; **timepicker** is the field + dial/input popup for choosing a time of day."
+    },
+    {
+      "slug": "feedback",
+      "title": "Feedback & status",
+      "blurb": "Communicating status, progress, and messages.",
+      "members": [
+        "badge",
+        "snackbar",
+        "tooltip",
+        "loading-indicator",
+        "progress-indicator",
+        "skeleton"
+      ],
+      "choosing": "**snackbar** = brief, dismissible message about a completed action (global service). **tooltip** = on-hover/focus context for a control. **badge** = a small count/dot on an icon or item. For waiting: **progress-indicator** (linear/circular, determinate or indeterminate), **loading-indicator** (expressive attention-grabbing spinner), **skeleton** (placeholder surface while content loads)."
+    },
+    {
+      "slug": "content-media",
+      "title": "Content & media",
+      "blurb": "Identity, iconography, and shape primitives.",
+      "members": [
+        "avatar",
+        "icon",
+        "heading",
+        "shape"
+      ],
+      "choosing": "**icon** renders Material Symbols. **avatar** shows a person/entity image or initials. **heading** gives expressive, accessible Material type-scale headings. **shape** applies Material's abstract shape system to arbitrary content."
+    },
+    {
+      "slug": "system",
+      "title": "System",
+      "blurb": "Non-visual configuration elements.",
+      "members": [
+        "theme"
+      ],
+      "choosing": "**theme** is a non-visual element that applies dynamic color/theming tokens to its subtree. See the Color & theming concept page."
+    }
+  ]
+}

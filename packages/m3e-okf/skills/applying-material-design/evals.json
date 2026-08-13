@@ -1,0 +1,25 @@
+{
+  "skill": "applying-material-design",
+  "notes": "Held-out Material-design questions answerable on ANY stack. A pass routes to the correct component class + cites the neutral bundle page; it must stay technology-neutral (no <m3e-*> or framework markup).",
+  "cases": [
+    {
+      "id": "amd-primary-action-class",
+      "prompt": "On a content screen I have one obviously-most-important action plus several secondary ones. In Material 3, which component class carries the primary action, and what's the mistake to avoid?",
+      "rubric": [
+        "Selects the FAB (floating action button) for the single primary action; routes to /knowledge/components/fab.",
+        "Names the anti-pattern of using a FAB for non-primary actions; routes to /knowledge/anti-patterns/fab-for-non-primary-actions.",
+        "Answer is technology-neutral — no <m3e-*> tags, no framework code.",
+        "Cites the bundle by bundle-absolute path (starts with /knowledge/...)."
+      ]
+    },
+    {
+      "id": "amd-state-not-color-only",
+      "prompt": "Is it fine to signal an input's error state with red color alone in a Material 3 UI?",
+      "rubric": [
+        "Says no — color must not be the only signal; routes to /knowledge/anti-patterns/color-only-state-signaling and/or /knowledge/foundations/accessibility.",
+        "Mentions a non-color cue (icon, text, shape).",
+        "Stays technology-neutral; cites the bundle by /knowledge/... path."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "//": "m3e-okf disclosure hook — PROJECT-LEVEL install. Put this in <repo>/.claude/settings.json for a repo you KNOW uses m3e. M3E_OKF_ASSUME_REPO=1 skips the repo-detection gate (the config's presence implies the repo uses m3e). Substitute the path to your m3e-docs/m3e-okf checkout.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "M3E_OKF_ASSUME_REPO=1 node /Users/jack/Documents/code/m3e-docs/hooks/m3e-disclosure.mjs"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,508 @@
+{
+  "upstream": "matraic/m3e",
+  "sha": "v2.7.3",
+  "license": "MIT",
+  "components": [
+    {
+      "name": "app-bar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/app-bar/README.md",
+      "sourceFiles": [
+        "packages/web/src/app-bar/AppBarElement.ts"
+      ]
+    },
+    {
+      "name": "autocomplete",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/autocomplete/README.md",
+      "sourceFiles": [
+        "packages/web/src/autocomplete/AutocompleteElement.ts"
+      ]
+    },
+    {
+      "name": "avatar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/avatar/README.md",
+      "sourceFiles": [
+        "packages/web/src/avatar/AvatarElement.ts"
+      ]
+    },
+    {
+      "name": "badge",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/badge/README.md",
+      "sourceFiles": [
+        "packages/web/src/badge/BadgeElement.ts"
+      ]
+    },
+    {
+      "name": "bottom-sheet",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/bottom-sheet/README.md",
+      "sourceFiles": [
+        "packages/web/src/bottom-sheet/BottomSheetElement.ts",
+        "packages/web/src/bottom-sheet/BottomSheetActionElement.ts",
+        "packages/web/src/bottom-sheet/BottomSheetTriggerElement.ts"
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/breadcrumb/README.md",
+      "sourceFiles": [
+        "packages/web/src/breadcrumb/BreadcrumbElement.ts",
+        "packages/web/src/breadcrumb/BreadcrumbItemElement.ts",
+        "packages/web/src/breadcrumb/BreadcrumbItemButtonElement.ts"
+      ]
+    },
+    {
+      "name": "button",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/button/README.md",
+      "sourceFiles": [
+        "packages/web/src/button/ButtonElement.ts"
+      ]
+    },
+    {
+      "name": "button-group",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/button-group/README.md",
+      "sourceFiles": [
+        "packages/web/src/button-group/ButtonGroupElement.ts"
+      ]
+    },
+    {
+      "name": "calendar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/calendar/README.md",
+      "sourceFiles": [
+        "packages/web/src/calendar/CalendarElement.ts",
+        "packages/web/src/calendar/MonthViewElement.ts",
+        "packages/web/src/calendar/MultiYearViewElement.ts",
+        "packages/web/src/calendar/YearViewElement.ts"
+      ]
+    },
+    {
+      "name": "card",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/card/README.md",
+      "sourceFiles": [
+        "packages/web/src/card/CardElement.ts"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/checkbox/README.md",
+      "sourceFiles": [
+        "packages/web/src/checkbox/CheckboxElement.ts"
+      ]
+    },
+    {
+      "name": "chips",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/chips/README.md",
+      "sourceFiles": [
+        "packages/web/src/chips/AssistChipElement.ts",
+        "packages/web/src/chips/ChipElement.ts",
+        "packages/web/src/chips/ChipSetElement.ts",
+        "packages/web/src/chips/FilterChipElement.ts",
+        "packages/web/src/chips/FilterChipSetElement.ts",
+        "packages/web/src/chips/InputChipElement.ts",
+        "packages/web/src/chips/InputChipSetElement.ts",
+        "packages/web/src/chips/SuggestionChipElement.ts"
+      ]
+    },
+    {
+      "name": "content-pane",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/content-pane/README.md",
+      "sourceFiles": [
+        "packages/web/src/content-pane/ContentPaneElement.ts"
+      ]
+    },
+    {
+      "name": "date-input",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/date-input/README.md",
+      "sourceFiles": [
+        "packages/web/src/date-input/DateInputElement.ts"
+      ]
+    },
+    {
+      "name": "datepicker",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/datepicker/README.md",
+      "sourceFiles": [
+        "packages/web/src/datepicker/DatepickerElement.ts",
+        "packages/web/src/datepicker/DatepickerToggleElement.ts"
+      ]
+    },
+    {
+      "name": "dialog",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/dialog/README.md",
+      "sourceFiles": [
+        "packages/web/src/dialog/DialogElement.ts",
+        "packages/web/src/dialog/DialogActionElement.ts",
+        "packages/web/src/dialog/DialogTriggerElement.ts"
+      ]
+    },
+    {
+      "name": "divider",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/divider/README.md",
+      "sourceFiles": [
+        "packages/web/src/divider/DividerElement.ts"
+      ]
+    },
+    {
+      "name": "drawer-container",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/drawer-container/README.md",
+      "sourceFiles": [
+        "packages/web/src/drawer-container/DrawerContainerElement.ts",
+        "packages/web/src/drawer-container/DrawerToggleElement.ts"
+      ]
+    },
+    {
+      "name": "expansion-panel",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/expansion-panel/README.md",
+      "sourceFiles": [
+        "packages/web/src/expansion-panel/AccordionElement.ts",
+        "packages/web/src/expansion-panel/ExpansionHeaderElement.ts",
+        "packages/web/src/expansion-panel/ExpansionPanelElement.ts"
+      ]
+    },
+    {
+      "name": "fab",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/fab/README.md",
+      "sourceFiles": [
+        "packages/web/src/fab/FabElement.ts"
+      ]
+    },
+    {
+      "name": "fab-menu",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/fab-menu/README.md",
+      "sourceFiles": [
+        "packages/web/src/fab-menu/FabMenuElement.ts",
+        "packages/web/src/fab-menu/FabMenuItemElement.ts",
+        "packages/web/src/fab-menu/FabMenuTriggerElement.ts"
+      ]
+    },
+    {
+      "name": "form-field",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/form-field/README.md",
+      "sourceFiles": [
+        "packages/web/src/form-field/FormFieldElement.ts"
+      ]
+    },
+    {
+      "name": "heading",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/heading/README.md",
+      "sourceFiles": [
+        "packages/web/src/heading/HeadingElement.ts"
+      ]
+    },
+    {
+      "name": "icon",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/icon/README.md",
+      "sourceFiles": [
+        "packages/web/src/icon/IconElement.ts"
+      ]
+    },
+    {
+      "name": "icon-button",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/icon-button/README.md",
+      "sourceFiles": [
+        "packages/web/src/icon-button/IconButtonElement.ts"
+      ]
+    },
+    {
+      "name": "list",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/list/README.md",
+      "sourceFiles": [
+        "packages/web/src/list/ActionListElement.ts",
+        "packages/web/src/list/ExpandableListItemElement.ts",
+        "packages/web/src/list/ListElement.ts",
+        "packages/web/src/list/ListActionElement.ts",
+        "packages/web/src/list/ListItemElement.ts",
+        "packages/web/src/list/ListItemButtonElement.ts",
+        "packages/web/src/list/ListOptionElement.ts",
+        "packages/web/src/list/SelectionListElement.ts"
+      ]
+    },
+    {
+      "name": "loading-indicator",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/loading-indicator/README.md",
+      "sourceFiles": [
+        "packages/web/src/loading-indicator/LoadingIndicatorElement.ts"
+      ]
+    },
+    {
+      "name": "menu",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/menu/README.md",
+      "sourceFiles": [
+        "packages/web/src/menu/MenuElement.ts",
+        "packages/web/src/menu/MenuItemElement.ts",
+        "packages/web/src/menu/MenuItemCheckboxElement.ts",
+        "packages/web/src/menu/MenuItemGroupElement.ts",
+        "packages/web/src/menu/MenuItemRadioElement.ts",
+        "packages/web/src/menu/MenuTriggerElement.ts"
+      ]
+    },
+    {
+      "name": "nav-bar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/nav-bar/README.md",
+      "sourceFiles": [
+        "packages/web/src/nav-bar/NavBarElement.ts",
+        "packages/web/src/nav-bar/NavItemElement.ts"
+      ]
+    },
+    {
+      "name": "nav-menu",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/nav-menu/README.md",
+      "sourceFiles": [
+        "packages/web/src/nav-menu/NavMenuElement.ts",
+        "packages/web/src/nav-menu/NavMenuItemElement.ts",
+        "packages/web/src/nav-menu/NavMenuItemGroupElement.ts"
+      ]
+    },
+    {
+      "name": "nav-rail",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/nav-rail/README.md",
+      "sourceFiles": [
+        "packages/web/src/nav-rail/NavRailElement.ts",
+        "packages/web/src/nav-rail/NavRailToggleElement.ts"
+      ]
+    },
+    {
+      "name": "option",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/option/README.md",
+      "sourceFiles": [
+        "packages/web/src/option/OptGroupElement.ts",
+        "packages/web/src/option/OptionElement.ts",
+        "packages/web/src/option/OptionPanelElement.ts"
+      ]
+    },
+    {
+      "name": "paginator",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/paginator/README.md",
+      "sourceFiles": [
+        "packages/web/src/paginator/PaginatorElement.ts"
+      ]
+    },
+    {
+      "name": "progress-indicator",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/progress-indicator/README.md",
+      "sourceFiles": [
+        "packages/web/src/progress-indicator/CircularProgressIndicatorElement.ts",
+        "packages/web/src/progress-indicator/LinearProgressIndicatorElement.ts"
+      ]
+    },
+    {
+      "name": "radio-group",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/radio-group/README.md",
+      "sourceFiles": [
+        "packages/web/src/radio-group/RadioElement.ts",
+        "packages/web/src/radio-group/RadioGroupElement.ts"
+      ]
+    },
+    {
+      "name": "search",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/search/README.md",
+      "sourceFiles": [
+        "packages/web/src/search/SearchBarElement.ts",
+        "packages/web/src/search/SearchViewElement.ts"
+      ]
+    },
+    {
+      "name": "segmented-button",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/segmented-button/README.md",
+      "sourceFiles": [
+        "packages/web/src/segmented-button/ButtonSegmentElement.ts",
+        "packages/web/src/segmented-button/SegmentedButtonElement.ts"
+      ]
+    },
+    {
+      "name": "select",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/select/README.md",
+      "sourceFiles": [
+        "packages/web/src/select/SelectElement.ts"
+      ]
+    },
+    {
+      "name": "shape",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/shape/README.md",
+      "sourceFiles": [
+        "packages/web/src/shape/ShapeElement.ts"
+      ]
+    },
+    {
+      "name": "skeleton",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/skeleton/README.md",
+      "sourceFiles": [
+        "packages/web/src/skeleton/SkeletonElement.ts"
+      ]
+    },
+    {
+      "name": "slide-group",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/slide-group/README.md",
+      "sourceFiles": [
+        "packages/web/src/slide-group/SlideGroupElement.ts"
+      ]
+    },
+    {
+      "name": "slider",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/slider/README.md",
+      "sourceFiles": [
+        "packages/web/src/slider/SliderElement.ts",
+        "packages/web/src/slider/SliderThumbElement.ts"
+      ]
+    },
+    {
+      "name": "snackbar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/snackbar/README.md",
+      "sourceFiles": [
+        "packages/web/src/snackbar/SnackbarElement.ts"
+      ]
+    },
+    {
+      "name": "split-button",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/split-button/README.md",
+      "sourceFiles": [
+        "packages/web/src/split-button/SplitButtonElement.ts"
+      ]
+    },
+    {
+      "name": "split-pane",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/split-pane/README.md",
+      "sourceFiles": [
+        "packages/web/src/split-pane/SplitPaneElement.ts"
+      ]
+    },
+    {
+      "name": "stepper",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/stepper/README.md",
+      "sourceFiles": [
+        "packages/web/src/stepper/StepElement.ts",
+        "packages/web/src/stepper/StepPanelElement.ts",
+        "packages/web/src/stepper/StepperElement.ts",
+        "packages/web/src/stepper/StepperNextElement.ts",
+        "packages/web/src/stepper/StepperPreviousElement.ts",
+        "packages/web/src/stepper/StepperResetElement.ts"
+      ]
+    },
+    {
+      "name": "switch",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/switch/README.md",
+      "sourceFiles": [
+        "packages/web/src/switch/SwitchElement.ts"
+      ]
+    },
+    {
+      "name": "tabs",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/tabs/README.md",
+      "sourceFiles": [
+        "packages/web/src/tabs/TabElement.ts",
+        "packages/web/src/tabs/TabPanelElement.ts",
+        "packages/web/src/tabs/TabsElement.ts"
+      ]
+    },
+    {
+      "name": "textarea-autosize",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/textarea-autosize/README.md",
+      "sourceFiles": [
+        "packages/web/src/textarea-autosize/TextareaAutosizeElement.ts"
+      ]
+    },
+    {
+      "name": "theme",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/theme/README.md",
+      "sourceFiles": [
+        "packages/web/src/theme/ThemeElement.ts",
+        "packages/web/src/theme/ThemeIconElement.ts"
+      ]
+    },
+    {
+      "name": "timepicker",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/timepicker/README.md",
+      "sourceFiles": [
+        "packages/web/src/timepicker/TimepickerElement.ts",
+        "packages/web/src/timepicker/TimepickerDialElement.ts",
+        "packages/web/src/timepicker/TimepickerInputElement.ts",
+        "packages/web/src/timepicker/TimepickerInputPeriodToggleElement.ts",
+        "packages/web/src/timepicker/TimepickerToggleElement.ts"
+      ]
+    },
+    {
+      "name": "toc",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/toc/README.md",
+      "sourceFiles": [
+        "packages/web/src/toc/TocElement.ts",
+        "packages/web/src/toc/TocItemElement.ts"
+      ]
+    },
+    {
+      "name": "toolbar",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/toolbar/README.md",
+      "sourceFiles": [
+        "packages/web/src/toolbar/ToolbarElement.ts"
+      ]
+    },
+    {
+      "name": "tooltip",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/tooltip/README.md",
+      "sourceFiles": [
+        "packages/web/src/tooltip/RichTooltipElement.ts",
+        "packages/web/src/tooltip/RichTooltipActionElement.ts",
+        "packages/web/src/tooltip/TooltipElement.ts"
+      ]
+    },
+    {
+      "name": "tree",
+      "sha": "v2.7.3",
+      "readme": "packages/web/src/tree/README.md",
+      "sourceFiles": [
+        "packages/web/src/tree/TreeElement.ts",
+        "packages/web/src/tree/TreeItemElement.ts"
+      ]
+    }
+  ]
+}

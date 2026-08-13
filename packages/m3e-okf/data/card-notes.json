@@ -1,0 +1,4 @@
+{
+  "button": "yes, really — the CEM default is `size=\"small\"`. This is verified against the manifest (machine truth); don't \"correct\" it to `medium` from generic Material intuition.",
+  "shape": "not for corner radii. `<m3e-shape>` is for expressive/decorative shapes (clip-paths). For corner rounding, use the Tailwind design-token classes directly: `rounded-md-corner-extra-small`, `rounded-md-corner-small`, `rounded-md-corner-medium`, `rounded-md-corner-large`, `rounded-md-corner-extra-large`, `rounded-full`, `rounded-none`. These are already semantic M3 tokens — do not wrap them in an abstraction layer. See [re-abstracting design tokens](/anti-patterns/re-abstracting-design-tokens)."
+}

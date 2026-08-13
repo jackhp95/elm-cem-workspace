@@ -1,0 +1,58 @@
+name: CI
+
+# Enforce the repo's guarantees on every push/PR. These checks run against
+# committed inputs only (data/components.json + guidance.json) — they do NOT
+# re-fetch upstream m3e (that's a deliberate, SHA-pinned regeneration step;
+# see check-staleness.mjs for version drift). They assert that what's committed
+# is internally consistent: validator rules hold, downstream artifacts are
+# freshly built, and no card or concept page ships markup the CEM contradicts.
+
+# MANUAL ONLY — `hooks/pre-push` runs this repo's gate locally before anything
+# reaches origin, so re-running it here is a slower duplicate. Kept dispatchable
+# for a clean-checkout or ubuntu-vs-macOS reproduction.
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install deps (npm ci — committed lockfile)
+        run: npm ci
+
+      - name: Unit tests (CEM validator)
+        run: node --test scripts/lib/*.test.mjs
+
+      - name: Rebuild downstream artifacts from committed data
+        run: |
+          node scripts/build-examples.mjs
+          node scripts/build-skill.mjs
+          node scripts/build-okf.mjs
+
+      - name: Assert committed artifacts are fresh
+        run: |
+          git diff --exit-code -- data/examples.json skills/ knowledge/ implementations/ \
+            || (echo "::error::Committed skill/examples/OKF bundle are stale — run build-examples.mjs + build-skill.mjs + build-okf.mjs and commit." && exit 1)
+
+      - name: Guard — every html block valid against the CEM
+        run: node scripts/check-skill.mjs
+
+      - name: Guard — OKF bundle valid (frontmatter, reserved files, citations)
+        run: node scripts/lib/validate-okf.mjs
+
+      - name: Guard — skills metadata valid (frontmatter, body budget, links)
+        run: node scripts/check-skills-meta.mjs
+
+      - name: Report — guidance provenance audit (non-gating)
+        if: always()
+        run: node scripts/audit-guidance.mjs
+
+      - name: Ratchet — uncited-guidance pages may not increase
+        run: node scripts/audit-guidance.mjs --max-uncited 1

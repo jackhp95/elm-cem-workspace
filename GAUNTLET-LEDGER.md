@@ -403,6 +403,32 @@ Structural facts confirmed at bootstrap (bind M1.d):
   producer via a wired script, with a check that regeneration reproduces it byte-identically. Two new
   deterministic checks enforce both, and prefigure M4's drift gate.
 
+- **D-019 (M3.b round 1) — the critic caught a REAL CONTENT REGRESSION that had already shipped.**
+  Iteration 1 passed all 11 deterministic checks; the Opus critic failed it anyway, on evidence.
+  A new tag-ascending sort changed `elements[0]`, and `extract.mjs:466` computes
+  `elements.find(e => e.tag === 'm3e-'+dir)?.tag || elements[0]?.tag` — for directory `chips` the
+  probe `m3e-chips` never matches, so it falls through to `elements[0]`. Result:
+  **`chips.primaryTag` silently changed `m3e-chip` -> `m3e-assist-chip`**, and that wrong primary
+  element was regenerated straight into a SHIPPED artifact: `skills/m3e/SKILL.md:65` now reads
+  `m3e-assist-chip +7` where the baseline read `m3e-chip +7`. I confirmed both independently.
+  Two further difference classes were unenumerated, and the diff doc asserted their ABSENCE:
+  **254 added `"default": null` keys on `properties[]`** (baseline 0, generated 254 — the
+  null->undefined mapping was applied to attributes only) and **12 added `"description": null`
+  keys**, while `m3b-generated-diff.md` claimed "zero `default: null` diffs remain" and that every
+  `default`/`description` is byte-identical. A parity doc that denies the differences it has is
+  worse than no doc.
+  This is exactly the failure R-005's methodology exists to catch — under a blind byte-identity bar
+  it would have been invisible, and under a "differences are corrections" bar it was caught by
+  requiring EVERY difference be justified. **Round 1 not accepted.**
+- **D-020 (M3.b) — my isolation check tripped on R-008's build timestamp (8th bar defect).**
+  Iterations 2-4 all failed
+  `[ -z "$(git diff --stat HEAD -- ... packages/elm-m3e ...)" ]` because
+  `packages/elm-m3e/docs/.elm-pages/Pages.elm` is a TRACKED file holding `builtAt` epoch-ms, so any
+  run that builds the docs dirties it (R-008, recorded at M2). Fixed by excluding that one path via
+  git pathspec magic (`':!packages/elm-m3e/docs/.elm-pages/Pages.elm'`) rather than dropping the
+  isolation check. M4's drift gate must handle the same file — the exclusion is a workaround, and
+  normalizing or untracking that timestamp is the real fix.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -541,3 +567,8 @@ Structural facts confirmed at bootstrap (bind M1.d):
   and asserts byte-identity with the committed copy. PROVEN to bite: tampering one component tag ->
   RED with a diff. This is spec section 9 drift-gate semantics applied to one consumer, and it
   prefigures M4.`
+- `M3.b: round 1 (loop 0d5bba04, 4 iterations; iteration 1 passed all 11 checks but critic
+  VERDICT: FAIL on a real content regression — chips.primaryTag m3e-chip -> m3e-assist-chip,
+  shipped into skills/m3e/SKILL.md:65 — plus 2 unenumerated diff classes the doc denied;
+  iterations 2-4 red on the manager's isolation check via R-008. NOT accepted. Strategy: D-019/D-020;
+  builder claude/sonnet, critic claude/opus)`

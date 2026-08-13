@@ -1,0 +1,25 @@
+{
+  "skill": "m3e",
+  "notes": "Held-out checks that the m3e skill routes an agent to correct, CEM-verified <m3e-*> API and to the neutral design bundle for design-level why/when. Rubrics are checkable by inspecting the produced answer.",
+  "cases": [
+    {
+      "id": "m3e-api-snackbar-vs-dialog",
+      "prompt": "Using @m3e/web, I need to show a brief non-blocking confirmation after a save. Which component and tag, and how do I add an action to it?",
+      "rubric": [
+        "Chooses the snackbar component, not a dialog (a dialog blocks; snackbar is non-blocking).",
+        "Names the real tag from components/snackbar.md (an <m3e-*> element), not an invented tag.",
+        "Attributes/slots/events cited match components/snackbar.md exactly (no hallucinated attribute names).",
+        "For the why (non-blocking vs blocking) it may cite /knowledge/components/snackbar or /knowledge/anti-patterns/dialog-for-non-blocking-info."
+      ]
+    },
+    {
+      "id": "m3e-routing-design-vs-api",
+      "prompt": "For @m3e/web, how should I decide between a navigation bar, rail, and drawer, and where is the exact tag API?",
+      "rubric": [
+        "Routes the design-level choice (which by window size) to the neutral bundle: /knowledge/patterns/navigation or /knowledge/components/navigation-*.",
+        "Routes the exact tags/attributes to the implementation cards under components/nav-bar.md / nav-rail.md (or the drawer container card).",
+        "Does not fabricate attribute names/defaults; defers to the card as source of truth."
+      ]
+    }
+  ]
+}

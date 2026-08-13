@@ -1,0 +1,5 @@
+{
+  "title": "M3 Expressive knowledge bundle",
+  "intro": "A technology-neutral knowledge bundle for Material 3 Expressive UI design, in Open Knowledge Format (OKF) v0.1. Read this index first, then open only the concept files you need. The tech-specific, CEM-verified component API lives outside this bundle under /implementations/m3e-web.",
+  "subdirs": ["foundations", "styles", "components", "expressive", "patterns", "anti-patterns", "history"]
+}

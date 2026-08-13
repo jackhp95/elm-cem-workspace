@@ -1,0 +1,20 @@
+{
+  "skill": "curating-okf-knowledge",
+  "notes": "Given a gap topic + sources, the produced data/knowledge/ page must pass the mechanical guards and the paraphrase check. Rubrics are checkable by running the listed commands against the produced file.",
+  "cases": [
+    {
+      "id": "curate-gap-page-passes-guards",
+      "prompt": "Author a new neutral knowledge page for the gap topic 'elevation' (already present) — pick a genuinely missing sibling if elevation exists — from these m3.material.io sources, and place it in the right section.",
+      "setup": "Provide 1-2 m3.material.io source URLs for a topic not yet covered under data/knowledge/.",
+      "rubric": [
+        "File lands in data/knowledge/<correct-section>/<slug>.md (foundations/styles/components/expressive/patterns/anti-patterns/history) matching the topic.",
+        "Frontmatter carries required `type` and all recommended keys (title, description, resource, tags, timestamp) plus `diataxis` and a non-empty `sources:` block of {url,retrieved,note}.",
+        "`node scripts/build-okf.mjs && node scripts/lib/validate-okf.mjs` exits 0 (no missing type, no reserved-file frontmatter, citation-presence satisfied).",
+        "Citation-presence: the page's design claims are backed by `sources:` (validate-okf does not flag it).",
+        "Paraphrase: `node scripts/check-paraphrase.mjs <section>/<slug>` finds no 15+-word verbatim run vs the cited sources.",
+        "Prose is technology-neutral — no <m3e-*> tags or framework code in knowledge/.",
+        "A dated bullet is appended to data/knowledge/log.md (newest first), and log.md still has no frontmatter."
+      ]
+    }
+  ]
+}

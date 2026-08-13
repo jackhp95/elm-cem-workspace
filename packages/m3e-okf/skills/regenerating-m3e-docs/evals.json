@@ -1,0 +1,19 @@
+{
+  "skill": "regenerating-m3e-docs",
+  "notes": "Dry-run an upstream bump on a pinned OLDER SHA. A pass produces the correct pipeline sequence, reads data/report.md drift, and makes NO hand-edits to generated trees. Checkable by inspecting the agent's plan/steps and the resulting diff.",
+  "cases": [
+    {
+      "id": "regen-upstream-bump-dryrun",
+      "prompt": "The pinned matraic/m3e SHA in data/sources.json is behind upstream. Walk through bumping it and regenerating, without pushing.",
+      "setup": "Point at a scenario where check-staleness reports exit 1 (stale) — e.g. an intentionally older SHA.",
+      "rubric": [
+        "Runs check-staleness first and interprets exit codes (0 current / 1 stale / 2 undetermined) correctly.",
+        "States the pipeline in order: extract -> guidance -> build-examples -> build-skill -> check-skill, then build-okf -> validate-okf -> check-okf.",
+        "Updates only data/sources.json `sha` (and re-fetches upstream + regenerates the CEM) as the source change; does NOT hand-edit skills/m3e, knowledge/, or implementations/.",
+        "Reviews data/report.md drift (DEFAULT-UNDOCUMENTED / UNDOCUMENTED / DEFAULT-MISMATCH / EXAMPLE-DRIFT counts + per-component list) and notes the CEM wins over the README.",
+        "Handles a new component by adding its data/spec-map.json entry (URL or explicit null) when build-skill fails on a missing key.",
+        "Confirms guards green and generated-tree git diff is clean before committing; does not push."
+      ]
+    }
+  ]
+}

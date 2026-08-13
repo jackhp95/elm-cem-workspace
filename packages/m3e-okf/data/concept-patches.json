@@ -1,0 +1,51 @@
+{
+  "_doc": "Auditable prose corrections applied to scraped concept markdown in guidance.mjs, AFTER html->markdown conversion. Each patch is a literal find/replace with a rationale. guidance.mjs fails the build if a `find` no longer matches (stale patch = upstream text changed = a human should re-verify).",
+  "color": [
+    {
+      "find": "library to generates",
+      "replace": "library to generate",
+      "why": "grammar (upstream typo)"
+    },
+    {
+      "find": "@material/material-color-utils",
+      "replace": "@material/material-color-utilities",
+      "why": "canonical package name — verified against upstream packages/web/package.json (@material/material-color-utilities ^0.4.0) at the pinned SHA"
+    },
+    {
+      "find": "Design tokens are named, platform-agnostic variables that represent visual design decisions—such as color, typography, spacing, and elevation—in a reusable, consistent format.",
+      "replace": "Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.",
+      "why": "D6: the phrase 'named, platform-agnostic variables that represent visual design decisions … in a reusable, consistent format' reads near-verbatim to Google's canonical m3.material.io design-tokens definition. Re-expressed in original words; facts preserved; citation kept on the preceding sentence. m3.material.io is a JS SPA and could not be fetched to diff, so this is a conservative rewrite."
+    }
+  ],
+  "density": [
+    {
+      "find": "Design tokens are named, platform-agnostic variables that represent visual design decisions—such as color, typography, spacing, and elevation—in a reusable, consistent format.",
+      "replace": "Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.",
+      "why": "D6: same near-verbatim Google design-tokens definition as on the color page; re-expressed in original words, facts preserved, citation kept. See color patch rationale."
+    }
+  ],
+  "motion": [
+    {
+      "find": "have adopted the [Material Design 3 motion physics system](https://m3.material.io/styles/motion/overview/how-it-works), bringing spring-based dynamics and velocity-aware responsiveness to components where expressive motion is essential.",
+      "replace": "have adopted a spring-based motion physics system — an m3e implementation of Material's [motion physics](https://m3.material.io/styles/motion/overview/how-it-works). Exactly which components use physics-based motion (buttons, loading indicators, switches) is library behavior, not stated by the cited spec page. (m3e behavior)",
+      "why": "the physics-motion component list is m3e-specific; detach it from the M3 spec citation (keep the link for the general physics system)"
+    },
+    {
+      "find": "Design tokens are named, platform-agnostic variables that represent visual design decisions—such as color, typography, spacing, and elevation—in a reusable, consistent format.",
+      "replace": "Each token gives one visual decision—a color, type style, spacing step, or elevation level—a stable name, so the same value is defined once and reused consistently across platforms and components.",
+      "why": "D6: same near-verbatim Google design-tokens definition as on the color page; re-expressed in original words, facts preserved, citation kept. See color patch rationale."
+    }
+  ],
+  "typography": [
+    {
+      "find": "[Material Design 3 typography system](https://m3.material.io/styles/typography)",
+      "replace": "[Material Design 3 typography system](https://m3.material.io/styles/typography/overview)",
+      "why": "re-point the bare /styles/typography citation at the canonical /overview subpage"
+    },
+    {
+      "find": "The system defines a **30-style type scale**—comprising 15 baseline and 15 emphasized roles.",
+      "replace": "The system defines the 15 baseline type roles; m3e also surfaces the **emphasized** tier introduced in Material 3 Expressive, for a 30-style scale (15 baseline + 15 emphasized). The emphasized styles and their `--md-sys-typescale-emphasized-*` tokens are an M3 Expressive / m3e convention, not part of the classic baseline type scale. (m3e behavior)",
+      "why": "the emphasized tier is an M3 Expressive addition originating in matraic's docs; the live SPA spec could not be scraped to confirm the generic /styles/typography page states '30 styles', so attribute the emphasized roles to Expressive/m3e rather than the baseline spec"
+    }
+  ]
+}
