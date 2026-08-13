@@ -4,6 +4,7 @@ module Cem.Compose exposing
     , PathStep(..), Path, MenuKind(..)
     , nodeAt, factAt
     , componentOf, attrsOf, slotsOf
+    , SlotAffordances, SlotChipInfo, slotChips
     )
 
 {-| A headless, type-directed editor for building a valid tree of custom
@@ -18,6 +19,7 @@ every pixel.
 @docs PathStep, Path, MenuKind
 @docs nodeAt, factAt
 @docs componentOf, attrsOf, slotsOf
+@docs SlotAffordances, SlotChipInfo, slotChips
 
 -}
 
@@ -364,3 +366,126 @@ full declared slot set asks `slotChips`.
 slotsOf : Node -> List ( String, List Child )
 slotsOf (Node n) =
     Dict.toList n.children |> List.filter (\( _, cs ) -> not (List.isEmpty cs))
+
+
+
+-- SLOTS
+
+
+{-| Every content mode a slot permits — not the highest-precedence one.
+
+The three are independent: a slot may afford all of them, exactly one, or
+none. This replaces the winner-takes-all classification the prototype used,
+under which a slot naming both text and components collapsed to text and the
+components became unreachable.
+
+-}
+type alias SlotAffordances =
+    { text : Bool
+    , icon : Bool
+    , components : List String
+    }
+
+
+{-| One slot chip. `max` is `Nothing` for a multi slot, `Just 1` otherwise —
+the machine-readable form of the replace-not-append invariant.
+-}
+type alias SlotChipInfo =
+    { name : String
+    , required : Bool
+    , affordances : SlotAffordances
+    , filled : Int
+    , max : Maybe Int
+    }
+
+
+{-| The kind tokens that mean "this slot takes text".
+
+`"shared:flow"` and `"shared:phrasing"` are HTML content categories. The
+prototype's rule did not name them at all, so they fell through to its
+component branch — a latent bug, fixed here.
+
+-}
+textKinds : List String
+textKinds =
+    [ "html", "shared:text", "shared:link", "shared:flow", "shared:phrasing" ]
+
+
+iconKind : String
+iconKind =
+    "shared:icon"
+
+
+kindsFor : Fact -> String -> List String
+kindsFor fact slot =
+    fact.slotKinds
+        |> List.filter (\( name, _ ) -> name == slot)
+        |> List.head
+        |> Maybe.map Tuple.second
+        |> Maybe.withDefault []
+
+
+affordancesFor : Model -> Fact -> String -> SlotAffordances
+affordancesFor model fact slot =
+    let
+        kinds =
+            kindsFor fact slot
+    in
+    { text = List.isEmpty kinds || List.any (\k -> List.member k textKinds) kinds
+    , icon = List.member iconKind kinds
+    , components =
+        kinds
+            |> List.filter (\k -> not (String.contains ":" k))
+            |> List.filter (\k -> Dict.member k model.facts)
+            |> List.Extra.unique
+    }
+
+
+{-| The declared slot set: required slots first in `requiredSlots` order, then
+the rest alphabetically, deduplicated.
+-}
+slotNames : Fact -> List String
+slotNames fact =
+    let
+        required =
+            List.Extra.unique fact.requiredSlots
+
+        rest =
+            (fact.multiSlots ++ List.map Tuple.first fact.slotKinds)
+                |> List.filter (\s -> not (List.member s required))
+                |> List.Extra.unique
+                |> List.sort
+    in
+    required ++ rest
+
+
+{-| One entry per slot the node's `Fact` declares. Empty for an unresolvable
+path.
+-}
+slotChips : Path -> Model -> List SlotChipInfo
+slotChips path model =
+    case ( nodeAt path model, factAt path model ) of
+        ( Just node, Just fact ) ->
+            slotNames fact
+                |> List.map
+                    (\slot ->
+                        { name = slot
+                        , required = List.member slot fact.requiredSlots
+                        , affordances = affordancesFor model fact slot
+                        , filled = childrenIn slot node |> List.length
+                        , max =
+                            if List.member slot fact.multiSlots then
+                                Nothing
+
+                            else
+                                Just 1
+                        }
+                    )
+
+        _ ->
+            []
+
+
+childrenIn : String -> Node -> List Child
+childrenIn slot (Node n) =
+    Dict.get slot n.children |> Maybe.withDefault []
