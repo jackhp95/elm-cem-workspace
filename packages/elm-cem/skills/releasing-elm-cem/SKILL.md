@@ -28,8 +28,8 @@ elm-cem's SemVer covers **two** surfaces; a breaking change to **either** is a m
 2. **The generated-output contract** — the emitted module names, function names, and
    phantom-row field names. Downstream packages compile against these, so a rename or
    type change is breaking **even though it lives in another repo**. This is the one
-   that's easy to under-count. The golden tests (`tests/src/GoldenTest.elm`) pin it, so a
-   generated-surface change surfaces as a reviewed golden diff, not a silent break.
+   that's easy to under-count. The `elm-test-rs` suites under `tests/src/` pin it, so a
+   generated-surface change surfaces as a reviewed test diff, not a silent break.
 
 Additive-only (new component/setter/key, nothing renamed/retyped) ⇒ minor. Fixes with no
 surface change ⇒ patch.
@@ -78,11 +78,9 @@ npm pack --dry-run
 
 Verify the tarball includes exactly the `files` allowlist — `codegen/`, `data/`,
 `bin/`, `cem-configs/`, `LICENSE`, `README.md`, `CHANGELOG.md` — and **excludes**
-`codegen/elm-stuff`. It must **not** contain the `native-manifest-gen/` dev harness (a
-dev-only tool that produces `data/native-attrs.json`; it carried a machine-local path and
-large scraped data and is deliberately off the allowlist). A missing `data/` ships a
-package without the bundled native-attr table (the CLI warns at generate time, but catch
-it here). Confirm `bin` and `engines` are correct.
+`codegen/elm-stuff`. A missing `data/` ships a package without the bundled
+hand-curated native-attr table (`data/native-attrs.json`; the CLI warns at generate
+time, but catch it here). Confirm `bin` and `engines` are correct.
 
 ### 5. Tag → trusted publishing (OIDC) does the publish
 

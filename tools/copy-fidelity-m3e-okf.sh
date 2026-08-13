@@ -48,6 +48,16 @@ EOF
 #   tools/check-bundle-provenance-m3e-okf.mjs, the same way
 #   packages/cem-figma-connect/profiles/m3-kit/facts/cem-facts.json is.
 
+
+# M6 deep-clean authorized deletions. Each path's rule and reasoning is in
+# docs/facts-bundle/m6-deep-clean.md; they are superseded plans, handoff notes and
+# per-repo .claude-memory files that described pre-migration states. Listed
+# explicitly rather than by prefix so a NEW unexplained deletion still goes red.
+AUTHORIZED_ABSENT_M6=$(cat <<'M6EOF'
+.claude-memory/m3e-disclosure-hook-design.md
+M6EOF
+)
+
 if [ ! -d "$SOURCE_M3E_OKF" ]; then
     echo "ERROR: source m3e-okf not found at $SOURCE_M3E_OKF" >&2
     exit 1
@@ -79,7 +89,9 @@ done | sort -u > "$tmp/workspace.txt"
 printf '%s\n' "$AUTHORIZED_ABSENT" | { grep -vE '^\s*$' || true; } | sort > "$tmp/authorized.txt"
 
 comm -23 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/missing-raw.txt"
-comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" > "$tmp/missing.txt"
+printf '%s\n' "$AUTHORIZED_ABSENT_M6" | grep -vE '^\s*$' | sort > "$tmp/authorized-m6.txt"
+comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" | sort > "$tmp/missing-1.txt"
+comm -23 "$tmp/missing-1.txt" "$tmp/authorized-m6.txt" > "$tmp/missing.txt"
 printf '%s\n' "$AUTHORIZED_EXTRA" | { grep -vE '^\s*$' || true; } | sort > "$tmp/authorized-extra.txt"
 comm -13 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/extra-raw.txt"
 comm -23 "$tmp/extra-raw.txt" "$tmp/authorized-extra.txt" > "$tmp/extra.txt"

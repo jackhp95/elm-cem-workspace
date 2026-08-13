@@ -101,7 +101,9 @@ release. Layout sketch (final in Plan A):
 
 ```
 src/
-  ingest/cem.mjs            # CEM load + .d.ts alias inlining (generalizes elm-cem's inliner)
+  ingest/cem.mjs            # reads the shared facts bundle (Face B/C) produced by elm-cem;
+                            #   .d.ts alias inlining moved upstream into elm-cem as of M3.a
+                            #   (dts-inline.mjs stays for a documented exception — see its header)
   ingest/figma.mjs          # figma-export.json loader + schema validation
   match/…                   # normalization, tiers, fusion detection
   correspond/…              # merge auto ⊕ overrides ⊕ delta; schema

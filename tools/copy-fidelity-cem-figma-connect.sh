@@ -139,6 +139,69 @@ EOF
 #   gen:facts`. tools/check-bundle-provenance.mjs calls the same generation
 #   logic to police drift.
 
+
+# M6 deep-clean authorized deletions. Each path's rule and reasoning is in
+# docs/facts-bundle/m6-deep-clean.md; they are superseded plans, handoff notes and
+# per-repo .claude-memory files that described pre-migration states. Listed
+# explicitly rather than by prefix so a NEW unexplained deletion still goes red.
+AUTHORIZED_ABSENT_M6=$(cat <<'M6EOF'
+.claude-memory/cem-figma-connect-state.md
+plans/2026-07-15-comprehensive-figma-capture-plan.md
+plans/2026-07-18-qualifier-aware-matcher-plan.md
+plans/2026-07-18-representative-example-emission-plan.md
+plans/2026-07-19-append-sets-mechanism-design.md
+plans/2026-07-19-appendsets-bank-execution.md
+plans/2026-07-19-bridge-coverage-gap.md
+plans/2026-07-19-icon-emit-design.md
+plans/2026-07-19-manual-correspondence-tab-design.md
+plans/2026-07-19-progress-set-attrs-design.md
+plans/2026-07-20-elm-emit-gap-closure.md
+plans/AUTONOMOUS-SESSION-FRICTIONS.md
+plans/coverage-remediation-execution-prompt.md
+plans/gate-content-remediation.md
+plans/gate-remediation-round2.md
+plans/gate-tooling/overrides-snapshot.json
+plans/gate-tooling/render-all.mjs
+plans/gate-tooling/review-launch.mjs
+plans/okf-friction-issues-DRAFT.md
+plans/okf-self-learning-loop-DESIGN.md
+plans/retarget-feedback-round3.md
+research/spikes/01-publish-gate/M3eButton.figma.ts
+research/spikes/01-publish-gate/figma.config.json
+research/spikes/01-publish-gate/package.json
+research/spikes/01-publish-gate/pnpm-lock.yaml
+research/spikes/02-elm-label/M3eButton.figma.ts
+research/spikes/02-elm-label/figma.config.json
+research/spikes/02-elm-label/package.json
+research/spikes/07-render-harness/NOTES.md
+research/spikes/07-render-harness/assets/m3e-all.bundle.js
+research/spikes/07-render-harness/assets/roboto-latin-400-normal.woff2
+research/spikes/07-render-harness/assets/roboto-latin-500-normal.woff2
+research/spikes/07-render-harness/assets/roboto-latin-700-normal.woff2
+research/spikes/07-render-harness/btn-57994-2242.png
+research/spikes/07-render-harness/btn-57994-2262.png
+research/spikes/07-render-harness/btn-57994-2282.png
+research/spikes/07-render-harness/btn-57994-2302.png
+research/spikes/07-render-harness/btn-57994-2322.png
+research/spikes/07-render-harness/entry.js
+research/spikes/07-render-harness/figma-button-filled-medium.png
+research/spikes/07-render-harness/harness.html
+research/spikes/07-render-harness/package.json
+research/spikes/07-render-harness/playwright.config.js
+research/spikes/07-render-harness/pnpm-lock.yaml
+research/spikes/07-render-harness/pnpm-workspace.yaml
+research/spikes/07-render-harness/shots/button-filled-run1.png
+research/spikes/07-render-harness/shots/button-filled-run2.png
+research/spikes/07-render-harness/shots/button-filled-run3.png
+research/spikes/07-render-harness/shots/switch-checked-run1.png
+research/spikes/07-render-harness/shots/switch-checked-run2.png
+research/spikes/07-render-harness/shots/switch-checked-run3.png
+research/spikes/07-render-harness/tests/render.spec.js
+research/spikes/07-render-harness/tests/static-server.js
+research/spikes/inline-coverage.js
+M6EOF
+)
+
 if [ ! -d "$SOURCE_CFC" ]; then
     echo "ERROR: source cem-figma-connect not found at $SOURCE_CFC" >&2
     exit 1
@@ -166,7 +229,9 @@ done | sort -u > "$tmp/workspace.txt"
 printf '%s\n' "$AUTHORIZED_ABSENT" | grep -vE '^\s*$' | sort > "$tmp/authorized.txt"
 
 comm -23 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/missing-raw.txt"
-comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" > "$tmp/missing-after-exact.txt"
+printf '%s\n' "$AUTHORIZED_ABSENT_M6" | grep -vE '^\s*$' | sort > "$tmp/authorized-m6.txt"
+comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" | sort > "$tmp/missing-after-base.txt"
+comm -23 "$tmp/missing-after-base.txt" "$tmp/authorized-m6.txt" > "$tmp/missing-after-exact.txt"
 
 # Directory-prefix allowlist (the 459-file m3e-web-2.7.0/ tree) — filtered
 # line-by-line rather than via comm, since it's a prefix match, not an exact one.

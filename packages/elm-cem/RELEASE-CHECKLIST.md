@@ -28,7 +28,7 @@ something changed:
   contributors. `npm install elm-cem` no longer breaks for a consumer.
 - **Packed contents are clean.** The `files` allowlist ships `codegen/`, `bin/`,
   `cem-configs/`, `data/`, `LICENSE`, `README.md`, `CHANGELOG.md` (and excludes
-  `codegen/elm-stuff`). The `native-manifest-gen/` dev harness — which contained a machine-
+  `codegen/elm-stuff`). The `native-manifest-gen/` dev harness was REMOVED in the Phase-0 deep clean (see docs/facts-bundle/m6-deep-clean.md); nothing to exclude from the pack any more.
   local path and large scraped data — is **not** shipped. The skill's `npm pack --dry-run`
   step re-checks this before every publish.
 - **README passes the no-dig test.** Install, an end-to-end example, the CEM input story,

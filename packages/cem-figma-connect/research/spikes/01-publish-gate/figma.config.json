@@ -1,7 +1,0 @@
-{
-  "codeConnect": {
-    "parser": "html",
-    "include": ["*.figma.ts"],
-    "label": "Web Components"
-  }
-}

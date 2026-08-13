@@ -14,7 +14,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 - [x] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
 - [x] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
 - [x] **M5** Retire migration dead weight — 5.a
-- [ ] **M6** Deep clean (separate commit) — 6.a, 6.b
+- [x] **M6** Deep clean (separate commit) — 6.a, 6.b
 
 ## Bootstrap
 
@@ -593,6 +593,21 @@ Structural facts confirmed at bootstrap (bind M1.d):
   the copy can only rot). **Verified the gate still bites** afterwards: removing
   `packages/elm-m3e/config/slots.json` -> RED naming the file; restored -> GREEN.
 
+- **D-029 (M6) — the deep clean's deletions authorized in all three copy-fidelity gates, with
+  reasons.** M6's removals made `copy-fidelity` go red for elm-m3e, cem-figma-connect and m3e-okf —
+  correctly, since those paths ARE git-tracked in the inert source repos and the gates refuse to
+  absorb a deletion silently. Authorized by listing the paths EXPLICITLY (not by a broad prefix) in
+  each script's allowlist, pointing at `docs/facts-bundle/m6-deep-clean.md` for the per-path
+  reasoning, so a NEW unexplained deletion still goes red. **Verified each still bites afterwards:**
+  removing `packages/cem-figma-connect/src/cli.mjs` -> RED naming the file; restored -> GREEN.
+- **D-030 (M6) — manager fixed the dangling references the critic found.** The critic passed M6 but
+  named four now-false claims left behind by the sweep: `elm-cem/RELEASE-CHECKLIST.md:31` and
+  `skills/releasing-elm-cem/evals.json:10` still asserted the deleted `native-manifest-gen/` harness
+  exists and is pack-excluded, `src/visual/harness/README.md` pointed at the deleted spike tree, and
+  the manifest's own headline count said 126 when 127 paths were removed. My brief had said
+  "docs that are now factually WRONG are worse than cruft", so I corrected all four rather than
+  leaving them; `evals.json` re-validated as JSON afterwards.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -805,3 +820,24 @@ Structural facts confirmed at bootstrap (bind M1.d):
   BUILD PRODUCED or it could not catch the tree-shaking/stale-build/registration-guard bugs it
   exists for; oracle.mjs needs raw TS type strings and exports/declarations set-equality that Face
   B's distilled shape does not carry, with a stated revisit condition if the schema is extended.`
+- `M6.a: pass (loop 5bbeae9b, builder claude/sonnet, critic claude/opus, 2 iterations — iteration 1
+  correctly red on the manifest check, which is the non-vacuous check preflight was added to
+  guarantee. VERDICT: PASS.)`
+- `M6 delivered: 127 paths removed, 8 modified, 1 added, across five packages — the 35-file
+  native-manifest-gen spike, the 33-file research/spikes tree, 10 skill files, 10 .claude-memory
+  files and ~37 plans/handoff/status docs. Manifest at docs/facts-bundle/m6-deep-clean.md.`
+- `M6 critic evidence (the gates were only the FLOOR here — deleting the unique explanation of a
+  mechanism breaks nothing detectable): sampled NINE removed docs across four packages and chased
+  each one's distinctive terms into the live tree, naming where the knowledge survives in every
+  case. Only two deleted files were tests, both spike-local, and their behaviour is now covered by
+  src/visual/harness/selfcheck.mjs (3 renders per component in separate subprocesses, sha256
+  compared), wired as check:render. Enumerated all 127 deletions against the manifest: zero
+  unaccounted paths. The "kept in doubt" section is substantive (9 flagged keeps) plus a candid
+  false-positive-correction section, and the sweep visibly restored 14 files after re-verification —
+  the correct failure direction for this rule.`
+- `M6: the manager's own native-manifest-gen concern was DISPROVED by the critic with evidence —
+  data/native-attrs.json is a 26-line HAND-CURATED table, not derived from the deleted WHATWG data;
+  elm-typed-html/manifest/native.cem.json is a separately committed curated input; and no script
+  reads any deleted whatwg-*.json. The load-bearing conclusion survives in
+  elm-typed-html/scripts/check-whatwg.mjs:244-258 and elm-cem/codegen/Attr.elm:35-55,955-975.`
+- `M6: integrated (gate-all 30/30 GREEN after the deep clean; A/B still 143 byte-identical files)`

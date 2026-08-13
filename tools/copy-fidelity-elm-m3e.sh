@@ -37,6 +37,41 @@ docs/pnpm-workspace.yaml
 EOF
 )
 
+# M6 deep-clean authorized deletions (docs/facts-bundle/m6-deep-clean.md has the
+# full reasoning per path). All are stale/superseded narrative docs or agent
+# session-memory scratch with zero live references anywhere in the workspace,
+# verified individually against both source-code citations and cross-doc
+# citations before removal — not a blanket sweep.
+AUTHORIZED_ABSENT="$AUTHORIZED_ABSENT
+$(cat <<'EOF'
+.claude-memory/elm-m3e-cross-cem-branding.md
+.claude-memory/elm-m3e-docs-barrel-conversion.md
+.claude-memory/elm-m3e-docs-mobile-shell-fab.md
+.claude-memory/elm-m3e-family-git-hygiene.md
+.claude-memory/elm-m3e-reflection-attr-property.md
+.claude-memory/elm-m3e-substrate-reexports.md
+.claude-memory/m3e-components-for-styling.md
+.claude-memory/release-planning-collection.md
+.claude-memory/thermo-nuclear-release-audit.md
+CAP-ACCOUNTING.md
+TASK1-FINDING.md
+docs-playbook/consumer-migration-playbook.md
+docs/plans/2026-08-09-theme-reel-design.md
+docs/plans/theme-flash-and-dev-fouc.md
+plans/2026-08-05-favicon-material-palette.md
+plans/2026-08-05-icon-registry-seam.md
+plans/2026-08-05-remove-raw-html-element.md
+plans/2026-08-05-shared-elm-value-primitives.md
+plans/2026-08-05-theme-host-view-restructure.md
+plans/2026-08-06-nav-rail-layout.md
+plans/2026-08-06-nav-rail-shell-tests.md
+plans/2026-08-06-nav-rail-tree-toc.md
+plans/2026-08-07-nav-rail-search.md
+plans/2026-08-08-welcome-page-url-restructure.md
+specs/2026-08-05-remove-raw-html-element-design.md
+EOF
+)"
+
 # M5 authorized deletion: the whole docs/vendor/tailwind-m3e-web/ tree. It was a
 # VENDORED copy of tailwind-m3e-web's CSS output, checked in because the real
 # package lived in a separate repo. That package is now co-located at

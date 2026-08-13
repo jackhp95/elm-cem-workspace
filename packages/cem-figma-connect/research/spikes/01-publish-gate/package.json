@@ -1,9 +1,0 @@
-{
-  "name": "publish-gate-spike",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "@figma/code-connect": "^1.4.9"
-  }
-}

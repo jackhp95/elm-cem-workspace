@@ -11,8 +11,8 @@ directory provides that project without polluting `src/`.
   sibling checkouts of the foundation repos.
 - `editor/stub/Cem/Facts.elm` — an editor-only stub of `Cem.Facts`, the module
   the generated `M3e.Review.Facts` imports. The canonical `Cem.Facts` lives in
-  `jackhp95/elm-review-cem`; this stub lets `src/` type-check without that
-  checkout.
+  `packages/elm-cem/facts/` (published as `jackhp95/elm-cem-facts`); this stub
+  lets `src/` type-check without that checkout's `source-directories` wired in.
 
 ## Why `editor/` and not `src/`
 
@@ -23,10 +23,10 @@ two gates:
    `elm-cem` regen. The generator emits neither the stub nor a `src/elm.json`,
    so both showed up as drift.
 2. **`check:review`** compiles with `source-directories` that include BOTH
-   `../src` and a real `elm-review-cem` checkout — each defining `Cem.Facts`.
+   `../src` and `../../elm-cem/facts/src` — each defining `Cem.Facts`.
    A stub under `src/` made `Cem.Facts` an `AMBIGUOUS IMPORT` on the review path.
 
 Relocating here keeps `src/` a pure generated artifact (regen-drift green) and
 leaves the review with exactly one `Cem.Facts` (the real one from
-`elm-review-cem`), while editor/standalone type-checking of `src/` still works
-via `editor/elm.json`.
+`packages/elm-cem/facts/`), while editor/standalone type-checking of `src/`
+still works via `editor/elm.json`.

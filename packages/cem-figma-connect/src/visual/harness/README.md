@@ -3,7 +3,7 @@
 Deterministic headless rendering of any custom element from a profile's kit
 bundle to a PNG — the CODE side of the visual verification gate (Plan C).
 Ported and generalized from the 2026-07-10 spike at
-`research/spikes/07-render-harness/`, which proved byte-identical PNGs across
+`research/evidence/07-render-harness-notes.md` (the spike tree itself was removed in the Phase-0 deep clean), which proved byte-identical PNGs across
 3 separate `playwright test` invocations
 (`research/evidence/07-render-harness-notes.md`).
 

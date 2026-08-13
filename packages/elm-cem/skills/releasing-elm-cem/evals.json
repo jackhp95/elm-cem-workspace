@@ -7,7 +7,7 @@
       "expect": {
         "green_first": "confirms npm test + format --validate + neutrality gate green",
         "downstream_regen_gate": "regenerates the downstream generated-atoms consumer and requires ZERO golden drift BEFORE tagging",
-        "pack_dry_run": "runs npm pack --dry-run to audit the tarball (codegen/ + data/ + native-manifest-gen/ included, elm-stuff excluded)",
+        "pack_dry_run": "runs npm pack --dry-run to audit the tarball (codegen/ + data/ + (removed in the Phase-0 deep clean)  included, elm-stuff excluded)",
         "oidc_publish": "publishes via the tag-triggered trusted-publishing (OIDC) workflow, not a local token",
         "changelog": "renames CHANGELOG Unreleased to the versioned section"
       },

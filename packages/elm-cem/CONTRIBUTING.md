@@ -15,10 +15,8 @@ makes sense for one design system belongs in a config key, not in the generator.
   Elm *application* (`Generate.elm`, `Cem.elm`, `Attr.elm`, …). This is the generator.
 - `data/` — bundled lookup tables (e.g. `native-attrs.json`) injected into the CEM
   before codegen. Library-agnostic HTML data; libraries may override via `--config-from`.
-- `native-manifest-gen/` — the WHATWG-sourced native HTML manifest generator
-  (`phantom-native.mjs`); produces `data/native-attrs.json` and related tables.
-  **Dev-only — not shipped in the npm package** (only its committed output, `data/`, is).
-- `tests/` — `elm-test-rs` suites, incl. `GoldenTest` pinning the emitted public surface.
+  Hand-curated — edit directly, there is no generator for it.
+- `tests/` — `elm-test-rs` suites pinning the emitted public surface.
 
 ## Setup
 
