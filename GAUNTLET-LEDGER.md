@@ -540,6 +540,26 @@ Structural facts confirmed at bootstrap (bind M1.d):
   dropped checks is the sharpest possible argument for "prove it bites" before trusting anything.
   Cost: a full bar run (minutes) before each dispatch. Cheap against eleven wasted rounds.
 
+- **D-026 (human, post-M4) — loop agents are INVISIBLE to the human; watch via `paseo loop ls`.**
+  The human asked why we were not using Paseo agents. We were — **19 loops, each spawning a worker
+  and a verifier, ~40 agents**. But `paseo loop run` owns its agents internally and does NOT register
+  them: `paseo agent ls -a` (including archived) lists only 3 agents, none of them loop workers, and
+  `paseo agent logs <workerId>` returns "Agent not found" even while that worker is live. I hit this
+  at the M0 checkpoint and reported it as friction, but never translated it into "the human cannot
+  watch the work" — which made the whole effort look like it was not using agents at all.
+  **Decision (human): keep the loops** — the worker/verifier gauntlet cycle is worth more than
+  per-agent visibility. The human's window is `paseo loop ls` (every loop with status, iteration and
+  an UPDATED timestamp, so stalls are self-evident), `paseo loop inspect <id>` (per-iteration detail
+  and which check failed), and `paseo loop logs <id>` (live stream).
+  **Manager duty going forward:** surface `paseo loop ls` output in status reports rather than
+  paraphrasing it, so the human is reading the real state and not my summary of it.
+- **D-027 (human, post-M4) — M5 and M6 run AUTONOMOUSLY, including deletions.** Human chose gates +
+  adversarial critic as the guard rather than a pre-deletion review, with `git revert` as the safety
+  net (the standing Human-Gate Policy). M6's keep/remove rule stands as written in the plan: KEEP
+  anything that is part of the input->output pipeline, is the UNIQUE explanation of part of it, or
+  tests part of it; REMOVE everything else; **when in doubt about uniqueness, keep and flag rather
+  than delete**. The M6 commit must stay self-contained and revertible on its own.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
