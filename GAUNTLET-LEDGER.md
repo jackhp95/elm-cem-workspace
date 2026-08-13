@@ -1270,3 +1270,11 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   Integrity: 11 files / +254 / -0, only compose/* + pnpm-lock.yaml, no golden/test mutated elsewhere. Fresh
   Opus critic independently re-ran all gates + reproduced the INCOMPATIBLE DEPENDENCIES root cause → PASS.
 
+- **A2: pass** (test:elm 18/18, critic clean, builder claude/sonnet). Commit `33c8111`. Node/Child/AttrValue/
+  AttrKind/PathStep/Path/MenuKind + Model/init/Msg/update + nodeAt/factAt + componentOf/attrsOf/slotsOf +
+  updateAt. `Node` opaque (no `(..)`), `update : Msg -> Model -> Model` (no Cmd/Effect), insertChild holds the
+  append-iff-multi-else-replace invariant. Integrity: 4 files (Compose.elm mod, FakeFacts+StructureTest added,
+  SmokeTest deleted per plan). Fresh Opus critic confirmed StructureTest.elm + FakeFacts.elm are BYTE-IDENTICAL
+  to the plan (tests not weakened) and all fixture traps intact (ghost absent, dup label, self-recursive
+  container/single) → PASS.
+
