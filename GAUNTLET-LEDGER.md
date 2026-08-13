@@ -1314,3 +1314,10 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   Opus critic confirmed the ordered load-bearing assertion `[variant,count,disabled,label,ratio]` + isSet/Clear
   tests are full-value equals, unweakened → PASS.
 
+- **A6: pass** (test:elm 59/59, critic clean, builder claude/sonnet). Commit `43aa010`. `NumberKind`,
+  `MenuOptions`, `attrMenuOptions` (delegates to attrChips → inherits offer/path resolution), `menuOptionsFor`,
+  `rawText`. Raw-number round-trip preserved verbatim (`AttrFloat "1."` → `NumberInput FloatNumber "1."`, no
+  reparse). Integrity: 2 files, additive. Fresh Opus critic confirmed all 8 menu-shape assertions are exact
+  equals, unweakened → PASS. **Phase A core queries (A2–A6) complete; A7 is the determinism + headless-gate
+  close-out.**
+
