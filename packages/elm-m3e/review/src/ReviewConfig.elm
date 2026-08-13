@@ -83,6 +83,9 @@ ignoreGeneratedSubstrate =
         [ "../src/"
         , "../../elm-typed-html/src/"
         , "../../elm-html-intermediate-representation/src/"
+        , "../../elm-cem/facts/src/"
+        , "../../elm-cem-compose/src/"
+        , "../../elm-cem-compose/tests/src/"
         , "vendor/elm-foundation/"
         , "../docs/vendor/elm-foundation/"
         ]

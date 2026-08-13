@@ -5,6 +5,8 @@
         "src",
         ".elm-pages",
         "../src",
+        "../../elm-cem/facts/src",
+        "../../elm-cem-compose/src",
         "vendor/elm-foundation"
     ],
     "elm-version": "0.19.1",
