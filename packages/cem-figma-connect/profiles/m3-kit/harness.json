@@ -1,0 +1,4 @@
+{
+  "$comment": "Task C1's config for src/visual/harness/bundle.mjs: the render harness bundles THIS entry (an import specifier resolved from the repo root's node_modules, esbuild --bundle --format=esm) to register every custom element the profile's kit ships in one shot, mirroring research/spikes/07-render-harness/entry.js (`import \"@m3e/web/all\"`). Per-component entries (@m3e/web/<name>) also exist if bundle size ever matters; not needed while the harness renders one element per page load.",
+  "entry": "@m3e/web/all"
+}

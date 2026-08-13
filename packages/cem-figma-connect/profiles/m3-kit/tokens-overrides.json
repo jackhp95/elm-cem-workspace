@@ -1,0 +1,1532 @@
+[
+  {
+    "figma": "Add-ons/Section background",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): a COLOR variable with 24 mode values (one per M3/Monochrome/Pink/Rose/etc. theme x light/dark/high-contrast), used to paint a section-divider/documentation background inside the Figma kit file itself (verified: research/figma-dumps/kit-variables.json). Verified no \"section\" token exists anywhere in tailwind-m3e-web/src/theme.css or m3e-web's custom-elements.json — this is a kit-specific presentation convenience, not part of the M3 design-token vocabulary @m3e/web or tailwind-m3e-web consume. Policy, not a gap."
+  },
+  {
+    "figma": "State Layers/Background/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Background/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Background/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Error/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse On Surface/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse On Surface/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse On Surface/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Primary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Primary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Primary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Surface/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Surface/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Inverse Surface/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Background/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Background/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Background/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Error/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Primary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Secondary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Surface/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/On Tertiary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Outline/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed Dim/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed Dim/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed Dim/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Primary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Scrim/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Scrim/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Scrim/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed Dim/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed Dim/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed Dim/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Secondary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Shadow/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Shadow/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Shadow/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Bright/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Bright/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Bright/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container High/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container High/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container High/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Highest/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Highest/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Highest/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Low/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Low/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Low/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Lowest/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Lowest/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container Lowest/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Dim/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Dim/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Dim/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Tint/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Tint/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Tint/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Variant/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Variant/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface Variant/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Surface/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Container/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Container/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Container/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed Dim/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed Dim/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed Dim/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary Fixed/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary/Opacity-08",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary/Opacity-10",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "State Layers/Tertiary/Opacity-16",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6, whole family): State Layers/* are Figma-side conveniences for painting hover/press/focus/drag overlays over each of the 49 M3 color roles at 3 opacities (08/10/16 = 147). On the code side @m3e/web consumes only 3 GENERIC opacity tokens internally (--md-sys-state-{hover,focus,pressed}-state-layer-opacity — verified in test/fixtures/m3e-web-2.5.14/dist/custom-elements.json) and tailwind-m3e-web intentionally does NOT surface --md-sys-state-* as @theme keys (verified: test/fixtures/tailwind-m3e-web-0.1.0/src/theme.css's own comment — \"consumed internally by @m3e/web's state-layer calc() expressions, not surfaced as user-facing utilities\"). There is no per-color-role state-layer token on the code side to map to — this is a documented design decision, not a gap. See profiles/m3-kit/README.md \"Token family coverage\" for the family-level rationale."
+  },
+  {
+    "figma": "Static/Body Large/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Body Large/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Body Medium/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Body Medium/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Body Small/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Body Small/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Display Large/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Display Large/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Display Medium/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Display Medium/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Display Small/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Display Small/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Font/Brand",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Font/Brand\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Font/Plain",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Font/Plain\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Headline Large/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Headline Large/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Headline Medium/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Headline Medium/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Headline Small/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Headline Small/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Label Large/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Label Large/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Label Medium/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Label Medium/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Label Small/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Label Small/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Title Large/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Title Large/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Title Medium/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Title Medium/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Title Small/Font",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Title Small/Font\" is (or aliases to) the typeface-name axis, not a typescale.css axis. Verified by direct read of test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css: it defines exactly 4 axes per scale (font-size, font-weight, line-height, tracking) and 0 font-family axes; grepped the vendored fixtures for \"typeface\" / \"font-family\" — zero matches anywhere. Verified in research/figma-dumps/kit-variables.json: every Static/<Scale>/Font row is a VARIABLE_ALIAS to Static/Font/Brand (\"Roboto\"/\"Flow Circular\") or Static/Font/Plain (same values) — i.e. the same two typeface-name constants, never a per-scale value of its own. No --md-ref-typeface-* or --md-sys-typescale-*-font token exists anywhere in the vendored code-side fixtures — @m3e/web and tailwind-m3e-web do not expose a swappable font-family token at all. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Weight/Bold",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Weight/Bold\" is a STRING constant holding a font-weight NAME (\"SemiBold\"/\"Regular\" across modes), used as a Figma text-style-selection label — not the numeric font-weight VALUE. Verified in research/figma-dumps/kit-variables.json: every already-mapped Static/<Scale>/Weight row is a VARIABLE_ALIAS resolving through Static/Weight/{Regular,Medium,Bold} to one of these name strings, while the code-side --md-sys-typescale-<scale>-font-weight token in typescale.css is a numeric value (400/500/700) that row's status is independently keyed on (D2 verified slug spelling, not value type). typescale.css defines no standalone named-weight constant of its own for this to map to. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Weight/Medium",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Weight/Medium\" is a STRING constant holding a font-weight NAME (\"Medium\"/\"Regular\" across modes), used as a Figma text-style-selection label — not the numeric font-weight VALUE. Verified in research/figma-dumps/kit-variables.json: every already-mapped Static/<Scale>/Weight row is a VARIABLE_ALIAS resolving through Static/Weight/{Regular,Medium,Bold} to one of these name strings, while the code-side --md-sys-typescale-<scale>-font-weight token in typescale.css is a numeric value (400/500/700) that row's status is independently keyed on (D2 verified slug spelling, not value type). typescale.css defines no standalone named-weight constant of its own for this to map to. Policy, not a gap."
+  },
+  {
+    "figma": "Static/Weight/Regular",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): \"Static/Weight/Regular\" is a STRING constant holding a font-weight NAME (\"Regular\" across modes), used as a Figma text-style-selection label — not the numeric font-weight VALUE. Verified in research/figma-dumps/kit-variables.json: every already-mapped Static/<Scale>/Weight row is a VARIABLE_ALIAS resolving through Static/Weight/{Regular,Medium,Bold} to one of these name strings, while the code-side --md-sys-typescale-<scale>-font-weight token in typescale.css is a numeric value (400/500/700) that row's status is independently keyed on (D2 verified slug spelling, not value type). typescale.css defines no standalone named-weight constant of its own for this to map to. Policy, not a gap."
+  },
+  {
+    "figma": "Tracking/None",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): standalone letter-spacing preset constant (value 0). Same investigation and rationale as Tracking/Small: verified in research/figma-dumps/kit-variables.json that no Static/<Scale>/Tracking row aliases to it — every per-scale tracking value is its own literal constant in typescale.css. Reusable Figma-side constant, no independent code-side token. Policy, not a gap."
+  },
+  {
+    "figma": "Tracking/Small",
+    "md": null,
+    "tailwind": null,
+    "m3eFallback": null,
+    "provenance": "human",
+    "status": "policy",
+    "note": "policy (D6): standalone letter-spacing preset constant (value 0.1). Verified in research/figma-dumps/kit-variables.json: every per-scale Static/<Scale>/Tracking row (already mapped -> --md-sys-typescale-<scale>-tracking) carries its OWN literal tracking value baked directly into typescale.css — none of them alias to Tracking/Small. This is a reusable Figma-side constant with no independent code-side token; its value is already folded into the per-scale typescale tokens that are mapped. Policy, not a gap."
+  }
+]

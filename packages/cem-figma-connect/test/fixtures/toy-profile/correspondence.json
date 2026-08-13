@@ -1,0 +1,47 @@
+[
+  {
+    "cemTag": "m3e-app-bar",
+    "figmaSets": [{ "nodeId": "58114:20565", "setName": "App bar", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "auto-exact",
+    "status": "proposed",
+    "$comment": "status:proposed (not confirmed) — must NOT be emitted."
+  },
+  {
+    "cemTag": "m3e-assist-chip",
+    "figmaSets": [{ "nodeId": "53923:28089", "setName": "Assistive chip", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "confirmed",
+    "$comment": "status:confirmed BUT suppressed via profile.json's deltas — must NOT be emitted."
+  },
+  {
+    "cemTag": "m3e-badge",
+    "figmaSets": [{ "nodeId": "51592:4768", "setName": "Badges", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "confirmed",
+    "$comment": "confirmed, not suppressed, figma set lives on page 'Badges' — must be emitted (unless --page excludes it)."
+  },
+  {
+    "cemTag": "m3e-bottom-sheet",
+    "figmaSets": [{ "nodeId": "51827:5859", "setName": "Bottom sheet", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "rejected",
+    "$comment": "status:rejected — must NOT be emitted."
+  },
+  {
+    "cemTag": "m3e-button",
+    "figmaSets": [{ "nodeId": "57994:2227", "setName": "Button", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "confirmed",
+    "$comment": "confirmed, not suppressed, figma set lives on page 'Buttons' — must be emitted (unless --page excludes it)."
+  }
+]

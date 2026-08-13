@@ -1,0 +1,14 @@
+node_modules/
+.figma-token
+.superpowers/
+render-cache/
+.DS_Store
+profiles/*/published.json
+# SP1 comprehensive Figma captures — regenerated binaries (PNGs) + a large
+# contentTree-heavy sidecar. Kept local, not committed (D3 decision 2026-07-15):
+# the offline gate uses them where present and falls back to a live export
+# (gate.mjs resolveFigmaRender) on a fresh clone / CI. Regenerate with
+# `node src/cli.mjs capture --profile <p> --channel <cem-xxxx>`.
+profiles/*/captures/
+profiles/*/figma-captures.json
+.claude/worktrees/

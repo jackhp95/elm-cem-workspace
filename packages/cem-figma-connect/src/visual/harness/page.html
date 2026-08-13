@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>cem-figma-connect render harness</title>
+<style>
+  /* Local Roboto — no network fetches. Custom elements from the target kit
+     declare font-family: inherit, so the host page font below is what
+     actually renders their text (see research/evidence/07-render-harness-notes.md). */
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: url("./fonts/roboto-latin-400-normal.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-display: block;
+    src: url("./fonts/roboto-latin-500-normal.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    font-display: block;
+    src: url("./fonts/roboto-latin-700-normal.woff2") format("woff2");
+  }
+  /* Material Symbols Outlined (FF-C1) — the family name m3e-icon's CSS applies.
+     Full variable axis file (opsz,wght,FILL,GRAD) so `filled`/weight variation
+     settings resolve. woff2-variations, no network fetch. */
+  @font-face {
+    font-family: "Material Symbols Outlined";
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url("./fonts/material-symbols-outlined-latin-full-normal.woff2") format("woff2-variations");
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent; /* transparent background for omitBackground screenshots */
+  }
+  body {
+    font-family: "Roboto", sans-serif;
+    font-synthesis: none; /* never fake weights — fail loudly if a weight is missing */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Belt-and-braces animation kill switch (light DOM + inheritable bits).
+     Shadow-DOM transitions/animations are handled by Playwright's
+     animations:"disabled" screenshot option plus the reducedMotion:"reduce"
+     context option (m3e reads prefers-reduced-motion internally). */
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+    caret-color: transparent !important;
+  }
+
+  #stage {
+    display: inline-block; /* shrink-wrap the mounted element */
+    padding: 8px;           /* breathing room so shadows/focus rings aren't clipped */
+  }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module" src="./page.mjs"></script>
+</body>
+</html>

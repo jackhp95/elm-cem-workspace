@@ -1,0 +1,37 @@
+{
+  "name": "cem-figma-connect",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Merge a CEM (custom-elements manifest) with a Figma library export to generate Figma Code Connect.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 'test/**/*.test.mjs' 'src/**/*.test.mjs'",
+    "gen:match": "node src/cli.mjs match --profile m3-kit",
+    "gen:emit": "node src/cli.mjs emit --profile m3-kit",
+    "gen:gap": "node src/cli.mjs gap --profile m3-kit",
+    "publish:cc": "node src/cli.mjs publish",
+    "check": "run-p \"check:*\"",
+    "check:drift": "node src/cli.mjs check --profile m3-kit",
+    "check:tokens": "node src/tokens/derive.mjs --check",
+    "check:render": "node src/visual/harness/selfcheck.mjs",
+    "gate": "run-s check test",
+    "hooks:install": "git config core.hooksPath hooks"
+  },
+  "dependencies": {
+    "@figma/code-connect": "^1.4.9"
+  },
+  "devDependencies": {
+    "@fontsource-variable/material-symbols-outlined": "^5.2.45",
+    "@fontsource/roboto": "^5.2.10",
+    "@m3e/web": "2.7.0",
+    "culori": "4.0.2",
+    "esbuild": "^0.28.1",
+    "npm-run-all2": "^9.0.3",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.61.1",
+    "pngjs": "^7.0.0"
+  }
+}

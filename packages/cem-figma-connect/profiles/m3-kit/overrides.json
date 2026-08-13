@@ -1,0 +1,314 @@
+[
+  {
+    "cemTag": "m3e-app-bar",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (example = leading menu icon-button + title + trailing overflow; render eyeball verified — Material top app bar)."
+  },
+  {
+    "cemTag": "m3e-assist-chip",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: text-tier 0.058 < 0.10 (RC2; branded icon omitted per decision #1)."
+  },
+  {
+    "cemTag": "m3e-avatar",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-18: monogram variant 0.0000 (Style fixedAttrs pin — unmapped axis; code Letter='A' renders a monogram matching Figma's Monogram variant); contains-tier match."
+  },
+  {
+    "cemTag": "m3e-badge",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: text-tier 0.0547 < 0.10 (benign text-AA; renders visually identical to Figma)."
+  },
+  {
+    "cemTag": "m3e-bottom-sheet",
+    "gate": "approved",
+    "note": "looks fine. we can omit sheet content in code. I also don't know why the notch at the top of the sheet is missing in the code example. largely correct though.",
+    "status": "confirmed"
+  },
+  {
+    "cemTag": "m3e-button",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Human-reviewed 2026-07-13: 8/10 states pixel-pass; elevated (clipped box-shadow) + xsmall (~5% proportion) visually confirmed same button, benign cross-renderer fidelity."
+  },
+  {
+    "cemTag": "m3e-button-group",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier; pixel gate N/A; example = 2 outlined m3e-button children; validateExamples + render eyeball verified)."
+  },
+  {
+    "cemTag": "m3e-button-segment",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Build-mode confirm 2026-07-29: sound correspondence match, composed/example-verified (not pixel-gated)."
+  },
+  {
+    "cemTag": "m3e-card",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier; pixel gate N/A — rich Figma showcase; example = header/content spans + text action button; validateExamples + render eyeball verified — proper Material card)."
+  },
+  {
+    "cemTag": "m3e-checkbox",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: 0.010 < 0.02 (multi-boolean Type -> checked + indeterminate)."
+  },
+  {
+    "cemTag": "m3e-chip-set",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example via manual-correspondence (matcher-unreachable real Figma set); render-verified."
+  },
+  {
+    "cemTag": "m3e-circular-progress-indicator",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 (per-set example attrs via set-attrs.json). Determinate: value=70 → render-verified 70% arc. Indeterminate: indeterminate=true → binding correct; offline render is a frozen animation frame (harness disables motion) — structurally verified, not pixel-verified. Web-components only (not in elm-facts)."
+  },
+  {
+    "cemTag": "m3e-date-input",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-30: text-entry date field (M3e.DateInput); adopted the two input Figma sets mis-bound to the calendar m3e-datepicker (conflict #1)."
+  },
+  {
+    "cemTag": "m3e-datepicker",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Banked 2026-07-19 by representative example; the OPEN/expanded state is render-verified (via force-open) — the emitted example is the correct Code Connect binding + slot structure; runtime open/show state omitted (like dialog). | Human-approved 2026-07-30 via the full code-vs-Figma review UI (final pass). Representative/example-verified binding approved by eyeball, not a pixel-gate pass."
+  },
+  {
+    "cemTag": "m3e-dialog",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Banked by representative example 2026-07-19 (example = header span + content span + Cancel/Reset action buttons; structure render-verified in open state; emitted example omits runtime open attr per Code Connect convention). | Human-approved 2026-07-30 via the full code-vs-Figma review UI (final pass). Representative/example-verified binding approved by eyeball, not a pixel-gate pass."
+  },
+  {
+    "cemTag": "m3e-drawer-container",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example; the OPEN/expanded state is render-verified (via force-open) — the emitted example is the correct Code Connect binding + slot structure; runtime open/show state omitted (like dialog)."
+  },
+  {
+    "cemTag": "m3e-expandable-list-item",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example; the OPEN/expanded state is render-verified (via force-open) — the emitted example is the correct Code Connect binding + slot structure; runtime open/show state omitted (like dialog)."
+  },
+  {
+    "cemTag": "m3e-fab",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-18 (offline capture): all 8 states ≤0.0985 < 0.10 benignAa tier (curved-shape + Material-Symbols icon-glyph AA; human-approved, no structural mismatch)."
+  },
+  {
+    "cemTag": "m3e-fab-menu",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Build-mode confirm 2026-07-29: sound correspondence match, composed/example-verified (not pixel-gated)."
+  },
+  {
+    "cemTag": "m3e-fab-menu-item",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Build-mode confirm 2026-07-29: sound correspondence match, composed/example-verified (not pixel-gated)."
+  },
+  {
+    "cemTag": "m3e-filter-chip",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: text-tier 0.058 < 0.10 (RC2 Configuration icon-hide; benign text-AA)."
+  },
+  {
+    "cemTag": "m3e-form-field",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example (render-verified faithful)."
+  },
+  {
+    "cemTag": "m3e-icon",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 — 141 per-icon Code Connect bindings from the iconTable (name = Figma symbol, +filled variants). Web-components only (not in elm-facts). Corrects the earlier false 'icon unbankable' assessment."
+  },
+  {
+    "cemTag": "m3e-icon-button",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14 (RC2 default-slot icon): all states ≤0.0008 < 0.02."
+  },
+  {
+    "cemTag": "m3e-input-chip",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: text-tier 0.089 < 0.10 (RC2; benign text-AA)."
+  },
+  {
+    "cemTag": "m3e-linear-progress-indicator",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 (per-set example attrs). Determinate: mode=determinate value=70 → render-verified 70% bar. Indeterminate: mode=indeterminate → binding correct; offline render frozen (harness disables motion). Web-components only (not in elm-facts)."
+  },
+  {
+    "cemTag": "m3e-list",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-19 (example = 3 m3e-list-item children; render eyeball verified — vertical list)."
+  },
+  {
+    "cemTag": "m3e-list-item",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: 0.0777 < 0.10 text-tier (harness representative content + width-match)."
+  },
+  {
+    "cemTag": "m3e-loading-indicator",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Build-mode confirm 2026-07-29: sound correspondence match, composed/example-verified (not pixel-gated)."
+  },
+  {
+    "cemTag": "m3e-menu",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-19 (example = 3 m3e-menu-item children with cut/copy/paste icons; render eyeball verified via force-open — elevated Material menu)."
+  },
+  {
+    "cemTag": "m3e-menu-item",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier; example = settings icon + label; render eyeball verified)."
+  },
+  {
+    "cemTag": "m3e-nav-bar",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example via manual-correspondence (matcher-unreachable real Figma set); render-verified."
+  },
+  {
+    "cemTag": "m3e-nav-item",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier; example = home icon + label; render eyeball verified)."
+  },
+  {
+    "cemTag": "m3e-nav-menu",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example (render-verified faithful)."
+  },
+  {
+    "cemTag": "m3e-nav-rail",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example via manual-correspondence (matcher-unreachable real Figma set); render-verified."
+  },
+  {
+    "cemTag": "m3e-radio",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 by representative example via manual-correspondence (matcher-unreachable real Figma set); render-verified."
+  },
+  {
+    "cemTag": "m3e-rich-tooltip",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-19 (example = subhead + body + Action button; render eyeball verified via force-open — Material rich tooltip)."
+  },
+  {
+    "cemTag": "m3e-search-bar",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: 0.0068 < 0.02 (literalIcon menu/search + input placeholder; width-matched to Figma)."
+  },
+  {
+    "cemTag": "m3e-search-view",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Banked 2026-07-19 by representative example; the OPEN/expanded state is render-verified (via force-open) — the emitted example is the correct Code Connect binding + slot structure; runtime open/show state omitted (like dialog). | Human-approved 2026-07-30 via the full code-vs-Figma review UI (final pass). Representative/example-verified binding approved by eyeball, not a pixel-gate pass."
+  },
+  {
+    "cemTag": "m3e-segmented-button",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier match; pixel gate N/A — rich Figma showcase; example = 3 m3e-button-segment children, validateExamples + structural eyeball verified)."
+  },
+  {
+    "cemTag": "m3e-shape",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: all 35 shape variants ≤0.0033 (scale-invariant compare; real Shape Set; Elm canon digit-name fix)."
+  },
+  {
+    "cemTag": "m3e-slider",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Banked 2026-07-19 by representative example. Human-approved 2026-07-30 via code-vs-Figma review UI (range binding: two m3e-slider-thumb 25/75). Representative example — human eyeball approval of the binding, not a pixel-gate pass (composed content differs from the Figma showcase by design)."
+  },
+  {
+    "cemTag": "m3e-snackbar",
+    "gate": "approved",
+    "note": "looks great!",
+    "status": "confirmed"
+  },
+  {
+    "cemTag": "m3e-split-button",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-18 (contains-tier; pixel gate N/A; example = leading m3e-button + trailing m3e-icon-button chevron; validateExamples + render eyeball verified — leading label pill + trailing dropdown)."
+  },
+  {
+    "cemTag": "m3e-suggestion-chip",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14: text-tier 0.072 < 0.10 (RC2 Show-icon variant; benign text-AA)."
+  },
+  {
+    "cemTag": "m3e-switch",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Gate-verified 2026-07-14 (RC1 boolean-axis Selected→checked): both states diffRatio 0.000."
+  },
+  {
+    "cemTag": "m3e-tab",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Banked 2026-07-19 by representative example (manual-correspondence; Primary + Secondary tab-item sets). Human-approved 2026-07-30 via code-vs-Figma review UI — 'different content, but correct'. Human eyeball approval, not a pixel-gate pass. Emits BOTH labels (WC + Elm); the earlier 'web-components only' note was stale."
+  },
+  {
+    "cemTag": "m3e-tabs",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-19 (example = 3 m3e-tab children, first selected; render eyeball verified — tab row with active indicator)."
+  },
+  {
+    "cemTag": "m3e-timepicker",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Coverage remediation 2026-07-30 (BIND, rebound per visual-gate feedback): @m3e/web 2.7.0 time picker container ↔ 'Dial picker' (mode:dial) + 'Keyboard picker' (mode:input). The Figma sets depict the full picker surface; the container renders it faithfully via force-open + representative time. Supersedes the earlier m3e-timepicker-dial/-input sub-element bindings (those depicted only a fragment of the set). Banked example-verified (force-open). | Human-approved 2026-07-30 via the full code-vs-Figma review UI (final pass). Representative/example-verified binding approved by eyeball, not a pixel-gate pass."
+  },
+  {
+    "cemTag": "m3e-timepicker-input-period-toggle",
+    "status": "confirmed",
+    "gate": "approved",
+    "note": "Coverage remediation 2026-07-30 (BIND, plan §4 B3): AM/PM period toggle ↔ '.Building Blocks/Period Selector' (vertical) + ' - Horizontal' (orientation:horizontal ∈ TimepickerOrientation). Banked example-verified. | Human-approved 2026-07-30 via the full code-vs-Figma review UI (final pass). Representative/example-verified binding approved by eyeball, not a pixel-gate pass."
+  },
+  {
+    "cemTag": "m3e-toolbar",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked by representative example 2026-07-19 (example = 3 icon-buttons bold/italic/underline; render eyeball verified — Material toolbar surface)."
+  },
+  {
+    "cemTag": "m3e-tooltip",
+    "status": "confirmed",
+    "gate": "example-verified",
+    "note": "Banked 2026-07-19 via standard emit — preserves the Supporting-text->content binding; render eyeball verified via force-open — dark plain tooltip."
+  }
+]

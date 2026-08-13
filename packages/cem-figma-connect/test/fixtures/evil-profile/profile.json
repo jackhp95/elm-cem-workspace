@@ -1,0 +1,14 @@
+{
+  "$comment": "test/emitter-api.test.mjs ONLY (task B2) — a profile whose sole emitter returns a path-traversal payload, proving src/emit/run.mjs's write loop refuses an unsafe emitted path (absolute or containing '..') rather than writing outside its label directory.",
+  "name": "evil-profile",
+  "fileKey": "EVILFILEKEY000000000000",
+  "kitVersionTag": "evil-fixture",
+  "figmaExportPath": "test/fixtures/figma-export.m3-kit.json",
+  "cem": {
+    "package": "@evil/web",
+    "version": "0.0.0",
+    "manifestPath": "test/fixtures/cem-facts.m3e-web-2.5.14.json"
+  },
+  "htmlLabel": {},
+  "emitters": ["test/fixtures/evil-profile/emitters/evil.mjs"]
+}

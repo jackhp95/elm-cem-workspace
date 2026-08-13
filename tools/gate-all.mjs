@@ -8,7 +8,9 @@
 //      hardcoded, so a package added in a later milestone is picked up with no
 //      edit here;
 //   2. the cross-cutting workspace checks (coverage map, single Cem.Facts,
-//      the A/B generation harness, the A/B split harness, the root gate);
+//      the A/B generation harness, the A/B split harness, copy-fidelity for
+//      the migrated elm-m3e AND cem-figma-connect, cem-figma-connect's
+//      gen:emit determinism proof, the root gate);
 //   3. a REAL end-to-end facts-bundle proof: run the workspace elm-cem against
 //      elm-m3e's own config into a temp dir, then validate both emitted faces
 //      against docs/facts-bundle/schema.json with the shipped validator.
@@ -260,6 +262,12 @@ function main() {
     // file — every other check here would still pass. It belongs in the sweep,
     // not in a human's memory.
     runItem("workspace: copy-fidelity elm-m3e", "bash", [path.join(repoRoot, "tools", "copy-fidelity-elm-m3e.sh")]);
+    runItem("workspace: copy-fidelity cem-figma-connect", "bash", [
+        path.join(repoRoot, "tools", "copy-fidelity-cem-figma-connect.sh"),
+    ]);
+    runItem("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
+        path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

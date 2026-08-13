@@ -1,0 +1,8 @@
+# Generated Code Connect templates and the golden fixtures they're compared
+# against are deliberately semicolon-free (VOLT-2003 lineage footgun, still
+# real: Prettier would inject semicolons into these `.figma.ts` files, and
+# that churn breaks the code-level drift diff the emitters/publish runner
+# rely on). Never let Prettier touch them.
+generated/
+profiles/*/fixtures/*.figma.ts
+research/spikes/**/*.figma.ts

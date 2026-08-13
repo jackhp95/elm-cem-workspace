@@ -1,0 +1,9 @@
+{
+  "$comment": "Vendored fixture (task D2) — verbatim byte-for-byte copies of src/theme.css and src/sys/typescale.css from the jackhp95/tailwind-m3e-web sibling repo, pinned at the commit below, so src/tokens/derive.mjs has a checked-in, portable, byte-stable input (architecture ground rule: 'all inputs checked in', plans/01-architecture.md §2) instead of depending on a live sibling checkout existing at generation time. Mirrors the test/fixtures/m3e-web-2.5.14 vendoring pattern for the same reason. Refresh by re-copying both files from the sibling repo and updating commit/pinnedAt below — never hand-edit the vendored CSS.",
+  "name": "tailwind-m3e-web",
+  "version": "0.1.0",
+  "repository": "https://github.com/jackhp95/tailwind-m3e-web",
+  "pinnedCommit": "e7592e4bd31700c8f2d12721261df5fb15971aae",
+  "pinnedAt": "2026-07-11",
+  "vendoredFiles": ["src/theme.css", "src/sys/typescale.css"]
+}

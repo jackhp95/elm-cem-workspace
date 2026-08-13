@@ -1,0 +1,18 @@
+[
+  {
+    "cemTag": "m3e-badge",
+    "figmaSets": [{ "nodeId": "51592:4768", "setName": "Badges", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "confirmed"
+  },
+  {
+    "cemTag": "m3e-bottom-sheet",
+    "figmaSets": [{ "nodeId": "51827:5859", "setName": "Bottom sheet", "fixedAttrs": {} }],
+    "axes": [],
+    "props": [],
+    "provenance": "human",
+    "status": "confirmed"
+  }
+]

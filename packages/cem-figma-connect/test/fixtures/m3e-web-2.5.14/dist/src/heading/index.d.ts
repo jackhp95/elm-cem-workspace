@@ -1,0 +1,5 @@
+export * from "./HeadingElement";
+export * from "./HeadingLevel";
+export * from "./HeadingSize";
+export * from "./HeadingVariant";
+//# sourceMappingURL=index.d.ts.map

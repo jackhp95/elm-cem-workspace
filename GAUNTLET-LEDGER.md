@@ -382,6 +382,27 @@ Structural facts confirmed at bootstrap (bind M1.d):
   This is a deliberate, recorded deviation from the plan's parallelization suggestion; revert by
   running the remaining two in worktrees if the wall-clock matters more than the merge risk.
 
+- **D-018 (M3.a round 1) — two defects that strike at the project's PURPOSE; not accepted.**
+  The loop failed all 5 iterations on `pnpm --filter cem-figma-connect run test`, which passes for me
+  in 9s (698 tests, exit 0) — and the whole bar passes in sequence. So the loop's red is once again
+  not the real signal. Inspecting the tree found two substantive defects no check caught:
+  1. **VERSION SKEW — the exact fragility this project exists to kill.** `cem-figma-connect` still
+     declares `@m3e/web: 2.7.0` while `elm-m3e/docs` declares `2.7.3`. Its own profile comment says
+     the bundle it now reads is "for elm-m3e's @m3e/web 2.7.3" — so it would emit Figma Code Connect
+     describing the **2.7.3** API while rendering components from **2.7.0**. Spec §2 names this
+     precise skew as a defect to remove and §5 requires "Re-pin once. One `@m3e/web` entry."
+     Two pins in one workspace is a regression against the goal, however green the gates are.
+  2. **The bundle is UNTRACKED loose state.** `profiles/m3-kit/facts/{cem-facts,elm-api-facts}.json`
+     exist on disk but are neither committed nor gitignored — they were allowlisted as "authorized
+     extras" in the copy-fidelity script. There is no `gen:facts` script and no workspace dependency
+     on the producer, so nothing regenerates them. **A fresh clone cannot build this package**, and
+     nothing polices the copy against the producer — which is the vendored-copy failure mode
+     returning by the back door.
+  **Fix:** unify to ONE `@m3e/web` pin (2.7.3, per D-013); make bundle delivery reproducible and
+  policed — the bundle is COMMITTED (so spec §9's drift gate can diff it) AND regenerable from the
+  producer via a wired script, with a check that regeneration reproduces it byte-identically. Two new
+  deterministic checks enforce both, and prefigure M4's drift gate.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -498,3 +519,8 @@ Structural facts confirmed at bootstrap (bind M1.d):
   Generated output byte-identical to the source checkout across src/ and all three split trees.`
 - `M2: integrated (gate-all 16/16 GREEN after the manager wired tools/copy-fidelity-elm-m3e.sh into
   the sweep — the critic correctly flagged that M2's central new protection only ran by hand)`
+- `M3.a: round 1 (loop 626e2b15, 5 iterations, all red on cem-figma-connect test — which passes
+  standalone in 9s/698 tests; the real defects were found by manager inspection, not by the bar:
+  @m3e/web version skew 2.7.0 vs 2.7.3, and an untracked unregenerable bundle. NOT accepted.
+  The main prize DID land: elm-facts.build.mjs (~995 lines) and elm-facts.json deleted, and a
+  10KB correction doc written. Strategy: see D-018; builder claude/sonnet)`

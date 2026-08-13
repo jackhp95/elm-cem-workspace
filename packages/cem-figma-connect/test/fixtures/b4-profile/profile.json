@@ -1,0 +1,17 @@
+{
+  "$comment": "Synthetic profile for test/publish-check.test.mjs ONLY (task B4). Reuses the real, already-validated m3-kit cem/figma-export fixtures purely so loadCem/loadFigmaExport succeed; its own correspondence.json (two badge/bottom-sheet entries, deliberately small) is what publish/check actually exercise. kitVersionTag is deliberately NOT the 'unknown-pre-a3-fixture' placeholder (profiles/m3-kit/profile.json's real value) so this fixture can exercise the offline publish/unpublish/staging flow without tripping the carry-in kitVersionTag guard, which is tested separately against the real m3-kit profile.",
+  "name": "b4-profile",
+  "fileKey": "B4FIXTUREFILEKEY0000000",
+  "kitVersionTag": "b4-test-fixture",
+  "figmaExportPath": "test/fixtures/figma-export.m3-kit.json",
+  "cem": {
+    "package": "@b4/web",
+    "version": "0.0.0",
+    "manifestPath": "test/fixtures/cem-facts.m3e-web-2.5.14.json"
+  },
+  "htmlLabel": {
+    "imports": ["import \"@m3e/web/all\""],
+    "iconPlaceholder": "wifi"
+  },
+  "emitters": ["html-label"]
+}

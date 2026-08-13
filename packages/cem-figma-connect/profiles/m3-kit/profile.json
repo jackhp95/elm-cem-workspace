@@ -1,0 +1,32 @@
+{
+  "$comment": "First consumer profile (plans/01-architecture.md §4): @m3e/web ⋈ the Material 3 Design Kit. fileKey/kitVersionTag pin the Figma side per architecture §3 item 6 — node-ids anchor within THIS kit version; refresh both together when the export is re-extracted, never independently. Component keys are explicitly NOT here (they live in profiles/m3-kit/keys.<fileKey>.json, a per-fileKey cache — evidence #5). kitVersionTag is passed through verbatim from the checked-in figma-export fixture's meta.kitVersionTag (test/fixtures/build-m3-kit-fixture.mjs) — a placeholder until a real extraction session (Plan A3 runbook) stamps a dated tag. figmaExportPath points at the A2/A3 fixture, checked in; point it at a fresh extraction (extract/README.md) once the kit is re-pulled — re-running `match` after that refresh regenerates auto-* entries but never touches human/confirmed ones (merge.mjs). emitters (task B2): each entry is either the literal string \"html-label\" (the built-in emitter) or a repo-root-relative path to a profile-local ES module dynamically imported by src/emit/run.mjs (e.g. \"profiles/m3-kit/emitters/elm.mjs\", B3's Elm emitter — not created yet, so only \"html-label\" is listed here for now).",
+  "name": "m3-kit",
+  "fileKey": "UtwpUdPiOZEuxp8Nq1d5yQ",
+  "kitVersionTag": "m3-community-2026-07-13",
+  "figmaExportPath": "research/figma-dumps/figma-export.m3-kit.json",
+  "cem": {
+    "$comment": "M3.a: manifestPath now points at elm-cem's own canonical facts bundle Face B (docs/facts-bundle/schema.json) for elm-m3e's @m3e/web 2.7.3 — the same input elm-m3e itself generates from — instead of a vendored raw-manifest + .d.ts copy this repo parsed independently. src/ingest/cem.mjs's loadCem() reads Face B directly; there is no dtsDir to configure anymore (Face B is already .d.ts-resolved).",
+    "package": "@m3e/web",
+    "version": "2.7.3",
+    "manifestPath": "profiles/m3-kit/facts/cem-facts.json"
+  },
+  "htmlLabel": {
+    "$comment": "Task B1's minimal config for src/emit/html-label.mjs's underlying `emitEntry`/`emitConfirmed` functions — kept separate from `emitters` (which just lists WHICH emitters run, task B2) since this is html-label's OWN per-profile config, read via ctx.profile.htmlLabel by the `emitter` export's ctx-to-config adapter (src/emit/html-label.mjs). imports: the one m3-kit needs live-proven 2026-07-10 (evidence #1). iconPlaceholder: fallback glyph baked into a slotted <m3e-icon> when a boolean slot prop has no mapped INSTANCE_SWAP counterpart (not exercised by m3e-button, whose 'Icon' prop IS mapped, but kept for other components/profiles).",
+    "imports": [
+      "import \"@m3e/web/all\""
+    ],
+    "iconPlaceholder": "wifi"
+  },
+  "elm": {
+    "$comment": "M3.a: config for profiles/m3-kit/emitters/elm.mjs. elmSurface (decision D5) selects which of the elm-cem facts bundle Face C's (profiles/m3-kit/facts/elm-api-facts.json) surfaceKeys the Elm snippets target: \"top\" (default, top-layer M3e.* module — the golden form), \"raw\", \"html\", \"record\", or \"build\". All module/setter/token names come from that bundle (emitted by elm-cem itself when it generates elm-m3e), never from this file. textSeam names the USERLAND seam module that renders text content — elm-m3e has NO library-exported text helper (text/link/label are config-declared, generator-typed, userland-filled seams per elm-m3e docs/DESIGN.md §4); \"Kit\" is the seam module elm-m3e's own examples (config/examples.generated.json) and docs/DESIGN.md consistently import and call (`Kit.text \"...\"`). This is sourced from that documented convention, NOT verified against a library `exposing` list and NOT a bundle fact — Face C carries no userland-seam field since a producer cannot measure a seam it doesn't generate. Override only if a consuming project's userland seam module is named differently.",
+    "elmSurface": "top",
+    "textSeam": "Kit",
+    "$comment_seams": "htmlSeam/attrSeam name the USERLAND seams for plain HTML scaffolding that carries multiple children — a right-aligned `<div slot=\"actions\">` action row, or a trailing `<span>` holding text + a control. Like textSeam, these are userland (NOT CEM-measured, NOT a Face C bundle fact) and sourced from elm-m3e's own example convention: config/examples.rich.json consistently renders scaffolding as `TypedHtml.div [ Native.attribute \"k\" \"v\" ] [ ... ]` and `Native.node \"img\" ...`. Kept deliberately separate from the M3e.* component-fact machinery. Override only if a consuming project's userland HTML seam modules are named differently.",
+    "htmlSeam": "TypedHtml",
+    "attrSeam": "Native"
+  },
+  "emitters": [
+    "html-label",
+    "profiles/m3-kit/emitters/elm.mjs"
+  ]
+}

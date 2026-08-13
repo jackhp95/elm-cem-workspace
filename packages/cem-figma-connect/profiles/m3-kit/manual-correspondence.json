@@ -1,0 +1,1083 @@
+{
+  "m3e-tab": {
+    "figmaSets": [
+      {
+        "nodeId": "54563:40142",
+        "setName": "Primary tabs/Icon and label",
+        "fixedAttrs": {}
+      },
+      {
+        "nodeId": "54563:40209",
+        "setName": "Primary tabs/Icon only",
+        "fixedAttrs": {},
+        "slugSuffix": "primary-icon-only",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "54563:40268",
+        "setName": "Primary tabs/Label only",
+        "fixedAttrs": {},
+        "slugSuffix": "primary-label-only",
+        "example": {
+          "children": [
+            {
+              "tag": "span",
+              "text": "Tab"
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "54563:40366",
+        "setName": "Secondary tabs/Icon and label",
+        "fixedAttrs": {},
+        "slugSuffix": "secondary-icon-label",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Tab"
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "54563:40319",
+        "setName": "Secondary tabs/Label only",
+        "fixedAttrs": {},
+        "slugSuffix": "secondary-label-only",
+        "example": {
+          "children": [
+            {
+              "tag": "span",
+              "text": "Tab"
+            }
+          ]
+        }
+      }
+    ],
+    "axes": [
+      {
+        "figmaProp": "Selected",
+        "attr": "selected",
+        "kind": "boolean",
+        "valueMap": {
+          "False": "false",
+          "True": "true"
+        }
+      }
+    ],
+    "note": "Manual: matcher can't reach the tab-item sets (head-noun 'tab' excluded by m3e-tabs' exact match). Representative binding — Primary tabs/Icon and label. 2026-07-19. Added Secondary tabs (Icon and label, Label only) 2026-07-30 — m3e-tab has no primary/secondary attr (that lives on m3e-tabs); same tag, distinct files via slugSuffix."
+  },
+  "m3e-radio": {
+    "figmaSets": [
+      {
+        "nodeId": "51739:4608",
+        "setName": "Radio buttons",
+        "fixedAttrs": {},
+        "example": {
+          "children": []
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: matcher-unreachable; real 'Radio buttons' set. Representative single radio."
+  },
+  "m3e-chip-set": {
+    "figmaSets": [
+      {
+        "nodeId": "57376:5501",
+        "setName": "Chip groups",
+        "fixedAttrs": {}
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'Chip groups' set; example = 2 filter chips."
+  },
+  "m3e-nav-bar": {
+    "figmaSets": [
+      {
+        "nodeId": "58016:37236",
+        "setName": "Navigation Bar: Horizontal items",
+        "fixedAttrs": {}
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'Navigation Bar' set; example = 2 nav items."
+  },
+  "m3e-nav-rail": {
+    "figmaSets": [
+      {
+        "nodeId": "58016:36879",
+        "setName": "Navigation Rail",
+        "fixedAttrs": {}
+      },
+      {
+        "nodeId": "58016:36670",
+        "setName": "Navigation Rail: Expanded",
+        "fixedAttrs": {},
+        "slugSuffix": "expanded"
+      }
+    ],
+    "note": "Manual 2026-07-19/30: \"Navigation Rail\" (collapsed) + \"Navigation Rail: Expanded\" (adopted 2026-07-30 from m3e-nav-menu; the expanded state belongs to the rail, which has NavRailToggleElement)."
+  },
+  "m3e-nav-menu": {
+    "figmaSets": [
+      {
+        "nodeId": "51593:5827",
+        "setName": "Navigation Drawer",
+        "fixedAttrs": {}
+      }
+    ],
+    "note": "Manual 2026-07-30: remapped from wrong counterpart \"Navigation Rail: Expanded\" (which is the expanded RAIL, moved to m3e-nav-rail) to \"Navigation Drawer\" — NavMenuElement is the hierarchical nested sidebar/drawer menu (conflict #4c)."
+  },
+  "m3e-expandable-list-item": {
+    "figmaSets": [
+      {
+        "nodeId": "59106:13316",
+        "setName": "List item - Accordion ",
+        "fixedAttrs": {}
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'List item - Accordion' set; accordion list item."
+  },
+  "m3e-drawer-container": {
+    "figmaSets": [
+      {
+        "nodeId": "53198:27851",
+        "setName": "Side Sheet",
+        "fixedAttrs": {}
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'Side Sheet' set; drawer w/ end panel."
+  },
+  "m3e-datepicker": {
+    "figmaSets": [
+      {
+        "nodeId": "51954:18136",
+        "setName": "Modal date picker",
+        "fixedAttrs": {
+          "variant": "modal"
+        },
+        "slugSuffix": "modal"
+      }
+    ],
+    "note": "Manual 2026-07-30: calendar-only component (DatepickerVariant docked|modal|auto all render calendars). Bound to the calendar set \"Modal date picker\" only; the text-entry \"Input date picker\" set moved to m3e-date-input (conflict #1). variant:modal (real enum); calendar internal shadow DOM -> force-open, example-verified."
+  },
+  "m3e-form-field": {
+    "figmaSets": [
+      {
+        "nodeId": "52798:24373",
+        "setName": "Text field",
+        "fixedAttrs": {
+          "variant": "filled"
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'Text field' set; outlined form field."
+  },
+  "m3e-search-view": {
+    "figmaSets": [
+      {
+        "nodeId": "59178:4992",
+        "setName": "Search docked layout",
+        "fixedAttrs": {
+          "mode": "docked"
+        }
+      },
+      {
+        "nodeId": "59178:4963",
+        "setName": "Search full-screen layout",
+        "fixedAttrs": {
+          "mode": "fullscreen",
+          "contained": "true"
+        },
+        "slugSuffix": "fullscreen",
+        "example": {
+          "children": [
+            {
+              "tag": "input",
+              "slot": "input",
+              "attrs": {
+                "placeholder": "Hinted search text"
+              }
+            },
+            {
+              "tag": "m3e-list",
+              "children": [
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "img",
+                      "slot": "leading",
+                      "attrs": {
+                        "src": "data:image/png;base64,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"
+                      }
+                    },
+                    {
+                      "tag": "span",
+                      "text": "Image result one"
+                    },
+                    {
+                      "tag": "m3e-icon",
+                      "slot": "trailing",
+                      "attrs": {
+                        "name": "north_west"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "img",
+                      "slot": "leading",
+                      "attrs": {
+                        "src": "data:image/png;base64,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"
+                      }
+                    },
+                    {
+                      "tag": "span",
+                      "text": "Image result two"
+                    },
+                    {
+                      "tag": "m3e-icon",
+                      "slot": "trailing",
+                      "attrs": {
+                        "name": "north_west"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "img",
+                      "slot": "leading",
+                      "attrs": {
+                        "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAGdElEQVR4Aa3By2lDWRBF0f1uAAVVYwdgjBPwxMH3pBMQjQLQ+BRUAmobbDDCHz3prLWx0/FwOvOL1uCUFTi1Bqes4KvH54eNHTb+cDyczlypNThlBU6twSkr+Mvj88PGLzZ+cDyczuzQGpyyAqfW4JQV7PH4/LDxjY1vHA+nMzu0BqeswKk1OGUFt3h8fti4sHHheDid2aE1OGUFTq3BKSu4x+Pzw8YXG18cD6czO7QGp6zAqTU4ZQUOj88PGx82PhwPpzM7tAanrMCpNThlBU6Pzw8bbxY3aA1OWYFTa3DKCpxaw6eNN8fD6cyVWoNTVuDUGpyyAqfW8Onl9Wlb7NAanLICp9bglBU4tYZLiyu1BqeswKk1OGUFTq3hO4srtAanrMCpNThlBU6t4Sfb8XA684vW4JQVOLUGp6zAqTX8ZvGL1uCUFTi1BqeswKk1/GXxg9bglBU4tQanrMCpNVxj8Y3W4JQVOLUGp6zAqTVca3GhNThlBU6twSkrcGoNeyy+aA1OWYFTa3DKCpxaw16LD63BKStwag1OWYFTa7jF4k1rcMoKnFqDU1bg1BputVqDU1bg1BqcsgKn1nCPhVFW4NQanLICp9Zwr4VJVuDUGpyyAqfW4LAwyAqcWoNTVuDUGlwWd8oKnFqDU1bg1BqcFnfICpxag1NW4NQanLKCxY2yAqfW4JQVOLUGp6zg3eIGWYFTa3DKCpxag1NW8GmxU1bg1BqcsgKn1uCUFXy12CErcGoNTlmBU2twygouLa6UFTi1BqeswKk1OGUF31lcIStwag1OWYFTa3DKCn6y+ENW4NQanLICp9bglBX8ZvGLrMCpNThlBU6twSkr+MviB1mBU2twygqcWoNTVnCNxTeyAqfW4JQVOLUGp6zgWosLWYFTa3DKCpxag1NWsMfii6zAqTU4ZQVOrcEpK9hr8SErcGoNTlmBU2twygpusXiTFTi1BqeswKk1OGUFt1pZgVNrcMoKnFqDU1Zwj4VRa3DKCpxag1NWcK+FSWtwygqcWoNTVuCwMGgNTlmBU2twygpcFndqDU5ZgVNrcMoKnBZ3aA1OWYFTa3DKCpxaw+JGrcEpK3BqDU5ZgVNreLe4QWtwygqcWoNTVuDUGj4tdmoNTlmBU2twygqcWsNXix1ag1NW4NQanLICp9ZwaXGl1uCUFTi1BqeswKk1fGdxhdbglBU4tQanrMCpNfxk8YfW4JQVOLUGp6zAqTX8ZvGL1uCUFTi1BqeswKk1/GXxg9bglBU4tQanrMCpNVxj8Y3W4JQVOLUGp6zAqTVca3GhNThlBU6twSkrcGoNeyy+aA1OWYFTa3DKCpxaw16LD63BKStwag1OWYFTa7jF4k1rcMoKnFqDU1bg1BputVqDU1bg1BqcsgKn1nCPhVFW4NQanLICp9Zwr4VJVuDUGpyyAqfW4LAwyAqcWoNTVuDUGlwWd8oKnFqDU1bg1BqcFnfICpxag1NW4NQanLKCxY2yAqfW4JQVOLUGp6zg3eIGWYFTa3DKCpxag1NW8GmxU1bg1BqcsgKn1uCUFXy12CErcGoNTlmBU2twygouLa6UFTi1BqeswKk1OGUF31lcIStwag1OWYFTa3DKCn6y+ENW4NQanLICp9bglBX8ZvGLrMCpNThlBU6twSkr+MviB1mBU2twygqcWoNTVnCNxTeyAqfW4JQVOLUGp6zgWosLWYFTa3DKCpxag1NWsMfii6zAqTU4ZQVOrcEpK9hr8SErcGoNTlmBU2twygpusXiTFTi1BqeswKk1OGUFt1pZgVNrcMoKnFqDU1Zwj4VRa3DKCpxag1NWcK+FSWtwygqcWoNTVuCwMGgNTlmBU2twygpcNt4cD6czN2oNTlmBU2twygpcHp8ftsUdWoNTVuDUGpyyArfFjVqDU1bg1BqcsgKn1vBucYPW4JQVOLUGp6zAqTV82vhwPJzOXKE1OGUFTq3BKStwag3vXl6fNt4sdmgNTlmBU2twygqcWsOljS+Oh9OZH7QGp6zAqTU4ZQVOreHTy+vTxoeNC8fD6cyF1uCUFTi1BqeswKk1fHp5fdr4YuMbx8PpzIfW4JQVOLUGp6zAqTV8enl92riw8YPj4XRuDU5ZgVNrcMoKnFrDp5fXp41vbPzh33/+O2OQFTi1BqeswKk1vHt5fdr4xcZO//7z35mdsgKn1uCUFbg8Pj9s7PA/Rx7zXY0h6+MAAAAASUVORK5CYII="
+                      }
+                    },
+                    {
+                      "tag": "span",
+                      "text": "Image result three"
+                    },
+                    {
+                      "tag": "m3e-icon",
+                      "slot": "trailing",
+                      "attrs": {
+                        "name": "north_west"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "img",
+                      "slot": "leading",
+                      "attrs": {
+                        "src": "data:image/png;base64,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"
+                      }
+                    },
+                    {
+                      "tag": "span",
+                      "text": "Image result four"
+                    },
+                    {
+                      "tag": "m3e-icon",
+                      "slot": "trailing",
+                      "attrs": {
+                        "name": "north_west"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "img",
+                      "slot": "leading",
+                      "attrs": {
+                        "src": "data:image/png;base64,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"
+                      }
+                    },
+                    {
+                      "tag": "span",
+                      "text": "Image result five"
+                    },
+                    {
+                      "tag": "m3e-icon",
+                      "slot": "trailing",
+                      "attrs": {
+                        "name": "north_west"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: real 'Search docked layout' set; search surface verified via open. Added Search full-screen layout (mode:fullscreen, verified against SearchViewMode enum) 2026-07-30; example-verified via force-open."
+  },
+  "m3e-timepicker": {
+    "figmaSets": [
+      {
+        "nodeId": "52949:27916",
+        "setName": "Dial picker",
+        "fixedAttrs": {
+          "mode": "dial"
+        },
+        "slugSuffix": "dial"
+      },
+      {
+        "nodeId": "52949:28053",
+        "setName": "Keyboard picker",
+        "fixedAttrs": {
+          "mode": "input"
+        },
+        "slugSuffix": "keyboard"
+      }
+    ],
+    "axes": [
+      {
+        "figmaProp": "Format",
+        "attr": "format",
+        "valueMap": {
+          "12 hour": "12",
+          "24 hour": "24"
+        }
+      }
+    ],
+    "note": "Manual 2026-07-30 (rebind per visual-gate feedback): the Figma 'Dial picker'/'Keyboard picker' sets are the FULL m3e-timepicker surface (header + time display + AM/PM + dial/inputs + Cancel/OK), NOT the dial/input sub-elements. Bind the container; mode is a real CEM enum (dial|input); force-open + set-attrs 'date' populates a representative time. Supersedes the earlier m3e-timepicker-dial/-input sub-element bindings."
+  },
+  "m3e-timepicker-input-period-toggle": {
+    "figmaSets": [
+      {
+        "nodeId": "52949:28132",
+        "setName": ".Building Blocks/Period Selector",
+        "fixedAttrs": {},
+        "slugSuffix": "vertical"
+      },
+      {
+        "nodeId": "52949:28175",
+        "setName": ".Building Blocks/Period Selector - Horizontal",
+        "fixedAttrs": {
+          "orientation": "horizontal"
+        },
+        "slugSuffix": "horizontal"
+      }
+    ],
+    "note": "Manual 2026-07-30: AM/PM period toggle. Vertical (default) + Horizontal variants. orientation is a real CEM attr (Exclude<TimepickerOrientation,'auto'> = vertical|horizontal)."
+  },
+  "m3e-slider": {
+    "appendSets": [
+      {
+        "nodeId": "58008:11810",
+        "setName": "Range slider",
+        "fixedAttrs": {},
+        "slugSuffix": "range",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-slider-thumb",
+              "attrs": {
+                "value": "25"
+              }
+            },
+            {
+              "tag": "m3e-slider-thumb",
+              "attrs": {
+                "value": "75"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-30: Range slider 2nd-set — two m3e-slider-thumb children (25/75) in the default slot (slider.md range example). Distinct from the single-thumb Standard slider already bound. example-verified."
+  },
+  "m3e-dialog": {
+    "appendSets": [
+      {
+        "nodeId": "52112:28937",
+        "setName": "List dialog",
+        "fixedAttrs": {},
+        "slugSuffix": "list",
+        "example": {
+          "children": [
+            {
+              "tag": "span",
+              "slot": "header",
+              "text": "Dialog title"
+            },
+            {
+              "tag": "span",
+              "text": "A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made."
+            },
+            {
+              "tag": "m3e-list",
+              "children": [
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-divider"
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-divider"
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "slot": "actions",
+              "attrs": {
+                "end": "true"
+              },
+              "children": [
+                {
+                  "tag": "m3e-button",
+                  "attrs": {
+                    "variant": "text"
+                  },
+                  "text": "Action 2"
+                },
+                {
+                  "tag": "m3e-button",
+                  "attrs": {
+                    "variant": "text"
+                  },
+                  "text": "Action 1"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "52112:29186",
+        "setName": "Scrollable list dialog",
+        "fixedAttrs": {},
+        "slugSuffix": "scrollable-list",
+        "example": {
+          "children": [
+            {
+              "tag": "span",
+              "slot": "header",
+              "text": "Dialog title"
+            },
+            {
+              "tag": "span",
+              "text": "A dialog is a type of modal window that appears in front of app content to provide critical information, or ask for a decision."
+            },
+            {
+              "tag": "m3e-list",
+              "children": [
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "m3e-list-item",
+                  "children": [
+                    {
+                      "tag": "m3e-avatar",
+                      "slot": "leading",
+                      "text": "A"
+                    },
+                    {
+                      "tag": "span",
+                      "text": "List item"
+                    },
+                    {
+                      "tag": "span",
+                      "slot": "trailing",
+                      "text": "100+",
+                      "children": [
+                        {
+                          "tag": "m3e-checkbox",
+                          "attrs": {
+                            "checked": "true"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "slot": "actions",
+              "attrs": {
+                "end": "true"
+              },
+              "children": [
+                {
+                  "tag": "m3e-button",
+                  "attrs": {
+                    "variant": "text"
+                  },
+                  "text": "Action 2"
+                },
+                {
+                  "tag": "m3e-button",
+                  "attrs": {
+                    "variant": "text"
+                  },
+                  "text": "Action 1"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-30: M3 list/scrollable-list dialogs = m3e-dialog with a m3e-list body (dialog.md + list.md); no dedicated tags. example-verified (force-open)."
+  },
+  "m3e-fab": {
+    "appendSets": [
+      {
+        "nodeId": "57998:43095",
+        "setName": "Extended FAB",
+        "fixedAttrs": {
+          "extended": "true"
+        },
+        "slugSuffix": "extended",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "slot": "label",
+              "text": "Label"
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: Extended FAB 2nd-set; icon in default slot + slot=label text. Render-verified."
+  },
+  "m3e-button": {
+    "appendSets": [
+      {
+        "nodeId": "57994:2328",
+        "setName": "Toggle button",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "filled"
+        },
+        "slugSuffix": "toggle-filled",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58653:13968",
+        "setName": "Toggle button - elevated",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "elevated"
+        },
+        "slugSuffix": "toggle-elevated",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58653:16237",
+        "setName": "Toggle button - outline",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "outlined"
+        },
+        "slugSuffix": "toggle-outlined",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58653:17539",
+        "setName": "Toggle button - tonal",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "tonal"
+        },
+        "slugSuffix": "toggle-tonal",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: 4 toggle-button 2nd-sets (filled/elevated/outlined/tonal). Render-verified."
+  },
+  "m3e-fab-menu-item": {
+    "figmaSets": [
+      {
+        "nodeId": "57998:42953",
+        "setName": ".Building Blocks/FAB Menu/Primary/Segment",
+        "fixedAttrs": {},
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-29: real '.Building Blocks/FAB Menu/Primary/Segment' set; one item of a FAB menu (icon slot + default label). Sibling m3e-fab-menu -> 'FAB menu'."
+  },
+  "m3e-button-segment": {
+    "figmaSets": [
+      {
+        "nodeId": "53923:36691",
+        "setName": "Building Blocks/Segmented button/Button segment (middle)",
+        "fixedAttrs": {},
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "slot": "icon",
+              "attrs": {
+                "name": "check"
+              }
+            },
+            {
+              "tag": "span",
+              "text": "Label"
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-29: real 'Building Blocks/Segmented button/Button segment (middle)' set; a single option within a segmented button (icon slot + default label). Parent m3e-segmented-button -> 'Segmented button'."
+  },
+  "m3e-icon-button": {
+    "appendSets": [
+      {
+        "nodeId": "57994:10368",
+        "setName": "Icon button togglable",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "filled"
+        },
+        "slugSuffix": "toggle-filled",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "attrs": {
+                "name": "star_border"
+              }
+            },
+            {
+              "tag": "m3e-icon",
+              "slot": "selected",
+              "attrs": {
+                "name": "stars"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58665:42416",
+        "setName": "Icon button togglable - standard",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "standard"
+        },
+        "slugSuffix": "toggle-standard",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "m3e-icon",
+              "slot": "selected",
+              "attrs": {
+                "name": "stars"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58668:45603",
+        "setName": "Icon button togglable - outline",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "outlined"
+        },
+        "slugSuffix": "toggle-outlined",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "m3e-icon",
+              "slot": "selected",
+              "attrs": {
+                "name": "stars"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "58668:48104",
+        "setName": "Icon button togglable - tonal",
+        "fixedAttrs": {
+          "toggle": "true",
+          "selected": "true",
+          "variant": "tonal"
+        },
+        "slugSuffix": "toggle-tonal",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-icon",
+              "attrs": {
+                "name": "stars"
+              }
+            },
+            {
+              "tag": "m3e-icon",
+              "slot": "selected",
+              "attrs": {
+                "name": "stars"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Manual 2026-07-19: 4 icon-button togglable 2nd-sets (filled/standard/outlined/tonal). Render-verified."
+  },
+  "m3e-date-input": {
+    "figmaSets": [
+      {
+        "nodeId": "51954:18540",
+        "setName": "Input date picker",
+        "fixedAttrs": {},
+        "slugSuffix": "modal"
+      },
+      {
+        "nodeId": "51954:18567",
+        "setName": "Docked input date picker [desktop]",
+        "fixedAttrs": {},
+        "slugSuffix": "docked"
+      }
+    ],
+    "note": "Manual 2026-07-30: DateInputElement is the date TEXT-ENTRY field (M3e.DateInput, upstreamed after the prior facts pin; see elm-facts bump). Adopted the two text-entry Figma sets that were mis-bound to m3e-datepicker (a calendar) — conflict #1."
+  }
+}

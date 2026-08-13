@@ -1,0 +1,32 @@
+{
+  "$comment": "research/figma-dumps/kit-styles.json — raw pass-through of paint/text/effect styles. Task D1 (Step 4) only consumes textStyles (30, evidence #13); paintStyles (727) and effectStyles (10) are kept as loose, unvalidated arrays — out of scope here (see Plan D's later tasks for any color/effect audit use).",
+  "type": "object",
+  "required": ["paintStyles", "textStyles", "effectStyles"],
+  "additionalProperties": false,
+  "properties": {
+    "paintStyles": { "type": "array" },
+    "effectStyles": { "type": "array" },
+    "textStyles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "fontName", "fontSize"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "fontName": {
+            "type": "object",
+            "required": ["family", "style"],
+            "additionalProperties": false,
+            "properties": {
+              "family": { "type": "string" },
+              "style": { "type": "string" }
+            }
+          },
+          "fontSize": { "type": "number" }
+        }
+      }
+    }
+  }
+}

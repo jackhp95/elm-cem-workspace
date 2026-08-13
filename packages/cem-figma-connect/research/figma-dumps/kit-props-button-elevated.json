@@ -1,0 +1,62 @@
+{
+  "id": "58650:9294",
+  "name": "Button - elevated",
+  "type": "COMPONENT_SET",
+  "properties": [
+    {
+      "name": "Label text#58650:153",
+      "type": "TEXT",
+      "defaultValue": "Label"
+    },
+    {
+      "name": "Show icon#58650:204",
+      "type": "BOOLEAN",
+      "defaultValue": true
+    },
+    {
+      "name": "Icon#58650:255",
+      "type": "INSTANCE_SWAP",
+      "defaultValue": "54616:25409",
+      "preferredValues": []
+    },
+    {
+      "name": "Show focus indicator#58654:2225",
+      "type": "BOOLEAN",
+      "defaultValue": false
+    },
+    {
+      "name": "Type",
+      "type": "VARIANT",
+      "defaultValue": "Round",
+      "variantOptions": [
+        "Round",
+        "Square"
+      ]
+    },
+    {
+      "name": "Size",
+      "type": "VARIANT",
+      "defaultValue": "Small",
+      "variantOptions": [
+        "XSmall",
+        "Small",
+        "Medium",
+        "Large",
+        "XLarge"
+      ]
+    },
+    {
+      "name": "State",
+      "type": "VARIANT",
+      "defaultValue": "Enabled",
+      "variantOptions": [
+        "Enabled",
+        "Hovered",
+        "Focused",
+        "Pressed",
+        "Disabled"
+      ]
+    }
+  ],
+  "variantCount": 50
+}
