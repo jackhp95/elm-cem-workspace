@@ -2,10 +2,12 @@
 @import "tailwindcss";
 
 /* M3 design tokens (seed -> ref -> sys -> @theme keys).
-   Vendored from the private jackhp95/tailwind-m3e-web repo (see vendor/). */
-@import "./vendor/tailwind-m3e-web/src/index.css";
+   tailwind-m3e-web is a co-located workspace package (packages/tailwind-m3e-web) —
+   the private jackhp95/tailwind-m3e-web repo, unpublished, but co-located here
+   so this docs app can depend on it directly instead of vendoring a copy. */
+@import "tailwind-m3e-web";
 /* Per-component CSS-variable utility setters for @m3e/web */
-@import "./vendor/tailwind-m3e-web/generated/utilities.css";
+@import "tailwind-m3e-web/utilities";
 
 /* Scan the docs routes and the Ui.* library for utility classes. */
 @source "./app";

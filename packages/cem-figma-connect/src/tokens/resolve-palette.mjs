@@ -5,10 +5,12 @@
 // the surface family (src/sys/color.css). There is no headless browser in
 // this project's toolchain, so those CSS expressions have no JS evaluator to
 // call — this module IS that evaluator, mirroring the two source files
-// arithmetically via `culori`, cited line-for-line against the vendored copy
-// (test/fixtures/tailwind-m3e-web-0.1.0/src/{ref/palette.css,sys/color.css}
-// pinned at tailwind-m3e-web commit e7592e4, 2026-07-11 — see that fixture
-// dir's provenance note in task-D5-report.md).
+// arithmetically via `culori`, cited line-for-line against the workspace
+// package (packages/tailwind-m3e-web/src/{ref/palette.css,sys/color.css}).
+// (M5: was a vendored, commit-pinned copy under
+// test/fixtures/tailwind-m3e-web-0.1.0/ — repointed at the real co-located
+// package now that both live in this workspace and move together; there is
+// no separate pin to track.)
 //
 // What is REUSED, not reimplemented (the brief's hard requirement): the
 // perceptual tone→OKLCH-lightness CALIBRATION — averaging
@@ -40,14 +42,16 @@ import { byKey } from "../lib/order.mjs";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..", "..");
 
-const VENDORED_DIR = path.join(repoRoot, "test", "fixtures", "tailwind-m3e-web-0.1.0", "src");
+const VENDORED_DIR = path.join(repoRoot, "..", "tailwind-m3e-web", "src");
 const FIXTURE_PATH = path.join(repoRoot, "test", "fixtures", "tailwind-computed-palette.json");
 
-// Pinned commit of the vendored tailwind-m3e-web source this fixture was
-// computed from (same commit D2 pinned test/fixtures/tailwind-m3e-web-0.1.0
-// at — see task-D2-report.md). Update this alongside a fixture refresh, not
-// independently.
-const TAILWIND_M3E_WEB_COMMIT = "e7592e4bd31700c8f2d12721261df5fb15971aae";
+// Version of the workspace tailwind-m3e-web package this fixture was computed
+// from (read live, not pinned — see the header note above). Update the
+// fixture (`--write`) whenever that package's src/seed.css, src/ref/*.css
+// change.
+const TAILWIND_M3E_WEB_VERSION = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "..", "tailwind-m3e-web", "package.json"), "utf8")
+).version;
 
 const TONES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100];
 
@@ -230,7 +234,7 @@ function sortedRoleMap(map) {
 }
 
 // buildFixture() -> the full checked-in fixture document: a provenance
-// header (which vendored commit + which script produced this, so a
+// header (which package version + which script produced this, so a
 // reviewer never has to reverse-engineer where these hex values came from)
 // plus the resolved light/dark role maps.
 export function buildFixture() {
@@ -243,12 +247,12 @@ export function buildFixture() {
       $comment:
         "Task D5 source #2 — tailwind-m3e-web's OKLCH-computed M3 color roles, " +
         "resolved by src/tokens/resolve-palette.mjs (NOT reimplementing the tone " +
-        "calibration — that is read verbatim from the vendored _tone-table.css; " +
-        "only the relative-color arithmetic in ref/palette.css + sys/color.css is " +
-        "mirrored, gamut-mapped via culori's clampChroma per CSS Color 4). " +
-        "Regenerate with: node src/tokens/resolve-palette.mjs --write",
-      tailwindM3eWebCommit: TAILWIND_M3E_WEB_COMMIT,
-      vendoredFrom: "test/fixtures/tailwind-m3e-web-0.1.0/src/{seed.css,ref/_tone-table.css,ref/palette.css,sys/color.css}",
+        "calibration — that is read verbatim from the co-located package's " +
+        "_tone-table.css; only the relative-color arithmetic in ref/palette.css + " +
+        "sys/color.css is mirrored, gamut-mapped via culori's clampChroma per CSS " +
+        "Color 4). Regenerate with: node src/tokens/resolve-palette.mjs --write",
+      tailwindM3eWebVersion: TAILWIND_M3E_WEB_VERSION,
+      vendoredFrom: "packages/tailwind-m3e-web/src/{seed.css,ref/_tone-table.css,ref/palette.css,sys/color.css}",
       resolver: "src/tokens/resolve-palette.mjs (resolveComputedPalette)",
       seeds: parseSeeds(seedCss),
       knownGap:

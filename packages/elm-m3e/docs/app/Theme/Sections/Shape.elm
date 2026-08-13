@@ -27,7 +27,7 @@ view model =
 
 {-| Static preview — six swatches labeled None/XS/S/M/L/XL/Full-ish, matching
 the reference site. Uses the real `rounded-md-corner-*` Tailwind utilities
-generated from `vendor/tailwind-m3e-web/src/theme.css`'s `--radius-md-corner-*`
+generated from `tailwind-m3e-web/src/theme.css`'s `--radius-md-corner-*`
 vars (NOT computed from `Theme.Scale`), per the spec's explicit "static
 preview swatches ... no live-updating boxes" requirement — Shape's preview
 is intentionally different from Typography's live-computed preview.

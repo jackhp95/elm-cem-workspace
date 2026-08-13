@@ -55,6 +55,7 @@
   "dependencies": {
     "@m3e/web": "2.7.3",
     "linkedom": "^0.18.13",
+    "tailwind-m3e-web": "workspace:*",
     "tslib": "^2.8.1"
   }
 }

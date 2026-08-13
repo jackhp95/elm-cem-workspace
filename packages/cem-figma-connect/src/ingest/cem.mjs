@@ -13,6 +13,16 @@
 // still-unit-tested module (test/cem-ingest.test.mjs) — nothing in this
 // pipeline calls it anymore.
 //
+// M5 (R-013) reconsidered this and reaffirmed KEEP, not delete: dts-inline.mjs
+// is small (~100 lines), zero-runtime-dep, has no maintenance cost, and is
+// still exercised by real (non-synthetic) unit tests against small inline
+// fixtures — deleting it would mean deleting that whole test file too, for
+// no gain besides a smaller file count. This workspace's standing rule for
+// exactly this situation is "when in doubt about uniqueness, keep and flag
+// rather than delete." Revisit only if it starts costing something (a dep
+// bump it forces, a real bug in dead code, etc.) — line count alone isn't a
+// reason.
+//
 // Zero runtime deps: only node:fs.
 
 import fs from "node:fs";

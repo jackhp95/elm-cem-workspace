@@ -1,6 +1,24 @@
 // Mapping oracle: per-tag lookup derived from the Custom Elements Manifest
 // (@m3e/web custom-elements.json) + config/slots.json. Feeds the HTML->Elm
 // mapper so it can turn `<m3e-button variant="filled">` into typed M3e.* calls.
+//
+// M5 (R-012) — DELIBERATE EXCEPTION, not moved onto elm-cem's facts bundle:
+// this reads fields the RAW CEM carries in its own shape — `mod.exports`
+// with `kind: "custom-element-definition"` + `declaration.module`/`.name`
+// (reconcileTagNames' tag-collision fix), `attr.type.text` / `attr.parsedType.text`
+// as raw TS type strings, `d.slots[].name` — that Face B's distilled shape
+// (schemaVersion/tagReconciliation/components/...) represents differently
+// (type.raw/type.parsed, tagReconciliation.mismatches, component.slots).
+// Rewriting this to Face B's shape is a real, nontrivial port of an
+// actively-used generator that turns live HTML markup into typed Elm calls
+// for the docs site's examples — a mismatch here silently mis-generates
+// example code, and there is no existing equivalence test to catch a bad
+// port. Given the standing rule ("when in doubt about uniqueness, keep and
+// flag rather than delete") and no test coverage proving the two shapes are
+// interchangeable for every field this file reads, keeping the direct CEM
+// read is the safer call than risking a silent behavior change here.
+// Revisit if/when Face B's schema is extended to cover set-equality with the
+// raw CEM's exports/declarations shape (see docs/facts-bundle/schema.json).
 
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";

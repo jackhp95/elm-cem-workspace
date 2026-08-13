@@ -5,9 +5,9 @@
 //   node --test src/tokens/derive.test.mjs
 //
 // OFFLINE, zero new deps. Loads the REAL committed dumps
-// (research/figma-dumps/kit-variables.json) and the vendored tailwind-m3e-web
-// / @m3e/web fixtures (test/fixtures/tailwind-m3e-web-0.1.0,
-// test/fixtures/m3e-web-2.5.14) — this task's whole point is asserting
+// (research/figma-dumps/kit-variables.json), the co-located tailwind-m3e-web
+// package (packages/tailwind-m3e-web), and the vendored @m3e/web fixture
+// (test/fixtures/m3e-web-2.5.14) — this task's whole point is asserting
 // MEASURED real join/coverage counts, not synthetic fixtures that could
 // quietly drift from reality. Only the merge-discipline unit tests use
 // synthetic in-memory rows (nothing real to measure there).

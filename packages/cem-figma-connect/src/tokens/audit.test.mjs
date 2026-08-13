@@ -241,17 +241,18 @@ test("buildNumericRows: 55 rows (45 Static axes + 10 Corner), real inputs", () =
   assert.equal(rows.length, 55);
 });
 
-test("buildNumericRows: real-input mismatches are exactly Corner/Full and Display Large/Tracking", () => {
+test("buildNumericRows: real-input mismatches are exactly Corner/Full (M5: tailwind-m3e-web's own Display Large/Tracking sign-flip is fixed upstream, now an exact match)", () => {
   const rows = buildNumericRows({ variables, tokenRows, typescaleCss, shapeCss });
   const mismatches = rows.filter((r) => !r.match).map((r) => r.figma).sort();
-  assert.deepEqual(mismatches, ["Corner/Full", "Static/Display Large/Tracking"]);
+  assert.deepEqual(mismatches, ["Corner/Full"]);
 });
 
-test("buildNumericRows: Display Large Tracking is a genuine sign-flip (kit negative, tailwind positive, same magnitude)", () => {
+test("buildNumericRows: Display Large Tracking now matches — tailwind-m3e-web/src/sys/typescale.css corrected its sign (was a genuine kit-negative/tailwind-positive flip; both are -0.25 now)", () => {
   const rows = buildNumericRows({ variables, tokenRows, typescaleCss, shapeCss });
   const row = rows.find((r) => r.figma === "Static/Display Large/Tracking");
   assert.equal(row.kitPx, -0.25);
-  assert.equal(row.codePx, 0.25);
+  assert.equal(row.codePx, -0.25);
+  assert.equal(row.match, true);
 });
 
 test("buildNumericRows: bare-zero tracking tokens (no 'rem' unit in typescale.css) parse as 0, not null", () => {
@@ -276,11 +277,11 @@ test("buildNumericRows: Corner/Full mismatch is 1000px (kit) vs 9999px (tailwind
 
 // -- Step 5 classification: required-code-change vs benign-equivalent -------
 
-test("buildNumericRows: Display Large Tracking sign-flip is classified 'required-code-change'", () => {
+test("buildNumericRows: Display Large Tracking carries no classification now that it matches", () => {
   const rows = buildNumericRows({ variables, tokenRows, typescaleCss, shapeCss });
   const row = rows.find((r) => r.figma === "Static/Display Large/Tracking");
-  assert.equal(row.classification, "required-code-change");
-  assert.match(row.classificationDetail, /sign-flipped/);
+  assert.equal(row.match, true);
+  assert.equal(row.classification, null);
 });
 
 test("buildNumericRows: Corner/Full is classified 'benign-equivalent', NOT a required change", () => {
@@ -297,7 +298,7 @@ test("buildNumericRows: exact-match rows carry no classification (null)", () => 
   assert.equal(row.classification, null);
 });
 
-test("renderReport: the Display Large Tracking sign-flip is filed under REQUIRED CODE CHANGES with a remedy naming tailwind-m3e-web/src/sys/typescale.css and the kit's -0.25 value", () => {
+test("renderReport: Display Large Tracking no longer appears under REQUIRED CODE CHANGES (the sign-flip is fixed upstream in tailwind-m3e-web)", () => {
   const colorRows = buildColorRows({ variables, tokenRows, computedPalette });
   const numericRows = buildNumericRows({ variables, tokenRows, typescaleCss, shapeCss });
   const report = renderReport({ colorRows, numericRows, extraModes: [], tolerance: DEFAULT_TOLERANCE });
@@ -307,9 +308,7 @@ test("renderReport: the Display Large Tracking sign-flip is filed under REQUIRED
       ? report.indexOf("## Naming discrepancies")
       : report.indexOf("## Full color-role comparison")
   );
-  assert.match(requiredSection, /display-large-tracking/);
-  assert.match(requiredSection, /tailwind-m3e-web\/src\/sys\/typescale\.css/);
-  assert.match(requiredSection, /-0\.25/);
+  assert.doesNotMatch(requiredSection, /display-large-tracking/);
 });
 
 test("renderReport: Corner/Full is annotated benign-equivalent in the Step 5 table and detail list, and does NOT appear in REQUIRED CODE CHANGES", () => {

@@ -1,8 +1,8 @@
 {
   "_provenance": {
-    "$comment": "Task D5 source #2 — tailwind-m3e-web's OKLCH-computed M3 color roles, resolved by src/tokens/resolve-palette.mjs (NOT reimplementing the tone calibration — that is read verbatim from the vendored _tone-table.css; only the relative-color arithmetic in ref/palette.css + sys/color.css is mirrored, gamut-mapped via culori's clampChroma per CSS Color 4). Regenerate with: node src/tokens/resolve-palette.mjs --write",
-    "tailwindM3eWebCommit": "e7592e4bd31700c8f2d12721261df5fb15971aae",
-    "vendoredFrom": "test/fixtures/tailwind-m3e-web-0.1.0/src/{seed.css,ref/_tone-table.css,ref/palette.css,sys/color.css}",
+    "$comment": "Task D5 source #2 — tailwind-m3e-web's OKLCH-computed M3 color roles, resolved by src/tokens/resolve-palette.mjs (NOT reimplementing the tone calibration — that is read verbatim from the co-located package's _tone-table.css; only the relative-color arithmetic in ref/palette.css + sys/color.css is mirrored, gamut-mapped via culori's clampChroma per CSS Color 4). Regenerate with: node src/tokens/resolve-palette.mjs --write",
+    "tailwindM3eWebVersion": "0.1.0",
+    "vendoredFrom": "packages/tailwind-m3e-web/src/{seed.css,ref/_tone-table.css,ref/palette.css,sys/color.css}",
     "resolver": "src/tokens/resolve-palette.mjs (resolveComputedPalette)",
     "seeds": {
       "primary": "#6750a4",

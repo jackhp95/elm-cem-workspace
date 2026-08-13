@@ -12,8 +12,8 @@ module Theme.Tokens exposing
     )
 
 {-| The `--md-sys-*` custom-property surface this editor exposes, read
-directly off `docs/vendor/tailwind-m3e-web/src/sys/*.css` (the actual
-`@m3e/web` token source — NOT the reference site's smaller set).
+directly off `tailwind-m3e-web/src/sys/*.css` (the actual `@m3e/web` token
+source — NOT the reference site's smaller set).
 -}
 
 

@@ -46,16 +46,8 @@ export const DEFAULT_PATHS = {
   variablesPath: path.join(repoRoot, "research", "figma-dumps", "kit-variables.json"),
   tokensPath: path.join(repoRoot, "profiles", "m3-kit", "tokens.json"),
   computedPalettePath: path.join(repoRoot, "test", "fixtures", "tailwind-computed-palette.json"),
-  typescaleCssPath: path.join(
-    repoRoot,
-    "test",
-    "fixtures",
-    "tailwind-m3e-web-0.1.0",
-    "src",
-    "sys",
-    "typescale.css"
-  ),
-  shapeCssPath: path.join(repoRoot, "test", "fixtures", "tailwind-m3e-web-0.1.0", "src", "sys", "shape.css"),
+  typescaleCssPath: path.join(repoRoot, "..", "tailwind-m3e-web", "src", "sys", "typescale.css"),
+  shapeCssPath: path.join(repoRoot, "..", "tailwind-m3e-web", "src", "sys", "shape.css"),
   reportPath: path.join(repoRoot, "profiles", "m3-kit", "token-audit.md"),
 };
 
@@ -254,7 +246,10 @@ function closestRole(paletteMode, targetHex, excludeRole, de) {
 // Matches either `<name>: <num>rem;` or the bare-zero form `<name>: 0;`
 // (typescale.css writes untracked axes as literal `0`, no unit — measured:
 // display-medium/small, headline-large/medium/small, title-large-tracking).
-const REM_DECL_RE = (name) => new RegExp(`${name}:\\s*([\\d.]+)(rem)?\\s*;`);
+// The leading `-?` is required now that tailwind-m3e-web's own
+// display-large-tracking is correctly negative (M5 repoint uncovered this —
+// the regex previously only ever matched the fixture's stale positive value).
+const REM_DECL_RE = (name) => new RegExp(`${name}:\\s*(-?[\\d.]+)(rem)?\\s*;`);
 
 function parseRemToken(css, name) {
   const m = css.match(REM_DECL_RE(name));

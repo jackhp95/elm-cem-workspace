@@ -13,7 +13,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 - [x] **M2** elm-m3e onto workspace elm-cem — 2.a
 - [x] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
 - [x] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
-- [ ] **M5** Retire migration dead weight — 5.a
+- [x] **M5** Retire migration dead weight — 5.a
 - [ ] **M6** Deep clean (separate commit) — 6.a, 6.b
 
 ## Bootstrap
@@ -573,6 +573,26 @@ Structural facts confirmed at bootstrap (bind M1.d):
   and `skills/m3e` outputs, and `report.md`/`sources.json` are a drift report and a SHA manifest — so
   this is not a hole of the D-023 kind. Recorded so a later pass can widen `paths` if wanted.
 
+- **R-019 (M3.c, M4, M5) — a per-package `test`/`bump` check can fail INSIDE a loop while passing
+  standalone.** Three times now the loop reported a check red for every iteration while that exact
+  command passes for me immediately afterwards on the same tree (M3.c and M5:
+  `pnpm --filter cem-figma-connect run test`, 698 tests, exit 0 in 9s; M4: `pnpm run bump`, which
+  succeeds and prints DONE). For `bump` the cause is known — it internally runs the ~350s sweep and
+  exceeds the loop's verify tolerance (D-015/D-024). For the fast test suites the cause is NOT
+  established; candidates are the verifier racing the worker's final writes, or a preceding check in
+  the bar leaving transient state. **Practical rule:** when a loop reds out on a check that passes
+  standalone on the same tree, verify the substance by hand rather than burning further iterations —
+  and never accept the loop's green as sufficient either (D-023 was found precisely by distrusting a
+  green). Worth a proper root-cause pass if this orchestration is reused.
+- **D-028 (M5) — `docs/vendor/tailwind-m3e-web/` deletion authorized in copy-fidelity, WITH the
+  reason.** M5's authorized deletion made `copy-fidelity elm-m3e` go red, correctly: that tree IS
+  git-tracked in the source repo and the gate refuses to silently absorb a deletion. Rather than
+  weaken the gate I added an explicit `AUTHORIZED_ABSENT_PREFIX` with the rationale (it was a
+  vendored copy of tailwind CSS output, checked in only because the real package lived in another
+  repo; that package is now co-located at `packages/tailwind-m3e-web` and the two move together, so
+  the copy can only rot). **Verified the gate still bites** afterwards: removing
+  `packages/elm-m3e/config/slots.json` -> RED naming the file; restored -> GREEN.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -769,3 +789,19 @@ Structural facts confirmed at bootstrap (bind M1.d):
   exclude/symlink options applying to the rsync INPUT copy and never to compared outputs.
   Non-destructive: regeneration happens in a mkdtemp rsync copy; git status empty after every probe.
   Nothing deleted across the whole M4 range (git diff --diff-filter=D returns nothing).`
+- `M5.a: pass (loop 8bb4afcf reported 4 red iterations on a check that passes standalone — R-019;
+  substance verified by the manager and by the M5 critic. gate-all 30/30 GREEN.)`
+- `M5 delivered: DELETED packages/elm-m3e/docs/vendor/tailwind-m3e-web/ (vendored tailwind CSS copy,
+  superseded by the co-located real package) and
+  packages/cem-figma-connect/test/fixtures/tailwind-m3e-web-0.1.0/ (the DIVERGED fixture, R-015).
+  src/tokens/resolve-palette.mjs was REPOINTED at the real packages/tailwind-m3e-web sources rather
+  than losing its input — the fixture was a production input, not just test data, which is why the
+  bar caught its removal. NO test was deleted anywhere.`
+- `M5 judgment calls, both decided and RECORDED (silence would have been a fail):
+  (A) R-013 dts-inline.mjs KEPT — it is unused by the pipeline but still unit-tested, and the M3.a
+  migration had already made a deliberate documented decision to keep it; deleting it would have
+  meant deleting its tests against that prior judgment. (B) R-012 both leftover CEM readers kept as
+  DOCUMENTED EXCEPTIONS with substantive reasons: render-verify.mjs must read the manifest THE SAME
+  BUILD PRODUCED or it could not catch the tree-shaking/stale-build/registration-guard bugs it
+  exists for; oracle.mjs needs raw TS type strings and exports/declarations set-equality that Face
+  B's distilled shape does not carry, with a stated revisit condition if the schema is extended.`

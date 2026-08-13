@@ -5,8 +5,8 @@
 //
 // Tests the CSS-mirroring arithmetic (parseToneTable/parseSeeds,
 // resolveRefPalette, resolveSysColorRoles, resolveComputedPalette) against
-// the REAL vendored tailwind-m3e-web fixture, plus the deterministic
-// fixture-write path (buildFixture/writeFixture).
+// the REAL co-located tailwind-m3e-web package (packages/tailwind-m3e-web),
+// plus the deterministic fixture-write path (buildFixture/writeFixture).
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -26,12 +26,12 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..", "..");
-const VENDORED = path.join(repoRoot, "test", "fixtures", "tailwind-m3e-web-0.1.0", "src");
+const VENDORED = path.join(repoRoot, "..", "tailwind-m3e-web", "src");
 
 const seedCss = fs.readFileSync(path.join(VENDORED, "seed.css"), "utf8");
 const toneTableCss = fs.readFileSync(path.join(VENDORED, "ref", "_tone-table.css"), "utf8");
 
-test("parseSeeds: reads the real vendored seed.css", () => {
+test("parseSeeds: reads the real seed.css", () => {
   const seeds = parseSeeds(seedCss);
   assert.equal(seeds.primary, "#6750a4");
   assert.equal(seeds.error, "#b3261e");
@@ -115,8 +115,8 @@ test("buildFixture: matches the checked-in fixture (regenerating it is a no-op)"
   assert.deepEqual(fresh.dark, existing.dark);
 });
 
-test("buildFixture: provenance header names the pinned tailwind-m3e-web commit and the resolver", () => {
+test("buildFixture: provenance header names the tailwind-m3e-web package version and the resolver", () => {
   const fixture = buildFixture();
-  assert.match(fixture._provenance.tailwindM3eWebCommit, /^[0-9a-f]{40}$/);
+  assert.match(fixture._provenance.tailwindM3eWebVersion, /^\d+\.\d+\.\d+/);
   assert.match(fixture._provenance.resolver, /resolve-palette\.mjs/);
 });

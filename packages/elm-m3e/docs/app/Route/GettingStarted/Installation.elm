@@ -117,17 +117,13 @@ import "@m3e/web/all";
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "3. Add the token + utility CSS bridge"
                 , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
-                    [ M3e.text "tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, …). It is NOT published to npm — it is a private repository, vendored here as CSS only. There is no @import from a package name; you must vendor the CSS files into your project first." ]
+                    [ M3e.text "tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, …). It is NOT published to npm — it is a private repository. There is no @import from a package name outside its own workspace; you must vendor the CSS files into your project first." ]
                 , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
-                    [ M3e.text "If you have access to the private repo, clone it and copy its CSS into your project; otherwise copy the vendored copy from this repo (docs/vendor/tailwind-m3e-web):" ]
+                    [ M3e.text "If you have access to the private repo, clone it and copy its CSS into your project:" ]
                 , codeBlock Shell """
-# Option A — from the private source repo (requires access)
 git clone https://github.com/jackhp95/tailwind-m3e-web.git
 cp -R tailwind-m3e-web/src        your-project/vendor/tailwind-m3e-web/src
 cp -R tailwind-m3e-web/generated  your-project/vendor/tailwind-m3e-web/generated
-
-# Option B — from the copy vendored inside this repo
-cp -R elm-m3e/docs/vendor/tailwind-m3e-web your-project/vendor/tailwind-m3e-web
 """
                 , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
                     [ M3e.text "Then reference the vendored files by relative path from your stylesheet:" ]

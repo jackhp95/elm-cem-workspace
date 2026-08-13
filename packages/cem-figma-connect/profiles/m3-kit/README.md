@@ -186,7 +186,7 @@ Regenerate this table's counts with:
 ### Static/\* Font-axis investigation (the 20 rows Task D2 left unmapped)
 
 Two distinct sub-groups, both investigated against
-`test/fixtures/tailwind-m3e-web-0.1.0/src/sys/typescale.css` (the code-side
+`packages/tailwind-m3e-web/src/sys/typescale.css` (the code-side
 naming source of truth) and `research/figma-dumps/kit-variables.json` (the
 raw Figma values) — **not** bulk-`policy`'d without checking:
 

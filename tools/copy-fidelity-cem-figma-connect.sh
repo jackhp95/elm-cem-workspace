@@ -55,6 +55,7 @@ EOF
 #   a test must catch drifting from it.
 AUTHORIZED_ABSENT_DIR_PREFIXES=$(cat <<'EOF'
 test/fixtures/m3e-web-2.7.0/
+test/fixtures/tailwind-m3e-web-0.1.0/
 EOF
 )
 # test/fixtures/m3e-web-2.7.0/ — the vendored raw-CEM + `.d.ts` copy Task 2's
@@ -66,11 +67,28 @@ EOF
 #   from that pipeline; the module itself stays, per the "never delete a
 #   tracked source file" rule, and is still unit-tested against small inline
 #   fixtures in test/cem-ingest.test.mjs).
+# test/fixtures/tailwind-m3e-web-0.1.0/ — (M5) a vendored, commit-pinned copy
+#   consumed as raw CSS text by src/tokens/{resolve-palette,derive,audit}.mjs,
+#   wholly unrelated to elm-cem's facts bundle. Repointed at the real
+#   co-located package (packages/tailwind-m3e-web, now a sibling under
+#   packages/) and deleted — the two packages live in the same workspace and
+#   move together now, so there is nothing left to pin against. Verified the
+#   repoint changes nothing spurious: seed.css/ref/_tone-table.css/
+#   ref/palette.css are byte-identical to the old fixture (resolve-palette's
+#   computed-palette fixture regenerates with only its provenance header
+#   changing), and the two real content changes it surfaces — sys/typescale.css's
+#   display-large-tracking sign flip and sys/color.css's on-container tone —
+#   are exactly the bugs audit.mjs's own "REQUIRED CODE CHANGES" report was
+#   built to catch; the first is now fixed upstream (test + report updated to
+#   match), the second is unchanged (resolve-palette.mjs computes its
+#   "should-be" tone from ref/palette.css, not sys/color.css, so that finding
+#   is untouched by the repoint). Along the way, audit.mjs's REM_DECL_RE
+#   regex was fixed to accept a leading `-` — it had never been exercised
+#   against a negative CSS value before.
 #
-# DELIBERATELY NOT in this list — test/fixtures/m3e-web-2.5.14/ and
-# test/fixtures/tailwind-m3e-web-0.1.0/ were BOTH on the task's authorized-
-# deletion list, and both are still present here. Neither deletion survived
-# investigation:
+# DELIBERATELY NOT in this list — test/fixtures/m3e-web-2.5.14/ was on the
+# task's authorized-deletion list, and is still present here. The deletion
+# did not survive investigation:
 #   - m3e-web-2.5.14 is read directly (as raw manifest TEXT, not via
 #     loadCem/dts-inline) by src/tokens/derive.mjs's DEFAULT_PATHS
 #     .customElementsPath — a design-token CSS `var(--md-sys-*, fallback)`
@@ -86,15 +104,6 @@ EOF
 #     unresolved `${CornerValue.extraExtraLarge}` template-literal fragment
 #     masquerading as a real fallback color), a REGRESSION, not a
 #     correction. Keeping the vendored tree is the correct call here.
-#   - tailwind-m3e-web-0.1.0 is consumed the same way (raw CSS text) by
-#     src/tokens/{resolve-palette,audit}.mjs, wholly unrelated to elm-cem's
-#     facts bundle. packages/elm-m3e/docs/vendor/tailwind-m3e-web is a
-#     same-named vendor copy but pinned to a DIFFERENT upstream commit
-#     (verified: sys/color.css differs — `:root` vs `html`, on-container
-#     tone 10 vs 30) — repointing to it would silently change computed
-#     color values, and rewiring tailwind-m3e-web is explicitly a later part
-#     per the task brief. Deleting it breaks `pnpm test` with no in-scope
-#     replacement, so it stays.
 
 # Files present in the workspace copy that are NOT in the source repo —
 # deliberate M3.a additions, each with a stated reason.

@@ -20,6 +20,19 @@
 //   (cd .cache/m3e/packages/web && npm run build)   # produces dist/all.js
 // Requires the jsdom devDependency. Not part of CI (CI stays browser-free and
 // builds nothing from upstream).
+//
+// M5 (R-012) — DELIBERATE EXCEPTION, reads a raw manifest on purpose: this
+// script's whole job is a build-vs-source cross-check — does the COMPILED
+// dist/all.js bundle actually register/ship what the source-derived data
+// says it should. elm-cem's facts bundle (data/cem-facts.json) is ALSO
+// derived from source (by static analysis, same as the raw CEM), so reading
+// it here instead would just be comparing source-derived data against
+// itself and could never catch the class of bug this exists for (tree-shaking,
+// a stale build, a registration guarded out of dist/all.js). It has to read
+// the manifest the SAME build produced (`.cache/m3e/packages/web/dist/
+// custom-elements.json`, for the core-tag/module-path check) to mean
+// anything. Already excluded from every gate (manual, opt-in, requires a
+// local upstream build) — not moved onto the facts bundle.
 
 import fs from "node:fs";
 import path from "node:path";

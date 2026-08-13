@@ -37,6 +37,14 @@ docs/pnpm-workspace.yaml
 EOF
 )
 
+# M5 authorized deletion: the whole docs/vendor/tailwind-m3e-web/ tree. It was a
+# VENDORED copy of tailwind-m3e-web's CSS output, checked in because the real
+# package lived in a separate repo. That package is now co-located at
+# packages/tailwind-m3e-web and the two move together, so the vendored copy is a
+# duplicate that can only rot. Matched as a prefix rather than file-by-file
+# because the whole subtree is authorized, not individual files.
+AUTHORIZED_ABSENT_PREFIX="docs/vendor/tailwind-m3e-web/"
+
 # Files present in the workspace copy that are NOT in the source repo, because
 # they are deliberate monorepo adaptations. Each entry needs a stated reason.
 AUTHORIZED_EXTRA=$(cat <<'EOF'
@@ -80,7 +88,8 @@ done | sort -u > "$tmp/workspace.txt"
 printf '%s\n' "$AUTHORIZED_ABSENT" | grep -vE '^\s*$' | sort > "$tmp/authorized.txt"
 
 comm -23 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/missing-raw.txt"
-comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" > "$tmp/missing.txt"
+comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" \
+    | grep -v "^${AUTHORIZED_ABSENT_PREFIX}" > "$tmp/missing.txt" || true
 printf '%s\n' "$AUTHORIZED_EXTRA" | grep -vE '^\s*$' | sort > "$tmp/authorized-extra.txt"
 comm -13 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/extra-raw.txt"
 comm -23 "$tmp/extra-raw.txt" "$tmp/authorized-extra.txt" > "$tmp/extra.txt"

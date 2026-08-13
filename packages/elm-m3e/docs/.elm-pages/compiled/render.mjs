@@ -149,14 +149,10 @@ npm i @m3e/web
 `),sr(3,`
 // m3e-entry.js \u2014 import once, before Elm.Main.init runs
 import "@m3e/web/all";
-`)])),le(a([c(h,"space-y-3")]),a([df("3. Add the token + utility CSS bridge"),ar(a([c(h,"text-body-lg text-on-surface-variant")]),a([S("tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, \u2026). It is NOT published to npm \u2014 it is a private repository, vendored here as CSS only. There is no @import from a package name; you must vendor the CSS files into your project first.")])),ar(a([c(h,"text-body-lg text-on-surface-variant")]),a([S("If you have access to the private repo, clone it and copy its CSS into your project; otherwise copy the vendored copy from this repo (docs/vendor/tailwind-m3e-web):")])),sr(1,`
-# Option A \u2014 from the private source repo (requires access)
+`)])),le(a([c(h,"space-y-3")]),a([df("3. Add the token + utility CSS bridge"),ar(a([c(h,"text-body-lg text-on-surface-variant")]),a([S("tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, \u2026). It is NOT published to npm \u2014 it is a private repository. There is no @import from a package name outside its own workspace; you must vendor the CSS files into your project first.")])),ar(a([c(h,"text-body-lg text-on-surface-variant")]),a([S("If you have access to the private repo, clone it and copy its CSS into your project:")])),sr(1,`
 git clone https://github.com/jackhp95/tailwind-m3e-web.git
 cp -R tailwind-m3e-web/src        your-project/vendor/tailwind-m3e-web/src
 cp -R tailwind-m3e-web/generated  your-project/vendor/tailwind-m3e-web/generated
-
-# Option B \u2014 from the copy vendored inside this repo
-cp -R elm-m3e/docs/vendor/tailwind-m3e-web your-project/vendor/tailwind-m3e-web
 `),ar(a([c(h,"text-body-lg text-on-surface-variant")]),a([S("Then reference the vendored files by relative path from your stylesheet:")])),sr(3,`
 /* style.css \u2014 paths are relative to your vendored copy */
 @import "tailwindcss";
@@ -526,8 +522,8 @@ Examples of valid identifiers: "America/New_York", "Europe/London", "Asia/Tokyo"
   <head>
     <meta charset="UTF-8" />
     <title><!-- PLACEHOLDER_TITLE --></title>
-    <link rel="preload" as="script" href="/elm.9b0085d9.js"><link rel="modulepreload" crossorigin href="/assets/all-DuBGuTcV.js"><link rel="modulepreload" crossorigin href="/assets/index-DJG0Huyf.js">
-    <script defer src="/elm.9b0085d9.js" type="text/javascript"></script>
+    <link rel="preload" as="script" href="/elm.3822c18b.js"><link rel="modulepreload" crossorigin href="/assets/all-DuBGuTcV.js"><link rel="modulepreload" crossorigin href="/assets/index-tLqVYC5z.js">
+    <script defer src="/elm.3822c18b.js" type="text/javascript"></script>
         
     <meta name="generator" content="elm-pages v3.5.1" />
     <script>(function(){try{
@@ -567,8 +563,8 @@ Examples of valid identifiers: "America/New_York", "Europe/London", "Asia/Tokyo"
     }catch(e){}})();</script>
     
     <!-- PLACEHOLDER_HEAD_AND_DATA -->
-    <script type="module" crossorigin src="/assets/index-DJG0Huyf.js"></script>
+    <script type="module" crossorigin src="/assets/index-tLqVYC5z.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/all-DuBGuTcV.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-CmZOHdlq.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-CNa2VDFP.css">
   </head>
   <body><div data-elm data-url="" style="display: none;"></div><div data-elm id="elm-pages-announcer" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 0; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); whiteSpace: nowrap; border: 0;"></div><!-- PLACEHOLDER_HTML --></body></html>`,The="build",Ahe=()=>{};async function ABe(v){let y=new Date,i=await YL(Kx,Mhe,a4.default,The,new n4.URL(v.rawUrl).pathname,v,Ahe,!1);if(i.kind==="bytes"){let{regions:g}=Xx(i.html||""),k=JSON.stringify(g),P=Buffer.from(k,"utf8"),Z=Buffer.alloc(4);return Z.writeUInt32BE(P.length,0),{body:Buffer.concat([Z,P,gp(i.contentDatPayload)]),statusCode:i.statusCode,kind:i.kind,headers:i.headers}}else{if(i.kind==="api-response")return{body:i.body.body,statusCode:i.body.statusCode,kind:i.kind,headers:i.body.headers,isBase64Encoded:i.body.isBase64Encoded};{let{html:g}=Xx(i.htmlString?.html||"");if(i.htmlString&&(i.htmlString.html=g),i.contentDatPayload&&i.htmlString){let k=JSON.stringify({}),P=Buffer.from(k,"utf8"),Z=Buffer.alloc(4);Z.writeUInt32BE(P.length,0);let ce=Buffer.concat([Z,P,gp(i.contentDatPayload)]);i.htmlString.bytesData=ce.toString("base64")}return{body:uL(She,i.htmlString),statusCode:i.statusCode,kind:i.kind,headers:i.headers}}}}export{ABe as render};

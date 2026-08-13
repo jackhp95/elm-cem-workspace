@@ -16,9 +16,9 @@ DeltaE via culori's CIEDE2000 (`differenceCiede2000`); tolerance **2.0** (percep
   - spec-failure: **28**
   - computed-unavailable (*-fixed* roles — no tailwind-m3e-web counterpart): **12**
 - Typescale/shape exact-match rows (Step 5): **55**
-  - exact match: **53**
-  - mismatch: **2**
-    - required-code-change: **1**
+  - exact match: **54**
+  - mismatch: **1**
+    - required-code-change: **0**
     - benign-equivalent (semantically the same value, not a required change): **1**
 
 ## REQUIRED CODE CHANGES (spec-failures — Figma wins on design intent)
@@ -74,12 +74,6 @@ Affected roles (measured max deltaE across Light/Dark/fallback):
 - `--md-sys-color-surface-variant`: max deltaE 2.787
 
 **Required change (quality improvement, not a functional bug):** increase the tone table's hue-sampling density (or switch from averaging to hue-interpolation) in `bin/calibrate-tones.mjs` so approximation error stays under the perceptibility threshold across the sampled hue range.
-
-### 4. Step 5 (typescale/shape) numeric spec-failures
-
-Unlike the color rows above (deltaE tolerance), these are EXACT-match rows (px, unit-converted) — any mismatch not explicitly allowlisted as benign-equivalent (see the `Corner/Full` note under Step 5 below) is a real value disagreement. Figma wins on design intent (architecture §1).
-
-- `--md-sys-typescale-display-large-tracking` (Static/Display Large/Tracking): sign-flipped — same magnitude (0.25), opposite sign (kit -0.25 vs code 0.25). **Remedy:** `tailwind-m3e-web/src/sys/typescale.css` — change `--md-sys-typescale-display-large-tracking` to `-0.25` (kit value, matches the public M3 spec).
 
 ## Full color-role comparison (Schemes/\*)
 
@@ -162,7 +156,7 @@ Font-weight is out of scope for this gate: the kit's `Static/*/Weight[-emphasize
 | Static/Body Small/Tracking | `--md-sys-typescale-body-small-tracking` | 0.4000000059604645 | 0.4 | ✅ | — |
 | Static/Display Large/Line Height | `--md-sys-typescale-display-large-line-height` | 64 | 64 | ✅ | — |
 | Static/Display Large/Size | `--md-sys-typescale-display-large-font-size` | 57 | 57 | ✅ | — |
-| Static/Display Large/Tracking | `--md-sys-typescale-display-large-tracking` | -0.25 | 0.25 | ❌ MISMATCH | **required-code-change** |
+| Static/Display Large/Tracking | `--md-sys-typescale-display-large-tracking` | -0.25 | -0.25 | ✅ | — |
 | Static/Display Medium/Line Height | `--md-sys-typescale-display-medium-line-height` | 52 | 52 | ✅ | — |
 | Static/Display Medium/Size | `--md-sys-typescale-display-medium-font-size` | 45 | 45 | ✅ | — |
 | Static/Display Medium/Tracking | `--md-sys-typescale-display-medium-tracking` | 0 | 0 | ✅ | — |
@@ -200,5 +194,4 @@ Font-weight is out of scope for this gate: the kit's `Static/*/Weight[-emphasize
 ### Step 5 mismatches — detail
 
 - `--md-sys-shape-corner-full` (Corner/Full): kit **1000px** vs tailwind-m3e-web **9999px** — **benign-equivalent** — both force full-pill rounding (border-radius clamps to half the box's shorter side, so any value past that threshold renders identically) — 1000px and 9999px are both "effectively infinite" pill radii for every realistic component size. Semantically equivalent — not a required change.
-- `--md-sys-typescale-display-large-tracking` (Static/Display Large/Tracking): kit **-0.25px** vs tailwind-m3e-web **0.25px** — **required-code-change** (sign-flipped — same magnitude (0.25), opposite sign (kit -0.25 vs code 0.25)) — see REQUIRED CODE CHANGES above for the remedy.
 
