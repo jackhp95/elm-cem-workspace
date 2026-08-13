@@ -7,6 +7,7 @@ module Cem.Compose exposing
     , SlotAffordances, SlotChipInfo, slotChips
     , SlotOption(..), slotMenuOptions
     , AttrChipInfo, AttrChipKind(..), attrChips
+    , NumberKind(..), MenuOptions(..), attrMenuOptions
     )
 
 {-| A headless, type-directed editor for building a valid tree of custom
@@ -24,6 +25,7 @@ every pixel.
 @docs SlotAffordances, SlotChipInfo, slotChips
 @docs SlotOption, slotMenuOptions
 @docs AttrChipInfo, AttrChipKind, attrChips
+@docs NumberKind, MenuOptions, attrMenuOptions
 
 -}
 
@@ -647,3 +649,87 @@ attrChips path model =
 currentAttr : String -> Node -> Maybe AttrValue
 currentAttr name (Node n) =
     Dict.get name n.attrs
+
+
+{-| Which numeric shape codegen and dispatch must use.
+-}
+type NumberKind
+    = FloatNumber
+    | IntNumber
+
+
+{-| What to draw for an open attribute menu. The consumer decides whether a
+boolean is a switch, a checkbox, or two menu items; the core only says it is
+boolean-shaped and what it currently is.
+-}
+type MenuOptions
+    = EnumTokens (List String) (Maybe String)
+    | BoolToggle Bool
+    | TextInput String
+    | NumberInput NumberKind String
+
+
+{-| `Nothing` if the path does not resolve, or if the attribute is not one this
+node offers.
+-}
+attrMenuOptions : Path -> String -> Model -> Maybe MenuOptions
+attrMenuOptions path name model =
+    attrChips path model
+        |> List.filter (\c -> c.name == name)
+        |> List.head
+        |> Maybe.map menuOptionsFor
+
+
+menuOptionsFor : AttrChipInfo -> MenuOptions
+menuOptionsFor chip =
+    case chip.kind of
+        EnumChip tokens ->
+            EnumTokens tokens
+                (case chip.currentValue of
+                    Just (AttrEnum token) ->
+                        Just token
+
+                    _ ->
+                        Nothing
+                )
+
+        PlainChip BoolAttr ->
+            BoolToggle
+                (case chip.currentValue of
+                    Just (AttrBool b) ->
+                        b
+
+                    _ ->
+                        False
+                )
+
+        PlainChip StringAttr ->
+            TextInput (rawText chip.currentValue)
+
+        PlainChip FloatAttr ->
+            NumberInput FloatNumber (rawText chip.currentValue)
+
+        PlainChip IntAttr ->
+            NumberInput IntNumber (rawText chip.currentValue)
+
+
+rawText : Maybe AttrValue -> String
+rawText value =
+    case value of
+        Just (AttrString s) ->
+            s
+
+        Just (AttrFloat s) ->
+            s
+
+        Just (AttrInt s) ->
+            s
+
+        Just (AttrEnum s) ->
+            s
+
+        Just (AttrBool _) ->
+            ""
+
+        Nothing ->
+            ""

@@ -84,4 +84,44 @@ all =
             \_ ->
                 C.attrChips [ C.IntoSlot "nope" 0 ] start
                     |> Expect.equal []
+        , describe "attribute menus"
+            [ test "an unset enum offers its tokens with no current selection" <|
+                \_ ->
+                    C.attrMenuOptions [] "variant" start
+                        |> Expect.equal
+                            (Just (C.EnumTokens [ "filled", "outlined" ] Nothing))
+            , test "a set enum reports the current token" <|
+                \_ ->
+                    start
+                        |> C.update (C.SetAttr [] "variant" (C.AttrEnum "filled"))
+                        |> C.attrMenuOptions [] "variant"
+                        |> Expect.equal
+                            (Just (C.EnumTokens [ "filled", "outlined" ] (Just "filled")))
+            , test "an unset boolean defaults to False" <|
+                \_ ->
+                    C.attrMenuOptions [] "disabled" start
+                        |> Expect.equal (Just (C.BoolToggle False))
+            , test "an unset string defaults to empty" <|
+                \_ ->
+                    C.attrMenuOptions [] "label" start
+                        |> Expect.equal (Just (C.TextInput ""))
+            , test "numbers carry raw entry text, so a half-typed value survives" <|
+                \_ ->
+                    start
+                        |> C.update (C.SetAttr [] "ratio" (C.AttrFloat "1."))
+                        |> C.attrMenuOptions [] "ratio"
+                        |> Expect.equal (Just (C.NumberInput C.FloatNumber "1."))
+            , test "an int attribute reports IntNumber" <|
+                \_ ->
+                    C.attrMenuOptions [] "count" start
+                        |> Expect.equal (Just (C.NumberInput C.IntNumber ""))
+            , test "an attribute this node does not offer is Nothing" <|
+                \_ ->
+                    C.attrMenuOptions [] "nope" start
+                        |> Expect.equal Nothing
+            , test "an unresolvable path is Nothing" <|
+                \_ ->
+                    C.attrMenuOptions [ C.IntoSlot "nope" 0 ] "variant" start
+                        |> Expect.equal Nothing
+            ]
         ]
