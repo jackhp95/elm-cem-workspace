@@ -11,7 +11,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 - [x] **M0** Workspace shell — 0.a skeleton, 0.b Elm-in-JS convention
 - [x] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
 - [x] **M2** elm-m3e onto workspace elm-cem — 2.a
-- [ ] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
+- [x] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
 - [ ] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
 - [ ] **M5** Retire migration dead weight — 5.a
 - [ ] **M6** Deep clean (separate commit) — 6.a, 6.b
@@ -453,6 +453,33 @@ Structural facts confirmed at bootstrap (bind M1.d):
   margin; normal inference gaps observed here are ~10-25 minutes. Do not kill a loop on 20 minutes of
   quiet.
 
+- **D-021 (operational) — do NOT `git add -A` while a loop is running.** My R-011 ledger commit
+  (`fb26b20`) swept the M3 integrator's in-progress 222-line scorecard and the `Pages.elm` timestamp
+  into a commit whose message mentions only hang detection. Nothing was lost and nothing is pushed,
+  but the history is momentarily misleading. Rule for the rest of the effort: stage explicit paths
+  (`git add GAUNTLET-LEDGER.md`) when a loop is live, never `-A`.
+- **R-012 (M3 integrator) — two GENUINE leftover CEM reads remain, both outside M3's four.**
+  `packages/m3e-okf/scripts/render-verify.mjs:129` parses `.cache/m3e/**/custom-elements.json` (a
+  manual visual script, in no `check`/`test`/gate) and
+  `packages/elm-m3e/docs/scripts/examples-gen/lib/oracle.mjs:14-17` parses
+  `docs/node_modules/@m3e/web/dist/custom-elements.json` (the producer repo's own examples
+  generator). The scorecard names both rather than claiming a clean sweep. **M5 cleanup candidates** —
+  each should either move onto the bundle or be documented as a deliberate exception.
+- **R-013 (M3 integrator) — `packages/cem-figma-connect/src/ingest/dts-inline.mjs` is now DEAD**
+  (no non-test importer; the producer does `.d.ts` resolution). M5 deletion candidate.
+- **R-014 (M3 integrator) — the bundle-regeneration argv is duplicated across EIGHT sites**
+  (three consumer `scripts/gen-facts.mjs`, both A/B harnesses, `gate-all`, and the three provenance
+  checks). **M4's `bump` orchestrator should become the single source** for that invocation rather
+  than adding a ninth copy.
+- **R-015 (M3 integrator) — `packages/cem-figma-connect/test/fixtures/tailwind-m3e-web-0.1.0/` has
+  DIVERGED** from the real tailwind package now co-located in the workspace. M5 candidate: point the
+  fixture at the workspace package or delete it.
+- **R-016 (M3.a, recorded by the copy-fidelity allowlist) — one test was legitimately not carried
+  over:** `packages/cem-figma-connect/test/elm-facts-build.test.mjs`, the test OF the deleted
+  ~995-line re-parser, with no fixture or replacement to repoint at. Face C behaviour is covered by
+  `test/elm-emitter.test.mjs` + `test/append-sets.test.mjs`. Recorded because "no test was deleted"
+  is otherwise a standing invariant, and this is its one authorized exception.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -614,3 +641,18 @@ Structural facts confirmed at bootstrap (bind M1.d):
 - `M3.c: work complete but loop HUNG (R-011) — loop 411c8a28 stopped manually after 4h22m in one
   iteration with no writes for 3h; all 6 bar checks verified green by the manager afterwards.
   Critic verdict pending in a separate pass.`
+- `M3.c: pass (bar verified green by the manager after the R-011 hang; covered by the M3 integrator
+  critic pass — loop 68e72f9b, VERDICT: PASS)`
+- `M3: integrated (loop 68e72f9b, integrator claude/opus, critic claude/opus, 1 iteration,
+  VERDICT: PASS; gate-all 29/29 GREEN)`
+- `M3 critic evidence: ALL FOUR original parsers confirmed gone, and every remaining CEM read in the
+  workspace enumerated and classified (producer + its tests; argv INVOKING the producer; four
+  documented exceptions; two genuine leftovers -> R-012). THE KEY CHECK: all three consumer bundle
+  copies share ONE sha256 (2e227c21...ff9d3274, 2630228 bytes each, cmp silent both ways) AND each is
+  byte-identical to a fresh regeneration from the producer — so there is no silent vintage drift
+  behind the green gates. gate-all inventory covers all three consumers, all three bundle-provenance
+  checks, and all four copy-fidelity checks.`
+- `M3: FOUR-PARSER PROBLEM SOLVED (with two named exceptions). One producer, one @m3e/web pin
+  (2.7.3, exact, 4 declarations), one bundle vintage read by three consumers. Deleted across M3:
+  cem-figma-connect's ~995-line elm-facts.build.mjs + elm-facts.json + vendored CEM/tailwind
+  fixtures; m3e-okf's reconcileTagNames + TS alias scanner; tailwind's CEM parse.`
