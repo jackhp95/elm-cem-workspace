@@ -1352,3 +1352,53 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   `M3e.Component.Card`/`M3e.Component.AppBar`/`M3e.Component.NavItem` — the live per-component layout — so Phase B
   uses the `M3e.Component.*` spelling. Reversible/mechanical. Next free IDs: **D-040**, **R-023**.
 
+- **D-040 (copy-fidelity AUTHORIZED_EXTRA requirement for Phase B new files — found during prep).** Read
+  `tools/copy-fidelity-elm-m3e.sh`: it compares git-tracked PATH SETS (not content) between workspace
+  `packages/elm-m3e` and the source oracle checkout, BIDIRECTIONALLY — flags `missing` (source∖workspace) AND
+  `extra` (workspace∖source, minus an `AUTHORIZED_EXTRA` allowlist). Consequences for Compose:
+  (1) **Content edits** to existing tracked files (docs/elm.json B8, Shared.elm B11, review/CodegenReviewConfig
+  B10) are INVISIBLE to this gate — safe. (2) **Each NEW file** Phase B adds under `packages/elm-m3e/` —
+  `docs/scripts/gen-compose-attrs.mjs`, `docs/app/Route/Components/Compose/Attrs.elm` (B9),
+  `.../Compose/Render.elm` (B10), `.../Compose.elm` (B11), `.../Compose/Codegen.elm` (B13),
+  `docs/tests-browser/compose.spec.ts` (B14) — will register as `extra` → copy-fidelity RED against the oracle
+  UNLESS added to `AUTHORIZED_EXTRA` in `tools/copy-fidelity-elm-m3e.sh` with a one-line reason (the script's own
+  sanctioned mechanism for "deliberate monorepo adaptations"). Editing that tool file is safe (it lives under
+  `tools/`, not `packages/elm-m3e/`, so it's invisible to the gate itself). **In THIS worktree copy-fidelity
+  SKIPs** (its `SOURCE_ELM_M3E` defaults to a nonexistent worktree-sibling), so it does not redden the in-worktree
+  `gate:all`; but for the deliverable to be correct/mergeable, the allowlist must be maintained. Baseline verified
+  read-only: `SOURCE_ELM_M3E=/Users/jhp/code/jackhp95/elm-m3e bash tools/copy-fidelity-elm-m3e.sh` → GREEN
+  (source=1245, workspace=1199) pre-Phase-B. **Plan: each Phase-B task that ADDS a file under packages/elm-m3e/
+  also appends it to AUTHORIZED_EXTRA; manager verifies copy-fidelity GREEN vs the real oracle (read-only, never
+  editing the oracle) after each.** B8 needs no entry (edits + deletes scratch only). Next free IDs: **D-041**,
+  **R-023**.
+
+- **D-041 (Task 8 §14-risk-5 collision — corrected autonomously, verified). PLAN GAP.** Adding
+  `../../elm-cem-compose/src` + `../../elm-cem/facts/src` to the docs app's `source-directories` (Task 8's whole
+  job) made the docs app's `check:review` gate RED with **45 errors** — because `elm-review` reviews every file in
+  the project's source-directories, so it began linting the compose + facts SIBLING packages (and compose's
+  `tests/src`, pulled via the sibling `tests/` convention) against the docs app's strict ReviewConfig
+  (NoMissingTypeAnnotationInLetIn, NoUnused.*, NoRedundantlyQualifiedType, NoPrematureLetComputation). The B8
+  builder (Sonnet) caught this — it IS the §14-risk-5 fail-fast Task 8 exists for, manifesting as a review-ruleset
+  collision rather than module shadowing — and STOPPED. Root cause bisected: facts/src alone = 2 errors,
+  compose/src alone = 43. **Decision: exclude the two new sibling source trees from the docs review**, exactly as
+  the config ALREADY excludes the other sibling workspace packages it compiles against. `ReviewConfig.elm`'s
+  `ignoreGeneratedSubstrate` helper (applied to every main-list rule) already lists `../../elm-typed-html/src/`
+  and `../../elm-html-intermediate-representation/src/`; added `../../elm-cem/facts/src/`,
+  `../../elm-cem-compose/src/`, `../../elm-cem-compose/tests/src/` alongside them. Verified:
+  `pnpm --filter m3e-builder-docs run check:review` → "I found no errors!" (all 45 cleared). REJECTED the
+  alternative of retrofitting compose's already-committed Phase-A code to satisfy the docs app's lint rules —
+  that would couple the headless published core to a consumer's style config, the exact inversion the whole design
+  forbids; you don't lint your dependencies. **Observation (not a blocker):** elm-cem-compose's own code is not
+  elm-reviewed by anything (its gate is format+headless+tests, per the spec's minimal toolchain); giving it its
+  own elm-review is out of this plan's scope. B8 commit now includes TWO files: `docs/elm.json` (+2 source-dirs)
+  and `review/src/ReviewConfig.elm` (+3 sibling exclusions); both are content edits, invisible to copy-fidelity.
+  Reversible. Next free IDs: **D-042**, **R-023**.
+
+- **B8: pass** (check:review green, critic clean, builder claude/sonnet). Commit `c25ee40`. `docs/elm.json` gains
+  the two canonical source-dirs (`../../elm-cem/facts/src`, `../../elm-cem-compose/src`); `ReviewConfig.elm`
+  excludes the two sibling trees from docs review (D-041). Round 1 stopped on the D-041 45-error collision
+  (builder correct); round 2 committed. Integrity: 2 files, content-only (invisible to copy-fidelity, re-verified
+  GREEN vs real oracle). Fresh Opus critic confirmed exact source-dir list, check:review "no errors", the
+  ReviewConfig change is ONLY the 3 sibling entries (no rule loosened), no scratch committed, external oracle
+  untouched → PASS. **Phase B wiring in place; the docs app now compiles against Cem.Facts + Cem.Compose.**
+
