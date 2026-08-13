@@ -1,0 +1,24 @@
+{
+  "name": "elm-cem-compose",
+  "version": "1.0.0",
+  "description": "Headless, type-directed element-tree editor over elm-cem facts",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "postinstall": "elm-tooling install",
+    "format": "elm-format src/ tests/src/ --yes",
+    "check:format": "elm-format src/ tests/src/ --validate",
+    "check:headless": "bash bin/check-headless.sh",
+    "check": "run-p \"check:*\"",
+    "test:elm": "elm-test-rs --project tests --compiler node_modules/.bin/elm tests/src/*.elm",
+    "test": "run-p \"test:*\"",
+    "gate": "run-s check test"
+  },
+  "devDependencies": {
+    "elm-tooling": "^1.20.0",
+    "npm-run-all2": "^9.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
