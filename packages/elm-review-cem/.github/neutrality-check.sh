@@ -28,10 +28,19 @@
 # Run locally from the repo root: `bash .github/neutrality-check.sh`
 # (also runs as a CI step, and via `npm run check:neutrality` / `npm run gate`).
 # Exit 0 = neutral, exit 1 = new unreviewed mention.
+#
+# Scoped to this package directory (not the git root): elm-review-cem lives as a
+# package inside a monorepo, and the invariant this gate protects is about
+# elm-review-cem's own files, not siblings elsewhere in the workspace. `git
+# ls-files` run from this directory lists only files tracked under here, with
+# paths already package-relative — which is also exactly what happens if
+# elm-review-cem is ever extracted back into its own repo, where this directory
+# IS the git root.
 
 set -euo pipefail
 
-cd "$(git rev-parse --show-toplevel)"
+PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$PACKAGE_DIR"
 
 ALLOWLIST=".neutrality-allowlist"
 PATTERN='\bmaterial\b|m3e|md3'

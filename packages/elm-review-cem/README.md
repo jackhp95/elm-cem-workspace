@@ -226,7 +226,6 @@ The other npm scripts:
 npm run check:format       # validates src/, tests/, review/src/ are elm-format clean
 npm run format              # formats in-place (the fix for check:format)
 npm run check:review        # dogfoods review/ config over src/ + tests/
-npm run check:facts-sync    # verifies Cem.Facts.Fact stays in sync with elm-cem's Review.Facts
 npm run check                # run-p "check:*" — every check above, in parallel
 npm run gate                 # run-s check test — what hooks/pre-push runs
 ```

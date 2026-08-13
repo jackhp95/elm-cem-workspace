@@ -253,6 +253,38 @@ Structural facts confirmed at bootstrap (bind M1.d):
   validator by invoking a library module as a CLI, which silently did nothing and looked like a
   no-op validator; through its actual API it rejects all five corruptions precisely.
 
+- **D-011 (M1.d post-mortem) — my bar covered only the package being changed, not its blast radius.**
+  M1.d's loop reported SUCCESS on iteration 4, but a real cross-package regression was still in the
+  tree: deleting the vendored `Cem/Facts.elm` broke `packages/elm-typed-html`'s `check:review`,
+  because `packages/elm-typed-html/review/elm.json` is an Elm APPLICATION whose
+  `source-directories` include `../../elm-review-cem/src` (so it compiles elm-review-cem's rule
+  modules FROM SOURCE) but never gained `../../elm-cem/facts/src`. The M1.d critic diagnosed this
+  precisely and failed iterations 2 AND 3 for it, noting — correctly — that *"no command in the
+  prescribed floor covers it"*. I verified the break myself after the loop passed: `MODULE NOT
+  FOUND ... You are trying to import a Cem.Facts module` at
+  `packages/elm-review-cem/src/Cem/MissingRequiredSingularSlot.elm:12`.
+  This is the FOURTH bar defect I have authored this milestone (D-008 unsatisfiable, D-009
+  self-tripping, D-010 vacuous-on-absence, D-011 blast-radius-blind). The pattern is consistent and
+  worth naming: **I keep scoping bars to the artifact under change rather than to everything that
+  depends on it.**
+  **Structural fix:** the M1 integrator builds `tools/gate-all.mjs`, a workspace-wide gate that runs
+  EVERY package's `check` and `test` plus the cross-cutting checks. From M2 on, every part's bar
+  includes `node tools/gate-all.mjs`, so a change can no longer green its own package while
+  breaking a sibling. Blast radius here was exactly one file
+  (`packages/elm-typed-html/review/elm.json` — the only Elm application in the graph vendoring
+  `elm-review-cem/src`), but the class of error is general.
+- **R-007 (M1.d) — `check:review` for a `type: package` depends on GLOBAL ELM_HOME state.**
+  elm-review-cem's own `check:review` resolves `Cem.Facts` through
+  `packages/elm-review-cem/bin/stage-facts-elm-home.mjs`, which seeds
+  `~/.elm/0.19.1/packages/jackhp95/elm-cem-facts/1.0.0`. This is genuinely unavoidable for a
+  `type: package` under elm-review (elm-review resolves a package's `dependencies` from the
+  ELM_HOME cache, and Elm forbids `source-directories` in a package), and it is the residual of
+  R-001 in its sharpest form. It writes nothing under `packages/` and is idempotent, but it means
+  that gate is **not hermetic**: it depends on machine-global state, so a clean CI checkout must run
+  the staging step first. M4's CI/drift gate must invoke it explicitly. The TEST tooling correctly
+  uses the hermetic application-layer convention instead (`tests/elm.json` with
+  `source-directories: ["src", "../src", "../../elm-cem/facts/src"]`).
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -318,3 +350,8 @@ Structural facts confirmed at bootstrap (bind M1.d):
   not merely omitted; widening the shared schema for one reader of a non-element fact is the exact
   anti-pattern the audit warns against. Verified non-regression: cem-figma-connect check:tokens
   reads the manifest directly today and still will.`
+- `M1.d: round 1 (loop 305d0761 reported succeeded on iteration 4, but manager verification found a
+  live cross-package regression the bar never covered — elm-typed-html check:review MODULE NOT FOUND;
+  critic had correctly failed iterations 1-3, incl. catching a checker that missed a symlinked
+  duplicate; NOT accepted as pass; strategy: see D-011, integrator fixes the seam + builds a
+  workspace-wide gate; builder claude/sonnet, 4 iterations)`

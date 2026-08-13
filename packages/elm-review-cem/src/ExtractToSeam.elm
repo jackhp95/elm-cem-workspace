@@ -909,8 +909,8 @@ groupByKey prepared =
 
 
 {-| The set of modules that (transitively) import the seam module. A qualified
-reference into one of these cannot be carried as a seam import (it would form an
-import cycle), so it is threaded as a parameter instead.
+reference into one of these cannot be carried as a seam import (it would form
+an import cycle), so it is threaded as a parameter instead.
 -}
 modulesDependingOnSeam : ModuleName -> List ( ModuleName, List ModuleName ) -> Set String
 modulesDependingOnSeam seamModuleName moduleImports =

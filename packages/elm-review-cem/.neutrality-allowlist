@@ -92,6 +92,10 @@ src/Cem/Internal/Facts.elm::{-| A namespace-qualified index key for a fact (`"M3
 src/Cem/Internal/Facts.elm::`"M3e\u{0000}button"`). Keying rule indices on this instead of the bare component
 src/Cem/Internal/Facts.elm::noun keeps two libraries' same-noun components (`M3e`'s `button` and `TypedHtml`'s
 src/Cem/Internal/Facts.elm::matching namespace prefix among `roots` (`M3e.Token` under `[["M3e"]]` →
+src/Cem/Internal/Facts.elm::(e.g. `M3e.Unsafe.Attributes` alongside `M3e.Component.Button`) share the
+src/Cem/Internal/Facts.elm::common root (`M3e`). Longest-first ordering ensures `callSiteUnder` matches
+src/Cem/Internal/Facts.elm::-- Barrel case: moduleName is a parent of root (e.g. M3e re-exports
+src/Cem/Internal/Facts.elm::-- M3e.Component.IconButton.iconButton as M3e.iconButton). The
 
 # src/NoRedundantElementEscape.elm — the escape-reflex doc-comment's worked
 # examples (`toHtml (M3e.button …)`, the `Cem.redundantElementEscape` config

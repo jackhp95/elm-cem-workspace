@@ -144,3 +144,8 @@ plans/2026-08-05-value-primitives-codegen.md
 # those repos to state the problem and the acceptance test at all.
 specs/2026-08-05-open-global-attributes-design.md
 plans/2026-08-05-open-global-attributes.md
+# M1.c facts-bundle coverage-audit fixture: a hand-written `@m3e/web` /
+# `m3e-button` sample facts bundle used to exercise the schema validator against
+# a realistic Face-B/C payload. Pedagogical example data, not a Material
+# assumption baked into the generator.
+tests/facts-bundle-schema.test.mjs

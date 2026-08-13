@@ -25,6 +25,7 @@
 "use strict";
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 // ── Single-sourced version ranges ────────────────────────────────────────────
@@ -196,6 +197,42 @@ function stampDependencies(srcDir, extra = {}) {
 
 // ── Coverage gate ─────────────────────────────────────────────────────────────
 
+// Module-name roots (e.g. "Review" for "Review.Rule") exposed by every
+// NON-family dependency an elm.json declares — a hand-authored package (like
+// elm-review-cem) may legitimately depend on ordinary published packages
+// (jfmengels/elm-review, stil4m/elm-syntax) beyond the family+stdlib set, and
+// the audit below must not flag those as undeclared. Resolved from the local
+// Elm package cache (any cached version's elm.json `exposed-modules` — root
+// namespaces don't change across a package's versions), so this is best-effort
+// and additive: it only ever widens what the audit accepts, it never narrows
+// the family/stdlib checks above.
+function providedRootsFromDeclaredDeps(declared, elmHome) {
+  const home = elmHome || process.env.ELM_HOME || path.join(os.homedir(), ".elm");
+  const roots = new Set();
+  for (const pkg of Object.keys(declared)) {
+    if (FAMILY_DEPS.some((d) => d.package === pkg)) continue; // handled separately
+    const pkgCacheDir = path.join(home, "0.19.1", "packages", ...pkg.split("/"));
+    let versions;
+    try {
+      versions = fs.readdirSync(pkgCacheDir);
+    } catch {
+      continue;
+    }
+    for (const version of versions) {
+      let depElmJson;
+      try {
+        depElmJson = JSON.parse(fs.readFileSync(path.join(pkgCacheDir, version, "elm.json"), "utf8"));
+      } catch {
+        continue;
+      }
+      const exposed = depElmJson["exposed-modules"];
+      const names = Array.isArray(exposed) ? exposed : Object.values(exposed || {}).flat();
+      for (const name of names) roots.add(name.split(".")[0]);
+    }
+  }
+  return roots;
+}
+
 // Audit one emitted package directory (containing elm.json + src/). Returns a
 // list of violation strings; empty means the package declares every family /
 // foreign namespace its src imports. Catches NB1: an `import HtmlIr.*` with no
@@ -213,7 +250,9 @@ function auditPackage(pkgDir) {
   } catch (e) {
     return [`cannot read ${elmJsonPath}: ${e.message}`];
   }
-  const declared = new Set(Object.keys(elmJson.dependencies || {}));
+  const declaredDeps = elmJson.dependencies || {};
+  const declared = new Set(Object.keys(declaredDeps));
+  const otherDeclaredRoots = providedRootsFromDeclaredDeps(declaredDeps);
   const modules = discoverModules(srcDir);
   const ownModules = new Set(Object.keys(modules));
 
@@ -231,6 +270,7 @@ function auditPackage(pkgDir) {
       }
       const root = imp.split(".")[0];
       if (ELM_STDLIB_ROOTS.has(root)) continue; // provided by the base Elm deps
+      if (otherDeclaredRoots.has(root)) continue; // provided by a declared non-family dependency
       violations.push(
         `${elmJson.name || pkgDir}: ${modName} imports foreign namespace ${imp} — no declared dependency provides it`
       );
@@ -251,6 +291,7 @@ module.exports = {
   requiredFamilyDeps,
   stampDependencies,
   auditPackage,
+  providedRootsFromDeclaredDeps,
   discoverModules,
   importsOf,
 };

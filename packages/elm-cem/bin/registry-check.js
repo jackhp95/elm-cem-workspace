@@ -122,12 +122,22 @@ function resolveFamilySrc(pkg, depSrcs) {
   return candidates.find((c) => c && fs.existsSync(c)) || null;
 }
 
-// Recursively symlink a src tree's top-level entries into a scratch src/.
+// Recursively merge a src tree into a scratch src/, symlinking only leaf files.
+// Directories are always REAL (mkdir'd, never symlinked) so that staging a
+// second dep whose top-level namespace collides with one already staged (e.g.
+// the brand's own `Cem/` alongside facts' `Cem/Facts.elm`) merges into the same
+// directory instead of the second stage silently no-op'ing on an existing
+// symlinked dir — and, crucially, never risks writing through a directory
+// symlink back into the original (read-only) source tree.
 function stageInto(depSrc, scratchSrc) {
-  for (const entry of fs.readdirSync(depSrc)) {
-    const link = path.join(scratchSrc, entry);
-    if (!fs.existsSync(link)) {
-      fs.symlinkSync(path.join(depSrc, entry), link);
+  for (const entry of fs.readdirSync(depSrc, { withFileTypes: true })) {
+    const from = path.join(depSrc, entry.name);
+    const to = path.join(scratchSrc, entry.name);
+    if (entry.isDirectory()) {
+      fs.mkdirSync(to, { recursive: true });
+      stageInto(from, to);
+    } else if (!fs.existsSync(to)) {
+      fs.symlinkSync(from, to);
     }
   }
 }
@@ -204,10 +214,18 @@ function run(argv) {
   for (const dep of stagedDeps) stageInto(dep.src, scratchSrc);
 
   // A package-shaped elm.json exposing the brand's real exposed surface. Its
-  // `dependencies` are only the base elm/* deps — the unpublished family deps are
-  // simulated as "published" ONLY by having been staged into src/ above (and only
-  // when declared). `elm make --docs` is what `elm publish` runs, so this mirrors
-  // the registry compile, including the exposed-doc-comment requirement.
+  // `dependencies` are the base elm/* deps plus every OTHER (non-family) dep the
+  // real elm.json declares (e.g. jfmengels/elm-review, stil4m/elm-syntax for a
+  // hand-authored package like elm-review-cem) — those are real published
+  // packages, resolved normally from the registry/local cache. The unpublished
+  // family deps are simulated as "published" ONLY by having been staged into
+  // src/ above (and only when declared), so they are deliberately excluded here.
+  // `elm make --docs` is what `elm publish` runs, so this mirrors the registry
+  // compile, including the exposed-doc-comment requirement.
+  const otherDeclaredDeps = {};
+  for (const [name, range] of Object.entries(declared)) {
+    if (!family.FAMILY_DEPS.some((d) => d.package === name)) otherDeclaredDeps[name] = range;
+  }
   const scratchElmJson = {
     type: "package",
     name: elmJson.name || "registry/check",
@@ -216,7 +234,7 @@ function run(argv) {
     version: elmJson.version || "1.0.0",
     "exposed-modules": [...exposed].sort(),
     "elm-version": elmJson["elm-version"] || "0.19.0 <= v < 0.20.0",
-    dependencies: family.baseDependencies(),
+    dependencies: { ...family.baseDependencies(), ...otherDeclaredDeps },
     "test-dependencies": {},
   };
   fs.writeFileSync(path.join(scratch, "elm.json"), JSON.stringify(scratchElmJson, null, 4) + "\n");
