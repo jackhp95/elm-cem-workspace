@@ -494,6 +494,20 @@ Structural facts confirmed at bootstrap (bind M1.d):
   bar that no builder could satisfy (D-008, D-009, D-022) — all three share one root cause: a check
   whose success depends on state the builder does not control.
 
+- **D-023 (M4) — the drift gate has a REAL HOLE: no consumer's generated OUTPUT is checked.**
+  I tested it myself rather than trusting the green: appended one line to
+  `packages/tailwind-m3e-web/generated/utilities.css` (a committed, generated artifact) and both
+  `node tools/check-drift.mjs` AND the full `node tools/gate-all.mjs` passed — **30/30, exit 0**.
+  `check-drift` covers the producer, brand Face A (A/B), the three bundle COPIES, and `Pages.elm`;
+  it does NOT regenerate any consumer's output and compare it. So a consumer's committed output can
+  silently diverge from what the producer would generate — exactly the drift spec section 9 exists
+  to prevent ("regenerate everything from the current bundle, diff against committed, require zero
+  diff"), and the M3 scorecard had already flagged tailwind's `generated/**` as ungated (its section 3.2).
+  The TDD negative test passes but only exercises R-008 timestamp semantics, not consumer coverage —
+  a reminder that a green negative test only proves the case it actually tests.
+  M4 is NOT done until each consumer's generated output is regenerated and byte-compared, with a
+  per-consumer negative test proving each one bites.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
