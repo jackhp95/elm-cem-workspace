@@ -6,6 +6,7 @@ module Cem.Compose exposing
     , componentOf, attrsOf, slotsOf
     , SlotAffordances, SlotChipInfo, slotChips
     , SlotOption(..), slotMenuOptions
+    , AttrChipInfo, AttrChipKind(..), attrChips
     )
 
 {-| A headless, type-directed editor for building a valid tree of custom
@@ -22,6 +23,7 @@ every pixel.
 @docs componentOf, attrsOf, slotsOf
 @docs SlotAffordances, SlotChipInfo, slotChips
 @docs SlotOption, slotMenuOptions
+@docs AttrChipInfo, AttrChipKind, attrChips
 
 -}
 
@@ -556,3 +558,92 @@ optionsOf a =
             []
         , List.map OptionComponent a.components
         ]
+
+
+
+-- ATTRIBUTES
+
+
+{-| Whether a chip is an enum (and its legal tokens) or a plain typed value.
+
+`kind` is carried on the chip because the consumer cannot render one without
+it — an enum chip's label shows the current token, a boolean chip is a toggle,
+a string chip opens a text field.
+
+-}
+type AttrChipKind
+    = EnumChip (List String)
+    | PlainChip AttrKind
+
+
+{-| One configurable attribute. `isSet` is `True` exactly when the attribute
+has an entry in the node's `attrs`. An unset attribute contributes nothing to
+the preview and nothing to the generated code.
+-}
+type alias AttrChipInfo =
+    { name : String
+    , kind : AttrChipKind
+    , isSet : Bool
+    , currentValue : Maybe AttrValue
+    }
+
+
+{-| Enum chips in the `Fact`'s own order, then plain chips deduplicated and
+sorted. `attrRewrites` maps barrel setter name to per-component setter name and
+the same per-component name can be reached from more than one barrel entry, so
+deduplication is required, not cosmetic.
+
+A name absent from both `fact.enums` and `Model.attrKinds` is not offered at
+all — which is how event setters are excluded.
+
+-}
+attrChips : Path -> Model -> List AttrChipInfo
+attrChips path model =
+    case ( nodeAt path model, factAt path model ) of
+        ( Just node, Just fact ) ->
+            let
+                current name =
+                    currentAttr name node
+
+                enumNames =
+                    List.map Tuple.first fact.enums
+
+                enumChips =
+                    fact.enums
+                        |> List.map
+                            (\( name, tokens ) ->
+                                { name = name
+                                , kind = EnumChip tokens
+                                , isSet = current name /= Nothing
+                                , currentValue = current name
+                                }
+                            )
+
+                plainChips =
+                    fact.attrRewrites
+                        |> List.map Tuple.second
+                        |> List.filter (\name -> not (List.member name enumNames))
+                        |> List.Extra.unique
+                        |> List.sort
+                        |> List.filterMap
+                            (\name ->
+                                Dict.get name model.attrKinds
+                                    |> Maybe.map
+                                        (\kind ->
+                                            { name = name
+                                            , kind = PlainChip kind
+                                            , isSet = current name /= Nothing
+                                            , currentValue = current name
+                                            }
+                                        )
+                            )
+            in
+            enumChips ++ plainChips
+
+        _ ->
+            []
+
+
+currentAttr : String -> Node -> Maybe AttrValue
+currentAttr name (Node n) =
+    Dict.get name n.attrs
