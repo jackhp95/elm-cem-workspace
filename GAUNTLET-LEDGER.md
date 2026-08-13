@@ -480,6 +480,20 @@ Structural facts confirmed at bootstrap (bind M1.d):
   `test/elm-emitter.test.mjs` + `test/append-sets.test.mjs`. Recorded because "no test was deleted"
   is otherwise a standing invariant, and this is its one authorized exception.
 
+- **D-022 (M4) — `git diff --exit-code` as a loop check is structurally unsatisfiable (10th bar
+  defect, and a repeat of the D-008 class).** M4's loop failed 3 iterations on
+  `pnpm run bump -- 2.7.3`, but `bump` itself was SUCCEEDING every time — its own log ends
+  `30/30 passed, GATE-ALL GREEN` and `bump: DONE`. The failure was the *next* thing: I made
+  `git diff --exit-code` the idempotence gate, while also forbidding the builder to commit. So the
+  builder's own in-progress work (the `bump` script registration, the shared-module refactor, 7
+  files) guaranteed a dirty tree, and no builder action could ever clear it.
+  **Idempotence must be measured as "bump changes nothing BEYOND the pre-bump state"** — snapshot,
+  run, compare — not as a diff against HEAD when uncommitted work is expected to exist. I committed
+  the builder's work myself and then measured it correctly: **`bump` on a clean tree exits 0 and
+  changes ZERO files.** The deliverable was right; the bar was wrong. Third time I have written a
+  bar that no builder could satisfy (D-008, D-009, D-022) — all three share one root cause: a check
+  whose success depends on state the builder does not control.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
