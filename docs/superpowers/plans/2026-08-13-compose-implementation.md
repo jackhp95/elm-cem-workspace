@@ -88,20 +88,27 @@ Splitting the consumer into four modules rather than one is deliberate: the spec
 
 Read spec §11, §11.1, and §14 risk 4. Read `GAUNTLET-LEDGER.md` entry **D-031** (recorded in commit `7cbb425`).
 
-The unresolved state, verbatim from the spec: **D-031** resolves that the elm-cem generator is canonical and its output is 143 modules in a flat `M3e.<Component>` namespace, *not* the 402-file `M3e/Build/*` + `M3e/Component/*` shape currently committed — which would mean `M3e.Component.Card` ceases to exist and `M3e.Card` replaces it. The ledger escalates this to a human and records it as **not yet decided**. Separately, **§11.1** records that `jackhp95/elm-m3e`'s `origin/main` is 27 commits ahead with a *different* 4-package layout, an `elm-m3e-icons` package, and a `M3e.Build.Internal` → `M3e.Forge.Internal` rename.
+The spec §11 describes **D-031** as escalated to a human and **not yet decided**. **That is now out of date and the spec has not been re-amended** — read the ledger, not the spec, for this one fact.
+
+**D-031c (ledger, commit `c51044c`, 2026-08-13) decided it autonomously, superseding the escalation:** the generator is canonical and its current **143-module flat `M3e.<Component>` output is the one true output shape**. Both committed 402-file trees are retired as publishable candidates. So `M3e.Component.Card` **does** cease to exist and `M3e.Card` replaces it. **D-031d** then measured the migration: 131 `import M3e.Component.<X>` are a pure rename, 7 `import M3e.Build` survive untouched, and only 9 `import M3e.Build.<X>` across seven files are real API work.
+
+Still genuinely open, and **not for this plan to answer**: spec §11.1 records that `jackhp95/elm-m3e`'s `origin/main` is 27 commits ahead with a *different* 4-package layout, an `elm-m3e-icons` package, and a `M3e.Build.Internal` → `M3e.Forge.Internal` rename. **Two boundary stories remain unreconciled** — D-031's cut inside the workspace, and `origin/main`'s 4-package layout. Nobody has merged them.
 
 - [ ] **Step 2: Record the answer or the blocker**
 
-Two questions need a human answer **before Phase B, not before Phase A**:
+One question still needs a human answer **before Phase B, not before Phase A**:
 
-1. Which boundary story wins — D-031's 3-way cut in the workspace, or `origin/main`'s 4-package layout?
-2. Is D-031's flat-namespace rename adopted before Compose is built, or does Phase B accept a known-cheap mechanical rename afterwards?
+> Which boundary story wins — the workspace's D-031 cut, or `origin/main`'s 4-package layout plus `elm-m3e-icons`?
 
-**Do not attempt to answer these. They are outside this plan's scope.** Escalate them and record the reply in `GAUNTLET-LEDGER.md`.
+**Do not attempt to answer it. It is outside this plan's scope.** Escalate it and record the reply in `GAUNTLET-LEDGER.md`.
 
-- [ ] **Step 3: Gate**
+- [ ] **Step 3: Note the import consequence for Phase B**
 
-**Acceptance:** Phase A may start immediately and unconditionally — the core imports only `Cem.Facts`, whose shape survives every scenario (spec §11 consequence 2). **Phase B must not start until questions 1 and 2 have a recorded human answer.** If a human answer is not available and the work must proceed, Phase B may start against the *currently committed* spelling (`M3e.Component.Card`), which is what compiles today — but that decision must be recorded as accepted rename debt, not made silently.
+Tasks 11 and 12 sketch `M3e.Component.Card`, because that is what the spec was written against and what compiles today. **Under D-031c the correct spelling is `M3e.Card`.** Before writing those tasks, check which shape `packages/elm-m3e/src/` actually holds at that moment — the Move 2 migration may or may not have landed — and use the spelling that compiles. Nothing structural changes either way; this is a mechanical rename and the core is entirely insulated (it imports only `Cem.Facts`, whose shape D-031 does not touch).
+
+- [ ] **Step 4: Gate**
+
+**Acceptance:** Phase A may start immediately and unconditionally — the core imports only `Cem.Facts`, whose shape survives every scenario (spec §11 consequence 2). **Phase B must not start until the remaining boundary question has a recorded answer.** If one is not available and the work must proceed, Phase B may start against whichever spelling compiles at that moment — but that must be recorded as accepted rename debt, not decided silently.
 
 ---
 
