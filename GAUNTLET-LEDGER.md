@@ -980,3 +980,36 @@ Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 co
     for a different tree and a different seam.
   - Not yet done, pending the D-031 decision: no `README.md`/`LICENSE` exist for any package, the
     cut is not committed, and no standalone-compile/size gate is wired.
+
+- **R-022 (Move 1, root cause of R-021 items 1 and 4) — the workspace has NEVER built with its own
+  declared Elm toolchain; stale package-local binaries have been covering for a wrong root pin.**
+  Chasing why `elm-cem: test` fails in a clone but passes here, I first assumed a cached
+  `tests/elm-stuff/` solve. **That hypothesis was wrong** — I copied this machine's `elm-stuff` into
+  the clone and the failure was identical. The real difference is the *binaries*:
+  | | `elm-format` | `elm-test-rs` |
+  |---|---|---|
+  | workspace ROOT `elm-tooling.json` | **0.8.7** | **1.0.0** |
+  | `packages/elm-cem/elm-tooling.json` | 0.8.8 | 3.0.0 |
+  | `packages/elm-review-cem/elm-tooling.json` | 0.8.8 | 3.0.0 |
+  | `packages/elm-html-intermediate-representation/elm-tooling.json` | 0.8.7 | 3.0.0 |
+  | `packages/elm-typed-html/elm-tooling.json` | 0.8.7 | — |
+  On this machine `packages/elm-cem/node_modules/.bin/` holds symlinks to **elm-test-rs 3.0.0** and
+  **elm-format 0.8.8**, dated `Aug 12 17:06` — leftovers from the pre-migration checkouts, created
+  when each source repo ran its own `elm-tooling install`. They shadow the root and make everything
+  green. A clone has only the ROOT pins, so it gets `elm-test-rs 1.0.0`, whose bundled
+  `mpizenberg/elm-test-runner 4.0.4` requires `elm-explorations/test 1.0.0 <= v < 2.0.0` while
+  `packages/elm-cem/tests/elm.json` pins `2.2.0` — unsatisfiable, hence R-021 item 1.
+  **`elm-test-rs 1.0.0` is wanted by NO package in the workspace.** The root pin is simply wrong.
+  This directly violates **D-003 rule 5** (*"The Elm toolchain is pinned at the workspace root ...
+  so every package builds with the same elm/elm-format/elm-test-rs"*): the rule was written, the
+  root file was created with the wrong versions, and no gate ever noticed because the stale
+  per-package binaries silently supplied the right ones.
+  Same mechanism explains R-021 item 4: `elm-review-cem`'s `check:review` and `test:elm` pass
+  `--compiler node_modules/.bin/elm`, a PACKAGE-LOCAL path that exists here only as an Aug-12
+  leftover symlink and is absent in a clone.
+  **Unresolved sub-question for the fix:** `elm-format` is genuinely inconsistent ACROSS packages
+  (0.8.8 for elm-cem/elm-review-cem, 0.8.7 for IR/elm-typed-html). A single root pin cannot serve
+  both if the two versions disagree on any formatting, so the fix must either run
+  `elm-tooling install` per package (reproducing today's working state deterministically, and
+  respecting each package's own pin) or unify the version and prove all four `check:format` gates
+  still pass. **Do not resolve it by relaxing a format check.**
