@@ -1321,3 +1321,34 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   equals, unweakened → PASS. **Phase A core queries (A2–A6) complete; A7 is the determinism + headless-gate
   close-out.**
 
+- **A7: pass — PHASE A GREEN** (test:elm 62/62, critic+sign-off clean, builder claude/sonnet). Commit `9ecff06`.
+  Determinism block (equal-models, stable attrsOf ordering, and the unbounded-depth self-recursive-`container`
+  nest-to-10 proof of §8.3 — no cap/guard); REAL headless gate replacing the placeholder; README. The headless
+  script needed ONE edit vs the plan's verbatim text — adding the package's own name `jackhp95/elm-cem-compose`
+  to the `allowed` alternation (the plan's own Step-2 note authorized this; it does not weaken the separate
+  elm/html/virtual-dom/elm-m3e forbidden loop). Integrity: 3 files. Fresh Opus critic+integrator INDEPENDENTLY:
+  (i) proved the headless gate BITES (injected elm/html on a copy → exit 1 with two FAIL lines; clean → exit 0);
+  (ii) ran full `node tools/gate-all.mjs` → `elm-cem-compose: check` + `test` both PASS, and the 5 failures are a
+  strict subset of the 6-item baseline fingerprint (elm-review-cem:check improved to PASS) — NO 7th failure, no
+  compose item red; (iii) confirmed all 4 spec-§15 Phase-A criteria (as amended by D-037) → **PHASE A: GREEN**.
+  Phase A (a tested, headless, registry-faithful package carrying the portability claim) is an independently
+  valuable artifact, done. Next free IDs: **D-040**, **R-023**.
+
+## Phase B parts
+
+- **D-039 (Phase B gate-command defects — found during prep, corrections to apply per-task). PLAN DEFECT.**
+  Verified on disk before starting Phase B: the docs app `packages/elm-m3e/docs/package.json` (pnpm name
+  `m3e-builder-docs`) has **NO top-level `check` script and NO `start` script**. The plan's Phase B reference
+  bars invoke `pnpm --filter m3e-builder-docs run check` (Tasks 8/11/12/13) and `npm run start` (Task 11) — both
+  non-existent. Also note `tools/gate-all.mjs` only runs per-package `check`/`test` scripts, so the docs app is
+  NOT gated by `gate:all` at all (why `m3e-builder-docs` never appears in gate-all output). **Corrected Phase B
+  gates (to inject into each builder brief):** for "the app still compiles/reviews" use
+  `pnpm --filter m3e-builder-docs run check:review` (`elm-review --config ../review --compiler
+  node_modules/.bin/elm` — compiles the whole app source set + runs rules) PLUS a targeted
+  `cd packages/elm-m3e/docs && npx elm make app/<the new module>.elm --output=/dev/null`; for the dev server
+  (Task 11 browser view) use `npm run dev` (elm-pages dev), NOT `start`; browser tests remain `npx playwright
+  test` (Task 14). The plan's other Phase B commands that DO exist — `check:review`, `check:nav`, `elm make`,
+  `playwright test`, `build:site` — stand. Spelling confirmed for D-034: the docs Feed.elm template imports
+  `M3e.Component.Card`/`M3e.Component.AppBar`/`M3e.Component.NavItem` — the live per-component layout — so Phase B
+  uses the `M3e.Component.*` spelling. Reversible/mechanical. Next free IDs: **D-040**, **R-023**.
+
