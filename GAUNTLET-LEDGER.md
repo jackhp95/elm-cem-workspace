@@ -1031,3 +1031,46 @@ Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 co
   the exposed set varying (the spike's method, which isolates the cap question from the cycle
   question). A true standalone per-package compile — P2 resolving P1 as a real registry dependency
   — has NOT been performed, and remains part of Move 2's acceptance.
+
+- **D-032 (human, hard requirement) — NO `claude-opus-5` agent may ever be spawned; Opus work is
+  `claude-opus-4-8` ONLY.** Root cause of the exposure: `~/.paseo/orchestration-preferences.json`
+  mapped `ui`/`planning`/`audit` to the bare alias **`claude/opus`**, and `paseo list_models` shows
+  `claude-opus-5` carries `isDefault: true` for the claude provider — so the bare alias silently
+  resolved to Opus 5. This is the same trap the bootstrap note already warned about ("an omitted
+  model silently inherits the most expensive"), except the alias made it invisible.
+  **Actions taken:** (1) prefs rewritten to name the model explicitly —
+  `ui`/`planning`/`audit` = `claude/claude-opus-4-8`, `impl`/`research` = `claude/sonnet`;
+  (2) a HARD REQUIREMENT line added as the FIRST preference, stating that the bare `claude/opus`
+  alias must never be used and that `claude-opus-5`/`claude-fable-5` are barred
+  (`claude-opus-4-8[1m]` is acceptable); (3) the in-flight M7.a loop `c5dc1ab1` — whose verifier
+  had been dispatched as `--verify-model opus`, i.e. Opus 5 — was **STOPPED mid-iteration** and
+  relaunched as `43079f1d` with `--verify-model claude-opus-4-8` and `--model claude-sonnet-5`.
+  The builder's on-disk work was preserved; nothing was lost. Standing rule for the rest of this
+  effort: **every dispatch names the model explicitly by full ID; never an alias.**
+  Revert by restoring the `claude/opus` mappings, but note that doing so re-enables Opus 5.
+  Not fixable by me: the MANAGER agent in this session is itself Opus 5 and cannot change its own
+  model mid-session — that needs `/model` or a fresh session.
+
+- **D-031c (Move 2, canonical tree — DECIDED AUTONOMOUSLY, superseding the escalation in D-031).**
+  I escalated the canonical-tree question to the human. That was **over-escalation and my error**:
+  the Human-Gate Policy says to escalate only if the answer is *not derivable*, and it is derivable
+  three times over — (a) the standing family rule *"generated code is the specification; never
+  hand-edit an emitted file, change source/config and regenerate"*, (b) the spike's own §6.2
+  recommendation *"the generator should own exactly one output shape"*, and (c) D-012, which framed
+  the freeze explicitly as a Phase-0 scoping decision to be revisited later — and Move 2 IS later.
+  A fourth fact removes the remaining doubt: **nothing has ever been published.** `git tag` = 0,
+  `git remote` = 0, and `package.elm-lang.org/packages/jackhp95/elm-m3e/releases.json` returns
+  *does not exist*. There is no external consumer to break, so this is choosing the shape BEFORE
+  first publish, not breaking a shipped API. My earlier framing ("renames the entire published
+  API") was wrong and is corrected here.
+  **DECISION: the generator is canonical, and its current 143-module flat `M3e.<Component>` output
+  is the one true output shape.** Both committed 402-file trees are retired as publishable
+  candidates. Revert by pinning a generator that emits the 402-file shape — no such generator
+  exists in this workspace.
+  **The cost is real and is a finding, not a hidden absorption:** 66 in-workspace files import the
+  superseded names (`M3e.Build.*` / `M3e.Component.*` / `M3e.Internal.*`) — the docs site
+  (`docs/app/**`, `docs/src/**`), the acid and spike test suites (`tests/acid/**`, `tests/spike/**`,
+  `tests/tests/**`), and one `elm-review-cem` test. All three elm-m3e Elm applications compile
+  against `../src`, so the stale tree is load-bearing today. Move 2 therefore includes migrating
+  those 66 files, and the acid tests encode API shape so some of that is real work rather than a
+  rename. **No test may be deleted to achieve it** — repoint, per the standing constraint.
