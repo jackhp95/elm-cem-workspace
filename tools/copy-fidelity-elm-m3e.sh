@@ -95,6 +95,8 @@ AUTHORIZED_ABSENT_PREFIX="docs/vendor/tailwind-m3e-web/"
 # they are deliberate monorepo adaptations. Each entry needs a stated reason.
 AUTHORIZED_EXTRA=$(cat <<'EOF'
 docs/scripts/fix-native-bins.mjs
+docs/scripts/gen-compose-attrs.mjs
+docs/app/Route/Components/Compose/Attrs.elm
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -103,6 +105,12 @@ EOF
 #   lamdera). docs/ was an npm-managed subproject with its own lockfile before
 #   the migration, so this only became necessary once the root pnpm workspace
 #   took over installing it. The script restores direct symlinks post-install.
+# docs/scripts/gen-compose-attrs.mjs — Compose B9: derives the attr kind +
+#   dispatch table from M3e.Attributes/M3e.Review.Facts; new to this
+#   monorepo's Compose POC, absent from the upstream elm-m3e checkout.
+# docs/app/Route/Components/Compose/Attrs.elm — the committed OUTPUT of the
+#   generator above (Compose B9); new to this monorepo's Compose POC, absent
+#   from the upstream elm-m3e checkout.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 

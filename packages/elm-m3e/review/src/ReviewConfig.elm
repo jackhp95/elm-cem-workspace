@@ -61,7 +61,7 @@ config =
         , complexity
         , toHtmlGate
         ]
-        |> List.map (ignoreElmPages >> ignoreLibraryTests >> ignoreGeneratedSubstrate)
+        |> List.map (ignoreElmPages >> ignoreLibraryTests >> ignoreGeneratedSubstrate >> ignoreGeneratedComposeAttrs)
 
 
 {-| The generated brand surfaces, the IR, and the vendored foundation copies
@@ -88,6 +88,24 @@ ignoreGeneratedSubstrate =
         , "../../elm-cem-compose/tests/src/"
         , "vendor/elm-foundation/"
         , "../docs/vendor/elm-foundation/"
+        ]
+
+
+{-| `Attrs.elm` is derived by `scripts/gen-compose-attrs.mjs` from
+`M3e.Attributes`/`M3e.Review.Facts` (`npm run check:compose-attrs` is what
+gates its hygiene, by byte-comparing against a fresh regeneration — never
+hand-edit it). Its `witness` export exists ONLY to make a renamed/retired
+setter a compile error and is deliberately never imported anywhere, so
+NoUnused-family rules would flag exactly the thing that makes it useful.
+Excluded by FILE, not by directory: `Render`/`Codegen`/other hand-written
+modules under `Compose/` stay fully reviewed. Two path forms cover root- vs
+docs/-relative runs.
+-}
+ignoreGeneratedComposeAttrs : Rule -> Rule
+ignoreGeneratedComposeAttrs =
+    Rule.ignoreErrorsForFiles
+        [ "app/Route/Components/Compose/Attrs.elm"
+        , "docs/app/Route/Components/Compose/Attrs.elm"
         ]
 
 
