@@ -1278,3 +1278,10 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   to the plan (tests not weakened) and all fixture traps intact (ghost absent, dup label, self-recursive
   container/single) → PASS.
 
+- **A3: pass** (test:elm 32/32, critic clean, builder claude/sonnet). Commit `7682ac3`. `SlotAffordances`
+  (`{text,icon,components}`), `SlotChipInfo`, `slotChips` — the §8.7 amendment. `affordancesFor` computes the
+  three modes INDEPENDENTLY (no winner-takes-all); `textKinds` includes shared:flow/shared:phrasing; components
+  filtered to `:`-free names present in facts. Integrity: 2 files (Compose.elm mod, SlotTest added). Fresh Opus
+  critic confirmed the decisive coexistence assertions (mixed.any text+icon+widget; mixed.flowy; unconstrained
+  text-only; container components-only) are full-record equals, unaltered → PASS.
+
