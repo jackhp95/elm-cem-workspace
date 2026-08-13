@@ -285,6 +285,9 @@ function main() {
     runItem("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
         path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
     ]);
+    runItem("workspace: check-drift (M4.b cross-cutting drift gate)", process.execPath, [
+        path.join(repoRoot, "tools", "check-drift.mjs"),
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "node --test --test-concurrency=1 'test/**/*.test.mjs' 'src/**/*.test.mjs'",
+    "gen:facts": "node scripts/gen-facts.mjs",
     "gen:match": "node src/cli.mjs match --profile m3-kit",
     "gen:emit": "node src/cli.mjs emit --profile m3-kit",
     "gen:gap": "node src/cli.mjs gap --profile m3-kit",

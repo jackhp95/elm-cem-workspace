@@ -1,0 +1,69 @@
+// regen.mjs — R-014: the ONE shared definition of the elm-cem regeneration
+// invocation (`--flags-from`/`--config-from`/`--facts-bundle`) run against
+// elm-m3e's own config. Before this existed, this exact argv was duplicated
+// across eight sites (three consumer `scripts/gen-facts.mjs`,
+// `tools/ab-elm-cem.sh`, `tools/ab-elm-m3e-split.sh`, `tools/gate-all.mjs`,
+// and the three `check-bundle-provenance*.mjs` scripts). `tools/bump.mjs` and
+// the consumer `gen-facts.mjs` scripts use this module; the rest are
+// untouched (refactoring them is optional per the M4 spec and each is
+// already independently correct).
+//
+// Zero dependencies (plain Node ESM).
+
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+
+/** The config/flags argv shared by every elm-cem invocation against elm-m3e's config. */
+export const GEN_CONFIG_ARGS = [
+    "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
+    "--config-from=config/slots.json",
+    "--config-from=config/native-mdn.json",
+    "--config-from=config/examples.generated.json",
+];
+
+export function elmCemCli(repoRoot) {
+    return path.join(repoRoot, "packages", "elm-cem", "bin", "elm-cem.js");
+}
+
+export function defaultElmM3e(repoRoot) {
+    return process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+}
+
+/**
+ * Run elm-cem against elmM3e's own config, writing to `output` (Face A) and/or
+ * `factsBundle` (Face B/C). Returns the raw spawnSync result; never throws.
+ */
+export function runFactsGenerator({ repoRoot, elmM3e, output, factsBundle }) {
+    const cli = elmCemCli(repoRoot);
+    const args = [cli, ...GEN_CONFIG_ARGS];
+    if (output) args.push(`--output=${output}`);
+    if (factsBundle) args.push(`--facts-bundle=${factsBundle}`);
+    return spawnSync(process.execPath, args, {
+        cwd: elmM3e,
+        encoding: "utf8",
+        env: { ...process.env, PATH: `${path.join(elmM3e, "node_modules", ".bin")}:${process.env.PATH}` },
+    });
+}
+
+/**
+ * Generate a fresh facts bundle (Face B + Face C) into a scratch directory
+ * under `workDir`. Throws on nonzero exit (after streaming stdout/stderr).
+ * Returns `{ outputDir, bundleDir }`.
+ */
+export function generateBundleToTemp({ repoRoot, elmM3e, workDir, streamOutput = true }) {
+    const outputDir = path.join(workDir, "out");
+    const bundleDir = path.join(workDir, "bundle");
+    fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(bundleDir, { recursive: true });
+
+    const result = runFactsGenerator({ repoRoot, elmM3e, output: outputDir, factsBundle: bundleDir });
+    if (streamOutput) {
+        if (result.stdout) process.stdout.write(result.stdout);
+        if (result.stderr) process.stderr.write(result.stderr);
+    }
+    if (result.status !== 0) {
+        throw new Error(`elm-cem --facts-bundle exited ${result.status}`);
+    }
+    return { outputDir, bundleDir };
+}

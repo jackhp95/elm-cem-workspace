@@ -4,6 +4,17 @@
 // behind we are and whether to regenerate. Exit 0 = current, 1 = stale,
 // 2 = couldn't determine (network/tooling).
 //
+// Also reports a second, FAMILY-LEVEL signal (M4.b): whether the workspace's
+// single `@m3e/web` pin (tools/check-single-m3e-web-pin.mjs) is behind the
+// latest version published to npm. This is a different axis than the SHA
+// check above — the SHA tracks matraic/m3e's SOURCE repo (what this package
+// extracted its docs/guidance from), the npm check tracks the PUBLISHED
+// package every elm-cem consumer actually installs and generates against.
+// Both report on the outside world moving past a pin this workspace holds,
+// so both stay NON-BLOCKING: `package.json`'s `check` script already
+// excludes this whole script (`"check:!(staleness)"`), and `gate` does not
+// call it either. This reports; it never fails a gate.
+//
 //   node scripts/check-staleness.mjs
 
 import fs from "node:fs";
@@ -12,10 +23,43 @@ import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = path.resolve(ROOT, "..", "..");
 const REPO = "matraic/m3e";
 const pinned = JSON.parse(fs.readFileSync(path.join(ROOT, "data/sources.json"), "utf8")).sha;
 
 const sh = (cmd) => execSync(cmd, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+
+function checkM3eWebNpmStaleness() {
+    let workspacePin;
+    try {
+        const pkg = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "packages", "tailwind-m3e-web", "package.json"), "utf8"));
+        workspacePin = pkg.devDependencies?.["@m3e/web"] || pkg.dependencies?.["@m3e/web"];
+    } catch {
+        console.log("ℹ️  family signal: could not read the workspace's @m3e/web pin — skipped.");
+        return;
+    }
+    if (!workspacePin) {
+        console.log("ℹ️  family signal: no @m3e/web pin found — skipped.");
+        return;
+    }
+    let latest;
+    try {
+        latest = sh("npm view @m3e/web version");
+    } catch {
+        console.log("ℹ️  family signal: could not reach npm to check @m3e/web's latest version — skipped.");
+        return;
+    }
+    if (latest === workspacePin) {
+        console.log(`✅ family signal: workspace @m3e/web pin (${workspacePin}) matches npm's latest (${latest}).`);
+    } else {
+        console.log(
+            `🔄 family signal: workspace @m3e/web pin is ${workspacePin}; npm's latest is ${latest}. ` +
+                `Non-blocking — this reports on the outside world, not this tree. Run \`pnpm run bump -- ${latest}\` to update.`,
+        );
+    }
+}
+
+checkM3eWebNpmStaleness();
 
 function upstreamHead() {
   // prefer gh (authed, gives commit metadata); fall back to git ls-remote
