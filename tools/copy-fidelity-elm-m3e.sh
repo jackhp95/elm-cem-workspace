@@ -95,6 +95,7 @@ AUTHORIZED_ABSENT_PREFIX="docs/vendor/tailwind-m3e-web/"
 # they are deliberate monorepo adaptations. Each entry needs a stated reason.
 AUTHORIZED_EXTRA=$(cat <<'EOF'
 docs/scripts/fix-native-bins.mjs
+docs/scripts/browser-guard.mjs
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -103,6 +104,12 @@ EOF
 #   lamdera). docs/ was an npm-managed subproject with its own lockfile before
 #   the migration, so this only became necessary once the root pnpm workspace
 #   took over installing it. The script restores direct symlinks post-install.
+# docs/scripts/browser-guard.mjs — workspace portability wrapper for
+#   `test:browser` (R-023). It runs the Playwright suite when its generated
+#   docs inputs + browser binaries are present, and SKIPs-with-reason in a
+#   fresh clone that has neither, so `gate-all` is green-with-a-documented-skip
+#   off the migration machine instead of a hard failure. Not in the source repo
+#   because it is a monorepo-clone concern the standalone repo never had.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 

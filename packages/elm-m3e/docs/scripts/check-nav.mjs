@@ -5,15 +5,33 @@
 // script re-derives that same set and checks (a) every nav slug resolves to a
 // pre-rendered page, and (b) warns about example-bearing pages the drawer never
 // links to — a category typo or a missing page is what would break nav.
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DOCS = resolve(HERE, "..");
 
-const reference = JSON.parse(readFileSync(resolve(DOCS, "data/reference.json"), "utf8"));
-const examples = JSON.parse(readFileSync(resolve(DOCS, "data/examples.json"), "utf8"));
+// data/reference.json and data/examples.json are GENERATED, gitignored docs
+// artifacts (produced by the docs build pipeline: gen:vendor + gen:reference).
+// A fresh clone that has only run `pnpm install` does not have them, so this
+// nav check has nothing to verify. Skip-with-reason rather than crash on
+// ENOENT; on the dev machine and in CI (where the pipeline has run, or
+// REQUIRE_CLONE_GATES=1 is set) it runs for real. See R-023.
+const referencePath = resolve(DOCS, "data/reference.json");
+const examplesPath = resolve(DOCS, "data/examples.json");
+if (!existsSync(referencePath) || !existsSync(examplesPath)) {
+    const missing = [referencePath, examplesPath].filter((p) => !existsSync(p)).map((p) => p.replace(DOCS + "/", ""));
+    if (process.env.REQUIRE_CLONE_GATES === "1") {
+        console.error(`check-nav: ${missing.join(", ")} absent and REQUIRE_CLONE_GATES=1 — run the docs build (gen:vendor + gen:reference) first.`);
+        process.exit(1);
+    }
+    console.log(`SKIP: check-nav — generated docs data absent (${missing.join(", ")}); it is produced by the full docs build in a dev environment (examples.json is not cold-reproducible), so this gate only runs there or in CI with REQUIRE_CLONE_GATES=1`);
+    process.exit(0);
+}
+
+const reference = JSON.parse(readFileSync(referencePath, "utf8"));
+const examples = JSON.parse(readFileSync(examplesPath, "utf8"));
 
 const pageSlugs = new Set(reference.map((c) => c.slug));
 const exampleSlugs = new Set(Object.keys(examples));

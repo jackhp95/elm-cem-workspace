@@ -1176,3 +1176,66 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   latently red. Revert with `git revert` of the commit — the six gates return to hardcoded
   absolute defaults. Does NOT fix the five real clone failures (V-C1's six red items) — those are
   the remaining Move 1 work. Next free IDs: **D-034**, **R-023**.
+
+- **D-034 (Move 1, ACCEPTANCE) — the five real clone failures are resolved: two FIXED, three
+  SKIP-when-absent-with-reason. A fresh clone now reaches `gate-all` GREEN with explained skips.**
+  Implemented directly by the manager rather than via a loop: the acceptance test is a slow
+  re-clone (can't be a loop verify-check, D-015) and the work is absence-guards that are hard to
+  preflight as a fast bar — the manager-runs-the-slow-gate pattern. Every fix was proven by
+  experiment in a disposable clone (`/tmp/verify/ws2`), not by reasoning.
+  **FIXED (genuine portability bugs):**
+  1. **Toolchain (R-022; V-C1 items `elm-cem: test`, `elm-review-cem: check`/`test`).** Root cause,
+     precisely: `elm-cem` and `elm-review-cem` deliberately OMIT a `postinstall: elm-tooling
+     install` (they are npm-published and must not force a ~50 MB toolchain on consumers — see
+     packages/elm-cem/RELEASE-CHECKLIST.md), whereas IR and elm-typed-html HAVE it. In a source
+     checkout the two got their binaries as leftovers; in a fresh clone they had none and fell back
+     to the root's wrong pin (elm-test-rs 1.0.0). Fix at the WORKSPACE layer, not the published
+     packages: `tools/install-toolchains.mjs` (new) runs `elm-tooling install` for the root and
+     every package that ships an `elm-tooling.json`, wired as the root `postinstall`. Idempotent;
+     never hard-fails install. Also corrected the root `elm-tooling.json` elm-test-rs pin 1.0.0 →
+     3.0.0 (no package wanted 1.0.0). Proven: in a clone, elm-cem now resolves elm-test-rs 3.0.0 /
+     elm-format 0.8.8, and all three gates go GREEN (elm-review-cem 280 tests pass). Left root
+     elm-format at 0.8.7 (per-package installs give each package its own correct 0.8.7/0.8.8, so
+     the root value is a fallback only — did NOT relax any format check, per R-022's warning).
+  **SKIP-when-absent-with-reason (heavy/external/generated inputs a bare clone cannot have; each
+  honors `REQUIRE_CLONE_GATES=1` to hard-fail in a CI that provisions them):**
+  2. **`elm-m3e: check`** — its docs sub-checks `check:nav` (check-nav.mjs) and `check:drift`
+     (check-data-drift.mjs) both read the GENERATED, gitignored `docs/data/reference.json`
+     (and `examples.json`, which is documented as NOT cold-reproducible). Guarded to SKIP when
+     absent. A fresh clone has modified no source, so its committed docs artifacts cannot be stale
+     — nothing is lost.
+  3. **`elm-m3e: test`** — `test:browser` needs the built docs site + Playwright browsers
+     (`npx playwright install`, ~300 MB). New `docs/scripts/browser-guard.mjs` wraps `playwright
+     test`, running it when its inputs are present and skipping otherwise. (Authorized as an extra
+     in `tools/copy-fidelity-elm-m3e.sh` with a reason, since it is a monorepo-clone concern the
+     source repo never had — gate re-verified to still bite.)
+  4. **`workspace: check-drift`** — the m3e-okf output descriptor regenerates guidance/OKF outputs
+     that read `packages/m3e-okf/.cache/m3e` (the upstream matraic/m3e@v2.7.3 checkout, gitignored;
+     R-020 item 1). Guarded to SKIP that one descriptor when `.cache/m3e` is absent; the other six
+     drift checks stay hard. Also made `checkBrand()` record a proper SKIP (not a false PASS) when
+     `ab-elm-cem.sh` skips on a missing snapshot.
+  **PROVEN (both directions):**
+  - Bare clone (`git clone` + `pnpm install` + `node tools/gate-all.mjs`) = **21/30 passed, 9
+    skipped, 0 failed, GATE-ALL GREEN** — the 9 skips are the 6 snapshot gates (D-033) + elm-m3e
+    check/test + check-drift, each printing WHY in the SKIPPED ITEMS list.
+  - `REQUIRE_CLONE_GATES=1` flips all four new skips to hard FAIL (check:nav, check:drift,
+    test:browser, check-drift all exit 1) — the CI override bites.
+  - Dev machine (siblings + docs data present): guards pass-through, gate-all unchanged.
+  Files: `tools/install-toolchains.mjs` (new), `package.json` (postinstall), `elm-tooling.json`
+  (root pin), `tools/check-drift.mjs`, `packages/elm-m3e/docs/scripts/{check-nav,check-data-drift}.mjs`,
+  `packages/elm-m3e/docs/scripts/browser-guard.mjs` (new), `packages/elm-m3e/docs/package.json`,
+  `tools/copy-fidelity-elm-m3e.sh`. The two elm-m3e docs scripts are CONTENT edits to the workspace
+  copy (invisible to copy-fidelity, which checks presence); recorded here as a deliberate divergence
+  from the inert source snapshot. Revert any piece with `git revert`. **Move 1 (R-020/R-021) is
+  CLOSED.** Next free IDs: **D-035**, **R-023**.
+
+- **R-023 (Move 1, residual) — a bare clone cannot reach FULL green for the docs/browser/external
+  gates, by design, not by defect.** `examples.json` is documented (in check-data-drift.mjs) as not
+  cold-reproducible (a cold regen degrades Elm surfaces 199→860 null), so `check:nav` cannot be made
+  green in a clone by any bootstrap; Playwright browsers are a deliberate opt-in download; and
+  `.cache/m3e` is an external upstream checkout. These are legitimately SKIP-in-a-clone and RUN on
+  the migration machine / in a provisioned CI (`REQUIRE_CLONE_GATES=1`). No `bootstrap-clone` script
+  was written precisely because it could not honestly deliver full green for the docs gates; the
+  SKIP messages name the real provisioning action instead. If a future CI wants full coverage it
+  provisions the docs pipeline + browsers + `.cache/m3e`, then runs `REQUIRE_CLONE_GATES=1` (and
+  `REQUIRE_SNAPSHOT_GATES=1` for the six snapshot gates).

@@ -56,8 +56,20 @@ const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e"
 
 const results = [];
 function record(name, ok, detail) {
-    results.push({ name, ok, detail: detail || "" });
+    results.push({ name, status: ok ? "pass" : "fail", detail: detail || "" });
     console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? `  — ${detail}` : ""}`);
+}
+// A SKIP is a check whose external input (an upstream checkout absent from a
+// fresh clone) is missing — it must never count as a pass, and under
+// REQUIRE_CLONE_GATES=1 (CI that provisions the inputs) it becomes a hard
+// fail instead. See tools/lib/snapshot-gate.sh for the sibling pattern.
+function recordSkip(name, reason) {
+    if (process.env.REQUIRE_CLONE_GATES === "1") {
+        record(name, false, `${reason} (REQUIRE_CLONE_GATES=1)`);
+        return;
+    }
+    results.push({ name, status: "skip", detail: reason });
+    console.log(`SKIP: ${name} — ${reason}`);
 }
 
 // ── 1. producer sanity: the generator runs and emits schema-valid, non-empty faces ──
@@ -101,6 +113,12 @@ function checkBrand() {
     });
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
+    // ab-elm-cem.sh skips (exit 0 + a SKIP line) when the pristine snapshot is
+    // absent (fresh clone). Record that as a skip, not a pass.
+    if (result.status === 0 && /(^|\n)SKIP[:\s]/.test(result.stdout || "")) {
+        recordSkip(name, "ab-elm-cem snapshot absent (pristine elm-cem checkout) — Face A drift not verifiable in this clone");
+        return;
+    }
     record(name, result.status === 0, result.status === 0 ? "" : `ab-elm-cem.sh exited ${result.status}`);
 }
 
@@ -132,6 +150,18 @@ function checkConsumers() {
 // ── 4. consumers: GENERATED OUTPUT drift (not just the bundle-copy intake) ──
 function checkConsumerOutputs() {
     for (const descriptor of consumerOutputDescriptors(repoRoot)) {
+        // A descriptor that symlinks in an upstream `.cache` checkout cannot be
+        // regenerated in a fresh clone that lacks it (m3e-okf's guidance/OKF
+        // outputs derive from .cache/m3e — the matraic/m3e@v2.7.3 checkout,
+        // gitignored). Skip-with-reason rather than fail; CI provisions it (or
+        // sets REQUIRE_CLONE_GATES=1). See R-020 / R-023.
+        if ((descriptor.symlinks || []).includes(".cache") && !fs.existsSync(path.join(descriptor.pkgDir, ".cache", "m3e"))) {
+            recordSkip(
+                descriptor.label,
+                `${path.relative(repoRoot, path.join(descriptor.pkgDir, ".cache", "m3e"))} absent (upstream matraic/m3e@v2.7.3 checkout) — provision it (git clone --branch v2.7.3 https://github.com/matraic/m3e) or set REQUIRE_CLONE_GATES=1 in CI`,
+            );
+            continue;
+        }
         try {
             const { ok, failures } = checkConsumerOutputDrift(descriptor);
             record(descriptor.label, ok, ok ? "byte-identical to a fresh regeneration" : failures.join(" | "));
@@ -166,15 +196,22 @@ function main() {
     checkConsumerOutputs();
     checkPagesElm();
 
-    const failed = results.filter((r) => !r.ok);
+    const failed = results.filter((r) => r.status === "fail");
+    const skipped = results.filter((r) => r.status === "skip");
+    const passed = results.filter((r) => r.status === "pass");
     console.log(`\n${"═".repeat(72)}\nCHECK-DRIFT SUMMARY\n${"═".repeat(72)}`);
-    for (const r of results) console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.name}${r.detail ? `  ${r.detail}` : ""}`);
-    console.log(`${results.length - failed.length}/${results.length} passed, ${failed.length} failed`);
+    for (const r of results) {
+        const label = r.status === "pass" ? "PASS" : r.status === "skip" ? "SKIP" : "FAIL";
+        console.log(`${label}  ${r.name}${r.detail ? `  ${r.detail}` : ""}`);
+    }
+    console.log(`${passed.length}/${results.length} passed, ${skipped.length} skipped, ${failed.length} failed`);
 
     if (failed.length > 0) {
         console.log("\nCHECK-DRIFT RED");
         process.exit(1);
     }
+    // A bare `SKIP:` line (emitted by recordSkip above) is what tools/gate-all.mjs
+    // detects to badge this whole item SKIP rather than PASS in a fresh clone.
     console.log("\nCHECK-DRIFT GREEN");
 }
 

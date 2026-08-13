@@ -8,7 +8,7 @@
     "gate": "node tools/gate.mjs",
     "gate:all": "node tools/gate-all.mjs",
     "bump": "node tools/bump.mjs",
-    "postinstall": "elm-tooling install"
+    "postinstall": "node tools/install-toolchains.mjs"
   },
   "devDependencies": {
     "elm-tooling": "^1.15.1"
