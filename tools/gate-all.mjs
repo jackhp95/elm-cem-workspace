@@ -253,6 +253,13 @@ function main() {
     ]);
     runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
     runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);
+
+    // Copy fidelity for the migrated elm-m3e: proves no git-tracked source file
+    // went missing and no untracked file got committed. This exists because a
+    // migration can be entirely green while having silently DROPPED a tracked
+    // file — every other check here would still pass. It belongs in the sweep,
+    // not in a human's memory.
+    runItem("workspace: copy-fidelity elm-m3e", "bash", [path.join(repoRoot, "tools", "copy-fidelity-elm-m3e.sh")]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

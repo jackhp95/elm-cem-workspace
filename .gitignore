@@ -12,8 +12,12 @@ elm-stuff/
 # 7747 files of docs/dist/** landing in this tree. This block keeps them out of
 # version control regardless of what the vendored ignore files say.
 #
-# tools/copy-fidelity-elm-m3e.sh is the active check (it fails on these files
-# being PRESENT, not merely tracked); this is the passive one.
+# tools/copy-fidelity-elm-m3e.sh is the active check. It compares git-TRACKED
+# sets, so build output ignored here is correctly invisible to it — having these
+# files on disk after a build is normal and is NOT a fidelity failure. What it
+# catches is a tracked source file that went missing, or an untracked file that
+# got committed. This block is the passive half: it keeps build output out of
+# version control in the first place.
 packages/elm-m3e/dist/
 packages/elm-m3e/dist-packages/
 packages/elm-m3e/docs.json

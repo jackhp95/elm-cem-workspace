@@ -10,7 +10,7 @@ A part is DONE iff it has a `pass` line. A milestone is DONE iff it has an `inte
 
 - [x] **M0** Workspace shell — 0.a skeleton, 0.b Elm-in-JS convention
 - [x] **M1** elm-cem in + facts bundle + coverage audit — 1.a move, 1.b audit, 1.c faces, 1.d one `Cem.Facts`
-- [ ] **M2** elm-m3e onto workspace elm-cem — 2.a
+- [x] **M2** elm-m3e onto workspace elm-cem — 2.a
 - [ ] **M3** Consumers onto the bundle (parallel) — 3.a cem-figma-connect, 3.b m3e-okf, 3.c tailwind
 - [ ] **M4** `bump` orchestrator + drift gate — 4.a, 4.b
 - [ ] **M5** Retire migration dead weight — 5.a
@@ -356,6 +356,14 @@ Structural facts confirmed at bootstrap (bind M1.d):
   `jackhp95/elm-review-cem`. After M1.d it lives in `jackhp95/elm-cem-facts`. Harmless to the build;
   fix in the M6 deep clean.
 
+- **R-010 (M2 critic) — elm-m3e's `check:cem` now carries `--skip-drift`.** Added during M2, it is a
+  genuine narrowing of elm-m3e's own gate, and it is the direct authorized consequence of D-012
+  (elm-m3e's committed output is knowingly stale and must NOT be refreshed in Phase 0, so a
+  regenerate-and-diff drift check inside that package can only ever be red). **M4 must revisit it**:
+  the family drift gate is where staleness legitimately becomes a signal, and M4 should either
+  restore this check under A/B semantics or record why it stays off. Do not let it quietly persist
+  as a permanently disabled gate.
+
 ## Progress
 
 - `M1.a: round 1 (gate red: pnpm --filter elm-cem run check — check:gates demands core.hooksPath set
@@ -458,3 +466,17 @@ Structural facts confirmed at bootstrap (bind M1.d):
   copy-fidelity; BOTH failing checks were manager-authored defects — see D-015 and D-016 — not
   builder error. Substantive repair landed correctly: editor/stub/Cem/Facts.elm restored
   byte-identical, check-single-cem-facts narrowed, .gitignore updated)`
+- `M2.a: pass (10/10 fast-bar checks green, critic VERDICT: PASS — loop fb54fe1a, builder
+  claude/sonnet, critic claude/opus, 1 iteration after the bar was corrected per D-015/D-016)`
+- `M2.a critic evidence: copy fidelity re-derived independently — 6 missing, exactly the 6
+  authorized lockfile/workspace paths, editor stub present and byte-identical; the 383 untracked
+  on-disk files traced to LOCAL builds (different vite hashes + 2026-08-13 mtimes vs source
+  2026-08-08), all gitignored, 0 committed. Narrowed checker proven on all 3 probes: re-vendored
+  copy -> RED with 6 problems incl. 5 per-graph clash reports; second exposer -> RED; editor stub
+  GREEN by REACHABILITY (permitted only when reached solely from application elm.json roots), not
+  by path or name. Both A/B harnesses proven to discriminate with LIVE emitter mutations
+  (Emit.elm:4468 -> RED naming M3e/Kind.elm; split.js:240 -> RED naming the package READMEs);
+  ab-elm-cem 143 files, ab-elm-m3e-split 152 files, both defaulting to the IN-WORKSPACE elm-m3e.
+  Generated output byte-identical to the source checkout across src/ and all three split trees.`
+- `M2: integrated (gate-all 16/16 GREEN after the manager wired tools/copy-fidelity-elm-m3e.sh into
+  the sweep — the critic correctly flagged that M2's central new protection only ran by hand)`
