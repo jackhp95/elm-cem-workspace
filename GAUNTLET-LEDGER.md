@@ -1238,6 +1238,23 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   installs only the root + elm-cem + elm-review-cem (the two that self-install nothing). Re-proven by
   a clean clone of the committed HEAD.
 
+- **V-C7 (Move 2) — the byte measurements are VERIFIED, exact to the byte.** Re-ran the spike's
+  Appendix-A harness (`/tmp/m2/measure.mjs`) on a fresh flat 143-module tree — assemble a
+  self-contained package, vendor IR + facts UNEXPOSED, `elm make --docs docs.json`:
+  - **Full canonical surface (142 exposed) = 1,342,855 B = 174.9% of cap** — EXACT match to D-031a.
+  - Largest modules exact: M3e.Values 94,244 · M3e.Html 50,077 · M3e.Attributes 48,559 ·
+    M3e 38,078 · M3e.Button 19,848 — every one matches D-031a to the byte.
+  - Independent greedy byte-balanced 3-way cut matches D-031a: P1 primitives+Html+Build (10 exposed)
+    = 212,241 B (27.6% cap); P2 componentsA (65) = 545,469 B (71.0%); P3 componentsB+barrel (66) =
+    584,008 B (76.0%). All three under BOTH the 768,000 hard cap and the 700,000 soft gate.
+  - Confirmed the DAG shape: the `M3e` barrel imports all 130 components (→ its package P3 depends
+    on P2), and (V-C8) no component imports another, so any component partition is legal.
+  **So the entire D-031/D-031a/D-031b analysis is independently confirmed.** The one item STILL not
+  done (and part of Move 2 acceptance) is a TRUE standalone per-package compile — P2 resolving P1 as
+  a real registry dependency via ELM_HOME staging, not from a shared source tree. The harness above
+  (like the spike's) still compiles every surface from the full tree with only the exposed set
+  varying. Group membership saved at `/tmp/m2/cut-groups.json`.
+
 - **R-023 (Move 1, residual) — a bare clone cannot reach FULL green for the docs/browser/external
   gates, by design, not by defect.** `examples.json` is documented (in check-data-drift.mjs) as not
   cold-reproducible (a cold regen degrades Elm surfaces 199→860 null), so `check:nav` cannot be made
