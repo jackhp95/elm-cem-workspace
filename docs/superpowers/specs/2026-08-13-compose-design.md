@@ -1,6 +1,10 @@
 # Compose — a portable, type-directed element-tree editor over `Cem.Facts`
 
 > **Status:** Design / spec, awaiting review. Authored 2026-08-13 via superpowers brainstorming.
+> **Amended 2026-08-13** to record decision §8.7 — a slot's content mode is chosen by the user per
+> child, not pre-classified per slot — which resolves what the first draft filed as §14 risk 3 and
+> called "the most important open question in this spec." Sections changed: §1, §2.3, §5.5, §5.8,
+> §6.5, §7.2, §8, §12.4, §13, §14 risk 3, §15. Everything else is unchanged from the first draft.
 > **Scope:** the `elm-cem-compose` headless core package + one consumer route in elm-m3e's docs
 > app, as a POC. The design of the core is settled (see §12 for what was considered and rejected);
 > this spec fleshes it out to the point where it can be implemented without further design work.
@@ -23,7 +27,8 @@ the card shows:
 - **one chip per slot** the component declares — showing how many children it currently holds.
 
 Clicking an attribute chip opens a menu of that attribute's legal values. Clicking a slot chip
-opens a menu of the components that slot legally accepts. Choosing an option applies it
+opens a menu of **everything that slot legally accepts** — plain text, an icon, and each component
+its `kinds` name — and the user picks which of those the new child is. Choosing an option applies it
 immediately, and two adjacent panes update:
 
 1. a **live preview** — the real `m3e-*` (or `<brand>-*`) elements, actually rendered in the DOM;
@@ -128,7 +133,7 @@ shipped, single-component version of this idea. It lives in the `avetta/ui` appl
 | `tagFor` / `toKebabCase` — `"appBar"` → `"m3e-app-bar"` | `Builder.elm:437-454` | Moves to the **consumer**; the prefix and casing rule are library-specific. |
 | Generic render via `Html.node (tagFor fact.component) attrs children` | `renderSelected`, `Builder.elm:676-686` | Becomes the consumer's recursive `renderNode`. Verified to match `M3e.Html`'s own tag literals for all 129 components. |
 | `slotInfos` — union of `requiredSlots`, `multiSlots`, and `slotKinds` keys | `Builder.elm:473-492` | Moves into the **core** verbatim; it is pure `Fact` arithmetic. |
-| `slotContentKind` — text/html/link kinds beat a nested-component kind; `shared:icon` is its own kind | `Builder.elm:505-524` | Moves into the **core** verbatim. |
+| `slotContentKind` — text/html/link kinds beat a nested-component kind; `shared:icon` is its own kind | `Builder.elm:505-524` | **Not ported.** Its winner-takes-all precedence is replaced by non-exclusive `SlotAffordances` (§6.5, decision §8.7). The core still reads the same `kinds` tokens; it just stops discarding all but one. |
 | `nonEnumAttrNames` — `attrRewrites` values, minus enum names, minus unclassifiable names | `Builder.elm:576-587` | Splits: the set arithmetic goes to the core, the `classify` call becomes injected data (§5.3). |
 | `App.Play.Builder.Attrs.classify` — a 1716-line mechanically-derived name→`AttrKind` table | `Builder/Attrs.elm` | Stays in the **consumer**. It names real `M3e.Attributes` functions so a renamed setter is a compile error, which is only possible in a module that can import them. |
 | `codeSnippet` / `attrCodeLine` / `slotCodeLine` | `Builder.elm:770-856` | Becomes the consumer's recursive codegen fold. |
@@ -350,14 +355,13 @@ a two-element non-multi slot. Accessors (§6.6) give the consumer everything its
 
 ### 5.5 `Child` — *a refinement of the approved design*
 
-> **This is the one substantive extension to the approved model, and it needs a decision.** The
-> brainstorming design said `children : Dict String (List Node)`. That cannot represent a text or
-> icon slot, and text slots are not an edge case — `slotContentKind` (`Builder.elm:505-524`)
-> returns `TextSlot` for *any* slot whose `kinds` are empty, or contain `"html"`, `"shared:text"`,
-> or `"shared:link"`, and empty `kinds` means "unconstrained," which is the common case. A
-> `List Node`-only model would leave most slots in most components unfillable, and the tool would
-> be unusable for exactly the components a newcomer reaches for first (`button`'s label,
-> `list-item`'s headline).
+> **This is the one substantive extension to the approved model.** The brainstorming design said
+> `children : Dict String (List Node)`. That cannot represent a text or icon slot, and text slots
+> are not an edge case: most slots in the library name `"shared:text"` (or `"html"`, or
+> `"shared:link"`) among their `kinds`, and an empty `kinds` — documented in `Cem.Facts` as
+> "unconstrained" — is text-fillable too. A `List Node`-only model would leave most slots in most
+> components unfillable, and the tool would be unusable for exactly the components a newcomer
+> reaches for first (`button`'s label, `list-item`'s headline).
 
 ```elm
 type Child
@@ -366,10 +370,18 @@ type Child
     | ChildIcon String
 ```
 
-The three variants are a one-to-one image of `Builder.elm`'s `SlotContentKind`
-(`TextSlot | IconSlot | NestedSlot String`), so no new concept is introduced — the prototype
-already distinguishes exactly these three, it just has nowhere to *store* the first two because it
-has no tree.
+**This variant type is where a slot's content mode is decided, and the decision is made at *choice*
+time, not ahead of it.** A slot is no longer pre-classified into one permitted mode: it advertises
+every mode its `kinds` allow (§6.5), the user picks one from the slot's menu, and the picked option
+determines which `Child` variant is constructed. `AddTextChild` builds a `ChildText`,
+`AddIconChild` a `ChildIcon`, `AddChild` a `ChildNode` — and for most slots more than one of those
+three messages is legal, which is the whole point of decision §8.7. The same slot on the same
+component can therefore hold a text child in one tree and a nested component in another.
+
+The three variants happen to be a one-to-one image of `Builder.elm`'s `SlotContentKind`
+(`TextSlot | IconSlot | NestedSlot String`), so no new *concept* is introduced — but the prototype
+used that type to pick one mode per slot and forbid the other two, whereas here it is a tagged union
+of what a child actually *is*. That is the difference between a constraint and a representation.
 
 `ChildIcon` holds a Material Symbols glyph name (`Builder.elm` defaults it to `"star"`,
 `Builder.elm:719`). The core treats it as an opaque `String`; it does not know what an icon is.
@@ -459,8 +471,13 @@ type Msg
 | `RemoveChild` | parent path, slot, index | Drop that child and its whole subtree. |
 
 `AddChild` with a component name absent from `Model.facts` is a **no-op** rather than an error, for
-the same reason `slotMenuOptions` omits such names (§6.4) — the two must agree, or the menu could
+the same reason `slotMenuOptions` omits such names (§6.5) — the two must agree, or the menu could
 offer an option that does nothing.
+
+The three `Add*Child` messages are siblings, not alternatives selected by the slot: which of them
+the consumer may send for a given slot is answered by that slot's `SlotAffordances` (§6.5), and for
+most slots more than one is permitted. `AddTextChild` / `AddIconChild` on a slot whose affordances
+do not allow text / icons is a **no-op**, on the same agree-with-the-menu principle.
 
 `SetAttr` deliberately does not validate that the value's variant matches the attribute's kind.
 Doing so would require returning a `Result` and would only catch a consumer bug that the consumer's
@@ -596,16 +613,17 @@ it is boolean-shaped and what it currently is.
 ### 6.5 Slot chips and menus
 
 ```elm
-type SlotContentKind
-    = TextContent
-    | IconContent
-    | ComponentContent
+type alias SlotAffordances =
+    { text : Bool
+    , icon : Bool
+    , components : List String
+    }
 
 
 type alias SlotChipInfo =
     { name : String
     , required : Bool
-    , content : SlotContentKind
+    , affordances : SlotAffordances
     , filled : Int
     , max : Maybe Int
     }
@@ -621,40 +639,68 @@ One entry per slot the `Fact` declares. The slot set is
 required slots first (in `requiredSlots` order), then the rest alphabetically.
 
 - `required` — `List.member name fact.requiredSlots`.
-- `content` — the port of `slotContentKind` (`Builder.elm:505-524`), preserving its precedence
-  exactly: empty `kinds`, or `kinds` containing `"html"`, `"shared:text"`, or `"shared:link"`, give
-  `TextContent`; otherwise `"shared:icon"` gives `IconContent`; otherwise `ComponentContent`. The
-  comment in the original explains the ordering — a text box is a simpler control than recursing
-  into another component — and it is preserved here for behavioural continuity, not because it is
-  the only defensible rule. See §14, risk 3.
+- `affordances` — **every content mode the slot's `kinds` permit, not the highest-precedence one.**
+  This replaces `Builder.elm`'s `slotContentKind` (`Builder.elm:505-524`) rather than porting it;
+  see decision §8.7. Derived from the slot's `kinds` in `fact.slotKinds`:
+  - `text` — `True` when `kinds` is empty (`Cem.Facts` documents empty as *unconstrained*), or when
+    `kinds` contains any of `"html"`, `"shared:text"`, `"shared:link"`, `"shared:flow"`,
+    `"shared:phrasing"`. The last two are HTML content categories that the inherited rule did not
+    name at all and let fall through to its component branch, which was a latent bug; they are
+    text-shaped and are classified as such here.
+  - `icon` — `True` when `kinds` contains `"shared:icon"`.
+  - `components` — every `kinds` entry that is a bare component noun (no `":"`), **filtered to names
+    present in `Model.facts`**, deduplicated, in `kinds` order. Measured against the real bundle:
+    every noun resolves, so the filter never fires today (§14, risk 2).
+
+  The three are independent. A slot may have all of them (`button.unnamed`: text, icon, and 15
+  components), exactly one (`list.unnamed`: 5 components, no text), or — for a slot whose `kinds`
+  resolve to nothing offerable — none, in which case its chip is inert and the consumer should
+  render it disabled.
 - `filled` — current child count.
 - `max` — `Nothing` for a slot in `fact.multiSlots`; `Just 1` otherwise. This is the machine-
   readable form of the replace-not-append invariant, so the consumer can label the chip
   ("2", "1 / 1") without re-deriving it.
 
+**Unconstrained still does not mean "offer every component."** An empty `kinds` yields
+`{ text = True, icon = False, components = [] }`: a 130-item menu is not an affordance, and the
+facts give no basis for ranking such a list. This is the one place the old rule's outcome is
+retained, now as a deliberate narrow choice rather than a side effect of precedence.
+
 ```elm
-slotMenuOptions : Path -> String -> Model -> List String
+type SlotOption
+    = OptionText
+    | OptionIcon
+    | OptionComponent String
+
+
+slotMenuOptions : Path -> String -> Model -> List SlotOption
 ```
 
-The component names offered by a slot's add-child menu. Derived from that slot's `kinds` in
-`fact.slotKinds`, **filtered to names present in `Model.facts`**.
+**The full menu for a slot: every valid way to fill it, in one list.** This is the query the chip's
+popup is drawn from, and it is the API-level expression of decision §8.7 — it enumerates, where the
+previous design collapsed.
 
-Returns `[]` for a `TextContent` or `IconContent` slot — those slots are filled with
-`AddTextChild` / `AddIconChild`, and the consumer knows which to use from `SlotChipInfo.content`,
-so no separate query is needed.
+Derived directly from that slot's `SlotAffordances`, in a fixed order so the menu does not
+reshuffle between renders:
 
-For a `ComponentContent` slot whose `kinds` name a component the facts do not contain, that name is
-**silently omitted**. This was an explicit decision in the brainstorming conversation, taken over
-surfacing a visible "facts data problem" banner, in order to keep the POC's error-handling surface
-small. It matches the existing posture at `Builder.elm:703-708`, where `renderDefaultInstance`'s
-`Dict.get nestedComponent factByName` returning `Nothing` yields `[]`. The consequence is that a
-malformed or partial facts bundle degrades to a shorter menu with no diagnostic. §14, risk 2
-records the cost.
+1. `OptionText`, if `affordances.text`;
+2. `OptionIcon`, if `affordances.icon`;
+3. one `OptionComponent name` per entry of `affordances.components`, in that field's order.
 
-An unconstrained slot (empty `kinds`) is `TextContent` by the precedence rule above, so
-"unconstrained" never means "offer every component." That is defensible — a 130-item menu is not an
-affordance — but it does mean a slot that genuinely accepts any component is only fillable with
-text. §14, risk 3.
+Text and icon lead because they are the cheap, terminal choices; the component list is the branch
+into recursion. Returns `[]` — an inert chip — only when the slot affords nothing at all.
+
+Each option maps to exactly one message: `OptionText` → `AddTextChild`, `OptionIcon` →
+`AddIconChild`, `OptionComponent n` → `AddChild … n`. The consumer needs no other query to build the
+popup, and **no option in this list is ever a no-op**, which is the invariant §15 tests for.
+
+For a slot whose `kinds` name a component the facts do not contain, that name is **silently
+omitted** from `affordances.components` and so from the menu. This was an explicit decision in the
+brainstorming conversation, taken over surfacing a visible "facts data problem" banner, in order to
+keep the POC's error-handling surface small. It matches the existing posture at
+`Builder.elm:703-708`, where `renderDefaultInstance`'s `Dict.get nestedComponent factByName`
+returning `Nothing` yields `[]`. The consequence is that a malformed or partial facts bundle
+degrades to a shorter menu with no diagnostic. §14, risk 2 records the cost.
 
 ### 6.6 Accessors for the consumer's folds
 
@@ -754,25 +800,33 @@ first `listItem` has a text headline.
    its `multiSlots` is `[]`, and its `slotKinds` names five slots. Required first, then
    alphabetical:
 
-   | chip | `required` | `kinds` (abridged) | `content` | `max` |
+   | chip | `required` | `kinds` (abridged) | `affordances` | `max` |
    |---|---|---|---|---|
-   | `unnamed` | ✅ | 15 component nouns + `shared:icon` + `shared:text` | `TextContent` | `Just 1` |
-   | `icon` | — | `loadingIndicator`, `shared:icon` | `IconContent` | `Just 1` |
-   | `selected` | — | `heading`, `shared:icon`, `shared:text` | `TextContent` | `Just 1` |
-   | `selected-icon` | — | `shared:icon` | `IconContent` | `Just 1` |
-   | `trailing-icon` | — | `shared:icon` | `IconContent` | `Just 1` |
+   | `unnamed` | ✅ | 15 component nouns + `shared:icon` + `shared:text` | text ✅, icon ✅, 15 components | `Just 1` |
+   | `icon` | — | `loadingIndicator`, `shared:icon` | text —, icon ✅, `[ "loadingIndicator" ]` | `Just 1` |
+   | `selected` | — | `heading`, `shared:icon`, `shared:text` | text ✅, icon ✅, `[ "heading" ]` | `Just 1` |
+   | `selected-icon` | — | `shared:icon` | text —, icon ✅, `[]` | `Just 1` |
+   | `trailing-icon` | — | `shared:icon` | text —, icon ✅, `[]` | `Just 1` |
 
-   `unnamed` resolves to `TextContent` despite listing 15 nested components, because `shared:text`
-   wins under the inherited precedence rule. That is `Builder.elm`'s behaviour reproduced exactly,
-   and it is also the sharpest illustration of §14's risk 3 — see there.
+   `unnamed` now offers all 17 of its options rather than collapsing to a text box. Under the
+   precedence rule superseded by §8.7 — stated at §14, risk 3 — `shared:text` would have won and all
+   15 nested components would have been unreachable. This is the sharpest single illustration of why
+   that rule was replaced.
 
-2. User clicks the `icon` chip. Because `content = IconContent`, the consumer does not open a
-   component menu at all — it fires `AddIconChild [] "icon"` directly and renders an inline text
-   field for the glyph name.
+2. User clicks the `icon` chip. `slotMenuOptions [] "icon" model` returns
+   `[ OptionIcon, OptionComponent "loadingIndicator" ]` — a two-item menu, where the old design
+   would have silently committed the slot to an icon and hidden the loading indicator. The user
+   picks the icon. Consumer fires `AddIconChild [] "icon"` and renders an inline text field for the
+   glyph name.
 
 ```elm
 children = Dict.fromList [ ( "icon", [ ChildIcon "star" ] ) ]
 ```
+
+   Note the `selected-icon` and `trailing-icon` chips, whose only affordance is `OptionIcon`. A
+   one-item menu is a pointless click, so the consumer is free to fire `AddIconChild` directly when
+   `slotMenuOptions` returns a single option. That is a consumer-side shortcut over a uniform core
+   answer, not a special case in the core.
 
 3. User types `favorite`. Consumer fires `SetChildContent [] "icon" 0 "favorite"` →
    `ChildIcon "favorite"`. Preview: `<m3e-icon slot="icon">favorite</m3e-icon>`.
@@ -780,17 +834,18 @@ children = Dict.fromList [ ( "icon", [ ChildIcon "star" ] ) ]
 4. Now the recursive case. Re-init the root as `"list"`. The real `list` fact
    (`Facts.elm:811-821`) has `multiSlots = [ "unnamed" ]` and
    `slotKinds = [ ( "unnamed", [ "divider", "expandableListItem", "listAction", "listItem",
-   "listOption" ] ) ]` — five component nouns and **no** `shared:*` kind, so the precedence rule
-   yields `ComponentContent`. `slotChips [] model` gives
-   `{ name = "unnamed", required = False, content = ComponentContent, filled = 0, max = Nothing }`.
-   This is the case Compose exists for, and it is worth noting it is *not* the common case (§14,
-   risk 3).
+   "listOption" ] ) ]` — five component nouns and **no** `shared:*` kind, so its affordances are
+   `{ text = False, icon = False, components = [ … 5 … ] }`. `slotChips [] model` gives
+   `{ name = "unnamed", required = False, affordances = that, filled = 0, max = Nothing }`. This is
+   a pure-nesting slot: unlike `button.unnamed` it offers no text at all, so the menu is
+   components-only.
 
 5. User clicks it. Consumer fires `OpenMenu [] (SlotMenu "unnamed")`.
 
 6. Consumer re-renders, calls `slotMenuOptions [] "unnamed" model` →
-   `[ "divider", "expandableListItem", "listAction", "listItem", "listOption" ]`. All five exist in
-   `facts`, so none is dropped. Draws a five-item menu.
+   `[ OptionComponent "divider", OptionComponent "expandableListItem", OptionComponent "listAction",
+   OptionComponent "listItem", OptionComponent "listOption" ]`. All five exist in `facts`, so none
+   is dropped. No `OptionText`, because `list.unnamed` does not accept text. Draws a five-item menu.
 
 7. User picks `listItem`. Consumer fires `AddChild [] "unnamed" "listItem"`.
 
@@ -815,10 +870,30 @@ Node { component = "list"
    longer path.
 
 10. `slotChips` on the `listItem` reads its real fact (`Facts.elm:841-851`): slots `unnamed`,
-    `leading`, `overline`, `supporting-text`, `trailing`, none required, none multi. Every one of
-    them lists `shared:text` among its `kinds`, so all five are `TextContent` with `max = Just 1`.
-    User clicks `unnamed`; consumer fires `AddTextChild [ IntoSlot "unnamed" 0 ] "unnamed"`, then
-    `SetChildContent [ IntoSlot "unnamed" 0 ] "unnamed" 0 "Inbox"`.
+    `leading`, `overline`, `supporting-text`, `trailing`, none required, none multi, all
+    `max = Just 1`. Every one lists `shared:text`, so every one affords text — but every one also
+    names at least one component noun, and under the superseded rule that made all five text-only:
+
+    | chip | affordances |
+    |---|---|
+    | `unnamed` | text ✅, icon —, `[ "heading" ]` |
+    | `leading` | text ✅, icon ✅, `[ "avatar", "heading" ]` |
+    | `overline` | text ✅, icon —, `[ "heading" ]` |
+    | `supporting-text` | text ✅, icon —, `[ "heading" ]` |
+    | `trailing` | text ✅, icon ✅, `[ "avatar", "checkbox", "heading", "radio", "switch" ] ` |
+
+    `listItem.trailing` is the case §14's risk 3 named as the indictment of the old rule — *"a user
+    cannot put a checkbox in a list item's trailing slot, one of the most ordinary things in the
+    entire library."* It now offers `[ OptionText, OptionIcon, OptionComponent "avatar",
+    OptionComponent "checkbox", OptionComponent "heading", OptionComponent "radio",
+    OptionComponent "switch" ]`, and the checkbox is one click away.
+
+    Here the user wants the plain headline. Clicking `unnamed` opens a two-option menu
+    (`OptionText`, `OptionComponent "heading"`); the user picks text. Consumer fires
+    `AddTextChild [ IntoSlot "unnamed" 0 ] "unnamed"`, then
+    `SetChildContent [ IntoSlot "unnamed" 0 ] "unnamed" 0 "Inbox"`. **The extra click is the whole
+    cost of this decision** — where the old design went straight to a text field, the user now
+    confirms that text is what they meant. That is the tradeoff §8.7 accepts.
 
 11. Final tree, and the three folds over it:
 
@@ -885,11 +960,33 @@ Recorded as settled from the brainstorming conversation, with rationale. Not ope
    for auto-fill, which is why dropping auto-fill removes the need for the guard rather than
    trading one problem for another.
 
-4. **Unknown component names in `slotKinds` are silently omitted** from menu options (§6.4).
+4. **Unknown component names in `slotKinds` are silently omitted** from menu options (§6.5).
 
 5. **The core owns `openMenu`** despite rendering nothing (§4).
 
 6. **One target facet for codegen**, chosen by the consumer (non-goal 8).
+
+7. **A slot's content mode is chosen by the user, per child, not pre-classified per slot.**
+   *Decided by the human after this spec's first draft, resolving what §14 recorded as risk 3 and
+   as "the most important open question in this spec."* `Builder.elm`'s winner-takes-all
+   `slotContentKind` is **not ported**. In its place, `SlotChipInfo` carries `SlotAffordances`
+   (`{ text, icon, components }`) and `slotMenuOptions` returns `List SlotOption` enumerating every
+   legal way to fill the slot (§6.5). The user picks text, an icon, or a specific nested component
+   from that one menu, and the pick determines the `Child` variant (§5.5).
+
+   The decision in the human's words: *"You can pick text, valid named slots, or the unnamed default
+   slot elements. Then that submenu will only show the valid options for that slot."*
+
+   Rationale, measured against the real 130-component bundle rather than argued: of the 185 declared
+   slots, 108 name at least one real component — and the old rule made **76 of those 108 silently
+   text-only**, leaving just 32 reachable. It held the
+   library to **29 of 130 components with any reachable nesting**. Enumerating instead of collapsing
+   takes that to **66 of 130** — every component that names a component anywhere in its `kinds` — and
+   lengthens the longest simple nesting chain from 3 to 5. §14, risk 3 carries the full table.
+
+   The cost is one extra click on slots that afford more than one mode, and a slightly larger menu.
+   Both were judged clearly worth it: the feature exists to make nesting discoverable, and a rule
+   that hides nesting on 76 slots defeats it.
 
 ---
 
@@ -1293,8 +1390,8 @@ setter dispatch. Out of scope here. §14, risk 1.
 ### 12.4 Reusing `Builder.elm` in place — rejected
 
 `Builder.elm` lives in `avetta/ui`, a private application repo, and imports `M3e` throughout. It
-cannot be depended on. Compose extracts the *ideas* (and, for `slotInfos` and `slotContentKind`, the
-literal logic) rather than the module.
+cannot be depended on. Compose extracts the *ideas* (and, for `slotInfos`, the literal logic) rather
+than the module. `slotContentKind` is the one piece deliberately *not* carried across — see §8.7.
 
 ---
 
@@ -1322,6 +1419,12 @@ fakeFacts =
         |> withSlotKinds [ ( "lead", [ "shared:icon" ] ) ]
     , blank "single"
         |> withSlotKinds [ ( "only", [ "widget" ] ) ]               -- not multi → max = Just 1
+    , blank "mixed"                                                 -- the §8.7 case
+        |> withSlotKinds
+            [ ( "any", [ "shared:text", "shared:icon", "widget", "ghost" ] )
+            , ( "flowy", [ "shared:flow", "widget" ] )              -- flow is text, not a component
+            , ( "unconstrained", [] )                               -- text only, never all-components
+            ]
     ]
 ```
 
@@ -1351,12 +1454,32 @@ Cases the suite must cover:
 - `isSet` is `False` before any `SetAttr` and `True` after — the specific divergence from
   `Builder.elm`'s always-emit-first-token behaviour, so it deserves a named test.
 - `ClearAttr` returns `isSet` to `False`.
-- `slotChips` computes `content` per the precedence rule: empty `kinds` → `TextContent`; `"html"`
-  present alongside a component name → `TextContent`; `"shared:icon"` → `IconContent`; a bare
-  component name → `ComponentContent`.
 - `slotChips` reports `max = Nothing` for multi, `Just 1` otherwise.
-- `slotMenuOptions` omits `"ghost"` (absent from facts) and returns `[]` for a text slot.
+
+**Slot affordances and menus** — the §8.7 decision; the behaviour most likely to be silently
+regressed back to a precedence rule
+- `mixed.any` yields `{ text = True, icon = True, components = [ "widget" ] }` — text and a
+  component noun **coexist**. This is the named regression test for §8.7: an implementation that
+  ported `slotContentKind` would report text-only here and this test is what catches it.
+- `mixed.flowy` yields `text = True` (from `"shared:flow"`) *and* `components = [ "widget" ]` — the
+  content-category tokens the old rule mishandled.
+- `mixed.unconstrained` (empty `kinds`) yields `{ text = True, icon = False, components = [] }` —
+  unconstrained never means "offer every component."
+- `labelled.headline` (`[ "shared:text" ]`) yields text only; `iconic.lead` (`[ "shared:icon" ]`)
+  icon only; `container.unnamed` components only. The three single-affordance shapes still work.
+- `slotMenuOptions` on `mixed.any` returns exactly
+  `[ OptionText, OptionIcon, OptionComponent "widget" ]` — order fixed, and `"ghost"` omitted
+  because it is absent from facts.
+- `slotMenuOptions` order is stable across repeated calls and independent of `kinds` order for the
+  text/icon entries.
+- **Every option `slotMenuOptions` returns produces a model change when its message is applied.**
+  Property-shaped: for each fixture component and slot, map each option to its message, apply, and
+  assert the tree changed. This is the mechanical form of §15's "no menu ever offers an option that
+  produces no effect."
 - `AddChild` with an unknown component name is a no-op — must agree with the menu omission.
+- `AddTextChild` on a components-only slot (`container.unnamed`) is a no-op; `AddIconChild` on
+  `labelled.headline` is a no-op. The converse of the line above: what the menu does *not* offer,
+  the core does *not* do.
 
 **Menu lifecycle**
 - `OpenMenu` sets `openMenu`; `CloseMenu` clears it.
@@ -1386,7 +1509,7 @@ so it disappears (§12.3). **Open: should the POC ship the derivation script as 
 exist, which argues consumer-side — but then every consumer writes it again. Leaning consumer-side
 for the POC and revisiting.
 
-**Risk 2 — silent omission hides real facts bugs.** §6.4's silent drop means a `slotKinds` entry
+**Risk 2 — silent omission hides real facts bugs.** §6.5's silent drop means a `slotKinds` entry
 naming a component that does not exist produces a quietly shorter menu. This is a deliberate,
 recorded decision, and it matches `Builder.elm`'s existing posture, but note that D-031 is actively
 changing the generated tree and a regenerated facts module with a renamed component would manifest
@@ -1394,63 +1517,58 @@ as *menus quietly losing options* rather than as an error. Cheap mitigation if i
 `Cem.Compose.unknownSlotKinds : Model -> List ( String, String, String )` diagnostic query that the
 consumer can render behind a debug flag. Not in the POC.
 
-**Risk 3 — the inherited `slotContentKind` precedence suppresses most nesting, and this is the
-biggest threat to the POC's value. Measured, not speculated.**
+**Risk 3 — RESOLVED. The inherited `slotContentKind` precedence suppressed most nesting; it has been
+replaced by non-exclusive `SlotAffordances`. See decision §8.7 and API §6.5.** The measurements
+below are retained because they are the evidence for that decision and the baseline the POC's demo
+targets are drawn from.
 
-The rule (`Builder.elm:505-524`) says: if `kinds` is empty, or contains `"html"`, `"shared:text"`,
-or `"shared:link"`, the slot is `TextContent` — *even when it also names nested components*. Against
-the real facts that is not a corner case:
+The superseded rule (`Builder.elm:505-524`) said: if `kinds` is empty, or contains `"html"`,
+`"shared:text"`, or `"shared:link"`, the slot is text-only — *even when it also names nested
+components*. Against the real facts that was not a corner case:
 
 - **`button.unnamed`** lists 15 component nouns (`menuTrigger`, `dialogTrigger`, `heading`,
-  `stepperNext`, …) alongside `shared:text`. Result: `TextContent`. **All 15 are unreachable.**
+  `stepperNext`, …) alongside `shared:text`. Old result: text-only, **all 15 unreachable**. New
+  result: text, icon, and all 15 offered.
 - **`listItem.trailing`** lists `avatar`, `checkbox`, `radio`, `switch`, `heading` alongside
-  `shared:text`. Result: `TextContent`. A user cannot put a checkbox in a list item's trailing slot
-  — one of the most ordinary things in the entire library.
-- **`list.unnamed`** lists five component nouns and no `shared:*`. Result: `ComponentContent`. This
-  works, and it is the case Trace B uses.
+  `shared:text`. Old result: text-only — a user could not put a checkbox in a list item's trailing
+  slot, one of the most ordinary things in the entire library. New result: seven options including
+  the checkbox (Trace B, step 10).
+- **`list.unnamed`** lists five component nouns and no `shared:*`. Nesting under both rules; it is
+  unaffected, and it is the case Trace B step 4 uses.
 
-So the components that nest are container-shaped ones; the leaf-adjacent slots that *also* accept
-components mostly collapse to text. A recursive editor that cannot put a checkbox in a list item is
-a much weaker demo than the concept promises.
-
-**Measured across all 130 components** (script: classify every slot by the rule above, build the
+**Measured across all 130 components** (script: classify every slot under each rule, build the
 component→component edge set, find the longest simple path):
 
-| Metric | Value |
-|---|---|
-| Components with ≥1 `ComponentContent` slot | **29 of 130** |
-| Longest component-nesting chain | **3** |
-| Example maximal chains | `menu > menuItemGroup > menuItem`, `autocomplete > optgroup > option`, `chipSet > inputChip > avatar` |
-| Self-recursive components | `navMenuItem` accepts `navMenuItem` → **unbounded depth reachable** |
+| Metric | Old rule | Decision §8.7 |
+|---|---|---|
+| Declared slots (union of `requiredSlots`, `multiSlots`, `slotKinds` keys) | 185 | 185 |
+| Slots naming ≥1 resolvable component noun | 108 | 108 |
+| …of those, **reachable** in the UI | 32 | **108** |
+| …of those, **silently hidden** | **76** | **0** |
+| Components with ≥1 nestable slot | **29 of 130** | **66 of 130** |
+| Longest simple component-nesting chain | **3** | **5** |
+| A maximal chain | `autocomplete > optgroup > option` | `appBar > searchBar > iconButton > bottomSheetAction > heading` |
+| Self-recursive components → unbounded depth | `navMenuItem` | `heading`, `navMenuItem`, `treeItem` |
 
-Two things follow. First, the POC's "three levels" bar (§15) **is achievable today** — but only
-along one of a handful of chains, so the demo must be built around a known-good one rather than
-whatever component the user clicks first. Second, 101 of 130 components offer no component nesting
-at all under this rule, which is the quantified version of the concern above.
+The old rule's numbers reproduce exactly, which is how the measurement script was validated. Note
+that the old nesting set is a strict subset of the new one — **the decision takes nothing away**; it
+only stops discarding.
 
-This is `Builder.elm`'s behaviour reproduced faithfully, and it was *correct there*: that tool
-offered no recursion at all, so collapsing to a text box lost nothing. For Compose the tradeoff
-inverts. Two further wrinkles found in the real data: `kinds` also contains `"shared:flow"` and
-`"shared:phrasing"` tokens that the inherited rule does not name at all (they fall through to the
-component branch), and an empty `kinds` — documented in `Cem.Facts` as "unconstrained" — is
-classified `TextContent`, so a slot that accepts *anything* accepts only text.
+Why it is 66 and not 130: the remaining 64 components name no component noun in any slot's `kinds`
+at all. They are genuine leaves (`icon`, `divider`, `badge`, …), and no rule change makes them nest.
+**66 of 130 is therefore the ceiling the facts allow, and the decision reaches it.** Anyone
+expecting "nearly all 130" should read this row rather than assume.
 
-**Open, and the most important open question in this spec: should `SlotContentKind` become
-non-exclusive?** The natural shape is a slot offering *both* — a text field *and* a component menu
-— rather than the current winner-takes-all classification:
+Two data wrinkles the old rule mishandled, both fixed by §6.5's derivation: `kinds` also contains
+`"shared:flow"` and `"shared:phrasing"` tokens that the inherited rule did not name at all, so they
+fell through to its *component* branch — these are HTML content categories and are now classified as
+text; and an empty `kinds`, documented in `Cem.Facts` as "unconstrained," is still text-only, now as
+the deliberate narrow choice recorded in §6.5 rather than as a side effect of precedence.
 
-```elm
-type alias SlotAffordances =
-    { text : Bool, icon : Bool, components : List String }
-```
-
-This is a small core change (`SlotChipInfo.content` becomes `SlotChipInfo.affordances`) and a
-moderate consumer change (a slot menu that mixes "type text" with a component list). It is
-**deliberately not folded into this spec**, because the approved design named `slotContentKind` as
-a straight port and changing it is a design decision the human should make explicitly. Recommend
-deciding it before Phase A, since it changes a core type. If the answer is "keep the port," the POC
-should demo with container components (`list`, `card`, `chipSet`) where nesting actually works, and
-this risk becomes the first follow-up.
+**Residual risk, small.** Enumerating costs one extra click on any slot affording more than one
+mode, and `button.unnamed`'s menu is 17 items. If a 17-item menu proves unwieldy, the fix is
+consumer-side grouping (text/icon in one section, components in another) and needs no core change —
+`SlotOption` is already partitioned by constructor. Accepted for the POC.
 
 **Risk 4 — the elm-m3e package boundary is being re-decided in two places at once.** §11 and §11.1.
 D-031 may rename the consumer's imports (`M3e.Component.Card` → `M3e.Card`); separately,
@@ -1493,9 +1611,12 @@ Phase A is independently valuable: a tested, published headless package with no 
 real artifact, and it is the part that carries the portability claim. Do not start Phase B until
 Phase A is green.
 
-**One decision should be made before Phase A starts**, because it changes a core type: §14 risk 3's
-question about whether `SlotContentKind` stays a winner-takes-all classification or becomes a set of
-non-exclusive affordances. Everything else in this spec can proceed on the answers already given.
+**The one decision that had to be made before Phase A has been made.** §14 risk 3's question —
+whether a slot's content mode stays a winner-takes-all classification or becomes a set of
+non-exclusive affordances — is resolved in favour of affordances (§8.7), and §5.5, §6.5, §7.2 and
+§13 are written against that answer. Nothing in this spec is now blocked on a design decision;
+Phase B remains blocked only on the §11.1 *boundary* question, which is a packaging matter, not a
+Compose one.
 
 ### Phase A — the core
 
@@ -1517,13 +1638,19 @@ contains no `elm/html`, no `jackhp95/elm-m3e`, and no path outside the registry-
 **Phase B is done when all of the following are demonstrable in a browser:**
 
 - Starting from an empty root, a user can build a tree **at least three levels deep** using only
-  chips and menus — the specific thing `Builder.elm` cannot do. Use a chain measured to exist:
-  **`menu > menuItemGroup > menuItem`** is the recommended demo. `autocomplete > optgroup > option`
-  and `chipSet > inputChip > avatar` also work. Do not pick a component at random — §14's risk 3
-  measures that only 29 of 130 components have any component-accepting slot at all.
-- **Unbounded depth is demonstrated, not just claimed:** `navMenuItem` accepts `navMenuItem`, so
-  nesting `navMenu > navMenuItem > navMenuItem > navMenuItem > …` to arbitrary depth must work with
-  no cap, no guard, and no degradation. This is the acceptance test for decision §8.3.
+  chips and menus — the specific thing `Builder.elm` cannot do. Under §8.7 this is no longer a
+  narrow path: 66 of 130 components have a nestable slot and the longest simple chain is 5, so most
+  reasonable starting points work. `menu > menuItemGroup > menuItem` remains a good scripted demo.
+- **The §8.7 decision is visible in the browser, not just in the tests.** Two concrete checks, both
+  impossible under the superseded rule:
+  - `listItem`'s `trailing` slot chip opens a menu offering text, an icon, **and** `checkbox`, and
+    picking `checkbox` puts a real `m3e-checkbox` in the rendered list item.
+  - `button`'s default slot chip offers text alongside its 15 component nouns, and the user can
+    choose either.
+- **Unbounded depth is demonstrated, not just claimed:** `navMenuItem` accepts `navMenuItem` (as do
+  `heading` and `treeItem` under §8.7), so nesting `navMenu > navMenuItem > navMenuItem > … ` to
+  arbitrary depth must work with no cap, no guard, and no degradation. This is the acceptance test
+  for decision §8.3.
 - Every attribute chip that appears corresponds to a real setter, and setting it changes the live
   element's rendered appearance.
 - The live preview and the snippet **agree** — pasting the snippet into a scratch module compiles
