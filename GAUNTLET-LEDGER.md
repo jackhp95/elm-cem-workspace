@@ -1074,3 +1074,23 @@ Manager: Opus (Gauntlet Loop on Paseo), taking over at `9900b33` with Phase 0 co
   against `../src`, so the stale tree is load-bearing today. Move 2 therefore includes migrating
   those 66 files, and the acid tests encode API shape so some of that is real work rather than a
   rename. **No test may be deleted to achieve it** — repoint, per the standing constraint.
+
+- **D-031d (Move 2) — the 66-file migration is 93% mechanical; I overstated its cost in D-031c.**
+  Counted the actual import forms across the workspace, excluding the generated trees:
+  | Import form | Count | Under the canonical shape |
+  |---|---:|---|
+  | `import M3e.Component.<X>` | **131** | pure rename -> `import M3e.<X>` |
+  | `import M3e.Build` (barrel) | 7 | **survives unchanged** — no edit needed |
+  | `import M3e.Build.<X>` | **9** | **no direct successor** — real API work |
+  The only genuine work is those 9 imports, concentrated in **seven** files:
+  `tests/spike/bad/WrongKindBuilderIntoIconSlot.elm`, `tests/spike/app/ApiConsolidation.elm`,
+  `tests/acid/app/Good.elm`, `packages/elm-review-cem/tests/src/PreferBarrelTest.elm`, and three
+  docs samples (`CheatSheet/ShapesCode.elm`, `Strictness/ShapesCode.elm`,
+  `TheLayers/DescentCode.elm`). `M3e.Build` and `M3e.Build.Internal` both exist in the canonical
+  tree; only the per-component `M3e.Build.<X>` modules are gone, their builder API having moved
+  into the single `M3e.<X>` module per component.
+  So "migrate 66 files" is really "sed 131 imports, then hand-port 7 files whose subject IS the
+  builder API." Correcting my own overstatement rather than letting it stand — it was the basis on
+  which I called this bigger than the brief scoped, and on the measured numbers that claim is much
+  weaker. (`M3e.Internally.Fine` in `NoInternalImportOutsideAllowedTest.elm` is an elm-review
+  fixture module name, not a real import — excluded from all counts.)
