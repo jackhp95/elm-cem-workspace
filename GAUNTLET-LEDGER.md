@@ -1453,3 +1453,25 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   So the re-integration is effectively re-running Phase-0 M1/M2 with ALL the family's latest mains,
   and may cascade further (elm-review-cem, elm-cem-facts). Scope materially larger than framed.
   Next free IDs: **D-042**, **R-025**.
+
+- **D-042 (Move 2 exec — family-wide reconciliation, most gates green).** Per human ("regenerate it;
+  the workspace is where these packages evolve together; nothing is published, no versioning"),
+  advanced the whole family and regenerated downstream outputs:
+  - **IR** advanced to main `843562f` (adds `HtmlIr.Element.testId`/`when`/`attrIf`; its Elm version
+    stays 1.0.0 so no constraint issue) — fixes `elm-cem test:gates`.
+  - **elm-typed-html** REGENERATED to concern-sep with the new elm-cem (`check:drift` green); it
+    regrouped per-element modules into `TypedHtml.Component.<Category>`.
+  - **elm-m3e** re-vendored `docs/vendor/elm-foundation` (new IR + concern-sep TypedHtml) →
+    `check:vendor` green; `copy-fidelity` now excludes `docs/vendor` (generated copy, verified by
+    check:vendor) as well as `docs/dist`.
+  - **check-drift** green (9/9): bundle byte-identical across all 3 consumers; fixed the Pages.elm
+    sub-check to pass when `docs/.elm-pages/` is gitignored on current main (R-008 obsolete).
+  Gate-all climbed 21 → 25 → (pending). Remaining tail, both docs/test-pipeline (NOT core):
+  1. `elm-m3e: check` → `check:review` flags `docs/app/Api.elm` "unused" — it's an elm-pages
+     framework module used via generated `.elm-pages/` wiring that is not built yet (same
+     docs-pipeline-not-built class as check:nav). Needs a docs build, or a review ignore.
+  2. `elm-typed-html: check` → the `verify/src/Good.elm` fixture imports the old flat per-element
+     modules; needs migrating to the regrouped `TypedHtml.Component.*` API.
+  Committed incrementally (IR advance, elm-typed-html regen, vendor refresh, copy-fidelity/check-drift
+  fixes). The 5-way elm-m3e repackage (split Build/*, rename core→html + review-facts→facts) is still
+  ahead. Next free IDs: **D-043**, **R-025**.
