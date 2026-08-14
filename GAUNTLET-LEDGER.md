@@ -1666,3 +1666,15 @@ M3E limits (`m3e-tree` can't host the editor; chips can't host menus) are docume
 realizable way the human chose (D-048). All green on branch `compose-poc`; not pushed/merged. Next free IDs:
 **D-049**, **R-023**.
 
+- **D-049 (further human UI feedback → part F3, task #19).** (1) Prefers **nested outlined cards** over F2's plain
+  divs — reverts F1; acceptable since outlined cards don't stack elevation (the audit concern was elevated cards;
+  already voiced, human decided). (2) Count badges **trailing** — realized as `M3e.badge [for=host, position=after]`
+  (button `trailing-icon` slot admits only `shared:icon`, not badge, so trailing is via badge `position=after`,
+  not a slot). (3) Tag name = **text-variant button** opening the change-component menu (drop the separate
+  edit-icon button); and **`m3e-icon` was built wrong** — must use `TA.name "edit"` attribute, NOT text content
+  `[M3e.text "edit"]` (app precedent: `M3e.icon [ TA.name "search" ] []`). Same bug in the remove button
+  (Compose.elm:600) AND the live-preview `Render.elm:60` (`Html.node "m3e-icon" .. [Html.text glyph]` → needs a
+  `name` attribute, else preview icons don't render) AND Codegen's icon emission — fix all. (4) Buttons
+  **`variant=elevated` when unselected, `filled` when selected/filled>0**. Touches Compose.elm + Render.elm (+
+  Codegen.elm for the icon snippet). Next free IDs: **D-050**, **R-023**.
+
