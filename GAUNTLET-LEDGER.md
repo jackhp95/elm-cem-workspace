@@ -1546,3 +1546,36 @@ Also flag: D-037 (compile gate), D-042 (attr count 166 vs spec's 182 — genuine
 D-039/D-040/D-041/D-043/D-044 (docs-app gate mechanics). The 4 red `gate:all` items are pre-existing Move-1
 migration debt, out of this effort's scope. Next free IDs: **D-046**, **R-023**.
 
+---
+
+# COMPOSE UX INCREMENT — branch `compose-poc` (post-POC, human-requested)
+
+Human (2026-08-14) asked to make the editor support the DOM modifications a user expects — add child (exists),
+remove node (exists), **edit the tag** (NEW), and move the slot/attr count numbers onto **m3e-badge** — then run
+an **m3e-okf** (correct-Material-usage) audit. Run as another gauntlet loop (human's choice). Parts: C1 (core),
+D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic claude/claude-opus-4-8).
+
+- **D-046 (edit-tag feature — human-approved scope step BEYOND the POC spec §5.7).** The spec froze a node's
+  component at creation ("cannot be replaced"). Human approved adding in-place component-change with **type-directed
+  choices** and **keep-valid-content** pruning. This EXTENDS the published `elm-cem-compose` core API (new `Msg`
+  variant + query) — a deliberate, recorded deviation from Phase A's "done" surface; bump the package minor
+  version. **Core semantics (C1 reference bar):**
+  - `componentOptions : Path -> Model -> List String` — the components this node may become, EXCLUDING its current
+    component. Root (`[]`): all `Dict.keys facts`, sorted. Nested: the PARENT slot's afforded components (via the
+    parent fact's `affordancesFor … .components` for the slot named in the last `PathStep`) — already
+    facts-present/deduped. Unresolvable path → `[]`. (Type-directed: a nested node can only become something its
+    parent slot legally accepts; the tree stays valid.)
+  - `SetComponent Path String` — if the target ∉ `componentOptions path model` → no-op + close menu (menu/update
+    agreement, as A4). Else, at `path`: set component := target, then PRUNE to keep only valid content:
+    (a) attrs → keep exactly the attrs the target offers (same set `attrChips` would produce for the target:
+    name ∈ target.enums OR (name ∈ target.attrRewrites-values AND ∈ model.attrKinds)); drop the rest.
+    (b) children → for each slot with children: keep the slot iff target declares it (target `slotNames`); within
+    a kept slot keep each child iff the target's slot still affords its kind (ChildText→text, ChildIcon→icon,
+    ChildNode→componentOf ∈ that slot's afforded components); then enforce the target's cap (if the slot ∉
+    target.multiSlots, keep only the first survivor). Clear `openMenu`.
+  - Node stays opaque; `update : Msg -> Model -> Model` (no Cmd). New tests: componentOptions (root/nested/
+    unresolvable), SetComponent no-op-when-unoffered, component swap, attr pruning (kept vs dropped), child
+    pruning (slot-not-declared dropped, kind-not-afforded dropped, survivor kept), non-multi cap after swap,
+    openMenu cleared, and the property "every componentOptions entry changes the model when SetComponent applied."
+  Next free IDs: **D-047**, **R-023**.
+
