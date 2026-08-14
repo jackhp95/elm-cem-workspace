@@ -206,7 +206,7 @@ viewNode path node model =
             , attrGroup path model
             , slotGroup path model
             , freeTextMenuFor path model
-            , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
+            , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
                 (childCards path node model)
             ]
         ]
@@ -243,7 +243,7 @@ change-component button).
 tagHeading : Cem.Compose.Node -> Element (M3e.Component.Heading.Is s) admittedBy Cem.Compose.Msg
 tagHeading node =
     M3e.heading
-        [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small ]
+        [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ]
         [ M3e.text (Cem.Compose.componentOf node) ]
 
 
@@ -337,8 +337,8 @@ attrGroup path model =
 
         chips ->
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
-                (groupLabel "Attributes"
-                    :: TypedHtml.div [ TA.class "flex flex-wrap gap-2" ] (List.map (attrButtonElement path) chips)
+                (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
+                    (groupLabel "Attributes" :: List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
@@ -356,8 +356,8 @@ slotGroup path model =
 
         chips ->
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
-                (groupLabel "Slots"
-                    :: TypedHtml.div [ TA.class "flex flex-wrap gap-2" ] (List.map (slotButtonElement path model) chips)
+                (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
+                    (groupLabel "Slots" :: List.map (slotButtonElement path model) chips)
                     :: slotMenusFor path model chips
                 )
 
@@ -371,10 +371,10 @@ groupLabel label =
 `Cem.Compose.componentOptions` is type-directed — a nested node only offers what
 its parent slot accepts, and the current component is already excluded — so an
 empty list means there is nothing valid to change to and no control renders.
-Kept as an `M3e.button` (icon-only) because `M3e.button` is the only host
-verified to scope a `menuTrigger`'s click to itself; the always-present `menu`
-is its sibling. The root's option list is every known component, so that menu is
-height-capped and scrolls rather than overflowing the page.
+An `M3e.iconButton` hosting the `menuTrigger` (its `Content` admits
+`menuTrigger`; the always-present `menu` is its sibling, addressed by id). The
+root's option list is every known component, so that menu is height-capped and
+scrolls rather than overflowing the page.
 -}
 editControl : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 editControl path model =
@@ -384,10 +384,8 @@ editControl path model =
 
         _ ->
             TypedHtml.div [ TA.class "inline-flex" ]
-                [ M3e.button
-                    [ M3e.Attributes.variant Value.text
-                    , Aria.label "Change component"
-                    ]
+                [ M3e.iconButton
+                    [ Aria.label "Change component" ]
                     [ M3e.menuTrigger [ M3e.Attributes.for (componentMenuId path) ]
                         [ M3e.icon [ TA.name "edit" ] [] ]
                     ]
