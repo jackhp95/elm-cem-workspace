@@ -1599,3 +1599,27 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
   6/6, verified real assertions + no weakening + badge/menu API + integrity 2 files + copy-fidelity GREEN → PASS.
   **Editor now supports add-child + remove-node + edit-tag (type-directed) with count badges. E1 = m3e-okf audit.**
 
+- **E1: m3e-okf Material-correctness audit — DONE (findings reported to human; fixes are a separate decision).**
+  OKF checkout `/Users/jhp/code/jackhp95/m3e-okf` verified current (state:current, HEAD 8275e26). Audited the
+  Compose route's M3E usage against the OKF knowledge bundle (applying-material-design skill). **4 findings, ranked
+  + cited; all recommended alternatives confirmed to exist in M3e (inputChip/assistChip/tree/treeItem):**
+  1. **HIGH — recursive editor uses NESTED `M3e.card`; the intent-correct container is `M3e.tree`/`treeItem`.**
+     Card = single-subject surface; nesting elevated cards → ambiguous containment/elevation. The thing being
+     edited IS a hierarchical node tree, and M3E ships Tree ("hierarchical list whose nodes expand/collapse").
+     Real redesign.
+  2. **MEDIUM — `filterChip` is the wrong chip type.** Filter chips = narrow a result set; `selected` = filter
+     active. Compose uses filterChip + `selected=isSet` for attribute editors and for "+add" slot actions
+     (neither is filtering), and MIXES attribute chips + add-action chips in one chip-set (OKF explicitly: "don't
+     mix chip types with conflicting behaviors"; "don't use chips as a substitute for buttons"). Fix: set-attr →
+     `inputChip` (an editable token); "+add" → `assistChip`/button; split the sets.
+  3. **LOW-MED — `attrValueBadge` puts an attribute's VALUE string in `M3e.badge`.** Badge = count/status marker,
+     not a value label. Slot COUNT badges are a defensible count use (and honor the human's "numbers→badge" ask);
+     the attr-value-in-badge overreaches — show a set value via the chip's own label/supporting text.
+  4. **LOW — emphasis density** (stacked elevated cards + chips + badges + buttons in a dense tool → "too many
+     emphasis levels"); largely resolved if #1 (tree) is adopted.
+  **Already correct (noted):** menus use the `menuTrigger[for=id]` + sibling `menu[id]` self-positioning pattern
+  (avoids the "wrapping self-positioning components" anti-pattern); icon-only controls have accessible names
+  (`Aria.label`); remove action separately reachable/named. **No code changed by the audit itself** — awaiting
+  the human's pick of which findings to fix (each fixable as a further gauntlet part). Next free IDs: **D-047**,
+  **R-023**.
+
