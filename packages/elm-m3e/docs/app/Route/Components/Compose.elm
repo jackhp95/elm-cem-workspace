@@ -11,8 +11,9 @@ the app-shell boundary — where the phantom `M3e` rows get erased once via
 `M3e.Unsafe.fromHtml`, because which component is on screen is only known at
 runtime.
 
-The recursive editor (`viewNode`) renders one card per node, each with its
-attribute and slot chips and, when open, that node's menu.
+The recursive editor (`viewNode`) renders one plain outlined container per
+node, each with its attribute and slot buttons (in two separated groups) and,
+when open, that node's menu.
 
 -}
 
@@ -27,7 +28,6 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Badge
-import M3e.Component.Card
 import M3e.Component.IconButton
 import M3e.Component.Menu
 import M3e.Component.MenuItem
@@ -135,32 +135,67 @@ screen compose =
 -- EDITOR --------------------------------------------------------------------
 
 
-{-| One `M3e.card` per `Cem.Compose.Node`: a header naming the component (with
-the edit-tag control alongside it), its attribute and slot chips, that node's
-menu (if open), and a recursive card per child node.
+{-| One plain outlined container per `Cem.Compose.Node` — not an `M3e.card`
+(a card asserts a specific Material surface role this editor doesn't need;
+a bordered box is honest about being a dev tool, not a piece of content). A
+header naming the component (with the edit-tag control alongside it), its
+attribute and slot buttons in two separated groups (mixing "set an attribute"
+and "add a child" controls in one row reads as one affordance when they are
+two), that node's menu (if open), and a recursive container per child node.
 -}
-viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (M3e.Component.Card.Is s) admittedBy Cem.Compose.Msg
+viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 viewNode path node model =
-    M3e.card
-        [ M3e.Attributes.variant Value.outlined ]
-        [ M3e.Component.Card.header
-            (TypedHtml.div [ TA.class "flex items-center gap-2" ]
-                [ Doc.sectionLabel (Cem.Compose.componentOf node)
-                , editTagControl path model
-                ]
-            )
-        , M3e.Component.Card.content
-            (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                [ TypedHtml.div [ TA.class "flex flex-wrap gap-2" ]
-                    (List.map (attrChipView path model) (Cem.Compose.attrChips path model)
-                        ++ List.map (slotChipView path model) (Cem.Compose.slotChips path model)
-                    )
-                , freeTextMenuFor path model
-                , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
-                    (childCards path node model)
-                ]
-            )
+    TypedHtml.div
+        [ TA.class "rounded-md-corner-medium border border-outline-variant p-4 flex flex-col gap-3" ]
+        [ TypedHtml.div [ TA.class "flex items-center gap-2" ]
+            [ Doc.sectionLabel (Cem.Compose.componentOf node)
+            , editTagControl path model
+            ]
+        , attrGroup path model
+        , slotGroup path model
+        , freeTextMenuFor path model
+        , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
+            (childCards path node model)
         ]
+
+
+{-| The Attributes group — every attribute button, under its own label,
+never sharing a row with the Slots group below.
+-}
+attrGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+attrGroup path model =
+    case Cem.Compose.attrChips path model of
+        [] ->
+            TypedHtml.div [] []
+
+        chips ->
+            TypedHtml.div [ TA.class "flex flex-col gap-1" ]
+                [ groupLabel "Attributes"
+                , TypedHtml.div [ TA.class "flex flex-wrap gap-2" ]
+                    (List.map (attrButtonView path model) chips)
+                ]
+
+
+{-| The Slots (add-child) group — every slot button, under its own label,
+never sharing a row with the Attributes group above.
+-}
+slotGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+slotGroup path model =
+    case Cem.Compose.slotChips path model of
+        [] ->
+            TypedHtml.div [] []
+
+        chips ->
+            TypedHtml.div [ TA.class "flex flex-col gap-1" ]
+                [ groupLabel "Slots"
+                , TypedHtml.div [ TA.class "flex flex-wrap gap-2" ]
+                    (List.map (slotButtonView path model) chips)
+                ]
+
+
+groupLabel : String -> Element (TypedHtml.Grouping.PIs s) admittedBy msg
+groupLabel label =
+    TypedHtml.p [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ] [ TypedHtml.text label ]
 
 
 {-| The edit-tag affordance: change this node's component in place.
@@ -168,8 +203,8 @@ viewNode path node model =
 offers what its parent slot accepts, and the current component is already
 excluded — so an empty list means there is genuinely nothing valid to change
 to, and no control is rendered at all. Same `button` + `menuTrigger` +
-always-present `menu` shape as the slot/attr chips (`M3e.filterChip` still
-cannot host a trigger). The root's option list is every known component, so
+always-present `menu` shape as the slot/attr buttons (`M3e.filterChip` cannot
+host a trigger at all). The root's option list is every known component, so
 its menu is height-capped and scrolls rather than overflowing the page.
 -}
 editTagControl : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
@@ -213,41 +248,37 @@ componentMenuId path =
     "compose-component-menu-" ++ pathId path
 
 
-{-| `m3e-chip-set`'s `Content` admits only bare `chip`/`filterChip` elements,
-not a `menuTrigger`-wrapped one, so chips that open a real menu (every slot
-chip, and enum/bool attr chips) are laid out in a plain flex-wrap `div`
-instead — `menuTrigger` needs to wrap (or be wrapped by) its trigger, which a
-closed-content chip set does not admit.
-
+{-| Every attribute control is an extra-small `M3e.button`, never a chip
+(chips read as filter/selection state, not as "open this to set a value").
 A discrete-choice attribute (`EnumChip`/`BoolAttr`) is wrapped in
 `M3e.menuTrigger`, referencing an always-present, id-addressed `M3e.menu` by
 `for` — the widget owns showing/hiding its own popover; `Cem.Compose.openMenu`
 is not what drives visibility here, only which attribute a click targets.
 A free-text attribute (`String`/`Float`/`Int`) keeps the plain
-`OpenMenu`-driven chip, whose inline text field is Elm-rendered content in
+`OpenMenu`-driven button, whose inline text field is Elm-rendered content in
 normal flow (`freeTextMenuFor`), not a popover — so it needs no menu-trigger
 pairing at all.
-
 -}
-attrChipView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-attrChipView path model info =
+attrButtonView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+attrButtonView path model info =
     case info.kind of
         Cem.Compose.EnumChip _ ->
-            discreteAttrChip path model info
+            discreteAttrButton path model info
 
         Cem.Compose.PlainChip Cem.Compose.BoolAttr ->
-            discreteAttrChip path model info
+            discreteAttrButton path model info
 
         Cem.Compose.PlainChip _ ->
             TypedHtml.div [ TA.class "inline-flex" ]
-                (M3e.filterChip
-                    [ M3e.Attributes.id (attrChipHostId path info.name)
+                [ M3e.button
+                    [ M3e.Attributes.id (attrButtonHostId path info.name)
+                    , M3e.Attributes.size Value.extraSmall
                     , M3e.Attributes.selected info.isSet
+                    , M3e.Attributes.toggle True
                     , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
                     ]
-                    [ M3e.text info.name ]
-                    :: attrValueBadge path info
-                )
+                    [ M3e.text (attrButtonLabel info) ]
+                ]
 
 
 {-| `M3e.filterChip` cannot host `menuTrigger` at all (its `Content` admits
@@ -255,26 +286,25 @@ only `heading`/`sharedText`), and `M3e.button` is the ONLY host verified to
 scope a trigger's click to itself — nesting `menuTrigger` inside a
 `filterChip` sibling of other triggers was tried and found to open every
 sibling's menu at once (the trigger's click-detection walks up past a
-`filterChip` host to a shared ancestor). So the discrete-choice control is a
-toggle `button`, not a `filterChip`; `menu` itself is a SIBLING of the
+`filterChip` host to a shared ancestor). `menu` itself is a SIBLING of the
 button, not nested inside it (`Button.Content` admits `menuTrigger`, not
 `menu`) — exactly the shape in `M3eMenuTriggerElement`'s own doc example.
 -}
-discreteAttrChip : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-discreteAttrChip path model info =
+discreteAttrButton : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+discreteAttrButton path model info =
     TypedHtml.div [ TA.class "inline-flex" ]
-        (M3e.button
-            [ M3e.Attributes.id (attrChipHostId path info.name)
+        [ M3e.button
+            [ M3e.Attributes.id (attrButtonHostId path info.name)
+            , M3e.Attributes.size Value.extraSmall
             , M3e.Attributes.selected info.isSet
             , M3e.Attributes.toggle True
             , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
             ]
             [ M3e.menuTrigger [ M3e.Attributes.for (attrMenuId path info.name) ]
-                [ M3e.text info.name ]
+                [ M3e.text (attrButtonLabel info) ]
             ]
-            :: attrValueBadge path info
-            ++ [ discreteAttrMenu path model info ]
-        )
+        , discreteAttrMenu path model info
+        ]
 
 
 {-| The always-present menu a discrete attr chip's `menuTrigger` points at by
@@ -325,24 +355,24 @@ pathId path =
            )
 
 
-attrChipHostId : Cem.Compose.Path -> String -> String
-attrChipHostId path name =
-    "compose-attr-chip-" ++ pathId path ++ "-" ++ name
+attrButtonHostId : Cem.Compose.Path -> String -> String
+attrButtonHostId path name =
+    "compose-attr-button-" ++ pathId path ++ "-" ++ name
 
 
-{-| The "set" indicator: a badge carrying the current value, present only
-when the attribute is actually set (`isSet`) — an unset attribute gets no
-badge at all, since there is nothing to show. The chip's own label is just
-the attribute name; this is what used to be crammed into "name: value" text.
+{-| The attribute name, plus its current value when set (e.g. `"variant:
+filled"`) — no separate badge; the value belongs in the label of the one
+control that sets it, not floating decoration on the side (spec: badges are
+for counts, not values).
 -}
-attrValueBadge : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> List (Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg)
-attrValueBadge path info =
+attrButtonLabel : Cem.Compose.AttrChipInfo -> String
+attrButtonLabel info =
     case attrValueText info of
-        Just text ->
-            [ M3e.badge [ M3e.Attributes.for (attrChipHostId path info.name) ] [ M3e.text text ] ]
+        Just value ->
+            info.name ++ ": " ++ value
 
         Nothing ->
-            []
+            info.name
 
 
 attrValueText : Cem.Compose.AttrChipInfo -> Maybe String
@@ -373,23 +403,23 @@ attrValueText info =
 {-| Just the slot name, prefixed to read as the "add here" affordance it is —
 the `filled`/`max` count moved to a badge (`slotCountBadge`).
 -}
-slotChipLabel : Cem.Compose.SlotChipInfo -> String
-slotChipLabel info =
+slotButtonLabel : Cem.Compose.SlotChipInfo -> String
+slotButtonLabel info =
     "+ " ++ info.name
 
 
-slotChipHostId : Cem.Compose.Path -> String -> String
-slotChipHostId path slotName =
-    "compose-slot-chip-" ++ pathId path ++ "-" ++ slotName
+slotButtonHostId : Cem.Compose.Path -> String -> String
+slotButtonHostId path slotName =
+    "compose-slot-button-" ++ pathId path ++ "-" ++ slotName
 
 
 {-| `filled`/`max`: the plain count when the slot is multi (`max = Nothing`),
-`"filled/max"` otherwise — the machine-readable form moved out of the chip's
-own label and onto a badge attached to it by id.
+`"filled/max"` otherwise — a badge attached to the button by id. Counts are
+what badges are for; the add affordance itself lives in the button's label.
 -}
 slotCountBadge : Cem.Compose.Path -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
 slotCountBadge path info =
-    M3e.badge [ M3e.Attributes.for (slotChipHostId path info.name) ]
+    M3e.badge [ M3e.Attributes.for (slotButtonHostId path info.name) ]
         [ M3e.text (slotCountText info) ]
 
 
@@ -403,37 +433,40 @@ slotCountText info =
             String.fromInt info.filled ++ "/" ++ String.fromInt max
 
 
-{-| When a slot affords exactly one option, the chip fires that message
+{-| When a slot affords exactly one option, the button fires that message
 directly instead of opening a one-item menu — a consumer convenience, not a
 core rule (spec §7.2 step 2). Otherwise it's wrapped in `menuTrigger`,
 pointing at an always-present menu with one item per `SlotOption` — this must
 not collapse to one representative choice (spec §8.7): a slot that affords
-text, an icon, AND components offers all of them at once.
+text, an icon, AND components offers all of them at once. Every case is an
+extra-small `M3e.button`, never a chip.
 -}
-slotChipView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-slotChipView path model info =
+slotButtonView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+slotButtonView path model info =
     case Cem.Compose.slotMenuOptions path info.name model of
         [ only ] ->
             TypedHtml.div [ TA.class "inline-flex" ]
-                [ M3e.filterChip
-                    [ M3e.Attributes.id (slotChipHostId path info.name)
+                [ M3e.button
+                    [ M3e.Attributes.id (slotButtonHostId path info.name)
+                    , M3e.Attributes.size Value.extraSmall
                     , M3e.Attributes.selected (info.filled > 0)
                     , M3e.Events.onClick (msgForOption path info.name only)
                     ]
-                    [ M3e.text (slotChipLabel info) ]
+                    [ M3e.text (slotButtonLabel info) ]
                 , slotCountBadge path info
                 ]
 
         _ ->
             TypedHtml.div [ TA.class "inline-flex" ]
                 [ M3e.button
-                    [ M3e.Attributes.id (slotChipHostId path info.name)
+                    [ M3e.Attributes.id (slotButtonHostId path info.name)
+                    , M3e.Attributes.size Value.extraSmall
                     , M3e.Attributes.selected (info.filled > 0)
                     , M3e.Attributes.toggle True
                     , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name))
                     ]
                     [ M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
-                        [ M3e.text (slotChipLabel info) ]
+                        [ M3e.text (slotButtonLabel info) ]
                     ]
                 , slotCountBadge path info
                 , slotMenuElement path model info.name
