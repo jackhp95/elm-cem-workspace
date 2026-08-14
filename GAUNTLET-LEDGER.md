@@ -1514,3 +1514,35 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   scratch-compile, verified codeFor structure + integrity 3 files + copy-fidelity GREEN → PASS. **All three folds
   done; only B14 (browser sign-off) remains.**
 
+- **B14: pass — PHASE B GREEN — EFFORT COMPLETE** (Playwright 4/4; gate:all no-new-failures; critic+sign-off
+  clean; builder claude/sonnet). Commit `f17a3ba` (5 files). Created `tests-browser/compose.spec.ts` (4 tests) +
+  AUTHORIZED_EXTRA. **The browser layer earned its keep: it caught TWO real runtime defects invisible to every
+  compile/type/review gate**, both fixed in-commit: (1) `m3e-menu` needs an `m3e-menu-trigger` — B12's chips
+  never opened a menu; reworked slot/discrete-attr chips as `m3e-button` toggles + sibling `m3e-menu` by id/for
+  (§8.7 non-collapse preserved — verified); (2) the B9 generator's `setterFor` was built only from the non-enum
+  subset, so `codeLineFor` silently dropped ENUM attributes from the snippet (a spec-§15 preview/snippet
+  DISAGREEMENT); fixed in `gen-compose-attrs.mjs`, `Attrs.elm` regenerated deterministically (diff=0,
+  check:compose-attrs OK). Fresh Opus critic+integrator INDEPENDENTLY: ran Playwright → 4/4 PASS; confirmed the
+  §8.7 test genuinely asserts `toHaveText(["Text","Icon","avatar","checkbox","heading","radio","switch"])` then
+  renders a real `m3e-checkbox`; the attr test asserts BOTH live element AND snippet; non-collapse preserved;
+  enum fix + determinism; check:review green (one fromHtml entry, no new suppressions); integrity 5 files →
+  **B14 PASS, PHASE B GREEN**. Final `node tools/gate-all.mjs` (manager, independent): **22/32 passed, 6 skipped,
+  4 failed** — `elm-cem-compose: check`+`test` PASS; the 4 failures (`elm-cem: test`, `elm-m3e: check`,
+  `elm-review-cem: test`, `workspace: check-drift`) are all a strict subset of the 6-item pre-existing baseline
+  (D-036; elm-m3e:test + elm-review-cem:check improved to PASS) — NO new/Compose-attributable failure.
+
+## EFFORT COMPLETE — summary for the human
+
+**All 14 tasks green and committed on branch `compose-poc`** (worktree `/Users/jhp/.paseo/worktrees/358ycm5n/
+compose-poc`). Phase A (A1–A7): the headless `jackhp95/elm-cem-compose` package — tested (62 elm-test cases),
+registry-faithful (exactly elm/core + list-extra + elm-cem-facts, no elm/html), `grep -ri m3e src` empty; the
+portability claim holds by dependency shape. Phase B (B8–B14): the `/components/compose` route in elm-m3e's docs
+app — three folds (editor/preview/codegen) + generated adapter, live and demonstrated in a real browser (§8.7
+`listItem.trailing` offers checkbox; 3-level nesting; attr→live+snippet agreement; drawer link). NOT pushed, NOT
+merged — that is the human's call. **13 autonomous decisions recorded (D-034…D-046 range used through D-045);
+the one to review first is D-045** (the plan's file layout put helper modules under `app/Route/`, which elm-pages
+mis-routes; relocated to `app/Compose/` — a deviation from the plan's explicit paths, mechanical + reversible).
+Also flag: D-037 (compile gate), D-042 (attr count 166 vs spec's 182 — genuine input drift, reconciled),
+D-039/D-040/D-041/D-043/D-044 (docs-app gate mechanics). The 4 red `gate:all` items are pre-existing Move-1
+migration debt, out of this effort's scope. Next free IDs: **D-046**, **R-023**.
+
