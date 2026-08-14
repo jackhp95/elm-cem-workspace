@@ -31,6 +31,7 @@ import M3e.Component.Badge
 import M3e.Component.Button
 import M3e.Component.Card
 import M3e.Component.FormField
+import M3e.Component.Heading
 import M3e.Component.IconButton
 import M3e.Component.Menu
 import M3e.Component.MenuItem
@@ -120,7 +121,38 @@ starterEdits =
 
 update : App Data ActionData RouteParams -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
 update _ _ (ComposeMsg composeMsg) model =
-    ( { model | compose = Cem.Compose.update composeMsg model.compose }, Effect.none )
+    ( { model | compose = applyCompose composeMsg model.compose }, Effect.none )
+
+
+{-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety: a freshly added
+text child is seeded with placeholder copy ("lorem ipsum") instead of an empty
+string, so the preview shows something the moment it is added. The core stays
+content-agnostic (it adds an empty `ChildText`); the placeholder is a demo
+choice that belongs here, in the consumer. The guard only rewrites the child if
+it is in fact the just-added empty text node, so it never clobbers real content.
+-}
+applyCompose : Cem.Compose.Msg -> Cem.Compose.Model -> Cem.Compose.Model
+applyCompose composeMsg compose =
+    let
+        updated : Cem.Compose.Model
+        updated =
+            Cem.Compose.update composeMsg compose
+    in
+    case composeMsg of
+        Cem.Compose.AddTextChild path slotName ->
+            let
+                newIndex : Int
+                newIndex =
+                    slotChildCount path slotName updated - 1
+            in
+            if childAt path slotName newIndex updated == Just (Cem.Compose.ChildText "") then
+                Cem.Compose.update (Cem.Compose.SetChildContent path slotName newIndex "lorem ipsum") updated
+
+            else
+                updated
+
+        _ ->
+            updated
 
 
 subscriptions : RouteParams -> UrlPath -> Shared.Model -> Model -> Sub Msg
@@ -169,35 +201,50 @@ viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element 
 viewNode path node model =
     M3e.card
         [ M3e.Attributes.variant Value.outlined ]
-        [ TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+        [ TypedHtml.div [ TA.class "flex flex-col gap-3 p-3" ]
             [ headerRow path node model
             , attrGroup path model
             , slotGroup path model
             , freeTextMenuFor path model
+            , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
+                (childCards path node model)
             ]
-        , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
-            (childCards path node model)
         ]
 
 
-{-| The header of a node's card: leading up/down reorder controls, the tag-name
-change-component button (which is itself the edit-tag affordance), and a
-trailing delete — all derived from the node's own path, whose last `PathStep`
-is its slot position among its siblings. The root node (empty path) has no
-siblings and cannot be removed, so it shows only the name control.
+{-| The header of a node's card: the tag name as an `M3e.heading`, then — at the
+trailing end — the edit-tag icon button, the up/down reorder row, and delete.
+The reorder + delete controls derive the node's sibling position from the last
+`PathStep` of its own path; the root (empty path) has no siblings, so it shows
+only its tag and edit control.
 -}
 headerRow : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 headerRow path node model =
     case nodePosition path of
         Nothing ->
-            nameControl path node model
+            TypedHtml.div [ TA.class "flex items-center gap-2" ]
+                [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
+                , editControl path model
+                ]
 
         Just ( parentPath, slotName, index ) ->
             TypedHtml.div [ TA.class "flex items-center gap-2" ]
-                [ reorderControls parentPath slotName index model
-                , TypedHtml.div [ TA.class "flex-1" ] [ nameControl path node model ]
+                [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
+                , editControl path model
+                , reorderControls parentPath slotName index model
                 , removeButton (Cem.Compose.RemoveChild parentPath slotName index)
                 ]
+
+
+{-| The node's tag name as a small title `M3e.heading` — a plain label now that
+editing lives in its own `editControl` icon button (the tag used to double as the
+change-component button).
+-}
+tagHeading : Cem.Compose.Node -> Element (M3e.Component.Heading.Is s) admittedBy Cem.Compose.Msg
+tagHeading node =
+    M3e.heading
+        [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small ]
+        [ M3e.text (Cem.Compose.componentOf node) ]
 
 
 {-| A node's position among its siblings, read off the last step of its own
@@ -231,7 +278,7 @@ reorderControls parentPath slotName index model =
         TypedHtml.div [] []
 
     else
-        TypedHtml.div [ TA.class "flex flex-col" ]
+        TypedHtml.div [ TA.class "flex flex-row" ]
             [ reorderButton "Move up" "arrow_upward" (index <= 0) (Cem.Compose.MoveChild parentPath slotName index (index - 1))
             , reorderButton "Move down" "arrow_downward" (index >= count - 1) (Cem.Compose.MoveChild parentPath slotName index (index + 1))
             ]
@@ -251,12 +298,26 @@ reorderButton label glyph isDisabled msg =
 -}
 slotChildCount : Cem.Compose.Path -> String -> Cem.Compose.Model -> Int
 slotChildCount parentPath slotName model =
+    slotChildrenAt parentPath slotName model
+        |> List.length
+
+
+{-| The child at `index` of `slotName` under the node at `parentPath`, if any.
+-}
+childAt : Cem.Compose.Path -> String -> Int -> Cem.Compose.Model -> Maybe Cem.Compose.Child
+childAt parentPath slotName index model =
+    slotChildrenAt parentPath slotName model
+        |> List.drop index
+        |> List.head
+
+
+slotChildrenAt : Cem.Compose.Path -> String -> Cem.Compose.Model -> List Cem.Compose.Child
+slotChildrenAt parentPath slotName model =
     Cem.Compose.nodeAt parentPath model
         |> Maybe.map Cem.Compose.slotsOf
         |> Maybe.withDefault []
         |> List.filter (\( name, _ ) -> name == slotName)
         |> List.concatMap Tuple.second
-        |> List.length
 
 
 {-| The Attributes group — every attribute button, under its own label,
@@ -306,29 +367,29 @@ groupLabel label =
     TypedHtml.p [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ] [ TypedHtml.text label ]
 
 
-{-| The component name doubles as the edit-tag control: a text-variant button
-whose own label IS the current component name, opening the change-component
-menu. `Cem.Compose.componentOptions` is already type-directed — a nested node
-only offers what its parent slot accepts, and the current component is
-already excluded — so an empty list means there is genuinely nothing valid to
-change to, and the name renders as plain text instead. Same `button` +
-`menuTrigger` + always-present `menu` shape as the slot/attr buttons
-(`M3e.filterChip` cannot host a trigger at all). The root's option list is
-every known component, so its menu is height-capped and scrolls rather than
-overflowing the page.
+{-| The edit-tag control: an icon button that opens the change-component menu.
+`Cem.Compose.componentOptions` is type-directed — a nested node only offers what
+its parent slot accepts, and the current component is already excluded — so an
+empty list means there is nothing valid to change to and no control renders.
+Kept as an `M3e.button` (icon-only) because `M3e.button` is the only host
+verified to scope a `menuTrigger`'s click to itself; the always-present `menu`
+is its sibling. The root's option list is every known component, so that menu is
+height-capped and scrolls rather than overflowing the page.
 -}
-nameControl : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-nameControl path node model =
+editControl : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+editControl path model =
     case Cem.Compose.componentOptions path model of
         [] ->
-            TypedHtml.div [] [ Doc.sectionLabel (Cem.Compose.componentOf node) ]
+            TypedHtml.div [] []
 
         _ ->
-            TypedHtml.div [ TA.class "flex items-center gap-2" ]
+            TypedHtml.div [ TA.class "inline-flex" ]
                 [ M3e.button
-                    [ M3e.Attributes.variant Value.text ]
+                    [ M3e.Attributes.variant Value.text
+                    , Aria.label "Change component"
+                    ]
                     [ M3e.menuTrigger [ M3e.Attributes.for (componentMenuId path) ]
-                        [ M3e.text (Cem.Compose.componentOf node) ]
+                        [ M3e.icon [ TA.name "edit" ] [] ]
                     ]
                 , componentMenuElement path model
                 ]
@@ -760,17 +821,17 @@ childRow path slotName index child model =
             childFieldRow "Icon" glyph path slotName index model
 
 
-{-| A `ChildText`/`ChildIcon` row: leading up/down reorder controls, then the
-labeled `M3e.formField` (whose own `suffix` slot carries the delete). The node
-case renders its reorder + delete inside the card header instead, so its row is
-just the card.
+{-| A `ChildText`/`ChildIcon` row: the labeled `M3e.formField` (whose own
+`suffix` slot carries the delete), then the up/down reorder row at the trailing
+end. The node case renders its reorder + delete inside the card header instead,
+so its row is just the card.
 -}
 childFieldRow : String -> String -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 childFieldRow labelText current path slotName index model =
     TypedHtml.div [ TA.class "flex items-center gap-2" ]
-        [ reorderControls path slotName index model
-        , TypedHtml.div [ TA.class "flex-1" ]
+        [ TypedHtml.div [ TA.class "flex-1" ]
             [ childFormField labelText current path slotName index ]
+        , reorderControls path slotName index model
         ]
 
 

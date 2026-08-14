@@ -93,11 +93,10 @@ test("nesting three levels deep works with chips alone", async ({ page }) => {
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // The root starts as "list". Its own name IS the edit-tag control: a
-  // text button whose label is the current component name. Its menu offers
-  // every known component (the root has no parent slot to constrain it) —
-  // pick a different one.
-  await page.getByRole("button", { name: "list", exact: true }).click();
+  // The root starts as "list". The tag name is an m3e-heading; editing is a
+  // separate "Change component" icon button (`.first()` = the root's). Its menu
+  // offers every known component (the root has no parent slot to constrain it).
+  await page.getByRole("button", { name: "Change component" }).first().click();
   await page.getByRole("menuitem", { name: "accordion", exact: true }).click();
 
   // The live preview: the root element's own tag changed.
@@ -111,11 +110,12 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
 test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // Add a fresh listItem, then open ITS edit-tag control — its name button,
-  // labeled "listItem" (`.last()` = the one just added; the starter has two more).
+  // Add a fresh listItem, then open ITS edit-tag control — the "Change
+  // component" icon button on the just-added node (`.last()`; the starter and
+  // the root have their own).
   await page.getByRole("button", { name: "unnamed" }).first().click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "listItem", exact: true }).last().click();
+  await page.getByRole("button", { name: "Change component" }).last().click();
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
   // listOption — never anything list.unnamed doesn't name, and never the
@@ -144,6 +144,19 @@ test("up/down controls reorder siblings within a slot", async ({ page }) => {
 
   await expect(items.nth(0)).toContainText("Second item");
   await expect(items.nth(1)).toContainText("First item");
+});
+
+test("a newly added text child defaults to placeholder copy", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Add a text child to the first list item's "supporting-text" slot (it
+  // affords text AND a heading, so it opens a menu; pick "Text"). The consumer
+  // seeds a fresh text node with "lorem ipsum" rather than an empty string.
+  await page.getByRole("button", { name: "supporting-text" }).first().click();
+  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+
+  // It shows up in the live preview as real content.
+  await expect(page.locator("m3e-list").first()).toContainText("lorem ipsum");
 });
 
 test("the drawer links to Compose", async ({ page }) => {
