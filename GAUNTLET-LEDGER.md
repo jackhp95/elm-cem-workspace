@@ -1431,3 +1431,30 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   with MISSING=0/EXTRA=0** (no silent drop), review-exclusion is file-scoped (Render/Codegen stay reviewed),
   copy-fidelity GREEN vs oracle, integrity 5 files → PASS. Hardest Phase B part done.
 
+- **D-043 (B10/B11 sequencing — Render.elm orphaned until the route consumes it).** The docs `NoUnused.Exports`
+  rule applies to app modules (`ignorePublicApi` only covers `src/M3e/`), so B10's hand-written `Render.elm`
+  (`renderNode`/`tagFor`) is an unused export until a route imports it — a transient artifact of the plan's
+  B10-before-B11 order. Render is HAND-WRITTEN, so it must stay reviewed (NOT excluded like the generated
+  Attrs.elm). Resolution: **B10 gate = `Render.elm` compiles (elm make) + the one `M3e.Unsafe.fromHtml`
+  allow-list entry added correctly + copy-fidelity GREEN (Render in AUTHORIZED_EXTRA); full check:review-green is
+  DEFERRED to B11**, whose route imports `renderNode` into a live-preview pane via `M3e.Unsafe.fromHtml` —
+  consuming it AND exercising the allow-list entry. Builders must NOT fake a consumer or review-exclude Render
+  to force B10 green. Reversible. Next free IDs: **D-044**, **R-023**.
+
+- **D-044 (elm-format must NOT touch the generated Attrs.elm — process rule for B11–B13).** The plan's per-task
+  formatting step `elm-format packages/elm-m3e/docs/app/Route/Components/Compose/ --yes` formats the WHOLE
+  directory, including the generator-owned `Attrs.elm`. `elm-format` changes Attrs.elm (the generator does not
+  emit elm-format-compliant output), which diverges it from the generator's raw output and RED-lines
+  `check:compose-attrs` (byte-identity). The B10 builder caught this and reverted Attrs.elm. **Rule for all
+  remaining Phase-B tasks: format ONLY the hand-written files just created/edited (e.g. `elm-format
+  app/Route/Components/Compose/Render.elm Codegen.elm ... --yes`), NEVER the directory, and NEVER Attrs.elm.**
+  check:compose-attrs is the gate that catches a violation. Reversible. Next free IDs: **D-045**, **R-023**.
+
+- **B10: pass** (compile + allow-list + copy-fidelity green; review-green deferred per D-043; critic clean;
+  builder claude/sonnet). Commit `bb8e969`. `Render.elm` (tagFor/toKebabCase/renderNode/renderSlot/placement/
+  withSlot — no double-render, ChildNode→withSlot renders once) + ONE documented `NoUnsafeImportOutsideAllowed`
+  allow-list entry (`Route.Components.Compose`) + Render.elm in copy-fidelity AUTHORIZED_EXTRA. Builder caught &
+  reverted an elm-format-on-Attrs.elm hazard (→ D-044). check:review = exactly the 2 expected "Render unused"
+  findings (D-043 transient, resolves at B11); check:compose-attrs still OK (Attrs intact). Fresh Opus critic
+  confirmed no-double-render, single allow-list entry, integrity 3 files, copy-fidelity GREEN → PASS.
+
