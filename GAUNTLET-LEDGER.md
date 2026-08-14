@@ -1431,3 +1431,25 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   gates need a durable checkout of the new-main SHAs to compare against; the sibling snapshots are
   read-only and frozen at the old SHAs. Options: (a) a fetch-pinned-SHA cache like m3e-okf's
   `.cache/m3e`; (b) the human re-points/updates the sibling checkouts. Next free IDs: **D-041**, **R-024**.
+
+- **D-041 (Move 2 exec) — snapshot-ref cache for the advanced mains.** Human chose option (a): the
+  A/B + copy-fidelity gates fetch pinned new-main SHAs into `.cache/snapshots/` (gitignored) via
+  `tools/fetch-snapshots.mjs` + `tools/snapshot-refs.json`; the read-only siblings stay frozen.
+  `ab-elm-cem` (403 byte-id), `ab-elm-m3e-split` (415 byte-id, now using elm-m3e's REAL packages.json
+  not the stale flat-era inline one), and `copy-fidelity elm-m3e` (docs/dist build-output excluded)
+  all GREEN. Plus gate-all `maxBuffer` fix (ENOBUFS on 403-file output) and re-applied elm-cem
+  neutrality allowlist entry. **5 of the 8 initial gate failures resolved.**
+
+- **R-024 (Move 2 exec — the re-integration is FAMILY-WIDE, not 2 packages).** The remaining 3 gate
+  failures reveal the family co-evolved across MORE repos than elm-cem + elm-m3e:
+  - **`elm-html-intermediate-representation` (IR)** co-evolved: main `843562f` exposes
+    `HtmlIr.Element.testId`/`when`/`attrIf` (the new barrel/producer helpers); the workspace snapshot
+    `d3848a2` does NOT — so `elm-cem test:gates` fails ("HtmlIr.Element does not expose testId"). IR
+    must advance to its main too (derivable — same rebase; I will do it).
+  - **`elm-typed-html`** is a SEPARATE BRAND sharing the elm-cem generator. Its main (`89c13d0`) is
+    UNCHANGED and still flat, but the new concern-separated elm-cem regenerates it as concern-sep
+    (`TypedHtml/Component/*`), so its `check:drift` (regen-diff) fails. Upstream hasn't regenerated it
+    either. This is a genuine product/scope decision (see below) — NOT purely derivable.
+  So the re-integration is effectively re-running Phase-0 M1/M2 with ALL the family's latest mains,
+  and may cascade further (elm-review-cem, elm-cem-facts). Scope materially larger than framed.
+  Next free IDs: **D-042**, **R-025**.
