@@ -126,7 +126,7 @@ trap 'rm -rf "$tmp"' EXIT
 # docs/dist/** is BUILT output (vite content-hashed) that the source repo commits
 # for deploy but the workspace rebuilds with different hashes — exclude it from
 # copy-fidelity on both sides (it is not source; the site build verifies it). D-041.
-git -C "$SOURCE_ELM_M3E" ls-files | grep -vE '^docs/dist/' | sort > "$tmp/source.txt"
+git -C "$SOURCE_ELM_M3E" ls-files | grep -vE '^docs/(dist|vendor)/' | sort > "$tmp/source.txt"
 
 # Workspace side: tracked files + untracked-but-not-ignored files, both relative
 # to packages/elm-m3e. `--others --exclude-standard` is exactly "files git would
@@ -139,7 +139,7 @@ git -C "$SOURCE_ELM_M3E" ls-files | grep -vE '^docs/dist/' | sort > "$tmp/source
     git -C "$REPO_ROOT" ls-files --others --exclude-standard "$PKG_REL"
 } | sort -u | while IFS= read -r p; do
     [ -e "$REPO_ROOT/$p" ] && printf '%s\n' "${p#"$PKG_REL/"}"
-done | grep -vE '^docs/dist/' | sort -u > "$tmp/workspace.txt"
+done | grep -vE '^docs/(dist|vendor)/' | sort -u > "$tmp/workspace.txt"
 
 printf '%s\n' "$AUTHORIZED_ABSENT" | grep -vE '^\s*$' | sort > "$tmp/authorized.txt"
 
