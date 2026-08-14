@@ -1458,3 +1458,39 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   findings (D-043 transient, resolves at B11); check:compose-attrs still OK (Attrs intact). Fresh Opus critic
   confirmed no-double-render, single allow-list entry, integrity 3 files, copy-fidelity GREEN → PASS.
 
+- **D-045 (Phase B file-layout is framework-incompatible — corrected autonomously; the effort's MOST SIGNIFICANT
+  deviation from the plan's stated structure — FLAG FOR HUMAN REVIEW). PLAN ARCHITECTURAL FLAW.** The plan's
+  File-Structure section places the three helper modules under the route directory:
+  `docs/app/Route/Components/Compose/{Attrs,Render,Codegen}.elm`. But **elm-pages treats EVERY module under
+  `app/Route/` as a page route** — so `elm-pages gen` emits a `.elm-pages/Main.elm` that references
+  `Route.Components.Compose.Attrs.route.data`, `.Model`, `.Msg`, `.Data`, `.ActionData`, `.subscriptions`,
+  `.onAction` (and same for `.Render`). Those helper modules expose only `(kinds,toAttribute,witness,codeLineFor)`
+  / `(renderNode,tagFor)` — NO route interface — so the generated Main cannot compile and **`elm-pages build`
+  fails**. Latent since B9 (Attrs.elm landed under Route/); B11's `gen:pages` exposed it. My per-task gates
+  (check:review, single-file `elm make`) MISSED it because none ran a full elm-pages gen/build — check:review
+  uses elm-review's AST analysis, not `elm make`, so it never compiled the generated Main. **GATE GAP now closed:
+  Phase B's build-truth gate is `elm-pages build` (what B14's playwright already runs), not check:review.**
+  **Fix (one correct answer, mechanical):** move the 3 helpers OUT of `app/Route/` to `app/Compose/`, renaming
+  modules `Route.Components.Compose.{Attrs,Render,Codegen}` → `Compose.{Attrs,Render,Codegen}`. Only the actual
+  route `app/Route/Components/Compose.elm` stays under Route/. The spec's module DECOMPOSITION (route + 3 folds +
+  generated adapter) is preserved unchanged — ONLY the directory/module-prefix changes. Touches: the B9 generator
+  (`gen-compose-attrs.mjs` output path + emitted module name), `check:compose-attrs`, the ReviewConfig
+  generated-Attrs exclusion path, the copy-fidelity AUTHORIZED_EXTRA paths (B9/B10), and Render's `tagFor`
+  un-exposed (it is module-internal — the plan's "Produces: tagFor" over-specified; NoUnused.Exports correctly
+  flags it). `.elm-pages/` is regenerated + committed (maintained routing manifest; build regenerates it anyway,
+  but committing keeps check:review's NoUnused.Modules green and the tree consistent); the new
+  `.elm-pages/Fetcher/Components/Compose.elm` gets an AUTHORIZED_EXTRA entry. Reversible via git revert. Recorded
+  here and surfaced in the final report because it deviates from the plan's explicit file paths. Next free IDs:
+  **D-046**, **R-023**.
+
+- **B11: pass** (build:site exit 0 w/ /components/compose prerendered; check:review green; critic clean; builder
+  claude/sonnet). Commits `555c116` + fixup `1d0448e`. Implements the D-045 layout fix (helpers → `app/Compose/`,
+  modules `Compose.Attrs`/`Compose.Render`; tagFor un-exposed) + the route `Route.Components.Compose` (init
+  root="list", view consumes `Render.renderNode` via `M3e.Unsafe.fromHtml`) + nav link + regenerated committed
+  `.elm-pages/`. Builder self-caught a failed multi-path `git add` that left the rename unstaged and fixed it with
+  a follow-up commit (transparent, verified). Fresh Opus critic INDEPENDENTLY ran the full `build:site` → exit 0,
+  `/components/compose` prerendered (proving generated Main.elm compiles — the gate check:review can't provide),
+  confirmed helpers no longer routed (Route.elm has Components__Compose only), route wiring, nav, check:review
+  green, check:compose-attrs OK, copy-fidelity GREEN, integrity of both commits → PASS. **The route is live and
+  the app builds; §8.7 editor UI + snippet are B12/B13.**
+
