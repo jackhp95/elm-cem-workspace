@@ -1648,3 +1648,21 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
   COUNTS only; a set attr's value goes in its button label, drop `attrValueBadge`. One gauntlet part F2 (task
   #18). Next free IDs: **D-049**, **R-023**.
 
+- **F2: pass — AUDIT-FIX INCREMENT COMPLETE** (build:site exit 0; Playwright 6/6; check:review green; critic clean;
+  builder claude/sonnet). Commit `905c82d` (1 file, route, +116/-83). F1: each node is now a plain outlined
+  `TypedHtml.div` (`rounded-md-corner-medium border border-outline-variant`), no `M3e.card`. F2: attr + slot
+  affordances are extra-small `M3e.button`s (no `filterChip`/`chipSet`), split into separate "Attributes" and
+  "Slots" groups, menu-openers keep the `menuTrigger[for]`+sibling-menu pattern. F3: `attrValueBadge` deleted
+  (set value → button label `name: value`); `slotCountBadge` retained. Playwright spec UNCHANGED (the tested
+  affordances were already buttons). Fresh Opus critic ran build:site + Playwright 6/6, verified no live
+  card/chip/chipSet, xs buttons, group split, value-in-label, count-badge kept, no new suppressions, integrity 1
+  file, copy-fidelity GREEN → PASS.
+
+## AUDIT INCREMENT — summary for the human
+Editor now supports all expected DOM edits — **add child, remove node, edit tag (type-directed, keep-valid)** —
+and the m3e-okf audit fixes landed: **outlined containers not nested cards, extra-small buttons not misused chips
+(Attributes/Slots split), badges for counts only**. The two audit recommendations that collided with concrete
+M3E limits (`m3e-tree` can't host the editor; chips can't host menus) are documented (D-047) and resolved the
+realizable way the human chose (D-048). All green on branch `compose-poc`; not pushed/merged. Next free IDs:
+**D-049**, **R-023**.
+
