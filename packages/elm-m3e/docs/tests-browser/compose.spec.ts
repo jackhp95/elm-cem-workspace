@@ -18,6 +18,14 @@ import { test, expect } from "@playwright/test";
  * triggers inside a filter chip was found, empirically, to open every
  * sibling's menu at once. `M3e.button` is the host verified (by hand, against
  * this exact page) to scope a trigger's click to itself.
+ *
+ * The attribute and slot buttons sit directly in an `M3e.buttonGroup`.
+ * `m3e-button-group` reacts to any `toggle` child by giving the GROUP
+ * `role="radiogroup"` and each toggle child `role="radio"` — so these chips
+ * are queried by `getByRole("radio", ...)`, not `"button"`. Their accessible
+ * name is now a leading `add` icon plus the slot/attribute name (never a
+ * literal "+"), so the locators drop the old `"+ "` prefix and match the
+ * name substring instead.
  */
 
 test("a slot menu offers every valid kind, not just text", async ({ page }) => {
@@ -25,12 +33,12 @@ test("a slot menu offers every valid kind, not just text", async ({ page }) => {
 
   // Root is "list": its default ("unnamed") slot affords five component
   // kinds and no text/icon, so its chip opens straight to a menu.
-  await page.getByRole("button", { name: "+ unnamed" }).click();
+  await page.getByRole("radio", { name: "unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
 
   // listItem's "trailing" slot is the §8.7 acceptance case: it affords text,
   // an icon, AND five components at once.
-  await page.getByRole("button", { name: "+ trailing" }).click();
+  await page.getByRole("radio", { name: "trailing" }).click();
 
   const trailingMenu = page.locator("m3e-menu[id*='trailing']");
   await expect(trailingMenu).toBeVisible();
@@ -57,7 +65,7 @@ test("setting an attribute updates both the live element and the snippet", async
 
   // The root "list" node's own "variant" attribute is a discrete (enum)
   // chip: filled, outlined, ... — click it and pick a token.
-  await page.getByRole("button", { name: "variant" }).click();
+  await page.getByRole("radio", { name: "variant" }).click();
   await page.getByRole("menuitem", { name: "segmented", exact: true }).click();
 
   // The live preview: a real `m3e-list` carrying the attribute.
@@ -74,9 +82,9 @@ test("nesting three levels deep works with chips alone", async ({ page }) => {
 
   // list > listItem > (trailing) checkbox — three levels, chips and menus
   // only, no hand-authored code.
-  await page.getByRole("button", { name: "+ unnamed" }).click();
+  await page.getByRole("radio", { name: "unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "+ trailing" }).click();
+  await page.getByRole("radio", { name: "trailing" }).click();
   await page.getByRole("menuitem", { name: "checkbox", exact: true }).click();
 
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
@@ -105,7 +113,7 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
 
   // list > listItem, then listItem's OWN edit-tag control — its name button,
   // labeled "listItem" (the root's is labeled "list").
-  await page.getByRole("button", { name: "+ unnamed" }).click();
+  await page.getByRole("radio", { name: "unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "listItem", exact: true }).click();
 
