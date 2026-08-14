@@ -1579,3 +1579,12 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
     openMenu cleared, and the property "every componentOptions entry changes the model when SetComponent applied."
   Next free IDs: **D-047**, **R-023**.
 
+- **C1: pass** (test:elm 74/74, critic clean, builder claude/sonnet). Commit `a6848ae` (5 files, all in
+  elm-cem-compose; version→1.1.0). `componentOptions` (root=all-facts-sorted-minus-current; nested=parent-slot
+  afforded-minus-current, type-directed; unresolvable=[]) + `SetComponent Path String` (no-op if unoffered; else
+  swap + prune attrs to `offeredByTarget` + prune children to target-declared/afforded slots + non-multi cap via
+  List.take 1 + clear openMenu). Fixture extended ADDITIVELY (`gadget` shares attrs w/ widget; `narrow`
+  slot-kind-change/cap) — original six byte-unchanged; builder self-caught + fixed an illegal fixture kind. Fresh
+  Opus critic verified all semantics + 12 exact-equal tests (none weakened) + Node opaque + no Cmd + grep-m3e
+  empty + 3 deps → PASS. **Core edit-tag done; D1 wires it into the route UI + badges + add/remove polish.**
+
