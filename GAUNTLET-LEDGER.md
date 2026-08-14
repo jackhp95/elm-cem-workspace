@@ -1709,3 +1709,16 @@ realizable way the human chose (D-048). All green on branch `compose-poc`; not p
   (Seams.elm:188). Screenshot confirms inline pills, not corner overlays. Small precedent-matching visual change —
   accepted on manager verification (build:site + Playwright + visual) without a separate critic. Next free IDs:
   **D-051**, **R-023**.
+
+- **D-051 (HANDOFF to a fresh Opus-4.8 UI agent, 2026-08-14).** Human requested `/paseo-handoff` to continue the
+  editor styling/UX interactively and will DETACH to work with the new agent directly. New requirements handed
+  off (styling round): (1) padding is inconsistent — normalize. (2) Text/icon child inputs → LABELED form fields,
+  with the field's TRAILING icon = delete button and LEADING icon = drag/drop handle for ordering. (3) Attributes
+  & Slots sections → form fields containing BUTTON GROUPS. (4) The count badge should be the button's TRAILING
+  ICON — OPEN TYPE QUESTION the human raised: a button's `trailing-icon` slot admits only `shared:icon`, not
+  `badge` (verified, D-047) — "is that not possible with the types? should we recast?" → the new agent must
+  investigate whether to recast/extend the M3e type (or the elm-cem facts) to admit a badge in that slot, vs an
+  alternative. (5) The `+` prefix on slot buttons → an ICON, not the literal "+". (6) Card header stays the tag
+  name, but add a LEADING drag/drop handle icon and TRAILING edit + delete icons. NOTE reordering (2/6 drag-drop)
+  is spec NON-GOAL #1 and needs a new core `MoveChild` Msg in `elm-cem-compose` — a real core extension. Receiving
+  agent: claude/claude-opus-4-8 (ui role), same worktree/branch. Next free IDs: **D-052**, **R-023**.
