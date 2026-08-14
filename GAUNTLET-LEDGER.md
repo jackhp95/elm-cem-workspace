@@ -1502,3 +1502,8 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   failed; only Good.elm changed (naming errors from the regroup), generated src/ untouched
   (regen-diff OK), bad fixture DefaultValueOnOption.elm still fails as intended. Manager
   re-verified exit 0 independently.`
+
+- `M8.b: dispatching (loop, worker claude-sonnet-5, verifier claude-opus-4-8). 5-way repackage of
+  packages/elm-m3e/packages.json. Bar: node tools/check-m3e-5pkg.mjs (5-pkg shape, fails-now) +
+  pnpm --filter elm-m3e run verify:split (per-pkg standalone compile + DAG, 5.2s). Manager measures
+  each docs.json under the 768KB cap after pass.`
