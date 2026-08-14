@@ -5242,7 +5242,7 @@ snapshots:
 
   '@types/minimatch@6.0.0':
     dependencies:
-      minimatch: 3.1.5
+      minimatch: 10.2.6
 
   '@types/mkdirp@0.5.2':
     dependencies:
