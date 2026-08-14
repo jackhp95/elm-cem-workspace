@@ -1,4 +1,4 @@
-module TypedHtml.Table exposing
+module TypedHtml.Component.Table exposing
     ( caption, col, colgroup, table, tbody, td, tfoot, th, thead, tr
     , CaptionIs, CaptionAttrs, CaptionContent, CaptionChildAdmittedBy, CaptionAdmittedBy, ColIs, ColAttrs, ColChildAdmittedBy, ColAdmittedBy, ColgroupIs, ColgroupAttrs, ColgroupContent, ColgroupChildAdmittedBy, ColgroupAdmittedBy, TableIs, TableAttrs, TableContent, TableChildAdmittedBy, TbodyIs, TbodyAttrs, TbodyContent, TbodyChildAdmittedBy, TbodyAdmittedBy, TdIs, TdAttrs, TdContent, TdChildAdmittedBy, TdAdmittedBy, TfootIs, TfootAttrs, TfootContent, TfootChildAdmittedBy, TfootAdmittedBy, ThIs, ThAttrs, ThContent, ThChildAdmittedBy, ThAdmittedBy, TheadIs, TheadAttrs, TheadContent, TheadChildAdmittedBy, TheadAdmittedBy, TrIs, TrAttrs, TrContent, TrChildAdmittedBy, TrAdmittedBy
     , abbr, colspan, headers, rowspan, scope, span

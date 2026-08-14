@@ -4,6 +4,7 @@ module TypedHtml.Attributes exposing
     , defaultChecked, defaultMuted, defaultSelected, defaultValue
     , coordsAsInts, stepAsNumber, valueAsNumber
     , blocking, charset, closedby, colorspace, crossorigin, decoding, enctype, fetchpriority, formenctype, formmethod, httpEquiv, kind, loading, method, popovertargetaction, preload, referrerpolicy, sandbox, scope, shadowrootmode, shadowrootslotassignment, shape, wrap
+    , blockingRender, charsetUtf8, closedbyAny, closedbyCloserequest, closedbyNone, colorspaceDisplayP3, colorspaceLimitedSrgb, crossoriginValue, crossoriginAnonymous, crossoriginUseCredentials, decodingAsync, decodingAuto, decodingSync, enctypeApplicationXWwwFormUrlencoded, enctypeMultipartFormData, enctypeTextPlain, fetchpriorityAuto, fetchpriorityHigh, fetchpriorityLow, formenctypeApplicationXWwwFormUrlencoded, formenctypeMultipartFormData, formenctypeTextPlain, formmethodDialog, formmethodGet, formmethodPost, httpEquivContentSecurityPolicy, httpEquivContentType, httpEquivDefaultStyle, httpEquivRefresh, httpEquivXUaCompatible, kindCaptions, kindChapters, kindDescriptions, kindMetadata, kindSubtitles, loadingEager, loadingLazy, methodDialog, methodGet, methodPost, popovertargetactionHide, popovertargetactionShow, popovertargetactionToggle, preloadValue, preloadAuto, preloadMetadata, preloadNone, referrerpolicyValue, referrerpolicyNoReferrer, referrerpolicyNoReferrerWhenDowngrade, referrerpolicyOrigin, referrerpolicyOriginWhenCrossOrigin, referrerpolicySameOrigin, referrerpolicyStrictOrigin, referrerpolicyStrictOriginWhenCrossOrigin, referrerpolicyUnsafeUrl, sandboxAllowDownloads, sandboxAllowForms, sandboxAllowModals, sandboxAllowOrientationLock, sandboxAllowPointerLock, sandboxAllowPopups, sandboxAllowPopupsToEscapeSandbox, sandboxAllowPresentation, sandboxAllowSameOrigin, sandboxAllowScripts, sandboxAllowTopNavigation, sandboxAllowTopNavigationByUserActivation, sandboxAllowTopNavigationToCustomProtocols, scopeCol, scopeColgroup, scopeRow, scopeRowgroup, shadowrootmodeClosed, shadowrootmodeOpen, shadowrootslotassignmentManual, shadowrootslotassignmentNamed, shapeCircle, shapeDefault, shapePoly, shapeRect, wrapHard, wrapSoft
     )
 
 {-| The canonical shared attribute vocabulary. Every setter is an open
@@ -11,6 +12,11 @@ producer (`{ c | attr : Supported }`); each element's closed `Attrs` row
 decides admittance. Enum setters here close over the library-wide UNION of
 values — cross-component misuse is caught by elm-review; reach for the
 per-component setters (`TypedHtml.<Component>.<attr>`) for compile-tight narrowing.
+
+Portmanteau setters (`variantRainbow`, `shapeRounded`, …) are nullary
+aliases that pre-apply one enum token. They exist for IDE discovery:
+type `variant` and autocomplete lists every value inline. Each claims
+the same capability row as its base enum setter, so admittance is identical.
 
 **Deliberately absent.** These attributes are declared by the manifest and
 are real HTML, but `elm/virtual-dom` cannot write them, so this library does
@@ -26,6 +32,7 @@ custom element instead of restoring a setter here.
 @docs defaultChecked, defaultMuted, defaultSelected, defaultValue
 @docs coordsAsInts, stepAsNumber, valueAsNumber
 @docs blocking, charset, closedby, colorspace, crossorigin, decoding, enctype, fetchpriority, formenctype, formmethod, httpEquiv, kind, loading, method, popovertargetaction, preload, referrerpolicy, sandbox, scope, shadowrootmode, shadowrootslotassignment, shape, wrap
+@docs blockingRender, charsetUtf8, closedbyAny, closedbyCloserequest, closedbyNone, colorspaceDisplayP3, colorspaceLimitedSrgb, crossoriginValue, crossoriginAnonymous, crossoriginUseCredentials, decodingAsync, decodingAuto, decodingSync, enctypeApplicationXWwwFormUrlencoded, enctypeMultipartFormData, enctypeTextPlain, fetchpriorityAuto, fetchpriorityHigh, fetchpriorityLow, formenctypeApplicationXWwwFormUrlencoded, formenctypeMultipartFormData, formenctypeTextPlain, formmethodDialog, formmethodGet, formmethodPost, httpEquivContentSecurityPolicy, httpEquivContentType, httpEquivDefaultStyle, httpEquivRefresh, httpEquivXUaCompatible, kindCaptions, kindChapters, kindDescriptions, kindMetadata, kindSubtitles, loadingEager, loadingLazy, methodDialog, methodGet, methodPost, popovertargetactionHide, popovertargetactionShow, popovertargetactionToggle, preloadValue, preloadAuto, preloadMetadata, preloadNone, referrerpolicyValue, referrerpolicyNoReferrer, referrerpolicyNoReferrerWhenDowngrade, referrerpolicyOrigin, referrerpolicyOriginWhenCrossOrigin, referrerpolicySameOrigin, referrerpolicyStrictOrigin, referrerpolicyStrictOriginWhenCrossOrigin, referrerpolicyUnsafeUrl, sandboxAllowDownloads, sandboxAllowForms, sandboxAllowModals, sandboxAllowOrientationLock, sandboxAllowPointerLock, sandboxAllowPopups, sandboxAllowPopupsToEscapeSandbox, sandboxAllowPresentation, sandboxAllowSameOrigin, sandboxAllowScripts, sandboxAllowTopNavigation, sandboxAllowTopNavigationByUserActivation, sandboxAllowTopNavigationToCustomProtocols, scopeCol, scopeColgroup, scopeRow, scopeRowgroup, shadowrootmodeClosed, shadowrootmodeOpen, shadowrootslotassignmentManual, shadowrootslotassignmentNamed, shapeCircle, shapeDefault, shapePoly, shapeRect, wrapHard, wrapSoft
 
 -}
 
@@ -1210,3 +1217,584 @@ shape value_ =
 wrap : Value TypedHtml.Values.Wrap -> Attr { c | wrap : Supported } msg
 wrap value_ =
     Ir.attribute "wrap" (HtmlIr.Value.toString value_)
+
+
+{-| Set the `blocking` attribute to `"render"`. Portmanteau of `blocking` + `render` — for IDE discovery and single-import ergonomics.
+-}
+blockingRender : Attr { c | blocking : Supported } msg
+blockingRender =
+    Ir.attribute "blocking" "render"
+
+
+{-| Set the `charset` attribute to `"utf-8"`. Portmanteau of `charset` + `utf-8` — for IDE discovery and single-import ergonomics.
+-}
+charsetUtf8 : Attr { c | charset : Supported } msg
+charsetUtf8 =
+    Ir.attribute "charset" "utf-8"
+
+
+{-| Set the `closedby` attribute to `"any"`. Portmanteau of `closedby` + `any` — for IDE discovery and single-import ergonomics.
+-}
+closedbyAny : Attr { c | closedby : Supported } msg
+closedbyAny =
+    Ir.attribute "closedby" "any"
+
+
+{-| Set the `closedby` attribute to `"closerequest"`. Portmanteau of `closedby` + `closerequest` — for IDE discovery and single-import ergonomics.
+-}
+closedbyCloserequest : Attr { c | closedby : Supported } msg
+closedbyCloserequest =
+    Ir.attribute "closedby" "closerequest"
+
+
+{-| Set the `closedby` attribute to `"none"`. Portmanteau of `closedby` + `none` — for IDE discovery and single-import ergonomics.
+-}
+closedbyNone : Attr { c | closedby : Supported } msg
+closedbyNone =
+    Ir.attribute "closedby" "none"
+
+
+{-| Set the `colorspace` attribute to `"display-p3"`. Portmanteau of `colorspace` + `display-p3` — for IDE discovery and single-import ergonomics.
+-}
+colorspaceDisplayP3 : Attr { c | colorspace : Supported } msg
+colorspaceDisplayP3 =
+    Ir.attribute "colorspace" "display-p3"
+
+
+{-| Set the `colorspace` attribute to `"limited-srgb"`. Portmanteau of `colorspace` + `limited-srgb` — for IDE discovery and single-import ergonomics.
+-}
+colorspaceLimitedSrgb : Attr { c | colorspace : Supported } msg
+colorspaceLimitedSrgb =
+    Ir.attribute "colorspace" "limited-srgb"
+
+
+{-| Set the `crossorigin` attribute to `""`. Portmanteau of `crossorigin` + \`\` — for IDE discovery and single-import ergonomics.
+-}
+crossoriginValue : Attr { c | crossorigin : Supported } msg
+crossoriginValue =
+    Ir.attribute "crossorigin" ""
+
+
+{-| Set the `crossorigin` attribute to `"anonymous"`. Portmanteau of `crossorigin` + `anonymous` — for IDE discovery and single-import ergonomics.
+-}
+crossoriginAnonymous : Attr { c | crossorigin : Supported } msg
+crossoriginAnonymous =
+    Ir.attribute "crossorigin" "anonymous"
+
+
+{-| Set the `crossorigin` attribute to `"use-credentials"`. Portmanteau of `crossorigin` + `use-credentials` — for IDE discovery and single-import ergonomics.
+-}
+crossoriginUseCredentials : Attr { c | crossorigin : Supported } msg
+crossoriginUseCredentials =
+    Ir.attribute "crossorigin" "use-credentials"
+
+
+{-| Set the `decoding` attribute to `"async"`. Portmanteau of `decoding` + `async` — for IDE discovery and single-import ergonomics.
+-}
+decodingAsync : Attr { c | decoding : Supported } msg
+decodingAsync =
+    Ir.attribute "decoding" "async"
+
+
+{-| Set the `decoding` attribute to `"auto"`. Portmanteau of `decoding` + `auto` — for IDE discovery and single-import ergonomics.
+-}
+decodingAuto : Attr { c | decoding : Supported } msg
+decodingAuto =
+    Ir.attribute "decoding" "auto"
+
+
+{-| Set the `decoding` attribute to `"sync"`. Portmanteau of `decoding` + `sync` — for IDE discovery and single-import ergonomics.
+-}
+decodingSync : Attr { c | decoding : Supported } msg
+decodingSync =
+    Ir.attribute "decoding" "sync"
+
+
+{-| Set the `enctype` attribute to `"application/x-www-form-urlencoded"`. Portmanteau of `enctype` + `application/x-www-form-urlencoded` — for IDE discovery and single-import ergonomics.
+-}
+enctypeApplicationXWwwFormUrlencoded : Attr { c | enctype : Supported } msg
+enctypeApplicationXWwwFormUrlencoded =
+    Ir.attribute "enctype" "application/x-www-form-urlencoded"
+
+
+{-| Set the `enctype` attribute to `"multipart/form-data"`. Portmanteau of `enctype` + `multipart/form-data` — for IDE discovery and single-import ergonomics.
+-}
+enctypeMultipartFormData : Attr { c | enctype : Supported } msg
+enctypeMultipartFormData =
+    Ir.attribute "enctype" "multipart/form-data"
+
+
+{-| Set the `enctype` attribute to `"text/plain"`. Portmanteau of `enctype` + `text/plain` — for IDE discovery and single-import ergonomics.
+-}
+enctypeTextPlain : Attr { c | enctype : Supported } msg
+enctypeTextPlain =
+    Ir.attribute "enctype" "text/plain"
+
+
+{-| Set the `fetchpriority` attribute to `"auto"`. Portmanteau of `fetchpriority` + `auto` — for IDE discovery and single-import ergonomics.
+-}
+fetchpriorityAuto : Attr { c | fetchpriority : Supported } msg
+fetchpriorityAuto =
+    Ir.attribute "fetchpriority" "auto"
+
+
+{-| Set the `fetchpriority` attribute to `"high"`. Portmanteau of `fetchpriority` + `high` — for IDE discovery and single-import ergonomics.
+-}
+fetchpriorityHigh : Attr { c | fetchpriority : Supported } msg
+fetchpriorityHigh =
+    Ir.attribute "fetchpriority" "high"
+
+
+{-| Set the `fetchpriority` attribute to `"low"`. Portmanteau of `fetchpriority` + `low` — for IDE discovery and single-import ergonomics.
+-}
+fetchpriorityLow : Attr { c | fetchpriority : Supported } msg
+fetchpriorityLow =
+    Ir.attribute "fetchpriority" "low"
+
+
+{-| Set the `formenctype` attribute to `"application/x-www-form-urlencoded"`. Portmanteau of `formenctype` + `application/x-www-form-urlencoded` — for IDE discovery and single-import ergonomics.
+-}
+formenctypeApplicationXWwwFormUrlencoded : Attr { c | formenctype : Supported } msg
+formenctypeApplicationXWwwFormUrlencoded =
+    Ir.attribute "formenctype" "application/x-www-form-urlencoded"
+
+
+{-| Set the `formenctype` attribute to `"multipart/form-data"`. Portmanteau of `formenctype` + `multipart/form-data` — for IDE discovery and single-import ergonomics.
+-}
+formenctypeMultipartFormData : Attr { c | formenctype : Supported } msg
+formenctypeMultipartFormData =
+    Ir.attribute "formenctype" "multipart/form-data"
+
+
+{-| Set the `formenctype` attribute to `"text/plain"`. Portmanteau of `formenctype` + `text/plain` — for IDE discovery and single-import ergonomics.
+-}
+formenctypeTextPlain : Attr { c | formenctype : Supported } msg
+formenctypeTextPlain =
+    Ir.attribute "formenctype" "text/plain"
+
+
+{-| Set the `formmethod` attribute to `"dialog"`. Portmanteau of `formmethod` + `dialog` — for IDE discovery and single-import ergonomics.
+-}
+formmethodDialog : Attr { c | formmethod : Supported } msg
+formmethodDialog =
+    Ir.attribute "formmethod" "dialog"
+
+
+{-| Set the `formmethod` attribute to `"get"`. Portmanteau of `formmethod` + `get` — for IDE discovery and single-import ergonomics.
+-}
+formmethodGet : Attr { c | formmethod : Supported } msg
+formmethodGet =
+    Ir.attribute "formmethod" "get"
+
+
+{-| Set the `formmethod` attribute to `"post"`. Portmanteau of `formmethod` + `post` — for IDE discovery and single-import ergonomics.
+-}
+formmethodPost : Attr { c | formmethod : Supported } msg
+formmethodPost =
+    Ir.attribute "formmethod" "post"
+
+
+{-| Set the `http-equiv` attribute to `"content-security-policy"`. Portmanteau of `httpEquiv` + `content-security-policy` — for IDE discovery and single-import ergonomics.
+-}
+httpEquivContentSecurityPolicy : Attr { c | httpEquiv : Supported } msg
+httpEquivContentSecurityPolicy =
+    Ir.attribute "http-equiv" "content-security-policy"
+
+
+{-| Set the `http-equiv` attribute to `"content-type"`. Portmanteau of `httpEquiv` + `content-type` — for IDE discovery and single-import ergonomics.
+-}
+httpEquivContentType : Attr { c | httpEquiv : Supported } msg
+httpEquivContentType =
+    Ir.attribute "http-equiv" "content-type"
+
+
+{-| Set the `http-equiv` attribute to `"default-style"`. Portmanteau of `httpEquiv` + `default-style` — for IDE discovery and single-import ergonomics.
+-}
+httpEquivDefaultStyle : Attr { c | httpEquiv : Supported } msg
+httpEquivDefaultStyle =
+    Ir.attribute "http-equiv" "default-style"
+
+
+{-| Set the `http-equiv` attribute to `"refresh"`. Portmanteau of `httpEquiv` + `refresh` — for IDE discovery and single-import ergonomics.
+-}
+httpEquivRefresh : Attr { c | httpEquiv : Supported } msg
+httpEquivRefresh =
+    Ir.attribute "http-equiv" "refresh"
+
+
+{-| Set the `http-equiv` attribute to `"x-ua-compatible"`. Portmanteau of `httpEquiv` + `x-ua-compatible` — for IDE discovery and single-import ergonomics.
+-}
+httpEquivXUaCompatible : Attr { c | httpEquiv : Supported } msg
+httpEquivXUaCompatible =
+    Ir.attribute "http-equiv" "x-ua-compatible"
+
+
+{-| Set the `kind` attribute to `"captions"`. Portmanteau of `kind` + `captions` — for IDE discovery and single-import ergonomics.
+-}
+kindCaptions : Attr { c | kind : Supported } msg
+kindCaptions =
+    Ir.attribute "kind" "captions"
+
+
+{-| Set the `kind` attribute to `"chapters"`. Portmanteau of `kind` + `chapters` — for IDE discovery and single-import ergonomics.
+-}
+kindChapters : Attr { c | kind : Supported } msg
+kindChapters =
+    Ir.attribute "kind" "chapters"
+
+
+{-| Set the `kind` attribute to `"descriptions"`. Portmanteau of `kind` + `descriptions` — for IDE discovery and single-import ergonomics.
+-}
+kindDescriptions : Attr { c | kind : Supported } msg
+kindDescriptions =
+    Ir.attribute "kind" "descriptions"
+
+
+{-| Set the `kind` attribute to `"metadata"`. Portmanteau of `kind` + `metadata` — for IDE discovery and single-import ergonomics.
+-}
+kindMetadata : Attr { c | kind : Supported } msg
+kindMetadata =
+    Ir.attribute "kind" "metadata"
+
+
+{-| Set the `kind` attribute to `"subtitles"`. Portmanteau of `kind` + `subtitles` — for IDE discovery and single-import ergonomics.
+-}
+kindSubtitles : Attr { c | kind : Supported } msg
+kindSubtitles =
+    Ir.attribute "kind" "subtitles"
+
+
+{-| Set the `loading` attribute to `"eager"`. Portmanteau of `loading` + `eager` — for IDE discovery and single-import ergonomics.
+-}
+loadingEager : Attr { c | loading : Supported } msg
+loadingEager =
+    Ir.attribute "loading" "eager"
+
+
+{-| Set the `loading` attribute to `"lazy"`. Portmanteau of `loading` + `lazy` — for IDE discovery and single-import ergonomics.
+-}
+loadingLazy : Attr { c | loading : Supported } msg
+loadingLazy =
+    Ir.attribute "loading" "lazy"
+
+
+{-| Set the `method` attribute to `"dialog"`. Portmanteau of `method` + `dialog` — for IDE discovery and single-import ergonomics.
+-}
+methodDialog : Attr { c | method : Supported } msg
+methodDialog =
+    Ir.attribute "method" "dialog"
+
+
+{-| Set the `method` attribute to `"get"`. Portmanteau of `method` + `get` — for IDE discovery and single-import ergonomics.
+-}
+methodGet : Attr { c | method : Supported } msg
+methodGet =
+    Ir.attribute "method" "get"
+
+
+{-| Set the `method` attribute to `"post"`. Portmanteau of `method` + `post` — for IDE discovery and single-import ergonomics.
+-}
+methodPost : Attr { c | method : Supported } msg
+methodPost =
+    Ir.attribute "method" "post"
+
+
+{-| Set the `popovertargetaction` attribute to `"hide"`. Portmanteau of `popovertargetaction` + `hide` — for IDE discovery and single-import ergonomics.
+-}
+popovertargetactionHide : Attr { c | popovertargetaction : Supported } msg
+popovertargetactionHide =
+    Ir.attribute "popovertargetaction" "hide"
+
+
+{-| Set the `popovertargetaction` attribute to `"show"`. Portmanteau of `popovertargetaction` + `show` — for IDE discovery and single-import ergonomics.
+-}
+popovertargetactionShow : Attr { c | popovertargetaction : Supported } msg
+popovertargetactionShow =
+    Ir.attribute "popovertargetaction" "show"
+
+
+{-| Set the `popovertargetaction` attribute to `"toggle"`. Portmanteau of `popovertargetaction` + `toggle` — for IDE discovery and single-import ergonomics.
+-}
+popovertargetactionToggle : Attr { c | popovertargetaction : Supported } msg
+popovertargetactionToggle =
+    Ir.attribute "popovertargetaction" "toggle"
+
+
+{-| Set the `preload` attribute to `""`. Portmanteau of `preload` + \`\` — for IDE discovery and single-import ergonomics.
+-}
+preloadValue : Attr { c | preload : Supported } msg
+preloadValue =
+    Ir.attribute "preload" ""
+
+
+{-| Set the `preload` attribute to `"auto"`. Portmanteau of `preload` + `auto` — for IDE discovery and single-import ergonomics.
+-}
+preloadAuto : Attr { c | preload : Supported } msg
+preloadAuto =
+    Ir.attribute "preload" "auto"
+
+
+{-| Set the `preload` attribute to `"metadata"`. Portmanteau of `preload` + `metadata` — for IDE discovery and single-import ergonomics.
+-}
+preloadMetadata : Attr { c | preload : Supported } msg
+preloadMetadata =
+    Ir.attribute "preload" "metadata"
+
+
+{-| Set the `preload` attribute to `"none"`. Portmanteau of `preload` + `none` — for IDE discovery and single-import ergonomics.
+-}
+preloadNone : Attr { c | preload : Supported } msg
+preloadNone =
+    Ir.attribute "preload" "none"
+
+
+{-| Set the `referrerpolicy` attribute to `""`. Portmanteau of `referrerpolicy` + \`\` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyValue : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyValue =
+    Ir.attribute "referrerpolicy" ""
+
+
+{-| Set the `referrerpolicy` attribute to `"no-referrer"`. Portmanteau of `referrerpolicy` + `no-referrer` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyNoReferrer : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyNoReferrer =
+    Ir.attribute "referrerpolicy" "no-referrer"
+
+
+{-| Set the `referrerpolicy` attribute to `"no-referrer-when-downgrade"`. Portmanteau of `referrerpolicy` + `no-referrer-when-downgrade` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyNoReferrerWhenDowngrade : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyNoReferrerWhenDowngrade =
+    Ir.attribute "referrerpolicy" "no-referrer-when-downgrade"
+
+
+{-| Set the `referrerpolicy` attribute to `"origin"`. Portmanteau of `referrerpolicy` + `origin` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyOrigin : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyOrigin =
+    Ir.attribute "referrerpolicy" "origin"
+
+
+{-| Set the `referrerpolicy` attribute to `"origin-when-cross-origin"`. Portmanteau of `referrerpolicy` + `origin-when-cross-origin` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyOriginWhenCrossOrigin : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyOriginWhenCrossOrigin =
+    Ir.attribute "referrerpolicy" "origin-when-cross-origin"
+
+
+{-| Set the `referrerpolicy` attribute to `"same-origin"`. Portmanteau of `referrerpolicy` + `same-origin` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicySameOrigin : Attr { c | referrerpolicy : Supported } msg
+referrerpolicySameOrigin =
+    Ir.attribute "referrerpolicy" "same-origin"
+
+
+{-| Set the `referrerpolicy` attribute to `"strict-origin"`. Portmanteau of `referrerpolicy` + `strict-origin` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyStrictOrigin : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyStrictOrigin =
+    Ir.attribute "referrerpolicy" "strict-origin"
+
+
+{-| Set the `referrerpolicy` attribute to `"strict-origin-when-cross-origin"`. Portmanteau of `referrerpolicy` + `strict-origin-when-cross-origin` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyStrictOriginWhenCrossOrigin : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyStrictOriginWhenCrossOrigin =
+    Ir.attribute "referrerpolicy" "strict-origin-when-cross-origin"
+
+
+{-| Set the `referrerpolicy` attribute to `"unsafe-url"`. Portmanteau of `referrerpolicy` + `unsafe-url` — for IDE discovery and single-import ergonomics.
+-}
+referrerpolicyUnsafeUrl : Attr { c | referrerpolicy : Supported } msg
+referrerpolicyUnsafeUrl =
+    Ir.attribute "referrerpolicy" "unsafe-url"
+
+
+{-| Set the `sandbox` attribute to `"allow-downloads"`. Portmanteau of `sandbox` + `allow-downloads` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowDownloads : Attr { c | sandbox : Supported } msg
+sandboxAllowDownloads =
+    Ir.attribute "sandbox" "allow-downloads"
+
+
+{-| Set the `sandbox` attribute to `"allow-forms"`. Portmanteau of `sandbox` + `allow-forms` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowForms : Attr { c | sandbox : Supported } msg
+sandboxAllowForms =
+    Ir.attribute "sandbox" "allow-forms"
+
+
+{-| Set the `sandbox` attribute to `"allow-modals"`. Portmanteau of `sandbox` + `allow-modals` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowModals : Attr { c | sandbox : Supported } msg
+sandboxAllowModals =
+    Ir.attribute "sandbox" "allow-modals"
+
+
+{-| Set the `sandbox` attribute to `"allow-orientation-lock"`. Portmanteau of `sandbox` + `allow-orientation-lock` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowOrientationLock : Attr { c | sandbox : Supported } msg
+sandboxAllowOrientationLock =
+    Ir.attribute "sandbox" "allow-orientation-lock"
+
+
+{-| Set the `sandbox` attribute to `"allow-pointer-lock"`. Portmanteau of `sandbox` + `allow-pointer-lock` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowPointerLock : Attr { c | sandbox : Supported } msg
+sandboxAllowPointerLock =
+    Ir.attribute "sandbox" "allow-pointer-lock"
+
+
+{-| Set the `sandbox` attribute to `"allow-popups"`. Portmanteau of `sandbox` + `allow-popups` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowPopups : Attr { c | sandbox : Supported } msg
+sandboxAllowPopups =
+    Ir.attribute "sandbox" "allow-popups"
+
+
+{-| Set the `sandbox` attribute to `"allow-popups-to-escape-sandbox"`. Portmanteau of `sandbox` + `allow-popups-to-escape-sandbox` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowPopupsToEscapeSandbox : Attr { c | sandbox : Supported } msg
+sandboxAllowPopupsToEscapeSandbox =
+    Ir.attribute "sandbox" "allow-popups-to-escape-sandbox"
+
+
+{-| Set the `sandbox` attribute to `"allow-presentation"`. Portmanteau of `sandbox` + `allow-presentation` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowPresentation : Attr { c | sandbox : Supported } msg
+sandboxAllowPresentation =
+    Ir.attribute "sandbox" "allow-presentation"
+
+
+{-| Set the `sandbox` attribute to `"allow-same-origin"`. Portmanteau of `sandbox` + `allow-same-origin` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowSameOrigin : Attr { c | sandbox : Supported } msg
+sandboxAllowSameOrigin =
+    Ir.attribute "sandbox" "allow-same-origin"
+
+
+{-| Set the `sandbox` attribute to `"allow-scripts"`. Portmanteau of `sandbox` + `allow-scripts` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowScripts : Attr { c | sandbox : Supported } msg
+sandboxAllowScripts =
+    Ir.attribute "sandbox" "allow-scripts"
+
+
+{-| Set the `sandbox` attribute to `"allow-top-navigation"`. Portmanteau of `sandbox` + `allow-top-navigation` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowTopNavigation : Attr { c | sandbox : Supported } msg
+sandboxAllowTopNavigation =
+    Ir.attribute "sandbox" "allow-top-navigation"
+
+
+{-| Set the `sandbox` attribute to `"allow-top-navigation-by-user-activation"`. Portmanteau of `sandbox` + `allow-top-navigation-by-user-activation` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowTopNavigationByUserActivation : Attr { c | sandbox : Supported } msg
+sandboxAllowTopNavigationByUserActivation =
+    Ir.attribute "sandbox" "allow-top-navigation-by-user-activation"
+
+
+{-| Set the `sandbox` attribute to `"allow-top-navigation-to-custom-protocols"`. Portmanteau of `sandbox` + `allow-top-navigation-to-custom-protocols` — for IDE discovery and single-import ergonomics.
+-}
+sandboxAllowTopNavigationToCustomProtocols : Attr { c | sandbox : Supported } msg
+sandboxAllowTopNavigationToCustomProtocols =
+    Ir.attribute "sandbox" "allow-top-navigation-to-custom-protocols"
+
+
+{-| Set the `scope` attribute to `"col"`. Portmanteau of `scope` + `col` — for IDE discovery and single-import ergonomics.
+-}
+scopeCol : Attr { c | scope : Supported } msg
+scopeCol =
+    Ir.attribute "scope" "col"
+
+
+{-| Set the `scope` attribute to `"colgroup"`. Portmanteau of `scope` + `colgroup` — for IDE discovery and single-import ergonomics.
+-}
+scopeColgroup : Attr { c | scope : Supported } msg
+scopeColgroup =
+    Ir.attribute "scope" "colgroup"
+
+
+{-| Set the `scope` attribute to `"row"`. Portmanteau of `scope` + `row` — for IDE discovery and single-import ergonomics.
+-}
+scopeRow : Attr { c | scope : Supported } msg
+scopeRow =
+    Ir.attribute "scope" "row"
+
+
+{-| Set the `scope` attribute to `"rowgroup"`. Portmanteau of `scope` + `rowgroup` — for IDE discovery and single-import ergonomics.
+-}
+scopeRowgroup : Attr { c | scope : Supported } msg
+scopeRowgroup =
+    Ir.attribute "scope" "rowgroup"
+
+
+{-| Set the `shadowrootmode` attribute to `"closed"`. Portmanteau of `shadowrootmode` + `closed` — for IDE discovery and single-import ergonomics.
+-}
+shadowrootmodeClosed : Attr { c | shadowrootmode : Supported } msg
+shadowrootmodeClosed =
+    Ir.attribute "shadowrootmode" "closed"
+
+
+{-| Set the `shadowrootmode` attribute to `"open"`. Portmanteau of `shadowrootmode` + `open` — for IDE discovery and single-import ergonomics.
+-}
+shadowrootmodeOpen : Attr { c | shadowrootmode : Supported } msg
+shadowrootmodeOpen =
+    Ir.attribute "shadowrootmode" "open"
+
+
+{-| Set the `shadowrootslotassignment` attribute to `"manual"`. Portmanteau of `shadowrootslotassignment` + `manual` — for IDE discovery and single-import ergonomics.
+-}
+shadowrootslotassignmentManual : Attr { c | shadowrootslotassignment : Supported } msg
+shadowrootslotassignmentManual =
+    Ir.attribute "shadowrootslotassignment" "manual"
+
+
+{-| Set the `shadowrootslotassignment` attribute to `"named"`. Portmanteau of `shadowrootslotassignment` + `named` — for IDE discovery and single-import ergonomics.
+-}
+shadowrootslotassignmentNamed : Attr { c | shadowrootslotassignment : Supported } msg
+shadowrootslotassignmentNamed =
+    Ir.attribute "shadowrootslotassignment" "named"
+
+
+{-| Set the `shape` attribute to `"circle"`. Portmanteau of `shape` + `circle` — for IDE discovery and single-import ergonomics.
+-}
+shapeCircle : Attr { c | shape : Supported } msg
+shapeCircle =
+    Ir.attribute "shape" "circle"
+
+
+{-| Set the `shape` attribute to `"default"`. Portmanteau of `shape` + `default` — for IDE discovery and single-import ergonomics.
+-}
+shapeDefault : Attr { c | shape : Supported } msg
+shapeDefault =
+    Ir.attribute "shape" "default"
+
+
+{-| Set the `shape` attribute to `"poly"`. Portmanteau of `shape` + `poly` — for IDE discovery and single-import ergonomics.
+-}
+shapePoly : Attr { c | shape : Supported } msg
+shapePoly =
+    Ir.attribute "shape" "poly"
+
+
+{-| Set the `shape` attribute to `"rect"`. Portmanteau of `shape` + `rect` — for IDE discovery and single-import ergonomics.
+-}
+shapeRect : Attr { c | shape : Supported } msg
+shapeRect =
+    Ir.attribute "shape" "rect"
+
+
+{-| Set the `wrap` attribute to `"hard"`. Portmanteau of `wrap` + `hard` — for IDE discovery and single-import ergonomics.
+-}
+wrapHard : Attr { c | wrap : Supported } msg
+wrapHard =
+    Ir.attribute "wrap" "hard"
+
+
+{-| Set the `wrap` attribute to `"soft"`. Portmanteau of `wrap` + `soft` — for IDE discovery and single-import ergonomics.
+-}
+wrapSoft : Attr { c | wrap : Supported } msg
+wrapSoft =
+    Ir.attribute "wrap" "soft"

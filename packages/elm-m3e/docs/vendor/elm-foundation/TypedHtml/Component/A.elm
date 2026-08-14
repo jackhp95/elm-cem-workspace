@@ -1,4 +1,4 @@
-module TypedHtml.A exposing
+module TypedHtml.Component.A exposing
     ( a
     , Attrs, ChildAdmittedBy, Roles
     , download, href, hreflang, ping, referrerpolicy, rel, target

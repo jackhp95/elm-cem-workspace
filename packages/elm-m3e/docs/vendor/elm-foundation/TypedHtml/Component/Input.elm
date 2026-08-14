@@ -1,4 +1,4 @@
-module TypedHtml.Input exposing
+module TypedHtml.Component.Input exposing
     ( input
     , Is, Attrs, ChildAdmittedBy
     , accept, alpha, alt, autocomplete, checked, colorspace, dirname, disabled, form, formenctype, formmethod, formnovalidate, formtarget, height, list, max, maxlength, min, minlength, multiple, name, pattern, placeholder, popovertarget, popovertargetaction, readonly, required, size, src, step, type_, value, width, defaultChecked, defaultValue, stepAsNumber, valueAsNumber

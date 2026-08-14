@@ -1,4 +1,4 @@
-module TypedHtml.Metadata exposing
+module TypedHtml.Component.Metadata exposing
     ( base, head, link, meta, style, title
     , BaseIs, BaseAttrs, BaseChildAdmittedBy, HeadIs, HeadAttrs, HeadChildAdmittedBy, LinkIs, LinkAttrs, LinkChildAdmittedBy, MetaIs, MetaAttrs, MetaChildAdmittedBy, StyleIs, StyleAttrs, StyleContent, StyleChildAdmittedBy, TitleIs, TitleAttrs, TitleContent, TitleChildAdmittedBy
     , blocking, charset, color, content, crossorigin, disabled, fetchpriority, href, hreflang, httpEquiv, imagesizes, imagesrcset, integrity, media, name, referrerpolicy, rel, sizes, target

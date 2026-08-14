@@ -1,4 +1,4 @@
-module TypedHtml.Select exposing
+module TypedHtml.Component.Select exposing
     ( datalist, optgroup, option, select
     , DatalistIs, DatalistAttrs, DatalistContent, DatalistChildAdmittedBy, OptgroupIs, OptgroupAttrs, OptgroupContent, OptgroupChildAdmittedBy, OptgroupAdmittedBy, OptionIs, OptionAttrs, OptionContent, OptionChildAdmittedBy, OptionAdmittedBy, SelectIs, SelectAttrs, SelectContent, SelectChildAdmittedBy
     , autocomplete, disabled, form, label, multiple, name, readonly, required, selected, size, value, defaultSelected, valueAsNumber
