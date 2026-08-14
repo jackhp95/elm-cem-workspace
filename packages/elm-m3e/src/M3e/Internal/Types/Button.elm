@@ -79,7 +79,7 @@ type alias SelectedIconSlot =
 
 
 type alias TrailingIconSlot =
-    { sharedIcon : Shared }
+    { badge : Brand, sharedIcon : Shared }
 
 
 type alias ChildAdmittedBy childAdm =
