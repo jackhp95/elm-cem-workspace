@@ -1496,3 +1496,9 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   - **Manager-direct — elm-m3e:check docs tail.** `check:review` flags `app/Api.elm` unused (an
     elm-pages framework module used via unbuilt `.elm-pages/`). Resolve by building the docs (restore
     dev state) or a review guard — manager call, not a loop.
+
+- `M8.a: pass (loop dfe8fafe, worker claude-sonnet-5, verifier claude-opus-4-8, 1 iteration, 0
+  escalations). elm-typed-html verify fixtures migrated to concern-sep API; `check` 29 passed / 0
+  failed; only Good.elm changed (naming errors from the regroup), generated src/ untouched
+  (regen-diff OK), bad fixture DefaultValueOnOption.elm still fails as intended. Manager
+  re-verified exit 0 independently.`
