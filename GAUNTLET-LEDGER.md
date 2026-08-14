@@ -1791,3 +1791,21 @@ strict); reordering → **up/down buttons**, not drag-drop. Landed in four commi
   clipped when a node has many slots; (ii) red `0/1` count badges on EMPTY slots read as alarming (red =
   notification). Plus the D-052-round buttonGroup `role=radiogroup` a11y question above. Next free IDs: **D-055**,
   **R-023**.
+
+- **D-055 (human feedback: buttonGroup is the wrong primitive + want a pre-filled starter). UX FIX.**
+  Commit `608a9d2` (`Compose.elm` + `compose.spec.ts`, manager). (1) **buttonGroup → `flex flex-wrap gap-2`.**
+  The human called the horizontal overflow "not acceptable" — `m3e-button-group` overflows/clips instead of
+  wrapping, and (the open a11y issue) stamps `role=radiogroup`/`role=radio` on our INDEPENDENT attribute/slot
+  toggles. Both `attrGroup` and `slotGroup` now wrap the buttons in a plain `flex flex-wrap` row; buttons are
+  plain `role=button` again → RESOLVES the radiogroup a11y concern AND the overflow in one move. (2) **Starter
+  tree.** `init` now folds `starterEdits` (2 `listItem`s, each with an `unnamed` text label "First item"/"Second
+  item") over `Cem.Compose.init` — the editor opens with content to work from, and because reorder arrows only
+  render when a slot holds >1 child (the human "wasn't seeing the arrows" on the previously EMPTY root — working
+  as designed, just nothing to reorder), the starter surfaces them immediately. All of it is deletable.
+  (3) **Playwright reworked** for the new starting DOM: `radio`→`button`; scratch-built tests add their own node
+  and scope to it via `.last()` (a new child appends last) + `:visible` (all menus are always in the DOM, only
+  the clicked one shows); the reorder test now drives the starter's two items directly and asserts the labels
+  swap. 7/7. Gates: build:site, check:review, check:compose-attrs, copy-fidelity green. **STILL OPEN (flagged,
+  not fixed):** red `0/1` count badges on EMPTY slots read as alarming (`m3e-badge` default is the error color) —
+  a color/variant tweak awaiting the human's call; and the item-6 "no separate edit pencil" judgment (D-054)
+  still stands for confirmation. Next free IDs: **D-056**, **R-023**.
