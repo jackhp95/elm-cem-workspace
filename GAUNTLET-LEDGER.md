@@ -1695,3 +1695,9 @@ realizable way the human chose (D-048). All green on branch `compose-poc`; not p
   manager verified the fix form + independently re-ran build:site + Playwright 6/6 on round 2. **UI-refinement
   round complete.** Next free IDs: **D-050**, **R-023**.
 
+
+- **D-050 (human: inline badges via slot, not positioning → part F4, task #20).** Replace the `for`+`position`
+  overlay badge with an inline `M3e.badge [] [ M3e.text count ]` sibling next to the slot button — content in the
+  badge's own `unnamed` slot, no `for`/`position`/host-id. Feasible + precedent-backed: app already uses
+  `M3e.badge [] [ M3e.text "3" ]` at `docs/app/Route/Guide/Seams.elm:188`; scratch inline badge compiles. Next
+  free IDs: **D-051**, **R-023**.
