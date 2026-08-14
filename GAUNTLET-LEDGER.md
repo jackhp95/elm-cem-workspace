@@ -1640,3 +1640,11 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
   Escalated to human to choose scope (realizable-now vs deeper chip re-architecture) rather than sink a builder in
   the popover/inline-menu swamp. Next free IDs: **D-048**, **R-023**.
 
+- **D-048 (audit-fix scope chosen by human).** F1 → **plain outlined container** (swap nesting `M3e.card` for a
+  bordered `TypedHtml.div`, drop card semantics for the recursion). F2 → **extra-small `M3e.button`s** instead of
+  chips (human's call — cleanly resolves the OKF "don't use chips as a substitute for buttons" finding AND the
+  chips-can't-host-menus wall in one move; unifies the editor on the button+`menuTrigger[for]`+menu pattern B14
+  proved works; also split attribute controls vs slot/add controls into separate groups). F3 → badges for slot
+  COUNTS only; a set attr's value goes in its button label, drop `attrValueBadge`. One gauntlet part F2 (task
+  #18). Next free IDs: **D-049**, **R-023**.
+
