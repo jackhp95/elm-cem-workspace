@@ -6,7 +6,10 @@ module HtmlIr.Internal exposing
     , token
     , fromHtml
     , node, keyedNode, text, addAttribute, toHtml
+    , isKeyed, toKeyedPair, key
     , lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+    , addClass, attrIf, when, testId
+    , tagOf, keysOf, childrenOf, classesOf
     , toNode, mapElement, mapNode, mapAttribute, toHtmlAttributes, toString
     )
 
@@ -110,7 +113,30 @@ These are re-exported by the public modules; they live here only because the
 opaque representations do. None of them mint a row.
 
 @docs node, keyedNode, text, addAttribute, toHtml
+@docs isKeyed, toKeyedPair, key
 @docs lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+
+
+# Decorator combinators
+
+Post-hoc rewrites over a typed `Element`, built on [`addAttribute`](#addAttribute).
+Each preserves the element's phantom rows (`when`'s empty branch invents fresh
+rows, as any producer does).
+
+@docs addClass, attrIf, when, testId
+
+
+# Structural-test accessors
+
+`Node` is opaque, so tests cannot pattern-match it. These read-only accessors let
+a suite assert IR structure (tag, keys, children, classes) without exposing the
+representation.
+
+@docs tagOf, keysOf, childrenOf, classesOf
+
+
+# Message-map and unwrap
+
 @docs toNode, mapElement, mapNode, mapAttribute, toHtmlAttributes, toString
 
 -}
@@ -150,7 +176,10 @@ type Element accepts admittedBy msg
 
 
 {-| The untyped intermediate tree every `Element` wraps: a tag node (name,
-facts, children), a text leaf, or a raw-`Html` escape. Construction stays
+facts, children), a keyed tag node, a **keyed marker** wrapping a single node (a
+child that has declared a diff key via [`key`](#key), lifted into a
+`KeyedTag` by the parent's [`node`](#node) auto-upgrade), a text leaf, or a
+raw-`Html` escape. Construction stays
 structural — not pre-rendered `VirtualDom` — so the typed layers above can
 rearrange, re-attribute, and message-map content before anything is rendered.
 
@@ -163,6 +192,7 @@ merge instead of appending a second, clobbering copy. Merging happens once, in
 type Node msg
     = Tag String (List (Fact msg)) (List (Node msg))
     | KeyedTag String (List (Fact msg)) (List ( String, Node msg ))
+    | Keyed String (Node msg)
     | Text String
     | Raw (Html msg)
 
@@ -386,10 +416,50 @@ fromHtml =
 [`fromNode`](#fromNode) can promote it to a typed `Element`. The attributes'
 capability rows are erased here — they were checked when the caller's closed
 attribute list unified.
+
+**Auto-upgrade to keyed diffing.** If **any** child carries an explicit diff key
+(a [`Keyed`](#Node) marker minted by [`key`](#key)), the whole child list is
+promoted to a `KeyedTag`: keyed children keep their key, unkeyed children fall
+back to `String.fromInt index` ([`toKeyedPair`](#toKeyedPair)). Mixing keyed and
+unkeyed children is a documented code smell — it degrades to positional keys
+rather than silently dropping the keying (see design decision D2). With no keyed
+child the node stays a plain `Tag`, exactly as before.
+
 -}
 node : String -> List (Attr capability msg) -> List (Node msg) -> Node msg
 node tag attrs children =
-    Tag tag (factsOf attrs) children
+    if List.any isKeyed children then
+        KeyedTag tag (factsOf attrs) (List.indexedMap toKeyedPair children)
+
+    else
+        Tag tag (factsOf attrs) children
+
+
+{-| Whether a node carries an explicit diff key (a [`Keyed`](#Node) marker) —
+the predicate that triggers [`node`](#node)'s keyed auto-upgrade.
+-}
+isKeyed : Node msg -> Bool
+isKeyed n =
+    case n of
+        Keyed _ _ ->
+            True
+
+        _ ->
+            False
+
+
+{-| Pair a child with its diff key for a `KeyedTag`: the explicit key if the
+child is a [`Keyed`](#Node) marker (unwrapping the marker), otherwise the
+positional `String.fromInt index` fallback.
+-}
+toKeyedPair : Int -> Node msg -> ( String, Node msg )
+toKeyedPair index n =
+    case n of
+        Keyed k inner ->
+            ( k, inner )
+
+        _ ->
+            ( String.fromInt index, n )
 
 
 {-| Build a tag node whose children carry diff keys (`VirtualDom.keyedNode`) —
@@ -401,6 +471,27 @@ keyedNode tag attrs children =
     KeyedTag tag (factsOf attrs) children
 
 
+{-| Attach a diff key to a child `Element` — the child-level keying primitive
+(design decision D1). The key rides along inside the container's normal,
+phantom-checked children slot; the container's [`node`](#node) constructor spots
+the [`Keyed`](#Node) marker and auto-upgrades the whole list to a `KeyedTag`.
+Attaching the key to the child (rather than re-attaching children to the
+container after the fact) keeps the container's "these children must be chips"
+kind constraint intact.
+
+Identity on both phantom rows: a keyed chip is still a chip.
+
+    M3e.chipSet []
+        [ M3e.chip [] [] |> key "1"
+        , M3e.chip [] [] |> key "2"
+        ]
+
+-}
+key : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+key k (Element n) =
+    Element (Keyed k n)
+
+
 {-| A text leaf.
 -}
 text : String -> Node msg
@@ -409,66 +500,129 @@ text =
 
 
 {-| Memoise a subtree: skip re-rendering while its inputs are referentially
-unchanged (`VirtualDom.lazy`). The body returns raw `Html`, not an `Element` —
-a typed subtree is `\model -> HtmlIr.Element.toHtml (myView model)` — because
-memoisation compares the function and each argument by **reference**; any
-per-render wrapper (an inline lambda, a packed tuple/record) allocates fresh and
-silently never memoises. So the body **must be a stable top-level function** and
-each argument a stable reference — exactly what `elm/html`'s `lazy` requires.
-Lift the result into a slot with [`fromNode`](#fromNode). Safe: mints no row.
+unchanged (`VirtualDom.lazy`). Element-in / Element-out, so the result keeps its
+phantom rows and drops into any slot — no `fromNode` lift, no leaked raw `Html`.
+
+Memoisation compares the view function and each argument by **reference**, so
+the view function **must be a stable top-level binding** and each argument a
+stable reference; any per-render wrapper (an inline lambda, a packed
+tuple/record) allocates fresh and silently never memoises. Exactly what
+`elm/html`'s `lazy` requires.
+
+The Element→Html bridge is threaded through a module-level `renderThunk` so it
+stays stable across renders — a fresh `\a -> toHtml (viewFn a)` closure per
+render would bust memoisation. The memo key is `(renderThunk, viewFn, arg)`, all
+stable.
+
 -}
-lazy : (a -> Html msg) -> a -> Node msg
-lazy f a =
-    Raw (VirtualDom.lazy f a)
+lazy : (a -> Element accepts admittedBy msg) -> a -> Element accepts admittedBy msg
+lazy viewFn a =
+    fromNode (Raw (VirtualDom.lazy2 renderThunk viewFn a))
 
 
 {-| [`lazy`](#lazy) for a two-argument view.
 -}
-lazy2 : (a -> b -> Html msg) -> a -> b -> Node msg
-lazy2 f a b =
-    Raw (VirtualDom.lazy2 f a b)
+lazy2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Element accepts admittedBy msg
+lazy2 viewFn a b =
+    fromNode (Raw (VirtualDom.lazy3 renderThunk2 viewFn a b))
 
 
 {-| [`lazy`](#lazy) for a three-argument view.
 -}
-lazy3 : (a -> b -> c -> Html msg) -> a -> b -> c -> Node msg
-lazy3 f a b c =
-    Raw (VirtualDom.lazy3 f a b c)
+lazy3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Element accepts admittedBy msg
+lazy3 viewFn a b c =
+    fromNode (Raw (VirtualDom.lazy4 renderThunk3 viewFn a b c))
 
 
 {-| [`lazy`](#lazy) for a four-argument view.
 -}
-lazy4 : (a -> b -> c -> d -> Html msg) -> a -> b -> c -> d -> Node msg
-lazy4 f a b c d =
-    Raw (VirtualDom.lazy4 f a b c d)
+lazy4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Element accepts admittedBy msg
+lazy4 viewFn a b c d =
+    fromNode (Raw (VirtualDom.lazy5 renderThunk4 viewFn a b c d))
 
 
 {-| [`lazy`](#lazy) for a five-argument view.
 -}
-lazy5 : (a -> b -> c -> d -> e -> Html msg) -> a -> b -> c -> d -> e -> Node msg
-lazy5 f a b c d e =
-    Raw (VirtualDom.lazy5 f a b c d e)
+lazy5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Element accepts admittedBy msg
+lazy5 viewFn a b c d e =
+    fromNode (Raw (VirtualDom.lazy6 renderThunk5 viewFn a b c d e))
 
 
 {-| [`lazy`](#lazy) for a six-argument view.
 -}
-lazy6 : (a -> b -> c -> d -> e -> g -> Html msg) -> a -> b -> c -> d -> e -> g -> Node msg
-lazy6 f a b c d e g =
-    Raw (VirtualDom.lazy6 f a b c d e g)
+lazy6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg
+lazy6 viewFn a b c d e g =
+    fromNode (Raw (VirtualDom.lazy7 renderThunk6 viewFn a b c d e g))
 
 
 {-| [`lazy`](#lazy) for a seven-argument view.
 -}
-lazy7 : (a -> b -> c -> d -> e -> g -> h -> Html msg) -> a -> b -> c -> d -> e -> g -> h -> Node msg
-lazy7 f a b c d e g h =
-    Raw (VirtualDom.lazy7 f a b c d e g h)
+lazy7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg
+lazy7 viewFn a b c d e g h =
+    fromNode (Raw (VirtualDom.lazy8 renderThunk7 viewFn a b c d e g h))
 
 
-{-| [`lazy`](#lazy) for an eight-argument view.
+{-| [`lazy`](#lazy) for an eight-argument view — but **this variant does not
+memoise at all**. It re-renders on every render, exactly as if you had not
+wrapped the view.
+
+The reason is structural. `VirtualDom.lazy8` has eight memo slots and compares
+all of them by reference. This bridge must spend one slot on the stable
+`renderThunk`, leaving only seven for data — but the view here takes eight data
+arguments. To make the numbers fit, the eighth argument (`i`) is closed over in
+a lambda that is allocated fresh on **every** render, and that lambda occupies
+one of the compared slots. Because a freshly-allocated closure never matches the
+previous render's reference, the memo check fails every time and the subtree is
+always recomputed. There is no partial gating on the first seven arguments: one
+mismatched slot forces a full recompute, so their values are irrelevant.
+
+For real memoisation, pack the extra state into one of the first seven arguments
+(for example a stable record) and use [`lazy7`](#lazy7). `lazy8` exists only to
+keep the API surface complete; do not rely on it to skip work.
+
 -}
-lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Html msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Node msg
-lazy8 f a b c d e g h i =
-    Raw (VirtualDom.lazy8 f a b c d e g h i)
+lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg
+lazy8 viewFn a b c d e g h i =
+    fromNode (Raw (VirtualDom.lazy8 renderThunk7 (\p q r s t u v -> viewFn p q r s t u v i) a b c d e g h))
+
+
+{-| Stable Element→Html bridge for [`lazy`](#lazy). Module-level so its reference
+is constant across renders — the load-bearing detail that keeps memoisation
+alive.
+-}
+renderThunk : (a -> Element accepts admittedBy msg) -> a -> Html msg
+renderThunk viewFn a =
+    toHtml (toNode (viewFn a))
+
+
+renderThunk2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Html msg
+renderThunk2 viewFn a b =
+    toHtml (toNode (viewFn a b))
+
+
+renderThunk3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Html msg
+renderThunk3 viewFn a b c =
+    toHtml (toNode (viewFn a b c))
+
+
+renderThunk4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Html msg
+renderThunk4 viewFn a b c d =
+    toHtml (toNode (viewFn a b c d))
+
+
+renderThunk5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Html msg
+renderThunk5 viewFn a b c d e =
+    toHtml (toNode (viewFn a b c d e))
+
+
+renderThunk6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Html msg
+renderThunk6 viewFn a b c d e g =
+    toHtml (toNode (viewFn a b c d e g))
+
+
+renderThunk7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Html msg
+renderThunk7 viewFn a b c d e g h =
+    toHtml (toNode (viewFn a b c d e g h))
 
 
 {-| Prepend one attribute to a node. A `Text` or `Raw` leaf cannot carry an
@@ -478,6 +632,9 @@ never silently dropped (`text "x"` given `slot="s"` becomes
 
 An **absent** attribute ([`none`](#none)) is a no-op: it leaves a tag node
 untouched and does not promote a leaf to a `<span>` to hold nothing.
+
+A [`Keyed`](#Node) marker is transparent: the attribute is applied to the node
+it wraps, so a keyed child keeps its diff key while gaining the attribute.
 
 Prepending means lowest precedence, matching the kernel's last-wins rule for
 duplicate names: a prepended `class` lands first in the merged list, and a
@@ -499,6 +656,9 @@ addAttribute (Attr facts) n =
                 KeyedTag tag existing children ->
                     KeyedTag tag (facts ++ existing) children
 
+                Keyed k inner ->
+                    Keyed k (addAttribute (Attr facts) inner)
+
                 Text s ->
                     Tag "span" facts [ Text s ]
 
@@ -517,6 +677,9 @@ toHtml n =
 
         KeyedTag tag facts children ->
             VirtualDom.keyedNode tag (mergeFacts facts) (List.map (Tuple.mapSecond toHtml) children)
+
+        Keyed _ inner ->
+            toHtml inner
 
         Text s ->
             VirtualDom.text s
@@ -554,6 +717,9 @@ mapNode f n =
         KeyedTag tag facts children ->
             KeyedTag tag (List.map (mapFact f) facts) (List.map (Tuple.mapSecond (mapNode f)) children)
 
+        Keyed k inner ->
+            Keyed k (mapNode f inner)
+
         Text s ->
             Text s
 
@@ -583,6 +749,161 @@ toHtmlAttributes (Attr facts) =
 toString : Value tags -> String
 toString (Value s) =
     s
+
+
+
+-- DECORATOR COMBINATORS
+
+
+{-| Add a `class` to an element, participating in the `class` merge (see _Merge
+semantics_). Phantom rows are preserved.
+-}
+addClass : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+addClass name (Element n) =
+    Element (addAttribute (attribute "class" name) n)
+
+
+{-| Conditionally attach an attribute: apply it when the flag is `True`, leave
+the element untouched when `False`. The `capability` row is fully polymorphic —
+it never has to unify with the element's rows, because [`addAttribute`](#addAttribute)
+erases it — so this threads generically for any `Attr`. Phantom rows preserved.
+
+    button [] [ text "Submit" ]
+        |> attrIf loading disabled
+
+-}
+attrIf : Bool -> Attr capability msg -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+attrIf cond attr (Element n) =
+    if cond then
+        Element (addAttribute attr n)
+
+    else
+        Element n
+
+
+{-| Keep an element only when the flag is `True`; a `False` flag collapses it to
+an **empty node** (`Text ""`), which renders nothing. The empty branch mints
+fresh phantom rows (as any producer does), so it drops into the same slot the
+kept element would.
+-}
+when : Bool -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+when cond el =
+    if cond then
+        el
+
+    else
+        Element (Text "")
+
+
+{-| Stamp a `data-testid` attribute for structural / end-to-end test hooks.
+Phantom rows preserved.
+-}
+testId : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+testId value (Element n) =
+    Element (addAttribute (attribute "data-testid" value) n)
+
+
+
+-- STRUCTURAL-TEST ACCESSORS
+
+
+{-| The tag name of a node, if it is a tag node (`Tag` or `KeyedTag`); `Nothing`
+for a text leaf, raw escape, or bare [`Keyed`](#Node) marker (unwrap the marker
+first). For asserting IR structure in tests without exposing the representation.
+-}
+tagOf : Node msg -> Maybe String
+tagOf n =
+    case n of
+        Tag tag _ _ ->
+            Just tag
+
+        KeyedTag tag _ _ ->
+            Just tag
+
+        Keyed _ inner ->
+            tagOf inner
+
+        Text _ ->
+            Nothing
+
+        Raw _ ->
+            Nothing
+
+
+{-| The diff keys of a node's children, in order — non-empty only for a
+`KeyedTag` (the shape [`node`](#node) auto-upgrades to). `[]` for any other node.
+Lets a suite assert `keysOf (toNode view) == [ "1", "2" ]`.
+-}
+keysOf : Node msg -> List String
+keysOf n =
+    case n of
+        KeyedTag _ _ children ->
+            List.map Tuple.first children
+
+        Keyed _ inner ->
+            keysOf inner
+
+        _ ->
+            []
+
+
+{-| The children of a node, in order — with any keys stripped, so a `KeyedTag`'s
+children come back as bare nodes. `[]` for a leaf or raw escape.
+-}
+childrenOf : Node msg -> List (Node msg)
+childrenOf n =
+    case n of
+        Tag _ _ children ->
+            children
+
+        KeyedTag _ _ children ->
+            List.map Tuple.second children
+
+        Keyed _ inner ->
+            childrenOf inner
+
+        Text _ ->
+            []
+
+        Raw _ ->
+            []
+
+
+{-| The `class` names on a node, in authoring order — reading the structural
+`FClass` facts before the merge. `[]` for a leaf, raw escape, or a node with no
+class facts.
+-}
+classesOf : Node msg -> List String
+classesOf n =
+    case n of
+        Tag _ facts _ ->
+            classNamesOf facts
+
+        KeyedTag _ facts _ ->
+            classNamesOf facts
+
+        Keyed _ inner ->
+            classesOf inner
+
+        Text _ ->
+            []
+
+        Raw _ ->
+            []
+
+
+classNamesOf : List (Fact msg) -> List String
+classNamesOf facts =
+    List.filterMap
+        (\fact ->
+            case fact of
+                FClass c ->
+                    Just c
+
+                _ ->
+                    Nothing
+        )
+        facts
 
 
 
@@ -667,17 +988,17 @@ equal or faster, and it avoids allocating red-black tree nodes per insert.
 
 -}
 upsert : ( String, String ) -> List ( String, String ) -> List ( String, String )
-upsert ( key, value ) declarations =
+upsert ( propKey, value ) declarations =
     case declarations of
         [] ->
-            [ ( key, value ) ]
+            [ ( propKey, value ) ]
 
         (( existingKey, _ ) as head) :: rest ->
-            if existingKey == key then
-                ( key, value ) :: rest
+            if existingKey == propKey then
+                ( propKey, value ) :: rest
 
             else
-                head :: upsert ( key, value ) rest
+                head :: upsert ( propKey, value ) rest
 
 
 {-| Scrub, then [`upsert`](#upsert) — fused so a rejected declaration costs no
@@ -691,14 +1012,14 @@ scans and allocates nothing.
 
 -}
 addDeclaration : ( String, String ) -> List ( String, String ) -> List ( String, String )
-addDeclaration ( key, value ) declarations =
+addDeclaration ( propKey, value ) declarations =
     let
         key_ =
-            if String.contains ";" key || String.contains ":" key then
-                String.filter (\c -> c /= ';' && c /= ':') key
+            if String.contains ";" propKey || String.contains ":" propKey then
+                String.filter (\c -> c /= ';' && c /= ':') propKey
 
             else
-                key
+                propKey
     in
     if String.isEmpty key_ then
         declarations
@@ -736,5 +1057,5 @@ styleAttribute declarations =
 
         _ ->
             [ Html.Attributes.attribute "style"
-                (String.join ";" (List.map (\( key, value ) -> key ++ ":" ++ value) declarations))
+                (String.join ";" (List.map (\( propKey, value ) -> propKey ++ ":" ++ value) declarations))
             ]

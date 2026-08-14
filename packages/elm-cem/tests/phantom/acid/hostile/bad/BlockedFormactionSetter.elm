@@ -23,9 +23,9 @@ Elm; use a port or a custom element.
 
 import HtmlIr.Attribute
 import Hz.Attributes
-import Hz.Blocked
+import Hz.Component.Blocked
 
 
-broken : HtmlIr.Attribute.Attr Hz.Blocked.Attrs msg
+broken : HtmlIr.Attribute.Attr Hz.Component.Blocked.Attrs msg
 broken =
     Hz.Attributes.formaction "/submit"

@@ -239,7 +239,16 @@ function providedRootsFromDeclaredDeps(declared, elmHome) {
 // `jackhp95/elm-html-intermediate-representation` dependency, an exposed
 // `Review.Facts` importing `Cem.Facts` with no facts dep, or an import of some
 // other brand's namespace with no dep providing it.
-function auditPackage(pkgDir) {
+// `providedModules` (optional) is the set of module names EXPOSED by declared
+// unpublished family deps — e.g. when auditing jackhp95/elm-m3e-components, the
+// exposed-modules of its declared dep jackhp95/elm-m3e-core (`M3e.Attributes`,
+// `M3e.Kind`, `M3e.Forge.Internal`, …). A family that SPLITS one namespace root
+// across sibling packages (`M3e.*` living in core + components + builder) can't
+// be resolved by the fixed FAMILY_DEPS namespace table alone, so an import of a
+// sibling's exposed module would look "foreign". Passing the siblings' exposed
+// surface lets the audit see it as covered — the caller (registry-check) knows
+// which deps are declared+staged and what each exposes.
+function auditPackage(pkgDir, providedModules = new Set()) {
   const elmJsonPath = path.join(pkgDir, "elm.json");
   const srcDir = path.join(pkgDir, "src");
   const violations = [];
@@ -268,6 +277,7 @@ function auditPackage(pkgDir) {
         }
         continue;
       }
+      if (providedModules.has(imp)) continue; // exposed by a declared family dep
       const root = imp.split(".")[0];
       if (ELM_STDLIB_ROOTS.has(root)) continue; // provided by the base Elm deps
       if (otherDeclaredRoots.has(root)) continue; // provided by a declared non-family dependency

@@ -19,9 +19,9 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
-import M3e.Build.Internal as B
 import M3e.Component.Theme as Component
 import M3e.Events as Ev
+import M3e.Forge.Internal as B
 import M3e.Internal.Types.Theme
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values

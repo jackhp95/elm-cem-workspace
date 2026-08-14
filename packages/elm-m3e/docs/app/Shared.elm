@@ -633,6 +633,7 @@ view sharedData page model toMsg pageView =
             [ M3e.Component.Theme.color model.theme.seed
             , M3e.Component.Theme.scheme model.theme.scheme
             , M3e.Component.Theme.contrast model.theme.contrast
+            , M3e.Component.Theme.variant model.theme.variant
             , M3e.Component.Theme.density model.theme.density
             , M3e.Component.Theme.motion model.theme.motion
             , TypedHtml.Attributes.dir model.dir

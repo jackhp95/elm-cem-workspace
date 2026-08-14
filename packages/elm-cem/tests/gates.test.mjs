@@ -96,6 +96,61 @@ if (gen.status !== 0) {
 }
 if (fs.existsSync(elmFormat)) spawnSync(elmFormat, [brandSrc, "--yes"], { encoding: "utf8" });
 
+// A SEPARATE throwaway brand, isolated from `brand` above, whose config also
+// declares `_iconModule.package` so the generator writes a standalone nested
+// package (elm-m3e batch-2's `elm-m3e-icons` pattern). Kept separate so the
+// nested-pkg tests below don't leak an extra exposed module into `brand`'s
+// elm.json and perturb the unrelated registry-check compile assertions further
+// down this file (bit us once — see the `--nested-pkg` test block's history).
+const brandIcons = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-gates-icons-"));
+const brandIconsSrc = path.join(brandIcons, "src");
+fs.mkdirSync(path.join(brandIcons, "config"), { recursive: true });
+fs.writeFileSync(path.join(brandIcons, "config", "icons-catalog.json"), JSON.stringify({ names: ["menu", "close"] }));
+fs.writeFileSync(
+  path.join(brandIcons, "config", "slots.json"),
+  JSON.stringify({
+    _phantom: true,
+    _iconModule: {
+      lib: "Wc",
+      iconComp: "Icon",
+      catalogFrom: "config/icons-catalog.json",
+      package: {
+        dir: "wc-icons",
+        name: "test/wc-icons",
+        summary: "test nested icon package",
+        version: "1.0.0",
+        deps: { "elm/core": "1.0.0 <= v < 2.0.0", "elm/html": "1.0.0 <= v < 2.0.0" },
+      },
+    },
+  })
+);
+fs.copyFileSync(fixture, path.join(brandIcons, "custom-elements.json"));
+fs.writeFileSync(
+  path.join(brandIcons, "package.json"),
+  JSON.stringify({ name: "elm-wc-icons-test", config: { cem: "custom-elements.json" } }, null, 2)
+);
+const genIcons = spawnSync(
+  "node",
+  [
+    cli,
+    `--flags-from=${path.join(brandIcons, "custom-elements.json")}`,
+    "--config-from=config/slots.json",
+    `--output=${brandIconsSrc}`,
+  ],
+  { cwd: brandIcons, encoding: "utf8" }
+);
+if (genIcons.status !== 0) {
+  console.error(genIcons.stdout, genIcons.stderr);
+  console.error("gates-test: FAIL — could not generate the nested-pkg test brand");
+  process.exit(1);
+}
+const nestedPkgSrc = path.join(brandIcons, "wc-icons", "src");
+if (fs.existsSync(elmFormat)) {
+  spawnSync(elmFormat, [brandIconsSrc, "--yes"], { encoding: "utf8" });
+  if (fs.existsSync(nestedPkgSrc)) spawnSync(elmFormat, [nestedPkgSrc, "--yes"], { encoding: "utf8" });
+}
+const runGateIcons = (sub, args = []) => spawnSync("node", [cli, sub, ...args], { cwd: brandIcons, encoding: "utf8" });
+
 const runGate = (sub, args = []) =>
   spawnSync("node", [cli, sub, ...args], { cwd: brand, encoding: "utf8" });
 
@@ -114,6 +169,55 @@ const runGate = (sub, args = []) =>
   fs.writeFileSync(barrelPath, original); // revert
   const reverted = runGate("regen-drift");
   check(reverted.status === 0, "regen-drift PASSES again after the perturbation is reverted");
+}
+
+// ── regen-drift --nested-pkg (elm-m3e-icons drift-gap fix) ───────────────────
+// The generator also writes a standalone `wc-icons/` package (config-driven via
+// `_iconModule.package`, mirroring elm-m3e's real `elm-m3e-icons`). Without
+// --nested-pkg, regen-drift never looks at it — this proves --nested-pkg=wc-icons
+// closes that blind spot the same way the root src/ check works.
+{
+  check(fs.existsSync(nestedPkgSrc), "nested package src/ was written by the generator (test setup sanity)");
+
+  const clean = runGateIcons("regen-drift", ["--nested-pkg=wc-icons"]);
+  check(
+    clean.status === 0,
+    "regen-drift --nested-pkg=wc-icons PASSES on a freshly-generated nested package",
+    clean.stdout + clean.stderr
+  );
+
+  // Without --nested-pkg at all, a nested-package perturbation must NOT be caught
+  // (documents the gap this feature closes — the root-only gate stays green).
+  const nestedFile = path.join(nestedPkgSrc, "Wc", "Icon.elm");
+  const nestedOriginal = fs.readFileSync(nestedFile, "utf8");
+  fs.writeFileSync(nestedFile, nestedOriginal.replace("{-|", "{-| DRIFT"));
+  const rootOnlyBlind = runGateIcons("regen-drift"); // no --nested-pkg
+  check(
+    rootOnlyBlind.status === 0,
+    "regen-drift WITHOUT --nested-pkg stays green on nested-package drift (the pre-fix blind spot)"
+  );
+
+  // With --nested-pkg, the same perturbation must FAIL and name the package.
+  const nestedDirty = runGateIcons("regen-drift", ["--nested-pkg=wc-icons"]);
+  check(
+    nestedDirty.status === 1 && /wc-icons/.test(nestedDirty.stdout + nestedDirty.stderr),
+    "regen-drift --nested-pkg=wc-icons FAILS and names the package when its committed src is perturbed",
+    nestedDirty.stdout + nestedDirty.stderr
+  );
+
+  fs.writeFileSync(nestedFile, nestedOriginal); // revert
+  const nestedReverted = runGateIcons("regen-drift", ["--nested-pkg=wc-icons"]);
+  check(
+    nestedReverted.status === 0,
+    "regen-drift --nested-pkg=wc-icons PASSES again after the nested perturbation is reverted"
+  );
+
+  // A configured-but-missing nested package must fail loudly, not silently pass.
+  const missing = runGateIcons("regen-drift", ["--nested-pkg=does-not-exist"]);
+  check(
+    missing.status === 1 && /does-not-exist/.test(missing.stdout + missing.stderr),
+    "regen-drift --nested-pkg=<missing dir> FAILS loudly instead of silently skipping"
+  );
 }
 
 // ── registry-check: static coverage gate (no elm needed) ─────────────────────
@@ -160,6 +264,7 @@ if (!elm || !irSrc || !fs.existsSync(factsSrc)) {
 }
 
 fs.rmSync(brand, { recursive: true, force: true });
+fs.rmSync(brandIcons, { recursive: true, force: true });
 
 if (failures > 0) {
   console.error(`\ngates-test: ${failures} FAILURE(S)`);

@@ -11,6 +11,11 @@ decides admittance. Enum setters here close over the library-wide UNION of
 values — cross-component misuse is caught by elm-review; reach for the
 per-component setters (`TypedHtml.<Component>.<attr>`) for compile-tight narrowing.
 
+Portmanteau setters (`variantRainbow`, `shapeRounded`, …) are nullary
+aliases that pre-apply one enum token. They exist for IDE discovery:
+type `variant` and autocomplete lists every value inline. Each claims
+the same capability row as its base enum setter, so admittance is identical.
+
 @docs autofocus, class, dir, hidden, id, slot, style, tabindex, classList, styleList
 @docs disabled, href, size, src, srcset, value
 @docs defaultValue

@@ -19,8 +19,8 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
 import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
-import M3e.Build.Internal as B
 import M3e.Component.Option as Component
+import M3e.Forge.Internal as B
 import M3e.Internal.Types.Option
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values

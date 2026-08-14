@@ -1,6 +1,7 @@
 node_modules/
 elm-stuff/
 dist/
+!docs/dist/
 dist-packages/
 .DS_Store
 *.log

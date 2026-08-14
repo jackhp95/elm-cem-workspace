@@ -3,6 +3,7 @@ module Mini.Attributes exposing
     , disabled, grid, weight
     , gridAsInts, weightAsNumber
     , size, variant
+    , sizeBig, sizeSmall, variantFilled, variantTonal
     )
 
 {-| The canonical shared attribute vocabulary. Every setter is an open
@@ -11,10 +12,16 @@ decides admittance. Enum setters here close over the library-wide UNION of
 values — cross-component misuse is caught by elm-review; reach for the
 per-component setters (`Mini.<Component>.<attr>`) for compile-tight narrowing.
 
+Portmanteau setters (`variantRainbow`, `shapeRounded`, …) are nullary
+aliases that pre-apply one enum token. They exist for IDE discovery:
+type `variant` and autocomplete lists every value inline. Each claims
+the same capability row as its base enum setter, so admittance is identical.
+
 @docs class, dir, id, inert, slot, style, tabindex, classList, styleList
 @docs disabled, grid, weight
 @docs gridAsInts, weightAsNumber
 @docs size, variant
+@docs sizeBig, sizeSmall, variantFilled, variantTonal
 
 -}
 
@@ -143,3 +150,31 @@ size value_ =
 variant : Value Mini.Values.Variant -> Attr { c | variant : Supported } msg
 variant value_ =
     Ir.attribute "variant" (HtmlIr.Value.toString value_)
+
+
+{-| Set the `size` attribute to `"big"`. Portmanteau of `size` + `big` — for IDE discovery and single-import ergonomics.
+-}
+sizeBig : Attr { c | size : Supported } msg
+sizeBig =
+    Ir.attribute "size" "big"
+
+
+{-| Set the `size` attribute to `"small"`. Portmanteau of `size` + `small` — for IDE discovery and single-import ergonomics.
+-}
+sizeSmall : Attr { c | size : Supported } msg
+sizeSmall =
+    Ir.attribute "size" "small"
+
+
+{-| Set the `variant` attribute to `"filled"`. Portmanteau of `variant` + `filled` — for IDE discovery and single-import ergonomics.
+-}
+variantFilled : Attr { c | variant : Supported } msg
+variantFilled =
+    Ir.attribute "variant" "filled"
+
+
+{-| Set the `variant` attribute to `"tonal"`. Portmanteau of `variant` + `tonal` — for IDE discovery and single-import ergonomics.
+-}
+variantTonal : Attr { c | variant : Supported } msg
+variantTonal =
+    Ir.attribute "variant" "tonal"

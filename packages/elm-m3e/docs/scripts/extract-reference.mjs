@@ -79,6 +79,13 @@ const NOT_EXPOSED = new Set([
   "M3e.Token",
   "M3e.Content",
   "M3e.Attr",
+  // The full Material Symbols icon-helper set (4083 nullary `m3e-icon`
+  // producers + `custom`) — a helper module, not a per-component demo, and its
+  // bare slug ("icon") collides with the real icon component (M3e.Component.Icon
+  // → /components/icon). Documented via its own package (elm-m3e-icons), not the
+  // component catalogue. Excluding it also keeps the per-slug route unique so the
+  // all-components browser spec's slug list has no duplicate titles.
+  "M3e.Icon",
 ]);
 
 // 0. The barrel source, with type annotations backfilled for any exposed value

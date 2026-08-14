@@ -20,8 +20,8 @@ import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
 import M3e.Attributes as A
-import M3e.Build.Internal as B
 import M3e.Component.SlideGroup as Component
+import M3e.Forge.Internal as B
 import M3e.Internal.Types.SlideGroup
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 

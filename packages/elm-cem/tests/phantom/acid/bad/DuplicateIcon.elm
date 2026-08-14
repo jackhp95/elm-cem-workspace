@@ -5,11 +5,11 @@ withIcon finds its capability already Used. MUST FAIL.
 -}
 
 import Mini
-import Mini.Button
+import Mini.Build.Button
 
 
 broken =
-    Mini.Button.build { content = Mini.text "x" }
-        |> Mini.Button.withIcon (Mini.icon [] [ Mini.text "a" ])
-        |> Mini.Button.withIcon (Mini.icon [] [ Mini.text "b" ])
-        |> Mini.Button.toElement
+    Mini.Build.Button.build { content = Mini.text "x" }
+        |> Mini.Build.Button.withIcon (Mini.Build.Button.build { content = Mini.text "a" })
+        |> Mini.Build.Button.withIcon (Mini.Build.Button.build { content = Mini.text "b" })
+        |> Mini.Build.Button.toElement

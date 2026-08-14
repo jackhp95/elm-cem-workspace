@@ -6,7 +6,7 @@ module BrandKindIntoSharedSlot exposing (broken)
     foreign brand's enumerated slots, but not both.
 
 `Mini.Chip` keeps its brand kind, so it produces `{ acc | chip : Mini.Kind.Brand }`.
-`Mini.Button`'s `icon` slot is enumerated over shared atoms alone —
+`Mini.Component.Button`'s `icon` slot is enumerated over shared atoms alone —
 `IconSlot = { sharedIcon : Shared }` — which is exactly the row a FOREIGN brand
 would write, since `Shared` is the only marker two packages can both name.
 
@@ -22,8 +22,8 @@ discriminating the producer.
 -}
 
 import Mini
-import Mini.Button
+import Mini.Component.Button
 
 
 broken =
-    Mini.Button.icon (Mini.chip [] [ Mini.text "not an icon" ])
+    Mini.Component.Button.icon (Mini.chip [] [ Mini.text "not an icon" ])

@@ -5,7 +5,7 @@ shows short qualified references instead of expanded record rows.
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
-import M3e.Build.Internal as B
+import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 

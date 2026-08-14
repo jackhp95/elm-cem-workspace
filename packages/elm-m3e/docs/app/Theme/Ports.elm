@@ -102,6 +102,7 @@ encode :
     { scheme : String
     , seed : String
     , contrast : String
+    , variant : String
     , density : Float
     , motion : String
     , displayFont : String
@@ -129,6 +130,7 @@ encode state =
         [ ( "scheme", Encode.string state.scheme )
         , ( "seed", Encode.string state.seed )
         , ( "contrast", Encode.string state.contrast )
+        , ( "variant", Encode.string state.variant )
         , ( "density", Encode.float state.density )
         , ( "motion", Encode.string state.motion )
         , ( "displayFont", Encode.string state.displayFont )
@@ -185,6 +187,7 @@ decoder :
         { scheme : String
         , seed : String
         , contrast : String
+        , variant : String
         , density : Float
         , motion : String
         , displayFont : String
@@ -208,10 +211,11 @@ decoder :
         }
 decoder =
     Decode.succeed
-        (\scheme seed contrast density motion displayFont bodyFont iconStyle typeScaleMode typeScaleFactor typeScaleRatio typeScaleBase typeScaleBump typeScaleExponent shapeScaleMode shapeScaleFactor shapeScaleRatio shapeScaleBase shapeScaleBump shapeScaleExponent colorOverrides cssOverrides activePresetId ->
+        (\scheme seed contrast variant density motion displayFont bodyFont iconStyle typeScaleMode typeScaleFactor typeScaleRatio typeScaleBase typeScaleBump typeScaleExponent shapeScaleMode shapeScaleFactor shapeScaleRatio shapeScaleBase shapeScaleBump shapeScaleExponent colorOverrides cssOverrides activePresetId ->
             { scheme = scheme
             , seed = seed
             , contrast = contrast
+            , variant = variant
             , density = density
             , motion = motion
             , displayFont = displayFont
@@ -237,6 +241,10 @@ decoder =
         |> andMap (Decode.field "scheme" Decode.string)
         |> andMap (Decode.field "seed" Decode.string)
         |> andMap (Decode.field "contrast" Decode.string)
+        -- `variant` was added after earlier blobs shipped; default to "neutral"
+        -- (the m3e-theme element's own documented default) so older persisted
+        -- state is not invalidated.
+        |> andMap (optionalField "variant" "neutral")
         |> andMap (Decode.field "density" Decode.float)
         |> andMap (Decode.field "motion" Decode.string)
         |> andMap (Decode.field "displayFont" Decode.string)

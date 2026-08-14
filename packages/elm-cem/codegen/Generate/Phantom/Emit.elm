@@ -104,7 +104,6 @@ files brand =
                 ++ [ factsModule brand ]
                 ++ unsafeModule brand
                 ++ actionModule brand
-                ++ coerceModule brand
                 -- R3: the shared pipe-builder mechanics live once per brand.
                 -- Only emitted when at least one rich per-component module
                 -- exists (native/home-only brands have no `Builder`).
@@ -112,12 +111,13 @@ files brand =
                         []
 
                     else
-                        [ buildInternalModule brand, buildModule brand ]
+                        [ buildInternalModule brand, buildModule brand own ]
                    )
                 -- R2: the loose elm/html-like producer layer (owns `Ir.node`),
                 -- emitted only when a rich per-component shape exists.
                 ++ htmlModule brand
-                ++ List.map (compModule brand) own
+                -- Per-component modules: the internal-types, component surface, and builder module.
+                ++ List.concatMap (\comp -> [ internalTypesModule brand comp, compModule brand comp, compBuildModule brand comp ]) own
                 ++ List.map (homeModule brand) homeGroups
 
         guardErrors =
@@ -390,8 +390,28 @@ guardGeneralModule brand =
         atomPairs =
             brand.atoms |> List.map (\a -> ( a, "atom \"" ++ a ++ "\"" ))
 
+        slotResult =
+            looseSlotPlacers brand
+
+        slotPairs =
+            slotResult.placers |> List.map (\p -> ( p.ident, "slot placer \"" ++ p.htmlName ++ "\"" ))
+
+        -- Camel-collisions between different HTML slot strings are a fatal error.
+        slotCollisionErrors =
+            slotResult.collisions
+                |> List.map
+                    (\col ->
+                        "SLOT COLLISION in module "
+                            ++ moduleName
+                            ++ ": slot names "
+                            ++ String.join ", " (List.map (\n -> "\"" ++ n ++ "\"") col.htmlNames)
+                            ++ " all map to identifier '"
+                            ++ col.ident
+                            ++ "'. Add a `_renames` override to resolve."
+                    )
+
         allPairs =
-            ctorPairs ++ atomPairs ++ [ ( "toHtml", "render bridge" ) ]
+            ctorPairs ++ atomPairs ++ slotPairs ++ [ ( "toHtml", "render bridge" ) ]
 
         topLevel =
             allPairs |> List.map Tuple.first
@@ -402,6 +422,7 @@ guardGeneralModule brand =
     List.concat
         [ guardNonEmpty moduleName "top-level" topLevel
         , guardDuplicatesRich moduleName "top-level" snippetHint allPairs
+        , slotCollisionErrors
         ]
 
 
@@ -451,8 +472,18 @@ guardAttributesModule brand =
         globalPairs =
             allGlobals brand |> List.map (\g -> ( g.elmName, "global attr \"" ++ g.elmName ++ "\"" ))
 
-        allPairs =
+        basePairs =
             globalPairs ++ plainAttrPairs ++ companionPairs ++ variantPairs ++ enumAttrPairs
+
+        -- Portmanteau attributes (`<attr><ValuePascal>`) share this namespace.
+        -- Computed against the already-taken names so dropped portmanteaus never
+        -- trigger a false collision; only the ones actually emitted are checked.
+        attrPortmanteauPairs =
+            enumAttrPortmanteaus brand (basePairs |> List.map Tuple.first)
+                |> List.map (\p -> ( p.name, "enum attr portmanteau \"" ++ p.capName ++ "\" + \"" ++ p.tokenValue ++ "\"" ))
+
+        allPairs =
+            basePairs ++ attrPortmanteauPairs
 
         topLevel =
             allPairs |> List.map Tuple.first
@@ -620,40 +651,25 @@ guardValuesModule brand =
 
 guardCompModule : Brand -> Comp -> List String
 guardCompModule brand comp =
+    -- The 3-package layout splits each component's surface across two modules:
+    --   Wa.Component.<Name>  — view/el, re-exports, events, slot values
+    --   Wa.Build.<Name>      — build/toElement, attr pipes, slot pipes
+    -- Guard each namespace independently so attrReExportNames and attrPipeNames
+    -- never collide (they live in different modules). This dissolves K5.
+    List.concat
+        [ guardComponentModule brand comp
+        , guardBuildModule brand comp
+        ]
+
+
+guardComponentModule : Brand -> Comp -> List String
+guardComponentModule brand comp =
     let
         moduleName =
-            brand.lib ++ "." ++ comp.name
+            brand.lib ++ ".Component." ++ comp.name
 
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")
-
-        singularSlots =
-            namedSlots |> List.filter (not << .multi)
-
-        variadicSlots =
-            namedSlots |> List.filter .multi
-
-        attrPipeNames_ =
-            attrsFields brand comp |> List.map (\f -> "with" ++ Naming.pascal f)
-
-        compTopLevelNs =
-            List.concat
-                [ [ comp.resolvedCtor ]
-                , comp.attrs |> List.map .elmName
-                , attrPipeNames_
-                , comp.events |> List.map (handlerName brand)
-                ]
-
-        slotPipeNameOf_ s =
-            let
-                plain =
-                    "with" ++ Naming.pascal s.name
-            in
-            if List.member plain compTopLevelNs then
-                plain ++ "Slot"
-
-            else
-                plain
 
         reExportedSpecs =
             comp.attrs
@@ -670,7 +686,8 @@ guardCompModule brand comp =
         eventNames =
             comp.events |> List.map (handlerName brand)
 
-        -- Top-level value identifiers
+        -- Component module top-level values: view, el, enums, re-exports, events, slot values.
+        -- Does NOT include attrPipeNames (those live in Build module only).
         topLevelValues =
             List.concat
                 [ [ "view" ]
@@ -679,23 +696,19 @@ guardCompModule brand comp =
 
                   else
                     []
-                , [ "build", "toElement" ]
                 , comp.enums |> List.concatMap (\e -> [ e.elmName ])
                 , attrReExportNames
                 , eventNames
                 , namedSlots |> List.map (\s -> Naming.camel s.name)
-                , attrPipeNames_
-                , singularSlots |> List.map slotPipeNameOf_
-                , variadicSlots |> List.map slotPipeNameOf_
                 , case comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head of
                     Just _ ->
-                        [ "withChild" ]
+                        [ "child" ]
 
                     Nothing ->
                         []
                 ]
 
-        -- Exposed type aliases
+        -- Exposed type aliases in the Component module.
         contentAliasNames =
             comp.slots
                 |> List.filterMap
@@ -728,49 +741,10 @@ guardCompModule brand comp =
 
                     Nothing ->
                         []
-                , [ "Builder", "AttrCaps", "SlotCaps" ]
                 , comp.enums |> List.map .aliasName
                 ]
 
-        -- Attrs record row fields
-        attrsRowFields =
-            attrsFields brand comp
-
-        -- AttrCaps record row fields (same as attrsRowFields)
-        attrCapsFields =
-            attrsFields brand comp
-
-        -- SlotCaps record row fields
-        slotCapsFields =
-            singularSlots |> List.map (.name >> Naming.camel)
-
-        -- Rich pairs for top-level value collision messages (FIX 3).
-        topLevelValuePairs =
-            List.concat
-                [ [ ( "view", "static decl" ) ]
-                , if not (List.isEmpty (comp.slots |> List.filter .required)) || comp.actionCaps /= Nothing then
-                    [ ( "el", "static decl" ) ]
-
-                  else
-                    []
-                , [ ( "build", "static decl" ), ( "toElement", "static decl" ) ]
-                , comp.enums |> List.concatMap (\e -> [ ( e.elmName, "enum attr \"" ++ e.elmName ++ "\"" ) ])
-                , attrReExportNames |> List.map (\n -> ( n, "attr re-export \"" ++ n ++ "\"" ))
-                , eventNames |> List.map (\n -> ( n, "event handler" ))
-                , namedSlots |> List.map (\s -> ( Naming.camel s.name, "slot \"" ++ s.name ++ "\"" ))
-                , attrPipeNames_ |> List.map (\n -> ( n, "attr pipe \"" ++ n ++ "\"" ))
-                , singularSlots |> List.map (\s -> ( slotPipeNameOf_ s, "slot pipe \"" ++ s.name ++ "\"" ))
-                , variadicSlots |> List.map (\s -> ( slotPipeNameOf_ s, "slot pipe \"" ++ s.name ++ "\"" ))
-                , case comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head of
-                    Just _ ->
-                        [ ( "withChild", "static decl" ) ]
-
-                    Nothing ->
-                        []
-                ]
-
-        -- Build a realistic _renames snippet using the first non-enum attr's htmlName
-        -- (the placeholder "attr:<htmlName>" was unfilled; §4.3 requires the exact snippet).
+        -- Snippet hint for collision messages.
         compSnippetHint =
             let
                 exampleHtmlName =
@@ -780,12 +754,162 @@ guardCompModule brand comp =
                         |> Maybe.withDefault "<htmlName>"
             in
             "\"" ++ comp.name ++ "\": { \"attr:" ++ exampleHtmlName ++ "\": \"customName\" }"
+
+        -- Rich pairs for top-level value collision messages.
+        topLevelValuePairs =
+            List.concat
+                [ [ ( "view", "static decl" ) ]
+                , if not (List.isEmpty (comp.slots |> List.filter .required)) || comp.actionCaps /= Nothing then
+                    [ ( "el", "static decl" ) ]
+
+                  else
+                    []
+                , comp.enums |> List.concatMap (\e -> [ ( e.elmName, "enum attr \"" ++ e.elmName ++ "\"" ) ])
+                , attrReExportNames |> List.map (\n -> ( n, "attr re-export \"" ++ n ++ "\"" ))
+                , eventNames |> List.map (\n -> ( n, "event handler" ))
+                , namedSlots |> List.map (\s -> ( Naming.camel s.name, "slot \"" ++ s.name ++ "\"" ))
+                , case comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head of
+                    Just _ ->
+                        [ ( "child", "static decl" ) ]
+
+                    Nothing ->
+                        []
+                ]
     in
     List.concat
         [ guardNonEmpty moduleName "top-level values" topLevelValues
         , guardDuplicatesRich moduleName "top-level values" compSnippetHint topLevelValuePairs
         , guardDuplicates moduleName "top-level types" topLevelTypes
-        , guardDuplicates moduleName "Attrs row" attrsRowFields
+        ]
+
+
+guardBuildModule : Brand -> Comp -> List String
+guardBuildModule brand comp =
+    let
+        moduleName =
+            brand.lib ++ ".Build." ++ comp.name
+
+        namedSlots =
+            comp.slots |> List.filter (\s -> s.name /= "unnamed")
+
+        singularSlots =
+            namedSlots |> List.filter (not << .multi)
+
+        variadicSlots =
+            namedSlots |> List.filter .multi
+
+        attrPipeNames_ =
+            attrsFields brand comp |> List.map (\f -> "with" ++ Naming.pascal f)
+
+        -- Mirror the slot-pipe naming logic from compBuildModule so the guard
+        -- checks exactly what the emitter produces.
+        compTopLevelNs =
+            List.concat
+                [ [ comp.resolvedCtor ]
+                , comp.attrs |> List.map .elmName
+                , attrPipeNames_
+                , comp.events |> List.map (handlerName brand)
+                ]
+
+        slotPipeNameOf_ s =
+            let
+                plain =
+                    "with" ++ Naming.pascal s.name
+            in
+            if List.member plain compTopLevelNs then
+                plain ++ "Slot"
+
+            else
+                plain
+
+        contentAliasNames =
+            comp.slots
+                |> List.filterMap
+                    (\s ->
+                        case ( s.name, s.content ) of
+                            ( "unnamed", M.Fields _ ) ->
+                                Just "Content"
+
+                            ( name_, M.Fields _ ) ->
+                                Just (Naming.pascal name_ ++ "Slot")
+
+                            _ ->
+                                Nothing
+                    )
+
+        -- Build module top-level values: build, toElement, slot placers, slot pipes, attr pipes.
+        topLevelValues =
+            List.concat
+                [ [ "build", "toElement" ]
+                , attrPipeNames_
+                , namedSlots |> List.map (\s -> Naming.camel s.name)
+                , singularSlots |> List.map slotPipeNameOf_
+                , variadicSlots |> List.map slotPipeNameOf_
+                , case comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head of
+                    Just _ ->
+                        [ "withChild" ]
+
+                    Nothing ->
+                        []
+                ]
+
+        -- Build module type aliases.
+        topLevelTypes =
+            List.concat
+                [ [ "Builder", "AttrCaps", "SlotCaps", "Is" ]
+                , contentAliasNames
+                , [ "ChildAdmittedBy" ]
+                , case comp.admittedBy of
+                    Just _ ->
+                        [ "AdmittedBy" ]
+
+                    Nothing ->
+                        []
+                , case comp.actionCaps of
+                    Just _ ->
+                        [ "ActionCaps" ]
+
+                    Nothing ->
+                        []
+                ]
+
+        -- Attrs record row fields (AttrCaps row).
+        attrCapsFields =
+            attrsFields brand comp
+
+        -- SlotCaps record row fields.
+        slotCapsFields =
+            singularSlots |> List.map (.name >> Naming.camel)
+
+        compSnippetHint =
+            let
+                exampleHtmlName =
+                    nonEnumAttrs comp
+                        |> List.head
+                        |> Maybe.map .htmlName
+                        |> Maybe.withDefault "<htmlName>"
+            in
+            "\"" ++ comp.name ++ "\": { \"attr:" ++ exampleHtmlName ++ "\": \"customName\" }"
+
+        topLevelValuePairs =
+            List.concat
+                [ [ ( "build", "static decl" ), ( "toElement", "static decl" ) ]
+                , attrPipeNames_ |> List.map (\n -> ( n, "attr pipe \"" ++ n ++ "\"" ))
+                , namedSlots |> List.map (\s -> ( Naming.camel s.name, "slot placer \"" ++ s.name ++ "\"" ))
+                , singularSlots |> List.map (\s -> ( slotPipeNameOf_ s, "slot pipe \"" ++ s.name ++ "\"" ))
+                , variadicSlots |> List.map (\s -> ( slotPipeNameOf_ s, "slot pipe \"" ++ s.name ++ "\"" ))
+                , case comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head of
+                    Just _ ->
+                        [ ( "withChild", "static decl" ) ]
+
+                    Nothing ->
+                        []
+                ]
+    in
+    List.concat
+        [ guardNonEmpty moduleName "top-level values" topLevelValues
+        , guardDuplicatesRich moduleName "top-level values" compSnippetHint topLevelValuePairs
+        , guardDuplicates moduleName "top-level types" topLevelTypes
         , guardDuplicates moduleName "AttrCaps row" attrCapsFields
         , guardDuplicates moduleName "SlotCaps row" slotCapsFields
         ]
@@ -1272,6 +1396,18 @@ supportedRow fields =
         ++ "\n    }"
 
 
+capsRecord : String -> List String -> String
+capsRecord marker fields =
+    case fields of
+        [] ->
+            "{}"
+
+        _ ->
+            "{ "
+                ++ (fields |> List.map (\f -> f ++ " : " ++ marker) |> String.join "\n    , ")
+                ++ "\n    }"
+
+
 exposeBlock : List (List String) -> String
 exposeBlock groups =
     let
@@ -1416,6 +1552,147 @@ enumPortmanteaus brand taken =
         |> Tuple.second
 
 
+{-| Enum portmanteau ATTRIBUTES: for each enum ATTRIBUTE and each of its VALUES a
+nullary `<attrName><ValuePascal>` identifier in `<Lib>.Attributes`, pre-applying
+the token value into the attribute body.
+
+  - `variantRainbow : Attr { c | variant : Supported } msg`
+  - `variantRainbow = Ir.attribute "variant" "rainbow"`
+
+Naming matches the existing `MV.variantRainbow` value-alias convention so `MA` and
+`MV` identifiers align. One portmanteau per (attr, token) pair; collisions with
+already-taken names are dropped (the enum setter wins, bare tokens in `Values` win).
+
+`taken` is the set of names already claimed in `<Lib>.Attributes` (globals,
+plain attrs, companions, variants, enum setters).
+
+-}
+enumAttrPortmanteaus :
+    Brand
+    -> List String
+    -> List { name : String, capName : String, htmlName : String, tokenValue : String }
+enumAttrPortmanteaus brand taken =
+    brand.unions
+        |> List.filter (\u -> not (isGlobalName brand u.elmName))
+        |> List.sortBy .elmName
+        |> List.concatMap
+            (\u ->
+                let
+                    htmlName =
+                        brand.sharedAttrs
+                            |> List.filter (\a -> a.elmName == u.elmName)
+                            |> List.head
+                            |> Maybe.map .htmlName
+                            |> Maybe.withDefault u.elmName
+                in
+                u.tokens
+                    |> List.sort
+                    |> List.map
+                        (\t ->
+                            { name = u.elmName ++ Naming.capitalize (tokenIdentResolved brand t)
+                            , capName = u.elmName
+                            , htmlName = htmlName
+                            , tokenValue = tokenValueOf brand t
+                            }
+                        )
+            )
+        |> List.foldl
+            (\p ( seen, acc ) ->
+                if List.member p.name seen then
+                    ( seen, acc )
+
+                else
+                    ( p.name :: seen, acc ++ [ p ] )
+            )
+            ( taken, [] )
+        |> Tuple.second
+
+
+{-| Design-C loose slot placers for the general `M3e` surface.
+
+Computes the DISTINCT set of slot names across all `brand` comps (excluding the
+`"unnamed"` default slot), deduplicated by their Elm identifier
+(`"slot" ++ Naming.capitalize (Naming.camel name)`).
+
+When two DIFFERENT HTML slot strings map to the SAME identifier (a camel
+collision), the pair is returned in the second element so the caller can FAIL
+generation loudly via the guard machinery. Identical slot names on different
+components collapse to ONE placer (the intended behaviour — breadth loss is
+accepted per Jack's decision).
+
+-}
+looseSlotPlacers :
+    Brand
+    -> { placers : List { ident : String, htmlName : String }, collisions : List { ident : String, htmlNames : List String } }
+looseSlotPlacers brand =
+    let
+        -- Collect (ident, htmlSlotName) pairs across all comps, excluding "unnamed".
+        rawPairs =
+            brand.comps
+                |> List.concatMap
+                    (\c ->
+                        c.slots
+                            |> List.filterMap
+                                (\s ->
+                                    if s.name == "unnamed" then
+                                        Nothing
+
+                                    else
+                                        Just
+                                            { ident = "slot" ++ Naming.capitalize (Naming.camel s.name)
+                                            , htmlName = s.name
+                                            }
+                                )
+                    )
+
+        -- Group by ident; collect all distinct htmlNames for each ident.
+        grouped =
+            rawPairs
+                |> List.sortBy .ident
+                |> List.foldl
+                    (\pair acc ->
+                        case List.filter (\( k, _ ) -> k == pair.ident) acc of
+                            [] ->
+                                acc ++ [ ( pair.ident, [ pair.htmlName ] ) ]
+
+                            _ ->
+                                acc
+                                    |> List.map
+                                        (\( k, vs ) ->
+                                            if k == pair.ident then
+                                                ( k
+                                                , if List.member pair.htmlName vs then
+                                                    vs
+
+                                                  else
+                                                    vs ++ [ pair.htmlName ]
+                                                )
+
+                                            else
+                                                ( k, vs )
+                                        )
+                    )
+                    []
+    in
+    grouped
+        |> List.foldl
+            (\( ident, htmlNames ) { placers, collisions } ->
+                case htmlNames of
+                    [ single ] ->
+                        { placers = placers ++ [ { ident = ident, htmlName = single } ]
+                        , collisions = collisions
+                        }
+
+                    many ->
+                        -- Two different HTML slot strings camel-collapsed to the same
+                        -- identifier — FAIL loudly.
+                        { placers = placers
+                        , collisions = collisions ++ [ { ident = ident, htmlNames = many } ]
+                        }
+            )
+            { placers = [], collisions = [] }
+
+
 {-| Payload Elm type + Json.Decode primitive for a typed event override.
 `date` decodes the ISO string (parse app-side).
 -}
@@ -1462,7 +1739,7 @@ unionFor brand elmName =
 {-| Every global the brand declares, both row shapes.
 
 The DEFAULT reading of `_globals`. Only two consumers want `brand.globals` alone,
-and both are the closed-row question itself: `attrsFields` (which *is* the closed
+and both are the closed-row question itself: `attrsFields` (which _is_ the closed
 `Attrs` alias) and `attrPipes` (whose `with<Field>` pipes consume a capability
 field an open global never has). Everything else — namespace collision checks,
 union minting, the exposing list, `Review.Facts` — is asking "is this a global?",
@@ -2230,11 +2507,14 @@ reExportBlock brand attrsRef excludeNames suppressed memberSpecs =
 
 -- SHARED BUILD (R3): the pipe-builder mechanics, defined ONCE per brand.
 --
--- `<Lib>.Build.Internal` is the builder forge — the single place a `Builder`'s
+-- `<Lib>.Forge.Internal` is the builder forge — the single place a `Builder`'s
 -- capability rows are minted/mutated and where its record constructor is
 -- exposed, so per-component modules can seed (`init`), advance
--- (`withAttribute`/`withChild`), and close (`toElement`) builders. Untrusted
--- code importing it can forge any capability claim (an echo of the
+-- (`withAttribute`/`withChild`), and close (`toElement`) builders. It is a
+-- NEUTRAL core module (NOT the `<Lib>.Build.*` builder surface), so both the
+-- component `Internal.Types` modules and the `<Lib>.Build.*` modules depend on
+-- it WITHOUT a cycle across the split-package DAG (core ← components ← builder).
+-- Untrusted code importing it can forge any capability claim (an echo of the
 -- `HtmlIr.Internal` forge decision); the `NoInternalImportOutsideAllowed` fence
 -- holds the line. `<Lib>.Build` is the safe surface: opaque `Builder` + the
 -- single `toElement`. Per-component `withX` are thin composed aliases over
@@ -2249,9 +2529,9 @@ buildInternalModule brand =
         lib =
             brand.lib
     in
-    file [ lib, "Build", "Internal" ]
+    file [ lib, "Forge", "Internal" ]
         (String.join "\n"
-            [ "module " ++ lib ++ ".Build.Internal exposing"
+            [ "module " ++ lib ++ ".Forge.Internal exposing"
             , "    ( Builder(..)"
             , "    , init, withAttribute, withChild, toElement"
             , "    )"
@@ -2275,11 +2555,12 @@ buildInternalModule brand =
             , ""
             , ""
             , "{-| The shared pipe-builder. `attrCaps`/`slotCaps` are phantom write-once"
-            , "capability rows; `row` is the host element's closed attribute row; `tag` is the"
-            , "custom-element tag closed over at `init`. Each component aliases this with its"
-            , "own `row` and exposes narrowed `withX` setters."
+            , "capability rows; `row` is the host element's closed attribute row; `accepts` is"
+            , "the element-kind phantom produced on close; `tag` is the custom-element tag"
+            , "closed over at `init`. Each component aliases this with its own `row` and"
+            , "`accepts = (Is s)`, and exposes narrowed `withX` setters."
             , "-}"
-            , "type Builder row attrCaps slotCaps msg"
+            , "type Builder row attrCaps slotCaps accepts msg"
             , "    = Builder"
             , "        { tag : String"
             , "        , attrs : List (Attr row msg)"
@@ -2289,21 +2570,21 @@ buildInternalModule brand =
             , ""
             , "{-| Seed a builder with its tag, initial attributes, and initial children."
             , "-}"
-            , "init : String -> List (Attr row msg) -> List (Node msg) -> Builder row attrCaps slotCaps msg"
+            , "init : String -> List (Attr row msg) -> List (Node msg) -> Builder row attrCaps slotCaps accepts msg"
             , "init tag attrs children ="
             , "    Builder { tag = tag, attrs = attrs, children = children }"
             , ""
             , ""
             , "{-| Prepend one attribute, advancing the attribute-capability row (phantom)."
             , "-}"
-            , "withAttribute : Attr row msg -> Builder row attrCapsIn slotCaps msg -> Builder row attrCapsOut slotCaps msg"
+            , "withAttribute : Attr row msg -> Builder row attrCapsIn slotCaps accepts msg -> Builder row attrCapsOut slotCaps accepts msg"
             , "withAttribute attr (Builder b) ="
             , "    Builder { b | attrs = attr :: b.attrs }"
             , ""
             , ""
             , "{-| Prepend one child node, advancing the slot-capability row (phantom)."
             , "-}"
-            , "withChild : Node msg -> Builder row attrCaps slotCapsIn msg -> Builder row attrCaps slotCapsOut msg"
+            , "withChild : Node msg -> Builder row attrCaps slotCapsIn accepts msg -> Builder row attrCaps slotCapsOut accepts msg"
             , "withChild child (Builder b) ="
             , "    Builder { b | children = child :: b.children }"
             , ""
@@ -2311,7 +2592,7 @@ buildInternalModule brand =
             , "{-| Close the builder into an element — defined ONCE for the brand. Attributes"
             , "and children are reversed so they render in the order they were piped on."
             , "-}"
-            , "toElement : Builder row attrCaps slotCaps msg -> Element accepts admittedBy msg"
+            , "toElement : Builder row attrCaps slotCaps accepts msg -> Element accepts admittedBy msg"
             , "toElement (Builder b) ="
             , "    Ir.fromNode (Ir.node b.tag (List.reverse b.attrs) (List.reverse b.children))"
             , ""
@@ -2319,48 +2600,85 @@ buildInternalModule brand =
         )
 
 
-buildModule : Brand -> Elm.File
-buildModule brand =
+buildModule : Brand -> List Comp -> Elm.File
+buildModule brand comps =
     let
         lib =
             brand.lib
+
+        isAliasNames =
+            comps |> List.map (\c -> Naming.pascal c.name ++ "Is")
+
+        isAliases =
+            comps
+                |> List.concatMap
+                    (\c ->
+                        let
+                            isName =
+                                Naming.pascal c.name ++ "Is"
+
+                            aliasFrom =
+                                lib ++ ".Build." ++ c.name ++ ".Is"
+                        in
+                        [ ""
+                        , ""
+                        , doc ("The `" ++ c.name ++ "` kind phantom — annotate with `List (Element (" ++ isName ++ " s) admittedBy msg)`.")
+                        , "type alias " ++ isName ++ " s ="
+                        , "    " ++ aliasFrom ++ " s"
+                        ]
+                    )
     in
     file [ lib, "Build" ]
         (String.join "\n"
-            [ "module " ++ lib ++ ".Build exposing"
-            , "    ( Builder"
-            , "    , toElement"
-            , "    )"
-            , ""
-            , "{-| The shared builder surface for the `" ++ lib ++ "` brand: the opaque `Builder`"
-            , "and the single `toElement` that closes any component's builder. Per-component"
-            , "modules provide the seeds (`build`) and the narrowed `withX` setters; they all"
-            , "share this one representation, so `toElement` is defined once (in"
-            , "`" ++ lib ++ ".Build.Internal`) and re-exported here."
-            , ""
-            , "@docs Builder"
-            , "@docs toElement"
-            , ""
-            , "-}"
-            , ""
-            , "import HtmlIr.Element exposing (Element)"
-            , "import " ++ lib ++ ".Build.Internal as Internal"
-            , ""
-            , ""
-            , "{-| The shared pipe-builder — see each component's `Builder` alias for its"
-            , "narrowed, brand-typed form."
-            , "-}"
-            , "type alias Builder row attrCaps slotCaps msg ="
-            , "    Internal.Builder row attrCaps slotCaps msg"
-            , ""
-            , ""
-            , "{-| Close any builder into its element."
-            , "-}"
-            , "toElement : Builder row attrCaps slotCaps msg -> Element accepts admittedBy msg"
-            , "toElement ="
-            , "    Internal.toElement"
-            , ""
-            ]
+            (List.concat
+                [ [ "module " ++ lib ++ ".Build exposing"
+                  , exposeBlock
+                        [ [ "Builder", "toElement" ]
+                        , isAliasNames
+                        ]
+                  , ""
+                  , "{-| The shared builder surface for the `" ++ lib ++ "` brand: the opaque `Builder`"
+                  , "and the single `toElement` that closes any component's builder. Per-component"
+                  , "modules provide the seeds (`build`) and the narrowed `withX` setters; they all"
+                  , "share this one representation, so `toElement` is defined once (in"
+                  , "`" ++ lib ++ ".Forge.Internal`) and re-exported here."
+                  , ""
+                  , "The `Is` aliases (`ButtonIs`, `CardIs`, …) let you annotate a phantom-kind"
+                  , "type without importing the component or its builder module."
+                  , ""
+                  , "@docs Builder"
+                  , "@docs toElement"
+                  , "@docs " ++ String.join ", " isAliasNames
+                  , ""
+                  , "-}"
+                  , ""
+                  ]
+                , [ "import HtmlIr.Element exposing (Element)"
+                  , "import " ++ lib ++ ".Forge.Internal as Internal"
+                  ]
+                    ++ (comps
+                            |> List.map (\c -> "import " ++ lib ++ ".Build." ++ c.name)
+                            |> List.sort
+                       )
+                    ++ [ ""
+                       , ""
+                       , "{-| The shared pipe-builder — see each component's `Builder` alias for its"
+                       , "narrowed, brand-typed form."
+                       , "-}"
+                       , "type alias Builder row attrCaps slotCaps accepts msg ="
+                       , "    Internal.Builder row attrCaps slotCaps accepts msg"
+                       , ""
+                       , ""
+                       , "{-| Close any builder into its element."
+                       , "-}"
+                       , "toElement : Builder row attrCaps slotCaps accepts msg -> Element accepts admittedBy msg"
+                       , "toElement ="
+                       , "    Internal.toElement"
+                       ]
+                    ++ isAliases
+                    ++ [ "" ]
+                ]
+            )
         )
 
 
@@ -2453,18 +2771,6 @@ compModule brand comp =
                 Nothing ->
                     "List (Element childAccepts (ChildAdmittedBy childAdm) msg)"
 
-        usesSet =
-            comp.slots
-                |> List.any
-                    (\s ->
-                        case s.content of
-                            SetContent _ ->
-                                True
-
-                            _ ->
-                                False
-                    )
-
         setNames =
             comp.slots
                 |> List.filterMap
@@ -2485,54 +2791,6 @@ compModule brand comp =
         eventNames =
             comp.events |> List.map (handlerName brand)
 
-        singularSlots =
-            namedSlots |> List.filter (not << .multi)
-
-        variadicSlots =
-            namedSlots |> List.filter .multi
-
-        attrPipeNames =
-            attrsFields brand comp |> List.map (\f -> "with" ++ Naming.pascal f)
-
-        -- K5: The full top-level namespace for this component, used to detect
-        -- slot-builder name collisions. Previously only attrPipeNames were
-        -- checked; widening to the FULL namespace catches collisions between a
-        -- slot builder and an attr setter elmName, an event handler name, or the
-        -- ctor. The slot builder yields with the established `Slot` suffix when
-        -- any name in this namespace would conflict.
-        compTopLevelNamespace =
-            List.concat
-                [ [ comp.resolvedCtor ]
-                , comp.attrs |> List.map .elmName
-                , attrPipeNames
-                , comp.events |> List.map (handlerName brand)
-                ]
-
-        slotPipeNameOf s =
-            let
-                plain =
-                    "with" ++ Naming.pascal s.name
-            in
-            if List.member plain compTopLevelNamespace then
-                plain ++ "Slot"
-
-            else
-                plain
-
-        pipeNames =
-            (attrPipeNames
-                ++ (singularSlots |> List.map slotPipeNameOf)
-                ++ (variadicSlots |> List.map slotPipeNameOf)
-                ++ (case unnamed of
-                        Just _ ->
-                            [ "withChild" ]
-
-                        Nothing ->
-                            []
-                   )
-            )
-                |> List.sort
-
         exposeGroups =
             [ [ "view" ]
                 ++ (if hasEl then
@@ -2541,7 +2799,6 @@ compModule brand comp =
                     else
                         []
                    )
-                ++ [ "build", "toElement" ]
             , [ "Is", "Attrs" ]
                 ++ List.map .alias_ contentAliases
                 ++ [ "ChildAdmittedBy" ]
@@ -2559,7 +2816,6 @@ compModule brand comp =
                         Nothing ->
                             []
                    )
-                ++ [ "Builder", "AttrCaps", "SlotCaps" ]
             , comp.enums |> List.concatMap (\e -> [ e.aliasName, e.elmName ])
             , attrReExportNames ++ eventNames
             , (namedSlots |> List.map (\s -> Naming.camel s.name))
@@ -2570,7 +2826,6 @@ compModule brand comp =
                         Nothing ->
                             []
                    )
-            , pipeNames
             ]
 
         exposing_ =
@@ -2605,7 +2860,7 @@ compModule brand comp =
 
         -- R4: alias the frequently-referenced imports to cut per-use bytes.
         -- `A` = <Lib>.Attributes, `Ev` = <Lib>.Events, `Ac` = <Lib>.Action,
-        -- `B` = <Lib>.Build.Internal (the shared builder forge), `El` =
+        -- `B` = <Lib>.Forge.Internal (the shared builder forge), `El` =
         -- HtmlIr.Element, `Val` = HtmlIr.Value. The one-time header cost buys a
         -- shorter body on every setter/builder line.
         imports =
@@ -2638,8 +2893,8 @@ compModule brand comp =
                   else
                     []
                 , [ "import " ++ lib ++ ".Attributes as A" ]
-                , [ "import " ++ lib ++ ".Build.Internal as B" ]
                 , [ "import " ++ lib ++ ".Html as H" ]
+                , [ "import " ++ lib ++ ".Internal.Types." ++ comp.name ]
                 , if List.isEmpty eventNames then
                     []
 
@@ -2672,15 +2927,18 @@ compModule brand comp =
                 MBrand ->
                     "The kind row `" ++ comp.tag ++ "` produces (open — composes into any slot naming it)."
 
+        internalRef n =
+            lib ++ ".Internal.Types." ++ comp.name ++ "." ++ n
+
         aliasDecls =
             [ doc isDoc
             , "type alias Is s ="
-            , "    { s | " ++ comp.produces.field ++ " : " ++ markerName comp.produces.marker ++ " }"
+            , "    " ++ internalRef "Is" ++ " s"
             , ""
             , ""
             , doc "The closed attribute-capability row."
             , "type alias Attrs ="
-            , "    " ++ supportedRow (attrsFields brand comp)
+            , "    " ++ internalRef "Attrs"
             ]
                 ++ (contentAliases
                         |> List.concatMap
@@ -2695,7 +2953,7 @@ compModule brand comp =
                                         "The kinds the `" ++ a.slotName ++ "` slot admits."
                                     )
                                 , "type alias " ++ a.alias_ ++ " ="
-                                , "    " ++ a.row
+                                , "    " ++ internalRef a.alias_
                                 ]
                             )
                    )
@@ -2703,7 +2961,7 @@ compModule brand comp =
                    , ""
                    , doc "The context demand this container injects into each child's admittedBy row."
                    , "type alias ChildAdmittedBy childAdm ="
-                   , "    { childAdm | " ++ comp.ctor ++ " : Ctx }"
+                   , "    " ++ internalRef "ChildAdmittedBy" ++ " childAdm"
                    ]
                 ++ (case comp.admittedBy of
                         Just parents ->
@@ -2731,7 +2989,7 @@ compModule brand comp =
                                     ++ "."
                                 )
                             , "type alias AdmittedBy ="
-                            , "    { " ++ (parents |> List.map (\p -> p ++ " : Ctx") |> String.join ", ") ++ " }"
+                            , "    " ++ internalRef "AdmittedBy"
                             ]
 
                         Nothing ->
@@ -2744,7 +3002,7 @@ compModule brand comp =
                                 , ""
                                 , doc ("The `" ++ e.elmName ++ "` values valid on this component (compile-tight narrowing).")
                                 , "type alias " ++ e.aliasName ++ " ="
-                                , "    " ++ supportedRow (e.tokens |> List.map (tokenIdentResolved brand))
+                                , "    " ++ internalRef e.aliasName
                                 ]
                             )
                    )
@@ -2754,7 +3012,7 @@ compModule brand comp =
                             , ""
                             , doc ("The behaviours this component's required action admits (see `" ++ lib ++ ".Action`).")
                             , "type alias ActionCaps ="
-                            , "    " ++ supportedRow (caps |> List.map Naming.safeField |> List.sort)
+                            , "    " ++ internalRef "ActionCaps"
                             ]
 
                         Nothing ->
@@ -3008,295 +3266,11 @@ compModule brand comp =
                 Nothing ->
                     []
 
-        -- THE BUILD PIPE FAMILY (Design A): capabilities consumed Available→Used,
-        -- so a duplicate singular attr/slot is a type error.
-        capsRecord marker fields =
-            case fields of
-                [] ->
-                    "{}"
-
-                _ ->
-                    "{ "
-                        ++ (fields |> List.map (\f -> f ++ " : " ++ marker) |> String.join "\n    , ")
-                        ++ "\n    }"
-
-        seedChildren =
-            requiredSlots
-                |> List.map
-                    (\s ->
-                        if s.name == "unnamed" then
-                            "El.toNode required_.content"
-
-                        else
-                            "El.toNode (" ++ Naming.camel s.name ++ " required_." ++ Naming.camel s.name ++ ")"
-                    )
-
-        buildDecl =
-            if hasEl then
-                let
-                    reqFields =
-                        (requiredSlots
-                            |> List.map
-                                (\s ->
-                                    ( if s.name == "unnamed" then
-                                        "content"
-
-                                      else
-                                        Naming.camel s.name
-                                    , "Element " ++ contentTypeOf s ++ " (ChildAdmittedBy childAdm) msg"
-                                    )
-                                )
-                        )
-                            ++ (reqAttrFields |> List.map (\( f, _ ) -> ( f, "String" )))
-                            ++ (case comp.actionCaps of
-                                    Just _ ->
-                                        [ ( "action", "Ac.Action ActionCaps msg" ) ]
-
-                                    Nothing ->
-                                        []
-                               )
-
-                    reqAttrsPrefix =
-                        reqAttrFields
-                            |> List.map (\( f, html ) -> "Ir.attribute \"" ++ html ++ "\" required_." ++ f ++ " :: ")
-                            |> String.concat
-
-                    seedAttrs =
-                        case comp.actionCaps of
-                            Just _ ->
-                                reqAttrsPrefix ++ "Ac.toAttrs required_.action"
-
-                            Nothing ->
-                                if String.isEmpty reqAttrsPrefix then
-                                    "[]"
-
-                                else
-                                    "[ " ++ (reqAttrFields |> List.map (\( f, html ) -> "Ir.attribute \"" ++ html ++ "\" required_." ++ f) |> String.join ", ") ++ " ]"
-
-                    seedChildren_ =
-                        case comp.actionCaps of
-                            Just _ ->
-                                seedChildren
-                                    |> List.map
-                                        (\s ->
-                                            if s == "El.toNode required_.content" then
-                                                "Ac.wrapContent required_.action (El.toNode required_.content)"
-
-                                            else
-                                                s
-                                        )
-
-                            Nothing ->
-                                seedChildren
-                in
-                -- R3: seed the SHARED builder (`B.init`) closing over the tag,
-                -- instead of re-defining a per-module `Builder { ... }` literal.
-                [ "build :"
-                , "    { "
-                    ++ (reqFields |> List.map (\( n, t ) -> n ++ " : " ++ t) |> String.join "\n    , ")
-                    ++ " }"
-                , "    -> Builder AttrCaps SlotCaps msg"
-                , "build required_ ="
-                , "    B.init \"" ++ comp.tag ++ "\" (" ++ seedAttrs ++ ") [ " ++ String.join ", " seedChildren_ ++ " ]"
-                ]
-
-            else
-                [ "build : Builder AttrCaps SlotCaps msg"
-                , "build ="
-                , "    B.init \"" ++ comp.tag ++ "\" [] []"
-                ]
-
-        -- R2/R3: each `withX` is a THIN composed alias over the shared
-        -- `B.withAttribute`; the phantom-row transition lives in the signature.
-        pipeFor : String -> String -> String -> List String
-        pipeFor capField inputSig applied =
-            pipeForParams capField
-                inputSig
-                (if String.isEmpty inputSig then
-                    []
-
-                 else
-                    [ "value_" ]
-                )
-                applied
-
-        -- Explicit parameter names, because not every setter is unary: `style`
-        -- takes a property AND a value (the elm/html 0.19 shape).
-        pipeForParams : String -> String -> List String -> String -> List String
-        pipeForParams capField inputSig params applied =
-            let
-                n =
-                    "with" ++ Naming.pascal capField
-            in
-            [ ""
-            , ""
-            , doc ("Pipe form of `" ++ capField ++ "` — consumes its capability (write-once).")
-            , n ++ " : " ++ inputSig ++ "Builder { a | " ++ capField ++ " : Available } slotCaps msg -> Builder { a | " ++ capField ++ " : Used } slotCaps msg"
-            , n
-                ++ (if List.isEmpty params then
-                        " ="
-
-                    else
-                        " " ++ String.join " " params ++ " ="
-                   )
-            , "    B.withAttribute (" ++ applied ++ ")"
-            ]
-
-        attrPipes =
-            (brand.globals
-                |> List.map
-                    (\g ->
-                        if g.elmName == "style" then
-                            -- The one non-unary global (the elm/html 0.19 shape),
-                            -- so it cannot go through `pipeFor`.
-                            pipeForParams "style" "String -> String -> " [ "property", "value_" ] "A.style property value_"
-
-                        else
-                            -- The pipe DELEGATES to the `<Lib>.Attributes` global, so it
-                            -- only has to echo that setter's input type — `Bool` for a
-                            -- presence boolean, `Int` for `tabindex`, `Value <Row>` for an
-                            -- enum global. It used to hard-code `String -> `, which typed
-                            -- every pipe wrong the moment a global stopped being a string.
-                            pipeFor g.capName (globalSetterInputType brand g ++ " -> ") ("A." ++ g.elmName ++ " value_")
-                    )
-            )
-                ++ (comp.attrs
-                        |> List.map
-                            (\a ->
-                                case ( isEnumSpec a, unionFor brand a.elmName ) of
-                                    ( True, _ ) ->
-                                        pipeFor a.capName ("Value " ++ Naming.pascal a.elmName ++ " -> ") (a.elmName ++ " value_")
-
-                                    ( _, Just _ ) ->
-                                        -- enum ELSEWHERE but plain on this member:
-                                        -- the member's own type wins (icon `name`
-                                        -- is a free string even though shape's is
-                                        -- an enum) — emit a LOCAL member-typed pipe.
-                                        pipeFor a.capName (setterInputType a ++ " -> ") (setterExpr a)
-
-                                    ( _, Nothing ) ->
-                                        if divergesFromCanonical brand a then
-                                            -- Type OR form divergence: the builder pipe
-                                            -- inlines this member's own setter rather
-                                            -- than delegating to `A.<attr>`, which would
-                                            -- write the canonical's kind of fact.
-                                            pipeFor a.capName (setterInputType a ++ " -> ") (setterExpr a)
-
-                                        else
-                                            pipeFor a.capName (setterInputType a ++ " -> ") ("A." ++ a.elmName ++ " value_")
-                            )
-                   )
-                ++ (comp.events
-                        |> List.map
-                            (\ev ->
-                                case overrideFor ev.name of
-                                    Just o ->
-                                        let
-                                            ( elmTy, _ ) =
-                                                overrideTypes o.type_
-                                        in
-                                        pipeFor (handlerName brand ev) ("(" ++ elmTy ++ " -> msg) -> ") (handlerName brand ev ++ " value_")
-
-                                    Nothing ->
-                                        case ev.payload of
-                                            Just payload ->
-                                                let
-                                                    ( elmTy, _ ) =
-                                                        payloadTypeAndDecoder payload
-                                                in
-                                                pipeFor (handlerName brand ev) ("(" ++ elmTy ++ " -> msg) -> ") ("Ev." ++ handlerName brand ev ++ " value_")
-
-                                            Nothing ->
-                                                pipeFor (handlerName brand ev) "msg -> " ("Ev." ++ handlerName brand ev ++ " value_")
-                            )
-                   )
-                |> List.concat
-
-        slotPipes =
-            singularSlots
-                |> List.concatMap
-                    (\s ->
-                        let
-                            n =
-                                slotPipeNameOf s
-                        in
-                        [ ""
-                        , ""
-                        , doc ("Pipe form of the `" ++ s.name ++ "` slot — consumes its capability (write-once).")
-                        , n ++ " : Element " ++ contentTypeOf s ++ " admittedBy msg -> Builder attrCaps { s | " ++ Naming.camel s.name ++ " : Available } msg -> Builder attrCaps { s | " ++ Naming.camel s.name ++ " : Used } msg"
-                        , n ++ " element ="
-                        , "    B.withChild (El.toNode (" ++ Naming.camel s.name ++ " element))"
-                        ]
-                    )
-
-        variadicSlotPipes =
-            variadicSlots
-                |> List.concatMap
-                    (\s ->
-                        let
-                            n =
-                                slotPipeNameOf s
-                        in
-                        [ ""
-                        , ""
-                        , doc ("Pipe form of the `" ++ s.name ++ "` slot — appends into the child list (repeatable, like `withChild`).")
-                        , n ++ " : Element " ++ contentTypeOf s ++ " admittedBy msg -> Builder attrCaps slotCaps msg -> Builder attrCaps slotCaps msg"
-                        , n ++ " element ="
-                        , "    B.withChild (El.toNode (" ++ Naming.camel s.name ++ " element))"
-                        ]
-                    )
-
-        childPipe =
-            case unnamed of
-                Just s ->
-                    [ ""
-                    , ""
-                    , doc "Pipe form of a default-slot child (repeatable)."
-                    , "withChild : Element " ++ contentTypeOf s ++ " (ChildAdmittedBy childAdm) msg -> Builder attrCaps slotCaps msg -> Builder attrCaps slotCaps msg"
-                    , "withChild element ="
-                    , "    B.withChild (El.toNode element)"
-                    ]
-
-                Nothing ->
-                    []
-
-        buildMachinery =
-            [ ""
-            , ""
-            , doc "The pipe-builder: capabilities are consumed Available→Used, so writing\na singular attribute or slot twice is unwritable. Aliases the shared builder in\n`Build.Internal`, closed over this component's `Attrs` row."
-            , "type alias Builder attrCaps slotCaps msg ="
-            , "    B.Builder Attrs attrCaps slotCaps msg"
-            , ""
-            , ""
-            , doc "Every attribute/event capability, still writable."
-            , "type alias AttrCaps ="
-            , "    " ++ capsRecord "Available" (attrsFields brand comp)
-            , ""
-            , ""
-            , doc "Every singular named-slot capability, still writable."
-            , "type alias SlotCaps ="
-            , "    " ++ capsRecord "Available" (singularSlots |> List.map (.name >> Naming.camel))
-            , ""
-            , ""
-            , doc "Seed the pipe-builder."
-            ]
-                ++ buildDecl
-                ++ [ ""
-                   , ""
-                   , doc "Close the pipe-builder (`toElement` is defined once in `Build.Internal`)."
-                   , "toElement : Builder attrCaps slotCaps msg -> " ++ returnType
-                   , "toElement ="
-                   , "    B.toElement"
-                   ]
-                ++ attrPipes
-                ++ slotPipes
-                ++ variadicSlotPipes
-                ++ childPipe
     in
-    file [ lib, comp.name ]
+    file [ lib, "Component", comp.name ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ lib ++ "." ++ comp.name ++ " exposing"
+                [ [ "module " ++ lib ++ ".Component." ++ comp.name ++ " exposing"
                   , exposing_
                   , ""
                   , "{-| The `" ++ comp.tag ++ "` component — strict per-component surface."
@@ -3319,8 +3293,857 @@ compModule brand comp =
                 , eventReExports
                 , slotSetters
                 , defaultChildSetter
-                , buildMachinery
                 , [ "" ]
+                ]
+            )
+        )
+
+
+{-| Emit the unexposed internal-types module (`M3e.Internal.Types.<Component>`).
+Contains the heavy record-row type definitions currently inline in `compModule`.
+This module is NOT in any package's `exposed-modules`, so its types appear as
+short qualified references in docs.json rather than expanded record rows.
+
+The empty-row skip rule: trivial aliases (empty `{}`) are NOT moved here —
+kept inline in the component module to avoid a net-negative savings.
+-}
+internalTypesModule : Brand -> Comp -> Elm.File
+internalTypesModule brand comp =
+    let
+        lib =
+            brand.lib
+
+        unnamed =
+            comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head
+
+        namedSlots =
+            comp.slots |> List.filter (\s -> s.name /= "unnamed")
+
+        singularSlots =
+            namedSlots |> List.filter (not << .multi)
+
+        contentAlias : ResolvedSlot -> Maybe { alias_ : String, slotName : String, row : String }
+        contentAlias s =
+            case s.content of
+                Fields fs ->
+                    Just
+                        { alias_ =
+                            if s.name == "unnamed" then
+                                "Content"
+
+                            else
+                                Naming.pascal s.name ++ "Slot"
+                        , slotName = s.name
+                        , row = kindRowCompact fs
+                        }
+
+                _ ->
+                    Nothing
+
+        contentAliases =
+            comp.slots |> List.filterMap contentAlias
+
+        kindImports =
+            ([ "Available", "Brand", "Ctx", "Used" ]
+                |> List.filter
+                    (\m ->
+                        m
+                            /= "Brand"
+                            || comp.produces.marker
+                            == MBrand
+                            || List.any (\a -> String.contains ": Brand" a.row) contentAliases
+                    )
+            )
+                ++ (comp.slots
+                        |> List.filterMap
+                            (\s ->
+                                case s.content of
+                                    SetContent set ->
+                                        Just set.pascal
+
+                                    _ ->
+                                        Nothing
+                            )
+                   )
+                |> List.sort
+
+        usesShared =
+            comp.produces.marker
+                == MShared
+                || List.any (\a -> String.contains "Shared" a.row) contentAliases
+
+        needsValueImport =
+            not (List.isEmpty comp.enums) || (comp.attrs |> List.any (\a -> isEnumSpec a)) || hasEnumGlobal brand
+
+        imports =
+            List.concat
+                [ [ "import HtmlIr.Kind exposing (" ++ (if usesShared then "Shared, Supported" else "Supported") ++ ")" ]
+                , [ "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " kindImports ++ ")" ]
+                , if needsValueImport then
+                    [ "import HtmlIr.Value as Val exposing (Value)" ]
+
+                  else
+                    []
+                , [ "import " ++ lib ++ ".Forge.Internal as B" ]
+                ]
+
+        slotCapsBody =
+            capsRecord "Available" (singularSlots |> List.map (.name >> Naming.camel))
+
+        isEmptyBody body =
+            String.trim body == "{}"
+
+        aliasDefs =
+            [ ""
+            , "type alias Is s ="
+            , "    { s | " ++ comp.produces.field ++ " : " ++ markerName comp.produces.marker ++ " }"
+            , ""
+            , ""
+            , "type alias Attrs ="
+            , "    " ++ supportedRow (attrsFields brand comp)
+            ]
+                ++ (contentAliases
+                        |> List.concatMap
+                            (\a ->
+                                [ ""
+                                , ""
+                                , "type alias " ++ a.alias_ ++ " ="
+                                , "    " ++ a.row
+                                ]
+                            )
+                   )
+                ++ [ ""
+                   , ""
+                   , "type alias ChildAdmittedBy childAdm ="
+                   , "    { childAdm | " ++ comp.ctor ++ " : Ctx }"
+                   ]
+                ++ (case comp.admittedBy of
+                        Just parents ->
+                            [ ""
+                            , ""
+                            , "type alias AdmittedBy ="
+                            , "    { " ++ (parents |> List.map (\p -> p ++ " : Ctx") |> String.join ", ") ++ " }"
+                            ]
+
+                        Nothing ->
+                            []
+                   )
+                ++ (comp.enums
+                        |> List.concatMap
+                            (\e ->
+                                [ ""
+                                , ""
+                                , "type alias " ++ e.aliasName ++ " ="
+                                , "    " ++ supportedRow (e.tokens |> List.map (tokenIdentResolved brand))
+                                ]
+                            )
+                   )
+                ++ (case comp.actionCaps of
+                        Just caps ->
+                            [ ""
+                            , ""
+                            , "type alias ActionCaps ="
+                            , "    " ++ supportedRow (caps |> List.map Naming.safeField |> List.sort)
+                            ]
+
+                        Nothing ->
+                            []
+                   )
+                ++ [ ""
+                   , ""
+                   , "type alias Builder attrCaps slotCaps msg s ="
+                   , "    B.Builder Attrs attrCaps slotCaps (Is s) msg"
+                   , ""
+                   , ""
+                   , "type alias AttrCaps ="
+                   , "    " ++ capsRecord "Available" (attrsFields brand comp)
+                   ]
+                ++ (if isEmptyBody slotCapsBody then
+                        []
+
+                    else
+                        [ ""
+                        , ""
+                        , "type alias SlotCaps ="
+                        , "    " ++ slotCapsBody
+                        ]
+                   )
+    in
+    file [ lib, "Internal", "Types", comp.name ]
+        (String.join "\n"
+            (List.concat
+                [ [ "module " ++ lib ++ ".Internal.Types." ++ comp.name ++ " exposing (..)"
+                  , ""
+                  , "{-| Internal type definitions for " ++ comp.name ++ " — unexposed so docs.json"
+                  , "shows short qualified references instead of expanded record rows."
+                  , "-}"
+                  , ""
+                  ]
+                , imports
+                , [ ""
+                  , ""
+                  ]
+                , aliasDefs
+                , [ "" ]
+                ]
+            )
+        )
+
+
+{-| Emit the per-component builder module (`M3e.<Component>.Build`). Each
+builder module encapsulates the builder pattern for one component: seeds
+(`build`), builder-accepting slot placers/pipes, and attr pipes re-exported
+from the component module. The `accepts` phantom is pinned to `(Component.Is s)`,
+so `toElement` produces `Element (Component.Is s) admittedBy msg`.
+-}
+compBuildModule : Brand -> Comp -> Elm.File
+compBuildModule brand comp =
+    let
+        lib =
+            brand.lib
+
+        unnamed =
+            comp.slots |> List.filter (\s -> s.name == "unnamed") |> List.head
+
+        namedSlots =
+            comp.slots |> List.filter (\s -> s.name /= "unnamed")
+
+        singularSlots =
+            namedSlots |> List.filter (not << .multi)
+
+        variadicSlots =
+            namedSlots |> List.filter .multi
+
+        requiredSlots =
+            comp.slots |> List.filter .required
+
+        reqAttrFields =
+            comp.requiredAttrs |> List.map (\a -> ( Naming.camel a, a ))
+
+        hasEl =
+            not (List.isEmpty requiredSlots) || comp.actionCaps /= Nothing || not (List.isEmpty reqAttrFields)
+
+        eventNames =
+            comp.events |> List.map (handlerName brand)
+
+        overrideFor evName =
+            comp.eventOverrides |> List.filter (\o -> o.name == evName) |> List.head
+
+        contentAlias : ResolvedSlot -> Maybe { alias_ : String, slotName : String, row : String }
+        contentAlias s =
+            case s.content of
+                Fields fs ->
+                    Just
+                        { alias_ =
+                            if s.name == "unnamed" then
+                                "Content"
+
+                            else
+                                Naming.pascal s.name ++ "Slot"
+                        , slotName = s.name
+                        , row = kindRowCompact fs
+                        }
+
+                _ ->
+                    Nothing
+
+        contentAliases =
+            comp.slots |> List.filterMap contentAlias
+
+        contentTypeOf : ResolvedSlot -> String
+        contentTypeOf s =
+            case s.content of
+                Permissive ->
+                    "childAccepts"
+
+                SetContent set ->
+                    set.pascal
+
+                Fields _ ->
+                    if s.name == "unnamed" then
+                        "Component.Content"
+
+                    else
+                        "Component." ++ Naming.pascal s.name ++ "Slot"
+
+        returnType =
+            "Element ("
+                ++ lib
+                ++ "."
+                ++ comp.name
+                ++ ".Is s) "
+                ++ (case comp.admittedBy of
+                        Just _ ->
+                            "(" ++ lib ++ "." ++ comp.name ++ ".AdmittedBy)"
+
+                        Nothing ->
+                            "admittedBy"
+                   )
+                ++ " msg"
+
+        -- K5: full top-level namespace from the component module, used so
+        -- slot pipe naming matches what the component module used (avoids
+        -- a spurious conflict where one module renames and the other doesn't).
+        attrPipeNames =
+            attrsFields brand comp |> List.map (\f -> "with" ++ Naming.pascal f)
+
+        compTopLevelNamespace =
+            List.concat
+                [ [ comp.resolvedCtor ]
+                , comp.attrs |> List.map .elmName
+                , attrPipeNames
+                , comp.events |> List.map (handlerName brand)
+                ]
+
+        slotPipeNameOf s =
+            let
+                plain =
+                    "with" ++ Naming.pascal s.name
+            in
+            if List.member plain compTopLevelNamespace then
+                plain ++ "Slot"
+
+            else
+                plain
+
+        slotPlacerNames =
+            namedSlots |> List.map (\s -> Naming.camel s.name)
+
+        singularSlotPipeNames =
+            singularSlots |> List.map slotPipeNameOf
+
+        variadicSlotPipeNames =
+            variadicSlots |> List.map slotPipeNameOf
+
+        contentAliasNames =
+            contentAliases |> List.map .alias_
+
+        -- Builder-relevant type aliases to expose
+        typeAliasExposeNames =
+            [ "Builder", "AttrCaps", "SlotCaps", "Is" ]
+                ++ contentAliasNames
+                ++ [ "ChildAdmittedBy" ]
+                ++ (case comp.admittedBy of
+                        Just _ ->
+                            [ "AdmittedBy" ]
+
+                        Nothing ->
+                            []
+                   )
+                ++ (case comp.actionCaps of
+                        Just _ ->
+                            [ "ActionCaps" ]
+
+                        Nothing ->
+                            []
+                   )
+
+        internalRef n =
+            lib ++ ".Internal.Types." ++ comp.name ++ "." ++ n
+
+        -- Re-export component's content type aliases
+        contentAliasReExports =
+            contentAliases
+                |> List.concatMap
+                    (\a ->
+                        [ ""
+                        , ""
+                        , "{-| -}"
+                        , "type alias " ++ a.alias_ ++ " ="
+                        , "    " ++ internalRef a.alias_
+                        ]
+                    )
+
+        contentAliasDocs =
+            contentAliases
+                |> List.concatMap
+                    (\a ->
+                        [ ""
+                        , "@docs " ++ a.alias_
+                        ]
+                    )
+
+        exposeGroups =
+            [ [ "build", "toElement" ]
+            , typeAliasExposeNames
+            , attrPipeNames
+            , slotPlacerNames
+            , singularSlotPipeNames
+                ++ variadicSlotPipeNames
+                ++ (case unnamed of
+                        Just _ ->
+                            [ "withChild" ]
+
+                        Nothing ->
+                            []
+                   )
+            ]
+
+        exposing_ =
+            exposeBlock exposeGroups
+
+        docs_ =
+            docsBlock exposeGroups
+
+        buildDecl =
+            if hasEl then
+                let
+                    seedChildren =
+                        requiredSlots
+                            |> List.map
+                                (\s ->
+                                    if s.name == "unnamed" then
+                                        "El.toNode required_.content"
+
+                                    else
+                                        "El.toNode (Component." ++ Naming.camel s.name ++ " required_." ++ Naming.camel s.name ++ ")"
+                                )
+
+                    seedAttrs =
+                        case comp.actionCaps of
+                            Just _ ->
+                                "Ac.toAttrs required_.action"
+
+                            Nothing ->
+                                if List.isEmpty reqAttrFields then
+                                    "[]"
+
+                                else
+                                    "[ "
+                                        ++ (reqAttrFields |> List.map (\( f, html ) -> "Ir.attribute \"" ++ html ++ "\" required_." ++ f) |> String.join ", ")
+                                        ++ " ]"
+
+                    seedChildren_ =
+                        case comp.actionCaps of
+                            Just _ ->
+                                seedChildren
+                                    |> List.map
+                                        (\s ->
+                                            if s == "El.toNode required_.content" then
+                                                "Ac.wrapContent required_.action (El.toNode required_.content)"
+
+                                            else
+                                                s
+                                        )
+
+                            Nothing ->
+                                seedChildren
+
+                    reqFields =
+                        (requiredSlots
+                            |> List.map
+                                (\s ->
+                                    ( if s.name == "unnamed" then
+                                        "content"
+
+                                      else
+                                        Naming.camel s.name
+                                    , "Element (" ++ contentTypeOf s ++ ") (" ++ "Component.ChildAdmittedBy childAdm) msg"
+                                    )
+                                )
+                        )
+                            ++ (reqAttrFields |> List.map (\( f, _ ) -> ( f, "String" )))
+                            ++ (case comp.actionCaps of
+                                    Just _ ->
+                                        [ ( "action", "Ac.Action (Component.ActionCaps) msg" ) ]
+
+                                    Nothing ->
+                                        []
+                               )
+                in
+                [ ""
+                , ""
+                , "{-| -}"
+                , "build :"
+                , "    { "
+                    ++ (reqFields |> List.map (\( n, t ) -> n ++ " : " ++ t) |> String.join "\n    , ")
+                    ++ " }"
+                , "    -> Builder AttrCaps SlotCaps msg kind"
+                , "build required_ ="
+                , "    B.init \"" ++ comp.tag ++ "\" (" ++ seedAttrs ++ ") [ " ++ String.join ", " seedChildren_ ++ " ]"
+                ]
+
+            else
+                [ ""
+                , ""
+                , "{-| -}"
+                , "build : Builder AttrCaps SlotCaps msg kind"
+                , "build ="
+                , "    B.init \"" ++ comp.tag ++ "\" [] []"
+                ]
+
+        -- Slot placers: builder-accepting versions of the component's slot setters.
+        -- Each takes a B.Builder, calls B.toElement internally, then delegates to
+        -- the component's slot placer. Constrains `accepts` to the slot's content
+        -- type for a better error message (the error points at the call site).
+        slotPlacers =
+            namedSlots
+                |> List.concatMap
+                    (\s ->
+                        [ ""
+                        , ""
+                        , "{-| -}"
+                        , Naming.camel s.name ++ " :"
+                        , "    B.Builder childRow childAttrCaps childSlotCaps (" ++ contentTypeOf s ++ ") msg"
+                        , "    -> Element free freeAdmittedBy msg"
+                        , Naming.camel s.name ++ " builder ="
+                        , "    " ++ "Component." ++ Naming.camel s.name ++ " (B.toElement builder)"
+                        ]
+                    )
+
+        -- Slot pipes: builder-accepting versions that consume slot capabilities.
+        singularSlotPipes =
+            singularSlots
+                |> List.concatMap
+                    (\s ->
+                        let
+                            n =
+                                slotPipeNameOf s
+                        in
+                        [ ""
+                        , ""
+                        , "{-| -}"
+                        , n ++ " :"
+                        , "    B.Builder childRow childAttrCaps childSlotCaps (" ++ contentTypeOf s ++ ") msg"
+                        , "    -> Builder attrCaps { s | " ++ Naming.camel s.name ++ " : Available } msg kind"
+                        , "    -> Builder attrCaps { s | " ++ Naming.camel s.name ++ " : Used } msg kind"
+                        , n ++ " slotBuilder builder_ ="
+                        , "    B.withChild (El.toNode (" ++ "Component." ++ Naming.camel s.name ++ " (B.toElement slotBuilder))) builder_"
+                        ]
+                    )
+
+        variadicSlotPipes =
+            variadicSlots
+                |> List.concatMap
+                    (\s ->
+                        let
+                            n =
+                                slotPipeNameOf s
+                        in
+                        [ ""
+                        , ""
+                        , "{-| -}"
+                        , n ++ " :"
+                        , "    B.Builder childRow childAttrCaps childSlotCaps (" ++ contentTypeOf s ++ ") msg"
+                        , "    -> Builder attrCaps slotCaps msg kind"
+                        , "    -> Builder attrCaps slotCaps msg kind"
+                        , n ++ " slotBuilder builder_ ="
+                        , "    B.withChild (El.toNode (" ++ "Component." ++ Naming.camel s.name ++ " (B.toElement slotBuilder))) builder_"
+                        ]
+                    )
+
+        -- Default child pipe (builder-accepting, universally quantified accepts)
+        childPipe =
+            case unnamed of
+                Just s ->
+                    [ ""
+                    , ""
+                    , "{-| -}"
+                    , "withChild :"
+                    , "    B.Builder childRow childAttrCaps childSlotCaps accepts msg"
+                    , "    -> Builder attrCaps slotCaps msg kind"
+                    , "    -> Builder attrCaps slotCaps msg kind"
+                    , "withChild childBuilder builder_ ="
+                    , "    B.withChild (El.toNode (B.toElement childBuilder)) builder_"
+                    ]
+
+                Nothing ->
+                    []
+
+        -- R2/R3: each `withX` is a thin `B.withAttribute` wrapper; the
+        -- phantom-row transition lives in the signature.
+        pipeFor : String -> String -> String -> List String
+        pipeFor capField inputSig applied =
+            pipeForParams capField
+                inputSig
+                (if String.isEmpty inputSig then
+                    []
+
+                 else
+                    [ "value_" ]
+                )
+                applied
+
+        -- Explicit parameter names, because not every setter is unary: `style`
+        -- takes a property AND a value (the elm/html 0.19 shape).
+        pipeForParams : String -> String -> List String -> String -> List String
+        pipeForParams capField inputSig params applied =
+            let
+                n =
+                    "with" ++ Naming.pascal capField
+            in
+            [ ""
+            , ""
+            , "{-| -}"
+            , n ++ " : " ++ inputSig ++ "Builder { a | " ++ capField ++ " : Available } slotCaps msg kind -> Builder { a | " ++ capField ++ " : Used } slotCaps msg kind"
+            , n
+                ++ (if List.isEmpty params then
+                        " ="
+
+                    else
+                        " " ++ String.join " " params ++ " ="
+                   )
+            , "    B.withAttribute (" ++ applied ++ ")"
+            ]
+
+        attrPipes =
+            (brand.globals
+                |> List.map
+                    (\g ->
+                        if g.elmName == "style" then
+                            -- The one non-unary global (the elm/html 0.19 shape),
+                            -- so it cannot go through `pipeFor`.
+                            pipeForParams "style" "String -> String -> " [ "property", "value_" ] "A.style property value_"
+
+                        else
+                            pipeFor g.capName (globalSetterInputType brand g ++ " -> ") ("A." ++ g.elmName ++ " value_")
+                    )
+            )
+                ++ (comp.attrs
+                        |> List.map
+                            (\a ->
+                                case ( isEnumSpec a, unionFor brand a.elmName ) of
+                                    ( True, _ ) ->
+                                        -- Component-local enum: delegate to the component's
+                                        -- own setter (which holds the right Value row).
+                                        pipeFor a.capName ("Value Component." ++ Naming.pascal a.elmName ++ " -> ") ("Component." ++ a.elmName ++ " value_")
+
+                                    ( _, Just _ ) ->
+                                        -- Enum ELSEWHERE but plain on this member: inline
+                                        -- the member's own setter rather than delegating.
+                                        pipeFor a.capName (setterInputType a ++ " -> ") (setterExpr a)
+
+                                    ( _, Nothing ) ->
+                                        if divergesFromCanonical brand a then
+                                            -- Type OR form divergence: inline rather than
+                                            -- delegating to `A.<attr>`, which would write
+                                            -- the canonical's kind of fact.
+                                            pipeFor a.capName (setterInputType a ++ " -> ") (setterExpr a)
+
+                                        else
+                                            pipeFor a.capName (setterInputType a ++ " -> ") ("A." ++ a.elmName ++ " value_")
+                            )
+                   )
+                ++ (comp.events
+                        |> List.map
+                            (\ev ->
+                                case overrideFor ev.name of
+                                    Just o ->
+                                        let
+                                            ( elmTy, _ ) =
+                                                overrideTypes o.type_
+                                        in
+                                        -- Override handler lives in the Component module.
+                                        pipeFor (handlerName brand ev) ("(" ++ elmTy ++ " -> msg) -> ") ("Component." ++ handlerName brand ev ++ " value_")
+
+                                    Nothing ->
+                                        case ev.payload of
+                                            Just payload ->
+                                                let
+                                                    ( elmTy, _ ) =
+                                                        payloadTypeAndDecoder payload
+                                                in
+                                                pipeFor (handlerName brand ev) ("(" ++ elmTy ++ " -> msg) -> ") ("Ev." ++ handlerName brand ev ++ " value_")
+
+                                            Nothing ->
+                                                pipeFor (handlerName brand ev) "msg -> " ("Ev." ++ handlerName brand ev ++ " value_")
+                            )
+                   )
+                |> List.concat
+
+        kindImports =
+            ([ "Available", "Brand", "Ctx", "Used" ]
+                |> List.filter
+                    (\m ->
+                        m
+                            /= "Brand"
+                            || comp.produces.marker
+                            == MBrand
+                            || List.any (\a -> String.contains ": Brand" a.row) contentAliases
+                    )
+            )
+                ++ (comp.slots
+                        |> List.filterMap
+                            (\s ->
+                                case s.content of
+                                    SetContent set ->
+                                        Just set.pascal
+
+                                    _ ->
+                                        Nothing
+                            )
+                   )
+                |> List.sort
+
+        usesShared =
+            comp.produces.marker
+                == MShared
+                || List.any (\a -> String.contains "Shared" a.row) contentAliases
+
+        irKindExposing =
+            (if usesShared then
+                [ "Shared", "Supported" ]
+
+             else
+                [ "Supported" ]
+            )
+                |> String.join ", "
+
+        needsValuesImport =
+            not (List.isEmpty comp.enums)
+                || hasEnumGlobal brand
+                || (comp.attrs |> List.any (\a -> isEnumSpec a))
+
+        imports =
+            List.concat
+                [ [ "import HtmlIr.Element as El exposing (Element)"
+                  , "import HtmlIr.Internal as Ir"
+                  , "import HtmlIr.Kind exposing (" ++ irKindExposing ++ ")"
+                  ]
+                , if not (List.isEmpty comp.enums) || hasEnumGlobal brand then
+                    [ "import HtmlIr.Value as Val exposing (Value)" ]
+
+                  else
+                    []
+                , if needsValuesImport then
+                    [ "import " ++ lib ++ ".Values" ]
+
+                  else
+                    []
+                , [ "import " ++ lib ++ ".Attributes as A" ]
+                , [ "import " ++ lib ++ ".Forge.Internal as B" ]
+                , if List.isEmpty eventNames then
+                    []
+
+                  else
+                    [ "import " ++ lib ++ ".Events as Ev" ]
+                , if needsJsonEncodeImport brand comp.attrs then
+                    [ "import Json.Encode" ]
+
+                  else
+                    []
+                , [ "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " kindImports ++ ")" ]
+                , [ "import " ++ lib ++ ".Component." ++ comp.name ++ " as Component" ]
+                , [ "import " ++ lib ++ ".Internal.Types." ++ comp.name ]
+                ]
+                ++ (case comp.actionCaps of
+                        Just _ ->
+                            [ "import " ++ lib ++ ".Action as Ac" ]
+
+                        Nothing ->
+                            []
+                   )
+                |> List.sort
+
+        isDoc =
+            if comp.transparent then
+                "The kind this element produces is transparent — it inherits its parent's kind."
+
+            else
+                "The kind this element produces — a `Brand` that marks the phantom row."
+
+        kindReturnType =
+            "Element (Component.Is kind) "
+                ++ (case comp.admittedBy of
+                        Just _ ->
+                            "(Component.AdmittedBy)"
+
+                        Nothing ->
+                            "admittedBy"
+                   )
+                ++ " msg"
+    in
+    file [ lib, "Build", comp.name ]
+        (String.join "\n"
+            (List.concat
+                [ [ "module " ++ lib ++ ".Build." ++ comp.name ++ " exposing"
+                  , exposing_
+                  , ""
+                  , "{-|"
+                  , docs_
+                  , "-}"
+                  , ""
+                  ]
+                , imports
+                , [ ""
+                  , ""
+                  , "{-| -}"
+                  , "type alias Is s ="
+                  , "    " ++ internalRef "Is" ++ " s"
+                  , ""
+                  , ""
+                  , "{-| -}"
+                  , "type alias Builder attrCaps slotCaps msg kind ="
+                  , "    " ++ internalRef "Builder" ++ " attrCaps slotCaps msg kind"
+                  , ""
+                  , ""
+                  , "{-| -}"
+                  , "type alias AttrCaps ="
+                  , "    " ++ internalRef "AttrCaps"
+                  , ""
+                  , ""
+                  ]
+                    ++ (let
+                            slotCapsBody =
+                                capsRecord "Available" (singularSlots |> List.map (.name >> Naming.camel))
+                        in
+                        if String.trim slotCapsBody == "{}" then
+                            [ "{-| -}"
+                            , "type alias SlotCaps ="
+                            , "    " ++ slotCapsBody
+                            ]
+
+                        else
+                            [ "{-| -}"
+                            , "type alias SlotCaps ="
+                            , "    " ++ internalRef "SlotCaps"
+                            ]
+                       )
+                    ++ [ ""
+                       , ""
+                       , "{-| -}"
+                       , "type alias ChildAdmittedBy childAdm ="
+                       , "    " ++ internalRef "ChildAdmittedBy" ++ " childAdm"
+                       ]
+                     ++ (case comp.admittedBy of
+                            Just _ ->
+                                [ ""
+                                , ""
+                                , "{-| -}"
+                                , "type alias AdmittedBy ="
+                                , "    " ++ internalRef "AdmittedBy"
+                                ]
+
+                            Nothing ->
+                                []
+                       )
+                     ++ (case comp.actionCaps of
+                            Just _ ->
+                                [ ""
+                                , ""
+                                , "{-| -}"
+                                , "type alias ActionCaps ="
+                                , "    " ++ internalRef "ActionCaps"
+                                ]
+
+                            Nothing ->
+                                []
+                       )
+                    ++ contentAliasReExports
+                    ++ buildDecl
+                    ++ [ ""
+                       , ""
+                       , "{-| -}"
+                       , "toElement : Builder attrCaps slotCaps msg kind -> " ++ kindReturnType
+                       , "toElement ="
+                       , "    B.toElement"
+                       ]
+                    ++ slotPlacers
+                    ++ singularSlotPipes
+                    ++ variadicSlotPipes
+                    ++ childPipe
+                    ++ attrPipes
+                    ++ [ "" ]
                 ]
             )
         )
@@ -3366,8 +4189,6 @@ globalSetterInputType brand g =
 -- module, so it compiles standalone. Native/home-shaped brands already own
 -- their `Ir.node` in the home modules (which ARE the loose layer), so this
 -- module is emitted only for the rich per-component (`own`) shape.
-
-
 -- SUBSTRATE RE-EXPORTS
 --
 -- The substrate types a caller needs to write a type annotation. Every brand
@@ -3385,7 +4206,27 @@ globalSetterInputType brand g =
 -}
 substrateReExportNames : List String
 substrateReExportNames =
-    [ "Element", "Attr", "Node", "toHtml", "toNode", "mapMsg", "mapNode" ]
+    [ "Element"
+    , "Attr"
+    , "Node"
+    , "toHtml"
+    , "toNode"
+    , "mapMsg"
+    , "mapNode"
+    , "key"
+    , "lazy"
+    , "lazy2"
+    , "lazy3"
+    , "lazy4"
+    , "lazy5"
+    , "lazy6"
+    , "lazy7"
+    , "lazy8"
+    , "addClass"
+    , "attrIf"
+    , "when"
+    , "testId"
+    ]
 
 
 {-| Imports that [`substrateReExportDecls`](#substrateReExportDecls) needs.
@@ -3443,6 +4284,84 @@ substrateReExportDecls =
     , "mapNode : (a -> b) -> Node a -> Node b"
     , "mapNode ="
     , "    HtmlIr.Node.map"
+    , ""
+    , ""
+    , doc "Attach a diff key to a child so its parent container renders as a keyed node. State and animations survive reorders, insertions, and removals. Phantom rows are preserved — a keyed chip is still a chip."
+    , "key : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg"
+    , "key ="
+    , "    HtmlIr.Element.key"
+    , ""
+    , ""
+    , doc "Memoise a subtree while its input is referentially unchanged. The result keeps its phantom rows and drops into any slot. **The view function must be a stable top-level binding** — an inline lambda allocates a fresh closure each render and silently never memoises."
+    , "lazy : (a -> Element accepts admittedBy msg) -> a -> Element accepts admittedBy msg"
+    , "lazy ="
+    , "    HtmlIr.Element.lazy"
+    , ""
+    , ""
+    , doc "2-argument variant of [`lazy`](#lazy)."
+    , "lazy2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Element accepts admittedBy msg"
+    , "lazy2 ="
+    , "    HtmlIr.Element.lazy2"
+    , ""
+    , ""
+    , doc "3-argument variant of [`lazy`](#lazy)."
+    , "lazy3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Element accepts admittedBy msg"
+    , "lazy3 ="
+    , "    HtmlIr.Element.lazy3"
+    , ""
+    , ""
+    , doc "4-argument variant of [`lazy`](#lazy)."
+    , "lazy4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Element accepts admittedBy msg"
+    , "lazy4 ="
+    , "    HtmlIr.Element.lazy4"
+    , ""
+    , ""
+    , doc "5-argument variant of [`lazy`](#lazy)."
+    , "lazy5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Element accepts admittedBy msg"
+    , "lazy5 ="
+    , "    HtmlIr.Element.lazy5"
+    , ""
+    , ""
+    , doc "6-argument variant of [`lazy`](#lazy). Note type params skip `f` to match the underlying `VirtualDom.lazy6` convention."
+    , "lazy6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg"
+    , "lazy6 ="
+    , "    HtmlIr.Element.lazy6"
+    , ""
+    , ""
+    , doc "7-argument variant of [`lazy`](#lazy)."
+    , "lazy7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg"
+    , "lazy7 ="
+    , "    HtmlIr.Element.lazy7"
+    , ""
+    , ""
+    , doc "8-argument variant of [`lazy`](#lazy). **This variant does not memoise** — the Element→Html bridge only has room for seven memoised data arguments, so the eighth forces a fresh closure each render and defeats the reference check. For real memoisation, fold the extra state into one of the first seven arguments and use [`lazy7`](#lazy7)."
+    , "lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg"
+    , "lazy8 ="
+    , "    HtmlIr.Element.lazy8"
+    , ""
+    , ""
+    , doc "Add a CSS class, participating in the `class` merge. Phantom rows preserved."
+    , "addClass : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg"
+    , "addClass ="
+    , "    HtmlIr.Element.addClass"
+    , ""
+    , ""
+    , doc "Conditionally attach an attribute — applied when the flag is `True`, a no-op when `False`. Phantom rows preserved."
+    , "attrIf : Bool -> Attr capability msg -> Element accepts admittedBy msg -> Element accepts admittedBy msg"
+    , "attrIf ="
+    , "    HtmlIr.Element.attrIf"
+    , ""
+    , ""
+    , doc "Keep an element only when the flag is `True`; `False` collapses it to an empty node that renders nothing. Phantom rows preserved."
+    , "when : Bool -> Element accepts admittedBy msg -> Element accepts admittedBy msg"
+    , "when ="
+    , "    HtmlIr.Element.when"
+    , ""
+    , ""
+    , doc "Stamp a `data-testid` attribute for test hooks. Phantom rows preserved."
+    , "testId : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg"
+    , "testId ="
+    , "    HtmlIr.Element.testId"
     ]
 
 
@@ -3536,15 +4455,15 @@ generalModule brand =
                     memberRef brand comp
 
                 q n =
-                    lib ++ "." ++ ref.module_ ++ "." ++ ref.prefix ++ n
+                    lib ++ ".Component." ++ ref.module_ ++ "." ++ ref.prefix ++ n
 
                 target =
                     case homeOf comp of
                         Nothing ->
-                            lib ++ "." ++ comp.name ++ ".view"
+                            lib ++ ".Component." ++ comp.name ++ ".view"
 
                         Just _ ->
-                            lib ++ "." ++ ref.module_ ++ "." ++ comp.ctor
+                            lib ++ ".Component." ++ ref.module_ ++ "." ++ comp.ctor
 
                 childType =
                     if comp.transparent then
@@ -3609,6 +4528,33 @@ generalModule brand =
                         ]
                     )
 
+        slotPlacerResult =
+            looseSlotPlacers brand
+
+        slotPlacerNames =
+            slotPlacerResult.placers |> List.map .ident
+
+        -- Design C loose slot placer declarations.
+        -- One placer per distinct HTML slot name; broad open `accepts` row (the
+        -- same single-import trade-off as `M3e.Attributes.variant`). Wrong-kind
+        -- narrowing is deferred to elm-review `ValidSlotKind`.
+        slotPlacerDecls =
+            slotPlacerResult.placers
+                |> List.concatMap
+                    (\p ->
+                        [ ""
+                        , ""
+                        , doc
+                            ("Place a child element into the `\""
+                                ++ p.htmlName
+                                ++ "\"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule."
+                            )
+                        , p.ident ++ " : Element accepts admittedBy msg -> Element free freeAdm msg"
+                        , p.ident ++ " el_ ="
+                        , "    Ir.fromNode (Ir.addAttribute (Ir.attribute \"slot\" \"" ++ p.htmlName ++ "\") (HtmlIr.Element.toNode el_))"
+                        ]
+                    )
+
         needsKindImport =
             brand.comps
                 |> List.any
@@ -3621,18 +4567,26 @@ generalModule brand =
                                 False
                     )
 
+        -- Ir is needed for atoms AND for slot placers (Ir.fromNode, Ir.addAttribute, Ir.attribute).
+        needsIrImport =
+            not (List.isEmpty brand.atoms) || not (List.isEmpty slotPlacerResult.placers)
+
         imports =
             (substrateReExportImports
+                ++ (if needsIrImport then
+                        [ "import HtmlIr.Internal as Ir" ]
+
+                    else
+                        []
+                   )
                 ++ (if List.isEmpty brand.atoms then
                         []
 
                     else
-                        [ "import HtmlIr.Internal as Ir"
-                        , "import HtmlIr.Kind exposing (Shared)"
-                        ]
+                        [ "import HtmlIr.Kind exposing (Shared)" ]
                    )
                 ++ (brand.comps
-                        |> List.map (\c -> "import " ++ lib ++ "." ++ (memberRef brand c).module_)
+                        |> List.map (\c -> "import " ++ lib ++ ".Component." ++ (memberRef brand c).module_)
                         |> List.foldr
                             (\i acc ->
                                 if List.member i acc then
@@ -3659,6 +4613,7 @@ generalModule brand =
                   , exposeBlock
                         [ brand.comps |> List.map .resolvedCtor
                         , brand.atoms
+                        , slotPlacerNames
                         , substrateReExportNames
                         ]
                   , ""
@@ -3670,7 +4625,16 @@ generalModule brand =
                   , ""
                   , "`toHtml` is the render bridge to `elm/html`."
                   , ""
-                  , docsBlock [ brand.comps |> List.map .resolvedCtor, brand.atoms, substrateReExportNames ]
+                  , "The `slot<Name>` placers assign a child element to a named slot in any"
+                  , "component that accepts it. Admittance is open (broad row) — wrong-kind"
+                  , "placements are caught by `Cem.ValidSlotKind` (elm-review)."
+                  , ""
+                  , docsBlock
+                        [ brand.comps |> List.map .resolvedCtor
+                        , brand.atoms
+                        , slotPlacerNames
+                        , substrateReExportNames
+                        ]
                   , ""
                   , "-}"
                   , ""
@@ -3678,6 +4642,7 @@ generalModule brand =
                 , imports
                 , brand.comps |> List.concatMap ctorSig
                 , atoms
+                , slotPlacerDecls
                 , substrateReExportDecls
                 , [ "" ]
                 ]
@@ -4011,6 +4976,46 @@ attributesModule brand =
                             |> List.map (\( name, reason ) -> "  - `" ++ name ++ "` — " ++ reason ++ ".")
                        )
 
+        -- Portmanteau attribute nullaries: `<attr><ValuePascal>` for every (enum attr,
+        -- token) pair that is not already claimed by a plain name. The `taken` set
+        -- mirrors `guardAttributesModule`'s `allPairs` (minus portmanteaus, which are
+        -- computed from it — same logic, same drop rule).
+        attrPortmanteauTaken =
+            globalNames
+                ++ (plainAttrs |> List.map .elmName)
+                ++ companionNames
+                ++ variantNames
+                ++ (enumAttrs |> List.map .elmName)
+
+        attrPortmanteauList =
+            enumAttrPortmanteaus brand attrPortmanteauTaken
+
+        attrPortmanteauNames =
+            attrPortmanteauList |> List.map .name
+
+        attrPortmanteauDecls =
+            attrPortmanteauList
+                |> List.concatMap
+                    (\p ->
+                        [ ""
+                        , ""
+                        , doc
+                            ("Set the `"
+                                ++ p.htmlName
+                                ++ "` attribute to `\""
+                                ++ p.tokenValue
+                                ++ "\"`. Portmanteau of `"
+                                ++ p.capName
+                                ++ "` + `"
+                                ++ p.tokenValue
+                                ++ "` — for IDE discovery and single-import ergonomics."
+                            )
+                        , p.name ++ " : Attr { c | " ++ p.capName ++ " : Supported } msg"
+                        , p.name ++ " ="
+                        , "    Ir.attribute \"" ++ p.htmlName ++ "\" \"" ++ p.tokenValue ++ "\""
+                        ]
+                    )
+
         needsValues =
             not (List.isEmpty enumAttrs) || hasEnumGlobal brand
 
@@ -4045,6 +5050,7 @@ attributesModule brand =
                         , companionNames
                         , variantNames
                         , enumAttrs |> List.map .elmName
+                        , attrPortmanteauNames
                         ]
                   , ""
                   , "{-| The canonical shared attribute vocabulary. Every setter is an open"
@@ -4052,6 +5058,11 @@ attributesModule brand =
                   , "decides admittance. Enum setters here close over the library-wide UNION of"
                   , "values — cross-component misuse is caught by elm-review; reach for the"
                   , "per-component setters (`" ++ lib ++ ".<Component>.<attr>`) for compile-tight narrowing."
+                  , ""
+                  , "Portmanteau setters (`variantRainbow`, `shapeRounded`, …) are nullary"
+                  , "aliases that pre-apply one enum token. They exist for IDE discovery:"
+                  , "type `variant` and autocomplete lists every value inline. Each claims"
+                  , "the same capability row as its base enum setter, so admittance is identical."
                   ]
                 , kernelBlockedNote
                 , [ ""
@@ -4061,6 +5072,7 @@ attributesModule brand =
                         , companionNames
                         , variantNames
                         , enumAttrs |> List.map .elmName
+                        , attrPortmanteauNames
                         ]
                   , ""
                   , "-}"
@@ -4079,6 +5091,7 @@ attributesModule brand =
                 , companionDecls
                 , variantDecls
                 , enumAttrs |> List.concatMap enumSetter
+                , attrPortmanteauDecls
                 , [ "" ]
                 ]
             )
@@ -4967,10 +5980,10 @@ homeModule brand ( home, members ) =
                 ]
                 |> List.sort
     in
-    file [ lib, home ]
+    file [ lib, "Component", home ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ lib ++ "." ++ home ++ " exposing"
+                [ [ "module " ++ lib ++ ".Component." ++ home ++ " exposing"
                   , exposeBlock exposeGroups
                   , ""
                   , "{-| The `" ++ home ++ "` element home: constructors, per-element rows, and"
@@ -5066,7 +6079,7 @@ factsModule brand =
         factOf comp =
             let
                 moduleName =
-                    lib ++ "." ++ (memberRef brand comp).module_
+                    lib ++ ".Component." ++ (memberRef brand comp).module_
 
                 attrRewrites =
                     (comp.attrs |> List.map (\a -> ( a.elmName, a.elmName )))
@@ -5139,10 +6152,11 @@ factsModule brand =
             , "-}"
             , "globalAttributes : List String"
             , "globalAttributes ="
-              -- Both row shapes: `globalAttributes` answers "is this attribute's
-              -- meaning element-INDEPENDENT?", which is the very property that
-              -- justified opening the row. Reading `brand.globals` alone would
-              -- silently shrink this roster the moment a brand opened an entry.
+
+            -- Both row shapes: `globalAttributes` answers "is this attribute's
+            -- meaning element-INDEPENDENT?", which is the very property that
+            -- justified opening the row. Reading `brand.globals` alone would
+            -- silently shrink this roster the moment a brand opened an entry.
             , "    " ++ strList (allGlobals brand |> List.map .htmlName |> List.sort)
             , ""
             , ""

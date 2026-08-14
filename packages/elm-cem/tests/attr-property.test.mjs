@@ -257,8 +257,8 @@ for (const name of ["value", "checked"]) {
 
 // NB2f — `propertyOnly` suppresses the companion on the element whose live property
 // has no backing content attribute, while the sibling that DOES have one keeps it.
-const output = all[path.join("Probe", "Output.elm")];
-const widget = all[path.join("Probe", "Widget.elm")];
+const output = all[path.join("Probe", "Component", "Output.elm")];
+const widget = all[path.join("Probe", "Component", "Widget.elm")];
 check(!!output && output.includes("value : String -> Attr"), "NB2f: `propertyOnly` element still gets the live property setter");
 check(!!output && !output.includes("defaultValue"), "NB2f: `propertyOnly` element gets NO defaultValue companion");
 check(!!widget && widget.includes("defaultValue ="), "NB2f: a sibling element WITH a content attribute keeps defaultValue");
@@ -281,8 +281,11 @@ check(!attrs.includes('Ir.property "pressed"'), "NB2g: an opted-out attribute is
 // AND wc-dial but scoped to `["wc-widget"]`. wc-widget stands in for <input> (live value,
 // dirty-value flag), wc-gauge for <button>/<data>/<option> (reflected DOMString), and
 // wc-dial for <progress>/<meter>/<li> (numeric IDL type) — see NB2i for that one.
-const gauge = all[path.join("Probe", "Gauge.elm")];
-const dial = all[path.join("Probe", "Dial.elm")];
+const gauge = all[path.join("Probe", "Component", "Gauge.elm")];
+const gaugeBuild = all[path.join("Probe", "Build", "Gauge.elm")];
+const dial = all[path.join("Probe", "Component", "Dial.elm")];
+const dialTypes = all[path.join("Probe", "Internal", "Types", "Dial.elm")];
+const dialBuild = all[path.join("Probe", "Build", "Dial.elm")];
 
 // The in-scope element's setter reaches the live property. It DELEGATES, because the
 // shared canonical is the property form and therefore already agrees with it — the
@@ -301,7 +304,7 @@ check(!!gauge && /reading : String -> Attr \{ c \| reading : Supported \} msg/.t
 // `A.reading`. Same reason the setter cannot delegate: the shared canonical is the
 // property form, and `divergesFromCanonical` is consulted at every delegation site.
 check(
-  !!gauge && /withReading value_ =\s*\n\s*B\.withAttribute \(Ir\.attribute "reading" value_\)/.test(gauge),
+  !!gaugeBuild && /withReading value_ =\s*\n\s*B\.withAttribute \(Ir\.attribute "reading" value_\)/.test(gaugeBuild),
   "NB2h: the out-of-scope element's builder pipe writes the attribute form too, inlined rather than delegated",
 );
 {
@@ -359,9 +362,9 @@ check(
 // IDL TypeError thrown mid-patch. So wc-dial leaves the row: `_renames` moves `elmName`
 // and `capName` together, `attrTypes` gives the setter the type its value space has, and
 // the bad call stops compiling.
-check(!!dial && /^type alias Attrs =\n(?:.*\n)*?    \}$/m.test(dial), "NB2i: the diverged element still emits a closed Attrs row");
+check(!!dialTypes && /^type alias Attrs =\n(?:.*\n)*?    \}$/m.test(dialTypes), "NB2i: the diverged element still emits a closed Attrs row");
 {
-  const row = dial.slice(dial.indexOf("type alias Attrs ="), dial.indexOf("}", dial.indexOf("type alias Attrs =")));
+  const row = dialTypes.slice(dialTypes.indexOf("type alias Attrs ="), dialTypes.indexOf("}", dialTypes.indexOf("type alias Attrs =")));
   check(/readingNumeric : Supported/.test(row), "NB2i: the diverged element's Attrs row carries `readingNumeric`");
   check(
     !/\breading : Supported/.test(row),
@@ -383,7 +386,7 @@ check(!!dial && !/\breading :/.test(dial), "NB2i: the diverged element has no `r
 // `readingNumeric` would be two names for one fact, claiming a row it does not own.
 check(!!dial && !dial.includes("readingAsNumber"), "NB2i: the diverged element gets NO `_variants` setter (its base setter name is gone)");
 check(
-  !!dial && /withReadingNumeric value_ =\s*\n\s*B\.withAttribute \(A\.readingNumeric value_\)/.test(dial),
+  !!dialBuild && /withReadingNumeric value_ =\s*\n\s*B\.withAttribute \(A\.readingNumeric value_\)/.test(dialBuild),
   "NB2i: the diverged element's builder pipe consumes the diverged capability",
 );
 

@@ -54,6 +54,7 @@
     "test:enum-override": "node tests/enum-override.test.mjs",
     "test:from-string": "node tests/from-string.test.mjs",
     "test:gates": "node tests/gates.test.mjs",
+    "test:registry-nested-pkg": "node tests/registry-check-nested-pkg.test.mjs",
     "test:check-gates": "node tests/check-gates.test.mjs",
     "test:bin-entrypoints": "node tests/bin-entrypoints.test.mjs",
     "test:brand-sync": "node tests/brand-sync.test.mjs",

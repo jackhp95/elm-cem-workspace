@@ -8,7 +8,7 @@ module M3e.Build exposing
 and the single `toElement` that closes any component's builder. Per-component
 modules provide the seeds (`build`) and the narrowed `withX` setters; they all
 share this one representation, so `toElement` is defined once (in
-`M3e.Build.Internal`) and re-exported here.
+`M3e.Forge.Internal`) and re-exported here.
 
 The `Is` aliases (`ButtonIs`, `CardIs`, …) let you annotate a phantom-kind
 type without importing the component or its builder module.
@@ -72,7 +72,6 @@ import M3e.Build.Icon
 import M3e.Build.IconButton
 import M3e.Build.InputChip
 import M3e.Build.InputChipSet
-import M3e.Build.Internal as Internal
 import M3e.Build.LinearProgressIndicator
 import M3e.Build.List
 import M3e.Build.ListAction
@@ -151,6 +150,7 @@ import M3e.Build.Tooltip
 import M3e.Build.Tree
 import M3e.Build.TreeItem
 import M3e.Build.YearView
+import M3e.Forge.Internal as Internal
 
 
 {-| The shared pipe-builder — see each component's `Builder` alias for its

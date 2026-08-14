@@ -11,8 +11,9 @@ to, and the row each pooled token asserts are the same rows.
 
 import Eo
 import Eo.Attributes
-import Eo.Bar
-import Eo.Gate
+import Eo.Build.Bar
+import Eo.Component.Bar
+import Eo.Component.Gate
 import Eo.Values
 import Html exposing (Html)
 import HtmlIr.Element
@@ -35,22 +36,22 @@ view =
                 -- `Value` spelling. See `Attr.AttrType`.
                 , Eo.Attributes.maxVisible "all"
                 ]
-                [ Eo.Bar.view
+                [ Eo.Component.Bar.view
                     -- The per-component setters narrow to the SAME pooled tokens.
-                    [ Eo.Bar.disablePagination Eo.Values.auto
-                    , Eo.Bar.mode Eo.Values.wide
+                    [ Eo.Component.Bar.disablePagination Eo.Values.auto
+                    , Eo.Component.Bar.mode Eo.Values.wide
                     ]
                     []
                 , Eo.gate
                     -- MAP form. The Elm name is `always`; the string it writes is "true".
                     [ Eo.Attributes.strict Eo.Values.always ]
                     []
-                , Eo.Gate.view [ Eo.Gate.strict Eo.Values.never ] []
+                , Eo.Component.Gate.view [ Eo.Component.Gate.strict Eo.Values.never ] []
 
                 -- The builder pipes carry the same rows.
-                , Eo.Bar.build
-                    |> Eo.Bar.withDisablePagination Eo.Values.false
-                    |> Eo.Bar.toElement
+                , Eo.Build.Bar.build
+                    |> Eo.Build.Bar.withDisablePagination Eo.Values.false
+                    |> Eo.Build.Bar.toElement
                 ]
             )
         )

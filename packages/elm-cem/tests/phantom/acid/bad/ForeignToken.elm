@@ -5,9 +5,9 @@ Variant row { filled, tonal } excludes it. MUST FAIL.
 -}
 
 import Mini
-import Mini.Button
+import Mini.Component.Button
 import Mini.Values
 
 
 broken =
-    Mini.button [ Mini.Button.variant Mini.Values.small ] [ Mini.text "x" ]
+    Mini.button [ Mini.Component.Button.variant Mini.Values.small ] [ Mini.text "x" ]

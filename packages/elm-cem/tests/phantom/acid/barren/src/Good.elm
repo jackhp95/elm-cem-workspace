@@ -9,7 +9,7 @@ import HtmlIr.Element
 import HtmlIr.Node
 import Br
 import Br.Attributes
-import Br.Barren
+import Br.Component.Barren
 import Br.Kind
 
 
@@ -20,7 +20,7 @@ type Msg
 page : HtmlIr.Element.Element { s | barren : Br.Kind.Brand } admittedBy Msg
 page =
     Br.barren
-        [ Br.Barren.label "test label"
+        [ Br.Component.Barren.label "test label"
         , Br.Attributes.class "container"
         ]
         []

@@ -242,6 +242,21 @@ function resolveElmCodegen() {
   return null;
 }
 
+// After the Elm codegen step, run any supplemental Node.js generators that
+// produce modules the Elm codegen cannot: currently the icon-module generator
+// (WS-C), which writes <Lib>.Icon from a config-declared ligature-name catalog.
+// This runs before syncExposedModules so the emitted file is included in the
+// exposed-modules computation (or filtered by _internalModules as configured).
+if (outputDir) {
+  const configFromPaths = [];
+  for (let i = 0; i < process.argv.length; i++) {
+    const a = process.argv[i];
+    if (a.startsWith("--config-from=")) configFromPaths.push(a.slice("--config-from=".length));
+    else if (a === "--config-from" && process.argv[i + 1]) { configFromPaths.push(process.argv[i + 1]); i++; }
+  }
+  require("./gen-icon-module").run(process.argv.slice(2), configFromPaths, outputDir);
+}
+
 // The generator knows exactly which modules it wrote, so it owns the package's
 // `exposed-modules` — consumers don't hand-maintain it or ship a helper script.
 // After generation, if there's a package `elm.json` next to the output dir,
@@ -658,6 +673,7 @@ function readPublishShape(argv) {
   }
   let brand = null;
   let generalOnly = false;
+  const internalModules = new Set();
   for (const p of paths) {
     if (!/\.json$/.test(p)) continue; // only JSON configs carry these keys
     try {
@@ -665,12 +681,20 @@ function readPublishShape(argv) {
       if (c && typeof c === "object") {
         if (c._brand) brand = c._brand;
         if (c._publishGeneralOnly) generalOnly = true;
+        // `_internalModules` — modules that ARE generated (component modules import
+        // them) but are NOT exposed in the published package's `exposed-modules`.
+        // Declared in config so the exclusion is explicit and diff-visible, not
+        // hardcoded. Example: `"_internalModules": ["M3e.Html"]` internalizes the
+        // loose elm/html-like producer layer (WS-B: spec §3.1).
+        if (Array.isArray(c._internalModules)) {
+          for (const m of c._internalModules) internalModules.add(m);
+        }
       }
     } catch {
       /* unreadable/invalid config-from is not this function's error */
     }
   }
-  return { brand, generalOnly };
+  return { brand, generalOnly, internalModules };
 }
 
 function syncExposedModules(output, publishShape) {
@@ -725,6 +749,21 @@ function syncExposedModules(output, publishShape) {
   if (publishShape && publishShape.generalOnly && publishShape.brand) {
     const prim = require("./classify").primitivesExposed(srcDir, publishShape.brand);
     if (prim && prim.length) modules = prim;
+  }
+
+  // Config-declared internal modules: generated (so component modules may import
+  // them), but not exposed in the published package API. Declared in config via
+  // `_internalModules: ["<ModuleName>", ...]` rather than hardcoded here, so the
+  // choice is explicit and diff-visible. Applied AFTER generalOnly so that a
+  // module excluded here is excluded even from the general-only surface.
+  if (publishShape && publishShape.internalModules && publishShape.internalModules.size > 0) {
+    const internalized = modules.filter((m) => publishShape.internalModules.has(m));
+    modules = modules.filter((m) => !publishShape.internalModules.has(m));
+    if (internalized.length > 0) {
+      console.log(
+        `elm-cem: internalized ${internalized.length} module(s) (generated but not exposed): ${internalized.join(", ")}`
+      );
+    }
   }
 
   // Stamp the family dependencies the emitted src actually imports (issue #48,

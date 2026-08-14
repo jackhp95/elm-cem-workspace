@@ -31,6 +31,7 @@ type alias Model =
     { scheme : Value Value.Scheme
     , seed : String
     , contrast : Value Value.Contrast
+    , variant : Value M3e.Component.Theme.Variant
     , density : Float
     , motion : Value Value.Motion
     , displayFont : String
@@ -49,6 +50,7 @@ init =
     { scheme = Value.auto
     , seed = "#6750A4"
     , contrast = Value.standard
+    , variant = Value.neutral
     , density = 0
     , motion = Value.standard
     , displayFont = "Roboto"
@@ -77,6 +79,7 @@ type Msg
     = SetScheme (Value Value.Scheme)
     | SetSeed String
     | SetContrast (Value Value.Contrast)
+    | SetVariant (Value M3e.Component.Theme.Variant)
     | SetDensity Float
     | SetMotion (Value Value.Motion)
     | SetDisplayFont String
@@ -135,6 +138,9 @@ update msg model =
 
         SetContrast contrast ->
             persist { model | contrast = contrast, activePresetId = Nothing }
+
+        SetVariant v ->
+            persist { model | variant = v, activePresetId = Nothing }
 
         SetDensity density ->
             persist { model | density = density }
@@ -355,6 +361,7 @@ storeState model =
             { scheme = Value.toString model.scheme
             , seed = model.seed
             , contrast = Value.toString model.contrast
+            , variant = Value.toString model.variant
             , density = model.density
             , motion = Value.toString model.motion
             , displayFont = model.displayFont
@@ -438,6 +445,7 @@ fromPersisted :
     { scheme : String
     , seed : String
     , contrast : String
+    , variant : String
     , density : Float
     , motion : String
     , displayFont : String
@@ -464,6 +472,7 @@ fromPersisted decoded =
     { scheme = Value.schemeFromString decoded.scheme |> Maybe.withDefault Value.auto
     , seed = decoded.seed
     , contrast = Value.contrastFromString decoded.contrast |> Maybe.withDefault Value.standard
+    , variant = themeVariantFromString decoded.variant
     , density = decoded.density
     , motion = Value.motionFromString decoded.motion |> Maybe.withDefault Value.standard
     , displayFont = decoded.displayFont
@@ -575,6 +584,87 @@ schemeLabel v =
 
         other ->
             capitalize other
+
+
+{-| The 9 M3 dynamic-color variants valid on `m3e-theme`. Separated from the
+broader `Value.variantValues` (which covers every component's variant enum,
+not just theme's).
+-}
+themeVariantValues : List (Value M3e.Component.Theme.Variant)
+themeVariantValues =
+    [ Value.content
+    , Value.expressive
+    , Value.fidelity
+    , Value.fruitSalad
+    , Value.monochrome
+    , Value.neutral
+    , Value.rainbow
+    , Value.tonalSpot
+    , Value.vibrant
+    ]
+
+
+{-| Parse a persisted variant string back to a typed value. Falls back to
+`neutral` (the element's own documented default) for unknown strings so old
+blobs or typos don't silently break the decode.
+-}
+themeVariantFromString : String -> Value M3e.Component.Theme.Variant
+themeVariantFromString s =
+    case s of
+        "content" ->
+            Value.content
+
+        "expressive" ->
+            Value.expressive
+
+        "fidelity" ->
+            Value.fidelity
+
+        "fruit-salad" ->
+            Value.fruitSalad
+
+        "monochrome" ->
+            Value.monochrome
+
+        "rainbow" ->
+            Value.rainbow
+
+        "tonal-spot" ->
+            Value.tonalSpot
+
+        "vibrant" ->
+            Value.vibrant
+
+        _ ->
+            Value.neutral
+
+
+{-| Editorial label for one theme variant. camelCase wire strings get
+split into title case; everything else is just capitalized.
+-}
+variantLabelFor : Value M3e.Component.Theme.Variant -> String
+variantLabelFor v =
+    case Value.toString v of
+        "fruit-salad" ->
+            "Fruit Salad"
+
+        "tonal-spot" ->
+            "Tonal Spot"
+
+        other ->
+            capitalize other
+
+
+{-| Segmented button for the 9 M3 dynamic-color variants, mirroring
+`schemeSegmented`. The 9 options may overflow on narrow screens; the caller
+wraps this in an `overflow-x-auto` container.
+-}
+variantSegmented : Model -> Element { s | segmentedButton : M3e.Kind.Brand } admittedBy Msg
+variantSegmented model =
+    segmented
+        (themeVariantValues
+            |> List.map (\v -> ( variantLabelFor v, model.variant == v, SetVariant v ))
+        )
 
 
 {-| The drawer's color controls, all real m3e components: a row of blank
@@ -731,6 +821,7 @@ view { sectionsEl } model toMsg =
         ]
         [ colorOptions model |> HtmlIr.Element.map toMsg
         , schemeSegmented model |> HtmlIr.Element.map toMsg
+        , variantSegmented model |> HtmlIr.Element.map toMsg
         , Theme.Reel.view
             { presets = Theme.Presets.presets
             , activeId = model.activePresetId

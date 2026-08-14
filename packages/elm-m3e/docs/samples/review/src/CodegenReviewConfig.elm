@@ -14,6 +14,7 @@ import NoInternalImportOutsideAllowed
 import NoRedundantAttributeEscape
 import NoRedundantElementEscape
 import NoRedundantElementForge
+import NoSeamOutsideAllowedModules
 import NoUnsafeImportOutsideAllowed
 import Review.Rule exposing (Rule)
 import TypedHtml.Review.Facts
@@ -47,10 +48,26 @@ others structurally cannot:
 3.  `NoRedundantElementForge` — the _producer_ layer, for a blessed adapter
     re-forging a plain tag `TypedHtml.*` already provides.
 
-This replaces `NoSeamOutsideAllowedModules`, which had been repurposed to fence
-`*.Unsafe` after the userland `Seam` module was deleted. That was a wheel already
-in the box: `NoUnsafeImportOutsideAllowed` was built for exactly that job, and
-running two rules over one boundary is how they drift apart.
+This replaces `NoSeamOutsideAllowedModules`'s old job of fencing `*.Unsafe`
+directly (repurposed to that after the userland `Seam` module was deleted):
+`NoUnsafeImportOutsideAllowed` was built for exactly that job, and running two
+rules over one boundary is how they drift apart.
+
+**`NoSeamOutsideAllowedModules` is still in the list below**, but for a
+narrower, forward-looking job: containing `Recast`, the reserved destination
+module name `ExtractToSeam` (`jackhp95/elm-review-cem`, opt-in `--fix`, kept
+OUT of this gate) writes escapes into when a team runs it to hoist scattered
+`M3e.Unsafe.recast` / `M3e.Unsafe.Attributes.recastAttr` calls into one place.
+Today no `Recast` module exists in this project, so this entry is a no-op
+(zero live findings) — but the import fence above only ever gates literal
+`import *.Unsafe`, so a _hoisted_ `Recast.recastFoo` call site would import
+`Recast`, not `M3e.Unsafe`, and would silently slip past it. Reserving
+`"Recast"` here means the day someone runs `ExtractToSeam` with
+`recastModule = "Recast"`, containment is already live with no further gate
+change. If a team picks a different `recastModule` name, add it to both this
+rule's `seamModules` and the import fence's allow-list (`Recast` is
+allow-listed there too, since the destination module legitimately imports
+`M3e.Unsafe` to wrap it).
 
 -}
 config : List Rule
@@ -66,6 +83,9 @@ config =
       --     genuinely does not admit a Badge.
       --   `Route.Guide` — pedagogical: these pages' teaching subject IS the
       --     escape surface, shown inline as live examples.
+      --   `Recast` — reserved `ExtractToSeam` destination (see docstring); the
+      --     hoisted module itself is allowed to hold the `M3e.Unsafe` import
+      --     it wraps.
       NoUnsafeImportOutsideAllowed.rule
         [ "M3e"
         , "TypedHtml"
@@ -74,7 +94,27 @@ config =
         , "View"
         , "Route.Examples.Shop"
         , "Route.Guide"
+        , "Recast"
         ]
+
+    -- The recast-containment fence for the reserved `Recast` destination
+    -- module (see docstring). Same allow-list as the import fence above,
+    -- minus `Recast` itself being redundant to list (a module is always
+    -- allowed to reference its own functions unqualified; this only ever
+    -- fires on a QUALIFIED `Recast.*` call from elsewhere).
+    , NoSeamOutsideAllowedModules.rule
+        { seamModules = [ "Recast" ]
+        , allowedModules =
+            [ "M3e"
+            , "TypedHtml"
+            , "Doc"
+            , "Shared"
+            , "View"
+            , "Route.Examples.Shop"
+            , "Route.Guide"
+            , "Recast"
+            ]
+        }
 
     -- The use layer: names the call AND the typed setter that already exists.
     -- Evidence-driven — a setter is only ever suggested when the rule has seen

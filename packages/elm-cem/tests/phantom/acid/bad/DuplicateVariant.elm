@@ -5,12 +5,12 @@ already Used. MUST FAIL.
 -}
 
 import Mini
-import Mini.Button
+import Mini.Build.Button
 import Mini.Values
 
 
 broken =
-    Mini.Button.build { content = Mini.text "x" }
-        |> Mini.Button.withVariant Mini.Values.filled
-        |> Mini.Button.withVariant Mini.Values.tonal
-        |> Mini.Button.toElement
+    Mini.Build.Button.build { content = Mini.text "x" }
+        |> Mini.Build.Button.withVariant Mini.Values.filled
+        |> Mini.Build.Button.withVariant Mini.Values.tonal
+        |> Mini.Build.Button.toElement

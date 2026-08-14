@@ -3,6 +3,7 @@ module Hz.Attributes exposing
     , label, value, withHint, withLabel
     , defaultValue
     , position
+    , positionBlank_, positionParent_, positionSelf_, positionTop_, positionTop
     )
 
 {-| The canonical shared attribute vocabulary. Every setter is an open
@@ -10,6 +11,11 @@ producer (`{ c | attr : Supported }`); each element's closed `Attrs` row
 decides admittance. Enum setters here close over the library-wide UNION of
 values — cross-component misuse is caught by elm-review; reach for the
 per-component setters (`Hz.<Component>.<attr>`) for compile-tight narrowing.
+
+Portmanteau setters (`variantRainbow`, `shapeRounded`, …) are nullary
+aliases that pre-apply one enum token. They exist for IDE discovery:
+type `variant` and autocomplete lists every value inline. Each claims
+the same capability row as its base enum setter, so admittance is identical.
 
 **Deliberately absent.** These attributes are declared by the manifest and
 are real HTML, but `elm/virtual-dom` cannot write them, so this library does
@@ -27,6 +33,7 @@ custom element instead of restoring a setter here.
 @docs label, value, withHint, withLabel
 @docs defaultValue
 @docs position
+@docs positionBlank_, positionParent_, positionSelf_, positionTop_, positionTop
 
 -}
 
@@ -131,3 +138,38 @@ defaultValue =
 position : Value Hz.Values.Position -> Attr { c | position : Supported } msg
 position value_ =
     Ir.attribute "position" (HtmlIr.Value.toString value_)
+
+
+{-| Set the `position` attribute to `"_blank"`. Portmanteau of `position` + `_blank` — for IDE discovery and single-import ergonomics.
+-}
+positionBlank_ : Attr { c | position : Supported } msg
+positionBlank_ =
+    Ir.attribute "position" "_blank"
+
+
+{-| Set the `position` attribute to `"_parent"`. Portmanteau of `position` + `_parent` — for IDE discovery and single-import ergonomics.
+-}
+positionParent_ : Attr { c | position : Supported } msg
+positionParent_ =
+    Ir.attribute "position" "_parent"
+
+
+{-| Set the `position` attribute to `"_self"`. Portmanteau of `position` + `_self` — for IDE discovery and single-import ergonomics.
+-}
+positionSelf_ : Attr { c | position : Supported } msg
+positionSelf_ =
+    Ir.attribute "position" "_self"
+
+
+{-| Set the `position` attribute to `"_top"`. Portmanteau of `position` + `_top` — for IDE discovery and single-import ergonomics.
+-}
+positionTop_ : Attr { c | position : Supported } msg
+positionTop_ =
+    Ir.attribute "position" "_top"
+
+
+{-| Set the `position` attribute to `"top"`. Portmanteau of `position` + `top` — for IDE discovery and single-import ergonomics.
+-}
+positionTop : Attr { c | position : Supported } msg
+positionTop =
+    Ir.attribute "position" "top"

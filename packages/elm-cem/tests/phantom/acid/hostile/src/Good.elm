@@ -19,14 +19,14 @@ import HtmlIr.Element
 import HtmlIr.Kind
 import HtmlIr.Node
 import Hz
-import Hz.AttrSlot
-import Hz.Blocked
-import Hz.EventClash
+import Hz.Build.AttrSlot
+import Hz.Build.Blocked
+import Hz.Component.AttrSlot
+import Hz.Component.Blocked
+import Hz.Component.EventClash
+import Hz.Component.Placement
 import Hz.Events
 import Hz.Kind
-import Hz.Placement
-import Hz.Text
-import Hz.TextElement
 import Hz.Values
 import Json.Decode
 
@@ -38,20 +38,20 @@ type Msg
 -- K1: both top_ and top tokens work (compile-time narrowing)
 placement1 : HtmlIr.Element.Element { s | placement : Hz.Kind.Brand } admittedBy Msg
 placement1 =
-    Hz.placement [ Hz.Placement.position Hz.Values.top_ ] []
+    Hz.placement [ Hz.Component.Placement.position Hz.Values.top_ ] []
 
 
 placement2 : HtmlIr.Element.Element { s | placement : Hz.Kind.Brand } admittedBy Msg
 placement2 =
-    Hz.placement [ Hz.Placement.position Hz.Values.top ] []
+    Hz.placement [ Hz.Component.Placement.position Hz.Values.top ] []
 
 
 -- K4: both onError and onHzError exist and can be used together
 eventClash1 : HtmlIr.Element.Element { s | eventClash : Hz.Kind.Brand } admittedBy Msg
 eventClash1 =
     Hz.eventClash
-        [ Hz.EventClash.onError NoOp
-        , Hz.EventClash.onHzError NoOp
+        [ Hz.Component.EventClash.onError NoOp
+        , Hz.Component.EventClash.onHzError NoOp
         , Hz.Events.onErrorWith (Json.Decode.succeed NoOp)
         , Hz.Events.onHzErrorWith (Json.Decode.succeed NoOp)
         ]
@@ -62,14 +62,14 @@ eventClash1 =
 -- (Element -> Builder -> Builder) exist and are distinct
 attrSlot1 : HtmlIr.Element.Element { s | attrSlot : Hz.Kind.Brand } admittedBy Msg
 attrSlot1 =
-    Hz.attrSlot [ Hz.AttrSlot.withHint True ] []
+    Hz.attrSlot [ Hz.Component.AttrSlot.withHint True ] []
 
 
 -- withHintSlot is a slot builder, not an attribute
 attrSlot2 : HtmlIr.Element.Element { s | attrSlot : Hz.Kind.Brand } admittedBy Msg
 attrSlot2 =
-    Hz.AttrSlot.build
-        |> Hz.AttrSlot.toElement
+    Hz.Build.AttrSlot.build
+        |> Hz.Build.AttrSlot.toElement
 
 
 -- K7: text atom and hzCapitalText element ctor are distinct
@@ -79,7 +79,7 @@ textAtom =
     Hz.text "raw text"
 
 
--- K7 resolved ctor: Hz.Text is the module for the "Text" element
+-- K7 resolved ctor: Hz.Component.Text is the module for the "Text" element
 hzCapitalTextEl : HtmlIr.Element.Element { s | text : Hz.Kind.Brand } admittedBy Msg
 hzCapitalTextEl =
     Hz.hzCapitalText [] []
@@ -97,15 +97,15 @@ textElementEl =
 -- the element the sixth — nor its globals, nor its builder pipes.
 blockedEl : HtmlIr.Element.Element { s | blocked : Hz.Kind.Brand } admittedBy Msg
 blockedEl =
-    Hz.blocked [ Hz.Blocked.label "still here" ] []
+    Hz.blocked [ Hz.Component.Blocked.label "still here" ] []
 
 
 blockedPipe : HtmlIr.Element.Element { s | blocked : Hz.Kind.Brand } admittedBy Msg
 blockedPipe =
-    Hz.Blocked.build
-        |> Hz.Blocked.withLabel "still here"
-        |> Hz.Blocked.withClass "c"
-        |> Hz.Blocked.toElement
+    Hz.Build.Blocked.build
+        |> Hz.Build.Blocked.withLabel "still here"
+        |> Hz.Build.Blocked.withClass "c"
+        |> Hz.Build.Blocked.toElement
 
 
 {-| The `Attrs` row of `hz-blocked`, spelled out — an EXACTNESS assertion, not a
@@ -129,7 +129,7 @@ type alias ExpectedBlockedAttrs =
     }
 
 
-blockedRowIsExactly : Hz.Blocked.Attrs -> ExpectedBlockedAttrs
+blockedRowIsExactly : Hz.Component.Blocked.Attrs -> ExpectedBlockedAttrs
 blockedRowIsExactly row =
     row
 

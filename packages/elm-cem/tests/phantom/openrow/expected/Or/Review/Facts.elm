@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "plain"
-      , module_ = "Or.Plain"
+      , module_ = "Or.Component.Plain"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "widget"
-      , module_ = "Or.Widget"
+      , module_ = "Or.Component.Widget"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]

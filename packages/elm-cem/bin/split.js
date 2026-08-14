@@ -31,10 +31,17 @@
 //         "buckets": [                   // assignment rules (first match wins)
 //           { "prefix": "<ModulePrefix>" },  // module name starts with this
 //           { "exact": "<ModuleName>" }       // module name equals this exactly
-//         ]
-//       }
-//     ]
-//   }
+//         ],
+//         "exposeInternal": [            // OPTIONAL: force-expose designated
+//           "<Lib>.Forge.Internal",       // *.Internal modules despite the blanket
+//           "<Lib>.Internal.Types."        // Internal filter, so a dependent package
+//         ]                               // can import them across the boundary
+//       }                                 // (fenced by elm-review, exactly like
+//     ]                                   // elm/html-ir exposes HtmlIr.Internal). An
+//   }                                     // entry ending in "." is a PREFIX (matches
+//                                         // every module under it); otherwise EXACT.
+//                                         // Each entry MUST match >=1 module routed to
+//                                         // this package by its buckets, else GATE FAIL.
 
 "use strict";
 
@@ -194,6 +201,24 @@ function run(argv) {
 
     // Copy source files
     const exposedModules = [];
+    // Designated cross-package internal modules to expose despite the blanket
+    // Internal filter (see schema `exposeInternal`). An entry ending in "." is a
+    // prefix; otherwise it is an exact module name. Validate that each entry
+    // matches >=1 routed module — a typo would otherwise silently never expose,
+    // exactly the empty-exposed-modules class of bug this splitter exists to
+    // prevent.
+    const exposeExact = new Set((pkg.exposeInternal || []).filter((e) => !e.endsWith(".")));
+    const exposePrefixes = (pkg.exposeInternal || []).filter((e) => e.endsWith("."));
+    const forceExposed = (modName) =>
+      exposeExact.has(modName) || exposePrefixes.some((p) => modName.startsWith(p));
+    for (const entry of pkg.exposeInternal || []) {
+      const isPrefix = entry.endsWith(".");
+      const matched = pkgMods[pkg.name].some((m) => (isPrefix ? m.startsWith(entry) : m === entry));
+      if (!matched) {
+        console.error(`elm-cem split: GATE FAIL — exposeInternal: ${pkg.name} lists ${entry} but no bucket routes a matching module to this package`);
+        process.exit(1);
+      }
+    }
     for (const modName of pkgMods[pkg.name].sort()) {
       const srcFile = allModules[modName];
       const relPath = path.relative(srcDir, srcFile);
@@ -207,8 +232,9 @@ function run(argv) {
       // Stage F (issue #48) so `Cem.Facts` resolves.
       const isReviewFacts = /(^|\.)Review\.Facts$/.test(modName);
       if (
-        !/(^|\.)Internal(\.|$)/.test(modName) &&
-        (isReviewFacts || !/(^|\.)Review(\.|$)/.test(modName))
+        forceExposed(modName) ||
+        (!/(^|\.)Internal(\.|$)/.test(modName) &&
+          (isReviewFacts || !/(^|\.)Review(\.|$)/.test(modName)))
       ) {
         exposedModules.push(modName);
       }

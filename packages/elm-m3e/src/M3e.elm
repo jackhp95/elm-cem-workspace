@@ -1,7 +1,8 @@
 module M3e exposing
     ( accordion, actionList, appBar, assistChip, autocomplete, avatar, badge, bottomSheet, bottomSheetAction, bottomSheetTrigger, breadcrumb, breadcrumbItem, breadcrumbItemButton, button, buttonGroup, buttonSegment, calendar, card, checkbox, chip, chipSet, circularProgressIndicator, collapsible, contentPane, dateInput, datepicker, datepickerToggle, dialog, dialogAction, dialogTrigger, divider, drawerContainer, drawerToggle, elevation, expandableListItem, expansionHeader, expansionPanel, fab, fabMenu, fabMenuItem, fabMenuTrigger, filterChip, filterChipSet, floatingPanel, focusRing, focusTrap, formField, heading, icon, iconButton, inputChip, inputChipSet, linearProgressIndicator, list, listAction, listItem, listItemButton, listOption, loadingIndicator, menu, menuItem, menuItemCheckbox, menuItemGroup, menuItemRadio, menuTrigger, monthView, multiYearView, navBar, navItem, navMenu, navMenuItem, navMenuItemGroup, navRail, navRailToggle, optgroup, option, optionPanel, paginator, pseudoCheckbox, pseudoRadio, radio, radioGroup, richTooltip, richTooltipAction, ripple, scrollContainer, searchBar, searchView, segmentedButton, select, selectionIndicator, selectionList, shape, skeleton, slide, slideGroup, slider, sliderThumb, snackbar, splitButton, splitPane, stateLayer, step, stepPanel, stepper, stepperNext, stepperPrevious, stepperReset, suggestionChip, switch, tab, tabPanel, tabs, textHighlight, textOverflow, textareaAutosize, theme, themeIcon, timepicker, timepickerDial, timepickerInput, timepickerInputPeriodToggle, timepickerToggle, toc, tocItem, toolbar, tooltip, tree, treeItem, yearView
     , text
-    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, keyed, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+    , slotActions, slotArrow, slotAvatar, slotBadge, slotClearIcon, slotCloseIcon, slotClosedLeading, slotClosedTrailing, slotContent, slotDoneIcon, slotEditIcon, slotEnd, slotError, slotErrorIcon, slotFirstPageIcon, slotFooter, slotHeader, slotHint, slotIcon, slotInput, slotItems, slotLabel, slotLastPageIcon, slotLeading, slotLeadingButton, slotLeadingIcon, slotLoading, slotNextIcon, slotNextPageIcon, slotNoData, slotOpenLeading, slotOpenToggleIcon, slotOpenTrailing, slotOverline, slotPanel, slotPrefix, slotPrefixText, slotPrevIcon, slotPreviousPageIcon, slotRemoveIcon, slotSearchIcon, slotSelected, slotSelectedIcon, slotSeparator, slotStart, slotStep, slotSubhead, slotSubtitle, slotSuffix, slotSuffixText, slotSupportingText, slotTitle, slotToggleIcon, slotTrailing, slotTrailingButton, slotTrailingIcon, slotValue
+    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
 
 {-| The general surface: every component constructor in the elm/html call
@@ -12,9 +13,14 @@ content, builder, narrowed values), and `M3e.Attributes` / `M3e.Events` /
 
 `toHtml` is the render bridge to `elm/html`.
 
+The `slot<Name>` placers assign a child element to a named slot in any
+component that accepts it. Admittance is open (broad row) — wrong-kind
+placements are caught by `Cem.ValidSlotKind` (elm-review).
+
 @docs accordion, actionList, appBar, assistChip, autocomplete, avatar, badge, bottomSheet, bottomSheetAction, bottomSheetTrigger, breadcrumb, breadcrumbItem, breadcrumbItemButton, button, buttonGroup, buttonSegment, calendar, card, checkbox, chip, chipSet, circularProgressIndicator, collapsible, contentPane, dateInput, datepicker, datepickerToggle, dialog, dialogAction, dialogTrigger, divider, drawerContainer, drawerToggle, elevation, expandableListItem, expansionHeader, expansionPanel, fab, fabMenu, fabMenuItem, fabMenuTrigger, filterChip, filterChipSet, floatingPanel, focusRing, focusTrap, formField, heading, icon, iconButton, inputChip, inputChipSet, linearProgressIndicator, list, listAction, listItem, listItemButton, listOption, loadingIndicator, menu, menuItem, menuItemCheckbox, menuItemGroup, menuItemRadio, menuTrigger, monthView, multiYearView, navBar, navItem, navMenu, navMenuItem, navMenuItemGroup, navRail, navRailToggle, optgroup, option, optionPanel, paginator, pseudoCheckbox, pseudoRadio, radio, radioGroup, richTooltip, richTooltipAction, ripple, scrollContainer, searchBar, searchView, segmentedButton, select, selectionIndicator, selectionList, shape, skeleton, slide, slideGroup, slider, sliderThumb, snackbar, splitButton, splitPane, stateLayer, step, stepPanel, stepper, stepperNext, stepperPrevious, stepperReset, suggestionChip, switch, tab, tabPanel, tabs, textHighlight, textOverflow, textareaAutosize, theme, themeIcon, timepicker, timepickerDial, timepickerInput, timepickerInputPeriodToggle, timepickerToggle, toc, tocItem, toolbar, tooltip, tree, treeItem, yearView
 @docs text
-@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, keyed, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+@docs slotActions, slotArrow, slotAvatar, slotBadge, slotClearIcon, slotCloseIcon, slotClosedLeading, slotClosedTrailing, slotContent, slotDoneIcon, slotEditIcon, slotEnd, slotError, slotErrorIcon, slotFirstPageIcon, slotFooter, slotHeader, slotHint, slotIcon, slotInput, slotItems, slotLabel, slotLastPageIcon, slotLeading, slotLeadingButton, slotLeadingIcon, slotLoading, slotNextIcon, slotNextPageIcon, slotNoData, slotOpenLeading, slotOpenToggleIcon, slotOpenTrailing, slotOverline, slotPanel, slotPrefix, slotPrefixText, slotPrevIcon, slotPreviousPageIcon, slotRemoveIcon, slotSearchIcon, slotSelected, slotSelectedIcon, slotSeparator, slotStart, slotStep, slotSubhead, slotSubtitle, slotSuffix, slotSuffixText, slotSupportingText, slotTitle, slotToggleIcon, slotTrailing, slotTrailingButton, slotTrailingIcon, slotValue
+@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
 -}
 
@@ -1463,6 +1469,405 @@ text value_ =
     Ir.fromNode (Ir.text value_)
 
 
+{-| Place a child element into the `"actions"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotActions : Element accepts admittedBy msg -> Element free freeAdm msg
+slotActions el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "actions") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"arrow"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotArrow : Element accepts admittedBy msg -> Element free freeAdm msg
+slotArrow el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "arrow") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"avatar"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotAvatar : Element accepts admittedBy msg -> Element free freeAdm msg
+slotAvatar el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "avatar") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"badge"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotBadge : Element accepts admittedBy msg -> Element free freeAdm msg
+slotBadge el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "badge") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"clear-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotClearIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotClearIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "clear-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"close-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotCloseIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotCloseIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "close-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"closed-leading"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotClosedLeading : Element accepts admittedBy msg -> Element free freeAdm msg
+slotClosedLeading el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "closed-leading") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"closed-trailing"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotClosedTrailing : Element accepts admittedBy msg -> Element free freeAdm msg
+slotClosedTrailing el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "closed-trailing") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"content"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotContent : Element accepts admittedBy msg -> Element free freeAdm msg
+slotContent el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "content") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"done-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotDoneIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotDoneIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "done-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"edit-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotEditIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotEditIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "edit-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"end"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotEnd : Element accepts admittedBy msg -> Element free freeAdm msg
+slotEnd el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "end") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"error"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotError : Element accepts admittedBy msg -> Element free freeAdm msg
+slotError el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "error") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"error-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotErrorIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotErrorIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "error-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"first-page-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotFirstPageIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotFirstPageIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "first-page-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"footer"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotFooter : Element accepts admittedBy msg -> Element free freeAdm msg
+slotFooter el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "footer") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"header"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotHeader : Element accepts admittedBy msg -> Element free freeAdm msg
+slotHeader el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "header") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"hint"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotHint : Element accepts admittedBy msg -> Element free freeAdm msg
+slotHint el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "hint") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"input"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotInput : Element accepts admittedBy msg -> Element free freeAdm msg
+slotInput el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "input") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"items"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotItems : Element accepts admittedBy msg -> Element free freeAdm msg
+slotItems el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "items") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"label"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLabel : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLabel el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "label") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"last-page-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLastPageIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLastPageIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "last-page-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"leading"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLeading : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLeading el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "leading") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"leading-button"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLeadingButton : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLeadingButton el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "leading-button") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"leading-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLeadingIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLeadingIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "leading-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"loading"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotLoading : Element accepts admittedBy msg -> Element free freeAdm msg
+slotLoading el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "loading") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"next-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotNextIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotNextIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "next-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"next-page-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotNextPageIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotNextPageIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "next-page-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"no-data"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotNoData : Element accepts admittedBy msg -> Element free freeAdm msg
+slotNoData el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "no-data") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"open-leading"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotOpenLeading : Element accepts admittedBy msg -> Element free freeAdm msg
+slotOpenLeading el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "open-leading") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"open-toggle-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotOpenToggleIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotOpenToggleIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "open-toggle-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"open-trailing"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotOpenTrailing : Element accepts admittedBy msg -> Element free freeAdm msg
+slotOpenTrailing el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "open-trailing") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"overline"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotOverline : Element accepts admittedBy msg -> Element free freeAdm msg
+slotOverline el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "overline") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"panel"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotPanel : Element accepts admittedBy msg -> Element free freeAdm msg
+slotPanel el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "panel") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"prefix"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotPrefix : Element accepts admittedBy msg -> Element free freeAdm msg
+slotPrefix el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "prefix") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"prefix-text"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotPrefixText : Element accepts admittedBy msg -> Element free freeAdm msg
+slotPrefixText el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "prefix-text") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"prev-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotPrevIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotPrevIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "prev-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"previous-page-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotPreviousPageIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotPreviousPageIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "previous-page-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"remove-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotRemoveIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotRemoveIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "remove-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"search-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSearchIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSearchIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "search-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"selected"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSelected : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSelected el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "selected") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"selected-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSelectedIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSelectedIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "selected-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"separator"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSeparator : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSeparator el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "separator") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"start"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotStart : Element accepts admittedBy msg -> Element free freeAdm msg
+slotStart el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "start") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"step"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotStep : Element accepts admittedBy msg -> Element free freeAdm msg
+slotStep el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "step") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"subhead"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSubhead : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSubhead el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "subhead") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"subtitle"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSubtitle : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSubtitle el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "subtitle") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"suffix"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSuffix : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSuffix el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "suffix") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"suffix-text"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSuffixText : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSuffixText el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "suffix-text") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"supporting-text"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSupportingText : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSupportingText el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "supporting-text") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"title"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotTitle : Element accepts admittedBy msg -> Element free freeAdm msg
+slotTitle el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "title") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"toggle-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotToggleIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotToggleIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "toggle-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"trailing"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotTrailing : Element accepts admittedBy msg -> Element free freeAdm msg
+slotTrailing el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trailing") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"trailing-button"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotTrailingButton : Element accepts admittedBy msg -> Element free freeAdm msg
+slotTrailingButton el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trailing-button") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"trailing-icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotTrailingIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotTrailingIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trailing-icon") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"value"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotValue : Element accepts admittedBy msg -> Element free freeAdm msg
+slotValue el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "value") (HtmlIr.Element.toNode el_))
+
+
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.
 -}
 type alias Element accepts admittedBy msg =
@@ -1509,64 +1914,92 @@ mapNode =
     HtmlIr.Node.map
 
 
-{-| A keyed node — like `node` but children carry diff keys for VirtualDom's keyed-node diffing. Lists that reorder/insert/remove keep their children's state and animation. Each child is a `(String, Node msg)` pair.
+{-| Attach a diff key to a child so its parent container renders as a keyed node. State and animations survive reorders, insertions, and removals. Phantom rows are preserved — a keyed chip is still a chip.
 -}
-keyed : String -> List (Attr attrs msg) -> List ( String, Node msg ) -> Node msg
-keyed tagName attrs children =
-    HtmlIr.Node.keyedNode tagName attrs children
+key : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+key =
+    HtmlIr.Element.key
 
 
-{-| A lazily-rendered subtree — Elm's `VirtualDom.lazy` memoizes rendered output by reference-equality of the function and argument. **Stable top-level function required** — an inline lambda allocates a fresh closure each render and silently never memoizes. The body returns `Html.Html msg`, not [`Element`](#Element); see type signature.
+{-| Memoise a subtree while its input is referentially unchanged. The result keeps its phantom rows and drops into any slot. **The view function must be a stable top-level binding** — an inline lambda allocates a fresh closure each render and silently never memoises.
 -}
-lazy : (a -> Html.Html msg) -> a -> Node msg
-lazy func arg =
-    HtmlIr.Node.lazy func arg
+lazy : (a -> Element accepts admittedBy msg) -> a -> Element accepts admittedBy msg
+lazy =
+    HtmlIr.Element.lazy
 
 
 {-| 2-argument variant of [`lazy`](#lazy).
 -}
-lazy2 : (a -> b -> Html.Html msg) -> a -> b -> Node msg
-lazy2 func arg1 arg2 =
-    HtmlIr.Node.lazy2 func arg1 arg2
+lazy2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Element accepts admittedBy msg
+lazy2 =
+    HtmlIr.Element.lazy2
 
 
 {-| 3-argument variant of [`lazy`](#lazy).
 -}
-lazy3 : (a -> b -> c -> Html.Html msg) -> a -> b -> c -> Node msg
-lazy3 func arg1 arg2 arg3 =
-    HtmlIr.Node.lazy3 func arg1 arg2 arg3
+lazy3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Element accepts admittedBy msg
+lazy3 =
+    HtmlIr.Element.lazy3
 
 
 {-| 4-argument variant of [`lazy`](#lazy).
 -}
-lazy4 : (a -> b -> c -> d -> Html.Html msg) -> a -> b -> c -> d -> Node msg
-lazy4 func arg1 arg2 arg3 arg4 =
-    HtmlIr.Node.lazy4 func arg1 arg2 arg3 arg4
+lazy4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Element accepts admittedBy msg
+lazy4 =
+    HtmlIr.Element.lazy4
 
 
 {-| 5-argument variant of [`lazy`](#lazy).
 -}
-lazy5 : (a -> b -> c -> d -> e -> Html.Html msg) -> a -> b -> c -> d -> e -> Node msg
-lazy5 func arg1 arg2 arg3 arg4 arg5 =
-    HtmlIr.Node.lazy5 func arg1 arg2 arg3 arg4 arg5
+lazy5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Element accepts admittedBy msg
+lazy5 =
+    HtmlIr.Element.lazy5
 
 
 {-| 6-argument variant of [`lazy`](#lazy). Note type params skip `f` to match the underlying `VirtualDom.lazy6` convention.
 -}
-lazy6 : (a -> b -> c -> d -> e -> g -> Html.Html msg) -> a -> b -> c -> d -> e -> g -> Node msg
-lazy6 func arg1 arg2 arg3 arg4 arg5 arg6 =
-    HtmlIr.Node.lazy6 func arg1 arg2 arg3 arg4 arg5 arg6
+lazy6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg
+lazy6 =
+    HtmlIr.Element.lazy6
 
 
 {-| 7-argument variant of [`lazy`](#lazy).
 -}
-lazy7 : (a -> b -> c -> d -> e -> g -> h -> Html.Html msg) -> a -> b -> c -> d -> e -> g -> h -> Node msg
-lazy7 func arg1 arg2 arg3 arg4 arg5 arg6 arg7 =
-    HtmlIr.Node.lazy7 func arg1 arg2 arg3 arg4 arg5 arg6 arg7
+lazy7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg
+lazy7 =
+    HtmlIr.Element.lazy7
 
 
-{-| 8-argument variant of [`lazy`](#lazy).
+{-| 8-argument variant of [`lazy`](#lazy). **This variant does not memoise** — the Element→Html bridge only has room for seven memoised data arguments, so the eighth forces a fresh closure each render and defeats the reference check. For real memoisation, fold the extra state into one of the first seven arguments and use [`lazy7`](#lazy7).
 -}
-lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Html.Html msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Node msg
-lazy8 func arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 =
-    HtmlIr.Node.lazy8 func arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
+lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg
+lazy8 =
+    HtmlIr.Element.lazy8
+
+
+{-| Add a CSS class, participating in the `class` merge. Phantom rows preserved.
+-}
+addClass : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+addClass =
+    HtmlIr.Element.addClass
+
+
+{-| Conditionally attach an attribute — applied when the flag is `True`, a no-op when `False`. Phantom rows preserved.
+-}
+attrIf : Bool -> Attr capability msg -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+attrIf =
+    HtmlIr.Element.attrIf
+
+
+{-| Keep an element only when the flag is `True`; `False` collapses it to an empty node that renders nothing. Phantom rows preserved.
+-}
+when : Bool -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+when =
+    HtmlIr.Element.when
+
+
+{-| Stamp a `data-testid` attribute for test hooks. Phantom rows preserved.
+-}
+testId : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+testId =
+    HtmlIr.Element.testId

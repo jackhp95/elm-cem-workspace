@@ -10,7 +10,7 @@ error or unknown identifier. MUST FAIL at compile time with a row-field error.
 -}
 
 import HtmlIr.Attribute
-import Hz.ErrorOnly
+import Hz.Component.ErrorOnly
 import Hz.Events
 
 
@@ -18,7 +18,7 @@ type Msg
     = ErrorHappened
 
 
-broken : Msg -> HtmlIr.Attribute.Attr (Hz.ErrorOnly.Attrs) Msg
+broken : Msg -> HtmlIr.Attribute.Attr (Hz.Component.ErrorOnly.Attrs) Msg
 broken msg =
     -- Hz.ErrorOnly.Attrs only admits { onHzError : Supported }, not onError.
     -- Hz.Events.onError requires { c | onError : Supported }.

@@ -1,7 +1,8 @@
 module Mini exposing
     ( button, chip, icon, surface, tab, tabs, toolbar
     , text
-    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode
+    , slotIcon
+    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
 
 {-| The general surface: every component constructor in the elm/html call
@@ -12,9 +13,14 @@ content, builder, narrowed values), and `Mini.Attributes` / `Mini.Events` /
 
 `toHtml` is the render bridge to `elm/html`.
 
+The `slot<Name>` placers assign a child element to a named slot in any
+component that accepts it. Admittance is open (broad row) — wrong-kind
+placements are caught by `Cem.ValidSlotKind` (elm-review).
+
 @docs button, chip, icon, surface, tab, tabs, toolbar
 @docs text
-@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode
+@docs slotIcon
+@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
 -}
 
@@ -24,84 +30,84 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import Mini.Button
-import Mini.Chip
-import Mini.Icon
+import Mini.Component.Button
+import Mini.Component.Chip
+import Mini.Component.Icon
+import Mini.Component.Surface
+import Mini.Component.Tab
+import Mini.Component.Tabs
+import Mini.Component.Toolbar
 import Mini.Kind
-import Mini.Surface
-import Mini.Tab
-import Mini.Tabs
-import Mini.Toolbar
 
 
-{-| See `Mini.Button.view`.
+{-| See `Mini.Component.Button.view`.
 -}
 button :
-    List (Attr Mini.Button.Attrs msg)
-    -> List (Element Mini.Button.Content (Mini.Button.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Button.Is s) admittedBy msg
+    List (Attr Mini.Component.Button.Attrs msg)
+    -> List (Element Mini.Component.Button.Content (Mini.Component.Button.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Button.Is s) admittedBy msg
 button =
-    Mini.Button.view
+    Mini.Component.Button.view
 
 
-{-| See `Mini.Chip.view`.
+{-| See `Mini.Component.Chip.view`.
 -}
 chip :
-    List (Attr Mini.Chip.Attrs msg)
-    -> List (Element Mini.Chip.Content (Mini.Chip.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Chip.Is s) admittedBy msg
+    List (Attr Mini.Component.Chip.Attrs msg)
+    -> List (Element Mini.Component.Chip.Content (Mini.Component.Chip.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Chip.Is s) admittedBy msg
 chip =
-    Mini.Chip.view
+    Mini.Component.Chip.view
 
 
-{-| See `Mini.Icon.view`.
+{-| See `Mini.Component.Icon.view`.
 -}
 icon :
-    List (Attr Mini.Icon.Attrs msg)
-    -> List (Element Mini.Icon.Content (Mini.Icon.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Icon.Is s) admittedBy msg
+    List (Attr Mini.Component.Icon.Attrs msg)
+    -> List (Element Mini.Component.Icon.Content (Mini.Component.Icon.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Icon.Is s) admittedBy msg
 icon =
-    Mini.Icon.view
+    Mini.Component.Icon.view
 
 
-{-| See `Mini.Surface.view`.
+{-| See `Mini.Component.Surface.view`.
 -}
 surface :
-    List (Attr Mini.Surface.Attrs msg)
-    -> List (Element childAccepts (Mini.Surface.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Surface.Is s) admittedBy msg
+    List (Attr Mini.Component.Surface.Attrs msg)
+    -> List (Element childAccepts (Mini.Component.Surface.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Surface.Is s) admittedBy msg
 surface =
-    Mini.Surface.view
+    Mini.Component.Surface.view
 
 
-{-| See `Mini.Tab.view`.
+{-| See `Mini.Component.Tab.view`.
 -}
 tab :
-    List (Attr Mini.Tab.Attrs msg)
-    -> List (Element Mini.Tab.Content (Mini.Tab.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Tab.Is s) Mini.Tab.AdmittedBy msg
+    List (Attr Mini.Component.Tab.Attrs msg)
+    -> List (Element Mini.Component.Tab.Content (Mini.Component.Tab.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Tab.Is s) Mini.Component.Tab.AdmittedBy msg
 tab =
-    Mini.Tab.view
+    Mini.Component.Tab.view
 
 
-{-| See `Mini.Tabs.view`.
+{-| See `Mini.Component.Tabs.view`.
 -}
 tabs :
-    List (Attr Mini.Tabs.Attrs msg)
-    -> List (Element Mini.Tabs.Content (Mini.Tabs.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Tabs.Is s) admittedBy msg
+    List (Attr Mini.Component.Tabs.Attrs msg)
+    -> List (Element Mini.Component.Tabs.Content (Mini.Component.Tabs.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Tabs.Is s) admittedBy msg
 tabs =
-    Mini.Tabs.view
+    Mini.Component.Tabs.view
 
 
-{-| See `Mini.Toolbar.view`.
+{-| See `Mini.Component.Toolbar.view`.
 -}
 toolbar :
-    List (Attr Mini.Toolbar.Attrs msg)
-    -> List (Element Mini.Kind.Actions (Mini.Toolbar.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Toolbar.Is s) admittedBy msg
+    List (Attr Mini.Component.Toolbar.Attrs msg)
+    -> List (Element Mini.Kind.Actions (Mini.Component.Toolbar.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Component.Toolbar.Is s) admittedBy msg
 toolbar =
-    Mini.Toolbar.view
+    Mini.Component.Toolbar.view
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.
@@ -109,6 +115,13 @@ toolbar =
 text : String -> Element { s | sharedText : Shared } admittedBy msg
 text value_ =
     Ir.fromNode (Ir.text value_)
+
+
+{-| Place a child element into the `"icon"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotIcon : Element accepts admittedBy msg -> Element free freeAdm msg
+slotIcon el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "icon") (HtmlIr.Element.toNode el_))
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.
@@ -155,3 +168,94 @@ mapMsg =
 mapNode : (a -> b) -> Node a -> Node b
 mapNode =
     HtmlIr.Node.map
+
+
+{-| Attach a diff key to a child so its parent container renders as a keyed node. State and animations survive reorders, insertions, and removals. Phantom rows are preserved — a keyed chip is still a chip.
+-}
+key : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+key =
+    HtmlIr.Element.key
+
+
+{-| Memoise a subtree while its input is referentially unchanged. The result keeps its phantom rows and drops into any slot. **The view function must be a stable top-level binding** — an inline lambda allocates a fresh closure each render and silently never memoises.
+-}
+lazy : (a -> Element accepts admittedBy msg) -> a -> Element accepts admittedBy msg
+lazy =
+    HtmlIr.Element.lazy
+
+
+{-| 2-argument variant of [`lazy`](#lazy).
+-}
+lazy2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Element accepts admittedBy msg
+lazy2 =
+    HtmlIr.Element.lazy2
+
+
+{-| 3-argument variant of [`lazy`](#lazy).
+-}
+lazy3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Element accepts admittedBy msg
+lazy3 =
+    HtmlIr.Element.lazy3
+
+
+{-| 4-argument variant of [`lazy`](#lazy).
+-}
+lazy4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Element accepts admittedBy msg
+lazy4 =
+    HtmlIr.Element.lazy4
+
+
+{-| 5-argument variant of [`lazy`](#lazy).
+-}
+lazy5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Element accepts admittedBy msg
+lazy5 =
+    HtmlIr.Element.lazy5
+
+
+{-| 6-argument variant of [`lazy`](#lazy). Note type params skip `f` to match the underlying `VirtualDom.lazy6` convention.
+-}
+lazy6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg
+lazy6 =
+    HtmlIr.Element.lazy6
+
+
+{-| 7-argument variant of [`lazy`](#lazy).
+-}
+lazy7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg
+lazy7 =
+    HtmlIr.Element.lazy7
+
+
+{-| 8-argument variant of [`lazy`](#lazy). **This variant does not memoise** — the Element→Html bridge only has room for seven memoised data arguments, so the eighth forces a fresh closure each render and defeats the reference check. For real memoisation, fold the extra state into one of the first seven arguments and use [`lazy7`](#lazy7).
+-}
+lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg
+lazy8 =
+    HtmlIr.Element.lazy8
+
+
+{-| Add a CSS class, participating in the `class` merge. Phantom rows preserved.
+-}
+addClass : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+addClass =
+    HtmlIr.Element.addClass
+
+
+{-| Conditionally attach an attribute — applied when the flag is `True`, a no-op when `False`. Phantom rows preserved.
+-}
+attrIf : Bool -> Attr capability msg -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+attrIf =
+    HtmlIr.Element.attrIf
+
+
+{-| Keep an element only when the flag is `True`; `False` collapses it to an empty node that renders nothing. Phantom rows preserved.
+-}
+when : Bool -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+when =
+    HtmlIr.Element.when
+
+
+{-| Stamp a `data-testid` attribute for test hooks. Phantom rows preserved.
+-}
+testId : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+testId =
+    HtmlIr.Element.testId

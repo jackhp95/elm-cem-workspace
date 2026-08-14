@@ -17,9 +17,9 @@ MUST FAIL, as an unknown value.
 -}
 
 import HtmlIr.Attribute
-import Hz.Blocked
+import Hz.Component.Blocked
 
 
-broken : HtmlIr.Attribute.Attr Hz.Blocked.Attrs msg
+broken : HtmlIr.Attribute.Attr Hz.Component.Blocked.Attrs msg
 broken =
-    Hz.Blocked.is "my-custom-button"
+    Hz.Component.Blocked.is "my-custom-button"

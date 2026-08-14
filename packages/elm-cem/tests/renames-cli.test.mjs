@@ -241,9 +241,10 @@ testCase("attr rename (per-component)", () => {
   }
 
   // Check that Input.elm contains "hintFlag" not "withHint"
-  const inputPath = path.join(outSrc, "Hz", "Input.elm");
+  // Post-split: per-component setters live in <Brand>/Component/<Name>.elm.
+  const inputPath = path.join(outSrc, "Hz", "Component", "Input.elm");
   if (!fs.existsSync(inputPath)) {
-    throw new Error("Hz/Input.elm not generated");
+    throw new Error("Hz/Component/Input.elm not generated");
   }
   const input = fs.readFileSync(inputPath, "utf8");
 

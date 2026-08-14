@@ -13,10 +13,9 @@ import HtmlIr.Element
 import HtmlIr.Node
 import Or
 import Or.Attributes
+import Or.Component.Widget
 import Or.Kind
-import Or.Plain
 import Or.Values
-import Or.Widget
 
 
 {-| An open global composes onto an element that ALSO carries closed globals and
@@ -25,7 +24,7 @@ its own CEM attribute — the mixed case.
 page : HtmlIr.Element.Element { s | widget : Or.Kind.Brand } admittedBy msg
 page =
     Or.widget
-        [ Or.Widget.label "hello"
+        [ Or.Component.Widget.label "hello"
         , Or.Attributes.class "container"
         , Or.Attributes.cflag True
         , Or.Attributes.cdir Or.Values.ltr

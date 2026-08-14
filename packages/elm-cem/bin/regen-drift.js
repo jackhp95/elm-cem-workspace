@@ -13,9 +13,20 @@
 // binary is this same elm-cem checkout — brands invoke it through an `ELM_CEM_BIN`
 // env that defaults to a sibling `../elm-cem/bin/elm-cem.js`. No absolute paths.
 //
+// A brand's generator can ALSO write standalone NESTED package trees alongside
+// the main `src/` (config-driven via `_iconModule.package` — see
+// gen-icon-module.js — an icon sub-package with no components dependency is the
+// first user of this). Those trees are regenerated into the same temp dir
+// (`<work>/<dir>/src`, `<work>/<dir>/elm.json`) by the same codegen run, but were
+// NOT diffed by this gate — a silent blind spot (see the drift-gap friction filed
+// against the first brand to use it): a hand-edited nested package could drift
+// from a fresh regen with the gate reporting green. `--nested-pkg=<dir>`
+// (repeatable) closes that gap by running the same src/ + elm.json diff against
+// each configured nested package directory.
+//
 // Usage (from a brand repo root):
 //   elm-cem regen-drift
-//   elm-cem regen-drift --flags-from=<cem> --config-from=<json> [--config-from=... ] [--src=src] [--elm-json=elm.json]
+//   elm-cem regen-drift --flags-from=<cem> --config-from=<json> [--config-from=... ] [--src=src] [--elm-json=elm.json] [--nested-pkg=<dir> ...]
 //
 // Exit 0 = committed output matches a fresh regen. Exit 1 = drift (diff printed).
 
@@ -46,19 +57,23 @@ function usage() {
       "  --config-from=<json>   per-component config; repeatable (default: config/slots.json if present)",
       "  --src=<dir>            committed generated source dir to compare (default: src)",
       "  --elm-json=<path>      committed package elm.json to compare (default: elm.json)",
+      "  --nested-pkg=<dir>     also diff <dir>/src + <dir>/elm.json (a standalone",
+      "                         nested package the generator writes, e.g. an icon",
+      "                         sub-package); repeatable",
       "  -h, --help             show this help",
     ].join("\n")
   );
 }
 
 function parseArgs(argv) {
-  const o = { configFrom: [] };
+  const o = { configFrom: [], nestedPkg: [] };
   for (const a of argv) {
     if (a === "-h" || a === "--help") o.help = true;
     else if (a.startsWith("--flags-from=")) o.flagsFrom = a.slice("--flags-from=".length);
     else if (a.startsWith("--config-from=")) o.configFrom.push(a.slice("--config-from=".length));
     else if (a.startsWith("--src=")) o.src = a.slice("--src=".length);
     else if (a.startsWith("--elm-json=")) o.elmJson = a.slice("--elm-json=".length);
+    else if (a.startsWith("--nested-pkg=")) o.nestedPkg.push(a.slice("--nested-pkg=".length));
     else fail(`unknown argument: ${a}`);
   }
   return o;
@@ -165,12 +180,19 @@ function run(argv) {
   }
 
   // Normalize formatting exactly as the committed src is normalized at gen time,
-  // so the diff surfaces real API drift, not line-wrapping noise.
+  // so the diff surfaces real API drift, not line-wrapping noise. Nested-package
+  // trees are formatted too (same rule the committed nested src is expected to
+  // follow), or a nested-pkg diff would just be formatting noise.
   const fmt = resolveElmFormat();
+  const formatTargets = [tmpSrc, ...o.nestedPkg.map((dir) => path.join(work, dir, "src"))].filter((d) =>
+    fs.existsSync(d)
+  );
   if (fmt) {
-    const f = spawnSync(fmt, [tmpSrc, "--yes"], { encoding: "utf8" });
-    if (f.status !== 0) {
-      fail(`elm-format failed on the regenerated output:\n${f.stderr || f.stdout}`);
+    for (const target of formatTargets) {
+      const f = spawnSync(fmt, [target, "--yes"], { encoding: "utf8" });
+      if (f.status !== 0) {
+        fail(`elm-format failed on the regenerated output at ${target}:\n${f.stderr || f.stdout}`);
+      }
     }
   } else {
     console.warn(
@@ -178,25 +200,53 @@ function run(argv) {
     );
   }
 
-  let drift = false;
+  // Diff one committed tree (src + elm.json) against its freshly-regenerated
+  // counterpart. `label` prefixes drift output so a failure names which tree
+  // (root or a nested package) went stale. Returns true if drift was found.
+  function compareTree(label, committedSrcDir, tmpSrcDir, committedElmJsonPath, tmpElmJsonPath) {
+    let treeDrift = false;
 
-  const srcDiff = gitDiff(committedSrc, tmpSrc);
-  if (srcDiff.trim()) {
-    drift = true;
-    console.error("\nregen-drift: DRIFT in generated src/ (committed ⟵ | fresh regen ⟶):");
-    console.error(srcDiff);
+    const srcDiff = gitDiff(committedSrcDir, tmpSrcDir);
+    if (srcDiff.trim()) {
+      treeDrift = true;
+      console.error(`\nregen-drift: DRIFT in ${label} src/ (committed ⟵ | fresh regen ⟶):`);
+      console.error(srcDiff);
+    }
+
+    if (fs.existsSync(committedElmJsonPath) && fs.existsSync(tmpElmJsonPath)) {
+      const aFile = path.join(work, `committed.${label.replace(/[^\w.-]/g, "_")}.elm.json.slice`);
+      const bFile = path.join(work, `regen.${label.replace(/[^\w.-]/g, "_")}.elm.json.slice`);
+      fs.writeFileSync(aFile, generatorOwnedElmJson(committedElmJsonPath) + "\n");
+      fs.writeFileSync(bFile, generatorOwnedElmJson(tmpElmJsonPath) + "\n");
+      const elmJsonDiff = gitDiff(aFile, bFile);
+      if (elmJsonDiff.trim()) {
+        treeDrift = true;
+        console.error(`\nregen-drift: DRIFT in ${label} elm.json exposed-modules / dependencies:`);
+        console.error(elmJsonDiff);
+      }
+    }
+
+    return treeDrift;
   }
 
-  if (fs.existsSync(committedElmJson) && fs.existsSync(tmpElmJson)) {
-    const aFile = path.join(work, "committed.elm.json.slice");
-    const bFile = path.join(work, "regen.elm.json.slice");
-    fs.writeFileSync(aFile, generatorOwnedElmJson(committedElmJson) + "\n");
-    fs.writeFileSync(bFile, generatorOwnedElmJson(tmpElmJson) + "\n");
-    const elmJsonDiff = gitDiff(aFile, bFile);
-    if (elmJsonDiff.trim()) {
+  let drift = compareTree("root", committedSrc, tmpSrc, committedElmJson, tmpElmJson);
+
+  for (const dir of o.nestedPkg) {
+    const nestedCommittedSrc = path.resolve(cwd, dir, "src");
+    const nestedTmpSrc = path.join(work, dir, "src");
+    const nestedCommittedElmJson = path.resolve(cwd, dir, "elm.json");
+    const nestedTmpElmJson = path.join(work, dir, "elm.json");
+    if (!fs.existsSync(nestedCommittedSrc)) {
+      fail(`--nested-pkg=${dir} configured but committed src dir not found at ${nestedCommittedSrc}`);
+    }
+    if (!fs.existsSync(nestedTmpSrc)) {
+      fail(
+        `--nested-pkg=${dir} configured but the fresh regen wrote nothing to ${nestedTmpSrc} — ` +
+          `is the package's _iconModule.package (or equivalent) config still declared?`
+      );
+    }
+    if (compareTree(`nested package "${dir}"`, nestedCommittedSrc, nestedTmpSrc, nestedCommittedElmJson, nestedTmpElmJson)) {
       drift = true;
-      console.error("\nregen-drift: DRIFT in elm.json exposed-modules / dependencies:");
-      console.error(elmJsonDiff);
     }
   }
 
@@ -208,7 +258,11 @@ function run(argv) {
     );
     process.exit(1);
   }
-  console.log("regen-drift: OK — committed src + elm.json match a fresh regen.");
+  console.log(
+    o.nestedPkg.length > 0
+      ? `regen-drift: OK — committed src + elm.json (root + ${o.nestedPkg.length} nested package(s)) match a fresh regen.`
+      : "regen-drift: OK — committed src + elm.json match a fresh regen."
+  );
 }
 
 module.exports = { run };

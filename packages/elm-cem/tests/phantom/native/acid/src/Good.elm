@@ -13,9 +13,9 @@ import TypedHtml as H
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as At
 import TypedHtml.Events as Ev
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Select
 import TypedHtml.Kind
-import TypedHtml.Select
 
 
 type Msg
@@ -23,7 +23,7 @@ type Msg
     | Picked String
 
 
-page : HtmlIr.Element.Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+page : HtmlIr.Element.Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 page =
     H.div [ At.class "layout", Aria.role Aria.navigation, Aria.label "Main" ]
         [ -- phrasing nesting + transparent <a> carrying phrasing inside <p>
@@ -50,7 +50,7 @@ page =
         , H.select []
             [ H.option [ At.valueAsNumber 1 ] [ H.text "num" ]
             , H.option [ At.defaultValue "2" ] [ H.text "default" ]
-            , TypedHtml.Select.option [ TypedHtml.Select.valueAsNumber 3 ] [ H.text "narrowed num" ]
+            , TypedHtml.Component.Select.option [ TypedHtml.Component.Select.valueAsNumber 3 ] [ H.text "narrowed num" ]
             ]
 
         -- restricted legend in its required fieldset context

@@ -1,7 +1,7 @@
 module TypedHtml exposing
     ( a, div, fieldset, legend, optgroup, option, p, picture, pictureSource, select, source, span, track, video
     , text
-    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode
+    , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
 
 {-| The general surface: every component constructor in the elm/html call
@@ -12,9 +12,13 @@ content, builder, narrowed values), and `TypedHtml.Attributes` / `TypedHtml.Even
 
 `toHtml` is the render bridge to `elm/html`.
 
+The `slot<Name>` placers assign a child element to a named slot in any
+component that accepts it. Admittance is open (broad row) — wrong-kind
+placements are caught by `Cem.ValidSlotKind` (elm-review).
+
 @docs a, div, fieldset, legend, optgroup, option, p, picture, pictureSource, select, source, span, track, video
 @docs text
-@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode
+@docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
 -}
 
@@ -24,151 +28,151 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import TypedHtml.A
-import TypedHtml.Form
-import TypedHtml.Grouping
-import TypedHtml.Media
-import TypedHtml.Select
+import TypedHtml.Component.A
+import TypedHtml.Component.Form
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Media
+import TypedHtml.Component.Select
 
 
-{-| See `TypedHtml.A.a`.
+{-| See `TypedHtml.Component.A.a`.
 -}
 a :
-    List (Attr TypedHtml.A.Attrs msg)
-    -> List (Element childAccepts (TypedHtml.A.ChildAdmittedBy childAdm) msg)
+    List (Attr TypedHtml.Component.A.Attrs msg)
+    -> List (Element childAccepts (TypedHtml.Component.A.ChildAdmittedBy childAdm) msg)
     -> Element childAccepts admittedBy msg
 a =
-    TypedHtml.A.a
+    TypedHtml.Component.A.a
 
 
-{-| See `TypedHtml.Grouping.div`.
+{-| See `TypedHtml.Component.Grouping.div`.
 -}
 div :
-    List (Attr TypedHtml.Grouping.DivAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Grouping.DivChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Grouping.DivAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 div =
-    TypedHtml.Grouping.div
+    TypedHtml.Component.Grouping.div
 
 
-{-| See `TypedHtml.Form.fieldset`.
+{-| See `TypedHtml.Component.Form.fieldset`.
 -}
 fieldset :
-    List (Attr TypedHtml.Form.FieldsetAttrs msg)
-    -> List (Element TypedHtml.Form.FieldsetContent (TypedHtml.Form.FieldsetChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Form.FieldsetIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Form.FieldsetAttrs msg)
+    -> List (Element TypedHtml.Component.Form.FieldsetContent (TypedHtml.Component.Form.FieldsetChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Form.FieldsetIs s) admittedBy msg
 fieldset =
-    TypedHtml.Form.fieldset
+    TypedHtml.Component.Form.fieldset
 
 
-{-| See `TypedHtml.Form.legend`.
+{-| See `TypedHtml.Component.Form.legend`.
 -}
 legend :
-    List (Attr TypedHtml.Form.LegendAttrs msg)
-    -> List (Element TypedHtml.Form.LegendContent (TypedHtml.Form.LegendChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Form.LegendIs s) TypedHtml.Form.LegendAdmittedBy msg
+    List (Attr TypedHtml.Component.Form.LegendAttrs msg)
+    -> List (Element TypedHtml.Component.Form.LegendContent (TypedHtml.Component.Form.LegendChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Form.LegendIs s) TypedHtml.Component.Form.LegendAdmittedBy msg
 legend =
-    TypedHtml.Form.legend
+    TypedHtml.Component.Form.legend
 
 
-{-| See `TypedHtml.Select.optgroup`.
+{-| See `TypedHtml.Component.Select.optgroup`.
 -}
 optgroup :
-    List (Attr TypedHtml.Select.OptgroupAttrs msg)
-    -> List (Element TypedHtml.Select.OptgroupContent (TypedHtml.Select.OptgroupChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Select.OptgroupIs s) TypedHtml.Select.OptgroupAdmittedBy msg
+    List (Attr TypedHtml.Component.Select.OptgroupAttrs msg)
+    -> List (Element TypedHtml.Component.Select.OptgroupContent (TypedHtml.Component.Select.OptgroupChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Select.OptgroupIs s) TypedHtml.Component.Select.OptgroupAdmittedBy msg
 optgroup =
-    TypedHtml.Select.optgroup
+    TypedHtml.Component.Select.optgroup
 
 
-{-| See `TypedHtml.Select.option`.
+{-| See `TypedHtml.Component.Select.option`.
 -}
 option :
-    List (Attr TypedHtml.Select.OptionAttrs msg)
-    -> List (Element TypedHtml.Select.OptionContent (TypedHtml.Select.OptionChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Select.OptionIs s) TypedHtml.Select.OptionAdmittedBy msg
+    List (Attr TypedHtml.Component.Select.OptionAttrs msg)
+    -> List (Element TypedHtml.Component.Select.OptionContent (TypedHtml.Component.Select.OptionChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Select.OptionIs s) TypedHtml.Component.Select.OptionAdmittedBy msg
 option =
-    TypedHtml.Select.option
+    TypedHtml.Component.Select.option
 
 
-{-| See `TypedHtml.Grouping.p`.
+{-| See `TypedHtml.Component.Grouping.p`.
 -}
 p :
-    List (Attr TypedHtml.Grouping.PAttrs msg)
-    -> List (Element TypedHtml.Grouping.PContent (TypedHtml.Grouping.PChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Grouping.PIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Grouping.PAttrs msg)
+    -> List (Element TypedHtml.Component.Grouping.PContent (TypedHtml.Component.Grouping.PChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Grouping.PIs s) admittedBy msg
 p =
-    TypedHtml.Grouping.p
+    TypedHtml.Component.Grouping.p
 
 
-{-| See `TypedHtml.Media.picture`.
+{-| See `TypedHtml.Component.Media.picture`.
 -}
 picture :
-    List (Attr TypedHtml.Media.PictureAttrs msg)
-    -> List (Element TypedHtml.Media.PictureContent (TypedHtml.Media.PictureChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Media.PictureIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Media.PictureAttrs msg)
+    -> List (Element TypedHtml.Component.Media.PictureContent (TypedHtml.Component.Media.PictureChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Media.PictureIs s) admittedBy msg
 picture =
-    TypedHtml.Media.picture
+    TypedHtml.Component.Media.picture
 
 
-{-| See `TypedHtml.Media.pictureSource`.
+{-| See `TypedHtml.Component.Media.pictureSource`.
 -}
 pictureSource :
-    List (Attr TypedHtml.Media.PictureSourceAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Media.PictureSourceChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Media.PictureSourceIs s) TypedHtml.Media.PictureSourceAdmittedBy msg
+    List (Attr TypedHtml.Component.Media.PictureSourceAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Component.Media.PictureSourceChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Media.PictureSourceIs s) TypedHtml.Component.Media.PictureSourceAdmittedBy msg
 pictureSource =
-    TypedHtml.Media.pictureSource
+    TypedHtml.Component.Media.pictureSource
 
 
-{-| See `TypedHtml.Select.select`.
+{-| See `TypedHtml.Component.Select.select`.
 -}
 select :
-    List (Attr TypedHtml.Select.SelectAttrs msg)
-    -> List (Element TypedHtml.Select.SelectContent (TypedHtml.Select.SelectChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Select.SelectIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Select.SelectAttrs msg)
+    -> List (Element TypedHtml.Component.Select.SelectContent (TypedHtml.Component.Select.SelectChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Select.SelectIs s) admittedBy msg
 select =
-    TypedHtml.Select.select
+    TypedHtml.Component.Select.select
 
 
-{-| See `TypedHtml.Media.source`.
+{-| See `TypedHtml.Component.Media.source`.
 -}
 source :
-    List (Attr TypedHtml.Media.SourceAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Media.SourceChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Media.SourceIs s) TypedHtml.Media.SourceAdmittedBy msg
+    List (Attr TypedHtml.Component.Media.SourceAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Component.Media.SourceChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Media.SourceIs s) TypedHtml.Component.Media.SourceAdmittedBy msg
 source =
-    TypedHtml.Media.source
+    TypedHtml.Component.Media.source
 
 
-{-| See `TypedHtml.Grouping.span`.
+{-| See `TypedHtml.Component.Grouping.span`.
 -}
 span :
-    List (Attr TypedHtml.Grouping.SpanAttrs msg)
-    -> List (Element TypedHtml.Grouping.SpanContent (TypedHtml.Grouping.SpanChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Grouping.SpanIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Grouping.SpanAttrs msg)
+    -> List (Element TypedHtml.Component.Grouping.SpanContent (TypedHtml.Component.Grouping.SpanChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Grouping.SpanIs s) admittedBy msg
 span =
-    TypedHtml.Grouping.span
+    TypedHtml.Component.Grouping.span
 
 
-{-| See `TypedHtml.Media.track`.
+{-| See `TypedHtml.Component.Media.track`.
 -}
 track :
-    List (Attr TypedHtml.Media.TrackAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Media.TrackChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Media.TrackIs s) TypedHtml.Media.TrackAdmittedBy msg
+    List (Attr TypedHtml.Component.Media.TrackAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Component.Media.TrackChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Media.TrackIs s) TypedHtml.Component.Media.TrackAdmittedBy msg
 track =
-    TypedHtml.Media.track
+    TypedHtml.Component.Media.track
 
 
-{-| See `TypedHtml.Media.video`.
+{-| See `TypedHtml.Component.Media.video`.
 -}
 video :
-    List (Attr TypedHtml.Media.VideoAttrs msg)
-    -> List (Element TypedHtml.Media.VideoContent (TypedHtml.Media.VideoChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Media.VideoIs s) admittedBy msg
+    List (Attr TypedHtml.Component.Media.VideoAttrs msg)
+    -> List (Element TypedHtml.Component.Media.VideoContent (TypedHtml.Component.Media.VideoChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Media.VideoIs s) admittedBy msg
 video =
-    TypedHtml.Media.video
+    TypedHtml.Component.Media.video
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.
@@ -222,3 +226,94 @@ mapMsg =
 mapNode : (a -> b) -> Node a -> Node b
 mapNode =
     HtmlIr.Node.map
+
+
+{-| Attach a diff key to a child so its parent container renders as a keyed node. State and animations survive reorders, insertions, and removals. Phantom rows are preserved — a keyed chip is still a chip.
+-}
+key : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+key =
+    HtmlIr.Element.key
+
+
+{-| Memoise a subtree while its input is referentially unchanged. The result keeps its phantom rows and drops into any slot. **The view function must be a stable top-level binding** — an inline lambda allocates a fresh closure each render and silently never memoises.
+-}
+lazy : (a -> Element accepts admittedBy msg) -> a -> Element accepts admittedBy msg
+lazy =
+    HtmlIr.Element.lazy
+
+
+{-| 2-argument variant of [`lazy`](#lazy).
+-}
+lazy2 : (a -> b -> Element accepts admittedBy msg) -> a -> b -> Element accepts admittedBy msg
+lazy2 =
+    HtmlIr.Element.lazy2
+
+
+{-| 3-argument variant of [`lazy`](#lazy).
+-}
+lazy3 : (a -> b -> c -> Element accepts admittedBy msg) -> a -> b -> c -> Element accepts admittedBy msg
+lazy3 =
+    HtmlIr.Element.lazy3
+
+
+{-| 4-argument variant of [`lazy`](#lazy).
+-}
+lazy4 : (a -> b -> c -> d -> Element accepts admittedBy msg) -> a -> b -> c -> d -> Element accepts admittedBy msg
+lazy4 =
+    HtmlIr.Element.lazy4
+
+
+{-| 5-argument variant of [`lazy`](#lazy).
+-}
+lazy5 : (a -> b -> c -> d -> e -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> Element accepts admittedBy msg
+lazy5 =
+    HtmlIr.Element.lazy5
+
+
+{-| 6-argument variant of [`lazy`](#lazy). Note type params skip `f` to match the underlying `VirtualDom.lazy6` convention.
+-}
+lazy6 : (a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> Element accepts admittedBy msg
+lazy6 =
+    HtmlIr.Element.lazy6
+
+
+{-| 7-argument variant of [`lazy`](#lazy).
+-}
+lazy7 : (a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> Element accepts admittedBy msg
+lazy7 =
+    HtmlIr.Element.lazy7
+
+
+{-| 8-argument variant of [`lazy`](#lazy). **This variant does not memoise** — the Element→Html bridge only has room for seven memoised data arguments, so the eighth forces a fresh closure each render and defeats the reference check. For real memoisation, fold the extra state into one of the first seven arguments and use [`lazy7`](#lazy7).
+-}
+lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Element accepts admittedBy msg
+lazy8 =
+    HtmlIr.Element.lazy8
+
+
+{-| Add a CSS class, participating in the `class` merge. Phantom rows preserved.
+-}
+addClass : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+addClass =
+    HtmlIr.Element.addClass
+
+
+{-| Conditionally attach an attribute — applied when the flag is `True`, a no-op when `False`. Phantom rows preserved.
+-}
+attrIf : Bool -> Attr capability msg -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+attrIf =
+    HtmlIr.Element.attrIf
+
+
+{-| Keep an element only when the flag is `True`; `False` collapses it to an empty node that renders nothing. Phantom rows preserved.
+-}
+when : Bool -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+when =
+    HtmlIr.Element.when
+
+
+{-| Stamp a `data-testid` attribute for test hooks. Phantom rows preserved.
+-}
+testId : String -> Element accepts admittedBy msg -> Element accepts admittedBy msg
+testId =
+    HtmlIr.Element.testId

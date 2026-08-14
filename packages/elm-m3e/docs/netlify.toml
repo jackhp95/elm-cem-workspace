@@ -16,7 +16,11 @@
   # source-directory in elm.json) instead of the old `../../elm-*/src` paths that
   # don't exist on Netlify. After changing HtmlIr or TypedHtml upstream, run
   # `pnpm run build:vendor` and commit the refreshed vendor/elm-foundation.
-  command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && corepack enable && pnpm install --frozen-lockfile && pnpm run build:ci"
+  # Netlify now serves the committed prebuilt dist/ — no build needed.
+  # dist/ is committed to the repo (gitignored → un-gitignored on this branch).
+  # The pre-push hook builds + commits it locally before every push, so Netlify
+  # only has to serve the static output, not rebuild from Elm source.
+  command = "true"
 
 [build.environment]
   NODE_VERSION = "22"

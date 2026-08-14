@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "gen": "run-s gen:src gen:vendor gen:reference gen:samples",
-    "gen:src": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-$PWD/../elm-cem/bin/elm-cem.js}\" --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --output=src && npm run format:src",
+    "gen:src": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --output=src && npm run format:src && npm run format:icons",
     "gen:vendor": "npm --prefix docs run gen:vendor",
     "gen:reference": "npm --prefix docs run gen:reference",
     "gen:samples": "npm --prefix docs run gen:samples",
@@ -25,7 +25,9 @@
     "check": "run-p \"check:*\"",
     "check:format": "node_modules/.bin/elm-format --validate docs/app docs/src review/src tests/acid",
     "check:review": "npm --prefix docs run check:review",
-    "check:cem": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/docs/vendor/elm-foundation}\" node \"${ELM_CEM_BIN:-$PWD/../elm-cem/bin/elm-cem.js}\" gate --skip-drift --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json",
+    "check:cem": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/docs/vendor/elm-foundation}\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" gate --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --nested-pkg=elm-m3e-icons",
+    "split": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" split --packages=packages.json --src=src --out=dist-packages",
+    "verify:split": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/docs/vendor/elm-foundation}\" FACTS_SRC=\"${FACTS_SRC:-$PWD/../elm-cem/facts/src}\" node scripts/check-split.mjs",
     "check:nav": "npm --prefix docs run check:nav",
     "check:drift": "npm --prefix docs run check:drift",
     "check:vendor": "npm --prefix docs run check:vendor",
@@ -35,9 +37,10 @@
     "gate": "run-s check build:site test",
     "format": "node_modules/.bin/elm-format --yes docs/app docs/src review/src",
     "format:src": "node_modules/.bin/elm-format --yes src",
+    "format:icons": "node_modules/.bin/elm-format --yes elm-m3e-icons/src",
     "hooks:install": "git config core.hooksPath hooks",
     "postinstall": "node scripts/fix-native-bins.mjs",
-    "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null"
+    "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ../../node_modules/.bin/elm make app/IconUse.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotPlacersOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/EnumNarrowingOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotApiOk.elm --output=/dev/null && ../../node_modules/.bin/elm make bad/SlotPlacersWrongKind.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingSplitButton.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingBuilder.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/SlotApiWrongKind.elm --output=/dev/null 2>/dev/null"
   },
   "devDependencies": {
     "elm": "0.19.1-6",

@@ -58,9 +58,17 @@ fs.writeFileSync(
   path.join(fixtureSrc, "Core", "Kind.elm"),
   `module Core.Kind exposing (Brand)\n\n{-| A fixture brand. -}\ntype Brand = Brand_\n`
 );
+// A designated cross-package internal forge module: named *.Internal (so the
+// blanket Internal filter would hide it) but force-exposed via exposeInternal so
+// the downstream Widget package can import it across the boundary.
+fs.mkdirSync(path.join(fixtureSrc, "Core", "Forge"), { recursive: true });
+fs.writeFileSync(
+  path.join(fixtureSrc, "Core", "Forge", "Internal.elm"),
+  `module Core.Forge.Internal exposing (Forge(..))\n\n{-| A fixture forge. -}\ntype Forge = Forge_\n`
+);
 fs.writeFileSync(
   path.join(fixtureSrc, "Widget.elm"),
-  `module Widget exposing (view)\n\nimport Core.Kind\nimport Core.Token\n\n{-| A fixture widget. -}\nview : Core.Token.Token -> Core.Kind.Brand -> Int\nview _ _ = 0\n`
+  `module Widget exposing (view)\n\nimport Core.Forge.Internal as Forge\nimport Core.Kind\nimport Core.Token\n\n{-| A fixture widget. -}\nview : Core.Token.Token -> Core.Kind.Brand -> Forge.Forge -> Int\nview _ _ _ = 0\n`
 );
 
 // packages.json for the fixture
@@ -77,7 +85,8 @@ const packagesJson = {
       deps: {},
       buckets: [
         { prefix: "Core." }
-      ]
+      ],
+      exposeInternal: [ "Core.Forge.Internal" ]
     },
     {
       name: "example/fixture-widget",
@@ -142,6 +151,11 @@ ok("README banner present");
   const exposed = coreElmJson["exposed-modules"];
   if (!exposed.includes("Core.Token")) fail("Core.Token not in exposed-modules");
   if (!exposed.includes("Core.Kind")) fail("Core.Kind not in exposed-modules");
+  // Force-exposed designated internal forge module must be exposed despite the
+  // blanket *.Internal filter (the cross-package forge carve-out).
+  if (!exposed.includes("Core.Forge.Internal")) {
+    fail("Core.Forge.Internal (exposeInternal) not in exposed-modules");
+  }
 
   const widgetElmJson = JSON.parse(
     fs.readFileSync(path.join(outDir, "fixture-widget", "elm.json"), "utf8")

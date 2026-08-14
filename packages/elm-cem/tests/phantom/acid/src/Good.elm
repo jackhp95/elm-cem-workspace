@@ -1,8 +1,9 @@
 module Good exposing (page, valueEnumeration, valueRoundTripIn, valueRoundTripOut, view)
 
 {-| Everything that MUST compile against the generated (golden) Mini brand:
-general + specific surfaces, both phantom rows, narrowing, slots, coerce,
-delegate, atoms, the render boundary.
+general + specific surfaces, both phantom rows, narrowing, slots, delegate,
+atoms, the render boundary, and the new IR-native vocabulary (key, lazy,
+decorators).
 -}
 
 import Html exposing (Html)
@@ -10,16 +11,14 @@ import HtmlIr.Element
 import HtmlIr.Node
 import Mini
 import Mini.Attributes
-import Mini.Button
-import Mini.Chip
-import Mini.Coerce
+import Mini.Build.Button
+import Mini.Build.Chip
+import Mini.Build.Icon
+import Mini.Component.Button
+import Mini.Component.Chip
+import Mini.Component.Surface
 import Mini.Events
-import Mini.Icon
 import Mini.Kind
-import Mini.Surface
-import Mini.Tab
-import Mini.Tabs
-import Mini.Toolbar
 import Mini.Values
 
 
@@ -33,52 +32,71 @@ page =
     Mini.surface [ Mini.Attributes.class "layout", Mini.Events.delegate (Mini.Events.onClick RowClicked) ]
         [ -- general surface, narrowed setter via specific module, named slot, event
           Mini.button
-            [ Mini.Button.variant Mini.Values.filled, Mini.Button.onClick Pressed ]
-            [ Mini.Button.icon (Mini.icon [] [ Mini.text "star" ])
+            [ Mini.Component.Button.variant Mini.Values.filled, Mini.Component.Button.onClick Pressed ]
+            [ Mini.Component.Button.icon (Mini.icon [] [ Mini.text "star" ])
             , Mini.text "Save"
             ]
 
         -- el form: required content enforced structurally
-        , Mini.Button.el { content = Mini.text "Go" } [] []
+        , Mini.Component.Button.el { content = Mini.text "Go" } [] []
 
         -- union setter from the general vocabulary (chip admits size)
-        , Mini.chip [ Mini.Attributes.size Mini.Values.small, Mini.Chip.disabled True ] [ Mini.text "tag" ]
+        , Mini.chip [ Mini.Attributes.size Mini.Values.small, Mini.Component.Chip.disabled True ] [ Mini.text "tag" ]
 
-        -- narrowed chip setter
-        , Mini.Chip.view [ Mini.Chip.size Mini.Values.big ] [ Mini.text "big tag" ]
+        -- narrowed chip setter via Component module
+        , Mini.Component.Chip.view [ Mini.Component.Chip.size Mini.Values.big ] [ Mini.text "big tag" ]
 
-        -- `_variants`: the base setter keeps the spec-correct String (it is the only
-        -- way to write the `auto` keyword) and the AsNumber variant sits beside it,
-        -- claiming the SAME capability row — so both are admitted by the same element
-        -- and neither added a field to Button's Attrs.
+        -- `_variants`: the base setter keeps the spec-correct String and the
+        -- AsNumber variant sits beside it, claiming the SAME capability row.
         , Mini.button [ Mini.Attributes.weight "auto" ] [ Mini.text "kw" ]
         , Mini.button [ Mini.Attributes.weightAsNumber 1.5 ] [ Mini.text "num" ]
-        , Mini.Button.view [ Mini.Button.weightAsNumber 2 ] [ Mini.text "narrowed num" ]
+        , Mini.Component.Button.view [ Mini.Component.Button.weightAsNumber 2 ] [ Mini.text "narrowed num" ]
 
         -- the `ints` renderer, from the shared vocabulary and from the co-located
         -- per-component re-export
         , Mini.surface [ Mini.Attributes.gridAsInts [ 2, 3 ] ] []
-        , Mini.Surface.view [ Mini.Surface.gridAsInts [ 4, 5 ], Mini.Surface.grid "6x7" ] []
+        , Mini.Component.Surface.view [ Mini.Component.Surface.gridAsInts [ 4, 5 ], Mini.Component.Surface.grid "6x7" ] []
 
         -- restricted-parent element in its REQUIRED parent
         , Mini.tabs [] [ Mini.tab [] [ Mini.text "One" ] ]
 
-        -- kind-set slot (toolbar admits @actions = button|chip) + coerce
+        -- kind-set slot (toolbar admits @actions = button|chip)
         , Mini.toolbar []
             [ Mini.button [] [ Mini.text "act" ]
             , Mini.chip [] [ Mini.text "chip" ]
             ]
-        , Mini.Coerce.asButton (Mini.chip [] [ Mini.text "promoted" ])
 
-        -- the pipe-builder family (compile-time cardinality)
-        , Mini.Button.build { content = Mini.text "Built" }
-            |> Mini.Button.withVariant Mini.Values.tonal
-            |> Mini.Button.withIcon (Mini.icon [] [ Mini.text "gear" ])
-            |> Mini.Button.withChild (Mini.text "extra")
-            |> Mini.Button.toElement
-        , Mini.Chip.build
-            |> Mini.Chip.withSize Mini.Values.big
-            |> Mini.Chip.toElement
+        -- IR-native `key`: attach diff keys to children; phantom rows preserved
+        , Mini.chip [ Mini.Component.Chip.disabled False ]
+            [ Mini.text "keyed-a" |> Mini.key "a"
+            , Mini.text "keyed-b" |> Mini.key "b"
+            ]
+
+        -- `addClass`: merge a class post-hoc; phantom rows preserved
+        , Mini.button [] [ Mini.text "styled" ]
+            |> Mini.addClass "primary"
+
+        -- `attrIf`: conditional attribute; phantom rows preserved
+        , Mini.button [] [ Mini.text "maybe-disabled" ]
+            |> Mini.attrIf True (Mini.Attributes.disabled True)
+
+        -- `when`: collapse to empty when False; identity when True
+        , Mini.chip [] [ Mini.text "conditional" ]
+            |> Mini.when True
+
+        -- `testId`: stamp a data-testid; phantom rows preserved
+        , Mini.button [] [ Mini.text "submit" ]
+            |> Mini.testId "submit-btn"
+
+        -- pipe-builder family (compile-time cardinality)
+        , Mini.Build.Button.build { content = Mini.text "Built" }
+            |> Mini.Build.Button.withVariant Mini.Values.tonal
+            |> Mini.Build.Button.withIcon (Mini.Build.Icon.build)
+            |> Mini.Build.Button.withChild Mini.Build.Chip.build
+            |> Mini.Build.Button.toElement
+        , Mini.Build.Chip.build
+            |> Mini.Build.Chip.withSize Mini.Values.big
+            |> Mini.Build.Chip.toElement
         ]
 
 

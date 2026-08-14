@@ -12,9 +12,15 @@
 // A brand's package.json simply calls `elm-cem gate` with whatever drift needs
 // (its CEM / config files); everything else is defaulted. Flags are routed to
 // the relevant sub-gate:
-//   drift    ← --flags-from, --config-from (repeatable), --src, --elm-json
-//   registry ← --elm-json, --dep-src (repeatable), --elm, --no-audit
+//   drift    ← --flags-from, --config-from (repeatable), --src, --elm-json, --nested-pkg (repeatable)
+//   registry ← --elm-json, --dep-src (repeatable), --elm, --no-audit, --nested-pkg (repeatable)
 //   acid     ← --acid-dir (→ --dir), --elm
+//
+// --nested-pkg routes to BOTH drift and registry: a standalone nested package
+// (e.g. an icon sub-package) needs its committed tree checked for drift AND its
+// elm.json checked for a self-sufficient, registry-faithful dependency set —
+// drift alone only proves "matches a fresh regen", not "the regen itself
+// declares every dep it needs" (see registry-check.js's header comment).
 // Any sub-gate can be skipped with --skip-drift / --skip-registry / --skip-acid
 // (a brand that ships no acid probes can pass --skip-acid, though acid also
 // passes cleanly with an empty probe set).
@@ -35,8 +41,8 @@ function usage() {
       "elm-cem gate — run regen-drift + registry-check + acid (the full brand release gate).",
       "",
       "Run from a brand repo root. Flags route to the relevant sub-gate:",
-      "  drift:    --flags-from, --config-from (repeatable), --src, --elm-json",
-      "  registry: --elm-json, --dep-src (repeatable), --elm, --no-audit",
+      "  drift:    --flags-from, --config-from (repeatable), --src, --elm-json, --nested-pkg (repeatable)",
+      "  registry: --elm-json, --dep-src (repeatable), --elm, --no-audit, --nested-pkg (repeatable)",
       "  acid:     --acid-dir (→ --dir), --elm",
       "Skip any stage: --skip-drift | --skip-registry | --skip-acid",
     ].join("\n")
@@ -61,6 +67,10 @@ function run(argv) {
     else if (a.startsWith("--flags-from=")) driftArgs.push(a);
     else if (a.startsWith("--config-from=")) driftArgs.push(a);
     else if (a.startsWith("--src=")) driftArgs.push(a);
+    else if (a.startsWith("--nested-pkg=")) {
+      driftArgs.push(a);
+      registryArgs.push(a);
+    }
     else if (a.startsWith("--elm-json=")) {
       driftArgs.push(a);
       registryArgs.push(a);
