@@ -25,12 +25,12 @@ test("a slot menu offers every valid kind, not just text", async ({ page }) => {
 
   // Root is "list": its default ("unnamed") slot affords five component
   // kinds and no text/icon, so its chip opens straight to a menu.
-  await page.getByRole("button", { name: "unnamed (0)" }).click();
+  await page.getByRole("button", { name: "+ unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
 
   // listItem's "trailing" slot is the §8.7 acceptance case: it affords text,
   // an icon, AND five components at once.
-  await page.getByRole("button", { name: "trailing (0 / 1)" }).click();
+  await page.getByRole("button", { name: "+ trailing" }).click();
 
   const trailingMenu = page.locator("m3e-menu[id*='trailing']");
   await expect(trailingMenu).toBeVisible();
@@ -74,12 +74,49 @@ test("nesting three levels deep works with chips alone", async ({ page }) => {
 
   // list > listItem > (trailing) checkbox — three levels, chips and menus
   // only, no hand-authored code.
-  await page.getByRole("button", { name: "unnamed (0)" }).click();
+  await page.getByRole("button", { name: "+ unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "trailing (0 / 1)" }).click();
+  await page.getByRole("button", { name: "+ trailing" }).click();
   await page.getByRole("menuitem", { name: "checkbox", exact: true }).click();
 
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
+});
+
+test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // The root starts as "list". Its edit-tag menu offers every known
+  // component (the root has no parent slot to constrain it) — pick a
+  // different one.
+  await page.getByRole("button", { name: "Change component" }).click();
+  await page.getByRole("menuitem", { name: "accordion", exact: true }).click();
+
+  // The live preview: the root element's own tag changed.
+  await expect(page.locator("m3e-list")).toHaveCount(0);
+  await expect(page.locator("main m3e-accordion")).toHaveCount(1);
+
+  // The generated-code snippet: the top-level call changed too.
+  await expect(page.locator(".cf-root").first()).toContainText("M3e.Html.accordion");
+});
+
+test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // list > listItem, then listItem's OWN edit-tag menu (the second
+  // "Change component" control on the page — the first is the root's).
+  await page.getByRole("button", { name: "+ unnamed" }).click();
+  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.getByRole("button", { name: "Change component" }).nth(1).click();
+
+  // list.unnamed affords divider/expandableListItem/listAction/listItem/
+  // listOption — never anything list.unnamed doesn't name, and never the
+  // current component ("listItem") itself.
+  await expect(page.getByRole("menuitem")).toHaveText([
+    "divider",
+    "expandableListItem",
+    "listAction",
+    "listOption",
+  ]);
 });
 
 test("the drawer links to Compose", async ({ page }) => {
