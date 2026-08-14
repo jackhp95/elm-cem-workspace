@@ -418,25 +418,16 @@ slotButtonLabel info =
     "+ " ++ info.name
 
 
-slotButtonHostId : Cem.Compose.Path -> String -> String
-slotButtonHostId path slotName =
-    "compose-slot-button-" ++ pathId path ++ "-" ++ slotName
-
-
 {-| `filled`/`max`: the plain count when the slot is multi (`max = Nothing`),
-`"filled/max"` otherwise — a badge attached to the button by id, at the
-button's trailing edge (`position = after`; a button's own `trailing-icon`
-slot admits only `shared:icon`, not a badge, so the badge's own `position`
-attribute is how it lands there instead). Counts are what badges are for;
-the add affordance itself lives in the button's label.
+`"filled/max"` otherwise — an inline badge, its own unnamed slot carrying the
+count text, rendered as a plain sibling next to the slot button rather than
+anchored to it by `for`/`position` (app precedent: `Guide/Seams.elm`'s
+`M3e.badge [] [ M3e.text "3" ]`). Counts are what badges are for; the add
+affordance itself lives in the button's label.
 -}
-slotCountBadge : Cem.Compose.Path -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
-slotCountBadge path info =
-    M3e.badge
-        [ M3e.Attributes.for (slotButtonHostId path info.name)
-        , M3e.Attributes.position Value.after
-        ]
-        [ M3e.text (slotCountText info) ]
+slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
+slotCountBadge info =
+    M3e.badge [] [ M3e.text (slotCountText info) ]
 
 
 slotCountText : Cem.Compose.SlotChipInfo -> String
@@ -461,10 +452,9 @@ slotButtonView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipIn
 slotButtonView path model info =
     case Cem.Compose.slotMenuOptions path info.name model of
         [ only ] ->
-            TypedHtml.div [ TA.class "inline-flex" ]
+            TypedHtml.div [ TA.class "inline-flex items-center gap-1" ]
                 [ M3e.button
-                    [ M3e.Attributes.id (slotButtonHostId path info.name)
-                    , M3e.Attributes.size Value.extraSmall
+                    [ M3e.Attributes.size Value.extraSmall
                     , M3e.Attributes.variant
                         (if info.filled > 0 then
                             Value.filled
@@ -476,14 +466,13 @@ slotButtonView path model info =
                     , M3e.Events.onClick (msgForOption path info.name only)
                     ]
                     [ M3e.text (slotButtonLabel info) ]
-                , slotCountBadge path info
+                , slotCountBadge info
                 ]
 
         _ ->
-            TypedHtml.div [ TA.class "inline-flex" ]
+            TypedHtml.div [ TA.class "inline-flex items-center gap-1" ]
                 [ M3e.button
-                    [ M3e.Attributes.id (slotButtonHostId path info.name)
-                    , M3e.Attributes.size Value.extraSmall
+                    [ M3e.Attributes.size Value.extraSmall
                     , M3e.Attributes.variant
                         (if info.filled > 0 then
                             Value.filled
@@ -498,7 +487,7 @@ slotButtonView path model info =
                     [ M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
                         [ M3e.text (slotButtonLabel info) ]
                     ]
-                , slotCountBadge path info
+                , slotCountBadge info
                 , slotMenuElement path model info.name
                 ]
 
