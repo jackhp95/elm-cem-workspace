@@ -1402,3 +1402,32 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   ReviewConfig change is ONLY the 3 sibling entries (no rule loosened), no scratch committed, external oracle
   untouched → PASS. **Phase B wiring in place; the docs app now compiles against Cem.Facts + Cem.Compose.**
 
+- **D-042 (B9 count-sanity drift — investigated, ACCEPTED, independently reconciled).** The B9 generator
+  produced `kinds`=**166** rows (spec §4.1 baseline 182, ~9% short) and `witness`=**204** distinct (attr,token)
+  enum pairs (baseline 201). Plan Task 9 flags "within a few of 182" as the sanity heuristic and "wildly
+  different = regex misparse / dropped half" as the failure trigger. The Sonnet builder investigated and STOPPED
+  rather than commit. I INDEPENDENTLY reconciled (did not trust the builder): parsed
+  `packages/elm-m3e/src/M3e/Attributes.elm` myself → first-arg Bool 80 + String 64 + Float 24 + Int 2 = **170
+  classifiable non-enum setters**, plus 39 `Value`-typed (enum) setters. Generated `kinds`=166 = exactly the
+  170 classifiable minus 4 that no component's `attrRewrites` names (unreachable). `witness` total M3e.Attributes
+  refs = **370 = 166 setter witnesses + 204 enum-pair witnesses** — reconciles to the byte. Builder's barrel
+  accounting also closes: 225 distinct reachable barrel names = 166 non-enum-classified + ~25 reachable
+  enum-typed + ~34 event handlers. **Conclusion: NOT a misparse and NOT a silent drop — every classifiable AND
+  reachable setter is in the table.** 166 is 91% of 182 (not half); the 182→166 / 201→204 drift is genuine input
+  evolution — the active migration reclassifying some non-enum setters as portmanteau enums, precisely the
+  `b85cb563` change spec §11.1 predicted would touch `M3e.Attributes` (non-enum ↓, enum ↑, the observed
+  direction). The table is COMPLETE and CORRECT for this workspace's real inputs; it is generated + deterministic
+  + A/B-gated (check:compose-attrs), so it is the specification. Accepted as current-baseline. If a human later
+  wants the 182 figure restored, that is an upstream M3e.Attributes question, not a Compose bug. Next free IDs:
+  **D-043**, **R-023**.
+
+- **B9: pass** (all gates green, critic clean, builder claude/sonnet). Commit `487e7d9`. `gen-compose-attrs.mjs`
+  (deterministic generator) + generated `Attrs.elm` (kinds/toAttribute/witness/codeLineFor) + package.json
+  scripts (gen/check:compose-attrs) + ReviewConfig `ignoreGeneratedComposeAttrs` (file-scoped exclusion of the
+  generated Attrs.elm ONLY) + 2 copy-fidelity AUTHORIZED_EXTRA entries. kinds=166, witness=204 enum pairs
+  (accepted per D-042). Round 1 stopped on the count anomaly (builder correct to check); I independently
+  reconciled → accept. Fresh Opus critic INDEPENDENTLY: determinism (regen → 0 diff), A/B bite (hand-edit →
+  check:compose-attrs exit 1, restore → 0), Attrs.elm compiles, **count bijection 166 = classifiable∩reachable
+  with MISSING=0/EXTRA=0** (no silent drop), review-exclusion is file-scoped (Render/Codegen stay reviewed),
+  copy-fidelity GREEN vs oracle, integrity 5 files → PASS. Hardest Phase B part done.
+
