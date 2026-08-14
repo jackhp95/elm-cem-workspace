@@ -1820,3 +1820,19 @@ strict); reordering → **up/down buttons**, not drag-drop. Landed in four commi
   grey count. Gates: build:site, check:review, check:compose-attrs, Playwright 7/7, copy-fidelity green. **STILL
   OPEN:** only the item-6 "no separate edit pencil" judgment (D-054) awaits human confirmation. Next free IDs:
   **D-057**, **R-023**.
+
+- **D-057 (human feedback: card padding, heading tag, explicit edit icon, reorder-row-at-trailing, text default).
+  UX ROUND — supersedes the D-054 "no edit pencil" judgment (human DID want the edit icon).** Commit `f0cc72b`
+  (`Compose.elm` + `compose.spec.ts`, manager). (1) **Padding:** attr/slot groups were flush to the card's left
+  edge — the whole card body is now one `p-3` container (children keep `pl-4`). (2) **Tag → `M3e.heading`**
+  (title/small): the tag name is a plain heading; `nameControl` split into `tagHeading` + `editControl`.
+  (3) **Explicit edit icon button** (`editControl`): a "Change component" `M3e.button` (icon-only, hosts the
+  `menuTrigger` — the only host that scopes a trigger) opens the change-component menu; renders nothing when
+  `componentOptions` is empty. (4) **Reorder = horizontal row at the TRAILING end** (`flex-row`, after the edit
+  control in the header and after the field in text/icon rows), not a leading vertical stack. (5) **New text
+  children default to "lorem ipsum":** the route `update` intercepts `AddTextChild` (via `applyCompose`) and seeds
+  the just-added empty `ChildText` with `SetChildContent` — the headless core stays content-agnostic (adds `""`);
+  the placeholder is a consumer/demo choice, guarded (`childAt … == Just (ChildText "")`) so it never clobbers
+  real content. Playwright 8/8: tests 4/5 now open the "Change component" icon button (`.first()`/`.last()`); added
+  a test asserting a new text child renders "lorem ipsum" in the preview. build:site, check:review,
+  check:compose-attrs, copy-fidelity green. No remaining open styling items. Next free IDs: **D-058**, **R-023**.
