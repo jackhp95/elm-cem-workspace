@@ -3,7 +3,7 @@
     "name": "jackhp95/elm-cem-compose",
     "summary": "Headless, type-directed element-tree editor over elm-cem facts",
     "license": "BSD-3-Clause",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "exposed-modules": [
         "Cem.Compose"
     ],

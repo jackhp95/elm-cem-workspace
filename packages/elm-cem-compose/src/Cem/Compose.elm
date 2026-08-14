@@ -158,6 +158,7 @@ type Msg
     | AddIconChild Path String
     | SetChildContent Path String Int String
     | RemoveChild Path String Int
+    | MoveChild Path String Int Int
     | SetComponent Path String
 
 
@@ -193,6 +194,9 @@ update msg model =
 
         RemoveChild path slot index ->
             edit path (removeChild slot index) model
+
+        MoveChild path slot fromIndex toIndex ->
+            edit path (moveChild slot fromIndex toIndex) model
 
         SetComponent path target ->
             if List.member target (componentOptions path model) then
@@ -300,6 +304,48 @@ removeChild slot index ((Node n) as node) =
 
             else
                 Node { n | children = Dict.insert slot (List.Extra.removeAt index children) n.children }
+
+
+{-| Reorder one slot's children, moving the child at `fromIndex` to `toIndex`.
+Out-of-range `fromIndex` is a no-op; out-of-range `toIndex` is clamped to
+`[0, length - 1]`, which is what makes "move up from the top" and "move down
+from the bottom" no-ops rather than errors. A pure list reorder: no validity
+re-check, since a child already valid in this slot stays valid at any
+position within it.
+-}
+moveChild : String -> Int -> Int -> Node -> Node
+moveChild slot fromIndex toIndex ((Node n) as node) =
+    case Dict.get slot n.children of
+        Nothing ->
+            node
+
+        Just children ->
+            let
+                len =
+                    List.length children
+
+                clampedTo =
+                    clamp 0 (len - 1) toIndex
+            in
+            if fromIndex < 0 || fromIndex >= len || clampedTo == fromIndex then
+                node
+
+            else
+                Node { n | children = Dict.insert slot (moveInList fromIndex clampedTo children) n.children }
+
+
+moveInList : Int -> Int -> List a -> List a
+moveInList fromIndex toIndex list =
+    case List.Extra.getAt fromIndex list of
+        Nothing ->
+            list
+
+        Just item ->
+            let
+                without =
+                    List.Extra.removeAt fromIndex list
+            in
+            List.take toIndex without ++ item :: List.drop toIndex without
 
 
 {-| Change a node's component, then prune content the new component does not
