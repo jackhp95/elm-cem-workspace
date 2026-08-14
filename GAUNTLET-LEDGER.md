@@ -1836,3 +1836,22 @@ strict); reordering → **up/down buttons**, not drag-drop. Landed in four commi
   real content. Playwright 8/8: tests 4/5 now open the "Change component" icon button (`.first()`/`.last()`); added
   a test asserting a new text child renders "lorem ipsum" in the preview. build:site, check:review,
   check:compose-attrs, copy-fidelity green. No remaining open styling items. Next free IDs: **D-058**, **R-023**.
+
+- **D-058 (human feedback batch — 6 items, split into a no-state pass + a stateful pass). UX ROUND.** Two commits.
+  **`aa3a31f` (no state):** (1) `tagHeading` → `variant title, size medium` (was small). (2) removed `pl-4` from the
+  children container — nesting still reads via the card border. (3) Attributes/Slots: the group LABEL now sits
+  inside the same `flex flex-wrap items-center` row as the buttons, so label + buttons wrap together (was a fixed
+  label line above a separate wrapping row). (4) `editControl` → `M3e.iconButton` (its `Content` admits
+  `menuTrigger`; **verified the trigger still scopes** — Playwright tests 4/5 open its menu and pass), matching the
+  reorder/delete iconButtons. **`62c02ed` (stateful):** (5) **Collapsible cards** — each node card gets a leading
+  chevron `iconButton` toggling its `pathId` in new `Model.collapsed : Set String`; collapsed hides the body
+  (attrs/slots/children), header stays. (6) **"Prefill examples" toggle** — an `M3e.switch` in a new `panelBar`
+  drives `Model.prefill`; `applyCompose` (now `Bool -> Msg -> Model -> Model`) seeds a fresh text child with
+  "lorem ipsum" AND gives a fresh child COMPONENT an example text child in its first text-affording slot
+  (`firstTextSlot`) when on, empty when off — every seed guarded against clobbering real content. **Architecture:**
+  the editor view now emits the route `Msg`; leaf editor fns still produce `Cem.Compose.Msg` and are lifted with
+  `M3e.mapMsg ComposeMsg` at the `viewNode`/`childRow` boundaries, while the chevron + switch emit `Msg` directly
+  (`view` drops its old blanket `ComposeMsg` wrap; static heading/preview/snippet are msg-polymorphic and unify).
+  Playwright 10/10 (added: edit-as-iconButton menu still works via tests 4/5; collapse hides/restores body;
+  prefill-off adds empty). Both commits: build:site, check:review, check:compose-attrs, copy-fidelity green.
+  Next free IDs: **D-059**, **R-023**.
