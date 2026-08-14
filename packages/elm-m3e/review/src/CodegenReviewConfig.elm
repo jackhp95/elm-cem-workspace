@@ -66,6 +66,9 @@ config =
       --     genuinely does not admit a Badge.
       --   `Route.Guide` — pedagogical: these pages' teaching subject IS the
       --     escape surface, shown inline as live examples.
+      --   `Route.Components.Compose` — the Compose preview renders a
+      --     runtime-chosen custom element, so no typed constructor can produce
+      --     it; one documented `fromHtml` at the render boundary.
       NoUnsafeImportOutsideAllowed.rule
         [ "M3e"
         , "TypedHtml"
@@ -74,6 +77,7 @@ config =
         , "View"
         , "Route.Examples.Shop"
         , "Route.Guide"
+        , "Route.Components.Compose"
         ]
 
     -- The use layer: names the call AND the typed setter that already exists.

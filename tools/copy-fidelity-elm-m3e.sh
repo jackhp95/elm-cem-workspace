@@ -97,6 +97,7 @@ AUTHORIZED_EXTRA=$(cat <<'EOF'
 docs/scripts/fix-native-bins.mjs
 docs/scripts/gen-compose-attrs.mjs
 docs/app/Route/Components/Compose/Attrs.elm
+docs/app/Route/Components/Compose/Render.elm
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -111,6 +112,9 @@ EOF
 # docs/app/Route/Components/Compose/Attrs.elm — the committed OUTPUT of the
 #   generator above (Compose B9); new to this monorepo's Compose POC, absent
 #   from the upstream elm-m3e checkout.
+# docs/app/Route/Components/Compose/Render.elm — Compose B10: the hand-written
+#   renderNode preview fold; new to this monorepo's Compose POC, absent from
+#   the upstream elm-m3e checkout.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 
