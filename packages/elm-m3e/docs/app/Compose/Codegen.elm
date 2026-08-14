@@ -102,8 +102,10 @@ childCode depth ( slotName, children ) =
 own attr list. `ChildText` emits `M3e.text` directly in the default slot, or
 a slotted `TypedHtml.span` wrapper in a named one (`M3e.text` has no attrs
 of its own to carry a `slot=`). `ChildIcon` emits the icon constructor with
-the glyph as its `M3e.Attributes.name` attr (an `m3e-icon` takes its glyph
-via `name`, not text content — the same fix as `Compose.Render`), carrying
+the glyph as a `TypedHtml.Attributes.name` attr (an `m3e-icon` takes its
+glyph via `name`, not text content — the same fix as `Compose.Render`;
+`M3e.Attributes.name` takes a `Value M3e.Values.Name`, not a `String`, so it
+is `TypedHtml.Attributes.name` that matches the `String` glyph here), carrying
 the slot attr alongside it, and no children.
 -}
 childItem : Int -> String -> Cem.Compose.Child -> String
@@ -131,7 +133,7 @@ childItem depth slotName child =
                     [ [ pad depth ++ "M3e.Html.icon" ]
                     , bracketed (depth + 1)
                         (List.map (\line -> pad (depth + 1) ++ line)
-                            (slotAttrLines slotName ++ [ "M3e.Attributes.name " ++ quoted glyph ])
+                            (slotAttrLines slotName ++ [ "TypedHtml.Attributes.name " ++ quoted glyph ])
                         )
                     , bracketed (depth + 1) []
                     ]
