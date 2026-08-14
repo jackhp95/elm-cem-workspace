@@ -1377,3 +1377,25 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   must be verified as a matched pair in-workspace). Next: rebase elm-m3e onto e1bde03 the same way,
   bring both in, reconcile the ~30 workspace gates (Face A re-baselines to the concern-sep file set),
   then repackage 5-way. Next free IDs: **D-039**, **R-024**.
+
+- **D-039 (Move 2 exec, part 2 core — elm-m3e REBASED onto latest main; R-010 resolved).** Same
+  3-way rebase (base 0cd7f486, ours = workspace elm-m3e, theirs = e1bde03) in
+  `/tmp/latest/elm-m3e-full` (`ws-ours`, d1d7501). Only **3 conflicts**, all minor: two gitignored
+  generated artifacts (`Pages.elm` timestamp, compiled `render.mjs`) → main; and `package.json` →
+  took main's (adds `format:icons`, `split`/`verify:split`, `--nested-pkg=elm-m3e-icons`, expanded
+  `check:spike`) with the ONE monorepo adaptation re-applied: postinstall drops `npm run
+  hooks:install` (per-package git hooks can't coexist in the monorepo, D-008). Result: src 403
+  concern-sep, `packages.json` present, `elm-m3e-icons` package present.
+  **R-010 RESOLVED as a side effect:** the workspace had added `check:cem --skip-drift` because the
+  OLD flat generator's output did not match the committed concern-sep `src/`. Main's `check:cem`
+  has NO `--skip-drift` (the generator now emits the concern-sep shape the src has), so the rebase
+  drops it — drift is re-enabled, exactly R-010's revisit condition.
+  **Both rebased trees preserved as thin git bundles** at `tools/move2/rebased/` (19K + 183K; only
+  the resolution commits atop the re-fetchable remote bases). `/tmp` copies are ephemeral; the
+  bundles are the durable artifact.
+  **State:** the two hardest technical merges (the co-evolved elm-cem + elm-m3e) are DONE and (for
+  elm-cem) verified functional. NOT yet in the workspace. **Remaining (the large mechanical part):**
+  copy both trees into `packages/`, `pnpm install`, regenerate facts bundle + 3 consumers,
+  re-baseline Face A (143 flat → concern-sep set), reconcile `gate-all` to green, then repackage
+  5-way (split `Build/*` → `elm-m3e-builder`, rename core→html + review-facts→facts) with
+  standalone-compile + size gates. **DO NOT PUBLISH.** Next free IDs: **D-040**, **R-024**.
