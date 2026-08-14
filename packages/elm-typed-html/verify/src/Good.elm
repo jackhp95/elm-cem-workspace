@@ -11,12 +11,12 @@ import HtmlIr.Node
 import TypedHtml as H
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as At
-import TypedHtml.Button as Button
+import TypedHtml.Component.Button as Button
 import TypedHtml.Events as Ev
-import TypedHtml.Grouping
-import TypedHtml.Input as Input
-import TypedHtml.Select as Select
-import TypedHtml.Text as Text
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Input as Input
+import TypedHtml.Component.Select as Select
+import TypedHtml.Component.Text as Text
 import TypedHtml.Unsafe as Unsafe
 import TypedHtml.Values as V
 

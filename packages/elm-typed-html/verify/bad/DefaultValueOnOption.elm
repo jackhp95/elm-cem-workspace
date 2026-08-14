@@ -24,7 +24,7 @@ the element with the live/default split. `TypedHtml.Select.defaultValue` is not.
 
 -}
 
-import TypedHtml.Select as Select
+import TypedHtml.Component.Select as Select
 
 
 broken =

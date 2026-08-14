@@ -1475,3 +1475,24 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   Committed incrementally (IR advance, elm-typed-html regen, vendor refresh, copy-fidelity/check-drift
   fixes). The 5-way elm-m3e repackage (split Build/*, rename core→html + review-facts→facts) is still
   ahead. Next free IDs: **D-043**, **R-025**.
+
+## M8 — gauntlet-orchestrated (human: "gauntlet-orchestration the rest")
+
+- **D-043 (M8 plan).** Remaining work decomposed into gauntlet parts (worker `claude-sonnet-5`,
+  verifier `claude-opus-4-8`, per prefs impl=claude/sonnet, audit=claude/claude-opus-4-8; NEVER
+  opus-5/fable-5). Manager runs `gate-all` itself (too slow for a loop verify-check, D-015/D-024).
+  - **M8.a (loop) — elm-typed-html verify fixtures.** Regenerating elm-typed-html to concern-sep
+    REGROUPED its per-element modules into `TypedHtml.Component.<Category>`; the hand-written verify
+    fixtures (`verify/src/Good.elm`, `verify/bad/DefaultValueOnOption.elm`) import the old flat
+    per-element modules AND reference functions that moved between modules (NAMING ERRORS beyond a
+    rename). Iterative compile-fix. Bar: `pnpm --filter elm-typed-html run check` exit 0. Manager
+    pre-migrated the imports; the loop finishes the naming errors. No generated `src/` edits; no
+    fixture deletion.
+  - **M8.b (loop) — the 5-way elm-m3e repackage.** Transform `packages/elm-m3e/packages.json` from
+    main's 4-package shape to the D-037 5-package split: split `M3e.Build.*` out of components into
+    `jackhp95/elm-m3e-builder`, rename core→`elm-m3e-html` and review-facts→`elm-m3e-facts`. Bar:
+    `pnpm --filter elm-m3e run verify:split` exit 0 + each emitted package's `docs.json` under the
+    768 KB cap (manager checks the byte gate). DAG acyclic (builder→components→html).
+  - **Manager-direct — elm-m3e:check docs tail.** `check:review` flags `app/Api.elm` unused (an
+    elm-pages framework module used via unbuilt `.elm-pages/`). Resolve by building the docs (restore
+    dev state) or a review guard — manager call, not a loop.
