@@ -1295,3 +1295,28 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   These change committed source broadly and are best done as discrete, gated parts. **DO NOT
   PUBLISH — stop and report at that boundary** (the brief's hard rule). Revert `tools/move2/` with
   `git revert`; nothing there is wired into a gate yet. Next free IDs: **D-036**, **R-024**.
+
+- **D-036 (Move 2, HUMAN DIRECTION — supersedes D-035's byte-cut and reframes D-031c).** The human
+  rejected the byte-balanced A/B component split ("that split sucks. we don't want apis split into
+  pieces, splitting by api is fine though") and specified a **concern-separated 5-package
+  architecture**: `elm-m3e-html` (elm/html-style vocab: tags/attrs/values/events), `elm-m3e-components`
+  (per-component required-record typesafe modules), `elm-m3e-builder` (phantom builder fns/types,
+  per-component), `elm-m3e-icons` (typesafe icons), `elm-m3e-facts` (shared facts).
+  **Key finding this forces:** that architecture is CONCERN-SEPARATED, which the current generator
+  does NOT emit — `elm-cem` emits ONE MERGED module per component (flat `M3e.Button` = record surface
+  + phantom builder + values together; `Emit.elm` `compModule`). The separated `M3e.Component.*` /
+  `M3e.Build.*` modules exist only in the committed 402 tree, from an older generator. `split.js` can
+  only assign whole modules to packages, so there is no config-only path — reaching this needs an
+  `elm-cem` CODEGEN change. This SUPERSEDES the flat-143 "canonical" decision (D-031c): flat was
+  consistent with today's generator, but the product requirement makes the generator's flat output
+  the thing to change.
+  **Human's two decisions (via AskUserQuestion):** (1) PATH = "change the generator, SPEC FIRST" —
+  I write a spec/plan, human approves, then build (this is the generator work the brief said returns
+  to the human first). (2) ICONS = "new Material Symbols name set" — a NEW generated typesafe
+  icon-name type (none exists today; only Icon/IconButton/ThemeIcon components).
+  **Byte feasibility measured** (committed 402 concern-separated tree, spike method): elm-m3e-html
+  212,958 B (27.7% cap) · elm-m3e-components 432,693 B (56.3%) · elm-m3e-builder 592,171 B (77.1%) —
+  all three UNDER both the 768k cap and the 700k soft gate, so the 5-package shape is viable (the
+  spike's 810k builder was a different, broken split). elm-m3e-facts is tiny; elm-m3e-icons size TBD.
+  **Next: write the spec** (D-035's byte-cut artifacts under tools/move2/ are now superseded; keep
+  them for the measurement harnesses but the A/B cut is not the plan). Next free IDs: **D-037**, **R-024**.
