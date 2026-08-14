@@ -1393,6 +1393,7 @@ currentSectionItems components path =
     case List.head path of
         Just "components" ->
             ( "/components/all", "All components" )
+                :: ( "/components/compose", "Compose" )
                 :: (components
                         |> List.sortBy (\c -> String.toLower c.label)
                         |> List.map (\c -> ( "/components/" ++ c.slug, c.label ))

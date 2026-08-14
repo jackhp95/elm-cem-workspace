@@ -18,6 +18,7 @@ import UrlPath
 {-| . -}
 type Route
     = Components__All
+    | Components__Compose
     | Examples__Dashboard
     | Examples__Feed
     | Examples__ListDetail
@@ -66,6 +67,9 @@ segmentsToRoute segments =
     case segments of
     [ "components", "all" ] ->
         Just Components__All
+
+    [ "components", "compose" ] ->
+        Just Components__Compose
 
     [ "examples", "dashboard" ] ->
         Just Examples__Dashboard
@@ -210,6 +214,9 @@ routeToPath route =
         (case route of
              Components__All ->
                  [ [ "components", "all" ] ]
+         
+             Components__Compose ->
+                 [ [ "components", "compose" ] ]
          
              Examples__Dashboard ->
                  [ [ "examples", "dashboard" ] ]

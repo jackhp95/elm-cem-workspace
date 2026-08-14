@@ -37,6 +37,7 @@ import Pages.PageUrl
 import PagesMsg
 import Route
 import Route.Components.All
+import Route.Components.Compose
 import Route.Components.Name_
 import Route.Examples
 import Route.Examples.Dashboard
@@ -105,6 +106,7 @@ type alias Model =
 
 type PageModel
     = ModelComponents__All Route.Components.All.Model
+    | ModelComponents__Compose Route.Components.Compose.Model
     | ModelExamples__Dashboard Route.Examples.Dashboard.Model
     | ModelExamples__Feed Route.Examples.Feed.Model
     | ModelExamples__ListDetail Route.Examples.ListDetail.Model
@@ -154,6 +156,7 @@ type PageModel
 
 type Msg
     = MsgComponents__All Route.Components.All.Msg
+    | MsgComponents__Compose Route.Components.Compose.Msg
     | MsgExamples__Dashboard Route.Examples.Dashboard.Msg
     | MsgExamples__Feed Route.Examples.Feed.Msg
     | MsgExamples__ListDetail Route.Examples.ListDetail.Msg
@@ -210,6 +213,7 @@ type Msg
 
 type PageData
     = DataComponents__All Route.Components.All.Data
+    | DataComponents__Compose Route.Components.Compose.Data
     | DataExamples__Dashboard Route.Examples.Dashboard.Data
     | DataExamples__Feed Route.Examples.Feed.Data
     | DataExamples__ListDetail Route.Examples.ListDetail.Data
@@ -259,6 +263,7 @@ type PageData
 
 type ActionData
     = ActionDataComponents__All Route.Components.All.ActionData
+    | ActionDataComponents__Compose Route.Components.Compose.ActionData
     | ActionDataExamples__Dashboard Route.Examples.Dashboard.ActionData
     | ActionDataExamples__Feed Route.Examples.Feed.ActionData
     | ActionDataExamples__ListDetail Route.Examples.ListDetail.ActionData
@@ -416,6 +421,11 @@ dataForRoute requestPayload maybeRoute =
                     BackendTask.map
                         (Server.Response.map DataComponents__All)
                         (Route.Components.All.route.data requestPayload {})
+            
+                Route.Components__Compose ->
+                    BackendTask.map
+                        (Server.Response.map DataComponents__Compose)
+                        (Route.Components.Compose.route.data requestPayload {})
             
                 Route.Examples__Dashboard ->
                     BackendTask.map
@@ -670,6 +680,12 @@ action requestPayload maybeRoute =
                     BackendTask.map
                         (Server.Response.map ActionDataComponents__All)
                         (Route.Components.All.route.action requestPayload {})
+            
+                Route.Components__Compose ->
+                    BackendTask.map
+                        (Server.Response.map ActionDataComponents__Compose)
+                        (Route.Components.Compose.route.action requestPayload {}
+                        )
             
                 Route.Examples__Dashboard ->
                     BackendTask.map
@@ -962,6 +978,21 @@ templateSubscriptions route path model =
                             Sub.map
                                 MsgComponents__All
                                 (Route.Components.All.route.subscriptions
+                                     {}
+                                     path
+                                     templateModel
+                                     model.global
+                                )
+                    
+                        _ ->
+                            Sub.none
+            
+                Route.Components__Compose ->
+                    case model.page of
+                        ModelComponents__Compose templateModel ->
+                            Sub.map
+                                MsgComponents__Compose
+                                (Route.Components.Compose.route.subscriptions
                                      {}
                                      path
                                      templateModel
@@ -1580,6 +1611,12 @@ onActionData actionData =
                 (\mapUnpack -> MsgComponents__All (mapUnpack thisActionData))
                 Route.Components.All.route.onAction
     
+        ActionDataComponents__Compose thisActionData ->
+            Maybe.map
+                (\mapUnpack -> MsgComponents__Compose (mapUnpack thisActionData)
+                )
+                Route.Components.Compose.route.onAction
+    
         ActionDataExamples__Dashboard thisActionData ->
             Maybe.map
                 (\mapUnpack -> MsgExamples__Dashboard (mapUnpack thisActionData)
@@ -1825,6 +1862,9 @@ byteEncodePageData pageData =
         DataComponents__All thisPageData ->
             Route.Components.All.w3_encode_Data thisPageData
     
+        DataComponents__Compose thisPageData ->
+            Route.Components.Compose.w3_encode_Data thisPageData
+    
         DataExamples__Dashboard thisPageData ->
             Route.Examples.Dashboard.w3_encode_Data thisPageData
     
@@ -1958,6 +1998,11 @@ byteDecodePageData maybeRoute =
                     Bytes.Decode.map
                         DataComponents__All
                         Route.Components.All.w3_decode_Data
+            
+                Route.Components__Compose ->
+                    Bytes.Decode.map
+                        DataComponents__Compose
+                        Route.Components.Compose.w3_decode_Data
             
                 Route.Examples__Dashboard ->
                     Bytes.Decode.map
@@ -2243,6 +2288,39 @@ init currentGlobalModel userFlags sharedData pageData actionData maybePagePath =
                                      , submit =
                                          Pages.Fetcher.submit
                                              Route.Components.All.w3_decode_ActionData
+                                     , navigation = Nothing
+                                     , concurrentSubmissions = Dict.empty
+                                     , pageFormState = Dict.empty
+                                     }
+                                )
+                    
+                        ( Route.Components__Compose, DataComponents__Compose thisPageData ) ->
+                            Tuple.mapBoth
+                                ModelComponents__Compose
+                                (Effect.map MsgComponents__Compose)
+                                (Route.Components.Compose.route.init
+                                     sharedModel
+                                     { data = thisPageData
+                                     , sharedData = sharedData
+                                     , action =
+                                         Maybe.andThen
+                                             (\andThenUnpack ->
+                                                  case andThenUnpack of
+                                                      ActionDataComponents__Compose thisActionData ->
+                                                          Just thisActionData
+                                                  
+                                                      _ ->
+                                                          Nothing
+                                             )
+                                             actionData
+                                     , routeParams = {}
+                                     , path =
+                                         (Tuple.second justRouteAndPath).path
+                                     , url =
+                                         Maybe.andThen .pageUrl maybePagePath
+                                     , submit =
+                                         Pages.Fetcher.submit
+                                             Route.Components.Compose.w3_decode_ActionData
                                      , navigation = Nothing
                                      , concurrentSubmissions = Dict.empty
                                      , pageFormState = Dict.empty
@@ -3703,6 +3781,73 @@ update pageFormState concurrentSubmissions navigation sharedData pageData naviga
                                                       (\mapUnpack0 ->
                                                            case mapUnpack0 of
                                                                ActionDataComponents__All justActionData ->
+                                                                   Just
+                                                                       justActionData
+                                                           
+                                                               _ ->
+                                                                   Nothing
+                                                      )
+                                             )
+                                             concurrentSubmissions
+                                     , pageFormState = pageFormState
+                                     }
+                                     msg_
+                                     pageModel
+                                     model.global
+                                )
+                        
+                        ( newGlobalModel, newGlobalCmd ) =
+                            globalModelAndCmd
+                    in
+                    ( { model
+                        | page = updatedPageModel
+                        , global = newGlobalModel
+                      }
+                    , Effect.batch
+                        [ pageCmd, Effect.map MsgGlobal newGlobalCmd ]
+                    )
+            
+                _ ->
+                    ( model, Effect.none )
+    
+        MsgComponents__Compose msg_ ->
+            case
+                ( model.page
+                , pageData
+                , Maybe.map3
+                    toTriple
+                    (Maybe.andThen .metadata model.current)
+                    (Maybe.andThen .pageUrl model.current)
+                    (Maybe.map .path model.current)
+                )
+            of
+                ( ModelComponents__Compose pageModel, DataComponents__Compose thisPageData, Just ( Route.Components__Compose, pageUrl, justPage ) ) ->
+                    let
+                        ( updatedPageModel, pageCmd, globalModelAndCmd ) =
+                            fooFn
+                                ModelComponents__Compose
+                                MsgComponents__Compose
+                                model
+                                (Route.Components.Compose.route.update
+                                     { data = thisPageData
+                                     , sharedData = sharedData
+                                     , action = Nothing
+                                     , routeParams = {}
+                                     , path = justPage.path
+                                     , url = Just pageUrl
+                                     , submit =
+                                         \options ->
+                                             Pages.Fetcher.submit
+                                                 Route.Components.Compose.w3_decode_ActionData
+                                                 options
+                                     , navigation = navigation
+                                     , concurrentSubmissions =
+                                         Dict.map
+                                             (\mapUnpack ->
+                                                  Pages.ConcurrentSubmission.map
+                                                      (\mapUnpack0 ->
+                                                           case mapUnpack0 of
+                                                               ActionDataComponents__Compose justActionData ->
                                                                    Just
                                                                        justActionData
                                                            
@@ -6530,6 +6675,60 @@ view pageFormState concurrentSubmissions navigation page maybePageUrl globalData
             , head = []
             }
     
+        ( Just Route.Components__Compose, DataComponents__Compose data ) ->
+            let
+                actionDataOrNothing thisActionData =
+                    case thisActionData of
+                        ActionDataComponents__Compose justActionData ->
+                            Just justActionData
+                    
+                        _ ->
+                            Nothing
+            in
+            { view =
+                \model ->
+                    case model.page of
+                        ModelComponents__Compose subModel ->
+                            Shared.template.view
+                                globalData
+                                page
+                                model.global
+                                (\myMsg -> PagesMsg.fromMsg (MsgGlobal myMsg))
+                                (View.map
+                                     (PagesMsg.map MsgComponents__Compose)
+                                     (Route.Components.Compose.route.view
+                                          model.global
+                                          subModel
+                                          { data = data
+                                          , sharedData = globalData
+                                          , routeParams = {}
+                                          , action =
+                                              Maybe.andThen
+                                                  actionDataOrNothing
+                                                  actionData
+                                          , path = page.path
+                                          , url = maybePageUrl
+                                          , submit =
+                                              Pages.Fetcher.submit
+                                                  Route.Components.Compose.w3_decode_ActionData
+                                          , navigation = navigation
+                                          , concurrentSubmissions =
+                                              Dict.map
+                                                  (\mapUnpack ->
+                                                       Pages.ConcurrentSubmission.map
+                                                           actionDataOrNothing
+                                                  )
+                                                  concurrentSubmissions
+                                          , pageFormState = pageFormState
+                                          }
+                                     )
+                                )
+                    
+                        _ ->
+                            modelMismatchView
+            , head = []
+            }
+    
         ( Just Route.Examples__Dashboard, DataExamples__Dashboard data ) ->
             let
                 actionDataOrNothing thisActionData =
@@ -8786,6 +8985,9 @@ routePatterns =
                                  [ { pathPattern = "/components/all"
                                    , kind = Route.Components.All.route.kind
                                    }
+                                 , { pathPattern = "/components/compose"
+                                   , kind = Route.Components.Compose.route.kind
+                                   }
                                  , { pathPattern = "/examples/dashboard"
                                    , kind = Route.Examples.Dashboard.route.kind
                                    }
@@ -8987,6 +9189,9 @@ getStaticRoutes =
                  (List.map (\_ -> Route.Components__All))
                  Route.Components.All.route.staticRoutes
              , BackendTask.map
+                 (List.map (\_ -> Route.Components__Compose))
+                 Route.Components.Compose.route.staticRoutes
+             , BackendTask.map
                  (List.map (\_ -> Route.Examples__Dashboard))
                  Route.Examples.Dashboard.route.staticRoutes
              , BackendTask.map
@@ -9129,6 +9334,22 @@ handleRoute maybeRoute =
                                     "components"
                                 , Pages.Internal.RoutePattern.StaticSegment
                                     "all"
+                                ]
+                            , ending = Nothing
+                            }
+                        }
+                        (\param -> [])
+                        {}
+            
+                Route.Components__Compose ->
+                    Route.Components.Compose.route.handleRoute
+                        { moduleName = [ "Components", "Compose" ]
+                        , routePattern =
+                            { segments =
+                                [ Pages.Internal.RoutePattern.StaticSegment
+                                    "components"
+                                , Pages.Internal.RoutePattern.StaticSegment
+                                    "compose"
                                 ]
                             , ending = Nothing
                             }
@@ -9777,6 +9998,9 @@ encodeActionData actionData =
         ActionDataComponents__All thisActionData ->
             Route.Components.All.w3_encode_ActionData thisActionData
     
+        ActionDataComponents__Compose thisActionData ->
+            Route.Components.Compose.w3_encode_ActionData thisActionData
+    
         ActionDataExamples__Dashboard thisActionData ->
             Route.Examples.Dashboard.w3_encode_ActionData thisActionData
     
@@ -9945,246 +10169,252 @@ encodePageDataForClient pageData =
                 , Route.Components.All.w3_encode_Data thisPageData
                 ]
     
+        DataComponents__Compose thisPageData ->
+            Lamdera.Wire3.encodeSequenceWithoutLength
+                [ Bytes.Encode.unsignedInt8 2
+                , Route.Components.Compose.w3_encode_Data thisPageData
+                ]
+    
         DataExamples__Dashboard thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 5
+                [ Bytes.Encode.unsignedInt8 6
                 , Route.Examples.Dashboard.w3_encode_Data thisPageData
                 ]
     
         DataExamples__Feed thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 6
+                [ Bytes.Encode.unsignedInt8 7
                 , Route.Examples.Feed.w3_encode_Data thisPageData
                 ]
     
         DataExamples__ListDetail thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 7
+                [ Bytes.Encode.unsignedInt8 8
                 , Route.Examples.ListDetail.w3_encode_Data thisPageData
                 ]
     
         DataExamples__Mail thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 8
+                [ Bytes.Encode.unsignedInt8 9
                 , Route.Examples.Mail.w3_encode_Data thisPageData
                 ]
     
         DataExamples__Settings thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 9
+                [ Bytes.Encode.unsignedInt8 10
                 , Route.Examples.Settings.w3_encode_Data thisPageData
                 ]
     
         DataExamples__Shop thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 10
+                [ Bytes.Encode.unsignedInt8 11
                 , Route.Examples.Shop.w3_encode_Data thisPageData
                 ]
     
         DataExamples__SupportingPane thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 11
+                [ Bytes.Encode.unsignedInt8 12
                 , Route.Examples.SupportingPane.w3_encode_Data thisPageData
                 ]
     
         DataExamples__Travel thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 12
+                [ Bytes.Encode.unsignedInt8 13
                 , Route.Examples.Travel.w3_encode_Data thisPageData
                 ]
     
         DataGettingStarted__BrowserSupport thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 13
+                [ Bytes.Encode.unsignedInt8 14
                 , Route.GettingStarted.BrowserSupport.w3_encode_Data
                     thisPageData
                 ]
     
         DataGettingStarted__Installation thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 14
+                [ Bytes.Encode.unsignedInt8 15
                 , Route.GettingStarted.Installation.w3_encode_Data thisPageData
                 ]
     
         DataGettingStarted__Welcome thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 15
+                [ Bytes.Encode.unsignedInt8 16
                 , Route.GettingStarted.Welcome.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Accessibility thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 17
+                [ Bytes.Encode.unsignedInt8 18
                 , Route.Guide.Accessibility.w3_encode_Data thisPageData
                 ]
     
         DataGuide__AccessibleByConstruction thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 18
+                [ Bytes.Encode.unsignedInt8 19
                 , Route.Guide.AccessibleByConstruction.w3_encode_Data
                     thisPageData
                 ]
     
         DataGuide__CheatSheet thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 19
+                [ Bytes.Encode.unsignedInt8 20
                 , Route.Guide.CheatSheet.w3_encode_Data thisPageData
                 ]
     
         DataGuide__CompositionTextField thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 20
+                [ Bytes.Encode.unsignedInt8 21
                 , Route.Guide.CompositionTextField.w3_encode_Data thisPageData
                 ]
     
         DataGuide__FirstComponent thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 21
+                [ Bytes.Encode.unsignedInt8 22
                 , Route.Guide.FirstComponent.w3_encode_Data thisPageData
                 ]
     
         DataGuide__GeneratedAndInspectable thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 22
+                [ Bytes.Encode.unsignedInt8 23
                 , Route.Guide.GeneratedAndInspectable.w3_encode_Data
                     thisPageData
                 ]
     
         DataGuide__Glossary thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 23
+                [ Bytes.Encode.unsignedInt8 24
                 , Route.Guide.Glossary.w3_encode_Data thisPageData
                 ]
     
         DataGuide__HowWeProveIt thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 24
+                [ Bytes.Encode.unsignedInt8 25
                 , Route.Guide.HowWeProveIt.w3_encode_Data thisPageData
                 ]
     
         DataGuide__InvalidStates thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 25
+                [ Bytes.Encode.unsignedInt8 26
                 , Route.Guide.InvalidStates.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Motion thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 26
+                [ Bytes.Encode.unsignedInt8 27
                 , Route.Guide.Motion.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Reference thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 27
+                [ Bytes.Encode.unsignedInt8 28
                 , Route.Guide.Reference.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Roundtrip thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 28
+                [ Bytes.Encode.unsignedInt8 29
                 , Route.Guide.Roundtrip.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Seams thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 29
+                [ Bytes.Encode.unsignedInt8 30
                 , Route.Guide.Seams.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Strictness thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 30
+                [ Bytes.Encode.unsignedInt8 31
                 , Route.Guide.Strictness.w3_encode_Data thisPageData
                 ]
     
         DataGuide__TheLayers thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 31
+                [ Bytes.Encode.unsignedInt8 32
                 , Route.Guide.TheLayers.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Theming thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 32
+                [ Bytes.Encode.unsignedInt8 33
                 , Route.Guide.Theming.w3_encode_Data thisPageData
                 ]
     
         DataGuide__ToolingRefactors thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 33
+                [ Bytes.Encode.unsignedInt8 34
                 , Route.Guide.ToolingRefactors.w3_encode_Data thisPageData
                 ]
     
         DataGuide__Troubleshooting thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 34
+                [ Bytes.Encode.unsignedInt8 35
                 , Route.Guide.Troubleshooting.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Color thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 36
+                [ Bytes.Encode.unsignedInt8 37
                 , Route.Styles.Color.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Density thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 37
+                [ Bytes.Encode.unsignedInt8 38
                 , Route.Styles.Density.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Elevation thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 38
+                [ Bytes.Encode.unsignedInt8 39
                 , Route.Styles.Elevation.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Motion thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 39
+                [ Bytes.Encode.unsignedInt8 40
                 , Route.Styles.Motion.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Shape thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 40
+                [ Bytes.Encode.unsignedInt8 41
                 , Route.Styles.Shape.w3_encode_Data thisPageData
                 ]
     
         DataStyles__StateLayers thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 41
+                [ Bytes.Encode.unsignedInt8 42
                 , Route.Styles.StateLayers.w3_encode_Data thisPageData
                 ]
     
         DataStyles__Typography thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 42
+                [ Bytes.Encode.unsignedInt8 43
                 , Route.Styles.Typography.w3_encode_Data thisPageData
                 ]
     
         DataComponents__Name_ thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 2
+                [ Bytes.Encode.unsignedInt8 3
                 , Route.Components.Name_.w3_encode_Data thisPageData
                 ]
     
         DataExamples thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 4
+                [ Bytes.Encode.unsignedInt8 5
                 , Route.Examples.w3_encode_Data thisPageData
                 ]
     
         DataGuide thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 16
+                [ Bytes.Encode.unsignedInt8 17
                 , Route.Guide.w3_encode_Data thisPageData
                 ]
     
         DataIndex thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 35
+                [ Bytes.Encode.unsignedInt8 36
                 , Route.Index.w3_encode_Data thisPageData
                 ]
     
@@ -10193,7 +10423,7 @@ encodePageDataForClient pageData =
     
         DataErrorPage____ thisPageData ->
             Lamdera.Wire3.encodeSequenceWithoutLength
-                [ Bytes.Encode.unsignedInt8 3
+                [ Bytes.Encode.unsignedInt8 4
                 , ErrorPage.w3_encode_ErrorPage thisPageData
                 ]
 
@@ -10213,6 +10443,12 @@ routePatterns3 =
     [ { segments =
           [ Pages.Internal.RoutePattern.StaticSegment "components"
           , Pages.Internal.RoutePattern.StaticSegment "all"
+          ]
+      , ending = Nothing
+      }
+    , { segments =
+          [ Pages.Internal.RoutePattern.StaticSegment "components"
+          , Pages.Internal.RoutePattern.StaticSegment "compose"
           ]
       , ending = Nothing
       }

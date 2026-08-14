@@ -104,8 +104,8 @@ docs/-relative runs.
 ignoreGeneratedComposeAttrs : Rule -> Rule
 ignoreGeneratedComposeAttrs =
     Rule.ignoreErrorsForFiles
-        [ "app/Route/Components/Compose/Attrs.elm"
-        , "docs/app/Route/Components/Compose/Attrs.elm"
+        [ "app/Compose/Attrs.elm"
+        , "docs/app/Compose/Attrs.elm"
         ]
 
 
