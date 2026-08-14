@@ -159,6 +159,36 @@ test("a newly added text child defaults to placeholder copy", async ({ page }) =
   await expect(page.locator("m3e-list").first()).toContainText("lorem ipsum");
 });
 
+test("the collapse chevron hides and restores a node's body", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Root starts expanded: its "unnamed" slot button is visible.
+  await expect(page.getByRole("button", { name: "unnamed" }).first()).toBeVisible();
+
+  // Collapse the root card (`.first()` chevron) — its whole body, including the
+  // child cards, disappears; only the header remains.
+  await page.getByRole("button", { name: "Collapse" }).first().click();
+  await expect(page.getByRole("button", { name: "unnamed" })).toHaveCount(0);
+
+  // Expanding restores it.
+  await page.getByRole("button", { name: "Expand" }).first().click();
+  await expect(page.getByRole("button", { name: "unnamed" }).first()).toBeVisible();
+});
+
+test("prefill off adds empty content instead of placeholder", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Prefill starts on; turn it off.
+  await page.getByRole("switch", { name: "Prefill examples" }).click();
+
+  // Add a text child to the first item's supporting-text slot (affords text +
+  // heading, so a menu; pick "Text"). With prefill off, no "lorem ipsum".
+  await page.getByRole("button", { name: "supporting-text" }).first().click();
+  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+
+  await expect(page.locator("m3e-list").first()).not.toContainText("lorem ipsum");
+});
+
 test("the drawer links to Compose", async ({ page }) => {
   await page.goto("/components/button");
   // At a desktop width the tree is already pinned open (`Shared.init` seeds

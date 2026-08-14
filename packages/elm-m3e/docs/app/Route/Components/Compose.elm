@@ -41,6 +41,7 @@ import M3e.Unsafe
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatefulRoute)
+import Set exposing (Set)
 import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
@@ -52,11 +53,16 @@ import View exposing (View)
 
 
 type alias Model =
-    { compose : Cem.Compose.Model }
+    { compose : Cem.Compose.Model
+    , collapsed : Set String
+    , prefill : Bool
+    }
 
 
 type Msg
     = ComposeMsg Cem.Compose.Msg
+    | ToggleCollapse String
+    | TogglePrefill
 
 
 type alias RouteParams =
@@ -99,6 +105,8 @@ init _ _ =
                     }
                 )
                 starterEdits
+      , collapsed = Set.empty
+      , prefill = True
       }
     , Effect.none
     )
@@ -120,39 +128,101 @@ starterEdits =
 
 
 update : App Data ActionData RouteParams -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
-update _ _ (ComposeMsg composeMsg) model =
-    ( { model | compose = applyCompose composeMsg model.compose }, Effect.none )
+update _ _ msg model =
+    case msg of
+        ComposeMsg composeMsg ->
+            ( { model | compose = applyCompose model.prefill composeMsg model.compose }, Effect.none )
+
+        ToggleCollapse pid ->
+            ( { model
+                | collapsed =
+                    if Set.member pid model.collapsed then
+                        Set.remove pid model.collapsed
+
+                    else
+                        Set.insert pid model.collapsed
+              }
+            , Effect.none
+            )
+
+        TogglePrefill ->
+            ( { model | prefill = not model.prefill }, Effect.none )
 
 
-{-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety: a freshly added
-text child is seeded with placeholder copy ("lorem ipsum") instead of an empty
-string, so the preview shows something the moment it is added. The core stays
-content-agnostic (it adds an empty `ChildText`); the placeholder is a demo
-choice that belongs here, in the consumer. The guard only rewrites the child if
-it is in fact the just-added empty text node, so it never clobbers real content.
+{-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety governed by the
+"Prefill examples" toggle: when it is on, a freshly added text child is seeded
+with placeholder copy and a freshly added child COMPONENT gets an example text
+child in its first text-affording slot, so the preview shows something the
+moment it is added; when off, adds land empty. The core stays content-agnostic
+(it adds an empty `ChildText`); the placeholder is a demo choice that belongs
+here, in the consumer. Every seed is guarded so it never clobbers real content.
 -}
-applyCompose : Cem.Compose.Msg -> Cem.Compose.Model -> Cem.Compose.Model
-applyCompose composeMsg compose =
+applyCompose : Bool -> Cem.Compose.Msg -> Cem.Compose.Model -> Cem.Compose.Model
+applyCompose prefill composeMsg compose =
     let
         updated : Cem.Compose.Model
         updated =
             Cem.Compose.update composeMsg compose
     in
-    case composeMsg of
-        Cem.Compose.AddTextChild path slotName ->
-            let
-                newIndex : Int
-                newIndex =
-                    slotChildCount path slotName updated - 1
-            in
-            if childAt path slotName newIndex updated == Just (Cem.Compose.ChildText "") then
-                Cem.Compose.update (Cem.Compose.SetChildContent path slotName newIndex "lorem ipsum") updated
+    if not prefill then
+        updated
 
-            else
+    else
+        case composeMsg of
+            Cem.Compose.AddTextChild path slotName ->
+                seedText path slotName updated
+
+            Cem.Compose.AddChild path slotName _ ->
+                let
+                    newIndex : Int
+                    newIndex =
+                        slotChildCount path slotName updated - 1
+                in
+                seedExample (path ++ [ Cem.Compose.IntoSlot slotName newIndex ]) updated
+
+            _ ->
                 updated
 
-        _ ->
-            updated
+
+{-| Seed the just-added empty text child in `slotName` with "lorem ipsum",
+if that is in fact what is there (never clobbers real content).
+-}
+seedText : Cem.Compose.Path -> String -> Cem.Compose.Model -> Cem.Compose.Model
+seedText path slotName compose =
+    let
+        newIndex : Int
+        newIndex =
+            slotChildCount path slotName compose - 1
+    in
+    if childAt path slotName newIndex compose == Just (Cem.Compose.ChildText "") then
+        Cem.Compose.update (Cem.Compose.SetChildContent path slotName newIndex "lorem ipsum") compose
+
+    else
+        compose
+
+
+{-| Give the freshly added component at `childPath` a small example: a text
+child (seeded with placeholder copy) in its first text-affording slot. A
+component with no text slot is left as-is.
+-}
+seedExample : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.Model
+seedExample childPath compose =
+    case firstTextSlot childPath compose of
+        Just slotName ->
+            seedText childPath slotName (Cem.Compose.update (Cem.Compose.AddTextChild childPath slotName) compose)
+
+        Nothing ->
+            compose
+
+
+{-| The first slot of the node at `path` that affords a text child, if any.
+-}
+firstTextSlot : Cem.Compose.Path -> Cem.Compose.Model -> Maybe String
+firstTextSlot path compose =
+    Cem.Compose.slotChips path compose
+        |> List.filter (\chip -> List.member Cem.Compose.OptionText (Cem.Compose.slotMenuOptions path chip.name compose))
+        |> List.head
+        |> Maybe.map .name
 
 
 subscriptions : RouteParams -> UrlPath -> Shared.Model -> Model -> Sub Msg
@@ -168,21 +238,40 @@ head _ =
 view : App Data ActionData RouteParams -> Shared.Model -> Model -> View (PagesMsg Msg)
 view _ _ model =
     View.fromElement "Compose"
-        (M3e.mapMsg PagesMsg.fromMsg
-            (M3e.mapMsg ComposeMsg (Doc.pane [ screen model.compose ]))
-        )
+        (M3e.mapMsg PagesMsg.fromMsg (Doc.pane [ screen model ]))
 
 
-{-| A heading, the live preview, the recursive editor, and the generated-code
-snippet.
+{-| A heading, the panel bar, the live preview, the recursive editor, and the
+generated-code snippet. Only the panel bar and the editor emit real messages;
+the heading/preview/snippet are static (msg-polymorphic), so they sit in the
+same `Msg`-typed tree without wrapping.
 -}
-screen : Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-screen compose =
+screen : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+screen model =
     TypedHtml.div [ TA.class "space-y-4" ]
-        [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf compose.root)
-        , M3e.Unsafe.fromHtml (Render.renderNode compose.root)
-        , viewNode [] compose.root compose
-        , Doc.codeBlock Doc.Elm (Codegen.codeFor compose.root)
+        [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
+        , panelBar model
+        , M3e.Unsafe.fromHtml (Render.renderNode model.compose.root)
+        , viewNode [] model.compose.root model
+        , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
+        ]
+
+
+{-| The compose panel bar: a "Prefill examples" switch. When on, adding a text
+child or a component seeds example content (see `applyCompose`); when off, adds
+land empty so you build from a blank component.
+-}
+panelBar : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+panelBar model =
+    TypedHtml.div [ TA.class "flex items-center gap-2" ]
+        [ M3e.switch
+            [ M3e.Attributes.checked model.prefill
+            , Aria.label "Prefill examples"
+            , M3e.Events.onClick TogglePrefill
+            ]
+            []
+        , TypedHtml.span [ TA.class "text-label-lg text-on-surface-variant" ]
+            [ TypedHtml.text "Prefill examples" ]
         ]
 
 
@@ -197,18 +286,66 @@ groups (mixing "set an attribute" and "add a child" controls in one row
 reads as one affordance when they are two), that node's menu (if open), and
 a recursive card per child node.
 -}
-viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (M3e.Component.Card.Is s) admittedBy Cem.Compose.Msg
+viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
 viewNode path node model =
+    let
+        collapsed : Bool
+        collapsed =
+            Set.member (pathId path) model.collapsed
+    in
     M3e.card
         [ M3e.Attributes.variant Value.outlined ]
         [ TypedHtml.div [ TA.class "flex flex-col gap-3 p-3" ]
-            [ headerRow path node model
-            , attrGroup path model
-            , slotGroup path model
-            , freeTextMenuFor path model
-            , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                (childCards path node model)
+            (TypedHtml.div [ TA.class "flex items-center gap-2" ]
+                [ collapseChevron path collapsed
+                , M3e.mapMsg ComposeMsg (headerRow path node model.compose)
+                ]
+                :: (if collapsed then
+                        []
+
+                    else
+                        [ M3e.mapMsg ComposeMsg
+                            (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                                [ attrGroup path model.compose
+                                , slotGroup path model.compose
+                                , freeTextMenuFor path model.compose
+                                ]
+                            )
+                        , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                            (childCards path node model)
+                        ]
+                   )
+            )
+        ]
+
+
+{-| The leading collapse toggle for a node's card — a chevron icon button that
+adds/removes this node's `pathId` from the collapsed set, hiding or showing its
+body (attributes, slots, and child rows). The tag name and its controls stay
+visible when collapsed.
+-}
+collapseChevron : Cem.Compose.Path -> Bool -> Element (M3e.Component.IconButton.Is s) admittedBy Msg
+collapseChevron path collapsed =
+    M3e.iconButton
+        [ Aria.label
+            (if collapsed then
+                "Expand"
+
+             else
+                "Collapse"
+            )
+        , M3e.Events.onClick (ToggleCollapse (pathId path))
+        ]
+        [ M3e.icon
+            [ TA.name
+                (if collapsed then
+                    "chevron_right"
+
+                 else
+                    "expand_more"
+                )
             ]
+            []
         ]
 
 
@@ -222,13 +359,13 @@ headerRow : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element
 headerRow path node model =
     case nodePosition path of
         Nothing ->
-            TypedHtml.div [ TA.class "flex items-center gap-2" ]
+            TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
                 [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
                 , editControl path model
                 ]
 
         Just ( parentPath, slotName, index ) ->
-            TypedHtml.div [ TA.class "flex items-center gap-2" ]
+            TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
                 [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
                 , editControl path model
                 , reorderControls parentPath slotName index model
@@ -794,7 +931,7 @@ menuItemView label msg =
 reorder-prefixed labeled `M3e.formField` for `ChildText`/`ChildIcon` whose
 built-in `suffix` slot carries the delete control.
 -}
-childCards : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg)
+childCards : Cem.Compose.Path -> Cem.Compose.Node -> Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Msg)
 childCards path node model =
     Cem.Compose.slotsOf node
         |> List.concatMap
@@ -805,7 +942,11 @@ childCards path node model =
             )
 
 
-childRow : Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+{-| A `ChildNode` recurses into `viewNode` (route `Msg`); a `ChildText`/
+`ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
+`M3e.mapMsg ComposeMsg` at this boundary.
+-}
+childRow : Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
 childRow path slotName index child model =
     case child of
         Cem.Compose.ChildNode inner ->
@@ -813,10 +954,10 @@ childRow path slotName index child model =
                 [ viewNode (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
 
         Cem.Compose.ChildText text ->
-            childFieldRow "Text" text path slotName index model
+            M3e.mapMsg ComposeMsg (childFieldRow "Text" text path slotName index model.compose)
 
         Cem.Compose.ChildIcon glyph ->
-            childFieldRow "Icon" glyph path slotName index model
+            M3e.mapMsg ComposeMsg (childFieldRow "Icon" glyph path slotName index model.compose)
 
 
 {-| A `ChildText`/`ChildIcon` row: the labeled `M3e.formField` (whose own
