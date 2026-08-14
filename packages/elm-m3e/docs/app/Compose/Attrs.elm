@@ -654,6 +654,9 @@ setterFor name =
         "anchorOffset" ->
             Just "M3e.Attributes.anchorOffset"
 
+        "animation" ->
+            Just "M3e.Attributes.animation"
+
         "ariaInvalid" ->
             Just "M3e.Attributes.ariaInvalid"
 
@@ -699,6 +702,12 @@ setterFor name =
         "contained" ->
             Just "M3e.Attributes.contained"
 
+        "contrast" ->
+            Just "M3e.Attributes.contrast"
+
+        "current" ->
+            Just "M3e.Attributes.current"
+
         "date" ->
             Just "M3e.Attributes.date"
 
@@ -735,6 +744,9 @@ setterFor name =
         "disableHover" ->
             Just "M3e.Attributes.disableHover"
 
+        "disablePagination" ->
+            Just "M3e.Attributes.disablePagination"
+
         "disableRestoreFocus" ->
             Just "M3e.Attributes.disableRestoreFocus"
 
@@ -752,6 +764,9 @@ setterFor name =
 
         "dismissible" ->
             Just "M3e.Attributes.dismissible"
+
+        "dividers" ->
+            Just "M3e.Attributes.dividers"
 
         "download" ->
             Just "M3e.Attributes.download"
@@ -777,11 +792,17 @@ setterFor name =
         "endDivider" ->
             Just "M3e.Attributes.endDivider"
 
+        "endMode" ->
+            Just "M3e.Attributes.endMode"
+
         "extended" ->
             Just "M3e.Attributes.extended"
 
         "filled" ->
             Just "M3e.Attributes.filled"
+
+        "filter" ->
+            Just "M3e.Attributes.filter"
 
         "firstPageLabel" ->
             Just "M3e.Attributes.firstPageLabel"
@@ -789,14 +810,26 @@ setterFor name =
         "fitAnchorWidth" ->
             Just "M3e.Attributes.fitAnchorWidth"
 
+        "floatLabel" ->
+            Just "M3e.Attributes.floatLabel"
+
         "for" ->
             Just "M3e.Attributes.for"
+
+        "format" ->
+            Just "M3e.Attributes.format"
+
+        "grade" ->
+            Just "M3e.Attributes.grade"
 
         "handle" ->
             Just "M3e.Attributes.handle"
 
         "handleLabel" ->
             Just "M3e.Attributes.handleLabel"
+
+        "headerPosition" ->
+            Just "M3e.Attributes.headerPosition"
 
         "hideDelay" ->
             Just "M3e.Attributes.hideDelay"
@@ -828,11 +861,17 @@ setterFor name =
         "hideSelectionIndicator" ->
             Just "M3e.Attributes.hideSelectionIndicator"
 
+        "hideSubscript" ->
+            Just "M3e.Attributes.hideSubscript"
+
         "hideToggle" ->
             Just "M3e.Attributes.hideToggle"
 
         "hideable" ->
             Just "M3e.Attributes.hideable"
+
+        "highlightMode" ->
+            Just "M3e.Attributes.highlightMode"
 
         "hour" ->
             Just "M3e.Attributes.hour"
@@ -842,6 +881,9 @@ setterFor name =
 
         "href" ->
             Just "M3e.Attributes.href"
+
+        "icons" ->
+            Just "M3e.Attributes.icons"
 
         "indeterminate" ->
             Just "M3e.Attributes.indeterminate"
@@ -875,6 +917,9 @@ setterFor name =
 
         "label" ->
             Just "M3e.Attributes.label"
+
+        "labelPosition" ->
+            Just "M3e.Attributes.labelPosition"
 
         "labelled" ->
             Just "M3e.Attributes.labelled"
@@ -939,14 +984,23 @@ setterFor name =
         "modal" ->
             Just "M3e.Attributes.modal"
 
+        "mode" ->
+            Just "M3e.Attributes.mode"
+
         "modeToggleLabel" ->
             Just "M3e.Attributes.modeToggleLabel"
 
         "monthLabel" ->
             Just "M3e.Attributes.monthLabel"
 
+        "motion" ->
+            Just "M3e.Attributes.motion"
+
         "multi" ->
             Just "M3e.Attributes.multi"
+
+        "name" ->
+            Just "M3e.Attributes.name"
 
         "nextMonthLabel" ->
             Just "M3e.Attributes.nextMonthLabel"
@@ -969,6 +1023,66 @@ setterFor name =
         "noFocusTrap" ->
             Just "M3e.Attributes.noFocusTrap"
 
+        "onActiveChange" ->
+            Just "M3e.Attributes.onActiveChange"
+
+        "onBeforeinput" ->
+            Just "M3e.Attributes.onBeforeinput"
+
+        "onBeforetoggle" ->
+            Just "M3e.Attributes.onBeforetoggle"
+
+        "onCancel" ->
+            Just "M3e.Attributes.onCancel"
+
+        "onChange" ->
+            Just "M3e.Attributes.onChange"
+
+        "onClear" ->
+            Just "M3e.Attributes.onClear"
+
+        "onClick" ->
+            Just "M3e.Attributes.onClick"
+
+        "onClosed" ->
+            Just "M3e.Attributes.onClosed"
+
+        "onClosing" ->
+            Just "M3e.Attributes.onClosing"
+
+        "onHighlight" ->
+            Just "M3e.Attributes.onHighlight"
+
+        "onInput" ->
+            Just "M3e.Attributes.onInput"
+
+        "onInvalid" ->
+            Just "M3e.Attributes.onInvalid"
+
+        "onOpened" ->
+            Just "M3e.Attributes.onOpened"
+
+        "onOpening" ->
+            Just "M3e.Attributes.onOpening"
+
+        "onPage" ->
+            Just "M3e.Attributes.onPage"
+
+        "onQuery" ->
+            Just "M3e.Attributes.onQuery"
+
+        "onRemove" ->
+            Just "M3e.Attributes.onRemove"
+
+        "onToggle" ->
+            Just "M3e.Attributes.onToggle"
+
+        "onValueChange" ->
+            Just "M3e.Attributes.onValueChange"
+
+        "onViewChange" ->
+            Just "M3e.Attributes.onViewChange"
+
         "open" ->
             Just "M3e.Attributes.open"
 
@@ -977,6 +1091,9 @@ setterFor name =
 
         "optional" ->
             Just "M3e.Attributes.optional"
+
+        "orientation" ->
+            Just "M3e.Attributes.orientation"
 
         "overshootLimit" ->
             Just "M3e.Attributes.overshootLimit"
@@ -987,17 +1104,32 @@ setterFor name =
         "pageSize" ->
             Just "M3e.Attributes.pageSize"
 
+        "pageSizeVariant" ->
+            Just "M3e.Attributes.pageSizeVariant"
+
         "pageSizes" ->
             Just "M3e.Attributes.pageSizes"
 
         "panelClass" ->
             Just "M3e.Attributes.panelClass"
 
+        "period" ->
+            Just "M3e.Attributes.period"
+
         "periodLabel" ->
             Just "M3e.Attributes.periodLabel"
 
         "periodToggleLabel" ->
             Just "M3e.Attributes.periodToggleLabel"
+
+        "position" ->
+            Just "M3e.Attributes.position"
+
+        "positionX" ->
+            Just "M3e.Attributes.positionX"
+
+        "positionY" ->
+            Just "M3e.Attributes.positionY"
 
         "previousMonthLabel" ->
             Just "M3e.Attributes.previousMonthLabel"
@@ -1044,6 +1176,12 @@ setterFor name =
         "returnValue" ->
             Just "M3e.Attributes.returnValue"
 
+        "scheme" ->
+            Just "M3e.Attributes.scheme"
+
+        "scrollStrategy" ->
+            Just "M3e.Attributes.scrollStrategy"
+
         "second" ->
             Just "M3e.Attributes.second"
 
@@ -1059,6 +1197,9 @@ setterFor name =
         "selectedIndex" ->
             Just "M3e.Attributes.selectedIndex"
 
+        "shape" ->
+            Just "M3e.Attributes.shape"
+
         "showDelay" ->
             Just "M3e.Attributes.showDelay"
 
@@ -1068,6 +1209,9 @@ setterFor name =
         "showSeconds" ->
             Just "M3e.Attributes.showSeconds"
 
+        "size" ->
+            Just "M3e.Attributes.size"
+
         "start" ->
             Just "M3e.Attributes.start"
 
@@ -1076,6 +1220,15 @@ setterFor name =
 
         "startDivider" ->
             Just "M3e.Attributes.startDivider"
+
+        "startMode" ->
+            Just "M3e.Attributes.startMode"
+
+        "startView" ->
+            Just "M3e.Attributes.startView"
+
+        "state" ->
+            Just "M3e.Attributes.state"
 
         "step" ->
             Just "M3e.Attributes.step"
@@ -1101,6 +1254,9 @@ setterFor name =
         "threshold" ->
             Just "M3e.Attributes.threshold"
 
+        "timeFormat" ->
+            Just "M3e.Attributes.timeFormat"
+
         "tocIgnore" ->
             Just "M3e.Attributes.tocIgnore"
 
@@ -1109,6 +1265,18 @@ setterFor name =
 
         "toggle" ->
             Just "M3e.Attributes.toggle"
+
+        "toggleDirection" ->
+            Just "M3e.Attributes.toggleDirection"
+
+        "togglePosition" ->
+            Just "M3e.Attributes.togglePosition"
+
+        "touchGestures" ->
+            Just "M3e.Attributes.touchGestures"
+
+        "type_" ->
+            Just "M3e.Attributes.type_"
 
         "unbounded" ->
             Just "M3e.Attributes.unbounded"
@@ -1119,11 +1287,20 @@ setterFor name =
         "value" ->
             Just "M3e.Attributes.value"
 
+        "variant" ->
+            Just "M3e.Attributes.variant"
+
         "vertical" ->
             Just "M3e.Attributes.vertical"
 
+        "viewAttr" ->
+            Just "M3e.Attributes.viewAttr"
+
         "weight" ->
             Just "M3e.Attributes.weight"
+
+        "width" ->
+            Just "M3e.Attributes.width"
 
         "wrap" ->
             Just "M3e.Attributes.wrap"

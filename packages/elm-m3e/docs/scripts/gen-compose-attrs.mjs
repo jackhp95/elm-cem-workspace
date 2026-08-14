@@ -235,9 +235,11 @@ function render({ kindsRows, witnessBarrels, enumRows, nameToBarrel }) {
     .map((expr) => `    , ${expr}`)
     .join("\n");
 
-  const nameToBarrelEntries = [...nameToBarrel.entries()]
-    .filter(([, barrel]) => kindsRows.some((r) => r[1] === barrel))
-    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  // Every reachable name gets a `setterFor` branch, not just the classified
+  // (non-enum) subset in `kindsRows` — `codeLineFor` must also emit a line
+  // for an `AttrEnum` value, whose setter is enum-typed and therefore never
+  // appears in `kinds`.
+  const nameToBarrelEntries = [...nameToBarrel.entries()].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
 
   const codeLineBranches = nameToBarrelEntries
     .map(([componentName, barrel]) => `        ${elmString(componentName)} ->\n            Just "M3e.Attributes.${barrel}"`)

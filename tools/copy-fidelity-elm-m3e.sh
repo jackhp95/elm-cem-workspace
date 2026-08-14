@@ -101,6 +101,7 @@ docs/app/Compose/Render.elm
 docs/app/Route/Components/Compose.elm
 docs/app/Compose/Codegen.elm
 docs/.elm-pages/Fetcher/Components/Compose.elm
+docs/tests-browser/compose.spec.ts
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -129,6 +130,9 @@ EOF
 # docs/app/Compose/Codegen.elm — Compose B13: the hand-written recursive
 #   generated-code snippet fold; new to this monorepo's Compose POC, absent
 #   from the upstream elm-m3e checkout.
+# docs/tests-browser/compose.spec.ts — Compose B14: Playwright browser
+#   coverage for the /components/compose route; new to this monorepo's
+#   Compose POC, absent from the upstream elm-m3e checkout.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 

@@ -27,8 +27,8 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Card
-import M3e.Component.FilterChip
 import M3e.Component.IconButton
+import M3e.Component.Menu
 import M3e.Component.MenuItem
 import M3e.Events
 import M3e.Review.Facts
@@ -117,8 +117,8 @@ view _ _ model =
         )
 
 
-{-| A heading, the live preview, and the recursive editor. The generated-code
-snippet arrives in Task 13.
+{-| A heading, the live preview, the recursive editor, and the generated-code
+snippet.
 -}
 screen : Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 screen compose =
@@ -146,11 +146,11 @@ viewNode path node model =
             (Doc.sectionLabel (Cem.Compose.componentOf node))
         , M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                [ M3e.chipSet []
-                    (List.map (attrChipView path) (Cem.Compose.attrChips path model)
+                [ TypedHtml.div [ TA.class "flex flex-wrap gap-2" ]
+                    (List.map (attrChipView path model) (Cem.Compose.attrChips path model)
                         ++ List.map (slotChipView path model) (Cem.Compose.slotChips path model)
                     )
-                , menuFor path model
+                , freeTextMenuFor path model
                 , TypedHtml.div [ TA.class "pl-4 flex flex-col gap-3" ]
                     (childCards path node model)
                 ]
@@ -158,13 +158,112 @@ viewNode path node model =
         ]
 
 
-attrChipView : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.FilterChip.Is s) admittedBy Cem.Compose.Msg
-attrChipView path info =
-    M3e.filterChip
-        [ M3e.Attributes.selected info.isSet
-        , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
+{-| `m3e-chip-set`'s `Content` admits only bare `chip`/`filterChip` elements,
+not a `menuTrigger`-wrapped one, so chips that open a real menu (every slot
+chip, and enum/bool attr chips) are laid out in a plain flex-wrap `div`
+instead — `menuTrigger` needs to wrap (or be wrapped by) its trigger, which a
+closed-content chip set does not admit.
+
+A discrete-choice attribute (`EnumChip`/`BoolAttr`) is wrapped in
+`M3e.menuTrigger`, referencing an always-present, id-addressed `M3e.menu` by
+`for` — the widget owns showing/hiding its own popover; `Cem.Compose.openMenu`
+is not what drives visibility here, only which attribute a click targets.
+A free-text attribute (`String`/`Float`/`Int`) keeps the plain
+`OpenMenu`-driven chip, whose inline text field is Elm-rendered content in
+normal flow (`freeTextMenuFor`), not a popover — so it needs no menu-trigger
+pairing at all.
+
+-}
+attrChipView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+attrChipView path model info =
+    case info.kind of
+        Cem.Compose.EnumChip _ ->
+            discreteAttrChip path model info
+
+        Cem.Compose.PlainChip Cem.Compose.BoolAttr ->
+            discreteAttrChip path model info
+
+        Cem.Compose.PlainChip _ ->
+            TypedHtml.div []
+                [ M3e.filterChip
+                    [ M3e.Attributes.selected info.isSet
+                    , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
+                    ]
+                    [ M3e.text (attrChipLabel info) ]
+                ]
+
+
+{-| `M3e.filterChip` cannot host `menuTrigger` at all (its `Content` admits
+only `heading`/`sharedText`), and `M3e.button` is the ONLY host verified to
+scope a trigger's click to itself — nesting `menuTrigger` inside a
+`filterChip` sibling of other triggers was tried and found to open every
+sibling's menu at once (the trigger's click-detection walks up past a
+`filterChip` host to a shared ancestor). So the discrete-choice control is a
+toggle `button`, not a `filterChip`; `menu` itself is a SIBLING of the
+button, not nested inside it (`Button.Content` admits `menuTrigger`, not
+`menu`) — exactly the shape in `M3eMenuTriggerElement`'s own doc example.
+-}
+discreteAttrChip : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+discreteAttrChip path model info =
+    TypedHtml.div []
+        [ M3e.button
+            [ M3e.Attributes.selected info.isSet
+            , M3e.Attributes.toggle True
+            , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
+            ]
+            [ M3e.menuTrigger [ M3e.Attributes.for (attrMenuId path info.name) ]
+                [ M3e.text (attrChipLabel info) ]
+            ]
+        , discreteAttrMenu path model info
         ]
-        [ M3e.text (attrChipLabel info) ]
+
+
+{-| The always-present menu a discrete attr chip's `menuTrigger` points at by
+id — built directly from `attrMenuOptions`, not gated on `model.openMenu`.
+-}
+discreteAttrMenu : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg
+discreteAttrMenu path model info =
+    M3e.menu [ M3e.Attributes.id (attrMenuId path info.name) ]
+        (case Cem.Compose.attrMenuOptions path info.name model of
+            Just (Cem.Compose.EnumTokens tokens _) ->
+                tokens
+                    |> List.map
+                        (\token ->
+                            menuItemView token (Cem.Compose.SetAttr path info.name (Cem.Compose.AttrEnum token))
+                        )
+
+            Just (Cem.Compose.BoolToggle _) ->
+                [ menuItemView "On" (Cem.Compose.SetAttr path info.name (Cem.Compose.AttrBool True))
+                , menuItemView "Off" (Cem.Compose.SetAttr path info.name (Cem.Compose.AttrBool False))
+                ]
+
+            _ ->
+                []
+        )
+
+
+attrMenuId : Cem.Compose.Path -> String -> String
+attrMenuId path name =
+    "compose-attr-menu-" ++ pathId path ++ "-" ++ name
+
+
+slotMenuId : Cem.Compose.Path -> String -> String
+slotMenuId path slotName =
+    "compose-slot-menu-" ++ pathId path ++ "-" ++ slotName
+
+
+pathId : Cem.Compose.Path -> String
+pathId path =
+    path
+        |> List.map (\(Cem.Compose.IntoSlot slot index) -> slot ++ String.fromInt index)
+        |> String.join "_"
+        |> (\s ->
+                if String.isEmpty s then
+                    "root"
+
+                else
+                    s
+           )
 
 
 attrChipLabel : Cem.Compose.AttrChipInfo -> String
@@ -204,22 +303,35 @@ slotChipLabel info =
 
 {-| When a slot affords exactly one option, the chip fires that message
 directly instead of opening a one-item menu — a consumer convenience, not a
-core rule (spec §7.2 step 2).
+core rule (spec §7.2 step 2). Otherwise it's wrapped in `menuTrigger`,
+pointing at an always-present menu with one item per `SlotOption` — this must
+not collapse to one representative choice (spec §8.7): a slot that affords
+text, an icon, AND components offers all of them at once.
 -}
-slotChipView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.FilterChip.Is s) admittedBy Cem.Compose.Msg
+slotChipView : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 slotChipView path model info =
-    M3e.filterChip
-        [ M3e.Attributes.selected (info.filled > 0)
-        , M3e.Events.onClick
-            (case Cem.Compose.slotMenuOptions path info.name model of
-                [ only ] ->
-                    msgForOption path info.name only
+    case Cem.Compose.slotMenuOptions path info.name model of
+        [ only ] ->
+            TypedHtml.div []
+                [ M3e.filterChip
+                    [ M3e.Attributes.selected (info.filled > 0)
+                    , M3e.Events.onClick (msgForOption path info.name only)
+                    ]
+                    [ M3e.text (slotChipLabel info) ]
+                ]
 
-                _ ->
-                    Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name)
-            )
-        ]
-        [ M3e.text (slotChipLabel info) ]
+        _ ->
+            TypedHtml.div []
+                [ M3e.button
+                    [ M3e.Attributes.selected (info.filled > 0)
+                    , M3e.Attributes.toggle True
+                    , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name))
+                    ]
+                    [ M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
+                        [ M3e.text (slotChipLabel info) ]
+                    ]
+                , slotMenuElement path model info.name
+                ]
 
 
 msgForOption : Cem.Compose.Path -> String -> Cem.Compose.SlotOption -> Cem.Compose.Msg
@@ -235,75 +347,28 @@ msgForOption path slotName option =
             Cem.Compose.AddChild path slotName name
 
 
-{-| The open menu for this path, if `model.openMenu` matches it. `Nothing`
-and "matches a different path" both render nothing.
+{-| The free-text attribute menu for this path, if `model.openMenu` matches
+it — the only case still gated on `openMenu`, since a `TextInput`/
+`NumberInput` field is plain Elm-rendered content in normal flow, not a
+popover, so it needs no `menuTrigger` pairing.
 -}
-menuFor : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-menuFor path model =
+freeTextMenuFor : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+freeTextMenuFor path model =
     case model.openMenu of
-        Just ( openPath, kind ) ->
+        Just ( openPath, Cem.Compose.AttrMenu name ) ->
             if openPath == path then
-                case kind of
-                    Cem.Compose.AttrMenu name ->
-                        attrMenuView path name model
-
-                    Cem.Compose.SlotMenu slotName ->
-                        slotMenuView path slotName model
+                freeTextAttrView path name model
 
             else
                 TypedHtml.div [] []
 
-        Nothing ->
+        _ ->
             TypedHtml.div [] []
 
 
-{-| One item per `SlotOption` — this must not collapse to one representative
-choice (spec §8.7): a slot that affords text, an icon, AND components offers
-all of them at once.
--}
-slotMenuView : Cem.Compose.Path -> String -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-slotMenuView path slotName model =
-    TypedHtml.div [ TA.class "pl-4" ]
-        [ M3e.menu []
-            (Cem.Compose.slotMenuOptions path slotName model
-                |> List.map
-                    (\option ->
-                        case option of
-                            Cem.Compose.OptionText ->
-                                menuItemView "Text" (Cem.Compose.AddTextChild path slotName)
-
-                            Cem.Compose.OptionIcon ->
-                                menuItemView "Icon" (Cem.Compose.AddIconChild path slotName)
-
-                            Cem.Compose.OptionComponent name ->
-                                menuItemView name (Cem.Compose.AddChild path slotName name)
-                    )
-            )
-        ]
-
-
-attrMenuView : Cem.Compose.Path -> String -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-attrMenuView path name model =
+freeTextAttrView : Cem.Compose.Path -> String -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+freeTextAttrView path name model =
     case Cem.Compose.attrMenuOptions path name model of
-        Just (Cem.Compose.EnumTokens tokens _) ->
-            TypedHtml.div [ TA.class "pl-4" ]
-                [ M3e.menu []
-                    (tokens
-                        |> List.map
-                            (\token ->
-                                menuItemView token (Cem.Compose.SetAttr path name (Cem.Compose.AttrEnum token))
-                            )
-                    )
-                ]
-
-        Just (Cem.Compose.BoolToggle _) ->
-            TypedHtml.div [ TA.class "pl-4" ]
-                [ M3e.menu []
-                    [ menuItemView "On" (Cem.Compose.SetAttr path name (Cem.Compose.AttrBool True))
-                    , menuItemView "Off" (Cem.Compose.SetAttr path name (Cem.Compose.AttrBool False))
-                    ]
-                ]
-
         Just (Cem.Compose.TextInput current) ->
             textInputRow current (\text -> Cem.Compose.SetAttr path name (Cem.Compose.AttrString text))
 
@@ -313,8 +378,31 @@ attrMenuView path name model =
         Just (Cem.Compose.NumberInput Cem.Compose.IntNumber current) ->
             textInputRow current (\text -> Cem.Compose.SetAttr path name (Cem.Compose.AttrInt text))
 
-        Nothing ->
+        _ ->
             TypedHtml.div [] []
+
+
+{-| The always-present menu a slot chip's `menuTrigger` points at by id — one
+item per `SlotOption`, built directly from `slotMenuOptions`, not gated on
+`model.openMenu`.
+-}
+slotMenuElement : Cem.Compose.Path -> Cem.Compose.Model -> String -> Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg
+slotMenuElement path model slotName =
+    M3e.menu [ M3e.Attributes.id (slotMenuId path slotName) ]
+        (Cem.Compose.slotMenuOptions path slotName model
+            |> List.map
+                (\option ->
+                    case option of
+                        Cem.Compose.OptionText ->
+                            menuItemView "Text" (Cem.Compose.AddTextChild path slotName)
+
+                        Cem.Compose.OptionIcon ->
+                            menuItemView "Icon" (Cem.Compose.AddIconChild path slotName)
+
+                        Cem.Compose.OptionComponent name ->
+                            menuItemView name (Cem.Compose.AddChild path slotName name)
+                )
+        )
 
 
 textInputRow : String -> (String -> Cem.Compose.Msg) -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
