@@ -1809,3 +1809,14 @@ strict); reordering → **up/down buttons**, not drag-drop. Landed in four commi
   not fixed):** red `0/1` count badges on EMPTY slots read as alarming (`m3e-badge` default is the error color) —
   a color/variant tweak awaiting the human's call; and the item-6 "no separate edit pencil" judgment (D-054)
   still stands for confirmation. Next free IDs: **D-056**, **R-023**.
+
+- **D-056 (human: neutral badge, numerator only, hidden at zero). UX POLISH — resolves D-055's open badge item.**
+  Commit `574dbc7` (`Compose.elm`, manager). The slot-count badge now: (1) shows just `info.filled` (no `/max`
+  denominator); (2) renders NOTHING when `filled == 0` — `slotCountTrailing` returns `[]`, spliced into the button
+  content list via `trailingIcon`'s polymorphic result type; (3) is NEUTRAL, not the `m3e-badge` default error
+  color — since badge has no color/variant attribute, its `--m3e-badge-container-color`/`--m3e-badge-color` CSS
+  custom properties are overridden to `surface-container-highest`/`on-surface-variant`. `slotCountText`
+  (the old filled/max helper) deleted. Verified visually: empty slot buttons are clean, filled ones carry a quiet
+  grey count. Gates: build:site, check:review, check:compose-attrs, Playwright 7/7, copy-fidelity green. **STILL
+  OPEN:** only the item-6 "no separate edit pencil" judgment (D-054) awaits human confirmation. Next free IDs:
+  **D-057**, **R-023**.
