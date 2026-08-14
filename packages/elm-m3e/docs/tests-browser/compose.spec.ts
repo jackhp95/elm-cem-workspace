@@ -128,6 +128,42 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
   ]);
 });
 
+test("up/down controls reorder siblings within a slot", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // list.unnamed is multi: add two distinct children so their order is
+  // observable. First a listItem, then a listOption — DOM order follows
+  // insertion order, so the preview reads list-item then list-option.
+  // Scope to the ROOT list's "unnamed" button (`.first()`): once a child is
+  // added, the child node has its own "unnamed" slot button too.
+  await page.getByRole("radio", { name: "unnamed" }).first().click();
+  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.getByRole("radio", { name: "unnamed" }).first().click();
+  await page.getByRole("menuitem", { name: "listOption", exact: true }).click();
+
+  // Scope to the real list children in the preview (m3e-list also renders an
+  // internal `<slot>` element, and only the first m3e-list is the preview).
+  const previewChildren = page
+    .locator("m3e-list")
+    .first()
+    .locator("> :is(m3e-list-item, m3e-list-option)");
+  await expect(previewChildren).toHaveCount(2);
+  expect(await previewChildren.nth(0).evaluate((el) => el.tagName.toLowerCase())).toBe(
+    "m3e-list-item",
+  );
+
+  // The first child (index 0) has "Move up" disabled and "Move down" enabled;
+  // clicking its "Move down" swaps it past the listOption.
+  await page.getByRole("button", { name: "Move down" }).first().click();
+
+  expect(await previewChildren.nth(0).evaluate((el) => el.tagName.toLowerCase())).toBe(
+    "m3e-list-option",
+  );
+  expect(await previewChildren.nth(1).evaluate((el) => el.tagName.toLowerCase())).toBe(
+    "m3e-list-item",
+  );
+});
+
 test("the drawer links to Compose", async ({ page }) => {
   await page.goto("/components/button");
   // At a desktop width the tree is already pinned open (`Shared.init` seeds
