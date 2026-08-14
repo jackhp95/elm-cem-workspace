@@ -1357,3 +1357,23 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   per-package standalone-compile + size gates; prove each under cap, DAG clean. **DO NOT PUBLISH.**
   Supersedes D-031c (flat canonical), D-035 (byte A/B cut), and the first draft of the
   2026-08-14 spec. Next free IDs: **D-038**, **R-024**.
+
+- **D-038 (Move 2 exec, part 1 — elm-cem REBASED onto latest main, verified functional).** Confirmed
+  the human's framing: this is a REBASE of the workspace's Phase-0 elm-cem changes onto the newer
+  remote main, not an adopt (the two forked from e0e4f1c — workspace added the facts-bundle emitter,
+  main added concern-separated emit + forge-relocation + typed icons + Coerce-removal; neither had
+  the other's work). Done with git's 3-way machinery in a scratch clone
+  (`/tmp/latest/elm-cem-full`, branch `ws-ours`): base e0e4f1c, ours = workspace elm-cem,
+  theirs = ad5d523. **`Emit.elm` (the two heavy evolutions, 5730→6081 ours / →6744 theirs) auto-merged
+  cleanly** to 7095 lines; only two trivial conflicts (`.neutrality-allowlist` QA entries and
+  `registry-check.js` staging comments), both resolved by taking main's newer side (the workspace's
+  real neutrality adaptation is in `neutrality-check.sh`, which auto-merged).
+  **Verified the merged generator RUNS** (compiles the combined codegen → the merge is valid) against
+  the latest elm-m3e config: emits **403 files concern-separated (130 Component/ + 130 Build/ +
+  Forge.Internal + primitives + barrel), the typed `M3e.Icon` (4083 ligatures) as a standalone
+  elm-m3e-icons package, AND the facts bundle Face B (130 comp/583 attr) + Face C** — both lines
+  coexist. The merged tree lives at `/tmp/latest/elm-cem-full` (`ws-ours`), NOT yet copied into the
+  workspace (parts 1+2 land together, since elm-cem's emit and elm-m3e's src/config co-evolved and
+  must be verified as a matched pair in-workspace). Next: rebase elm-m3e onto e1bde03 the same way,
+  bring both in, reconcile the ~30 workspace gates (Face A re-baselines to the concern-sep file set),
+  then repackage 5-way. Next free IDs: **D-039**, **R-024**.
