@@ -58,7 +58,7 @@ function record(name, status, detail) {
 /** Run a command to completion, streaming its output. Never throws. */
 function runItem(name, command, args, options = {}) {
     console.log(`\n${"─".repeat(72)}\n▶ ${name}\n$ ${command} ${args.join(" ")}${options.cwd ? `  (cwd: ${options.cwd})` : ""}`);
-    const result = spawnSync(command, args, { stdio: "pipe", encoding: "utf8", cwd: repoRoot, ...options });
+    const result = spawnSync(command, args, { stdio: "pipe", encoding: "utf8", cwd: repoRoot, maxBuffer: 256 * 1024 * 1024, ...options });
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
     if (result.error) {
