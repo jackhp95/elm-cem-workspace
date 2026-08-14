@@ -1678,3 +1678,20 @@ realizable way the human chose (D-048). All green on branch `compose-poc`; not p
   **`variant=elevated` when unselected, `filled` when selected/filled>0**. Touches Compose.elm + Render.elm (+
   Codegen.elm for the icon snippet). Next free IDs: **D-050**, **R-023**.
 
+- **F3 round 1 (gate red: codegen icon snippet does not compile; strategy: use the compiling `TypedHtml.Attributes.name` form).**
+  Commit `ca7c9c4` got 4 of 5 refinements right, but the fresh Opus critic caught a real bug via the snippet
+  scratch-compile (spec §15): `Codegen.elm` emits `M3e.Html.icon [ M3e.Attributes.name "glyph" ] []`, but
+  `M3e.Attributes.name : Value M3e.Values.Name -> …` needs a `Value`, not a `String` → the copy-paste snippet for
+  an icon does NOT compile. (The editor + preview were correct — they use `TypedHtml.Attributes.name : String`.)
+  Manager verified the fix: `M3e.Html.icon [ TypedHtml.Attributes.name "close" ] []` compiles (scratch, Success).
+  Sent builder back to align Codegen's icon emission to `TypedHtml.Attributes.name` and re-run the scratch-compile.
+
+- **F3: pass** (round 2; build:site exit 0; Playwright 6/6; icon snippet compiles; builder claude/sonnet).
+  Commit `ca7c9c4` (4 files: the 5 refinements) + fixup `1bf7e9e` (Codegen icon → `TypedHtml.Attributes.name`,
+  the compiling form). Delivered: (1) nested outlined `M3e.card`; (2) trailing count badges (`position=after`);
+  (3) tag NAME is a text-variant button opening the change-tag menu (no edit-icon button) + `m3e-icon name=` fix
+  across editor/preview/codegen (preview icons + the remove `×` now render); (4) buttons elevated(unset)/
+  filled(set) with the set value in the label. Round-1 critic caught the codegen snippet-compile bug (spec §15);
+  manager verified the fix form + independently re-ran build:site + Playwright 6/6 on round 2. **UI-refinement
+  round complete.** Next free IDs: **D-050**, **R-023**.
+
