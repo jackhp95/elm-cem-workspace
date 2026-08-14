@@ -1,0 +1,5 @@
+{
+  "_comment": "Pinned upstream SHAs the workspace's A/B + copy-fidelity gates compare against. elm-cem/elm-m3e advanced to their latest mains at the 2026-08-14 re-integration (D-040/D-041); tools/fetch-snapshots.mjs materializes these into .cache/snapshots/ (gitignored). The frozen sibling checkouts under /Users/jhp/code/jackhp95 remain read-only and are no longer the reference for these two.",
+  "elm-cem": { "repo": "https://github.com/jackhp95/elm-cem.git", "sha": "ad5d5233051914d61bbe59fa01e71f1f6fd320f7" },
+  "elm-m3e": { "repo": "https://github.com/jackhp95/elm-m3e.git", "sha": "e1bde0340e9d82360fd4f2fc7a7d5fc65b0a2947" }
+}

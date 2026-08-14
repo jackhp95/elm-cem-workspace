@@ -36,7 +36,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
 
 SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
-PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$SNAPSHOT_ROOT/elm-cem}"
+# elm-cem's reference advanced to latest main (D-041) — see .cache/snapshots via
+# tools/fetch-snapshots.mjs.
+PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$REPO_ROOT/.cache/snapshots/elm-cem}"
 WORKSPACE_ELM_CEM="$REPO_ROOT/packages/elm-cem"
 ELM_M3E="${ELM_M3E:-$REPO_ROOT/packages/elm-m3e}"
 
@@ -76,68 +78,14 @@ if [ "$GEN_COUNT" -eq 0 ]; then
 fi
 echo "generated src/ tree: $GEN_COUNT .elm files"
 
-# ── 2. the packages.json bucket config (core / components / builder) ───────
+# ── 2. the packages.json bucket config ─────────────────────────────────────
+# Use elm-m3e's OWN committed packages.json (the concern-separated split config,
+# with exposeInternal for M3e.Forge.Internal) rather than a stale inline copy —
+# after the 2026-08-14 re-integration the generator emits the concern-separated
+# tree and the flat-era inline config DAG-fails on it (D-041). This proves the
+# SPLIT STEP is unchanged pristine-vs-workspace against the real config.
 PACKAGES_JSON="$WORK_DIR/packages.json"
-cat > "$PACKAGES_JSON" <<'JSON'
-{
-  "family": "elm-m3e",
-  "devRepo": "jackhp95/elm-m3e",
-  "licenseText": "BSD-3-Clause",
-  "packages": [
-    {
-      "name": "jackhp95/elm-m3e",
-      "summary": "M3e.* brand primitives (shared vocabulary + escape hatches)",
-      "version": "1.0.0",
-      "elmVersion": "0.19.0 <= v < 0.20.0",
-      "deps": {
-        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0"
-      },
-      "buckets": [
-        { "exact": "M3e.Action" },
-        { "exact": "M3e.Attributes" },
-        { "exact": "M3e.Coerce" },
-        { "exact": "M3e.Events" },
-        { "exact": "M3e.Html" },
-        { "exact": "M3e.Kind" },
-        { "exact": "M3e.Unsafe" },
-        { "exact": "M3e.Unsafe.Attributes" },
-        { "exact": "M3e.Values" }
-      ]
-    },
-    {
-      "name": "jackhp95/elm-m3e-builder",
-      "summary": "M3e.Build annotation-skin shared by every component module",
-      "version": "1.0.0",
-      "elmVersion": "0.19.0 <= v < 0.20.0",
-      "deps": {
-        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e": "1.0.0 <= v < 2.0.0"
-      },
-      "buckets": [
-        { "exact": "M3e.Build" },
-        { "prefix": "M3e.Build." }
-      ]
-    },
-    {
-      "name": "jackhp95/elm-m3e-components",
-      "summary": "M3e per-component API + M3e.Review.Facts",
-      "version": "1.0.0",
-      "elmVersion": "0.19.0 <= v < 0.20.0",
-      "deps": {
-        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e-builder": "1.0.0 <= v < 2.0.0"
-      },
-      "buckets": [
-        { "exact": "M3e" },
-        { "prefix": "M3e." }
-      ]
-    }
-  ]
-}
-JSON
+cp "$ELM_M3E/packages.json" "$PACKAGES_JSON"
 
 OUT_PRISTINE="$WORK_DIR/out-pristine"
 OUT_WORKSPACE="$WORK_DIR/out-workspace"

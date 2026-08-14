@@ -18,7 +18,10 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
 
 SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
-PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$SNAPSHOT_ROOT/elm-cem}"
+# elm-cem's reference advanced to its latest main at the 2026-08-14 re-integration
+# (D-041). tools/fetch-snapshots.mjs materializes the pinned SHA into
+# .cache/snapshots/elm-cem; the frozen sibling under SNAPSHOT_ROOT is no longer it.
+PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$REPO_ROOT/.cache/snapshots/elm-cem}"
 WORKSPACE_ELM_CEM="$REPO_ROOT/packages/elm-cem"
 ELM_M3E="${ELM_M3E:-$REPO_ROOT/packages/elm-m3e}"
 

@@ -32,7 +32,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$REPO_ROOT/tools/lib/snapshot-gate.sh"
 
 SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
-SOURCE_ELM_M3E="${SOURCE_ELM_M3E:-$SNAPSHOT_ROOT/elm-m3e}"
+# elm-m3e's reference advanced to latest main (D-041) — .cache/snapshots/elm-m3e
+# via tools/fetch-snapshots.mjs; the frozen sibling is no longer it.
+SOURCE_ELM_M3E="${SOURCE_ELM_M3E:-$REPO_ROOT/.cache/snapshots/elm-m3e}"
 PKG_REL="packages/elm-m3e"
 
 # Source-tracked paths that are DELIBERATELY absent from the workspace copy:
@@ -121,7 +123,10 @@ fi
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
-git -C "$SOURCE_ELM_M3E" ls-files | sort > "$tmp/source.txt"
+# docs/dist/** is BUILT output (vite content-hashed) that the source repo commits
+# for deploy but the workspace rebuilds with different hashes — exclude it from
+# copy-fidelity on both sides (it is not source; the site build verifies it). D-041.
+git -C "$SOURCE_ELM_M3E" ls-files | grep -vE '^docs/dist/' | sort > "$tmp/source.txt"
 
 # Workspace side: tracked files + untracked-but-not-ignored files, both relative
 # to packages/elm-m3e. `--others --exclude-standard` is exactly "files git would
@@ -134,7 +139,7 @@ git -C "$SOURCE_ELM_M3E" ls-files | sort > "$tmp/source.txt"
     git -C "$REPO_ROOT" ls-files --others --exclude-standard "$PKG_REL"
 } | sort -u | while IFS= read -r p; do
     [ -e "$REPO_ROOT/$p" ] && printf '%s\n' "${p#"$PKG_REL/"}"
-done | sort -u > "$tmp/workspace.txt"
+done | grep -vE '^docs/dist/' | sort -u > "$tmp/workspace.txt"
 
 printf '%s\n' "$AUTHORIZED_ABSENT" | grep -vE '^\s*$' | sort > "$tmp/authorized.txt"
 

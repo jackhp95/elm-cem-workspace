@@ -31,3 +31,4 @@ packages/elm-m3e/docs/data/rule-roundtrip-report.json
 packages/elm-m3e/docs/public/style.css
 packages/elm-m3e/docs/public/m3e.js
 packages/elm-m3e/docs/app/Route/RoundtripHarness.elm
+.cache/snapshots/
