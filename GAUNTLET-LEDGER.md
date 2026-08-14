@@ -1320,3 +1320,40 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   spike's 810k builder was a different, broken split). elm-m3e-facts is tiny; elm-m3e-icons size TBD.
   **Next: write the spec** (D-035's byte-cut artifacts under tools/move2/ are now superseded; keep
   them for the measurement harnesses but the A/B cut is not the plan). Next free IDs: **D-037**, **R-024**.
+
+- **D-037 (Move 2, FINAL architecture — anchored on latest remote mains, human-directed).** After
+  several clarifications the target is LOCKED. Key correction to my own earlier errors: I twice
+  inverted the "barrel" intent. The strong-typed `M3e` general surface is KEPT (it is part of the
+  "html api"); "barrel is dead" meant retire the dismissive framing, not the module. The human's
+  definition of the layers: **"anything not in the `Build/` or `Component/` folders, and is exposed,
+  is the html api"** — the shared middle surface (stronger than raw elm/html, looser than
+  per-component, because shared attributes must be permissive). And **"the current remote main
+  basically has the shapes I want"** — so the target is anchored on latest `origin/main`
+  (elm-cem `ad5d523`, elm-m3e `e1bde03`), NOT rebuilt from the stale workspace snapshots.
+  **The stale snapshots (elm-cem e0e4f1c / elm-m3e 0cd7f486) predate everything:** the latest mains
+  ALREADY have the concern-separated emit (`Emit.elm` emits `M3e.Component.<X>` + `M3e.Build.<X>`
+  separately), the forge relocated to core (`M3e.Build.Internal → M3e.Forge.Internal`, which is what
+  eliminated the old components↔builder cycle), the `elm-m3e-icons` package (typed Material Symbols),
+  Coerce removed, and a working `packages.json` + `split.js exposeInternal` + `check-split.mjs`.
+  **Final 5-package shape** = main's `packages.json` + ONE refinement (human: "split Build/* out into
+  its own elm-m3e-builder") + renames (core→html, review-facts→facts):
+  | Package | modules | deps | docs (proxy) |
+  |---|---|---|---|
+  | `jackhp95/elm-m3e-html` | html api: `M3e.Html`, `M3e.Attributes`, `M3e.Values`, `M3e.Events`, `M3e.Kind`, `M3e.Unsafe`, `M3e.Action`, `M3e.Forge.Internal` (exposeInternal) | IR | ~213 KB (28%) |
+  | `jackhp95/elm-m3e-components` | `M3e` barrel + `M3e.Component.*` + `M3e.Internal.Types.*` | html | ~433 KB (56%) |
+  | `jackhp95/elm-m3e-builder` | `M3e.Build.*` (split out of main's components) | components, html | ~592 KB (77%) |
+  | `jackhp95/elm-m3e-icons` | `M3e.Icon` (typed Material Symbols) | html/IR | TBD |
+  | `jackhp95/elm-m3e-facts` | `M3e.Review.Facts` (renamed from review-facts) | elm-cem-facts | tiny |
+  **DAG verified acyclic on latest main:** `builder → components → html`; `icons → html`;
+  `facts → elm-cem-facts`. `Component.* → Build.*` = 0; barrel and `Internal.Types.*` do not import
+  `Build.*`; the split is clean because the forge already lives in html.
+  **Facts:** `elm-m3e-facts` is m3e's own facts contract; the generic `jackhp95/elm-cem-facts` is to
+  be archived/renamed separately (human).
+  **PLAN (per human "update workspace to latest mains first"):** (1) update the workspace's
+  `packages/elm-cem` + `packages/elm-m3e` to latest `origin/main`, which also moves the copy-fidelity
+  snapshot reference forward; (2) reconcile the workspace gates to the new trees (Face A re-baselines
+  from 143 flat to the concern-separated file set; facts bundle + 3 consumers stay green; gate-all
+  green); (3) apply `packages.json` = the 5-package split above (builder split + renames) and wire
+  per-package standalone-compile + size gates; prove each under cap, DAG clean. **DO NOT PUBLISH.**
+  Supersedes D-031c (flat canonical), D-035 (byte A/B cut), and the first draft of the
+  2026-08-14 spec. Next free IDs: **D-038**, **R-024**.
