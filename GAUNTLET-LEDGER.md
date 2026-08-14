@@ -1588,3 +1588,14 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
   Opus critic verified all semantics + 12 exact-equal tests (none weakened) + Node opaque + no Cmd + grep-m3e
   empty + 3 deps → PASS. **Core edit-tag done; D1 wires it into the route UI + badges + add/remove polish.**
 
+- **D1: pass** (build:site exit 0; Playwright 6/6; check:review green; critic clean; builder claude/sonnet).
+  Commit `fea1f3c` (route + spec, 2 files). Edit-tag UI: `editTagControl`/`componentMenuElement` — a header
+  "Change component" menu from `componentOptions` firing `SetComponent` (renders nothing when options empty; root's
+  long list height-capped `overflow-y-auto`). Counts moved to `M3e.badge` (slot chips always; attr chips when
+  set). Remove controls retained on children (root none). +2 Playwright tests (edit-tag rewrites tree:
+  m3e-list→m3e-accordion + snippet; nested type-directed menu = exactly [divider,expandableListItem,listAction,
+  listOption]). 3 prior tests updated ONLY their button-name locators for the badge rename (assertions unchanged —
+  critic verified not weakened). Builder fixed 2 Simplify findings. Fresh Opus critic ran build:site + Playwright
+  6/6, verified real assertions + no weakening + badge/menu API + integrity 2 files + copy-fidelity GREEN → PASS.
+  **Editor now supports add-child + remove-node + edit-tag (type-directed) with count badges. E1 = m3e-okf audit.**
+
