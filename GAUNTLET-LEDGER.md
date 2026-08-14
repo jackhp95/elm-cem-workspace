@@ -1503,3 +1503,14 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   matching the app pattern. NO new allow-list/exclusions. Fresh Opus critic ran build:site (exit 0, compose
   prerendered), confirmed §8.7 non-collapse + recursion wiring + integrity 1 file + copy-fidelity GREEN → PASS.
 
+- **B13: pass** (build:site exit 0 w/ all 3 panes prerendered; snippet-compile proof; check:review green; critic
+  clean; builder claude/sonnet). Commit `8c26e55` (3 files: `app/Compose/Codegen.elm` added [D-045 layout], route
+  +14, copy-fidelity +4). `Compose.Codegen.codeFor` recursive fold: `M3e.Html.<component>` + `bracketed` attr/child
+  lists + depth indentation + `"unnamed"` default-slot special-case (no slot=) + `ChildText`→`M3e.text`,
+  `ChildIcon`→`M3e.Html.icon` + `Attrs.codeLineFor`. Snippet pane wired via `Doc.codeBlock Doc.Elm`; editor +
+  live preview retained. Builder fixed a real `NoMissingTypeAnnotationInLetIn`. **Snippet/preview agreement
+  (spec §15) proven by scratch-compile** (worked example + set enum + set bool → `elm make` Success). Codegen is
+  hand-written + fully reviewed (no exclusion). Fresh Opus critic ran build:site (exit 0), re-did the
+  scratch-compile, verified codeFor structure + integrity 3 files + copy-fidelity GREEN → PASS. **All three folds
+  done; only B14 (browser sign-off) remains.**
+
