@@ -541,26 +541,32 @@ attrValueText info =
             Nothing
 
 
-{-| `filled`/`max`: the plain count when the slot is multi (`max = Nothing`),
-`"filled/max"` otherwise — an inline badge, its own unnamed slot carrying the
-count text, rendered as a plain sibling next to the slot button rather than
-anchored to it by `for`/`position` (app precedent: `Guide/Seams.elm`'s
-`M3e.badge [] [ M3e.text "3" ]`). Counts are what badges are for; the add
-affordance itself lives in the button's label.
+{-| The slot's fill count as the button's trailing badge — but ONLY when the
+slot holds at least one child; an empty slot shows no badge at all (a `0` badge
+is noise). Returned as a list so it can be `[]` when empty; `trailingIcon`'s
+result type is fully polymorphic, so it slots into the button's content list.
+-}
+slotCountTrailing : Cem.Compose.SlotChipInfo -> List (Element free freeAdmittedBy Cem.Compose.Msg)
+slotCountTrailing info =
+    if info.filled > 0 then
+        [ M3e.Component.Button.trailingIcon (slotCountBadge info) ]
+
+    else
+        []
+
+
+{-| The plain fill count (just the numerator — no `/max` denominator), in a
+neutral badge. `m3e-badge` has no color/variant attribute and defaults to the
+error color, so its container/text CSS custom properties are overridden to a
+quiet surface pair rather than red.
 -}
 slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
 slotCountBadge info =
-    M3e.badge [] [ M3e.text (slotCountText info) ]
-
-
-slotCountText : Cem.Compose.SlotChipInfo -> String
-slotCountText info =
-    case info.max of
-        Nothing ->
-            String.fromInt info.filled
-
-        Just max ->
-            String.fromInt info.filled ++ "/" ++ String.fromInt max
+    M3e.badge
+        [ M3e.Attributes.style "--m3e-badge-container-color" "var(--md-sys-color-surface-container-highest)"
+        , M3e.Attributes.style "--m3e-badge-color" "var(--md-sys-color-on-surface-variant)"
+        ]
+        [ M3e.text (String.fromInt info.filled) ]
 
 
 {-| When a slot affords exactly one option, the button fires that message
@@ -570,8 +576,9 @@ pointing at an always-present menu with one item per `SlotOption` — this must
 not collapse to one representative choice (spec §8.7): a slot that affords
 text, an icon, AND components offers all of them at once. Every case is an
 extra-small `M3e.button`, never a chip, its content a leading `add` icon
-(never a literal "+") then the slot name, with the fill-count badge in the
-button's own `trailing-icon` slot. Sits in a plain `flex flex-wrap` row, so
+(never a literal "+") then the slot name, with the fill-count badge (only when
+the slot is non-empty) in the button's own `trailing-icon` slot. Sits in a
+plain `flex flex-wrap` row, so
 the (when present) menu is built as a sibling by `slotGroup`, not nested here.
 -}
 slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
@@ -590,10 +597,11 @@ slotButtonElement path model info =
                 , M3e.Attributes.selected (info.filled > 0)
                 , M3e.Events.onClick (msgForOption path info.name only)
                 ]
-                [ M3e.icon [ TA.name "add" ] []
-                , M3e.text info.name
-                , M3e.Component.Button.trailingIcon (slotCountBadge info)
-                ]
+                ([ M3e.icon [ TA.name "add" ] []
+                 , M3e.text info.name
+                 ]
+                    ++ slotCountTrailing info
+                )
 
         _ ->
             M3e.button
@@ -609,12 +617,12 @@ slotButtonElement path model info =
                 , M3e.Attributes.toggle True
                 , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name))
                 ]
-                [ M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
+                (M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
                     [ M3e.icon [ TA.name "add" ] []
                     , M3e.text info.name
                     ]
-                , M3e.Component.Button.trailingIcon (slotCountBadge info)
-                ]
+                    :: slotCountTrailing info
+                )
 
 
 {-| Every multi-option slot's always-present menu — the sibling-of-the-
