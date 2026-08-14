@@ -83,19 +83,39 @@ route =
 
 {-| Root component `"list"` is a deliberate starting choice: `list.unnamed`
 is a pure-nesting slot with five component options and no text, so the
-recursive case is visible immediately.
+recursive case is visible immediately. The editor opens with a small starter
+tree (`starterEdits`) rather than an empty root, so there is something to edit
+straight away.
 -}
 init : App Data ActionData RouteParams -> Shared.Model -> ( Model, Effect Msg )
 init _ _ =
     ( { compose =
-            Cem.Compose.init
-                { facts = M3e.Review.Facts.facts
-                , attrKinds = Attrs.kinds
-                , root = "list"
-                }
+            List.foldl Cem.Compose.update
+                (Cem.Compose.init
+                    { facts = M3e.Review.Facts.facts
+                    , attrKinds = Attrs.kinds
+                    , root = "list"
+                    }
+                )
+                starterEdits
       }
     , Effect.none
     )
+
+
+{-| A small starter tree so the editor opens with something to work from rather
+than an empty root: two labeled list items — enough to reveal the reorder arrows,
+which only appear once a slot holds more than one child. Any of it can be deleted.
+-}
+starterEdits : List Cem.Compose.Msg
+starterEdits =
+    [ Cem.Compose.AddChild [] "unnamed" "listItem"
+    , Cem.Compose.AddChild [] "unnamed" "listItem"
+    , Cem.Compose.AddTextChild [ Cem.Compose.IntoSlot "unnamed" 0 ] "unnamed"
+    , Cem.Compose.SetChildContent [ Cem.Compose.IntoSlot "unnamed" 0 ] "unnamed" 0 "First item"
+    , Cem.Compose.AddTextChild [ Cem.Compose.IntoSlot "unnamed" 1 ] "unnamed"
+    , Cem.Compose.SetChildContent [ Cem.Compose.IntoSlot "unnamed" 1 ] "unnamed" 0 "Second item"
+    ]
 
 
 update : App Data ActionData RouteParams -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
@@ -240,11 +260,13 @@ slotChildCount parentPath slotName model =
 
 
 {-| The Attributes group — every attribute button, under its own label,
-never sharing a row with the Slots group below. The buttons themselves sit
-directly in an `M3e.buttonGroup` (whose unnamed slot admits only
-`button`/`iconButton`); each discrete attribute's always-present menu is a
-sibling of the group rather than nested in it — `menuTrigger`/`menu` are
-addressed by id, so their DOM position doesn't matter.
+never sharing a row with the Slots group below. The buttons wrap in a plain
+`flex flex-wrap` row (an `M3e.buttonGroup` was rejected: it overflows rather
+than wraps, and it stamps `role="radiogroup"`/`role="radio"` on these
+independent toggles, implying a single-select exclusivity they do not have).
+Each discrete attribute's always-present menu is a sibling rather than nested
+— `menuTrigger`/`menu` are addressed by id, so their DOM position doesn't
+matter.
 -}
 attrGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 attrGroup path model =
@@ -255,16 +277,15 @@ attrGroup path model =
         chips ->
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
                 (groupLabel "Attributes"
-                    :: M3e.buttonGroup [] (List.map (attrButtonElement path) chips)
+                    :: TypedHtml.div [ TA.class "flex flex-wrap gap-2" ] (List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
 
 {-| The Slots (add-child) group — every slot button, under its own label,
-never sharing a row with the Attributes group above. Same buttonGroup +
-sibling-menus shape as `attrGroup`; the per-slot fill-count badges are a
-second sibling row (badges aren't `button`/`iconButton` either, so they
-can't live inside the group).
+never sharing a row with the Attributes group above. Same `flex flex-wrap`
+row + sibling-menus shape as `attrGroup`; each slot's fill-count badge rides
+in its own button's `trailing-icon` slot, so there is no separate badge row.
 -}
 slotGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
 slotGroup path model =
@@ -275,7 +296,7 @@ slotGroup path model =
         chips ->
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
                 (groupLabel "Slots"
-                    :: M3e.buttonGroup [] (List.map (slotButtonElement path model) chips)
+                    :: TypedHtml.div [ TA.class "flex flex-wrap gap-2" ] (List.map (slotButtonElement path model) chips)
                     :: slotMenusFor path model chips
                 )
 
@@ -373,7 +394,7 @@ attrButtonElement path info =
 
 
 {-| Every discrete attribute's always-present menu, one per chip that is
-`EnumChip`/`BoolAttr` — the sibling-of-the-buttonGroup half of the
+`EnumChip`/`BoolAttr` — the sibling-of-the-row half of the
 `attrButtonElement` split (plain free-text chips have no menu at all; their
 inline field is `freeTextMenuFor`).
 -}
@@ -402,10 +423,9 @@ sibling's menu at once (the trigger's click-detection walks up past a
 `filterChip` host to a shared ancestor). `menu` itself is a SIBLING of the
 button, not nested inside it (`Button.Content` admits `menuTrigger`, not
 `menu`) — exactly the shape in `M3eMenuTriggerElement`'s own doc example.
-Now that the button sits directly in an `M3e.buttonGroup` (whose unnamed
-slot admits only `button`/`iconButton`), the menu is a sibling of the GROUP
-instead, built separately by `attrMenusFor` — the `for`/id pairing is
-unaffected by that move.
+The button sits in a plain `flex flex-wrap` row, so the menu is a sibling of
+that row, built separately by `attrMenusFor` — the `for`/id pairing is
+unaffected by DOM position.
 -}
 discreteAttrButtonElement : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
 discreteAttrButtonElement path info =
@@ -550,9 +570,9 @@ pointing at an always-present menu with one item per `SlotOption` — this must
 not collapse to one representative choice (spec §8.7): a slot that affords
 text, an icon, AND components offers all of them at once. Every case is an
 extra-small `M3e.button`, never a chip, its content a leading `add` icon
-(never a literal "+") then the slot name. Sits directly in an
-`M3e.buttonGroup`, so the fill-count badge and (when present) the menu are
-built as siblings by `slotGroup`, not nested here.
+(never a literal "+") then the slot name, with the fill-count badge in the
+button's own `trailing-icon` slot. Sits in a plain `flex flex-wrap` row, so
+the (when present) menu is built as a sibling by `slotGroup`, not nested here.
 -}
 slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
 slotButtonElement path model info =
@@ -598,7 +618,7 @@ slotButtonElement path model info =
 
 
 {-| Every multi-option slot's always-present menu — the sibling-of-the-
-buttonGroup half of the `slotButtonElement` split (a single-option slot fires
+row half of the `slotButtonElement` split (a single-option slot fires
 its message directly and has no menu at all).
 -}
 slotMenusFor : Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.SlotChipInfo -> List (Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg)

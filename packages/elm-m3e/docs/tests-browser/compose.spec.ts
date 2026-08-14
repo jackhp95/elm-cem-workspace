@@ -11,36 +11,35 @@ import { test, expect } from "@playwright/test";
  * highest-precedence one. Under the superseded rule `listItem.trailing`
  * collapsed to a text box and the checkbox was unreachable.
  *
- * A slot chip that affords more than one option (every test here except the
- * single-option shortcut, which none of these exercise) is a toggle `button`,
- * not an `m3e-filter-chip` — `M3e.filterChip`'s `Content` cannot host
- * `menuTrigger` at all, and nesting a trigger's ANCESTOR chip among sibling
- * triggers inside a filter chip was found, empirically, to open every
- * sibling's menu at once. `M3e.button` is the host verified (by hand, against
- * this exact page) to scope a trigger's click to itself.
+ * A slot chip that affords more than one option is a toggle `M3e.button` (not
+ * an `m3e-filter-chip` — `M3e.filterChip`'s `Content` cannot host `menuTrigger`
+ * at all). The attribute/slot buttons wrap in a plain `flex flex-wrap` row, so
+ * they carry `role="button"` (an earlier `M3e.buttonGroup` was dropped: it
+ * overflowed instead of wrapping and stamped `role="radiogroup"`/`role="radio"`
+ * on these independent toggles). Their accessible name is a leading `add` icon
+ * plus the slot/attribute name (never a literal "+"), matched here by substring.
  *
- * The attribute and slot buttons sit directly in an `M3e.buttonGroup`.
- * `m3e-button-group` reacts to any `toggle` child by giving the GROUP
- * `role="radiogroup"` and each toggle child `role="radio"` — so these chips
- * are queried by `getByRole("radio", ...)`, not `"button"`. Their accessible
- * name is now a leading `add` icon plus the slot/attribute name (never a
- * literal "+"), so the locators drop the old `"+ "` prefix and match the
- * name substring instead.
+ * The editor opens with a STARTER tree (see `init`/`starterEdits`): a root
+ * `m3e-list` holding two `listItem`s labeled "First item" / "Second item". So
+ * the tests that build from scratch add their own node and scope to it with
+ * `.last()` (a new child appends last) and, for the opened menu, `:visible`
+ * (every menu is always in the DOM, only the clicked one is shown).
  */
 
 test("a slot menu offers every valid kind, not just text", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // Root is "list": its default ("unnamed") slot affords five component
-  // kinds and no text/icon, so its chip opens straight to a menu.
-  await page.getByRole("radio", { name: "unnamed" }).click();
+  // Add a fresh listItem via the ROOT list's "unnamed" slot (`.first()` — the
+  // starter's own listItems each expose an "unnamed" button too).
+  await page.getByRole("button", { name: "unnamed" }).first().click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
 
-  // listItem's "trailing" slot is the §8.7 acceptance case: it affords text,
-  // an icon, AND five components at once.
-  await page.getByRole("radio", { name: "trailing" }).click();
+  // The new listItem is last; its "trailing" slot is the §8.7 acceptance case:
+  // it affords text, an icon, AND five components at once.
+  await page.getByRole("button", { name: "trailing" }).last().click();
 
-  const trailingMenu = page.locator("m3e-menu[id*='trailing']");
+  // Every menu is in the DOM; only the just-opened one is visible.
+  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
   await expect(trailingMenu).toBeVisible();
 
   const items = trailingMenu.getByRole("menuitem");
@@ -64,8 +63,9 @@ test("setting an attribute updates both the live element and the snippet", async
   await page.goto("/components/compose");
 
   // The root "list" node's own "variant" attribute is a discrete (enum)
-  // chip: filled, outlined, ... — click it and pick a token.
-  await page.getByRole("radio", { name: "variant" }).click();
+  // button: filled, outlined, ... — click it (`.first()` = the root's) and
+  // pick a token.
+  await page.getByRole("button", { name: "variant" }).first().click();
   await page.getByRole("menuitem", { name: "segmented", exact: true }).click();
 
   // The live preview: a real `m3e-list` carrying the attribute.
@@ -80,12 +80,12 @@ test("setting an attribute updates both the live element and the snippet", async
 test("nesting three levels deep works with chips alone", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list > listItem > (trailing) checkbox — three levels, chips and menus
-  // only, no hand-authored code.
-  await page.getByRole("radio", { name: "unnamed" }).click();
+  // list > listItem > (trailing) checkbox — three levels, buttons and menus
+  // only, no hand-authored code. Add a fresh listItem and drive ITS trailing.
+  await page.getByRole("button", { name: "unnamed" }).first().click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("radio", { name: "trailing" }).click();
-  await page.getByRole("menuitem", { name: "checkbox", exact: true }).click();
+  await page.getByRole("button", { name: "trailing" }).last().click();
+  await page.locator("m3e-menu[id*='trailing']:visible").getByRole("menuitem", { name: "checkbox", exact: true }).click();
 
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
 });
@@ -111,15 +111,15 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
 test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list > listItem, then listItem's OWN edit-tag control — its name button,
-  // labeled "listItem" (the root's is labeled "list").
-  await page.getByRole("radio", { name: "unnamed" }).click();
+  // Add a fresh listItem, then open ITS edit-tag control — its name button,
+  // labeled "listItem" (`.last()` = the one just added; the starter has two more).
+  await page.getByRole("button", { name: "unnamed" }).first().click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "listItem", exact: true }).click();
+  await page.getByRole("button", { name: "listItem", exact: true }).last().click();
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
   // listOption — never anything list.unnamed doesn't name, and never the
-  // current component ("listItem") itself.
+  // current component ("listItem") itself. Only the opened menu is visible.
   await expect(page.getByRole("menuitem")).toHaveText([
     "divider",
     "expandableListItem",
@@ -131,37 +131,19 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
 test("up/down controls reorder siblings within a slot", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list.unnamed is multi: add two distinct children so their order is
-  // observable. First a listItem, then a listOption — DOM order follows
-  // insertion order, so the preview reads list-item then list-option.
-  // Scope to the ROOT list's "unnamed" button (`.first()`): once a child is
-  // added, the child node has its own "unnamed" slot button too.
-  await page.getByRole("radio", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("radio", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listOption", exact: true }).click();
+  // The starter tree already holds two labeled list items, so the reorder
+  // arrows are present from the start. Preview order follows child order.
+  const items = page.locator("m3e-list").first().locator("> m3e-list-item");
+  await expect(items).toHaveCount(2);
+  await expect(items.nth(0)).toContainText("First item");
+  await expect(items.nth(1)).toContainText("Second item");
 
-  // Scope to the real list children in the preview (m3e-list also renders an
-  // internal `<slot>` element, and only the first m3e-list is the preview).
-  const previewChildren = page
-    .locator("m3e-list")
-    .first()
-    .locator("> :is(m3e-list-item, m3e-list-option)");
-  await expect(previewChildren).toHaveCount(2);
-  expect(await previewChildren.nth(0).evaluate((el) => el.tagName.toLowerCase())).toBe(
-    "m3e-list-item",
-  );
-
-  // The first child (index 0) has "Move up" disabled and "Move down" enabled;
-  // clicking its "Move down" swaps it past the listOption.
+  // The first item's "Move up" is disabled and its "Move down" is enabled
+  // (`.first()` = the first item's controls); clicking it swaps the two.
   await page.getByRole("button", { name: "Move down" }).first().click();
 
-  expect(await previewChildren.nth(0).evaluate((el) => el.tagName.toLowerCase())).toBe(
-    "m3e-list-option",
-  );
-  expect(await previewChildren.nth(1).evaluate((el) => el.tagName.toLowerCase())).toBe(
-    "m3e-list-item",
-  );
+  await expect(items.nth(0)).toContainText("Second item");
+  await expect(items.nth(1)).toContainText("First item");
 });
 
 test("the drawer links to Compose", async ({ page }) => {
