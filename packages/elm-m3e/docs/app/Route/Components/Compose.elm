@@ -11,7 +11,7 @@ the app-shell boundary — where the phantom `M3e` rows get erased once via
 `M3e.Unsafe.fromHtml`, because which component is on screen is only known at
 runtime.
 
-The recursive editor (`viewNode`) renders one plain outlined container per
+The recursive editor (`viewNode`) renders one nested outlined `M3e.card` per
 node, each with its attribute and slot buttons (in two separated groups) and,
 when open, that node's menu.
 
@@ -28,6 +28,7 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Badge
+import M3e.Component.Card
 import M3e.Component.IconButton
 import M3e.Component.Menu
 import M3e.Component.MenuItem
@@ -135,22 +136,18 @@ screen compose =
 -- EDITOR --------------------------------------------------------------------
 
 
-{-| One plain outlined container per `Cem.Compose.Node` — not an `M3e.card`
-(a card asserts a specific Material surface role this editor doesn't need;
-a bordered box is honest about being a dev tool, not a piece of content). A
-header naming the component (with the edit-tag control alongside it), its
-attribute and slot buttons in two separated groups (mixing "set an attribute"
-and "add a child" controls in one row reads as one affordance when they are
-two), that node's menu (if open), and a recursive container per child node.
+{-| One nested outlined `M3e.card` per `Cem.Compose.Node` — the component
+name itself IS the edit-tag control (a text-variant button opening the
+change-component menu), its attribute and slot buttons in two separated
+groups (mixing "set an attribute" and "add a child" controls in one row
+reads as one affordance when they are two), that node's menu (if open), and
+a recursive card per child node.
 -}
-viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (M3e.Component.Card.Is s) admittedBy Cem.Compose.Msg
 viewNode path node model =
-    TypedHtml.div
-        [ TA.class "rounded-md-corner-medium border border-outline-variant p-4 flex flex-col gap-3" ]
-        [ TypedHtml.div [ TA.class "flex items-center gap-2" ]
-            [ Doc.sectionLabel (Cem.Compose.componentOf node)
-            , editTagControl path model
-            ]
+    M3e.card
+        [ M3e.Attributes.variant Value.outlined ]
+        [ nameControl path node model
         , attrGroup path model
         , slotGroup path model
         , freeTextMenuFor path model
@@ -198,30 +195,29 @@ groupLabel label =
     TypedHtml.p [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ] [ TypedHtml.text label ]
 
 
-{-| The edit-tag affordance: change this node's component in place.
-`Cem.Compose.componentOptions` is already type-directed — a nested node only
-offers what its parent slot accepts, and the current component is already
-excluded — so an empty list means there is genuinely nothing valid to change
-to, and no control is rendered at all. Same `button` + `menuTrigger` +
-always-present `menu` shape as the slot/attr buttons (`M3e.filterChip` cannot
-host a trigger at all). The root's option list is every known component, so
-its menu is height-capped and scrolls rather than overflowing the page.
+{-| The component name doubles as the edit-tag control: a text-variant button
+whose own label IS the current component name, opening the change-component
+menu. `Cem.Compose.componentOptions` is already type-directed — a nested node
+only offers what its parent slot accepts, and the current component is
+already excluded — so an empty list means there is genuinely nothing valid to
+change to, and the name renders as plain text instead. Same `button` +
+`menuTrigger` + always-present `menu` shape as the slot/attr buttons
+(`M3e.filterChip` cannot host a trigger at all). The root's option list is
+every known component, so its menu is height-capped and scrolls rather than
+overflowing the page.
 -}
-editTagControl : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-editTagControl path model =
+nameControl : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
+nameControl path node model =
     case Cem.Compose.componentOptions path model of
         [] ->
-            TypedHtml.div [] []
+            TypedHtml.div [] [ Doc.sectionLabel (Cem.Compose.componentOf node) ]
 
         _ ->
-            TypedHtml.div []
+            TypedHtml.div [ TA.class "flex items-center gap-2" ]
                 [ M3e.button
-                    [ M3e.Attributes.variant Value.text
-                    , M3e.Attributes.shape Value.rounded
-                    , Aria.label "Change component"
-                    ]
+                    [ M3e.Attributes.variant Value.text ]
                     [ M3e.menuTrigger [ M3e.Attributes.for (componentMenuId path) ]
-                        [ M3e.icon [] [ M3e.text "edit" ] ]
+                        [ M3e.text (Cem.Compose.componentOf node) ]
                     ]
                 , componentMenuElement path model
                 ]
@@ -273,6 +269,13 @@ attrButtonView path model info =
                 [ M3e.button
                     [ M3e.Attributes.id (attrButtonHostId path info.name)
                     , M3e.Attributes.size Value.extraSmall
+                    , M3e.Attributes.variant
+                        (if info.isSet then
+                            Value.filled
+
+                         else
+                            Value.elevated
+                        )
                     , M3e.Attributes.selected info.isSet
                     , M3e.Attributes.toggle True
                     , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
@@ -296,6 +299,13 @@ discreteAttrButton path model info =
         [ M3e.button
             [ M3e.Attributes.id (attrButtonHostId path info.name)
             , M3e.Attributes.size Value.extraSmall
+            , M3e.Attributes.variant
+                (if info.isSet then
+                    Value.filled
+
+                 else
+                    Value.elevated
+                )
             , M3e.Attributes.selected info.isSet
             , M3e.Attributes.toggle True
             , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.AttrMenu info.name))
@@ -414,12 +424,18 @@ slotButtonHostId path slotName =
 
 
 {-| `filled`/`max`: the plain count when the slot is multi (`max = Nothing`),
-`"filled/max"` otherwise — a badge attached to the button by id. Counts are
-what badges are for; the add affordance itself lives in the button's label.
+`"filled/max"` otherwise — a badge attached to the button by id, at the
+button's trailing edge (`position = after`; a button's own `trailing-icon`
+slot admits only `shared:icon`, not a badge, so the badge's own `position`
+attribute is how it lands there instead). Counts are what badges are for;
+the add affordance itself lives in the button's label.
 -}
 slotCountBadge : Cem.Compose.Path -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
 slotCountBadge path info =
-    M3e.badge [ M3e.Attributes.for (slotButtonHostId path info.name) ]
+    M3e.badge
+        [ M3e.Attributes.for (slotButtonHostId path info.name)
+        , M3e.Attributes.position Value.after
+        ]
         [ M3e.text (slotCountText info) ]
 
 
@@ -449,6 +465,13 @@ slotButtonView path model info =
                 [ M3e.button
                     [ M3e.Attributes.id (slotButtonHostId path info.name)
                     , M3e.Attributes.size Value.extraSmall
+                    , M3e.Attributes.variant
+                        (if info.filled > 0 then
+                            Value.filled
+
+                         else
+                            Value.elevated
+                        )
                     , M3e.Attributes.selected (info.filled > 0)
                     , M3e.Events.onClick (msgForOption path info.name only)
                     ]
@@ -461,6 +484,13 @@ slotButtonView path model info =
                 [ M3e.button
                     [ M3e.Attributes.id (slotButtonHostId path info.name)
                     , M3e.Attributes.size Value.extraSmall
+                    , M3e.Attributes.variant
+                        (if info.filled > 0 then
+                            Value.filled
+
+                         else
+                            Value.elevated
+                        )
                     , M3e.Attributes.selected (info.filled > 0)
                     , M3e.Attributes.toggle True
                     , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name))
@@ -597,4 +627,4 @@ childContent path slotName index child model =
 removeButton : Cem.Compose.Msg -> Element (M3e.Component.IconButton.Is s) admittedBy Cem.Compose.Msg
 removeButton msg =
     M3e.iconButton [ Aria.label "Remove", M3e.Events.onClick msg ]
-        [ M3e.icon [] [ M3e.text "close" ] ]
+        [ M3e.icon [ TA.name "close" ] [] ]

@@ -57,7 +57,7 @@ renderSlot ( slotName, children ) =
                     Html.span (placement slotName) [ Html.text text ]
 
                 Cem.Compose.ChildIcon glyph ->
-                    Html.node "m3e-icon" (placement slotName) [ Html.text glyph ]
+                    Html.node "m3e-icon" (Html.Attributes.attribute "name" glyph :: placement slotName) []
 
                 Cem.Compose.ChildNode inner ->
                     withSlot slotName inner

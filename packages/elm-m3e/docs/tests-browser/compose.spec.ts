@@ -85,10 +85,11 @@ test("nesting three levels deep works with chips alone", async ({ page }) => {
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // The root starts as "list". Its edit-tag menu offers every known
-  // component (the root has no parent slot to constrain it) — pick a
-  // different one.
-  await page.getByRole("button", { name: "Change component" }).click();
+  // The root starts as "list". Its own name IS the edit-tag control: a
+  // text button whose label is the current component name. Its menu offers
+  // every known component (the root has no parent slot to constrain it) —
+  // pick a different one.
+  await page.getByRole("button", { name: "list", exact: true }).click();
   await page.getByRole("menuitem", { name: "accordion", exact: true }).click();
 
   // The live preview: the root element's own tag changed.
@@ -102,11 +103,11 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
 test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list > listItem, then listItem's OWN edit-tag menu (the second
-  // "Change component" control on the page — the first is the root's).
+  // list > listItem, then listItem's OWN edit-tag control — its name button,
+  // labeled "listItem" (the root's is labeled "list").
   await page.getByRole("button", { name: "+ unnamed" }).click();
   await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "Change component" }).nth(1).click();
+  await page.getByRole("button", { name: "listItem", exact: true }).click();
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
   // listOption — never anything list.unnamed doesn't name, and never the
