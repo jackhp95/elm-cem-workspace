@@ -1494,3 +1494,12 @@ human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
   green, check:compose-attrs OK, copy-fidelity GREEN, integrity of both commits → PASS. **The route is live and
   the app builds; §8.7 editor UI + snippet are B12/B13.**
 
+- **B12: pass** (build:site exit 0 w/ editor prerendered; check:review green; critic clean; builder
+  claude/sonnet). Commit `e6c1e9d` (1 file, route only, +258/-5). Recursive `viewNode` editor: attr/slot chip-set,
+  `attrMenuView`/`slotMenuView`, `childCards` recursion, inline `SetChildContent` text fields, `RemoveChild`
+  controls; live preview retained. **§8.7 non-collapse preserved in the consumer:** `slotMenuView` renders one
+  item per `SlotOption` via 3 independent case branches (single-option→fire-directly shortcut lives in
+  slotChipView). Builder fixed a real `MissingRequiredAttribute` (iconButton needs aria-label) with `Aria.label`,
+  matching the app pattern. NO new allow-list/exclusions. Fresh Opus critic ran build:site (exit 0, compose
+  prerendered), confirmed §8.7 non-collapse + recursion wiring + integrity 1 file + copy-fidelity GREEN → PASS.
+
