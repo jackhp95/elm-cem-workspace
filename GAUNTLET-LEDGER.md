@@ -1623,3 +1623,20 @@ D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic clau
   the human's pick of which findings to fix (each fixable as a further gauntlet part). Next free IDs: **D-047**,
   **R-023**.
 
+- **D-047 (audit-fix FEASIBILITY — the abstract Material advice partly collides with concrete M3E component
+  capabilities).** Human approved fixing all of F1/F2/F3. Before dispatching I verified each against the real M3E
+  component facts and found two collisions (the same class of wall B14 hit):
+  - **F1 `m3e-tree` INFEASIBLE.** `treeItem` facts: `label` admits only `[heading,shared:text]`, `unnamed` admits
+    only `[treeItem]` — a pure text hierarchy; it cannot host a node's chip-set/menus/inline-inputs/remove. So
+    "use m3e-tree" is not realizable. MITIGANT: the node cards are ALREADY `variant=outlined` (no elevation
+    stacking), so the primary nested-card anti-pattern is largely avoided; realistic fix = swap the nesting
+    `M3e.card` for a plain outlined container (drops "card" semantics), small + safe.
+  - **F2 chip-types PARTLY COLLIDE.** `assistChip`/`inputChip` slotKinds admit only `[heading,shared:text]`(+icon)
+    — like `filterChip` they CANNOT host a `menuTrigger` (B14's exact finding; only `M3e.button` scopes a trigger).
+    So set-attr-as-inputChip-that-opens-a-menu needs the menu mechanism switched from m3e popover(`menuTrigger[for]`)
+    to Elm `openMenu`-state inline menus — a real interaction re-architecture. `assistChip`/`inputChip` DO have
+    `onClick`/`onRemove`/`removable`, so the achievable subset is real (see below).
+  - **F3 clean.** Drop `attrValueBadge`; a set attr shows its value in the chip label; keep `slotCountBadge`.
+  Escalated to human to choose scope (realizable-now vs deeper chip re-architecture) rather than sink a builder in
+  the popover/inline-menu swamp. Next free IDs: **D-048**, **R-023**.
+
