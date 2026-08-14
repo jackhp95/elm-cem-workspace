@@ -36,6 +36,19 @@ non-multi slot, for instance — and every downstream query (`slotChips`,
 itself never produces. Opacity makes "every `Node` in existence came through
 `update`" a fact, not a convention.
 
+## Editing a node's component in place
+
+`SetComponent path target` (1.1.0) changes an existing node's component
+without rebuilding the tree around it. `componentOptions path model` reports
+which components are legal there: at the root, every known fact; nested,
+only what the parent slot affords — a nested node may only become something
+its parent legally admits in that slot. `SetComponent` to anything outside
+`componentOptions` is a no-op, the same menu/update agreement `AddChild`
+keeps. On a real swap, content the new component doesn't support is pruned:
+attrs it doesn't offer, slots it doesn't declare, and children whose kind
+its slots no longer afford — then the slot's cap (multi vs. single) is
+re-enforced against the target, not the old component.
+
 ## Why the consumer supplies `attrKinds`
 
 Elm has no reflection: nothing in `Cem.Facts.Fact` says whether a given

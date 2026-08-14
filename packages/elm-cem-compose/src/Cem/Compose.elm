@@ -8,6 +8,7 @@ module Cem.Compose exposing
     , SlotOption(..), slotMenuOptions
     , AttrChipInfo, AttrChipKind(..), attrChips
     , NumberKind(..), MenuOptions(..), attrMenuOptions
+    , componentOptions
     )
 
 {-| A headless, type-directed editor for building a valid tree of custom
@@ -26,6 +27,7 @@ every pixel.
 @docs SlotOption, slotMenuOptions
 @docs AttrChipInfo, AttrChipKind, attrChips
 @docs NumberKind, MenuOptions, attrMenuOptions
+@docs componentOptions
 
 -}
 
@@ -156,6 +158,7 @@ type Msg
     | AddIconChild Path String
     | SetChildContent Path String Int String
     | RemoveChild Path String Int
+    | SetComponent Path String
 
 
 {-| Every structural message applies `updateAt` and then clears `openMenu` —
@@ -190,6 +193,13 @@ update msg model =
 
         RemoveChild path slot index ->
             edit path (removeChild slot index) model
+
+        SetComponent path target ->
+            if List.member target (componentOptions path model) then
+                edit path (setComponent model target) model
+
+            else
+                closeMenu model
 
 
 {-| Apply a node transform at a path and dismiss any open menu.
@@ -292,6 +302,74 @@ removeChild slot index ((Node n) as node) =
                 Node { n | children = Dict.insert slot (List.Extra.removeAt index children) n.children }
 
 
+{-| Change a node's component, then prune content the new component does not
+support: attrs it does not offer, slots it does not declare, and — within a
+slot it still declares — children of a kind that slot no longer affords. A
+slot's cap is re-enforced against the target's own `multiSlots`, since a slot
+that survives the swap may go from multi to non-multi.
+-}
+setComponent : Model -> String -> Node -> Node
+setComponent model target (Node n) =
+    case Dict.get target model.facts of
+        Nothing ->
+            Node n
+
+        Just targetFact ->
+            Node
+                { component = target
+                , attrs = Dict.filter (\name _ -> offeredByTarget model targetFact name) n.attrs
+                , children =
+                    n.children
+                        |> Dict.toList
+                        |> List.filterMap (prunedSlot model targetFact)
+                        |> Dict.fromList
+                }
+
+
+{-| The same test `attrChips` uses to decide whether a name gets a chip at
+all: a real enum on the target, or a plain attr both the target's
+`attrRewrites` names and `Model.attrKinds` classifies.
+-}
+offeredByTarget : Model -> Fact -> String -> Bool
+offeredByTarget model fact name =
+    List.any (\( enumName, _ ) -> enumName == name) fact.enums
+        || (List.member name (List.map Tuple.second fact.attrRewrites) && Dict.member name model.attrKinds)
+
+
+prunedSlot : Model -> Fact -> ( String, List Child ) -> Maybe ( String, List Child )
+prunedSlot model targetFact ( slot, children ) =
+    if not (List.member slot (slotNames targetFact)) then
+        Nothing
+
+    else
+        let
+            affordances =
+                affordancesFor model targetFact slot
+
+            fits child =
+                case child of
+                    ChildText _ ->
+                        affordances.text
+
+                    ChildIcon _ ->
+                        affordances.icon
+
+                    ChildNode inner ->
+                        List.member (componentOf inner) affordances.components
+
+            survivors =
+                List.filter fits children
+        in
+        Just
+            ( slot
+            , if List.member slot targetFact.multiSlots then
+                survivors
+
+              else
+                List.take 1 survivors
+            )
+
+
 {-| The single recursive locator. Descends only through `ChildNode`; a step
 landing on text/icon content, an out-of-range index, or an unknown slot is a
 no-op returning the tree unchanged. Compose never crashes on a stale path.
@@ -359,6 +437,39 @@ factAt : Path -> Model -> Maybe Fact
 factAt path model =
     nodeAt path model
         |> Maybe.andThen (\node -> Dict.get (componentOf node) model.facts)
+
+
+{-| The components this node may become, excluding its current one. At the
+root, every fact is a candidate — there is no parent slot to constrain it.
+Nested, only the components the PARENT slot's affordances name are
+candidates: a nested node may only become something its parent legally
+admits there. `[]` for an unresolvable path.
+-}
+componentOptions : Path -> Model -> List String
+componentOptions path model =
+    case nodeAt path model of
+        Nothing ->
+            []
+
+        Just node ->
+            let
+                current =
+                    componentOf node
+            in
+            case List.reverse path of
+                [] ->
+                    Dict.keys model.facts
+                        |> List.filter (\c -> c /= current)
+
+                (IntoSlot slotName _) :: revParentPath ->
+                    case factAt (List.reverse revParentPath) model of
+                        Just parentFact ->
+                            affordancesFor model parentFact slotName
+                                |> .components
+                                |> List.filter (\c -> c /= current)
+
+                        Nothing ->
+                            []
 
 
 
