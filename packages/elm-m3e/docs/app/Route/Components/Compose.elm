@@ -5,20 +5,21 @@ of custom elements from `M3e.Review.Facts`, backed by `Cem.Compose`.
 
 This route owns no editing logic itself: `Cem.Compose` owns the tree and the
 path-addressed edits, `Compose.Attrs` (generated) supplies the attribute
-kind/dispatch table, and `Compose.Render` folds the tree to the live
-preview. This module is the app-shell boundary — where the phantom `M3e`
-rows get erased once via `M3e.Unsafe.fromHtml`, because which component is
-on screen is only known at runtime.
+kind/dispatch table, `Compose.Render` folds the tree to the live preview,
+and `Compose.Codegen` folds it to the generated-code snippet. This module is
+the app-shell boundary — where the phantom `M3e` rows get erased once via
+`M3e.Unsafe.fromHtml`, because which component is on screen is only known at
+runtime.
 
 The recursive editor (`viewNode`) renders one card per node, each with its
-attribute and slot chips and, when open, that node's menu. The generated-code
-snippet (Task 13) is not wired up yet.
+attribute and slot chips and, when open, that node's menu.
 
 -}
 
 import BackendTask
 import Cem.Compose
 import Compose.Attrs as Attrs
+import Compose.Codegen as Codegen
 import Compose.Render as Render
 import Doc
 import Effect exposing (Effect)
@@ -125,6 +126,7 @@ screen compose =
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf compose.root)
         , M3e.Unsafe.fromHtml (Render.renderNode compose.root)
         , viewNode [] compose.root compose
+        , Doc.codeBlock Doc.Elm (Codegen.codeFor compose.root)
         ]
 
 

@@ -99,6 +99,7 @@ docs/scripts/gen-compose-attrs.mjs
 docs/app/Compose/Attrs.elm
 docs/app/Compose/Render.elm
 docs/app/Route/Components/Compose.elm
+docs/app/Compose/Codegen.elm
 docs/.elm-pages/Fetcher/Components/Compose.elm
 EOF
 )
@@ -125,6 +126,9 @@ EOF
 # docs/.elm-pages/Fetcher/Components/Compose.elm — Compose B11: elm-pages'
 #   generated fetcher for the new route above; new to this monorepo's Compose
 #   POC, absent from the upstream elm-m3e checkout.
+# docs/app/Compose/Codegen.elm — Compose B13: the hand-written recursive
+#   generated-code snippet fold; new to this monorepo's Compose POC, absent
+#   from the upstream elm-m3e checkout.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 
