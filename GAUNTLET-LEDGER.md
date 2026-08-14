@@ -1701,3 +1701,11 @@ realizable way the human chose (D-048). All green on branch `compose-poc`; not p
   badge's own `unnamed` slot, no `for`/`position`/host-id. Feasible + precedent-backed: app already uses
   `M3e.badge [] [ M3e.text "3" ]` at `docs/app/Route/Guide/Seams.elm:188`; scratch inline badge compiles. Next
   free IDs: **D-051**, **R-023**.
+
+- **F4: pass** (build:site exit 0; Playwright 6/6; manager-verified incl. visual; builder claude/sonnet).
+  Commit `bdaa69b` (1 file, +14/-25). `slotCountBadge` → inline `M3e.badge [] [ M3e.text count ]` (content in the
+  badge's own slot), wrapped inline-flex as a trailing sibling of each slot button; dropped `for`/`position` and
+  the now-unused `slotButtonHostId`; slot-menu wiring untouched (still opens). Matches app precedent
+  (Seams.elm:188). Screenshot confirms inline pills, not corner overlays. Small precedent-matching visual change —
+  accepted on manager verification (build:site + Playwright + visual) without a separate critic. Next free IDs:
+  **D-051**, **R-023**.
