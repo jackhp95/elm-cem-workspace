@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "a"
-      , module_ = "TypedHtml.A"
+      , module_ = "TypedHtml.Component.A"
       , enums = [ ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "abbr"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "address"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "area"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = [ ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ), ( "shape", [ "circle", "default", "poly", "rect" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "article"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "aside"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "audio"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = [ ( "crossorigin", [ "value", "anonymous", "useCredentials" ] ), ( "loading", [ "eager", "lazy" ] ), ( "preload", [ "value", "auto", "metadata", "none" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -119,7 +119,7 @@ facts =
       , usesAction = False
       }
     , { component = "b"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -134,7 +134,7 @@ facts =
       , usesAction = False
       }
     , { component = "base"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -149,7 +149,7 @@ facts =
       , usesAction = False
       }
     , { component = "bdi"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -164,7 +164,7 @@ facts =
       , usesAction = False
       }
     , { component = "bdo"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -179,7 +179,7 @@ facts =
       , usesAction = False
       }
     , { component = "blockquote"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -194,7 +194,7 @@ facts =
       , usesAction = False
       }
     , { component = "body"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -209,7 +209,7 @@ facts =
       , usesAction = False
       }
     , { component = "br"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -224,7 +224,7 @@ facts =
       , usesAction = False
       }
     , { component = "button"
-      , module_ = "TypedHtml.Button"
+      , module_ = "TypedHtml.Component.Button"
       , enums = [ ( "formenctype", [ "applicationXWwwFormUrlencoded", "multipartFormData", "textPlain" ] ), ( "formmethod", [ "dialog", "get", "post" ] ), ( "popovertargetaction", [ "hide", "show", "toggle" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -239,7 +239,7 @@ facts =
       , usesAction = False
       }
     , { component = "canvas"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -254,7 +254,7 @@ facts =
       , usesAction = False
       }
     , { component = "caption"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -269,7 +269,7 @@ facts =
       , usesAction = False
       }
     , { component = "cite"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -284,7 +284,7 @@ facts =
       , usesAction = False
       }
     , { component = "code"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -299,7 +299,7 @@ facts =
       , usesAction = False
       }
     , { component = "col"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -314,7 +314,7 @@ facts =
       , usesAction = False
       }
     , { component = "colgroup"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -329,7 +329,7 @@ facts =
       , usesAction = False
       }
     , { component = "data"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -344,7 +344,7 @@ facts =
       , usesAction = False
       }
     , { component = "datalist"
-      , module_ = "TypedHtml.Select"
+      , module_ = "TypedHtml.Component.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -359,7 +359,7 @@ facts =
       , usesAction = False
       }
     , { component = "dd"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -374,7 +374,7 @@ facts =
       , usesAction = False
       }
     , { component = "del"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -389,7 +389,7 @@ facts =
       , usesAction = False
       }
     , { component = "details"
-      , module_ = "TypedHtml.Details"
+      , module_ = "TypedHtml.Component.Details"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -404,7 +404,7 @@ facts =
       , usesAction = False
       }
     , { component = "dfn"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -419,7 +419,7 @@ facts =
       , usesAction = False
       }
     , { component = "dialog"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = [ ( "closedby", [ "any", "closerequest", "none" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -434,7 +434,7 @@ facts =
       , usesAction = False
       }
     , { component = "div"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -449,7 +449,7 @@ facts =
       , usesAction = False
       }
     , { component = "dl"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -464,7 +464,7 @@ facts =
       , usesAction = False
       }
     , { component = "dt"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -479,7 +479,7 @@ facts =
       , usesAction = False
       }
     , { component = "em"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -494,7 +494,7 @@ facts =
       , usesAction = False
       }
     , { component = "embed"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -509,7 +509,7 @@ facts =
       , usesAction = False
       }
     , { component = "fieldset"
-      , module_ = "TypedHtml.Form"
+      , module_ = "TypedHtml.Component.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -524,7 +524,7 @@ facts =
       , usesAction = False
       }
     , { component = "figcaption"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -539,7 +539,7 @@ facts =
       , usesAction = False
       }
     , { component = "figure"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -554,7 +554,7 @@ facts =
       , usesAction = False
       }
     , { component = "footer"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -569,7 +569,7 @@ facts =
       , usesAction = False
       }
     , { component = "form"
-      , module_ = "TypedHtml.Form"
+      , module_ = "TypedHtml.Component.Form"
       , enums = [ ( "enctype", [ "applicationXWwwFormUrlencoded", "multipartFormData", "textPlain" ] ), ( "method", [ "dialog", "get", "post" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -584,7 +584,7 @@ facts =
       , usesAction = False
       }
     , { component = "h1"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -599,7 +599,7 @@ facts =
       , usesAction = False
       }
     , { component = "h2"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -614,7 +614,7 @@ facts =
       , usesAction = False
       }
     , { component = "h3"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -629,7 +629,7 @@ facts =
       , usesAction = False
       }
     , { component = "h4"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -644,7 +644,7 @@ facts =
       , usesAction = False
       }
     , { component = "h5"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -659,7 +659,7 @@ facts =
       , usesAction = False
       }
     , { component = "h6"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -674,7 +674,7 @@ facts =
       , usesAction = False
       }
     , { component = "head"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -689,7 +689,7 @@ facts =
       , usesAction = False
       }
     , { component = "header"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -704,7 +704,7 @@ facts =
       , usesAction = False
       }
     , { component = "hgroup"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -719,7 +719,7 @@ facts =
       , usesAction = False
       }
     , { component = "hr"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -734,7 +734,7 @@ facts =
       , usesAction = False
       }
     , { component = "i"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -749,7 +749,7 @@ facts =
       , usesAction = False
       }
     , { component = "iframe"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = [ ( "loading", [ "eager", "lazy" ] ), ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ), ( "sandbox", [ "allowDownloads", "allowForms", "allowModals", "allowOrientationLock", "allowPointerLock", "allowPopups", "allowPopupsToEscapeSandbox", "allowPresentation", "allowSameOrigin", "allowScripts", "allowTopNavigation", "allowTopNavigationByUserActivation", "allowTopNavigationToCustomProtocols" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -764,7 +764,7 @@ facts =
       , usesAction = False
       }
     , { component = "img"
-      , module_ = "TypedHtml.Img"
+      , module_ = "TypedHtml.Component.Img"
       , enums = [ ( "crossorigin", [ "value", "anonymous", "useCredentials" ] ), ( "decoding", [ "async", "auto", "sync" ] ), ( "fetchpriority", [ "auto", "high", "low" ] ), ( "loading", [ "eager", "lazy" ] ), ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -779,7 +779,7 @@ facts =
       , usesAction = False
       }
     , { component = "input"
-      , module_ = "TypedHtml.Input"
+      , module_ = "TypedHtml.Component.Input"
       , enums = [ ( "colorspace", [ "displayP3", "limitedSrgb" ] ), ( "formenctype", [ "applicationXWwwFormUrlencoded", "multipartFormData", "textPlain" ] ), ( "formmethod", [ "dialog", "get", "post" ] ), ( "popovertargetaction", [ "hide", "show", "toggle" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -794,7 +794,7 @@ facts =
       , usesAction = False
       }
     , { component = "ins"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -809,7 +809,7 @@ facts =
       , usesAction = False
       }
     , { component = "kbd"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -824,7 +824,7 @@ facts =
       , usesAction = False
       }
     , { component = "label"
-      , module_ = "TypedHtml.Form"
+      , module_ = "TypedHtml.Component.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -839,7 +839,7 @@ facts =
       , usesAction = False
       }
     , { component = "legend"
-      , module_ = "TypedHtml.Form"
+      , module_ = "TypedHtml.Component.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -854,7 +854,7 @@ facts =
       , usesAction = False
       }
     , { component = "li"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -869,7 +869,7 @@ facts =
       , usesAction = False
       }
     , { component = "link"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = [ ( "blocking", [ "render" ] ), ( "crossorigin", [ "value", "anonymous", "useCredentials" ] ), ( "fetchpriority", [ "auto", "high", "low" ] ), ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -884,7 +884,7 @@ facts =
       , usesAction = False
       }
     , { component = "main_"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -899,7 +899,7 @@ facts =
       , usesAction = False
       }
     , { component = "map"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -914,7 +914,7 @@ facts =
       , usesAction = False
       }
     , { component = "mark"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -929,7 +929,7 @@ facts =
       , usesAction = False
       }
     , { component = "menu"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -944,7 +944,7 @@ facts =
       , usesAction = False
       }
     , { component = "meta"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = [ ( "charset", [ "utf8" ] ), ( "httpEquiv", [ "contentSecurityPolicy", "contentType", "defaultStyle", "refresh", "xUaCompatible" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -959,7 +959,7 @@ facts =
       , usesAction = False
       }
     , { component = "meter"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -974,7 +974,7 @@ facts =
       , usesAction = False
       }
     , { component = "nav"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -989,7 +989,7 @@ facts =
       , usesAction = False
       }
     , { component = "noscript"
-      , module_ = "TypedHtml.Scripting"
+      , module_ = "TypedHtml.Component.Scripting"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1004,7 +1004,7 @@ facts =
       , usesAction = False
       }
     , { component = "object"
-      , module_ = "TypedHtml.Embedded"
+      , module_ = "TypedHtml.Component.Embedded"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -1019,7 +1019,7 @@ facts =
       , usesAction = False
       }
     , { component = "ol"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1034,7 +1034,7 @@ facts =
       , usesAction = False
       }
     , { component = "optgroup"
-      , module_ = "TypedHtml.Select"
+      , module_ = "TypedHtml.Component.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1049,7 +1049,7 @@ facts =
       , usesAction = False
       }
     , { component = "option"
-      , module_ = "TypedHtml.Select"
+      , module_ = "TypedHtml.Component.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1064,7 +1064,7 @@ facts =
       , usesAction = False
       }
     , { component = "output"
-      , module_ = "TypedHtml.Form"
+      , module_ = "TypedHtml.Component.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1079,7 +1079,7 @@ facts =
       , usesAction = False
       }
     , { component = "p"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1094,7 +1094,7 @@ facts =
       , usesAction = False
       }
     , { component = "picture"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1109,7 +1109,7 @@ facts =
       , usesAction = False
       }
     , { component = "pictureSource"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -1124,7 +1124,7 @@ facts =
       , usesAction = False
       }
     , { component = "pre"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1139,7 +1139,7 @@ facts =
       , usesAction = False
       }
     , { component = "progress"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1154,7 +1154,7 @@ facts =
       , usesAction = False
       }
     , { component = "q"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1169,7 +1169,7 @@ facts =
       , usesAction = False
       }
     , { component = "rp"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1184,7 +1184,7 @@ facts =
       , usesAction = False
       }
     , { component = "rt"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1199,7 +1199,7 @@ facts =
       , usesAction = False
       }
     , { component = "ruby"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1214,7 +1214,7 @@ facts =
       , usesAction = False
       }
     , { component = "s"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1229,7 +1229,7 @@ facts =
       , usesAction = False
       }
     , { component = "samp"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1244,7 +1244,7 @@ facts =
       , usesAction = False
       }
     , { component = "script"
-      , module_ = "TypedHtml.Scripting"
+      , module_ = "TypedHtml.Component.Scripting"
       , enums = [ ( "blocking", [ "render" ] ), ( "crossorigin", [ "value", "anonymous", "useCredentials" ] ), ( "fetchpriority", [ "auto", "high", "low" ] ), ( "referrerpolicy", [ "value", "noReferrer", "noReferrerWhenDowngrade", "origin", "originWhenCrossOrigin", "sameOrigin", "strictOrigin", "strictOriginWhenCrossOrigin", "unsafeUrl" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1259,7 +1259,7 @@ facts =
       , usesAction = False
       }
     , { component = "search"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1274,7 +1274,7 @@ facts =
       , usesAction = False
       }
     , { component = "section"
-      , module_ = "TypedHtml.Sectioning"
+      , module_ = "TypedHtml.Component.Sectioning"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1289,7 +1289,7 @@ facts =
       , usesAction = False
       }
     , { component = "select"
-      , module_ = "TypedHtml.Select"
+      , module_ = "TypedHtml.Component.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1304,7 +1304,7 @@ facts =
       , usesAction = False
       }
     , { component = "slot"
-      , module_ = "TypedHtml.Scripting"
+      , module_ = "TypedHtml.Component.Scripting"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -1319,7 +1319,7 @@ facts =
       , usesAction = False
       }
     , { component = "small"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1334,7 +1334,7 @@ facts =
       , usesAction = False
       }
     , { component = "source"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -1349,7 +1349,7 @@ facts =
       , usesAction = False
       }
     , { component = "span"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1364,7 +1364,7 @@ facts =
       , usesAction = False
       }
     , { component = "strong"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1379,7 +1379,7 @@ facts =
       , usesAction = False
       }
     , { component = "style"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = [ ( "blocking", [ "render" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1394,7 +1394,7 @@ facts =
       , usesAction = False
       }
     , { component = "sub"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1409,7 +1409,7 @@ facts =
       , usesAction = False
       }
     , { component = "summary"
-      , module_ = "TypedHtml.Details"
+      , module_ = "TypedHtml.Component.Details"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1424,7 +1424,7 @@ facts =
       , usesAction = False
       }
     , { component = "sup"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1439,7 +1439,7 @@ facts =
       , usesAction = False
       }
     , { component = "table"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1454,7 +1454,7 @@ facts =
       , usesAction = False
       }
     , { component = "tbody"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1469,7 +1469,7 @@ facts =
       , usesAction = False
       }
     , { component = "td"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1484,7 +1484,7 @@ facts =
       , usesAction = False
       }
     , { component = "template"
-      , module_ = "TypedHtml.Scripting"
+      , module_ = "TypedHtml.Component.Scripting"
       , enums = [ ( "shadowrootmode", [ "closed", "open" ] ), ( "shadowrootslotassignment", [ "manual", "named" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -1499,7 +1499,7 @@ facts =
       , usesAction = False
       }
     , { component = "textarea"
-      , module_ = "TypedHtml.Textarea"
+      , module_ = "TypedHtml.Component.Textarea"
       , enums = [ ( "wrap", [ "hard", "soft" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1514,7 +1514,7 @@ facts =
       , usesAction = False
       }
     , { component = "tfoot"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1529,7 +1529,7 @@ facts =
       , usesAction = False
       }
     , { component = "th"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = [ ( "scope", [ "col", "colgroup", "row", "rowgroup" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1544,7 +1544,7 @@ facts =
       , usesAction = False
       }
     , { component = "thead"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1559,7 +1559,7 @@ facts =
       , usesAction = False
       }
     , { component = "time"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1574,7 +1574,7 @@ facts =
       , usesAction = False
       }
     , { component = "title"
-      , module_ = "TypedHtml.Metadata"
+      , module_ = "TypedHtml.Component.Metadata"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1589,7 +1589,7 @@ facts =
       , usesAction = False
       }
     , { component = "tr"
-      , module_ = "TypedHtml.Table"
+      , module_ = "TypedHtml.Component.Table"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1604,7 +1604,7 @@ facts =
       , usesAction = False
       }
     , { component = "track"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = [ ( "kind", [ "captions", "chapters", "descriptions", "metadata", "subtitles" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -1619,7 +1619,7 @@ facts =
       , usesAction = False
       }
     , { component = "u"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1634,7 +1634,7 @@ facts =
       , usesAction = False
       }
     , { component = "ul"
-      , module_ = "TypedHtml.Grouping"
+      , module_ = "TypedHtml.Component.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1649,7 +1649,7 @@ facts =
       , usesAction = False
       }
     , { component = "var"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1664,7 +1664,7 @@ facts =
       , usesAction = False
       }
     , { component = "video"
-      , module_ = "TypedHtml.Media"
+      , module_ = "TypedHtml.Component.Media"
       , enums = [ ( "crossorigin", [ "value", "anonymous", "useCredentials" ] ), ( "loading", [ "eager", "lazy" ] ), ( "preload", [ "value", "auto", "metadata", "none" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -1679,7 +1679,7 @@ facts =
       , usesAction = False
       }
     , { component = "wbr"
-      , module_ = "TypedHtml.Text"
+      , module_ = "TypedHtml.Component.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = []

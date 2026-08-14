@@ -1,4 +1,4 @@
-module TypedHtml.Media exposing
+module TypedHtml.Component.Media exposing
     ( audio, picture, pictureSource, source, track, video
     , AudioIs, AudioAttrs, AudioContent, AudioChildAdmittedBy, PictureIs, PictureAttrs, PictureContent, PictureChildAdmittedBy, PictureSourceIs, PictureSourceAttrs, PictureSourceChildAdmittedBy, PictureSourceAdmittedBy, SourceIs, SourceAttrs, SourceChildAdmittedBy, SourceAdmittedBy, TrackIs, TrackAttrs, TrackChildAdmittedBy, TrackAdmittedBy, VideoIs, VideoAttrs, VideoContent, VideoChildAdmittedBy
     , autoplay, controls, crossorigin, default, height, kind, label, loading, loop, media, muted, playsinline, poster, preload, sizes, src, srclang, srcset, width, defaultMuted

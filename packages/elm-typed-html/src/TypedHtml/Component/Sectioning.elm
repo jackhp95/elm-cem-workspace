@@ -1,4 +1,4 @@
-module TypedHtml.Sectioning exposing
+module TypedHtml.Component.Sectioning exposing
     ( address, article, aside, body, footer, h1, h2, h3, h4, h5, h6, header, hgroup, main_, nav, search, section
     , AddressIs, AddressAttrs, AddressChildAdmittedBy, ArticleIs, ArticleAttrs, ArticleChildAdmittedBy, AsideIs, AsideAttrs, AsideChildAdmittedBy, BodyIs, BodyAttrs, BodyChildAdmittedBy, FooterIs, FooterAttrs, FooterChildAdmittedBy, H1Is, H1Attrs, H1Content, H1ChildAdmittedBy, H2Is, H2Attrs, H2Content, H2ChildAdmittedBy, H3Is, H3Attrs, H3Content, H3ChildAdmittedBy, H4Is, H4Attrs, H4Content, H4ChildAdmittedBy, H5Is, H5Attrs, H5Content, H5ChildAdmittedBy, H6Is, H6Attrs, H6Content, H6ChildAdmittedBy, HeaderIs, HeaderAttrs, HeaderChildAdmittedBy, HgroupIs, HgroupAttrs, HgroupChildAdmittedBy, MainIs, MainAttrs, MainChildAdmittedBy, NavIs, NavAttrs, NavChildAdmittedBy, NavRoles, SearchIs, SearchAttrs, SearchChildAdmittedBy, SectionIs, SectionAttrs, SectionChildAdmittedBy, SectionRoles
     )

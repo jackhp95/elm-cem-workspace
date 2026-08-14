@@ -1,4 +1,4 @@
-module TypedHtml.Button exposing
+module TypedHtml.Component.Button exposing
     ( button
     , Is, Attrs, Content, ChildAdmittedBy, Roles
     , commandfor, disabled, form, formenctype, formmethod, formnovalidate, formtarget, name, popovertarget, popovertargetaction, readonly, type_, value, valueAsNumber

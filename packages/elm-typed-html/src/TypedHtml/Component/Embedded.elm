@@ -1,4 +1,4 @@
-module TypedHtml.Embedded exposing
+module TypedHtml.Component.Embedded exposing
     ( area, canvas, embed, iframe, map, object
     , AreaIs, AreaAttrs, AreaChildAdmittedBy, CanvasAttrs, CanvasChildAdmittedBy, EmbedIs, EmbedAttrs, EmbedChildAdmittedBy, IframeIs, IframeAttrs, IframeChildAdmittedBy, MapAttrs, MapContent, MapChildAdmittedBy, ObjectAttrs, ObjectChildAdmittedBy
     , allow, allowfullscreen, alt, coords, data, download, form, height, href, loading, name, ping, referrerpolicy, rel, sandbox, shape, src, srcdoc, target, width, coordsAsInts

@@ -1,4 +1,4 @@
-module TypedHtml.Img exposing
+module TypedHtml.Component.Img exposing
     ( img
     , Is, Attrs, ChildAdmittedBy
     , alt, crossorigin, decoding, fetchpriority, height, ismap, loading, referrerpolicy, sizes, src, srcset, usemap, width

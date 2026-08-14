@@ -1,4 +1,4 @@
-module TypedHtml.Details exposing
+module TypedHtml.Component.Details exposing
     ( details, summary
     , DetailsIs, DetailsAttrs, DetailsChildAdmittedBy, SummaryIs, SummaryAttrs, SummaryContent, SummaryChildAdmittedBy, SummaryAdmittedBy
     , name, open

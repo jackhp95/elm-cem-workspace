@@ -1,4 +1,4 @@
-module TypedHtml.Scripting exposing
+module TypedHtml.Component.Scripting exposing
     ( noscript, script, slot, template
     , NoscriptIs, NoscriptAttrs, NoscriptContent, NoscriptChildAdmittedBy, ScriptIs, ScriptAttrs, ScriptContent, ScriptChildAdmittedBy, SlotAttrs, SlotChildAdmittedBy, TemplateIs, TemplateAttrs, TemplateChildAdmittedBy
     , async, blocking, crossorigin, defer, fetchpriority, integrity, name, nomodule, referrerpolicy, shadowrootclonable, shadowrootcustomelementregistry, shadowrootdelegatesfocus, shadowrootmode, shadowrootserializable, shadowrootslotassignment, src, type_

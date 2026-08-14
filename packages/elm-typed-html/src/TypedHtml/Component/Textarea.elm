@@ -1,4 +1,4 @@
-module TypedHtml.Textarea exposing
+module TypedHtml.Component.Textarea exposing
     ( textarea
     , Is, Attrs, Content, ChildAdmittedBy
     , autocomplete, cols, dirname, disabled, form, maxlength, minlength, name, placeholder, readonly, required, rows, wrap

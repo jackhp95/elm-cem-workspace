@@ -1,4 +1,4 @@
-module TypedHtml.Form exposing
+module TypedHtml.Component.Form exposing
     ( fieldset, form, label, legend, output
     , FieldsetIs, FieldsetAttrs, FieldsetChildAdmittedBy, FormIs, FormAttrs, FormChildAdmittedBy, LabelIs, LabelAttrs, LabelContent, LabelChildAdmittedBy, LegendIs, LegendAttrs, LegendContent, LegendChildAdmittedBy, LegendAdmittedBy, OutputIs, OutputAttrs, OutputContent, OutputChildAdmittedBy
     , acceptCharset, action, autocomplete, disabled, enctype, for, method, name, novalidate, readonly, target

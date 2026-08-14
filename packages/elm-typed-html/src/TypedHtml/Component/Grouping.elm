@@ -1,4 +1,4 @@
-module TypedHtml.Grouping exposing
+module TypedHtml.Component.Grouping exposing
     ( blockquote, dd, dialog, div, dl, dt, figcaption, figure, hr, li, menu, ol, p, pre, ul
     , BlockquoteIs, BlockquoteAttrs, BlockquoteChildAdmittedBy, DdIs, DdAttrs, DdContent, DdChildAdmittedBy, DdAdmittedBy, DialogIs, DialogAttrs, DialogChildAdmittedBy, DivIs, DivAttrs, DivChildAdmittedBy, DivRoles, DlIs, DlAttrs, DlContent, DlChildAdmittedBy, DtIs, DtAttrs, DtContent, DtChildAdmittedBy, DtAdmittedBy, FigcaptionIs, FigcaptionAttrs, FigcaptionContent, FigcaptionChildAdmittedBy, FigcaptionAdmittedBy, FigureIs, FigureAttrs, FigureChildAdmittedBy, HrIs, HrAttrs, HrChildAdmittedBy, LiIs, LiAttrs, LiContent, LiChildAdmittedBy, LiAdmittedBy, MenuIs, MenuAttrs, MenuContent, MenuChildAdmittedBy, OlIs, OlAttrs, OlContent, OlChildAdmittedBy, PIs, PAttrs, PContent, PChildAdmittedBy, PreIs, PreAttrs, PreContent, PreChildAdmittedBy, UlIs, UlAttrs, UlContent, UlChildAdmittedBy
     , cite, closedby, open, reversed, start, valueOrdinal
