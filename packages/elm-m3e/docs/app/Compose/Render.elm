@@ -1,18 +1,18 @@
-module Route.Components.Compose.Render exposing (renderNode, tagFor)
+module Compose.Render exposing (renderNode)
 
 {-| The live preview: a pure fold from `Cem.Compose.Node` to `Html msg`.
 
 This renders through `Html.node` because which component is on screen is
 only known at runtime — no typed constructor can produce it. `tagFor` and
-`Route.Components.Compose.Attrs.toAttribute` are what keep that plain
-rendering honest against the real component/attribute vocabulary.
+`Compose.Attrs.toAttribute` are what keep that plain rendering honest against
+the real component/attribute vocabulary.
 
 -}
 
 import Cem.Compose
+import Compose.Attrs as Attrs
 import Html exposing (Html)
 import Html.Attributes
-import Route.Components.Compose.Attrs as Attrs
 
 
 {-| `"appBar"` → `"m3e-app-bar"`. Kebab-casing the fact's component noun is
