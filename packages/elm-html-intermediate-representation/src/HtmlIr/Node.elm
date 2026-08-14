@@ -1,7 +1,7 @@
 module HtmlIr.Node exposing
     ( Node
     , node, keyedNode, text
-    , lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+    , isKeyed, toKeyedPair
     , addAttribute, map
     , toHtml
     )
@@ -19,7 +19,7 @@ typed slot — only the fenced `HtmlIr.Internal.fromNode` can promote one to an
 
 @docs Node
 @docs node, keyedNode, text
-@docs lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
+@docs isKeyed, toKeyedPair
 @docs addAttribute, map
 @docs toHtml
 
@@ -40,6 +40,12 @@ type alias Node msg =
 constructor behind every element (native tags and custom elements alike). The
 attributes' capability rows are erased; they were checked where the caller's
 typed attribute list unified.
+
+If any child carries a diff key (via [`HtmlIr.Element.key`](HtmlIr-Element#key)),
+the whole child list is auto-upgraded to a keyed node, with `String.fromInt
+index` filling in for unkeyed children. See
+[`HtmlIr.Internal.node`](HtmlIr-Internal#node).
+
 -}
 node : String -> List (Attr capability msg) -> List (Node msg) -> Node msg
 node =
@@ -47,8 +53,10 @@ node =
 
 
 {-| Build a tag node whose children carry diff keys (`VirtualDom.keyedNode`) —
-for lists that reorder/insert/remove, where unkeyed diffing breaks animation
-and state retention.
+the low-level keyed primitive for lists that reorder/insert/remove, where
+unkeyed diffing breaks animation and state retention. Prefer
+[`HtmlIr.Element.key`](HtmlIr-Element#key) on children (which lets `node`
+auto-upgrade) when you want to keep a typed container's child-kind constraint.
 -}
 keyedNode : String -> List (Attr capability msg) -> List ( String, Node msg ) -> Node msg
 keyedNode =
@@ -62,64 +70,20 @@ text =
     I.text
 
 
-{-| Memoise a subtree while its inputs are referentially unchanged. The body
-returns raw `Html` — a typed subtree is `\model -> HtmlIr.Element.toHtml (myView
-model)` — and **must be a stable top-level function** with stable arguments, or
-it silently never memoises (see [`HtmlIr.Internal.lazy`](HtmlIr-Internal#lazy)).
-Lift the result into a slot with `HtmlIr.Internal.fromNode`.
+{-| Whether a node carries an explicit diff key — the predicate that triggers
+[`node`](#node)'s keyed auto-upgrade.
 -}
-lazy : (a -> Html msg) -> a -> Node msg
-lazy =
-    I.lazy
+isKeyed : Node msg -> Bool
+isKeyed =
+    I.isKeyed
 
 
-{-| [`lazy`](#lazy) for a two-argument view.
+{-| Pair a child with its diff key for a keyed node: the explicit key if the
+child carries one, otherwise the positional `String.fromInt index` fallback.
 -}
-lazy2 : (a -> b -> Html msg) -> a -> b -> Node msg
-lazy2 =
-    I.lazy2
-
-
-{-| [`lazy`](#lazy) for a three-argument view.
--}
-lazy3 : (a -> b -> c -> Html msg) -> a -> b -> c -> Node msg
-lazy3 =
-    I.lazy3
-
-
-{-| [`lazy`](#lazy) for a four-argument view.
--}
-lazy4 : (a -> b -> c -> d -> Html msg) -> a -> b -> c -> d -> Node msg
-lazy4 =
-    I.lazy4
-
-
-{-| [`lazy`](#lazy) for a five-argument view.
--}
-lazy5 : (a -> b -> c -> d -> e -> Html msg) -> a -> b -> c -> d -> e -> Node msg
-lazy5 =
-    I.lazy5
-
-
-{-| [`lazy`](#lazy) for a six-argument view.
--}
-lazy6 : (a -> b -> c -> d -> e -> g -> Html msg) -> a -> b -> c -> d -> e -> g -> Node msg
-lazy6 =
-    I.lazy6
-
-
-{-| [`lazy`](#lazy) for a seven-argument view.
--}
-lazy7 : (a -> b -> c -> d -> e -> g -> h -> Html msg) -> a -> b -> c -> d -> e -> g -> h -> Node msg
-lazy7 =
-    I.lazy7
-
-
-{-| [`lazy`](#lazy) for an eight-argument view.
--}
-lazy8 : (a -> b -> c -> d -> e -> g -> h -> i -> Html msg) -> a -> b -> c -> d -> e -> g -> h -> i -> Node msg
-lazy8 =
-    I.lazy8
+toKeyedPair : Int -> Node msg -> ( String, Node msg )
+toKeyedPair =
+    I.toKeyedPair
 
 
 {-| Prepend one attribute. `Text` (and raw) leaves are promoted to a `<span>`
