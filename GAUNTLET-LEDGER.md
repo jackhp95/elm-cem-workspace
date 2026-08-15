@@ -2509,3 +2509,64 @@ and three PLAN-ONLY tasks. NOTHING published/pushed/tagged/branched.
 - `session 2026-08-15: pass — conflict marker gone (git grep clean); §1.3 root-caused display-only (compose
   spec 11/11); 3 plans written; gate-all re-run GREEN; committed to main. No core edit, no publish/push/tag/branch.`
   Next free IDs: **D-063**, **R-028**.
+
+---
+
+# COMPOSE IA-REVIEW MILESTONE — branch `compose-poc` (approved follow-on)
+
+Source: `/Users/jhp/code/jackhp95/elm-cem-workspace/docs/superpowers/spikes/2026-08-15-compose-ia-review.md` (hands-on
+IA audit; §1 findings, §3 reorg, §4 priority). Design decided; mechanical implementation under full gauntlet
+discipline (builder claude/sonnet, fresh critic claude/claude-opus-4-8, reference-bar gates, ledger). 5 parts in
+the doc's §4 priority order + an end-of-milestone integrator walkthrough. Not pushed/merged. Manager d79872b
+resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-IA1..M-IA5.
+
+- **D-061 (milestone plan + Part-1 ROOT CAUSE — done by manager per the "don't skip diagnosis" instruction).**
+  Decomposition (§4 order): **M-IA1** §3.3/§1.9 correctness gate → **M-IA2** §3.1 split change-component vs
+  add-child menus + de-pollute the type picker + qualify example labels → **M-IA3** §3.2 Attributes/Slots +
+  empty/filled slot chips as distinct visual kinds → **M-IA4** §3.4 per-level nesting indentation (match the code
+  panel) → **M-IA5** §3.5/§3.6 preview frame+label + dismissible localStorage root caption → **Integrator** fresh
+  Opus ~20-interaction walkthrough + resolved/still-open table vs §1.1–§1.9.
+  **ROOT CAUSE of §1.3 (chip presses but preview/snippet don't update) and §1.9 (collapse no-op): DEV-SERVER
+  ARTIFACT, not a state-sync bug.** The audit ran on `elm-pages dev` (doc line 6) — the environment established
+  throughout this effort where THIS route's clicks/state do NOT register (all our Playwright runs use the
+  production `build:site`+serve). Manager reproduced on the PRODUCTION build via Playwright: (a) attr variant→
+  segmented updates the chip AND `m3e-list variant='segmented'` AND the snippet together; (b) adding Text to a
+  text-affording slot (listItem.overline) changes the snippet; (c) clicking a card's Collapse reduces its visible
+  body (SLOTS captions 3→0). On production the chip's pressed state is DRIVEN BY the model (`isSet`/`filled>0`),
+  so pressed ≡ applied by construction — the divergence is structurally impossible there. Also: §1.2's "identical
+  overline/unnamed menus ⇒ broken slot filtering" is a FALSE ALARM (those slots genuinely afford the same content,
+  kinds `[heading, shared:text]`; same menu is type-directed-correct). §1.2's IA problem (flat menu, dup "Label
+  Small") IS real and confirmed → M-IA2. **M-IA1 = write the §3.3/§1.9 locking Playwright tests (chip pressed +
+  preview HTML + snippet + computed body-visibility all move together) — NO model fix needed (proven works); if a
+  test surfaces a real production failure, fix the actual bug, don't paper over.** Next free IDs: **D-062**, **R-023**.
+
+- **M-IA1: pass** (Playwright 14/14; critic clean; builder claude/sonnet). Commit `7ff3710` (spec only, +64/-0,
+  purely additive, NO source change). Three correctness-lock tests on the production build: (1) attr-select →
+  variant button `variant=filled`+`"variant: segmented"` AND `m3e-list variant=segmented` AND snippet
+  `M3e.Attributes.variant`+`M3e.Values.segmented` — all three together (anti-§1.3); (2) add Text to overline →
+  preview `[slot='overline']` shows content AND snippet `TypedHtml.Attributes.slot "overline"`; (3) collapse →
+  the card's "Slots" caption `toBeHidden()` then Expand → `toBeVisible()` (computed visibility, not chevron).
+  Fresh Opus critic confirmed all three assert the full guarantee, no weakening, no route patch (consistent with
+  the D-061 dev-artifact root cause) → PASS. **Correctness gate satisfied; §1.3/§1.9 resolved as dev-artifacts +
+  locked.**
+
+- **D-062 (M-IA2 split — manager decomposition).** §3.1 (the highest-leverage fix) splits cleanly into two
+  independently-gateable parts that share a reusable grouped+searchable component picker:
+  **M-IA2a** = the CHANGE-COMPONENT menu → only real component types (REMOVE the G-Ex2 example options from THIS
+  menu), grouped by the Components-sidebar nav categories, with a search box. **M-IA2b** = the ADD-CHILD slot menu
+  → lead with exactly `Text`, `Icon`, `Nest a component…` (the last reuses M-IA2a's picker, constrained to the
+  slot's afforded components), then a distinctly-headed "Load an example" section (only when examples exist)
+  with labels QUALIFIED by source component (fixes the dup "Label Small"). Reuse Doc.Data reference.json (each
+  entry has category+label+slug; already decoded in Doc.Data) for grouping/labels, and allUsage/FromHtml for
+  examples. M-IA2a first (builds the picker). Next free IDs: **D-063**, **R-023**.
+
+- **M-IA2a: pass** (build:site exit 0; Playwright 15/15; critic clean; builder claude/sonnet). Commit `3dce992`
+  (2 files: route +335, spec +108). Change-component control rebuilt from the flat ~300-item polluted `m3e-menu`
+  into a grouped, searchable custom `componentPicker { search, onSearch, onPick, options, reference }` panel: ONLY
+  real component types (examples removed from this menu), grouped by `Shared.componentCategories` (7 nav
+  categories) with visible captions + a trailing "Other" group (no `componentOptions` entry dropped), and a
+  "Search components" input that filters by name/editorial-label. Route now also loads `reference.json` (category/
+  label) alongside `allUsage`. Builder found a real facts detail (`avatar` has `slotKinds=[]` → no addable text
+  slot; switched a test to `heading`). Fresh Opus critic verified zero example titles + real search filtering +
+  grouping + reusable signature + existing tests not weakened → PASS. Directly fixes §1.1. Next free IDs:
+  **D-063**, **R-023**.
