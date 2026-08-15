@@ -1636,6 +1636,7 @@
           "shared:icon"
         ],
         "trailing-icon": [
+          "badge",
           "shared:icon"
         ]
       },

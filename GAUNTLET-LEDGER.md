@@ -1901,3 +1901,16 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
   (public Msgs only, no core change). Fresh Opus critic verified the 3 embedded example strings are BYTE-IDENTICAL
   to examples.json, assertions genuine (enum→AttrEnum, non-classified attr dropped, slot placement, child kinds),
   and the toMsgs replay folds through update + asserts via accessors → PASS. Next free IDs: **D-060**, **R-023**.
+
+- **D-060 (branch regression from D-053 badge recast — caught by G-Ex2's gate:all, fixed).** `gate:all` on the
+  G-Ex2 run showed a NEW failure `workspace: check-bundle-provenance cem-figma-connect` — the G-Ex2 builder
+  MIS-ATTRIBUTED it as "pre-existing/unrelated". Manager verified: it is a REAL branch regression. The handoff
+  agent's badge type-recast (D-053, branch commit `55ab1cb`, "admit badge in button trailing-icon slot") changed
+  `elm-m3e/config/slots.json` + `M3e` types → changed elm-cem's GENERATED facts (button.trailing-icon now emits
+  `"badge"`), but the DERIVED `packages/cem-figma-connect/profiles/m3-kit/facts/elm-api-facts.json` bundle was
+  never regenerated → drift → provenance FAIL. Passes on `main` (no recast), fails on the branch. Latent since
+  D-053 because the handoff agent's per-part gates were docs-scoped (never ran `gate:all`); G-Ex2's run is the
+  first `gate:all` since D-053, surfacing it. **Fix:** `pnpm --filter cem-figma-connect run gen:facts` → the golden
+  regenerates with EXACTLY one added line (`+"badge"` under trailing-icon), matching the recast; provenance now
+  "byte-identical to a fresh regeneration" (PASS). Committed as a separate corrective commit (NOT folded into
+  G-Ex2). Completes the D-053 recast properly. Next free IDs: **D-061**, **R-023**.
