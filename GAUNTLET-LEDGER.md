@@ -1637,3 +1637,25 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   (html/components/builder/icons/facts). Manager-verified all 6 axes: check-m3e-5pkg + verify:split
   exit 0, regen-clean, Internal.Types unexposed, elm-typed-html no-op. docs.json: html/components/
   builder/facts under cap; icons OVER (R-026, pre-existing, escalated). See D-045.`
+
+- **D-046 (M8.b — Face A re-baseline: `ab-elm-cem` now compares against a COMMITTED BUNDLE of the
+  workspace generator, not the remote SHA).** The R-025 emitter change forked the workspace elm-cem
+  generator AHEAD of pinned upstream main (ad5d523), which the change is not in and cannot be pushed
+  to (read-only remote). So Face A's "workspace generator output == pinned-upstream output" invariant
+  is now permanently, intentionally false. Chose the brief's first sanctioned option — advance the
+  cache/pin to the workspace's changed generator — over retiring the gate: it PRESERVES Face A's
+  unique protective value (forcing a conscious re-baseline whenever the generator's output changes,
+  which is exactly what caught this change; regen-drift/`check:cem` alone can't, since it passes when
+  emitter+committed-src change together). Mechanism: `git archive HEAD:packages/elm-cem` (export-ignore
+  drops only dev-only /tests etc. the generator doesn't need) → fresh single-commit git repo →
+  `tools/snapshots/elm-cem-generator.bundle` (committed, 680 KB, durable + reproducible on clone).
+  `tools/snapshot-refs.json` elm-cem entry now carries a `bundle` field (sha e5f2b9a8) + kept `repo`
+  for provenance; `tools/fetch-snapshots.mjs` gained a `bundle` branch that clones straight from the
+  committed bundle (no remote fetch). Proven: fetch-snapshots materializes at e5f2b9a8; `ab-elm-cem`
+  A/B PASS 403 files byte-identical; `check-drift` 9/9 GREEN. **Proven to still BITE** (non-vacuous):
+  mutating a live emitter doc literal in the workspace → `ab-elm-cem` RED naming the exact diff;
+  restore → GREEN. **Standing rule:** any future intended elm-cem generator change must RE-BUNDLE
+  (`git archive HEAD:packages/elm-cem` → new bundle) and bump `snapshot-refs.json` elm-cem `sha` —
+  same conscious-re-baseline discipline D-041 established when advancing to a new main. Revert via
+  `git revert` (restores the ad5d523 remote pin, which will then red on the R-025 output change).
+  Next free IDs: **D-047**, **R-027**.
