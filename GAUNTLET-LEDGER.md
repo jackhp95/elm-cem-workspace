@@ -1538,3 +1538,49 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   5-package split, re-baseline (Face A + snapshot cache), and get gate-all green. Tree is clean at
   HEAD, 4-package (main's shape), verify:split green. DO NOT PUBLISH. Also open: a pre-existing
   acid-probe failure in elm-m3e check:cem to run down (R-026 candidate).
+
+## M8 (continued) — new manager (claude-opus-4-8), took over at 0f52d9f
+
+- **D-044 (M8.b emitter change — PLAN + precise emitter analysis, recorded before dispatch per
+  D-009).** Re-derived the R-025 option-1 change against the real generated tree. The blocker is
+  concrete: `M3e.Build.<X>` currently declares its top-of-module type aliases (`Is`, `Builder`,
+  `AttrCaps`, `SlotCaps`, `ChildAdmittedBy`, `AdmittedBy`, `ActionCaps`, and the content
+  re-exports `Content`/`<Slot>Slot`) by pointing `internalRef` at the UNEXPOSED
+  `M3e.Internal.Types.<X>`; splitting Build into its own package makes that a cross-package import
+  of an `exposing (..)` module → IMPLICIT EXPOSING. Measured on `M3e.Build.Button`: exactly 11
+  refs to `M3e.Internal.Types.Button.*`, ALL inside that alias block (the `build`/`toElement`
+  bodies and setters already route through `Component.*` or the forge `B.*`, not Internal.Types).
+  `M3e.Component.<X>` already exposes 8 of the 11 (`Is`, `Content`, the 4 slot aliases,
+  `ChildAdmittedBy`, `ActionCaps`); the 3 it does NOT are `Builder`, `AttrCaps`, `SlotCaps`.
+  **The change (two localized edits to `packages/elm-cem/codegen/Generate/Phantom/Emit.elm`):**
+  1. `compModule` (Component emitter, lines 2689–3309): add a `singularSlots` binding
+     (`namedSlots |> List.filter (not << .multi)`) and emit three new alias decls into
+     `aliasDecls` — `Builder` (`internalRef "Builder" ++ " attrCaps slotCaps msg kind"`), `AttrCaps`
+     (`internalRef "AttrCaps"`), and `SlotCaps` with the SAME `{}`-vs-`internalRef` conditional
+     `compBuildModule` uses today (`capsRecord "Available" (singularSlots |> map camel name)`; inline
+     `{}` when trimmed body is `{}`, else `internalRef "SlotCaps"`). Internal.Types defines
+     `Builder`/`AttrCaps` for all 130 comps and `SlotCaps` for only the 51 with singular slots — so
+     the conditional is REQUIRED (79 comps have no `Internal.Types.<X>.SlotCaps`). Add
+     `"Builder"`, `"AttrCaps"`, `"SlotCaps"` to `compModule`'s `exposeGroups` type group (drives
+     both `exposing` and `@docs`). `compModule`'s existing `internalRef` (line 2930, →Internal.Types)
+     is CORRECT and unchanged — Component legitimately imports Internal.Types intra-package.
+  2. `compBuildModule` (Build emitter, lines 3499–4149): redefine `internalRef n = "Component." ++ n`
+     (line 3641) so ALL Build aliases route through the now-exposed Component surface, and DROP the
+     `import <lib>.Internal.Types.<comp>` line (4027). No other Build edit needed.
+  **Why no cycle:** the `M3e` barrel imports ONLY `M3e.Component.*` (0 Build imports); `Component.* →
+  Build.* = 0`; `Internal.Types.* → Build.* = 0`. DAG stays `builder → components → html`,
+  `icons → html` (M3e.Icon imports only IR), `facts → elm-cem-facts` — acyclic.
+  **packages.json → D-037 5-pkg split:** rename `elm-m3e-core`→`elm-m3e-html` and
+  `elm-m3e-review-facts`→`elm-m3e-facts`; drop the `M3e.Build`/`M3e.Build.` buckets out of
+  `elm-m3e-components`; add `elm-m3e-builder` with buckets `{exact:"M3e.Build"}` + `{prefix:"M3e.Build."}`,
+  deps = html + components + IR + elm/*. `M3e.Build` (the barrel importing all Build.*) goes in
+  builder. Update every renamed dep reference (components dep html; builder dep html+components).
+  **Bar (preflighted):** `node tools/check-m3e-5pkg.mjs` (fails-now on 4-pkg — the discriminator) +
+  `pnpm --filter elm-m3e run verify:split` (~4.4s; passes-now on 4-pkg, but goes RED if the 5-pkg
+  config is set WITHOUT the emitter change — R-025, the exact wall loop 348f0002 hit). Jointly
+  non-vacuous/non-gameable. The one vector the fast bar can't see — hand-editing generated `src/`
+  instead of `Emit.elm` — is closed by the critic (regen `src/` from Emit.elm, diff against working
+  tree) and by the manager's post-loop `gate-all` Face A A/B (`ab-elm-cem` regenerates the whole
+  emitter output and byte-compares). Builder=claude-sonnet-5, critic=claude-opus-4-8 (NEVER
+  opus-5/fable-5). Manager runs `gate-all` + the docs.json byte cap itself (too slow / must-not-be-a-
+  loop-check, D-015). Next free IDs: **D-045**, **R-026**.
