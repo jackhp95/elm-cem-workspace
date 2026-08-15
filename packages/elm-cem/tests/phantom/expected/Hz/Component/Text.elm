@@ -1,6 +1,6 @@
 module Hz.Component.Text exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Hz.Component.Text exposing
 Tests K7 (capitalized-name shape, fluent): name=Text decapitalizes to ctor=text, collides with \_atoms.text. K7 must revert to Naming.camel tag = hzCapitalText.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -46,6 +46,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.Text.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.Text.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.Text.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

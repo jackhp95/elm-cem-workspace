@@ -1,6 +1,6 @@
 module Mini.Component.Icon exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Mini.Component.Icon exposing
 A shared icon atom.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -49,6 +49,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Mini.Internal.Types.Icon.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Icon.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Icon.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

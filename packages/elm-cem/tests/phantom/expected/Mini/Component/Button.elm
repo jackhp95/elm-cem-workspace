@@ -1,6 +1,6 @@
 module Mini.Component.Button exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , Variant, variant
     , disabled, weight, weightAsNumber, onClick
     , icon, child
@@ -11,7 +11,7 @@ module Mini.Component.Button exposing
 An action chip trigger.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs Variant, variant
 @docs disabled, weight, weightAsNumber, onClick
 @docs icon, child
@@ -65,6 +65,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     Mini.Internal.Types.Button.Variant
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Button.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Button.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    Mini.Internal.Types.Button.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

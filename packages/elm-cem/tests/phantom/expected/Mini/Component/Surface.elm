@@ -1,6 +1,6 @@
 module Mini.Component.Surface exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , grid, gridAsInts
     , child
     )
@@ -10,7 +10,7 @@ module Mini.Component.Surface exposing
 A kind-permissive layout container (still context-gating).
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs grid, gridAsInts
 @docs child
 
@@ -44,6 +44,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     Mini.Internal.Types.Surface.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Surface.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Surface.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

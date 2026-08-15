@@ -21,24 +21,23 @@ import HtmlIr.Value as Val exposing (Value)
 import Or.Attributes as A
 import Or.Component.Plain as Component
 import Or.Forge.Internal as B
-import Or.Internal.Types.Plain
 import Or.Kind exposing (Available, Brand, Ctx, Used)
 import Or.Values
 
 
 {-| -}
 type alias Is s =
-    Or.Internal.Types.Plain.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Or.Internal.Types.Plain.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Or.Internal.Types.Plain.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -48,12 +47,12 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Or.Internal.Types.Plain.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Or.Internal.Types.Plain.Content
+    Component.Content
 
 
 {-| -}

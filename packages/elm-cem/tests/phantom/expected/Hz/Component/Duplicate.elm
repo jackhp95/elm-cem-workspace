@@ -1,6 +1,6 @@
 module Hz.Component.Duplicate exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , value, defaultValue
     , child
     )
@@ -10,7 +10,7 @@ module Hz.Component.Duplicate exposing
 Tests K3: duplicate value attribute.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs value, defaultValue
 @docs child
 
@@ -48,6 +48,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.Duplicate.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.Duplicate.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.Duplicate.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

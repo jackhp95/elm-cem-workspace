@@ -21,24 +21,23 @@ import HtmlIr.Value as Val exposing (Value)
 import Hz.Attributes as A
 import Hz.Component.Placement as Component
 import Hz.Forge.Internal as B
-import Hz.Internal.Types.Placement
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 import Hz.Values
 
 
 {-| -}
 type alias Is s =
-    Hz.Internal.Types.Placement.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Placement.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Hz.Internal.Types.Placement.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -48,12 +47,12 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Placement.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Hz.Internal.Types.Placement.Content
+    Component.Content
 
 
 {-| -}

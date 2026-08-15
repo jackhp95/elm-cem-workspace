@@ -21,24 +21,23 @@ import HtmlIr.Value as Val exposing (Value)
 import Mini.Attributes as A
 import Mini.Component.Tab as Component
 import Mini.Forge.Internal as B
-import Mini.Internal.Types.Tab
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
 import Mini.Values
 
 
 {-| -}
 type alias Is s =
-    Mini.Internal.Types.Tab.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Mini.Internal.Types.Tab.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Mini.Internal.Types.Tab.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -48,17 +47,17 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Mini.Internal.Types.Tab.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias AdmittedBy =
-    Mini.Internal.Types.Tab.AdmittedBy
+    Component.AdmittedBy
 
 
 {-| -}
 type alias Content =
-    Mini.Internal.Types.Tab.Content
+    Component.Content
 
 
 {-| -}

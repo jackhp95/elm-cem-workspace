@@ -1,6 +1,6 @@
 module Br.Component.Barren exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , count, label
     , child
     )
@@ -10,7 +10,7 @@ module Br.Component.Barren exposing
 A component with zero enum types (K6: no closed enums, no enum tokens).
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs count, label
 @docs child
 
@@ -48,6 +48,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Br.Internal.Types.Barren.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Br.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Br.Internal.Types.Barren.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Br.Internal.Types.Barren.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

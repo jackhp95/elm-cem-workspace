@@ -24,44 +24,43 @@ import Mini.Attributes as A
 import Mini.Component.Button as Component
 import Mini.Events as Ev
 import Mini.Forge.Internal as B
-import Mini.Internal.Types.Button
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
 import Mini.Values
 
 
 {-| -}
 type alias Is s =
-    Mini.Internal.Types.Button.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Mini.Internal.Types.Button.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Mini.Internal.Types.Button.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Mini.Internal.Types.Button.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Mini.Internal.Types.Button.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Mini.Internal.Types.Button.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    Mini.Internal.Types.Button.IconSlot
+    Component.IconSlot
 
 
 {-| -}

@@ -1,6 +1,6 @@
 module Mini.Component.Tab exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy, AdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Mini.Component.Tab exposing
 A single tab. Only valid inside mini-tabs.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy, AdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
 @docs child
 
 -}
@@ -55,6 +55,24 @@ only writable as a direct child of `mini-tabs`.
 -}
 type alias AdmittedBy =
     Mini.Internal.Types.Tab.AdmittedBy
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Tab.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Tab.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1,6 +1,6 @@
 module Hz.Component.Placement exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Position, position
     , child
     )
@@ -10,7 +10,7 @@ module Hz.Component.Placement exposing
 Tests K1: enum with both \_top and top tokens.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Position, position
 @docs child
 
@@ -55,6 +55,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Position =
     Hz.Internal.Types.Placement.Position
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.Placement.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.Placement.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

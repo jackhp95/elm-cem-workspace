@@ -19,23 +19,22 @@ import Hz.Attributes as A
 import Hz.Component.ErrorOnly as Component
 import Hz.Events as Ev
 import Hz.Forge.Internal as B
-import Hz.Internal.Types.ErrorOnly
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    Hz.Internal.Types.ErrorOnly.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.ErrorOnly.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Hz.Internal.Types.ErrorOnly.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -45,7 +44,7 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.ErrorOnly.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}

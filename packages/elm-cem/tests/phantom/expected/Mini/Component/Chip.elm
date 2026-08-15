@@ -1,6 +1,6 @@
 module Mini.Component.Chip exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Size, size
     , disabled
     , child
@@ -11,7 +11,7 @@ module Mini.Component.Chip exposing
 A compact labelled element.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Size, size
 @docs disabled
 @docs child
@@ -58,6 +58,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Size =
     Mini.Internal.Types.Chip.Size
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Chip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Chip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1,6 +1,6 @@
 module Hz.Component.Global exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Hz.Component.Global exposing
 Tests K2: redeclares global attrs id, class, slot, style.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -46,6 +46,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.Global.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.Global.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.Global.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

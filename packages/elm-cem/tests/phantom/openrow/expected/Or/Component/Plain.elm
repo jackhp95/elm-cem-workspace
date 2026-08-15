@@ -1,6 +1,6 @@
 module Or.Component.Plain exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Or.Component.Plain exposing
 An element declaring NO attributes of its own, so every field in its `Attrs` row came from `_globals` — which makes an open global's absence from that row unambiguous.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -48,6 +48,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Or.Internal.Types.Plain.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Or.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Or.Internal.Types.Plain.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Or.Internal.Types.Plain.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

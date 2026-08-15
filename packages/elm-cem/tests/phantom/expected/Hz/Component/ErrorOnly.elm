@@ -1,6 +1,6 @@
 module Hz.Component.ErrorOnly exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , onHzError
     )
 
@@ -9,7 +9,7 @@ module Hz.Component.ErrorOnly exposing
 Tests K4 acid probe: component with only hz-error event, no native error.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs onHzError
 
 -}
@@ -41,6 +41,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.ErrorOnly.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.ErrorOnly.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.ErrorOnly.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

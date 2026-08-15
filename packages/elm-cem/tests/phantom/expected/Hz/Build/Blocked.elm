@@ -20,23 +20,22 @@ import HtmlIr.Kind exposing (Supported)
 import Hz.Attributes as A
 import Hz.Component.Blocked as Component
 import Hz.Forge.Internal as B
-import Hz.Internal.Types.Blocked
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    Hz.Internal.Types.Blocked.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Blocked.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Hz.Internal.Types.Blocked.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -46,12 +45,12 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Blocked.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Hz.Internal.Types.Blocked.Content
+    Component.Content
 
 
 {-| -}

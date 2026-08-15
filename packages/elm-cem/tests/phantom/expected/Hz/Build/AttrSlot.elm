@@ -22,43 +22,42 @@ import HtmlIr.Kind exposing (Supported)
 import Hz.Attributes as A
 import Hz.Component.AttrSlot as Component
 import Hz.Forge.Internal as B
-import Hz.Internal.Types.AttrSlot
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    Hz.Internal.Types.AttrSlot.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.AttrSlot.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Hz.Internal.Types.AttrSlot.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Hz.Internal.Types.AttrSlot.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.AttrSlot.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias HintSlot =
-    Hz.Internal.Types.AttrSlot.HintSlot
+    Component.HintSlot
 
 
 {-| -}
 type alias LabelSlot =
-    Hz.Internal.Types.AttrSlot.LabelSlot
+    Component.LabelSlot
 
 
 {-| -}

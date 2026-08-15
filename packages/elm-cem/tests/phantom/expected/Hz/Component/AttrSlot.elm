@@ -1,6 +1,6 @@
 module Hz.Component.AttrSlot exposing
     ( view
-    , Is, Attrs, HintSlot, LabelSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, HintSlot, LabelSlot, ChildAdmittedBy
     , withHint, withLabel
     , hint, label
     )
@@ -10,7 +10,7 @@ module Hz.Component.AttrSlot exposing
 Tests K5: attr with-hint + slot hint collision, and with-label/label.
 
 @docs view
-@docs Is, Attrs, HintSlot, LabelSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, HintSlot, LabelSlot, ChildAdmittedBy
 @docs withHint, withLabel
 @docs hint, label
 
@@ -54,6 +54,24 @@ type alias LabelSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.AttrSlot.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.AttrSlot.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.AttrSlot.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    Hz.Internal.Types.AttrSlot.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

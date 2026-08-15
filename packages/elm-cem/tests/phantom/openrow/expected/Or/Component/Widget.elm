@@ -1,6 +1,6 @@
 module Or.Component.Widget exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , label
     , child
     )
@@ -10,7 +10,7 @@ module Or.Component.Widget exposing
 An element with one attribute of its own, so its `Attrs` row is a mix of global and CEM fields.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs label
 @docs child
 
@@ -50,6 +50,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Or.Internal.Types.Widget.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Or.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Or.Internal.Types.Widget.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Or.Internal.Types.Widget.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

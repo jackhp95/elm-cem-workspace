@@ -3023,7 +3023,7 @@ compModule brand comp =
                    )
                 ++ [ ""
                    , ""
-                   , doc "The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes."
+                   , doc ("The narrowed pipe-builder this component's `" ++ lib ++ ".Build.<X>` module exposes.")
                    , "type alias Builder attrCaps slotCaps msg kind ="
                    , "    " ++ internalRef "Builder" ++ " attrCaps slotCaps msg kind"
                    , ""

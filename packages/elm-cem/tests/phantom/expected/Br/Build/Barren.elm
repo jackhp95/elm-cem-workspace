@@ -17,7 +17,6 @@ module Br.Build.Barren exposing
 import Br.Attributes as A
 import Br.Component.Barren as Component
 import Br.Forge.Internal as B
-import Br.Internal.Types.Barren
 import Br.Kind exposing (Available, Brand, Ctx, Used)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
@@ -26,17 +25,17 @@ import HtmlIr.Kind exposing (Supported)
 
 {-| -}
 type alias Is s =
-    Br.Internal.Types.Barren.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Br.Internal.Types.Barren.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Br.Internal.Types.Barren.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -46,12 +45,12 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Br.Internal.Types.Barren.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Br.Internal.Types.Barren.Content
+    Component.Content
 
 
 {-| -}

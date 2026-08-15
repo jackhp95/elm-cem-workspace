@@ -1,6 +1,6 @@
 module Mini.Component.Toolbar exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module Mini.Component.Toolbar exposing
 Groups action elements (a set-reference consumer).
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs child
 
 -}
@@ -42,6 +42,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     Mini.Internal.Types.Toolbar.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Mini.Internal.Types.Toolbar.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Mini.Internal.Types.Toolbar.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot admits

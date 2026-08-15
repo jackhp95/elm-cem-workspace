@@ -1,6 +1,6 @@
 module Hz.Component.EventClash exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , onError, onHzError, onLoad, onHzLoad
     , child
     )
@@ -10,7 +10,7 @@ module Hz.Component.EventClash exposing
 Tests K4: native error + hz-error events.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs onError, onHzError, onLoad, onHzLoad
 @docs child
 
@@ -49,6 +49,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     Hz.Internal.Types.EventClash.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    Hz.Internal.Types.EventClash.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    Hz.Internal.Types.EventClash.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.
