@@ -26,40 +26,86 @@ import { test, expect } from "@playwright/test";
  * (every menu is always in the DOM, only the clicked one is shown).
  */
 
-test("a slot menu offers every valid kind, not just text", async ({ page }) => {
+test("a slot add-panel offers every valid kind, not just text (M-IA2b)", async ({ page }) => {
   await page.goto("/components/compose");
 
   // Add a fresh listItem via the ROOT list's "unnamed" slot (`.first()` — the
-  // starter's own listItems each expose an "unnamed" button too).
+  // starter's own listItems each expose an "unnamed" button too). That slot
+  // affords ONLY components (no text/icon), so its panel's one leading
+  // option is "Nest a component..."; pick "listItem" from the picker it opens.
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  const unnamedPanel = page.locator(".compose-slot-add-panel");
+  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
 
   // The new listItem is last; its "trailing" slot is the §8.7 acceptance case:
-  // it affords text, an icon, AND five components at once.
+  // it affords text, an icon, AND five components at once. Per M-IA2b/§3.1
+  // the add-control is a plain positioned panel (`.compose-slot-add-panel`),
+  // not an `m3e-menu` — only the just-opened slot's panel is ever in the DOM.
   await page.getByRole("button", { name: "trailing" }).last().click();
 
-  // Every menu is in the DOM; only the just-opened one is visible.
-  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
-  await expect(trailingMenu).toBeVisible();
+  const panel = page.locator(".compose-slot-add-panel");
+  await expect(panel).toBeVisible();
 
-  // `.compose-example-item` items (one per real example a component has) are
-  // excluded here — this asserts the plain option set, not the real-example
-  // options G-Ex2 adds alongside them (see the "real example" test below).
-  const items = trailingMenu.locator("m3e-menu-item:not(.compose-example-item)");
-  await expect(items).toHaveText([
-    "Text",
-    "Icon",
-    "avatar",
-    "checkbox",
-    "heading",
-    "radio",
-    "switch",
-  ]);
+  // The three fixed leading options — real component types and doc-example
+  // titles are NOT flattened in here anymore (§1.1/§1.2's fix).
+  await expect(panel.getByRole("button", { name: "Text", exact: true })).toBeVisible();
+  await expect(panel.getByRole("button", { name: "Icon", exact: true })).toBeVisible();
+  await expect(panel.getByRole("button", { name: "Nest a component...", exact: true })).toBeVisible();
 
-  // Picking `checkbox` — one of five component options this menu did NOT
-  // collapse away — puts a real `m3e-checkbox` in the rendered tree.
-  await trailingMenu.getByRole("menuitem", { name: "checkbox", exact: true }).click();
+  // "Nest a component..." opens the constrained component picker; picking
+  // `checkbox` (editorial label "Checkbox" — its reference category is
+  // recognized, so `pickerEntry` uses the nicer label, same rule as the
+  // change-component picker) — one of five component options this slot
+  // affords — puts a real `m3e-checkbox` in the rendered tree.
+  await panel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  const nestPicker = panel.locator(".compose-component-picker");
+  await expect(nestPicker).toBeVisible();
+  await nestPicker.getByRole("button", { name: "Checkbox", exact: true }).click();
   await expect(page.locator("m3e-list-item m3e-checkbox")).toHaveCount(1);
+});
+
+test("'Nest a component...' constrains the picker to what the slot affords (M-IA2b)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // The first listItem's "overline" slot affords text and `heading` only
+  // (see the doc comment on `qualifiedExamplesForAddChild`'s test sibling
+  // below) — `avatar`, offered on OTHER slots (e.g. `trailing`), must be
+  // absent here. This is the concrete proof the nest picker is constrained
+  // per-slot rather than reusing the full ~300-item component list.
+  await page.getByRole("button", { name: /overline/ }).first().click();
+  const panel = page.locator(".compose-slot-add-panel");
+  await panel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+
+  const nestPicker = panel.locator(".compose-component-picker");
+  await expect(nestPicker).toBeVisible();
+  await expect(nestPicker.getByRole("button", { name: "Heading", exact: true })).toBeVisible();
+  await expect(nestPicker.getByRole("button", { name: "avatar", exact: true })).toHaveCount(0);
+  await expect(nestPicker.getByRole("button", { name: "Avatar", exact: true })).toHaveCount(0);
+});
+
+test("the 'Load an example' section is headed and qualifies duplicate example titles by source component (M-IA2b)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // The first listItem's "overline" slot's only nestable component is
+  // `heading`, whose real examples (`data/examples.json`) include two
+  // literally titled "Label Small" / "Label Small (2)" — the exact §1.2
+  // duplicate the IA review flagged. Qualifying by source component turns
+  // them into two genuinely distinct strings.
+  await page.getByRole("button", { name: /overline/ }).first().click();
+  const panel = page.locator(".compose-slot-add-panel");
+
+  await expect(panel.getByText("Load an example", { exact: true })).toBeVisible();
+
+  const first = panel.getByRole("button", { name: "Heading - Label Small", exact: true });
+  const second = panel.getByRole("button", { name: "Heading - Label Small (2)", exact: true });
+  await expect(first).toBeVisible();
+  await expect(second).toBeVisible();
+
+  await first.click();
+  await expect(page.locator("m3e-list-item m3e-heading[slot='overline']")).toHaveCount(1);
 });
 
 test("setting an attribute updates both the live element and the snippet", async ({ page }) => {
@@ -83,12 +129,19 @@ test("setting an attribute updates both the live element and the snippet", async
 test("nesting three levels deep works with chips alone", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list > listItem > (trailing) checkbox — three levels, buttons and menus
-  // only, no hand-authored code. Add a fresh listItem and drive ITS trailing.
+  // list > listItem > (trailing) checkbox — three levels, buttons and panels
+  // only, no hand-authored code. Add a fresh listItem via the root's
+  // component-only "unnamed" slot (its panel's one leading option is "Nest a
+  // component..."), then drive ITS trailing.
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  const unnamedPanel = page.locator(".compose-slot-add-panel");
+  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "trailing" }).last().click();
-  await page.locator("m3e-menu[id*='trailing']:visible").getByRole("menuitem", { name: "checkbox", exact: true }).click();
+
+  const panel = page.locator(".compose-slot-add-panel");
+  await panel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await panel.locator(".compose-component-picker").getByRole("button", { name: "Checkbox", exact: true }).click();
 
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
 });
@@ -154,26 +207,30 @@ test("the change-component picker is grouped, searchable, and offers no example 
 test("loading a real example (G-Ex2) fills the node with its actual content", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // Add a fresh listItem, then open ITS "trailing" slot menu — one of the
-  // five components it affords is "heading", which (via data/examples.json)
-  // has a real "Typescale variants and sizes" example (root
-  // `<m3e-heading variant="display" size="large">Display Large</m3e-heading>`),
-  // offered as an extra `.compose-example-item` alongside the plain
-  // "heading" option. (M-IA2a removed examples from the CHANGE-COMPONENT
-  // menu only — see the picker test above; the add-child menu keeps them.)
+  // Add a fresh listItem, then open ITS "trailing" slot add-panel — one of
+  // the five components it affords is "heading", which (via
+  // data/examples.json) has a real "Typescale variants and sizes" example
+  // (root `<m3e-heading variant="display" size="large">Display Large</m3e-heading>`),
+  // offered in the panel's "Load an example" section, qualified by source
+  // component ("Heading - Typescale variants and sizes", M-IA2b/§3.1).
+  // (M-IA2a removed examples from the CHANGE-COMPONENT menu only — see the
+  // picker test above; the add-child panel keeps them.)
   // ("avatar", also offered here, is NOT usable for this: its Fact declares
   // no slots at all, so it can never receive slot content through
   // `Cem.Compose` regardless of FromHtml — a real, pre-existing modeling
   // limit, not something this test should paper over.)
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  const unnamedPanel = page.locator(".compose-slot-add-panel");
+  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "trailing" }).last().click();
 
-  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
-  const headingExample = trailingMenu.locator(
-    'm3e-menu-item:text-is("heading") + m3e-menu-item.compose-example-item'
-  );
-  await expect(headingExample).toHaveText("Typescale variants and sizes");
+  const panel = page.locator(".compose-slot-add-panel");
+  const headingExample = panel.getByRole("button", {
+    name: "Heading - Typescale variants and sizes",
+    exact: true,
+  });
+  await expect(headingExample).toBeVisible();
   await headingExample.click();
 
   // The live preview: a real m3e-heading in the trailing slot, carrying the
@@ -194,7 +251,9 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
   // component" icon button on the just-added node (`.last()`; the starter and
   // the root have their own).
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  const unnamedPanel = page.locator(".compose-slot-add-panel");
+  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "Change component" }).last().click();
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
@@ -234,10 +293,11 @@ test("a newly added text child defaults to placeholder copy", async ({ page }) =
   await page.goto("/components/compose");
 
   // Add a text child to the first list item's "supporting-text" slot (it
-  // affords text AND a heading, so it opens a menu; pick "Text"). The consumer
-  // seeds a fresh text node with "lorem ipsum" rather than an empty string.
+  // affords text AND a heading, so it opens an add-panel; pick "Text"). The
+  // consumer seeds a fresh text node with "lorem ipsum" rather than an empty
+  // string.
   await page.getByRole("button", { name: "supporting-text" }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-add-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   // It shows up in the live preview as real content.
   await expect(page.locator("m3e-list").first()).toContainText("lorem ipsum");
@@ -266,9 +326,9 @@ test("prefill off adds empty content instead of placeholder", async ({ page }) =
   await page.getByRole("switch", { name: "Prefill examples" }).click();
 
   // Add a text child to the first item's supporting-text slot (affords text +
-  // heading, so a menu; pick "Text"). With prefill off, no "lorem ipsum".
+  // heading, so an add-panel; pick "Text"). With prefill off, no "lorem ipsum".
   await page.getByRole("button", { name: "supporting-text" }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-add-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   await expect(page.locator("m3e-list").first()).not.toContainText("lorem ipsum");
 });
@@ -335,10 +395,10 @@ test("adding slot content updates the preview and the snippet", async ({ page })
   await page.goto("/components/compose");
 
   // Lock-in for the IA review's §1.3 finding, slot side: the first listItem's
-  // "overline" slot affords text (and a heading, so it opens a menu); pick
-  // "Text". (Not `list.unnamed` — that slot doesn't afford text at all.)
+  // "overline" slot affords text (and a heading, so it opens an add-panel);
+  // pick "Text". (Not `list.unnamed` — that slot doesn't afford text at all.)
   await page.getByRole("button", { name: /overline/ }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-add-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   // The live preview: a real slotted child under the first listItem, seeded
   // (prefill is on by default) with placeholder copy.
@@ -366,6 +426,23 @@ test("collapsing a card hides its body", async ({ page }) => {
 
   await page.getByRole("button", { name: "Expand" }).first().click();
   await expect(rootSlotsCaption).toBeVisible();
+});
+
+test("screenshot: the opened slot add-panel shows the leading options and the 'Load an example' section together (M-IA2b)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // The first listItem's "overline" slot has both the three fixed leading
+  // options AND a "Load an example" section (its only nestable component,
+  // `heading`, has real examples) — the one slot on this starter tree that
+  // shows both halves of the panel in a single screenshot.
+  await page.getByRole("button", { name: /overline/ }).first().click();
+  const panel = page.locator(".compose-slot-add-panel");
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText("Load an example", { exact: true })).toBeVisible();
+
+  await panel.screenshot({ path: "/tmp/m-ia2b-slot-menu.png" });
 });
 
 test("the drawer links to Compose", async ({ page }) => {

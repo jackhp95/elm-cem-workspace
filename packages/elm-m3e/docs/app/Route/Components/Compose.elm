@@ -64,6 +64,9 @@ type alias Model =
     , prefill : Bool
     , componentPicker : Maybe Cem.Compose.Path
     , componentSearch : String
+    , slotAddPanel : Maybe ( Cem.Compose.Path, String )
+    , nestPickerOpen : Bool
+    , nestSearch : String
     }
 
 
@@ -75,6 +78,10 @@ type Msg
     | ToggleComponentPicker Cem.Compose.Path
     | SetComponentSearch String
     | PickComponent Cem.Compose.Path String
+    | ToggleSlotAddPanel Cem.Compose.Path String
+    | ToggleNestPicker
+    | SetNestSearch String
+    | PickNestComponent Cem.Compose.Path String String
 
 
 type alias RouteParams =
@@ -137,6 +144,9 @@ init _ _ =
       , prefill = True
       , componentPicker = Nothing
       , componentSearch = ""
+      , slotAddPanel = Nothing
+      , nestPickerOpen = False
+      , nestSearch = ""
       }
     , Effect.none
     )
@@ -209,6 +219,36 @@ update _ _ msg model =
                 | compose = applyCompose model.prefill (Cem.Compose.SetComponent path name) model.compose
                 , componentPicker = Nothing
                 , componentSearch = ""
+              }
+            , Effect.none
+            )
+
+        ToggleSlotAddPanel path slotName ->
+            ( { model
+                | slotAddPanel =
+                    if model.slotAddPanel == Just ( path, slotName ) then
+                        Nothing
+
+                    else
+                        Just ( path, slotName )
+                , nestPickerOpen = False
+                , nestSearch = ""
+              }
+            , Effect.none
+            )
+
+        ToggleNestPicker ->
+            ( { model | nestPickerOpen = not model.nestPickerOpen, nestSearch = "" }, Effect.none )
+
+        SetNestSearch text ->
+            ( { model | nestSearch = text }, Effect.none )
+
+        PickNestComponent path slotName name ->
+            ( { model
+                | compose = applyCompose model.prefill (Cem.Compose.AddChild path slotName name) model.compose
+                , slotAddPanel = Nothing
+                , nestPickerOpen = False
+                , nestSearch = ""
               }
             , Effect.none
             )
@@ -396,7 +436,7 @@ viewNode ctx path node model =
                                     , freeTextMenuFor path model.compose
                                     ]
                                 )
-                            , slotGroup ctx.usage path model.compose
+                            , slotGroup ctx path model
                             ]
                         , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
                             (childCards ctx path node model)
@@ -569,21 +609,41 @@ attrGroup path model =
 
 {-| The Slots (add-child) group — every slot button, under its own label,
 never sharing a row with the Attributes group above. Same `flex flex-wrap`
-row + sibling-menus shape as `attrGroup`; each slot's fill-count badge rides
-in its own button's `trailing-icon` slot, so there is no separate badge row.
+row shape as `attrGroup`; each slot's fill-count badge rides in its own
+button's `trailing-icon` slot, so there is no separate badge row. Per
+M-IA2b/§3.1, each multi-option slot's add control is a `slotControl` — the
+button plus its own positioned add-panel sibling — rather than a shared
+always-present `m3e-menu`.
 -}
-slotGroup : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (Grouping.DivIs s) admittedBy Msg
-slotGroup usage path model =
-    case Cem.Compose.slotChips path model of
+slotGroup : MenuCtx -> Cem.Compose.Path -> Model -> Element (Grouping.DivIs s) admittedBy Msg
+slotGroup ctx path model =
+    case Cem.Compose.slotChips path model.compose of
         [] ->
             TypedHtml.div [] []
 
         chips ->
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
-                (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                    (groupLabel "Slots" :: List.map (slotButtonElement path model) chips)
-                    :: slotMenusFor usage path model chips
-                )
+                [ TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
+                    (groupLabel "Slots" :: List.map (slotControl ctx path model) chips)
+                ]
+
+
+{-| One slot's button plus, when open, its own add-panel — wrapped together
+in a `relative` container so the panel (`absolute`) positions under THIS
+button specifically, the same shape `editControl` uses for the
+change-component picker.
+-}
+slotControl : MenuCtx -> Cem.Compose.Path -> Model -> Cem.Compose.SlotChipInfo -> Element (Grouping.DivIs s) admittedBy Msg
+slotControl ctx path model info =
+    TypedHtml.div [ TA.class "relative inline-flex" ]
+        (slotButtonElement path model.compose info
+            :: (if model.slotAddPanel == Just ( path, info.name ) then
+                    [ slotAddPanelElement ctx path model info ]
+
+                else
+                    []
+               )
+        )
 
 
 groupLabel : String -> Element (Grouping.PIs s) admittedBy msg
@@ -910,11 +970,6 @@ attrMenuId path name =
     "compose-attr-menu-" ++ pathId path ++ "-" ++ name
 
 
-slotMenuId : Cem.Compose.Path -> String -> String
-slotMenuId path slotName =
-    "compose-slot-menu-" ++ pathId path ++ "-" ++ slotName
-
-
 pathId : Cem.Compose.Path -> String
 pathId path =
     path
@@ -1003,76 +1058,43 @@ slotCountBadge info =
 
 
 {-| When a slot affords exactly one option, the button fires that message
-directly instead of opening a one-item menu — a consumer convenience, not a
-core rule (spec §7.2 step 2). Otherwise it's wrapped in `menuTrigger`,
-pointing at an always-present menu with one item per `SlotOption` — this must
-not collapse to one representative choice (spec §8.7): a slot that affords
-text, an icon, AND components offers all of them at once. Every case is an
-extra-small `M3e.button`, never a chip, its content a leading `add` icon
-(never a literal "+") then the slot name, with the fill-count badge (only when
-the slot is non-empty) in the button's own `trailing-icon` slot. Sits in a
-plain `flex flex-wrap` row, so
-the (when present) menu is built as a sibling by `slotGroup`, not nested here.
+directly instead of opening a one-item panel — a consumer convenience, not a
+core rule (spec §7.2 step 2). Otherwise it toggles this slot's add-panel
+open/closed (`ToggleSlotAddPanel`) — the panel itself, when open, is built as
+a sibling by `slotControl`, not nested here. Every case is an extra-small
+`M3e.button`, never a chip, its content a leading `add` icon (never a literal
+"+") then the slot name, with the fill-count badge (only when the slot is
+non-empty) in the button's own `trailing-icon` slot.
 -}
 slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Msg
 slotButtonElement path model info =
-    case Cem.Compose.slotMenuOptions path info.name model of
-        [ only ] ->
-            M3e.button
-                [ M3e.Attributes.size Value.extraSmall
-                , M3e.Attributes.variant
-                    (if info.filled > 0 then
-                        Value.filled
+    let
+        onClickMsg : Msg
+        onClickMsg =
+            case Cem.Compose.slotMenuOptions path info.name model of
+                [ only ] ->
+                    ComposeMsg (msgForOption path info.name only)
 
-                     else
-                        Value.elevated
-                    )
-                , M3e.Attributes.selected (info.filled > 0)
-                , M3e.Events.onClick (ComposeMsg (msgForOption path info.name only))
-                ]
-                ([ M3e.icon [ TA.name "add" ] []
-                 , M3e.text info.name
-                 ]
-                    ++ slotCountTrailing info
-                )
+                _ ->
+                    ToggleSlotAddPanel path info.name
+    in
+    M3e.button
+        [ M3e.Attributes.size Value.extraSmall
+        , M3e.Attributes.variant
+            (if info.filled > 0 then
+                Value.filled
 
-        _ ->
-            M3e.button
-                [ M3e.Attributes.size Value.extraSmall
-                , M3e.Attributes.variant
-                    (if info.filled > 0 then
-                        Value.filled
-
-                     else
-                        Value.elevated
-                    )
-                , M3e.Attributes.selected (info.filled > 0)
-                , M3e.Events.onClick (ComposeMsg (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name)))
-                ]
-                (M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
-                    [ M3e.icon [ TA.name "add" ] []
-                    , M3e.text info.name
-                    ]
-                    :: slotCountTrailing info
-                )
-
-
-{-| Every multi-option slot's always-present menu — the sibling-of-the-
-row half of the `slotButtonElement` split (a single-option slot fires
-its message directly and has no menu at all).
--}
-slotMenusFor : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.SlotChipInfo -> List (Element (M3e.Component.Menu.Is s) admittedBy Msg)
-slotMenusFor usage path model chips =
-    chips
-        |> List.filterMap
-            (\info ->
-                case Cem.Compose.slotMenuOptions path info.name model of
-                    [ _ ] ->
-                        Nothing
-
-                    _ ->
-                        Just (slotMenuElement usage path model info.name)
+             else
+                Value.elevated
             )
+        , M3e.Attributes.selected (info.filled > 0)
+        , M3e.Events.onClick onClickMsg
+        ]
+        ([ M3e.icon [ TA.name "add" ] []
+         , M3e.text info.name
+         ]
+            ++ slotCountTrailing info
+        )
 
 
 msgForOption : Cem.Compose.Path -> String -> Cem.Compose.SlotOption -> Cem.Compose.Msg
@@ -1123,57 +1145,174 @@ freeTextAttrView path name model =
             TypedHtml.div [] []
 
 
-{-| The always-present menu a slot chip's `menuTrigger` points at by id — one
-plain item per `SlotOption`, built directly from `slotMenuOptions` (not gated
-on `model.openMenu`), PLUS — for an `OptionComponent name` — one extra item
-per real example of `name` (`exampleMenuItemsForAddChild`), alongside the
-plain option rather than replacing it.
+{-| A multi-option slot's add-panel — per M-IA2b/§3.1, NOT an `m3e-menu`
+(`M3e.Internal.Types.Menu.Content`/`MenuItemGroup.Content` admit no caption,
+so a visible "Load an example" heading is impossible inside one — see
+`componentPicker`'s own doc comment for the same wall). A plain positioned
+panel instead, styled like `componentPicker`, toggled by `model.slotAddPanel`:
+
+  - Exactly three fixed leading options — **Text**/**Icon**/**Nest a
+    component...** — each shown only when the slot actually affords it
+    (never an escape hatch around the type-directed `slotMenuOptions`).
+  - **Nest a component...** toggles `model.nestPickerOpen`, revealing the
+    EXISTING `componentPicker` constrained to just this slot's own
+    `OptionComponent` names — never the full component list.
+  - A trailing **"Load an example"** section, only when at least one
+    afforded component has a real example, each item qualified by its
+    source component's label (`"Heading - Label Small"`) so duplicate
+    example titles across different components stay distinguishable.
 -}
-slotMenuElement : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> String -> Element (M3e.Component.Menu.Is s) admittedBy Msg
-slotMenuElement usage path model slotName =
-    M3e.menu [ M3e.Attributes.id (slotMenuId path slotName) ]
-        (Cem.Compose.slotMenuOptions path slotName model
-            |> List.concatMap
+slotAddPanelElement : MenuCtx -> Cem.Compose.Path -> Model -> Cem.Compose.SlotChipInfo -> Element (Grouping.DivIs s) admittedBy Msg
+slotAddPanelElement ctx path model info =
+    let
+        options : List Cem.Compose.SlotOption
+        options =
+            Cem.Compose.slotMenuOptions path info.name model.compose
+
+        componentNames : List String
+        componentNames =
+            List.filterMap
                 (\option ->
                     case option of
-                        Cem.Compose.OptionText ->
-                            [ menuItemViewMsg "Text" (ComposeMsg (Cem.Compose.AddTextChild path slotName)) ]
-
-                        Cem.Compose.OptionIcon ->
-                            [ menuItemViewMsg "Icon" (ComposeMsg (Cem.Compose.AddIconChild path slotName)) ]
-
                         Cem.Compose.OptionComponent name ->
-                            menuItemViewMsg name (ComposeMsg (Cem.Compose.AddChild path slotName name))
-                                :: exampleMenuItemsForAddChild usage path slotName model name
+                            Just name
+
+                        _ ->
+                            Nothing
                 )
+                options
+
+        examples : List ( String, Msg )
+        examples =
+            componentNames
+                |> List.concatMap (qualifiedExamplesForAddChild ctx.usage ctx.reference path info.name model.compose)
+    in
+    TypedHtml.div
+        [ TA.class "compose-slot-add-panel absolute z-10 mt-1 w-64 max-h-96 overflow-y-auto rounded-md-corner-medium border border-outline-variant bg-surface-container p-2 flex flex-col gap-2 shadow-md-level2" ]
+        (leadingSlotAddOptions path info.name options
+            ++ (if model.nestPickerOpen then
+                    [ nestComponentPicker ctx path info.name componentNames model ]
+
+                else
+                    []
+               )
+            ++ (if List.isEmpty examples then
+                    []
+
+                else
+                    groupLabel "Load an example"
+                        :: List.map (\( label, msg ) -> slotAddOptionButton "compose-example-item" label msg) examples
+               )
         )
 
 
-{-| One extra add-child menu item per real example of `name`, alongside the
-plain option `slotMenuElement` already adds — never replacing it. Fires
-`LoadExample`: `AddChild path slotName name` (create the new child, appended
-at the slot's current fill count), then the parsed example's own message
-batch (`FromHtml.toMsgs`), addressed at that new child's own resulting path
-— `IntoSlot slotName filled`, since an `Add*` only ever appends (or replaces
-at `0` on a non-multi slot, where `filled` is already `0`).
+{-| The three fixed, always-visually-distinct leading options — **Text**,
+**Icon**, **Nest a component...** — each included only when `options` (this
+slot's own `slotMenuOptions`) actually affords it.
 -}
-exampleMenuItemsForAddChild : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> Cem.Compose.Model -> String -> List (Element (M3e.Component.MenuItem.Is s) admittedBy Msg)
-exampleMenuItemsForAddChild usage path slotName model name =
+leadingSlotAddOptions : Cem.Compose.Path -> String -> List Cem.Compose.SlotOption -> List (Element (TypedHtml.Component.Button.Is s) admittedBy Msg)
+leadingSlotAddOptions path slotName options =
+    List.concat
+        [ if List.member Cem.Compose.OptionText options then
+            [ slotAddOptionButton "" "Text" (ComposeMsg (Cem.Compose.AddTextChild path slotName)) ]
+
+          else
+            []
+        , if List.member Cem.Compose.OptionIcon options then
+            [ slotAddOptionButton "" "Icon" (ComposeMsg (Cem.Compose.AddIconChild path slotName)) ]
+
+          else
+            []
+        , if List.any isComponentOption options then
+            [ slotAddOptionButton "" "Nest a component..." ToggleNestPicker ]
+
+          else
+            []
+        ]
+
+
+isComponentOption : Cem.Compose.SlotOption -> Bool
+isComponentOption option =
+    case option of
+        Cem.Compose.OptionComponent _ ->
+            True
+
+        _ ->
+            False
+
+
+{-| The "Nest a component..." affordance: the EXISTING `componentPicker`
+(same picker M-IA2a built for "Change component"), constrained here to just
+this slot's own afforded `OptionComponent` names — never the full component
+list, which is exactly the ~300-item dump M-IA2b exists to keep out of the
+add-child panel.
+-}
+nestComponentPicker : MenuCtx -> Cem.Compose.Path -> String -> List String -> Model -> Element (Grouping.DivIs s) admittedBy Msg
+nestComponentPicker ctx path slotName componentNames model =
+    TypedHtml.div [ TA.class "relative" ]
+        [ componentPicker
+            { search = model.nestSearch
+            , onSearch = SetNestSearch
+            , onPick = PickNestComponent path slotName
+            , options = componentNames
+            , reference = ctx.reference
+            }
+        ]
+
+
+{-| One "Load an example" entry per real example of `name`, its label
+qualified by `name`'s own editorial label (`pickerEntry`'s fallback-to-raw-
+name rule applies here too) so duplicate example titles across different
+components — e.g. two different components each having a "Label Small"
+example — read as distinct strings. Fires `LoadExample`: `AddChild path
+slotName name` (create the new child, appended at the slot's current fill
+count), then the parsed example's own message batch (`FromHtml.toMsgs`),
+addressed at that new child's own resulting path — `IntoSlot slotName
+filled`, since an `Add*` only ever appends (or replaces at `0` on a
+non-multi slot, where `filled` is already `0`).
+-}
+qualifiedExamplesForAddChild : Dict String (List Doc.Usage.UsageExample) -> Dict String Doc.Data.Component -> Cem.Compose.Path -> String -> Cem.Compose.Model -> String -> List ( String, Msg )
+qualifiedExamplesForAddChild usage reference path slotName compose name =
     let
         filled : Int
         filled =
-            slotChildCount path slotName model
+            slotChildCount path slotName compose
+
+        sourceLabel : String
+        sourceLabel =
+            (pickerEntry reference name).label
     in
     examplesFor usage name
         |> List.map
             (\( example, exampleNode ) ->
-                exampleMenuItemView example.title
-                    (LoadExample
-                        (Cem.Compose.AddChild path slotName name
-                            :: FromHtml.toMsgs (path ++ [ Cem.Compose.IntoSlot slotName filled ]) exampleNode
-                        )
+                ( sourceLabel ++ " - " ++ example.title
+                , LoadExample
+                    (Cem.Compose.AddChild path slotName name
+                        :: FromHtml.toMsgs (path ++ [ Cem.Compose.IntoSlot slotName filled ]) exampleNode
                     )
+                )
             )
+
+
+{-| One plain option row in a slot's add-panel — same visual shape as the
+change-component picker's `pickerItem`, an extra CSS class hook for tests
+(e.g. `"compose-example-item"`, empty string for the three fixed options).
+-}
+slotAddOptionButton : String -> String -> Msg -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
+slotAddOptionButton extraClass label msg =
+    TypedHtml.button
+        [ TA.class
+            ("text-left w-full rounded-md-corner-small px-2 py-1 text-body-md hover:bg-surface-container-high"
+                ++ (if String.isEmpty extraClass then
+                        ""
+
+                    else
+                        " " ++ extraClass
+                   )
+            )
+        , TE.onClick msg
+        ]
+        [ TypedHtml.text label ]
 
 
 textInputRow : String -> (String -> Cem.Compose.Msg) -> Element (Grouping.DivIs s) admittedBy Cem.Compose.Msg
@@ -1190,28 +1329,6 @@ textInputRow current toMsg =
 menuItemView : String -> Cem.Compose.Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Cem.Compose.Msg
 menuItemView label msg =
     M3e.menuItem [ M3e.Events.onClick msg ] [ M3e.text label ]
-
-
-{-| `menuItemView`'s route-`Msg` sibling — used where a menu item must fire
-something other than a bare `Cem.Compose.Msg` (a real-example item fires the
-route-level `LoadExample`, not a single core message).
--}
-menuItemViewMsg : String -> Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Msg
-menuItemViewMsg label msg =
-    M3e.menuItem [ M3e.Events.onClick msg ] [ M3e.text label ]
-
-
-{-| A real-example menu item — same shape as `menuItemViewMsg`, but marked
-with a `compose-example-item` class so it's distinguishable (from tests, and
-from any future styling) from the plain option it sits alongside.
--}
-exampleMenuItemView : String -> Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Msg
-exampleMenuItemView label msg =
-    M3e.menuItem
-        [ M3e.Attributes.class "compose-example-item"
-        , M3e.Events.onClick msg
-        ]
-        [ M3e.text label ]
 
 
 {-| One row per child across every slot: a recursive card for `ChildNode`
