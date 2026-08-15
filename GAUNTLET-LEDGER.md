@@ -1530,3 +1530,11 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   Component.* to expose every type Build needs). Either is real emitter work that cascades. The
   alternative is to keep Build merged in components (main's shape). This is a genuine
   architecture/product decision — surfaced to the human.
+
+- **HANDOFF (2026-08-14) — to a fresh Gauntlet orchestrator (claude-opus-4-8).** The outgoing
+  manager (this session, claude-opus-4-8) handed off the LAST Move 2 piece: the emitter change
+  (R-025 option 1 — route M3e.Build.<X> phantom-type refs through the exposed M3e.Component.<X>
+  surface so Build can be its own package while M3e.Internal.Types.* stay private), then land the
+  5-package split, re-baseline (Face A + snapshot cache), and get gate-all green. Tree is clean at
+  HEAD, 4-package (main's shape), verify:split green. DO NOT PUBLISH. Also open: a pre-existing
+  acid-probe failure in elm-m3e check:cem to run down (R-026 candidate).
