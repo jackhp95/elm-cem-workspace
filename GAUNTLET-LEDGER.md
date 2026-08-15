@@ -1914,3 +1914,16 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
   regenerates with EXACTLY one added line (`+"badge"` under trailing-icon), matching the recast; provenance now
   "byte-identical to a fresh regeneration" (PASS). Committed as a separate corrective commit (NOT folded into
   G-Ex2). Completes the D-053 recast properly. Next free IDs: **D-061**, **R-023**.
+
+- **G-Ex2: pass — EXAMPLES-PREFILL FEATURE COMPLETE** (build:site exit 0; Playwright 11/11; gate:all no new
+  failures; critic clean; builder claude/sonnet). Commit `0ecd65e` (2 files: route + spec, +226/-64). Route
+  `data` now loads `Doc.Data.allUsage`; the change-component AND slot add-child menus each gain one option per real
+  example a component has (via `examplesFor` = lowercase-normalized `Dict.get` + `FromHtml.parse` + root-component
+  match), ALONGSIDE the retained empty option and the D-058 lorem toggle. Picking an example fires
+  `LoadExample (SetComponent/AddChild … :: FromHtml.toMsgs …)` — a consumer-side batch folded through
+  `Cem.Compose.update` (NO core change). New Playwright test asserts CONCRETE recovered content (appBar "Anatomy"
+  → `m3e-icon[name=arrow_back]`, a `variant=tonal` icon-button, and "arrow_back" in the snippet); 2 prior tests
+  refined locators (`:not(.compose-example-item)`) without weakening. Fresh Opus critic ran build:site + Playwright
+  11/11 + full gate:all (22/32, 4 failed — all baseline; cem-figma-connect PASS per D-060) → PASS.
+  **Feature done: Compose's add/change-component menu now prefills real docs examples. All green on `compose-poc`;
+  not pushed/merged.** Next free IDs: **D-061**, **R-023**.
