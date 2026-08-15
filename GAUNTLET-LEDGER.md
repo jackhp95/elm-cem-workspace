@@ -1709,7 +1709,6 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   boundary per the brief. Also handed back for the human: whether to upstream the R-025 emitter change
   to elm-cem `main` (it currently lives only in-workspace; Face A now compares against the committed
   bundle, D-046).
-||||||| b3d20ed
 
 ---
 
@@ -2461,3 +2460,52 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
   11/11 + full gate:all (22/32, 4 failed — all baseline; cem-figma-connect PASS per D-060) → PASS.
   **Feature done: Compose's add/change-component menu now prefills real docs examples. All green on `compose-poc`;
   not pushed/merged.** Next free IDs: **D-061**, **R-023**.
+
+---
+
+# POST-MERGE SESSION (2026-08-15) — housekeeping, §1.3 diagnosis, plans C/D/E (manager claude-opus-4-8)
+
+Took over at HEAD `9080da9` (post compose-poc merge). Two autonomous tasks (gate-guarded, revertible)
+and three PLAN-ONLY tasks. NOTHING published/pushed/tagged/branched.
+
+- **D-061 (housekeeping — orphaned diff3 conflict marker removed).** `GAUNTLET-LEDGER.md:1712` carried a
+  lone `||||||| b3d20ed` (a diff3 base marker orphaned by the compose-poc merge — no matching
+  `<<<<<<<`/`=======`/`>>>>>>>`). Removed that one line. Verified: `git grep -nE '^(<<<<<<< |\|\|\|\|\|\|\| |>>>>>>> )'`
+  returns nothing; broader `^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>)` scan also clean. Doc-only edit; no product code.
+- **D-062 (Compose §1.3 "pressed ≠ applied" ROOT-CAUSED — DISPLAY-ONLY, not a model bug; fix proposed, NOT
+  applied).** Full finding: `docs/superpowers/spikes/2026-08-15-compose-1.3-diagnosis.md`. Reproduced the audit's
+  exact §1.3 scenarios against the real browser: `node scripts/browser-guard.mjs compose.spec.ts` = **11/11 pass**
+  at HEAD — including test `:65` (the literal §1.3 action #1: `variant → segmented` updates `m3e-list[variant=
+  segmented]` AND the snippet), `:183` (AddTextChild → "lorem ipsum" renders), `:29` (AddChild → real element),
+  `:113` (LoadExample). So the model→preview→codegen path provably works; "selection doesn't update the model" is
+  NOT reproducible. **Root cause:** the attr/slot chips are `M3e.button`s carrying `M3e.Attributes.toggle True`;
+  the m3e-button self-flips its own reflected `selected` on every click (`m3e web` `ButtonElement.ts:639`
+  `this.selected = !this.selected`), so the menu-OPENING click turns the chip pressed with no Elm msg. The model's
+  `isSet` stays `False`, so Elm's vdom diff (False→False) emits no patch and never resets the DOM `selected` — the
+  chip lies. **Proposed fix (consumer route only, NOT the published core):** drop `toggle True` from the three chip
+  builders in `app/Route/Components/Compose.elm` so `selected` is purely model-derived. Scoped as Part 1 of the IA
+  plan. Per the brief, reported for human sign-off; NOT applied. `packages/elm-cem-compose` untouched.
+- **PLAN C (Compose IA rework — Gauntlet):** `docs/superpowers/plans/2026-08-15-compose-ia-rework-gauntlet.md`.
+  6 parts in the audit's priority order (§3.3 pressed-fix → §3.1 menu split → §3.2 attr/slot separation →
+  §3.4 indentation → §3.5/§3.6 preview frame + explainer), objective gates (build:site, check:review,
+  check:compose-attrs, `compose.spec.ts`), core-boundary guard (`git diff --quiet packages/elm-cem-compose`),
+  Sonnet builders / Opus-4-8 critics. Product questions surfaced, not decided.
+- **PLAN D (publish runbook — PLAN ONLY):** `docs/superpowers/plans/2026-08-15-publish-runbook.md`. 5-package split
+  + 2 substrate deps, topological order, per-package mirror-repo mechanism (now fed by `split.js`'s
+  `dist-packages/` — README/LICENSE/elm.json already emitted), all 12 `Publish.hs` requirements mapped. Hard
+  blocker = R-026 icons over cap. Open decisions O-1…O-6 (versioning, remotes, icons, README≥300B, substrate,
+  dry-run) put to the human. No publish/tag/push.
+- **PLAN E (upstream R-025 emitter — PLAN ONLY):** `docs/superpowers/plans/2026-08-15-upstream-r025-emitter.md`.
+  Upstream-relevant delta isolated = `Emit.elm` (+33/-3, commits `5bc2ae4`+`fbbac5d`) + ~38 re-blessed
+  Hz/Mini/Br/Or golden fixtures; the ~262 other files are downstream elm-m3e regen (do NOT push). Blast radius:
+  additive API (+3 aliases/comp) + import reroute → every compModule/Build-shaped brand drifts + re-blesses
+  (elm-typed-html is a genuine no-op). Face-A revert (undo D-046) documented: point `snapshot-refs.json` elm-cem
+  back to `{repo, sha:<new-upstream>}`, drop the bundle. Irreversible push — plan only.
+- **Recommendation (docs/dist churn — NOT actioned, flagged per brief):** the ~372 tracked
+  `packages/elm-m3e/docs/dist/**` files churn on every build and dominate `git status`. They are tracked
+  *deliberately* (re-tracked via a nested `.gitignore` un-ignore). Untracking 375 build-output files is a
+  separate, clearly-scoped consideration with a real tradeoff (Netlify/deploy expectations) — recommended for a
+  future dedicated decision, NOT unilaterally changed here. Left as-is.
+- `session 2026-08-15: pass — conflict marker gone (git grep clean); §1.3 root-caused display-only (compose
+  spec 11/11); 3 plans written; gate-all re-run GREEN; committed to main. No core edit, no publish/push/tag/branch.`
+  Next free IDs: **D-063**, **R-028**.
