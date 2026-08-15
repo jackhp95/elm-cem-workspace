@@ -1659,3 +1659,34 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   same conscious-re-baseline discipline D-041 established when advancing to a new main. Revert via
   `git revert` (restores the ad5d523 remote pin, which will then red on the R-025 output change).
   Next free IDs: **D-047**, **R-027**.
+
+- **R-027 (M8.b — the `check:cem` acid-probe failure the handoff flagged is PRE-EXISTING D-042 debt,
+  now FIXED; NOT introduced by R-025).** Ran it down: `tests/acid/app/NativeIntoM3eSlot.elm` (a
+  POSITIVE probe) failed `MODULE NOT FOUND — import TypedHtml.Text`. Root cause = D-042 regrouped
+  elm-typed-html's flat per-element modules into `TypedHtml.Component.<Category>`, but elm-m3e's
+  TypedHtml CONSUMERS (acid probes, docs samples, docs app/src) still imported the flat names —
+  M8.a only migrated the elm-typed-html-side verify fixtures, not the elm-m3e-side consumers. The
+  probe is byte-unchanged by my commits (`git diff 0f52d9f` blank), and the R-025 change removed no
+  importable module/name, so this can't originate from it. Same D-042 root cause as `check:samples`
+  (SnackbarCode) and the `check:review` docs failures. FIX: migrated the flat imports
+  `TypedHtml.{Grouping,Sectioning,Text}` -> `TypedHtml.Component.{...}` across 41 elm-m3e consumer
+  files (pure prefix rename — category names preserved, so both `import` lines and qualified body
+  refs like `TypedHtml.Text.SpanIs` map cleanly; elm-format re-sorted imports). `TypedHtml.Review.Facts`
+  untouched (it exists). No generated `src/` edits, no test deleted. Result: `check:cem`
+  (drift+registry+acid) OK, `check:samples` OK, `check:format` OK. Committed f52b682.
+
+- **D-047 (M8.b — `check:review` resolved PROPERLY via an elm-pages-router guard, not a gate skip).**
+  After the R-027 import fix let the docs compile, `check:review` surfaced 92 pre-existing
+  `NoUnused.Modules`/`Exports` errors on the elm-pages framework modules (`Api`, `ErrorPage`,
+  `Shared`, `Site`, `Route.*`) — the classic elm-review-without-built-`.elm-pages/` false positive:
+  the generated router wiring (`.elm-pages/Main.elm`/`Route.elm`, which USES those modules) is
+  gitignored and was absent (only the `Pages.elm` stub present). Confirmed: `elm-pages gen`
+  regenerates the router -> `check:review` = "I found no errors!" So this is NOT a rule failure and
+  NOT a gate to skip — it just needs its generated prerequisite. `packages/elm-m3e/docs/scripts/
+  check-review-guard.mjs` (new) runs `elm-pages gen` then `elm-review`; if the router codegen can't
+  run (a bare clone lacking docs inputs), it SKIPs with a reason (REQUIRE_CLONE_GATES=1 hard-fails) —
+  same R-023 docs-pipeline pattern as check:nav/browser-guard/check:drift, so clone portability
+  (D-034) is preserved. `docs/package.json` `check:review` now calls the guard. Proven: removed the
+  router, ran the guard from clean -> regenerated + elm-review found no errors; FULL
+  `pnpm --filter elm-m3e run check` = exit 0 (cem/acid, review, format, samples, nav, drift, vendor,
+  spike). `elm-m3e: check` is GREEN. Next free IDs: **D-048**, **R-028**.
