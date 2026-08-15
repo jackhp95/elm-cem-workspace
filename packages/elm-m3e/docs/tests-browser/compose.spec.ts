@@ -223,6 +223,70 @@ test("prefill off adds empty content instead of placeholder", async ({ page }) =
   await expect(page.locator("m3e-list").first()).not.toContainText("lorem ipsum");
 });
 
+test("selecting an attribute value updates the chip, the live preview, and the snippet together", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Lock-in for the IA review's §1.3 finding ("chip presses but preview/
+  // snippet don't update") — reproduced only on `elm-pages dev`; on the
+  // PRODUCTION build (what this suite runs against) all three move together.
+  // The button's own accessible name carries "name" until set, then
+  // "name: value" (`attrButtonLabel`) — match by prefix so this locator is
+  // valid both before and after the click.
+  const variantButton = page.getByRole("button", { name: /^variant/ }).first();
+  await variantButton.click();
+  await page.getByRole("menuitem", { name: "segmented", exact: true }).click();
+
+  // (a) The chip/button itself: elevated→filled is F3's visible "is this
+  // set" signal, and its label now carries the chosen token.
+  await expect(variantButton).toHaveAttribute("variant", "filled");
+  await expect(variantButton).toHaveText("variant: segmented");
+
+  // (b) The live preview: a real `m3e-list` carrying the attribute.
+  await expect(page.locator("m3e-list").first()).toHaveAttribute("variant", "segmented");
+
+  // (c) The generated-code snippet: the setter call that produced it.
+  const snippet = page.locator(".cf-root").first();
+  await expect(snippet).toContainText("M3e.Attributes.variant");
+  await expect(snippet).toContainText("M3e.Values.segmented");
+});
+
+test("adding slot content updates the preview and the snippet", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Lock-in for the IA review's §1.3 finding, slot side: the first listItem's
+  // "overline" slot affords text (and a heading, so it opens a menu); pick
+  // "Text". (Not `list.unnamed` — that slot doesn't afford text at all.)
+  await page.getByRole("button", { name: /overline/ }).first().click();
+  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+
+  // The live preview: a real slotted child under the first listItem, seeded
+  // (prefill is on by default) with placeholder copy.
+  await expect(page.locator("m3e-list-item [slot='overline']").first()).toContainText("lorem ipsum");
+
+  // The generated-code snippet reflects the same new child (a named-slot
+  // text child emits a slotted `TypedHtml.span`, per `Compose.Codegen`).
+  await expect(page.locator(".cf-root").first()).toContainText('TypedHtml.Attributes.slot "overline"');
+});
+
+test("collapsing a card hides its body", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Lock-in for the IA review's §1.9 finding ("collapse no-op") — reproduced
+  // only on `elm-pages dev`. The root card's "Slots" group label is part of
+  // its body (rendered before the recursive child cards, so this is the
+  // FIRST "Slots" caption on the page); collapsing removes the whole body
+  // from the DOM, not just rotating the chevron, so the label itself
+  // actually stops being visible/present — not a proxy like button removal.
+  const rootSlotsCaption = page.getByText("Slots", { exact: true }).first();
+  await expect(rootSlotsCaption).toBeVisible();
+
+  await page.getByRole("button", { name: "Collapse" }).first().click();
+  await expect(rootSlotsCaption).toBeHidden();
+
+  await page.getByRole("button", { name: "Expand" }).first().click();
+  await expect(rootSlotsCaption).toBeVisible();
+});
+
 test("the drawer links to Compose", async ({ page }) => {
   await page.goto("/components/button");
   // At a desktop width the tree is already pinned open (`Shared.init` seeds
