@@ -1927,3 +1927,33 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
   11/11 + full gate:all (22/32, 4 failed — all baseline; cem-figma-connect PASS per D-060) → PASS.
   **Feature done: Compose's add/change-component menu now prefills real docs examples. All green on `compose-poc`;
   not pushed/merged.** Next free IDs: **D-061**, **R-023**.
+
+---
+
+# COMPOSE IA-REVIEW MILESTONE — branch `compose-poc` (approved follow-on)
+
+Source: `/Users/jhp/code/jackhp95/elm-cem-workspace/docs/superpowers/spikes/2026-08-15-compose-ia-review.md` (hands-on
+IA audit; §1 findings, §3 reorg, §4 priority). Design decided; mechanical implementation under full gauntlet
+discipline (builder claude/sonnet, fresh critic claude/claude-opus-4-8, reference-bar gates, ledger). 5 parts in
+the doc's §4 priority order + an end-of-milestone integrator walkthrough. Not pushed/merged. Manager d79872b
+resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-IA1..M-IA5.
+
+- **D-061 (milestone plan + Part-1 ROOT CAUSE — done by manager per the "don't skip diagnosis" instruction).**
+  Decomposition (§4 order): **M-IA1** §3.3/§1.9 correctness gate → **M-IA2** §3.1 split change-component vs
+  add-child menus + de-pollute the type picker + qualify example labels → **M-IA3** §3.2 Attributes/Slots +
+  empty/filled slot chips as distinct visual kinds → **M-IA4** §3.4 per-level nesting indentation (match the code
+  panel) → **M-IA5** §3.5/§3.6 preview frame+label + dismissible localStorage root caption → **Integrator** fresh
+  Opus ~20-interaction walkthrough + resolved/still-open table vs §1.1–§1.9.
+  **ROOT CAUSE of §1.3 (chip presses but preview/snippet don't update) and §1.9 (collapse no-op): DEV-SERVER
+  ARTIFACT, not a state-sync bug.** The audit ran on `elm-pages dev` (doc line 6) — the environment established
+  throughout this effort where THIS route's clicks/state do NOT register (all our Playwright runs use the
+  production `build:site`+serve). Manager reproduced on the PRODUCTION build via Playwright: (a) attr variant→
+  segmented updates the chip AND `m3e-list variant='segmented'` AND the snippet together; (b) adding Text to a
+  text-affording slot (listItem.overline) changes the snippet; (c) clicking a card's Collapse reduces its visible
+  body (SLOTS captions 3→0). On production the chip's pressed state is DRIVEN BY the model (`isSet`/`filled>0`),
+  so pressed ≡ applied by construction — the divergence is structurally impossible there. Also: §1.2's "identical
+  overline/unnamed menus ⇒ broken slot filtering" is a FALSE ALARM (those slots genuinely afford the same content,
+  kinds `[heading, shared:text]`; same menu is type-directed-correct). §1.2's IA problem (flat menu, dup "Label
+  Small") IS real and confirmed → M-IA2. **M-IA1 = write the §3.3/§1.9 locking Playwright tests (chip pressed +
+  preview HTML + snippet + computed body-visibility all move together) — NO model fix needed (proven works); if a
+  test surfaces a real production failure, fix the actual bug, don't paper over.** Next free IDs: **D-062**, **R-023**.
