@@ -1,6 +1,6 @@
 module M3e.Component.Slider exposing
     ( view, el
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Size, size
     , disabled, discrete, labelled, max, min, step, onBeforeinput, onInput, onChange
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Slider exposing
 Allows for the selection of numeric values from a range.
 
 @docs view, el
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Size, size
 @docs disabled, discrete, labelled, max, min, step, onBeforeinput, onInput, onChange
 @docs child
@@ -52,6 +52,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Size =
     M3e.Internal.Types.Slider.Size
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Slider.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Slider.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

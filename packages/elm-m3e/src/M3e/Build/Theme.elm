@@ -22,24 +22,23 @@ import M3e.Attributes as A
 import M3e.Component.Theme as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Theme
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Theme.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Theme.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Theme.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -49,7 +48,7 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Theme.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}

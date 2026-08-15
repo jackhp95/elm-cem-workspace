@@ -1,6 +1,6 @@
 module M3e.Component.InputChipSet exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, name, required, validationmessages, vertical, onChange
     , input, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.InputChipSet exposing
 A container that transforms user input into a cohesive set of interactive chips, supporting entry, editing, and removal of discrete values.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, name, required, validationmessages, vertical, onChange
 @docs input, child
 
@@ -50,6 +50,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.InputChipSet.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.InputChipSet.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.InputChipSet.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.InputChipSet.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

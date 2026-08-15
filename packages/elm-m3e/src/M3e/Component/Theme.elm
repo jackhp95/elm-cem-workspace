@@ -1,6 +1,6 @@
 module M3e.Component.Theme exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Contrast, contrast, Motion, motion, Scheme, scheme, Variant, variant
     , color, density, strongFocus, onChange
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Theme exposing
 A non-visual element responsible for application-level theming.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Contrast, contrast, Motion, motion, Scheme, scheme, Variant, variant
 @docs color, density, strongFocus, onChange
 @docs child
@@ -70,6 +70,24 @@ type alias Scheme =
 -}
 type alias Variant =
     M3e.Internal.Types.Theme.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Theme.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Theme.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

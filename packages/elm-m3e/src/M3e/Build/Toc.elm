@@ -22,43 +22,42 @@ import HtmlIr.Kind exposing (Shared, Supported)
 import M3e.Attributes as A
 import M3e.Component.Toc as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Toc
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Toc.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Toc.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Toc.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.Toc.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Toc.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias OverlineSlot =
-    M3e.Internal.Types.Toc.OverlineSlot
+    Component.OverlineSlot
 
 
 {-| -}
 type alias TitleSlot =
-    M3e.Internal.Types.Toc.TitleSlot
+    Component.TitleSlot
 
 
 {-| -}

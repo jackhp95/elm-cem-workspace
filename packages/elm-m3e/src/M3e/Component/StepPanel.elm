@@ -1,6 +1,6 @@
 module M3e.Component.StepPanel exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , actions, child
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.StepPanel exposing
 A panel presented for a step in a wizard-like workflow.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs actions, child
 
 -}
@@ -40,6 +40,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.StepPanel.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.StepPanel.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.StepPanel.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.StepPanel.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

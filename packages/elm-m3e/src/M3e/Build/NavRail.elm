@@ -22,24 +22,23 @@ import M3e.Attributes as A
 import M3e.Component.NavRail as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.NavRail
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.NavRail.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.NavRail.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.NavRail.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -49,12 +48,12 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.NavRail.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.NavRail.Content
+    Component.Content
 
 
 {-| -}

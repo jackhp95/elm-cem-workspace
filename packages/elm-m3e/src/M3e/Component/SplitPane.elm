@@ -1,6 +1,6 @@
 module M3e.Component.SplitPane exposing
     ( view, el
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Orientation, orientation
     , detents, disabled, label, max, min, name, overshootLimit, step, value, wrapDetents, defaultValue, onChange, onBeforeinput, onInput
     , end, start
@@ -11,7 +11,7 @@ module M3e.Component.SplitPane exposing
 A dual-view layout that separates content with a movable drag handle.
 
 @docs view, el
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Orientation, orientation
 @docs detents, disabled, label, max, min, name, overshootLimit, step, value, wrapDetents, defaultValue, onChange, onBeforeinput, onInput
 @docs end, start
@@ -53,6 +53,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Orientation =
     M3e.Internal.Types.SplitPane.Orientation
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SplitPane.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SplitPane.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.SplitPane.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1,6 +1,6 @@
 module M3e.Component.SplitButton exposing
     ( view, el
-    , Is, Attrs, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
     , Size, size, Variant, variant
     , leadingButton, trailingButton
     )
@@ -10,7 +10,7 @@ module M3e.Component.SplitButton exposing
 A button used to show an action with a menu of related actions.
 
 @docs view, el
-@docs Is, Attrs, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
 @docs Size, size, Variant, variant
 @docs leadingButton, trailingButton
 
@@ -67,6 +67,24 @@ type alias Size =
 -}
 type alias Variant =
     M3e.Internal.Types.SplitButton.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SplitButton.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SplitButton.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.SplitButton.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

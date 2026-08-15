@@ -1,6 +1,6 @@
 module M3e.Component.Icon exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Grade, grade, Variant, variant
     , filled, name, opticalSize, weight
     )
@@ -10,7 +10,7 @@ module M3e.Component.Icon exposing
 A small symbol used to easily identify an action or category.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Grade, grade, Variant, variant
 @docs filled, name, opticalSize, weight
 
@@ -57,6 +57,24 @@ type alias Grade =
 -}
 type alias Variant =
     M3e.Internal.Types.Icon.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Icon.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Icon.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

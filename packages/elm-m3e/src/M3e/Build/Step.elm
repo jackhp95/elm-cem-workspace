@@ -23,68 +23,67 @@ import M3e.Attributes as A
 import M3e.Component.Step as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Step
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Step.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Step.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Step.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.Step.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Step.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.Step.Content
+    Component.Content
 
 
 {-| -}
 type alias DoneIconSlot =
-    M3e.Internal.Types.Step.DoneIconSlot
+    Component.DoneIconSlot
 
 
 {-| -}
 type alias EditIconSlot =
-    M3e.Internal.Types.Step.EditIconSlot
+    Component.EditIconSlot
 
 
 {-| -}
 type alias ErrorSlot =
-    M3e.Internal.Types.Step.ErrorSlot
+    Component.ErrorSlot
 
 
 {-| -}
 type alias ErrorIconSlot =
-    M3e.Internal.Types.Step.ErrorIconSlot
+    Component.ErrorIconSlot
 
 
 {-| -}
 type alias HintSlot =
-    M3e.Internal.Types.Step.HintSlot
+    Component.HintSlot
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.Step.IconSlot
+    Component.IconSlot
 
 
 {-| -}

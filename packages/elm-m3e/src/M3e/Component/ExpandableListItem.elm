@@ -1,6 +1,6 @@
 module M3e.Component.ExpandableListItem exposing
     ( view
-    , Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
     , disabled, open, onOpening, onOpened, onClosing, onClosed
     , items, leading, overline, supportingText, toggleIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.ExpandableListItem exposing
 An item in a list that can be expanded to show more items.
 
 @docs view
-@docs Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
 @docs disabled, open, onOpening, onOpened, onClosing, onClosed
 @docs items, leading, overline, supportingText, toggleIcon, child
 
@@ -73,6 +73,24 @@ type alias ToggleIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.ExpandableListItem.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ExpandableListItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ExpandableListItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ExpandableListItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1,6 +1,6 @@
 module M3e.Component.SuggestionChip exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, ChildAdmittedBy, ActionCaps
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy, ActionCaps
     , Type, type_, Variant, variant
     , disabled, disabledInteractive, download, href, name, rel, target, value, defaultValue, onClick
     , icon, child
@@ -12,7 +12,7 @@ A chip used to help narrow a user's intent by presenting dynamically generated s
 suggested responses or search filters.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, ActionCaps
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy, ActionCaps
 @docs Type, type_, Variant, variant
 @docs disabled, disabledInteractive, download, href, name, rel, target, value, defaultValue, onClick
 @docs icon, child
@@ -79,6 +79,24 @@ type alias Variant =
 -}
 type alias ActionCaps =
     M3e.Internal.Types.SuggestionChip.ActionCaps
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SuggestionChip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SuggestionChip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.SuggestionChip.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

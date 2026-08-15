@@ -24,44 +24,43 @@ import M3e.Attributes as A
 import M3e.Component.OptionPanel as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.OptionPanel
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.OptionPanel.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.OptionPanel.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.OptionPanel.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.OptionPanel.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.OptionPanel.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.OptionPanel.Content
+    Component.Content
 
 
 {-| -}
 type alias LoadingSlot =
-    M3e.Internal.Types.OptionPanel.LoadingSlot
+    Component.LoadingSlot
 
 
 {-| -}

@@ -1,6 +1,6 @@
 module M3e.Component.Step exposing
     ( view, el
-    , Is, Attrs, Content, DoneIconSlot, EditIconSlot, ErrorSlot, ErrorIconSlot, HintSlot, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, DoneIconSlot, EditIconSlot, ErrorSlot, ErrorIconSlot, HintSlot, IconSlot, ChildAdmittedBy
     , completed, disabled, editable, for, invalid, optional, selected, defaultSelected, onBeforeinput, onInput, onChange, onClick
     , doneIcon, editIcon, error, errorIcon, hint, icon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.Step exposing
 A step in a wizard-like workflow.
 
 @docs view, el
-@docs Is, Attrs, Content, DoneIconSlot, EditIconSlot, ErrorSlot, ErrorIconSlot, HintSlot, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, DoneIconSlot, EditIconSlot, ErrorSlot, ErrorIconSlot, HintSlot, IconSlot, ChildAdmittedBy
 @docs completed, disabled, editable, for, invalid, optional, selected, defaultSelected, onBeforeinput, onInput, onChange, onClick
 @docs doneIcon, editIcon, error, errorIcon, hint, icon, child
 
@@ -85,6 +85,24 @@ type alias IconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Step.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Step.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Step.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Step.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -21,24 +21,23 @@ import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
 import M3e.Component.Skeleton as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Skeleton
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Skeleton.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Skeleton.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Skeleton.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -48,7 +47,7 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Skeleton.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}

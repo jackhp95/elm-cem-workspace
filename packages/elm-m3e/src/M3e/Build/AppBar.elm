@@ -23,54 +23,53 @@ import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
 import M3e.Component.AppBar as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.AppBar
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.AppBar.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.AppBar.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.AppBar.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.AppBar.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.AppBar.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias LeadingSlot =
-    M3e.Internal.Types.AppBar.LeadingSlot
+    Component.LeadingSlot
 
 
 {-| -}
 type alias SubtitleSlot =
-    M3e.Internal.Types.AppBar.SubtitleSlot
+    Component.SubtitleSlot
 
 
 {-| -}
 type alias TitleSlot =
-    M3e.Internal.Types.AppBar.TitleSlot
+    Component.TitleSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    M3e.Internal.Types.AppBar.TrailingSlot
+    Component.TrailingSlot
 
 
 {-| -}

@@ -26,49 +26,48 @@ import M3e.Attributes as A
 import M3e.Component.SuggestionChip as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.SuggestionChip
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.SuggestionChip.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.SuggestionChip.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.SuggestionChip.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.SuggestionChip.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.SuggestionChip.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias ActionCaps =
-    M3e.Internal.Types.SuggestionChip.ActionCaps
+    Component.ActionCaps
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.SuggestionChip.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.SuggestionChip.IconSlot
+    Component.IconSlot
 
 
 {-| -}

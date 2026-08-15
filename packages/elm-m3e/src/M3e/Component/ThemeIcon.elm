@@ -1,6 +1,6 @@
 module M3e.Component.ThemeIcon exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Scheme, scheme, Variant, variant
     , color
     )
@@ -10,7 +10,7 @@ module M3e.Component.ThemeIcon exposing
 An icon that visually presents a preview of a theme.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Scheme, scheme, Variant, variant
 @docs color
 
@@ -55,6 +55,24 @@ type alias Scheme =
 -}
 type alias Variant =
     M3e.Internal.Types.ThemeIcon.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ThemeIcon.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ThemeIcon.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

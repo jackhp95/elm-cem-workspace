@@ -1,6 +1,6 @@
 module M3e.Component.Divider exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , inset, insetEnd, insetStart, vertical
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.Divider exposing
 A thin line that separates content in lists or other containers.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs inset, insetEnd, insetStart, vertical
 
 -}
@@ -40,6 +40,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Divider.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Divider.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Divider.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

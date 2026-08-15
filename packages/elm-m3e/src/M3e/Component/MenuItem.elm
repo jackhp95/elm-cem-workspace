@@ -1,6 +1,6 @@
 module M3e.Component.MenuItem exposing
     ( view
-    , Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
     , disabled, download, href, rel, target, onClick
     , icon, trailingIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.MenuItem exposing
 An item of a menu.
 
 @docs view
-@docs Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
 @docs disabled, download, href, rel, target, onClick
 @docs icon, trailingIcon, child
 
@@ -61,6 +61,24 @@ type alias TrailingIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.MenuItem.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.MenuItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.MenuItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.MenuItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

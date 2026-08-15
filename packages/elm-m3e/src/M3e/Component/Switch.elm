@@ -1,6 +1,6 @@
 module M3e.Component.Switch exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Icons, icons
     , checked, disabled, name, validationmessages, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
     )
@@ -10,7 +10,7 @@ module M3e.Component.Switch exposing
 An on/off control that can be toggled by clicking.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Icons, icons
 @docs checked, disabled, name, validationmessages, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 
@@ -51,6 +51,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Icons =
     M3e.Internal.Types.Switch.Icons
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Switch.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Switch.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

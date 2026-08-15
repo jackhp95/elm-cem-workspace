@@ -20,23 +20,22 @@ import HtmlIr.Kind exposing (Supported)
 import M3e.Attributes as A
 import M3e.Component.StepperReset as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.StepperReset
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.StepperReset.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.StepperReset.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.StepperReset.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -46,7 +45,7 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.StepperReset.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}

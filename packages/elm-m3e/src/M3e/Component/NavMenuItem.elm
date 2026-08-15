@@ -1,6 +1,6 @@
 module M3e.Component.NavMenuItem exposing
     ( view, el
-    , Is, Attrs, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
     , disabled, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
     , badge, icon, label, selectedIcon, toggleIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.NavMenuItem exposing
 An expandable item, selectable item within a navigation menu.
 
 @docs view, el
-@docs Is, Attrs, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
 @docs disabled, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
 @docs badge, icon, label, selectedIcon, toggleIcon, child
 
@@ -79,6 +79,24 @@ type alias ToggleIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.NavMenuItem.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.NavMenuItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.NavMenuItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.NavMenuItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

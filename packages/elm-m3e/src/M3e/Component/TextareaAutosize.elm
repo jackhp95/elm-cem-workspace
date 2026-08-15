@@ -1,6 +1,6 @@
 module M3e.Component.TextareaAutosize exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , disabled, for, maxRows, minRows
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.TextareaAutosize exposing
 A non-visual element used to automatically resize a `textarea` to fit its content.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs disabled, for, maxRows, minRows
 
 -}
@@ -40,6 +40,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.TextareaAutosize.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.TextareaAutosize.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.TextareaAutosize.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

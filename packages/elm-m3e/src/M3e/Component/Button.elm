@@ -1,6 +1,6 @@
 module M3e.Component.Button exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
     , Shape, shape, Size, size, Type, type_, Variant, variant
     , disabled, disabledInteractive, download, href, name, rel, target, toggle, value, defaultValue, onBeforeinput, onInput, onChange, onClick
     , icon, selected, selectedIcon, trailingIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.Button exposing
 A button users interact with to perform an action.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
 @docs Shape, shape, Size, size, Type, type_, Variant, variant
 @docs disabled, disabledInteractive, download, href, name, rel, target, toggle, value, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, selected, selectedIcon, trailingIcon, child
@@ -108,6 +108,24 @@ type alias Variant =
 -}
 type alias ActionCaps =
     M3e.Internal.Types.Button.ActionCaps
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Button.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Button.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Button.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

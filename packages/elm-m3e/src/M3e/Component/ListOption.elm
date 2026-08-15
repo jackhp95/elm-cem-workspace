@@ -1,6 +1,6 @@
 module M3e.Component.ListOption exposing
     ( view
-    , Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
     , disabled, selected, value, defaultSelected, defaultValue, onBeforeinput, onInput, onChange, onClick
     , leading, overline, supportingText, trailing, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.ListOption exposing
 A selectable option in a list.
 
 @docs view
-@docs Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
 @docs disabled, selected, value, defaultSelected, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs leading, overline, supportingText, trailing, child
 
@@ -73,6 +73,24 @@ type alias TrailingSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.ListOption.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ListOption.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ListOption.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ListOption.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

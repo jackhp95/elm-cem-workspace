@@ -1,6 +1,6 @@
 module M3e.Component.FloatingPanel exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , ScrollStrategy, scrollStrategy
     , anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
     , child
@@ -11,7 +11,7 @@ module M3e.Component.FloatingPanel exposing
 A lightweight, generic floating surface used to present content above the page.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs ScrollStrategy, scrollStrategy
 @docs anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
 @docs child
@@ -52,6 +52,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias ScrollStrategy =
     M3e.Internal.Types.FloatingPanel.ScrollStrategy
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.FloatingPanel.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.FloatingPanel.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

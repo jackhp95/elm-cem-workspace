@@ -1,6 +1,6 @@
 module M3e.Component.NavItem exposing
     ( view
-    , Is, Attrs, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
     , Orientation, orientation
     , disabled, disabledInteractive, download, href, rel, selected, target, defaultSelected, onBeforeinput, onInput, onChange, onClick
     , icon, selectedIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.NavItem exposing
 An item, placed in a navigation bar or rail, used to navigate to destinations in an application.
 
 @docs view
-@docs Is, Attrs, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
 @docs Orientation, orientation
 @docs disabled, disabledInteractive, download, href, rel, selected, target, defaultSelected, onBeforeinput, onInput, onChange, onClick
 @docs icon, selectedIcon, child
@@ -70,6 +70,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Orientation =
     M3e.Internal.Types.NavItem.Orientation
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.NavItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.NavItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.NavItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

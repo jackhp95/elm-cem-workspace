@@ -1,6 +1,6 @@
 module M3e.Component.NavMenuItemGroup exposing
     ( view
-    , Is, Attrs, Content, LabelSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LabelSlot, ChildAdmittedBy
     , label, child
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.NavMenuItemGroup exposing
 A top-level semantic grouping of items in a navigation menu.
 
 @docs view
-@docs Is, Attrs, Content, LabelSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LabelSlot, ChildAdmittedBy
 @docs label, child
 
 -}
@@ -52,6 +52,24 @@ type alias LabelSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.NavMenuItemGroup.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.NavMenuItemGroup.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.NavMenuItemGroup.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.NavMenuItemGroup.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

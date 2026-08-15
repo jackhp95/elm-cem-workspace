@@ -26,54 +26,53 @@ import M3e.Attributes as A
 import M3e.Component.Fab as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Fab
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Fab.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Fab.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Fab.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.Fab.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Fab.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias ActionCaps =
-    M3e.Internal.Types.Fab.ActionCaps
+    Component.ActionCaps
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.Fab.Content
+    Component.Content
 
 
 {-| -}
 type alias CloseIconSlot =
-    M3e.Internal.Types.Fab.CloseIconSlot
+    Component.CloseIconSlot
 
 
 {-| -}
 type alias LabelSlot =
-    M3e.Internal.Types.Fab.LabelSlot
+    Component.LabelSlot
 
 
 {-| -}

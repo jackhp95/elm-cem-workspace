@@ -23,58 +23,57 @@ import M3e.Attributes as A
 import M3e.Component.ListOption as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.ListOption
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.ListOption.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.ListOption.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.ListOption.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.ListOption.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.ListOption.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.ListOption.Content
+    Component.Content
 
 
 {-| -}
 type alias LeadingSlot =
-    M3e.Internal.Types.ListOption.LeadingSlot
+    Component.LeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    M3e.Internal.Types.ListOption.OverlineSlot
+    Component.OverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    M3e.Internal.Types.ListOption.SupportingTextSlot
+    Component.SupportingTextSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    M3e.Internal.Types.ListOption.TrailingSlot
+    Component.TrailingSlot
 
 
 {-| -}

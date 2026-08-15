@@ -23,58 +23,57 @@ import M3e.Attributes as A
 import M3e.Component.ListItemButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.ListItemButton
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.ListItemButton.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.ListItemButton.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.ListItemButton.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.ListItemButton.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.ListItemButton.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.ListItemButton.Content
+    Component.Content
 
 
 {-| -}
 type alias LeadingSlot =
-    M3e.Internal.Types.ListItemButton.LeadingSlot
+    Component.LeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    M3e.Internal.Types.ListItemButton.OverlineSlot
+    Component.OverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    M3e.Internal.Types.ListItemButton.SupportingTextSlot
+    Component.SupportingTextSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    M3e.Internal.Types.ListItemButton.TrailingSlot
+    Component.TrailingSlot
 
 
 {-| -}

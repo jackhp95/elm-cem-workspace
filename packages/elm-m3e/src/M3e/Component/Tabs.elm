@@ -1,6 +1,6 @@
 module M3e.Component.Tabs exposing
     ( view
-    , Is, Attrs, Content, NextIconSlot, PanelSlot, PrevIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, NextIconSlot, PanelSlot, PrevIconSlot, ChildAdmittedBy
     , DisablePagination, disablePagination, HeaderPosition, headerPosition, Variant, variant
     , nextPageLabel, previousPageLabel, stretch, onChange, onBeforeinput, onInput
     , nextIcon, panel, prevIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.Tabs exposing
 Organizes content into separate views where only one view can be visible at a time.
 
 @docs view
-@docs Is, Attrs, Content, NextIconSlot, PanelSlot, PrevIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, NextIconSlot, PanelSlot, PrevIconSlot, ChildAdmittedBy
 @docs DisablePagination, disablePagination, HeaderPosition, headerPosition, Variant, variant
 @docs nextPageLabel, previousPageLabel, stretch, onChange, onBeforeinput, onInput
 @docs nextIcon, panel, prevIcon, child
@@ -88,6 +88,24 @@ type alias HeaderPosition =
 -}
 type alias Variant =
     M3e.Internal.Types.Tabs.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Tabs.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Tabs.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Tabs.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

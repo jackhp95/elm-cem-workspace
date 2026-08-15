@@ -1,6 +1,6 @@
 module M3e.Component.NavMenu exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.NavMenu exposing
 A hierarchical menu, typically used on larger devices, that allows a user to switch between views.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -46,6 +46,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.NavMenu.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.NavMenu.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.NavMenu.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

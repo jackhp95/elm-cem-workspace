@@ -24,49 +24,48 @@ import M3e.Attributes as A
 import M3e.Component.NavItem as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.NavItem
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.NavItem.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.NavItem.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.NavItem.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.NavItem.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.NavItem.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.NavItem.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.NavItem.IconSlot
+    Component.IconSlot
 
 
 {-| -}
 type alias SelectedIconSlot =
-    M3e.Internal.Types.NavItem.SelectedIconSlot
+    Component.SelectedIconSlot
 
 
 {-| -}

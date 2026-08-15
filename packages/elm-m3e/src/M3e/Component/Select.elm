@@ -1,6 +1,6 @@
 module M3e.Component.Select exposing
     ( view, el
-    , Is, Attrs, Content, ArrowSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ArrowSlot, ChildAdmittedBy
     , disabled, hideSelectionIndicator, multi, name, panelClass, required, validationmessages, onChange, onToggle, onBeforeinput, onInput
     , arrow, value, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.Select exposing
 A form control that allows users to select a value from a set of predefined options.
 
 @docs view, el
-@docs Is, Attrs, Content, ArrowSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ArrowSlot, ChildAdmittedBy
 @docs disabled, hideSelectionIndicator, multi, name, panelClass, required, validationmessages, onChange, onToggle, onBeforeinput, onInput
 @docs arrow, value, child
 
@@ -57,6 +57,24 @@ type alias ArrowSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Select.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Select.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Select.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Select.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

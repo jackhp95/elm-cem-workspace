@@ -1,6 +1,6 @@
 module M3e.Component.LinearProgressIndicator exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Mode, mode, Variant, variant
     , bufferValue, max, value, defaultValue
     )
@@ -10,7 +10,7 @@ module M3e.Component.LinearProgressIndicator exposing
 A horizontal bar for indicating progress and activity.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Mode, mode, Variant, variant
 @docs bufferValue, max, value, defaultValue
 
@@ -56,6 +56,24 @@ type alias Mode =
 -}
 type alias Variant =
     M3e.Internal.Types.LinearProgressIndicator.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.LinearProgressIndicator.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.LinearProgressIndicator.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

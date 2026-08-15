@@ -1,6 +1,6 @@
 module M3e.Component.YearView exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , active, activeDate, date, maxDate, minDate, today, onChange, onActiveChange
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.YearView exposing
 An internal component used to display a single year in a calendar.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs active, activeDate, date, maxDate, minDate, today, onChange, onActiveChange
 
 -}
@@ -41,6 +41,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.YearView.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.YearView.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.YearView.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

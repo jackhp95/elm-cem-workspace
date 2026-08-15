@@ -1,6 +1,6 @@
 module M3e.Component.Timepicker exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Format, format, Mode, mode, Orientation, orientation, Variant, variant
     , confirmLabel, date, dialLabel, dismissLabel, for, hideModeToggle, hourLabel, inputLabel, maxTime, minTime, minuteLabel, modeToggleLabel, periodToggleLabel, secondLabel, showSeconds, onChange, onBeforetoggle, onToggle
     )
@@ -10,7 +10,7 @@ module M3e.Component.Timepicker exposing
 Presents a time picker on a temporary surface.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Format, format, Mode, mode, Orientation, orientation, Variant, variant
 @docs confirmLabel, date, dialLabel, dismissLabel, for, hideModeToggle, hourLabel, inputLabel, maxTime, minTime, minuteLabel, modeToggleLabel, periodToggleLabel, secondLabel, showSeconds, onChange, onBeforetoggle, onToggle
 
@@ -68,6 +68,24 @@ type alias Orientation =
 -}
 type alias Variant =
     M3e.Internal.Types.Timepicker.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Timepicker.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Timepicker.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

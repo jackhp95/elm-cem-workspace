@@ -1,6 +1,6 @@
 module M3e.Component.Optgroup exposing
     ( view
-    , Is, Attrs, Content, LabelSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LabelSlot, ChildAdmittedBy
     , label, child
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.Optgroup exposing
 Groups options under a subheading.
 
 @docs view
-@docs Is, Attrs, Content, LabelSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LabelSlot, ChildAdmittedBy
 @docs label, child
 
 -}
@@ -52,6 +52,24 @@ type alias LabelSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Optgroup.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Optgroup.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Optgroup.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Optgroup.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

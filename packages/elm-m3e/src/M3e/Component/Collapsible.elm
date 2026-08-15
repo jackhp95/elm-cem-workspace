@@ -1,6 +1,6 @@
 module M3e.Component.Collapsible exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Orientation, orientation
     , noAnimate, open, onOpening, onOpened, onClosing, onClosed
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Collapsible exposing
 A container used to expand and collapse content.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Orientation, orientation
 @docs noAnimate, open, onOpening, onOpened, onClosing, onClosed
 @docs child
@@ -52,6 +52,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Orientation =
     M3e.Internal.Types.Collapsible.Orientation
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Collapsible.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Collapsible.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

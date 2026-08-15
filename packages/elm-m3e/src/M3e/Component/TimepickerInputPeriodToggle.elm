@@ -1,6 +1,6 @@
 module M3e.Component.TimepickerInputPeriodToggle exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Period, period
     , orientation, onChange
     )
@@ -8,7 +8,7 @@ module M3e.Component.TimepickerInputPeriodToggle exposing
 {-| The `m3e-timepicker-input-period-toggle` component — strict per-component surface.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Period, period
 @docs orientation, onChange
 
@@ -49,6 +49,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Period =
     M3e.Internal.Types.TimepickerInputPeriodToggle.Period
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.TimepickerInputPeriodToggle.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.TimepickerInputPeriodToggle.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

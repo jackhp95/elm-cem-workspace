@@ -1,6 +1,6 @@
 module M3e.Component.FabMenu exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Variant, variant
     , onBeforetoggle, onToggle
     , child
@@ -11,7 +11,7 @@ module M3e.Component.FabMenu exposing
 A menu, opened from a floating action button (FAB), used to display multiple related actions.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Variant, variant
 @docs onBeforetoggle, onToggle
 @docs child
@@ -58,6 +58,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     M3e.Internal.Types.FabMenu.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.FabMenu.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.FabMenu.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

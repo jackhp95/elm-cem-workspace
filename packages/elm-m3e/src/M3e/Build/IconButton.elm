@@ -26,49 +26,48 @@ import M3e.Attributes as A
 import M3e.Component.IconButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.IconButton
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.IconButton.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.IconButton.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.IconButton.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.IconButton.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.IconButton.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias ActionCaps =
-    M3e.Internal.Types.IconButton.ActionCaps
+    Component.ActionCaps
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.IconButton.Content
+    Component.Content
 
 
 {-| -}
 type alias SelectedSlot =
-    M3e.Internal.Types.IconButton.SelectedSlot
+    Component.SelectedSlot
 
 
 {-| -}

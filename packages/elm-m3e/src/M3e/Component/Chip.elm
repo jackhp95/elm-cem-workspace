@@ -1,6 +1,6 @@
 module M3e.Component.Chip exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
     , Variant, variant
     , value, defaultValue
     , icon, trailingIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.Chip exposing
 A non-interactive chip used to convey small pieces of information.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
 @docs Variant, variant
 @docs value, defaultValue
 @docs icon, trailingIcon, child
@@ -69,6 +69,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     M3e.Internal.Types.Chip.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Chip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Chip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Chip.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

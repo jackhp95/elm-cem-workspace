@@ -23,48 +23,47 @@ import M3e.Attributes as A
 import M3e.Component.MenuItemRadio as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.MenuItemRadio
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.MenuItemRadio.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.MenuItemRadio.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.MenuItemRadio.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.MenuItemRadio.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.MenuItemRadio.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.MenuItemRadio.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.MenuItemRadio.IconSlot
+    Component.IconSlot
 
 
 {-| -}
 type alias TrailingIconSlot =
-    M3e.Internal.Types.MenuItemRadio.TrailingIconSlot
+    Component.TrailingIconSlot
 
 
 {-| -}

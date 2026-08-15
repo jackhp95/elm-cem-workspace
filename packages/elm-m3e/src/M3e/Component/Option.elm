@@ -1,6 +1,6 @@
 module M3e.Component.Option exposing
     ( view, el
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , HighlightMode, highlightMode
     , disableHighlight, disabled, selected, term, value, defaultSelected, defaultValue
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Option exposing
 An option that can be selected.
 
 @docs view, el
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs HighlightMode, highlightMode
 @docs disableHighlight, disabled, selected, term, value, defaultSelected, defaultValue
 @docs child
@@ -57,6 +57,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias HighlightMode =
     M3e.Internal.Types.Option.HighlightMode
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Option.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Option.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1584,3 +1584,56 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   emitter output and byte-compares). Builder=claude-sonnet-5, critic=claude-opus-4-8 (NEVER
   opus-5/fable-5). Manager runs `gate-all` + the docs.json byte cap itself (too slow / must-not-be-a-
   loop-check, D-015). Next free IDs: **D-045**, **R-026**.
+
+- **D-045 (M8.b emitter change — LANDED + independently verified; loop 52237c2b succeeded iter 1).**
+  Worker=claude-sonnet-5, critic=claude-opus-4-8, 1 iteration, 0 escalations, ~3 min. The `Emit.elm`
+  diff is EXACTLY the D-044 spec (two functions, 1 file under packages/elm-cem): compModule gained
+  `singularSlots` + three alias decls (Builder/AttrCaps/SlotCaps, with the `{}`-conditional) + those
+  three names in `exposeGroups`; compBuildModule's `internalRef` now `"Component." ++ n` and its
+  Internal.Types import dropped. 261 files regenerated under packages/elm-m3e (src + packages.json);
+  packages/elm-typed-html UNCHANGED (see below).
+  **Manager independent re-verification (distrust the green, D-023) — all six axes PASS:**
+  1. `node tools/check-m3e-5pkg.mjs` exit 0 — 5-package shape (html/components/builder/icons/facts),
+     Build split out, `M3e.Build`+`M3e.Build.` buckets in builder only.
+  2. `pnpm --filter elm-m3e run verify:split` exit 0 — ALL 5 packages compile registry-faithfully;
+     `elm-m3e-builder` (131 exposed) compiles as its OWN package staging elm-m3e-components +
+     elm-m3e-html + IR. **R-025 CLEARED** — the exact cross-package import that used to be IMPLICIT
+     EXPOSING now resolves through the exposed `M3e.Component.<X>` surface.
+  3. REGEN-CLEAN: `cp src`, re-ran `gen:src`, `diff -rq` → identical. The working src IS the emitter
+     output; no hand-edited generated files (the one cheat vector the loop bar couldn't see).
+  4. Internal.Types stay UNEXPOSED: packages.json's only `exposeInternal` is `M3e.Forge.Internal`
+     (html); `M3e.Internal.Types.` is bucketed to components (intra-package). Generated
+     `M3e/Internal/Types/*.elm` still `exposing (..)`.
+  5. Spot-check: `M3e.Build.Button` no longer imports Internal.Types and aliases via
+     `Component.Builder/AttrCaps/SlotCaps`; `M3e.Component.Button` exposes+aliases those three.
+  6. elm-typed-html is a native/home-shaped brand — its `TypedHtml.Component.*` are NOT emitted via
+     compModule and it has no Build/Internal.Types modules, so the change is a genuine NO-OP for it:
+     `pnpm --filter elm-typed-html run check:drift` = "src/ is byte-identical to a clean regen"
+     (exit 0). No elm-typed-html regen needed; nothing stale.
+  **docs.json sizes (manager measured via `elm-cem validate --skip=elm-m3e-facts`; hard cap 768,000 B,
+  soft gate 700,000 B):** html 269,345 B (35.1% hard / 38.5% soft) · components 568,132 B (74.0% /
+  81.2%) · builder 586,177 B (76.3% / 83.7%) · facts tiny — all UNDER both. **icons 1,075,308 B —
+  OVER (140% hard cap): see R-026.** `elm-cem validate` is NOT wired into gate-all (verify:split uses
+  registry-check), so this measurement is manager-side; it does not red gate-all.
+  Revert the whole part with `git revert` of the (pending) commit. Next free IDs: **D-046**, **R-027**.
+
+- **R-026 (M8.b — `elm-m3e-icons` docs.json is 1,075,308 B = 140% of the 768,000-B HARD registry cap;
+  PRE-EXISTING, needs a product decision — ESCALATED TO HUMAN).** `M3e.Icon` exposes ~4083 typed
+  Material-Symbols helper functions (40,869-line module), one docs entry each → 1.07 MB, far over
+  cap. This is UNCHANGED by the emitter change (`git diff --stat -- src/M3e/Icon.elm` = blank; M3e.Icon
+  imports only IR), and is exactly the item spec §5 / D-037 flagged "icons size TBD, fix if over cap"
+  and D-036 tied to the human's "new Material Symbols name set, typesafe." It is NOT the R-025
+  Build-split and does NOT block landing it (the other 4 packages are under cap; gate-all does not
+  gate on docs size). Resolving it is a genuine architecture call the human should make — options
+  (not yet decided): (a) split `M3e.Icon` into N sub-packages (icons-a/b/…) each under cap, like the
+  components split; (b) expose fewer/︎grouped icon helpers or a leaner per-function doc; (c) a
+  different typed-name representation that does not expand 4083 entries into docs.json. All trade the
+  human's typed-icon ergonomics against the cap. Recorded; surfaced in the status report. Nothing
+  published, so no external breakage. Next free IDs: **D-046**, **R-027**.
+
+- `M8.b: pass (loop 52237c2b, worker claude-sonnet-5, verifier claude-opus-4-8, 1 iteration, 0
+  escalations). R-025 emitter change (option 1): M3e.Build.<X> now routes phantom types through the
+  exposed M3e.Component.<X> surface; Internal.Types.* stay unexposed. 5-package split landed
+  (html/components/builder/icons/facts). Manager-verified all 6 axes: check-m3e-5pkg + verify:split
+  exit 0, regen-clean, Internal.Types unexposed, elm-typed-html no-op. docs.json: html/components/
+  builder/facts under cap; icons OVER (R-026, pre-existing, escalated). See D-045.`

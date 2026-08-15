@@ -1,6 +1,6 @@
 module M3e.Component.MenuItemGroup exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.MenuItemGroup exposing
 Groups related items (such a radios) in a menu.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
 -}
@@ -46,6 +46,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.MenuItemGroup.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.MenuItemGroup.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.MenuItemGroup.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

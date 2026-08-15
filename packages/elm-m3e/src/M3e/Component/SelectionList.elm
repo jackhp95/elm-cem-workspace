@@ -1,6 +1,6 @@
 module M3e.Component.SelectionList exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Variant, variant
     , disabled, hideSelectionIndicator, multi, name, onChange, onBeforeinput, onInput
     , child
@@ -11,7 +11,7 @@ module M3e.Component.SelectionList exposing
 A list of selectable options.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Variant, variant
 @docs disabled, hideSelectionIndicator, multi, name, onChange, onBeforeinput, onInput
 @docs child
@@ -59,6 +59,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     M3e.Internal.Types.SelectionList.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SelectionList.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SelectionList.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

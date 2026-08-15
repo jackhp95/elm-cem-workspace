@@ -1,6 +1,6 @@
 module M3e.Component.Radio exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , checked, disabled, name, required, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.Radio exposing
 A radio button that allows a user to select one option from a set of options.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs checked, disabled, name, required, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 
 -}
@@ -42,6 +42,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Radio.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Radio.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Radio.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

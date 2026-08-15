@@ -1,6 +1,6 @@
 module M3e.Component.ListAction exposing
     ( view
-    , Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
     , disabled, download, href, rel, target, onClick
     , leading, overline, supportingText, trailing, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.ListAction exposing
 An item in a list that performs an action.
 
 @docs view
-@docs Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
 @docs disabled, download, href, rel, target, onClick
 @docs leading, overline, supportingText, trailing, child
 
@@ -73,6 +73,24 @@ type alias TrailingSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.ListAction.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ListAction.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ListAction.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ListAction.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -1,6 +1,6 @@
 module M3e.Component.OptionPanel exposing
     ( view
-    , Is, Attrs, Content, LoadingSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LoadingSlot, ChildAdmittedBy
     , ScrollStrategy, scrollStrategy, State, state
     , anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
     , loading, noData, child
@@ -11,7 +11,7 @@ module M3e.Component.OptionPanel exposing
 Presents a list of options on a temporary surface.
 
 @docs view
-@docs Is, Attrs, Content, LoadingSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LoadingSlot, ChildAdmittedBy
 @docs ScrollStrategy, scrollStrategy, State, state
 @docs anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
 @docs loading, noData, child
@@ -70,6 +70,24 @@ type alias ScrollStrategy =
 -}
 type alias State =
     M3e.Internal.Types.OptionPanel.State
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.OptionPanel.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.OptionPanel.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.OptionPanel.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

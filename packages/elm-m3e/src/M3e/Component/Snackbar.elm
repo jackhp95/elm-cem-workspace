@@ -1,6 +1,6 @@
 module M3e.Component.Snackbar exposing
     ( view, el
-    , Is, Attrs, Content, CloseIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
     , action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
     , closeIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.Snackbar exposing
 Presents short updates about application processes at the bottom of the screen.
 
 @docs view, el
-@docs Is, Attrs, Content, CloseIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
 @docs action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
 @docs closeIcon, child
 
@@ -55,6 +55,24 @@ type alias CloseIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Snackbar.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Snackbar.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Snackbar.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Snackbar.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

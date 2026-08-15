@@ -23,63 +23,62 @@ import M3e.Attributes as A
 import M3e.Component.TreeItem as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.TreeItem
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.TreeItem.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.TreeItem.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.TreeItem.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.TreeItem.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.TreeItem.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.TreeItem.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.TreeItem.IconSlot
+    Component.IconSlot
 
 
 {-| -}
 type alias LabelSlot =
-    M3e.Internal.Types.TreeItem.LabelSlot
+    Component.LabelSlot
 
 
 {-| -}
 type alias OpenToggleIconSlot =
-    M3e.Internal.Types.TreeItem.OpenToggleIconSlot
+    Component.OpenToggleIconSlot
 
 
 {-| -}
 type alias SelectedIconSlot =
-    M3e.Internal.Types.TreeItem.SelectedIconSlot
+    Component.SelectedIconSlot
 
 
 {-| -}
 type alias ToggleIconSlot =
-    M3e.Internal.Types.TreeItem.ToggleIconSlot
+    Component.ToggleIconSlot
 
 
 {-| -}

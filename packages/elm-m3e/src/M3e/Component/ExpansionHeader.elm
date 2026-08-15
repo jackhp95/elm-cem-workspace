@@ -1,6 +1,6 @@
 module M3e.Component.ExpansionHeader exposing
     ( view
-    , Is, Attrs, Content, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ToggleIconSlot, ChildAdmittedBy
     , ToggleDirection, toggleDirection, TogglePosition, togglePosition
     , disabled, hideToggle, onClick
     , toggleIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.ExpansionHeader exposing
 A button used to toggle the expanded state of an expansion panel.
 
 @docs view
-@docs Is, Attrs, Content, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ToggleIconSlot, ChildAdmittedBy
 @docs ToggleDirection, toggleDirection, TogglePosition, togglePosition
 @docs disabled, hideToggle, onClick
 @docs toggleIcon, child
@@ -70,6 +70,24 @@ type alias ToggleDirection =
 -}
 type alias TogglePosition =
     M3e.Internal.Types.ExpansionHeader.TogglePosition
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ExpansionHeader.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ExpansionHeader.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ExpansionHeader.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

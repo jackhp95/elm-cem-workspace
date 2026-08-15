@@ -23,58 +23,57 @@ import M3e.Attributes as A
 import M3e.Component.ExpandableListItem as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.ExpandableListItem
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.ExpandableListItem.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.ExpandableListItem.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.ExpandableListItem.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.ExpandableListItem.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.ExpandableListItem.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.ExpandableListItem.Content
+    Component.Content
 
 
 {-| -}
 type alias LeadingSlot =
-    M3e.Internal.Types.ExpandableListItem.LeadingSlot
+    Component.LeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    M3e.Internal.Types.ExpandableListItem.OverlineSlot
+    Component.OverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    M3e.Internal.Types.ExpandableListItem.SupportingTextSlot
+    Component.SupportingTextSlot
 
 
 {-| -}
 type alias ToggleIconSlot =
-    M3e.Internal.Types.ExpandableListItem.ToggleIconSlot
+    Component.ToggleIconSlot
 
 
 {-| -}

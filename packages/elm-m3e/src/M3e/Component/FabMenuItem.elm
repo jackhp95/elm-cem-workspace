@@ -1,6 +1,6 @@
 module M3e.Component.FabMenuItem exposing
     ( view
-    , Is, Attrs, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, IconSlot, ChildAdmittedBy
     , disabled, download, href, rel, target, onClick
     , icon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.FabMenuItem exposing
 An item of a floating action button (FAB) menu.
 
 @docs view
-@docs Is, Attrs, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, IconSlot, ChildAdmittedBy
 @docs disabled, download, href, rel, target, onClick
 @docs icon, child
 
@@ -49,6 +49,24 @@ type alias IconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.FabMenuItem.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.FabMenuItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.FabMenuItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.FabMenuItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

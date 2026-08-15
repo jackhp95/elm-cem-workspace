@@ -1,6 +1,6 @@
 module M3e.Component.ScrollContainer exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Dividers, dividers
     , thin
     , child
@@ -11,7 +11,7 @@ module M3e.Component.ScrollContainer exposing
 A vertically oriented content container which presents dividers above and below content when scrolled.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Dividers, dividers
 @docs thin
 @docs child
@@ -51,6 +51,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Dividers =
     M3e.Internal.Types.ScrollContainer.Dividers
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ScrollContainer.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ScrollContainer.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

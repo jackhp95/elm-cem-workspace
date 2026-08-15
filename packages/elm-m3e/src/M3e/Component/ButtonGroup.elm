@@ -1,6 +1,6 @@
 module M3e.Component.ButtonGroup exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Size, size, Variant, variant
     , multi
     , child
@@ -11,7 +11,7 @@ module M3e.Component.ButtonGroup exposing
 Organizes buttons and adds interactions between them.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Size, size, Variant, variant
 @docs multi
 @docs child
@@ -63,6 +63,24 @@ type alias Size =
 -}
 type alias Variant =
     M3e.Internal.Types.ButtonGroup.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ButtonGroup.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ButtonGroup.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

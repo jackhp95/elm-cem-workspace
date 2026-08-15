@@ -1,6 +1,6 @@
 module M3e.Component.CircularProgressIndicator exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Variant, variant
     , indeterminate, max, value, defaultValue
     , child
@@ -11,7 +11,7 @@ module M3e.Component.CircularProgressIndicator exposing
 A circular indicator of progress and activity.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Variant, variant
 @docs indeterminate, max, value, defaultValue
 @docs child
@@ -52,6 +52,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     M3e.Internal.Types.CircularProgressIndicator.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.CircularProgressIndicator.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.CircularProgressIndicator.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

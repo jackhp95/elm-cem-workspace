@@ -1,6 +1,6 @@
 module M3e.Component.MenuItemRadio exposing
     ( view
-    , Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
     , checked, disabled, defaultChecked, onClick
     , icon, trailingIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.MenuItemRadio exposing
 An item of a menu which supports a mutually exclusive checkable state.
 
 @docs view
-@docs Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
 @docs checked, disabled, defaultChecked, onClick
 @docs icon, trailingIcon, child
 
@@ -61,6 +61,24 @@ type alias TrailingIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.MenuItemRadio.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.MenuItemRadio.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.MenuItemRadio.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.MenuItemRadio.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

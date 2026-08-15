@@ -24,69 +24,68 @@ import M3e.Attributes as A
 import M3e.Component.SearchView as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.SearchView
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.SearchView.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.SearchView.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.SearchView.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.SearchView.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.SearchView.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias ClearIconSlot =
-    M3e.Internal.Types.SearchView.ClearIconSlot
+    Component.ClearIconSlot
 
 
 {-| -}
 type alias CloseIconSlot =
-    M3e.Internal.Types.SearchView.CloseIconSlot
+    Component.CloseIconSlot
 
 
 {-| -}
 type alias ClosedLeadingSlot =
-    M3e.Internal.Types.SearchView.ClosedLeadingSlot
+    Component.ClosedLeadingSlot
 
 
 {-| -}
 type alias ClosedTrailingSlot =
-    M3e.Internal.Types.SearchView.ClosedTrailingSlot
+    Component.ClosedTrailingSlot
 
 
 {-| -}
 type alias OpenLeadingSlot =
-    M3e.Internal.Types.SearchView.OpenLeadingSlot
+    Component.OpenLeadingSlot
 
 
 {-| -}
 type alias OpenTrailingSlot =
-    M3e.Internal.Types.SearchView.OpenTrailingSlot
+    Component.OpenTrailingSlot
 
 
 {-| -}
 type alias SearchIconSlot =
-    M3e.Internal.Types.SearchView.SearchIconSlot
+    Component.SearchIconSlot
 
 
 {-| -}

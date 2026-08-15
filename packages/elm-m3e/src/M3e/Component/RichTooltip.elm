@@ -1,6 +1,6 @@
 module M3e.Component.RichTooltip exposing
     ( view, el
-    , Is, Attrs, Content, SubheadSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, SubheadSlot, ChildAdmittedBy
     , Position, position, TouchGestures, touchGestures
     , disabled, for, hideDelay, showDelay, onBeforetoggle, onToggle
     , actions, subhead, child
@@ -11,7 +11,7 @@ module M3e.Component.RichTooltip exposing
 Provides contextual details for a control, such as explaining the value or purpose of a feature.
 
 @docs view, el
-@docs Is, Attrs, Content, SubheadSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, SubheadSlot, ChildAdmittedBy
 @docs Position, position, TouchGestures, touchGestures
 @docs disabled, for, hideDelay, showDelay, onBeforetoggle, onToggle
 @docs actions, subhead, child
@@ -70,6 +70,24 @@ type alias Position =
 -}
 type alias TouchGestures =
     M3e.Internal.Types.RichTooltip.TouchGestures
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.RichTooltip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.RichTooltip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.RichTooltip.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -21,24 +21,23 @@ import M3e.Attributes as A
 import M3e.Component.Switch as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Switch
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Switch.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Switch.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Switch.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
@@ -48,7 +47,7 @@ type alias SlotCaps =
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Switch.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}

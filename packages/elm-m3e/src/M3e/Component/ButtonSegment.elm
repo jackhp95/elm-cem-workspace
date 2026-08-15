@@ -1,6 +1,6 @@
 module M3e.Component.ButtonSegment exposing
     ( view
-    , Is, Attrs, Content, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , checked, disabled, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
     , icon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.ButtonSegment exposing
 A option that can be selected within a segmented button.
 
 @docs view
-@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs checked, disabled, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, child
 
@@ -55,6 +55,24 @@ type alias IconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.ButtonSegment.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ButtonSegment.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ButtonSegment.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ButtonSegment.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

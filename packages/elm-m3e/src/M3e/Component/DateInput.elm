@@ -1,6 +1,6 @@
 module M3e.Component.DateInput exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , TimeFormat, timeFormat, Type, type_
     , dayLabel, disabled, hourLabel, maxDate, maxTime, minDate, minTime, minuteLabel, monthLabel, name, periodLabel, readonly, required, secondLabel, showSeconds, validationmessages, value, yearLabel, defaultValue, onChange, onBeforeinput, onInput, onInvalid
     )
@@ -10,7 +10,7 @@ module M3e.Component.DateInput exposing
 A segmented input for entering date and/or time values using a keyboard.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs TimeFormat, timeFormat, Type, type_
 @docs dayLabel, disabled, hourLabel, maxDate, maxTime, minDate, minTime, minuteLabel, monthLabel, name, periodLabel, readonly, required, secondLabel, showSeconds, validationmessages, value, yearLabel, defaultValue, onChange, onBeforeinput, onInput, onInvalid
 
@@ -57,6 +57,24 @@ type alias TimeFormat =
 -}
 type alias Type =
     M3e.Internal.Types.DateInput.Type
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.DateInput.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.DateInput.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

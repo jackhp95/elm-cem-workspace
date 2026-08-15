@@ -1,6 +1,6 @@
 module M3e.Component.InputChip exposing
     ( view, el
-    , Is, Attrs, Content, AvatarSlot, IconSlot, RemoveIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, AvatarSlot, IconSlot, RemoveIconSlot, ChildAdmittedBy
     , Variant, variant
     , disabled, disabledInteractive, removable, removeLabel, value, defaultValue, onRemove, onClick
     , avatar, icon, removeIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.InputChip exposing
 A chip which represents a discrete piece of information entered by a user.
 
 @docs view, el
-@docs Is, Attrs, Content, AvatarSlot, IconSlot, RemoveIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, AvatarSlot, IconSlot, RemoveIconSlot, ChildAdmittedBy
 @docs Variant, variant
 @docs disabled, disabledInteractive, removable, removeLabel, value, defaultValue, onRemove, onClick
 @docs avatar, icon, removeIcon, child
@@ -76,6 +76,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Variant =
     M3e.Internal.Types.InputChip.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.InputChip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.InputChip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.InputChip.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

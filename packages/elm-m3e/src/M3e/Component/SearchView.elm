@@ -1,6 +1,6 @@
 module M3e.Component.SearchView exposing
     ( view, el
-    , Is, Attrs, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
     , Mode, mode
     , clearLabel, closeLabel, contained, hideSearchIcon, open, onQuery, onClear, onBeforetoggle, onToggle
     , clearIcon, closeIcon, closedLeading, closedTrailing, input, openLeading, openTrailing, searchIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.SearchView exposing
 A surface that presents suggestions and results for a search.
 
 @docs view, el
-@docs Is, Attrs, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
 @docs Mode, mode
 @docs clearLabel, closeLabel, contained, hideSearchIcon, open, onQuery, onClear, onBeforetoggle, onToggle
 @docs clearIcon, closeIcon, closedLeading, closedTrailing, input, openLeading, openTrailing, searchIcon, child
@@ -94,6 +94,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Mode =
     M3e.Internal.Types.SearchView.Mode
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SearchView.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SearchView.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.SearchView.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

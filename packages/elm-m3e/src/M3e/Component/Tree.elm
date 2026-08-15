@@ -1,6 +1,6 @@
 module M3e.Component.Tree exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , cascade, multi, onChange
     , child
     )
@@ -10,7 +10,7 @@ module M3e.Component.Tree exposing
 Presents hierarchical data in a tree structure.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs cascade, multi, onChange
 @docs child
 
@@ -49,6 +49,24 @@ type alias Content =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Tree.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Tree.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Tree.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

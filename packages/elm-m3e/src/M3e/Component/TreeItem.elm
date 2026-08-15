@@ -1,6 +1,6 @@
 module M3e.Component.TreeItem exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
     , disabled, indeterminate, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
     , icon, label, openToggleIcon, selectedIcon, toggleIcon, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.TreeItem exposing
 An expandable item in a tree.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
 @docs disabled, indeterminate, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
 @docs icon, label, openToggleIcon, selectedIcon, toggleIcon, child
 
@@ -79,6 +79,24 @@ type alias ToggleIconSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.TreeItem.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.TreeItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.TreeItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.TreeItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

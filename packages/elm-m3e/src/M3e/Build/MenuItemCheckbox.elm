@@ -23,48 +23,47 @@ import M3e.Attributes as A
 import M3e.Component.MenuItemCheckbox as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.MenuItemCheckbox
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.MenuItemCheckbox.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.MenuItemCheckbox.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.MenuItemCheckbox.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.MenuItemCheckbox.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.MenuItemCheckbox.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.MenuItemCheckbox.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.MenuItemCheckbox.IconSlot
+    Component.IconSlot
 
 
 {-| -}
 type alias TrailingIconSlot =
-    M3e.Internal.Types.MenuItemCheckbox.TrailingIconSlot
+    Component.TrailingIconSlot
 
 
 {-| -}

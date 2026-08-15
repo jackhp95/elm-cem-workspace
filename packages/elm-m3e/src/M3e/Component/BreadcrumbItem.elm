@@ -1,6 +1,6 @@
 module M3e.Component.BreadcrumbItem exposing
     ( view
-    , Is, Attrs, Content, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , Current, current
     , disabled, download, href, itemLabel, rel, target, onClick
     , icon, child
@@ -11,7 +11,7 @@ module M3e.Component.BreadcrumbItem exposing
 An item in a breadcrumb.
 
 @docs view
-@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs Current, current
 @docs disabled, download, href, itemLabel, rel, target, onClick
 @docs icon, child
@@ -64,6 +64,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Current =
     M3e.Internal.Types.BreadcrumbItem.Current
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.BreadcrumbItem.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.BreadcrumbItem.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.BreadcrumbItem.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -22,43 +22,42 @@ import HtmlIr.Kind exposing (Shared, Supported)
 import M3e.Attributes as A
 import M3e.Component.Optgroup as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Optgroup
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Optgroup.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Optgroup.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Optgroup.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.Optgroup.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Optgroup.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.Optgroup.Content
+    Component.Content
 
 
 {-| -}
 type alias LabelSlot =
-    M3e.Internal.Types.Optgroup.LabelSlot
+    Component.LabelSlot
 
 
 {-| -}

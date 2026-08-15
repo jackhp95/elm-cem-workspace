@@ -1,6 +1,6 @@
 module M3e.Component.TimepickerInput exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Format, format, Period, period, ViewAttr, viewAttr
     , for, hideLabels, hour, hourLabel, maxTime, minTime, minute, minuteLabel, orientation, periodToggleLabel, second, secondLabel, showSeconds, onViewChange, onChange
     )
@@ -10,7 +10,7 @@ module M3e.Component.TimepickerInput exposing
 A keyboard‑based time surface for choosing hours and minutes.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Format, format, Period, period, ViewAttr, viewAttr
 @docs for, hideLabels, hour, hourLabel, maxTime, minTime, minute, minuteLabel, orientation, periodToggleLabel, second, secondLabel, showSeconds, onViewChange, onChange
 
@@ -63,6 +63,24 @@ type alias Period =
 -}
 type alias ViewAttr =
     M3e.Internal.Types.TimepickerInput.ViewAttr
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.TimepickerInput.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.TimepickerInput.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

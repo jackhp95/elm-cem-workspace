@@ -1,6 +1,6 @@
 module M3e.Component.Fab exposing
     ( view, el
-    , Is, Attrs, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
     , Size, size, Type, type_, Variant, variant
     , disabled, disabledInteractive, download, extended, href, lowered, name, rel, target, value, defaultValue, onClick
     , closeIcon, label, child
@@ -11,7 +11,7 @@ module M3e.Component.Fab exposing
 A floating action button (FAB) used to present important actions.
 
 @docs view, el
-@docs Is, Attrs, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
 @docs Size, size, Type, type_, Variant, variant
 @docs disabled, disabledInteractive, download, extended, href, lowered, name, rel, target, value, defaultValue, onClick
 @docs closeIcon, label, child
@@ -90,6 +90,24 @@ type alias Variant =
 -}
 type alias ActionCaps =
     M3e.Internal.Types.Fab.ActionCaps
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Fab.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Fab.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Fab.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

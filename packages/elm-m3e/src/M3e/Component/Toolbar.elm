@@ -1,6 +1,6 @@
 module M3e.Component.Toolbar exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Shape, shape, Variant, variant
     , elevated, vertical
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Toolbar exposing
 Presents frequently used actions relevant to the current page.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Shape, shape, Variant, variant
 @docs elevated, vertical
 @docs child
@@ -57,6 +57,24 @@ type alias Shape =
 -}
 type alias Variant =
     M3e.Internal.Types.Toolbar.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Toolbar.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Toolbar.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

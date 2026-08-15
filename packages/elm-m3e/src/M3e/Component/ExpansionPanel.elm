@@ -1,6 +1,6 @@
 module M3e.Component.ExpansionPanel exposing
     ( view, el
-    , Is, Attrs, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
     , ToggleDirection, toggleDirection, TogglePosition, togglePosition
     , disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
     , actions, header, toggleIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.ExpansionPanel exposing
 An expandable details-summary view.
 
 @docs view, el
-@docs Is, Attrs, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
 @docs ToggleDirection, toggleDirection, TogglePosition, togglePosition
 @docs disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
 @docs actions, header, toggleIcon, child
@@ -64,6 +64,24 @@ type alias ToggleDirection =
 -}
 type alias TogglePosition =
     M3e.Internal.Types.ExpansionPanel.TogglePosition
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.ExpansionPanel.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.ExpansionPanel.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.ExpansionPanel.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

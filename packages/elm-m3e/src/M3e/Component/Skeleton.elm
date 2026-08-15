@@ -1,6 +1,6 @@
 module M3e.Component.Skeleton exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Animation, animation, Shape, shape
     , loaded
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Skeleton exposing
 A visual placeholder that mimics the layout of content while it's still loading.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Animation, animation, Shape, shape
 @docs loaded
 @docs child
@@ -57,6 +57,24 @@ type alias Animation =
 -}
 type alias Shape =
     M3e.Internal.Types.Skeleton.Shape
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Skeleton.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Skeleton.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

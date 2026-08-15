@@ -1,6 +1,6 @@
 module M3e.Component.Autocomplete exposing
     ( view
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Filter, filter
     , autoActivate, caseSensitive, for, hideLoading, hideNoData, hideSelectionIndicator, loadingLabel, noDataLabel, panelClass, required, resultsLabel, onChange, onQuery, onToggle
     , loading, noData, child
@@ -11,7 +11,7 @@ module M3e.Component.Autocomplete exposing
 Enhances a text input with suggested options.
 
 @docs view
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Filter, filter
 @docs autoActivate, caseSensitive, for, hideLoading, hideNoData, hideSelectionIndicator, loadingLabel, noDataLabel, panelClass, required, resultsLabel, onChange, onQuery, onToggle
 @docs loading, noData, child
@@ -58,6 +58,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Filter =
     M3e.Internal.Types.Autocomplete.Filter
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Autocomplete.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Autocomplete.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Autocomplete.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

@@ -23,49 +23,48 @@ import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
 import M3e.Component.Chip as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.Chip
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.Chip.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.Chip.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.Chip.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.Chip.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.Chip.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.Chip.Content
+    Component.Content
 
 
 {-| -}
 type alias IconSlot =
-    M3e.Internal.Types.Chip.IconSlot
+    Component.IconSlot
 
 
 {-| -}
 type alias TrailingIconSlot =
-    M3e.Internal.Types.Chip.TrailingIconSlot
+    Component.TrailingIconSlot
 
 
 {-| -}

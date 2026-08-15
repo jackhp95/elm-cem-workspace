@@ -1,6 +1,6 @@
 module M3e.Component.TextHighlight exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Mode, mode
     , caseSensitive, disabled, term, onHighlight
     , child
@@ -11,7 +11,7 @@ module M3e.Component.TextHighlight exposing
 Highlights text which matches a given search term.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Mode, mode
 @docs caseSensitive, disabled, term, onHighlight
 @docs child
@@ -52,6 +52,24 @@ type alias ChildAdmittedBy childAdm =
 -}
 type alias Mode =
     M3e.Internal.Types.TextHighlight.Mode
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.TextHighlight.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.TextHighlight.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

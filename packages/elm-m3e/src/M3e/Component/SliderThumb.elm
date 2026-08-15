@@ -1,6 +1,6 @@
 module M3e.Component.SliderThumb exposing
     ( view
-    , Is, Attrs, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , disabled, name, value, defaultValue, onValueChange, onBeforeinput, onInput, onChange, onClick
     )
 
@@ -9,7 +9,7 @@ module M3e.Component.SliderThumb exposing
 A thumb used to select a value in a slider.
 
 @docs view
-@docs Is, Attrs, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs disabled, name, value, defaultValue, onValueChange, onBeforeinput, onInput, onChange, onClick
 
 -}
@@ -42,6 +42,24 @@ type alias Attrs =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.SliderThumb.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.SliderThumb.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.SliderThumb.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

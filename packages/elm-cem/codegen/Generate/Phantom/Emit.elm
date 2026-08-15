@@ -2698,6 +2698,9 @@ compModule brand comp =
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")
 
+        singularSlots =
+            namedSlots |> List.filter (not << .multi)
+
         requiredSlots =
             comp.slots |> List.filter .required
 
@@ -2799,7 +2802,7 @@ compModule brand comp =
                     else
                         []
                    )
-            , [ "Is", "Attrs" ]
+            , [ "Is", "Attrs", "Builder", "AttrCaps", "SlotCaps" ]
                 ++ List.map .alias_ contentAliases
                 ++ [ "ChildAdmittedBy" ]
                 ++ (case comp.admittedBy of
@@ -3017,6 +3020,34 @@ compModule brand comp =
 
                         Nothing ->
                             []
+                   )
+                ++ [ ""
+                   , ""
+                   , doc "The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes."
+                   , "type alias Builder attrCaps slotCaps msg kind ="
+                   , "    " ++ internalRef "Builder" ++ " attrCaps slotCaps msg kind"
+                   , ""
+                   , ""
+                   , doc "The attribute capabilities this component's builder admits."
+                   , "type alias AttrCaps ="
+                   , "    " ++ internalRef "AttrCaps"
+                   ]
+                ++ (let
+                        slotCapsBody =
+                            capsRecord "Available" (singularSlots |> List.map (.name >> Naming.camel))
+                    in
+                    [ ""
+                    , ""
+                    , doc "The singular-slot capabilities this component's builder admits."
+                    , "type alias SlotCaps ="
+                    , "    "
+                        ++ (if String.trim slotCapsBody == "{}" then
+                                slotCapsBody
+
+                            else
+                                internalRef "SlotCaps"
+                           )
+                    ]
                    )
 
         viewDocText =
@@ -3639,7 +3670,7 @@ compBuildModule brand comp =
                    )
 
         internalRef n =
-            lib ++ ".Internal.Types." ++ comp.name ++ "." ++ n
+            "Component." ++ n
 
         -- Re-export component's content type aliases
         contentAliasReExports =
@@ -4024,7 +4055,6 @@ compBuildModule brand comp =
                     []
                 , [ "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " kindImports ++ ")" ]
                 , [ "import " ++ lib ++ ".Component." ++ comp.name ++ " as Component" ]
-                , [ "import " ++ lib ++ ".Internal.Types." ++ comp.name ]
                 ]
                 ++ (case comp.actionCaps of
                         Just _ ->

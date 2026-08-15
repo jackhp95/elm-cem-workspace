@@ -1,6 +1,6 @@
 module M3e.Component.AssistChip exposing
     ( view, el
-    , Is, Attrs, Content, IconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , Type, type_, Variant, variant
     , disabled, disabledInteractive, download, href, name, rel, target, value, defaultValue, onClick
     , icon, child
@@ -11,7 +11,7 @@ module M3e.Component.AssistChip exposing
 A chip users interact with to perform a smart or automated action that can span multiple applications.
 
 @docs view, el
-@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs Type, type_, Variant, variant
 @docs disabled, disabledInteractive, download, href, name, rel, target, value, defaultValue, onClick
 @docs icon, child
@@ -71,6 +71,24 @@ type alias Type =
 -}
 type alias Variant =
     M3e.Internal.Types.AssistChip.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.AssistChip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.AssistChip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.AssistChip.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.

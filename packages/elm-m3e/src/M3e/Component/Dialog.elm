@@ -1,6 +1,6 @@
 module M3e.Component.Dialog exposing
     ( view
-    , Is, Attrs, CloseIconSlot, HeaderSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, CloseIconSlot, HeaderSlot, ChildAdmittedBy
     , alert, closeLabel, disableClose, dismissible, noFocusTrap, open, onOpening, onOpened, onClosing, onClosed, onCancel
     , actions, closeIcon, header, child
     )
@@ -10,7 +10,7 @@ module M3e.Component.Dialog exposing
 A dialog that provides important prompts in a user flow.
 
 @docs view
-@docs Is, Attrs, CloseIconSlot, HeaderSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, CloseIconSlot, HeaderSlot, ChildAdmittedBy
 @docs alert, closeLabel, disableClose, dismissible, noFocusTrap, open, onOpening, onOpened, onClosing, onClosed, onCancel
 @docs actions, closeIcon, header, child
 
@@ -55,6 +55,24 @@ type alias HeaderSlot =
 -}
 type alias ChildAdmittedBy childAdm =
     M3e.Internal.Types.Dialog.ChildAdmittedBy childAdm
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Dialog.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Dialog.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    M3e.Internal.Types.Dialog.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`. The default slot is

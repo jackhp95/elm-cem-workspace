@@ -23,44 +23,43 @@ import HtmlIr.Value as Val exposing (Value)
 import M3e.Attributes as A
 import M3e.Component.SplitButton as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.SplitButton
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.SplitButton.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.SplitButton.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.SplitButton.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.SplitButton.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.SplitButton.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias LeadingButtonSlot =
-    M3e.Internal.Types.SplitButton.LeadingButtonSlot
+    Component.LeadingButtonSlot
 
 
 {-| -}
 type alias TrailingButtonSlot =
-    M3e.Internal.Types.SplitButton.TrailingButtonSlot
+    Component.TrailingButtonSlot
 
 
 {-| -}

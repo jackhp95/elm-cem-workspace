@@ -1,6 +1,6 @@
 module M3e.Component.Tooltip exposing
     ( view, el
-    , Is, Attrs, Content, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Position, position, TouchGestures, touchGestures
     , disabled, for, hideDelay, showDelay
     , child
@@ -11,7 +11,7 @@ module M3e.Component.Tooltip exposing
 Adds additional context to a button or other UI element.
 
 @docs view, el
-@docs Is, Attrs, Content, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Position, position, TouchGestures, touchGestures
 @docs disabled, for, hideDelay, showDelay
 @docs child
@@ -63,6 +63,24 @@ type alias Position =
 -}
 type alias TouchGestures =
     M3e.Internal.Types.Tooltip.TouchGestures
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Tooltip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Tooltip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

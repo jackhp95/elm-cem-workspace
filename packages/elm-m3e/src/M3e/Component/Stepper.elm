@@ -1,6 +1,6 @@
 module M3e.Component.Stepper exposing
     ( view
-    , Is, Attrs, PanelSlot, StepSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, PanelSlot, StepSlot, ChildAdmittedBy
     , HeaderPosition, headerPosition, LabelPosition, labelPosition, Orientation, orientation
     , linear, onChange, onBeforeinput, onInput
     , panel, step
@@ -11,7 +11,7 @@ module M3e.Component.Stepper exposing
 Provides a wizard-like workflow by dividing content into logical steps.
 
 @docs view
-@docs Is, Attrs, PanelSlot, StepSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, PanelSlot, StepSlot, ChildAdmittedBy
 @docs HeaderPosition, headerPosition, LabelPosition, labelPosition, Orientation, orientation
 @docs linear, onChange, onBeforeinput, onInput
 @docs panel, step
@@ -76,6 +76,24 @@ type alias LabelPosition =
 -}
 type alias Orientation =
     M3e.Internal.Types.Stepper.Orientation
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Stepper.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Stepper.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
 
 
 {-| Standard constructor: `[attributes] [children]`.

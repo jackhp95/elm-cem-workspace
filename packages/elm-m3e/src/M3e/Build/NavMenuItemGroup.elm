@@ -22,43 +22,42 @@ import HtmlIr.Kind exposing (Shared, Supported)
 import M3e.Attributes as A
 import M3e.Component.NavMenuItemGroup as Component
 import M3e.Forge.Internal as B
-import M3e.Internal.Types.NavMenuItemGroup
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
 {-| -}
 type alias Is s =
-    M3e.Internal.Types.NavMenuItemGroup.Is s
+    Component.Is s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    M3e.Internal.Types.NavMenuItemGroup.Builder attrCaps slotCaps msg kind
+    Component.Builder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    M3e.Internal.Types.NavMenuItemGroup.AttrCaps
+    Component.AttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    M3e.Internal.Types.NavMenuItemGroup.SlotCaps
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    M3e.Internal.Types.NavMenuItemGroup.ChildAdmittedBy childAdm
+    Component.ChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    M3e.Internal.Types.NavMenuItemGroup.Content
+    Component.Content
 
 
 {-| -}
 type alias LabelSlot =
-    M3e.Internal.Types.NavMenuItemGroup.LabelSlot
+    Component.LabelSlot
 
 
 {-| -}
