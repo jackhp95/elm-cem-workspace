@@ -38,7 +38,7 @@ import Markdown.Renderer
 import SyntaxHighlight
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
 {-| A matraic-style "showcase" card: live demo content in an outlined card.
@@ -94,7 +94,7 @@ type Lang
 
 
 {-| -}
-codeBlock : Lang -> String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+codeBlock : Lang -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 codeBlock lang s =
     let
         trimmed : String
@@ -149,7 +149,7 @@ Falls back to the raw text in a paragraph if parsing/rendering fails, so a
 malformed doc-comment never blanks the page. The `doc-prose` wrapper carries
 the prose spacing/typography from `style.css`.
 -}
-markdown : String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+markdown : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 markdown raw =
     TypedHtml.div [ TA.class "doc-prose" ]
         (List.map M3e.Unsafe.fromHtml (markdownBody raw))
@@ -223,7 +223,7 @@ slugify text =
 {-| The chapter recap box: a "Recap" overline over rendered markdown, in a
 tinted container.
 -}
-recapBox : String -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+recapBox : String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 recapBox md =
     TypedHtml.div [ TA.class "rounded-md-corner-medium bg-surface-container p-4 space-y-2" ]
         [ TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-primary" ] [ M3e.text "Recap" ]
@@ -236,7 +236,7 @@ Use for overline labels that introduce API sections or content groups.
 No uppercase — M3 permits uppercase only for very short labels (≤20 chars);
 long dynamic labels can exceed that, so this helper always uses sentence case.
 -}
-sectionLabel : String -> Element (TypedHtml.Grouping.PIs s) adm_ msg
+sectionLabel : String -> Element (TypedHtml.Component.Grouping.PIs s) adm_ msg
 sectionLabel s =
     TypedHtml.p [ TA.class "text-label-lg tracking-wide text-on-surface-variant" ] [ M3e.text s ]
 
@@ -244,7 +244,7 @@ sectionLabel s =
 {-| Same as [`sectionLabel`](#sectionLabel) but all-caps, for the short (≤20 char)
 overline labels in the example apps where the M3 uppercase overline is intentional.
 -}
-sectionLabelCaps : String -> Element (TypedHtml.Grouping.PIs s) adm_ msg
+sectionLabelCaps : String -> Element (TypedHtml.Component.Grouping.PIs s) adm_ msg
 sectionLabelCaps s =
     TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-on-surface-variant" ] [ M3e.text s ]
 
@@ -275,7 +275,7 @@ must not read as body prose (e.g. "these modules are yours to write"). The body 
 full Markdown, so it can carry links and inline `code`. Styled with the same surface
 tokens as the rest of the docs; a left accent bar marks it as a notice, not content.
 -}
-callout : String -> String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+callout : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 callout label body =
     TypedHtml.div
         [ TA.class "rounded-md-corner-medium bg-surface-container border-l-4 border-primary p-4 space-y-2" ]
@@ -289,7 +289,7 @@ callout label body =
 everywhere an example leans on a `Doc.*` helper. One definition, so the framing
 can't drift.
 -}
-userlandNote : Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+userlandNote : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 userlandNote =
     callout "These helpers are our examples, not the library"
         """The `Doc.*` helpers in these examples are **this docs app's own module** — not part of `elm-m3e` (they won't resolve from a fresh install). You rarely need anything like them. The library gives you typed components (`M3e.*`) plus `TypedHtml` for standard HTML, and you never import `HtmlIr`: `M3e.Element`, `M3e.Attr`, `M3e.Node`, `M3e.Values.Value` and `M3e.Kind.Supported` / `.Shared` are all re-exported, so every type annotation you need is reachable from the brand. Build layout, text, and links directly from those. The genuine *escapes* ship with the library too, in one greppable, lint-fenced place — `M3e.Unsafe` (`fromHtml`, `fromNode`, `recast`, and `customElement` for a custom tag the types can't express) and `M3e.Unsafe.Attributes`. See [Escapes](/guide/seams)."""
@@ -299,7 +299,7 @@ userlandNote =
 inline `<code>` block so it wraps within the list item; falls back to plain text
 if it doesn't tokenize as Elm.
 -}
-elmSignature : String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+elmSignature : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 elmSignature s =
     let
         trimmed : String
@@ -335,7 +335,7 @@ anchorPill link =
 
 {-| A horizontally-scrollable `<pre><code>` block for a verbatim signature line.
 -}
-preBlock : String -> Element (TypedHtml.Grouping.PreIs s) admittedBy msg
+preBlock : String -> Element (TypedHtml.Component.Grouping.PreIs s) admittedBy msg
 preBlock s =
     TypedHtml.pre [ TA.class "overflow-x-auto" ]
         [ TypedHtml.code [] [ M3e.text s ] ]
@@ -344,6 +344,6 @@ preBlock s =
 {-| A minimal `<div><p>…</p></div>` text block, for framework surfaces (e.g. the
 error page) that render a plain message with no typed M3e producer at hand.
 -}
-message : String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+message : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 message body =
     TypedHtml.div [] [ TypedHtml.p [] [ M3e.text body ] ]

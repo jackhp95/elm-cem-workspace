@@ -22,8 +22,8 @@ import Theme.Tokens
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
+import TypedHtml.Component.Grouping
 import TypedHtml.Events
-import TypedHtml.Grouping
 import TypedHtml.Values
 
 
@@ -675,7 +675,7 @@ primary — never a hand-painted hex. Each swatch sets the avatar's
 resolves against that swatch's nested theme. The first option is the
 source-color picker (`sourceColorOption`). A small `m3e-heading` labels the row.
 -}
-colorOptions : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+colorOptions : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 colorOptions model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1.5" ]
         [ TypedHtml.div []
@@ -697,7 +697,7 @@ carrying a `colorize` icon, with a transparent native `<input type=color>`
 stretched over it — clicking anywhere opens the OS color picker and fires
 `SetSeed`. The native input is the keyboard-accessible control.
 -}
-sourceColorOption : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+sourceColorOption : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 sourceColorOption model =
     TypedHtml.div
         [ TypedHtml.Attributes.class "relative inline-flex rounded-full" ]
@@ -734,7 +734,7 @@ phrasing-content slot. The active swatch (matching the current seed) gets a
 primary ring in the APP palette so the selected marker reads consistently
 across hues.
 -}
-colorAvatar : Model -> String -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 colorAvatar model hex =
     TypedHtml.div
         [ TypedHtml.Attributes.class
@@ -810,11 +810,11 @@ here.
 view :
     { dir : TypedHtml.Values.Value TypedHtml.Values.Dir
     , onSetDirection : TypedHtml.Values.Value TypedHtml.Values.Dir -> msg
-    , sectionsEl : Element { cs | formField : M3e.Kind.Brand, segmentedButton : M3e.Kind.Brand, sharedFlow : HtmlIr.Kind.Shared, button : M3e.Kind.Brand } (TypedHtml.Grouping.DivChildAdmittedBy sectionAdm) msg
+    , sectionsEl : Element { cs | formField : M3e.Kind.Brand, segmentedButton : M3e.Kind.Brand, sharedFlow : HtmlIr.Kind.Shared, button : M3e.Kind.Brand } (TypedHtml.Component.Grouping.DivChildAdmittedBy sectionAdm) msg
     }
     -> Model
     -> (Msg -> msg)
-    -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+    -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 view { sectionsEl } model toMsg =
     TypedHtml.div
         [ TypedHtml.Attributes.class "flex flex-col gap-2 py-4"

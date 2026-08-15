@@ -50,8 +50,8 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
-import TypedHtml.Sectioning
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -236,7 +236,7 @@ clips it away entirely.
 content in both directions -- which is what the `relative` here anchors.
 
 -}
-screen : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "bg-surface text-on-surface relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -252,7 +252,7 @@ screen model =
 
 {-| The shared "Built from" + prev/next strip.
 -}
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -276,7 +276,7 @@ exampleFooter =
 
 {-| Desktop navigation rail (hidden below `md:`).
 -}
-navRail : Element (TypedHtml.Sectioning.NavIs s) adm_ Msg
+navRail : Element (TypedHtml.Component.Sectioning.NavIs s) adm_ Msg
 navRail =
     TypedHtml.nav [ TA.class "hidden md:flex" ]
         [ M3e.navRail [ M3e.Attributes.mode Value.expanded ]
@@ -304,7 +304,7 @@ wrapper around the bar) as the flex child mirrors `navRail`, whose `<nav>` is
 likewise the flex child at `md:` and up.
 
 -}
-bottomBar : Element (TypedHtml.Sectioning.NavIs s) adm_ Msg
+bottomBar : Element (TypedHtml.Component.Sectioning.NavIs s) adm_ Msg
 bottomBar =
     TypedHtml.nav [ TA.class "md:hidden shrink-0" ]
         [ M3e.navBar []
@@ -405,7 +405,7 @@ it, where dismissing is a preference rather than a necessity -- but a control
 that moves or disappears between widths is worse than one that does not.
 
 -}
-closeReader : Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+closeReader : Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 closeReader =
     TypedHtml.div [ TA.class "flex" ]
         [ M3e.iconButton
@@ -488,7 +488,7 @@ messageRow selected index message =
 avatar and timestamp, label chips, and the body paragraphs — all styled with
 M3 token classes applied directly.
 -}
-readingPane : Message -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+readingPane : Message -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 readingPane message =
     TypedHtml.div [ TA.class "flex flex-col gap-6 p-6" ]
         [ closeReader
@@ -530,7 +530,7 @@ pointer events. Only the FAB itself should be clickable; the gutter around it
 belongs to whatever is underneath.
 
 -}
-composeFab : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+composeFab : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 composeFab =
     TypedHtml.div [ TA.class "pointer-events-none absolute bottom-20 right-6 md:bottom-6 [&>*]:pointer-events-auto" ]
         [ M3e.fab

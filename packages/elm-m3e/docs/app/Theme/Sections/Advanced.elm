@@ -17,10 +17,10 @@ import Theme.Sections.Shared as Shared
 import Theme.Tokens as Tokens exposing (MotionDurationToken, StateOpacityToken)
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2" ]
@@ -34,7 +34,7 @@ view model =
 token's default), parsing the numeric prefix back out of the stored
 `"250ms"`-shaped string.
 -}
-durationRow : Theme.Model -> MotionDurationToken -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+durationRow : Theme.Model -> MotionDurationToken -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 durationRow model token =
     let
         currentMs : Int
@@ -50,7 +50,7 @@ durationRow model token =
     Shared.numberStepper token.label (toFloat currentMs) 25 toMsg
 
 
-opacityRow : Theme.Model -> StateOpacityToken -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+opacityRow : Theme.Model -> StateOpacityToken -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 opacityRow model token =
     let
         currentPercent : Int

@@ -38,7 +38,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -168,7 +168,7 @@ today; `min-h-0` states it directly so the invariant does not hinge on the
 overflow class staying put.
 
 -}
-screen : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -182,7 +182,7 @@ screen model =
         ]
 
 
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -214,7 +214,7 @@ adaptivity: a single column on compact (list, then detail beneath), two panes on
 `md:` and up (a fixed `md:w-80` list beside a filling detail). Both panes scroll
 independently.
 -}
-body : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+body : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 body model =
     TypedHtml.div [ TA.class "flex flex-1 flex-col overflow-hidden md:flex-row" ]
         [ listPane model.selected
@@ -224,7 +224,7 @@ body model =
 
 {-| The master list — full-width on compact, a fixed rail on `md:`.
 -}
-listPane : Int -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+listPane : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 listPane selected =
     TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto border-outline-variant/40 md:w-80 md:flex-none md:shrink-0 md:border-r" ]
         [ M3e.list []
@@ -260,7 +260,7 @@ contactRow selected index contact =
 
 {-| The detail pane — fills the rest on `md:`, stacks beneath the list on compact.
 -}
-detailPane : Contact -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+detailPane : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 detailPane contact =
     TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto p-4 md:p-8" ]
         [ TypedHtml.div [ TA.class "mx-auto flex w-full max-w-xl flex-col gap-6" ]
@@ -270,7 +270,7 @@ detailPane contact =
         ]
 
 
-header : Contact -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+header : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 header contact =
     TypedHtml.div [ TA.class "flex flex-col items-center gap-3 pt-2" ]
         [ M3e.avatar [] [ M3e.text contact.initials ]

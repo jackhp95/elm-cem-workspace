@@ -17,7 +17,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import TypedHtml.Kind
 import UrlPath
 import View exposing (View)
@@ -93,7 +93,7 @@ scale =
     ]
 
 
-row : ( Element (TypedHtml.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Grouping.DivChildAdmittedBy childAdm) msg, String, String ) -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+row : ( Element (TypedHtml.Component.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 row ( exhibit, cls, metrics ) =
     TypedHtml.div [ TA.class "flex flex-wrap items-baseline justify-between gap-2 py-3" ]
         [ exhibit

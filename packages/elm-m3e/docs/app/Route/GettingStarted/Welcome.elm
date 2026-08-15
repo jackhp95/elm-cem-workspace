@@ -40,7 +40,7 @@ import Theme.Presets
 import Theme.Reel
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Sectioning
+import TypedHtml.Component.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -129,7 +129,7 @@ view app shared _ =
         )
 
 
-hero : Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+hero : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 hero =
     TypedHtml.section [ TA.class "space-y-5" ]
         [ M3e.heading
@@ -155,7 +155,7 @@ hero =
 {-| The "Why elm-m3e" highlight cards. The "Real M3 tokens" card's copy
 points users downward to the live theme reel below it.
 -}
-highlights : Int -> Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+highlights : Int -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 highlights componentCount =
     TypedHtml.section [ TA.class "space-y-6" ]
         [ Doc.sectionHeadingWithId (Doc.slugify "Why elm-m3e") "Why elm-m3e"
@@ -198,7 +198,7 @@ Clicking a card fires `PickTheme presetId` which routes through
 as required by the elm-pages route contract.
 
 -}
-themeReel : Shared.Model -> Element (TypedHtml.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
+themeReel : Shared.Model -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
 themeReel shared =
     TypedHtml.section [ TA.class "space-y-4 -mx-4 sm:-mx-8" ]
         [ TypedHtml.div [ TA.class "px-4 sm:px-8" ]
@@ -211,7 +211,7 @@ themeReel shared =
         ]
 
 
-statusGrid : Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+statusGrid : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 statusGrid =
     TypedHtml.section [ TA.class "space-y-3" ]
         [ Doc.sectionHeadingWithId (Doc.slugify "Status") "Status"

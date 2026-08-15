@@ -36,7 +36,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -209,7 +209,7 @@ view _ _ model =
 
 {-| The shared "Built from" + prev/next strip.
 -}
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -262,7 +262,7 @@ compiler still checks the Badge is legal _inside the div_ rather than being told
 to stop looking.
 
 -}
-cartAction : Int -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+cartAction : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 cartAction count =
     TypedHtml.div
         [ TA.class "inline-flex" ]
@@ -347,7 +347,7 @@ navDestination current dest =
 
 {-| A small welcome banner painted on a container surface.
 -}
-hero : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+hero : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 hero =
     TypedHtml.div
         [ TA.class "bg-primary-container text-on-primary-container rounded-md-corner-extra-large flex flex-col gap-1 p-6" ]
@@ -360,7 +360,7 @@ hero =
 {-| Category filter toolbar: a single-select FilterChipSet that scrolls
 horizontally on narrow screens, plus a sort action.
 -}
-filterBar : String -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+filterBar : String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 filterBar current =
     TypedHtml.div [ TA.class "flex items-center gap-2" ]
         [ TypedHtml.div [ TA.class "min-w-0 flex-1 overflow-x-auto" ]
@@ -382,7 +382,7 @@ categoryChip current cat =
 
 {-| Responsive product grid: 1 col on mobile, 2 on small, 3/4 on larger screens.
 -}
-productGrid : List Product -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+productGrid : List Product -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 productGrid shown =
     TypedHtml.div [ TA.class "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" ]
         (List.map productCard shown)
@@ -413,7 +413,7 @@ productCard product =
 
 {-| Placeholder media: a shape-clipped surface tile with a centered glyph.
 -}
-media : Product -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+media : Product -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 media product =
     TypedHtml.div
         [ TA.class (product.media ++ " rounded-md-corner-large flex aspect-square items-center justify-center") ]
@@ -422,7 +422,7 @@ media product =
 
 {-| A floating checkout action over the content.
 -}
-checkoutFab : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+checkoutFab : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 checkoutFab =
     TypedHtml.div [ TA.class "pointer-events-none sticky bottom-6 flex justify-end pr-2" ]
         [ TypedHtml.div [ TA.class "pointer-events-auto" ]

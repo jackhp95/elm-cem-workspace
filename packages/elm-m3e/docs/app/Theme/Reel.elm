@@ -58,7 +58,7 @@ import Theme.Presets exposing (Preset)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
 {-| Configuration for the reel view — kept as a record so callers can omit
@@ -77,7 +77,7 @@ type alias Config msg =
 intentional on touch screens. The reel is layout-only Tailwind; the visual
 surface of every card is an `m3e-card`.
 -}
-view : Config msg -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+view : Config msg -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 view config =
     TypedHtml.div
         [ TA.class "flex gap-3 overflow-x-auto snap-x snap-mandatory px-4 py-3" ]
@@ -140,7 +140,7 @@ presetCard config isActive preset =
 single m3e component kind — keeping the phantom-row lists homogeneous without
 per-child escapes.
 -}
-cardBody : Bool -> Preset -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+cardBody : Bool -> Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 cardBody isActive preset =
     TypedHtml.div
         [ TA.class "flex flex-col gap-1.5" ]
@@ -162,7 +162,7 @@ cardBody isActive preset =
 Shown only for the active card. Its colour inherits `on-surface` from the
 card's own nested theme.
 -}
-selectedBadge : Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+selectedBadge : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 selectedBadge =
     TypedHtml.div
         [ TA.class "flex justify-end -mb-1 text-primary" ]
@@ -179,7 +179,7 @@ selectedBadge =
 font. `font-family` is a regular CSS property, so inline `style` is reliable
 here (only CSS _custom_ properties are unreliable via the style encoder).
 -}
-cardName : Preset -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+cardName : Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 cardName preset =
     TypedHtml.div
         [ TA.class "min-w-0" ]
@@ -196,7 +196,7 @@ cardName preset =
 {-| "Aa" specimen: uppercase A in the display font, lowercase a in the body
 font — two `m3e-heading`s side by side so both fonts show at a glance.
 -}
-cardSpecimen : Preset -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+cardSpecimen : Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 cardSpecimen preset =
     TypedHtml.div
         [ TA.class "flex items-baseline gap-1" ]
@@ -242,7 +242,7 @@ token `--color-primary`, which never re-derives under a nested theme. Setting
 drops `--x`).
 
 -}
-cardRoleStrip : Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+cardRoleStrip : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 cardRoleStrip =
     TypedHtml.div
         [ TA.class "flex gap-1 mt-0.5" ]

@@ -32,7 +32,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria
 import TypedHtml.Attributes
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -109,7 +109,7 @@ site. No escape, no door.
 -- @sample-source seamsTwoColumn
 
 
-twoColumn : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+twoColumn : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 twoColumn =
     -- NOT a seam: standard HTML is already typed, so layout is a plain div.
     TypedHtml.div [ TypedHtml.Attributes.class "grid grid-cols-1 gap-4 md:grid-cols-2" ]
@@ -128,7 +128,7 @@ producer, contained and greppable, not scattered through feature code.
 -- @sample-source seamsModelViewer
 
 
-modelViewer : Element (TypedHtml.Grouping.DivIs k) freeAdm msg
+modelViewer : Element (TypedHtml.Component.Grouping.DivIs k) freeAdm msg
 modelViewer =
     -- a real seam: a custom element the types can't express, contained once.
     M3e.Unsafe.customElement "model-viewer"

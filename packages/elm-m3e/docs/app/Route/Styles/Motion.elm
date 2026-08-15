@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -86,7 +86,7 @@ tokenTable rows =
         ]
 
 
-tokenRow : ( String, String ) -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+tokenRow : ( String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 tokenRow ( token, value ) =
     TypedHtml.div [ TA.class "flex flex-wrap items-baseline justify-between gap-2 py-2.5" ]
         [ TypedHtml.code [ TA.class "text-body-md text-on-surface" ] [ M3e.text token ]

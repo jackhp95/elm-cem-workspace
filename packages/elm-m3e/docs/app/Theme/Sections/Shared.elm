@@ -18,8 +18,8 @@ import Theme.Scale as Scale exposing (ScaleConfig, ScaleMode)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
+import TypedHtml.Component.Grouping
 import TypedHtml.Events
-import TypedHtml.Grouping
 
 
 {-| A `Theme.segmented` control (the shared segmented-button helper also used
@@ -40,7 +40,7 @@ modeSegmented toMsg current =
 Linear uses `factor`, Modular uses `ratio`+`base`, Bump uses `bump`, Power
 uses `exponent`+`base`.
 -}
-stepperControls : (TypeScaleParam -> Float -> msg) -> ScaleConfig -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+stepperControls : (TypeScaleParam -> Float -> msg) -> ScaleConfig -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 stepperControls toMsg config =
     case config.mode of
         Scale.Linear ->
@@ -64,7 +64,7 @@ stepperControls toMsg config =
                 ]
 
 
-numberStepper : String -> Float -> Float -> (Float -> msg) -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+numberStepper : String -> Float -> Float -> (Float -> msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 numberStepper labelText current step toMsg =
     TypedHtml.div [ TypedHtml.Attributes.class "flex items-center gap-1" ]
         [ M3e.text labelText

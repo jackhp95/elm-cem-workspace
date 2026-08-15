@@ -27,9 +27,9 @@ which is why `app/NativeIntoM3eSlot.elm` uses `div`, not `span`.
 
 import M3e
 import TypedHtml
-import TypedHtml.Text
+import TypedHtml.Component.Text
 
 
-broken : M3e.Element (TypedHtml.Text.SpanIs s) admittedBy msg
+broken : M3e.Element (TypedHtml.Component.Text.SpanIs s) admittedBy msg
 broken =
     TypedHtml.span [] [ M3e.heading [] [ M3e.text "hi" ] ]

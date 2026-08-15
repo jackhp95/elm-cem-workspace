@@ -34,7 +34,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -171,7 +171,7 @@ but it keeps the "one bounded scroll region" invariant from hanging on that
 one class.
 
 -}
-screen : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -190,7 +190,7 @@ screen model =
         ]
 
 
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -248,7 +248,7 @@ shownPosts filter =
         List.filter (\p -> p.category == filter) posts
 
 
-cardGrid : List Post -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+cardGrid : List Post -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 cardGrid shown =
     TypedHtml.div [ TA.class "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" ]
         (List.map postCard shown)

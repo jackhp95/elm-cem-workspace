@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -65,7 +65,7 @@ head _ =
         |> Seo.website
 
 
-supportRow : String -> String -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+supportRow : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 supportRow browser note =
     TypedHtml.div [ TA.class "flex items-baseline justify-between gap-4 py-2.5" ]
         [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text browser ]
@@ -73,7 +73,7 @@ supportRow browser note =
         ]
 
 
-featureItem : String -> Element (TypedHtml.Grouping.LiIs s) TypedHtml.Grouping.LiAdmittedBy msg
+featureItem : String -> Element (TypedHtml.Component.Grouping.LiIs s) TypedHtml.Component.Grouping.LiAdmittedBy msg
 featureItem note =
     TypedHtml.li [] [ TypedHtml.span [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text note ] ]
 

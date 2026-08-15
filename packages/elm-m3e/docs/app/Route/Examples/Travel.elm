@@ -41,8 +41,8 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
-import TypedHtml.Sectioning
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -209,7 +209,7 @@ view _ _ model =
 {-| Full-viewport chrome: a top app bar, a rail-or-main body, and a bottom bar
 that only appears on small screens.
 -}
-shell : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+shell : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 shell model =
     TypedHtml.div [ TA.class "flex h-dvh w-full flex-col" ]
         [ appBar
@@ -226,7 +226,7 @@ shell model =
 
 {-| The shared "Built from" + prev/next strip.
 -}
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -263,7 +263,7 @@ appBar =
 
 {-| The desktop navigation rail, hidden below the `md` breakpoint.
 -}
-navRail : Dest -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+navRail : Dest -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 navRail current =
     TypedHtml.div [ TA.class "hidden md:flex" ]
         [ M3e.navRail []
@@ -284,7 +284,7 @@ railItem current ( dest, iconName, label ) =
 
 {-| The mobile bottom navigation bar, hidden at and above the `md` breakpoint.
 -}
-navBar : Dest -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+navBar : Dest -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 navBar current =
     TypedHtml.div [ TA.class "md:hidden" ]
         [ M3e.navBar []
@@ -307,7 +307,7 @@ barItem current ( dest, iconName, label ) =
 -- CONTENT
 
 
-content : Model -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+content : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 content model =
     TypedHtml.div [ TA.class "flex flex-col gap-8 p-4 md:p-8" ]
         [ hero
@@ -323,7 +323,7 @@ uses): every category's rail is mounted in the track, and switching the category
 tab slides the prior rail out and the new one in. The static "Nearby getaways"
 rail below is category-independent and stays put.
 -}
-popularRails : Category -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+popularRails : Category -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 popularRails current =
     Doc.Slider.slidingPanels
         (categoryIndex current)
@@ -348,7 +348,7 @@ categoryIndex current =
 extra-large-cornered panel — a plain `TypedHtml.div` carrying
 `bg-surface-container` and `rounded-md-corner-extra-large`.
 -}
-hero : Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+hero : Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 hero =
     TypedHtml.div
         [ TA.class "bg-surface-container text-on-surface rounded-md-corner-extra-large flex flex-col gap-4 p-6 md:p-8" ]
@@ -391,7 +391,7 @@ categoryTab current ( category, label ) =
 
 {-| A titled, horizontally-scrolling strip of destination cards.
 -}
-rail : String -> List Place -> Element (TypedHtml.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
+rail : String -> List Place -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
 rail heading places =
     TypedHtml.section [ TA.class "flex flex-col gap-4" ]
         [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text heading ]
@@ -403,7 +403,7 @@ rail heading places =
 {-| One destination card: shape-clipped tinted media, name + region, a rating
 `AssistChip` with a star, and a price. Fixed width so cards line up in the rail.
 -}
-placeCard : Place -> Element (TypedHtml.Grouping.DivIs s) adm_ (PagesMsg Msg)
+placeCard : Place -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 placeCard place =
     TypedHtml.div [ TA.class "w-56 shrink-0" ]
         [ M3e.card [ M3e.Attributes.variant Value.elevated ]
@@ -424,7 +424,7 @@ placeCard place =
 
 {-| Placeholder media: a tinted card-media block standing in for a destination photo.
 -}
-media : Place -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+media : Place -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 media place =
     TypedHtml.div
         [ TA.class (place.tint ++ " rounded-md-corner-large overflow-hidden flex h-28 w-full items-end p-3") ]

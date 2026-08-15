@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -97,7 +97,7 @@ surfaces =
 {-| A container/on-container pairing row: the bold role beside its container, so the
 "on" color is read directly off each layer/form.
 -}
-accentRow : Accent -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+accentRow : Accent -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 accentRow accent =
     TypedHtml.div [ TA.class "grid grid-cols-2 gap-3" ]
         [ swatch ( accent.name, accent.baseBg, accent.base )
@@ -105,7 +105,7 @@ accentRow accent =
         ]
 
 
-swatch : ( String, String, String ) -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+swatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 swatch ( label, bg, role ) =
     TypedHtml.div
         [ TA.class (role ++ " rounded-md-corner-medium border border-outline-variant flex flex-col justify-between p-4 min-h-24")

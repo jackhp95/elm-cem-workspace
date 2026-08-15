@@ -26,9 +26,9 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import TypedHtml.Kind
-import TypedHtml.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -168,7 +168,7 @@ generic **barrel** teaching form vs the precise **specific-module** form.
 Keeps the reference's terminology aligned with `/guide/the-layers` and
 `/guide/strictness` so a reader never meets a fifth name for the same idea.
 -}
-twoForms : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+twoForms : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 twoForms =
     TypedHtml.div [ TA.class "mt-8 max-w-2xl rounded-md-corner-medium bg-surface-container p-4 space-y-2" ]
         [ TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-primary" ] [ M3e.text "Two forms" ]
@@ -186,7 +186,7 @@ twoFormsText =
 Barrel-vs-module isn't a [surface](/guide/the-layers) choice and it isn't an escape hatch — it's a separate axis, only *which import you reach through*. Start on the barrel; reach for a component module when you want the tighter, component-scoped types."""
 
 
-indexGrid : List Component -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+indexGrid : List Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 indexGrid components =
     TypedHtml.div [ TA.class "mt-8 flex flex-wrap gap-2" ]
         (List.map
@@ -202,7 +202,7 @@ name-keyed groups a reader scans for (constructors, `variant*` tokens, `slot*`
 setters, `attr*`/other setters, `on*` events). Grouping by name prefix — not the
 JSON `role` — is what makes the ~650-member barrel navigable.
 -}
-barrelBlock : Component -> Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+barrelBlock : Component -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 barrelBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "mt-12 scroll-mt-6 space-y-6" ]
@@ -261,7 +261,7 @@ barrelGroup label pred members =
                 ]
 
 
-componentBlock : Component -> Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+componentBlock : Component -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 componentBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "scroll-mt-6 space-y-4" ]
@@ -309,7 +309,7 @@ memberRow m =
 
 {-| Render \\n\\n-separated text as body paragraphs at the given type-scale size.
 -}
-prose : String -> String -> String -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+prose : String -> String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 prose layoutCls bodyCls s =
     TypedHtml.div [ TA.class layoutCls ]
         (s

@@ -21,7 +21,7 @@ import M3e.Kind
 import M3e.Values as Value
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import TypedHtml.Kind
 
 
@@ -114,7 +114,7 @@ mounts a single `m3e-toc` that discovers these headings (and everything
 else on the page) at runtime; nothing here needs to enumerate them.
 
 -}
-usageBlocks : Int -> Model -> List UsageExample -> List (Element (TypedHtml.Grouping.DivIs s) adm_ Msg)
+usageBlocks : Int -> Model -> List UsageExample -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg)
 usageBlocks offset model examples =
     case examples of
         [] ->
@@ -167,7 +167,7 @@ always `HTML`). The selection lives in
 surface (`defaultSurfaceFor`). Grouped as one
 `space-y-3` block so title/preview/tabs/code stay tight while sections stay apart.
 -}
-exampleBlock : Model -> ( Int, UsageExample ) -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+exampleBlock : Model -> ( Int, UsageExample ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 exampleBlock model ( index, ex ) =
     let
         surface : Surface
@@ -280,10 +280,10 @@ surface is identical to `M3e` by design, so we show a short rationale instead of
 hollow duplicate.
 
 -}
-codeFor : Surface -> UsageExample -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+codeFor : Surface -> UsageExample -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 codeFor surface ex =
     let
-        elmOrHtml : Maybe String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+        elmOrHtml : Maybe String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
         elmOrHtml field =
             case field of
                 Just code ->
@@ -292,7 +292,7 @@ codeFor surface ex =
                 Nothing ->
                     Doc.codeBlock Doc.Xml ex.html
 
-        recordBuildCode : Maybe String -> String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+        recordBuildCode : Maybe String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
         recordBuildCode field surfaceName =
             case field of
                 Just code ->
@@ -327,7 +327,7 @@ the paragraph does not overflow on mobile when this panel is the inactive (inert
 panel in a `Doc.Slider.slidingPanels` stack.
 
 -}
-identicalSurfaceNote : String -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+identicalSurfaceNote : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 identicalSurfaceNote surface =
     TypedHtml.div [ TA.class "overflow-x-auto rounded-md-corner-medium bg-surface-container p-4" ]
         [ TypedHtml.p [ TA.class "text-body-md leading-relaxed text-on-surface" ]

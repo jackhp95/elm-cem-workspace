@@ -36,7 +36,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import View exposing (View)
 
 
@@ -116,7 +116,7 @@ its flex basis, pushing the nav bar off the bottom of the viewport and turning
 the DOCUMENT into the scroller.
 
 -}
-screen : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+screen : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 screen =
     TypedHtml.div
         [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -132,7 +132,7 @@ screen =
         ]
 
 
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -164,7 +164,7 @@ pane BELOW the primary on compact and BESIDE it on expanded. `flex-1` lets the
 primary grow; `lg:w-80 lg:shrink-0` fixes the supporting pane's width so it never
 crowds the primary.
 -}
-body : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+body : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 body =
     TypedHtml.div [ TA.class "mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 md:p-6 lg:flex-row" ]
         [ primary
@@ -174,7 +174,7 @@ body =
 
 {-| The primary region: the focus content. Flexes to fill the row.
 -}
-primary : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+primary : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 primary =
     TypedHtml.div [ TA.class "flex flex-1 flex-col gap-4 min-w-0" ]
         [ M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Project overview" ]
@@ -199,7 +199,7 @@ summaryCard =
         ]
 
 
-metric : String -> String -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+metric : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 metric value label =
     TypedHtml.div [ TA.class "flex flex-col" ]
         [ M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.medium, TA.class "text-primary" ] [ M3e.text value ]
@@ -236,7 +236,7 @@ milestoneRow iconName label status =
 {-| The supporting pane: secondary, related material. Fixed width beside the
 primary on `lg:`, reflowed beneath it on compact.
 -}
-supporting : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+supporting : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 supporting =
     TypedHtml.div [ TA.class "shrink-0 lg:w-80" ]
         [ TypedHtml.div
@@ -264,7 +264,7 @@ activity =
     ]
 
 
-activityRow : Activity -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+activityRow : Activity -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 activityRow a =
     TypedHtml.div [ TA.class "flex items-start gap-3" ]
         [ M3e.avatar [] [ M3e.text a.initials ]

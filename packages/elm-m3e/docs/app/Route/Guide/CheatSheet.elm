@@ -20,7 +20,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Sectioning
+import TypedHtml.Component.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -64,7 +64,7 @@ head _ =
         |> Seo.website
 
 
-card : String -> List (M3e.Element (M3e.Component.Heading.Is s) (TypedHtml.Sectioning.SectionChildAdmittedBy childAdm) msg) -> M3e.Element (TypedHtml.Sectioning.SectionIs s2) adm_ msg
+card : String -> List (M3e.Element (M3e.Component.Heading.Is s) (TypedHtml.Component.Sectioning.SectionChildAdmittedBy childAdm) msg) -> M3e.Element (TypedHtml.Component.Sectioning.SectionIs s2) adm_ msg
 card title items =
     TypedHtml.section [ TA.class "space-y-3" ]
         (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text title ] :: items)

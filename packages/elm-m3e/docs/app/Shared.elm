@@ -82,9 +82,9 @@ import Theme.Sections.Typography
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import TypedHtml.Events
-import TypedHtml.Grouping
-import TypedHtml.Sectioning
 import TypedHtml.Values
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -876,7 +876,7 @@ their CONTROL logic moved out of `Shared` into the `Theme` module and its
 per-section `Theme.Sections.*` views.
 
 -}
-settingsSheetContent : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+settingsSheetContent : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 settingsSheetContent model =
     TypedHtml.div
         [ TypedHtml.Attributes.id "settings-sheet-content"
@@ -1027,7 +1027,7 @@ runs against an unloaded or failed index -- both surface their own message
 instead, so a failed fetch is visibly "Search unavailable," not a silently
 empty panel.
 -}
-searchResults : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+searchResults : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 searchResults model =
     case model.searchIndex of
         Nothing ->
@@ -1231,8 +1231,8 @@ drawerShell :
     -> Model
     -> { path : UrlPath, route : Maybe Route }
     -> List NavComponent
-    -> List (Element childAccepts (TypedHtml.Grouping.DivChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Sectioning.MainIs s) admittedBy msg
+    -> List (Element childAccepts (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Component.Sectioning.MainIs s) admittedBy msg
 drawerShell toMsg model page components body =
     TypedHtml.main_
         [ TypedHtml.Attributes.id "main-content"
@@ -1611,7 +1611,7 @@ Material FAB floats over content by design, and it sits in the bar's own
 gutter (`bottom-20`) rather than displacing content.
 
 -}
-docsNavBar : (Msg -> msg) -> UrlPath -> Element (TypedHtml.Grouping.DivIs s) admittedBy msg
+docsNavBar : (Msg -> msg) -> UrlPath -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 docsNavBar toMsg path =
     TypedHtml.div
         [ TypedHtml.Attributes.class "contents" ]

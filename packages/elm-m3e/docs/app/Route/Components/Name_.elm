@@ -27,7 +27,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -141,7 +141,7 @@ a display heading (with its category chip alongside), the cleaned one-line CEM
 summary, and a barrel-first install card. Events and slots are documented by the
 colocated API section below, not repeated here.
 -}
-header : Component -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+header : Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 header component =
     TypedHtml.div [ TA.class "space-y-4" ]
         (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-3" ]
@@ -159,7 +159,7 @@ header component =
 component, from `data/example-usage.json`. Rendered only when non-empty, so a
 component absent from every example app shows no section at all.
 -}
-exampleAppsSection : List ExampleUsage -> List (Element (TypedHtml.Grouping.DivIs s) adm_ msg)
+exampleAppsSection : List ExampleUsage -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
 exampleAppsSection usages =
     if List.isEmpty usages then
         []
@@ -191,7 +191,7 @@ categoryChip cat =
 {-| The one-line summary paragraph, constrained to a comfortable reading measure.
 Empty ⇒ nothing.
 -}
-summaryBlock : String -> List (Element (TypedHtml.Grouping.DivIs s) adm_ msg)
+summaryBlock : String -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
 summaryBlock summary =
     if summary == "" then
         []
@@ -208,7 +208,7 @@ same filled, rounded code block the Usage section uses (matraic's install card i
 a bare `<pre>`); wrapping it in an outlined Card would nest a surface-container
 fill inside a card border — a box-in-box that fights the M3 surface roles.
 -}
-installCard : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+installCard : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 installCard =
     Doc.codeBlock Doc.Elm "import M3e\nimport M3e.Values"
 
@@ -218,7 +218,7 @@ grouped by role (constructor + its colocated type aliases, then attribute setter
 slot setters, and events), each group an overline-labelled outlined card. Members
 keep their `@docs` order within a group. Empty groups drop out.
 -}
-apiSection : List Doc.Data.Member -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+apiSection : List Doc.Data.Member -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 apiSection members =
     TypedHtml.div [ TA.class "space-y-6" ]
         (Doc.sectionHeadingWithId (Doc.slugify "API") "API"
@@ -244,7 +244,7 @@ apiGroups =
 {-| One API group: an overline label over an outlined card listing its members.
 `Nothing` when the group has no members, so it drops out of the section rhythm.
 -}
-apiGroup : List Doc.Data.Member -> ( String, List String ) -> Maybe (Element (TypedHtml.Grouping.DivIs s) adm_ msg)
+apiGroup : List Doc.Data.Member -> ( String, List String ) -> Maybe (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
 apiGroup members ( label, roles ) =
     case List.filter (\m -> List.member m.role roles) members of
         [] ->

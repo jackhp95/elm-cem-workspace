@@ -11,13 +11,13 @@ import M3e exposing (Element)
 import M3e.Unsafe
 import M3e.Unsafe.Attributes
 import Sample.Support exposing (Toast)
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
 -- Elm owns WHEN the snackbar exists; the element owns the slide-in animation.
 -- Render the <avt-snackbar> element (via `M3e.Unsafe.customElement`) only while
 -- shown — mounting it is what triggers the toast:
-snackbar : Toast -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+snackbar : Toast -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 snackbar t =
     M3e.Unsafe.customElement "avt-snackbar"
         [ M3e.Unsafe.Attributes.customAttribute "message" t.message

@@ -34,7 +34,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -131,7 +131,7 @@ view app _ model =
                 [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small, M3e.Attributes.level 1 ]
                 [ M3e.text "All components" ]
 
-        content : List (Element (TypedHtml.Grouping.DivIs s) adm_ Msg)
+        content : List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg)
         content =
             if model.revealed then
                 stackedBlocks model.usage app.data
@@ -156,7 +156,7 @@ a summary line, the category names, and a **Show all components** button that
 flips `revealed` on click.
 
 -}
-overview : Data -> Element (TypedHtml.Grouping.DivIs s) adm_ Msg
+overview : Data -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 overview d =
     let
         withExamples : List Component
@@ -215,7 +215,7 @@ wrapped in an `id`-anchored `.cv-auto` block. A running offset (the count of
 examples already placed) is threaded through `Usage.usageBlocks` so each
 component's tab strips occupy a disjoint index range in the shared model.
 -}
-stackedBlocks : Usage.Model -> Data -> List (Element (TypedHtml.Grouping.DivIs s) adm_ Usage.Msg)
+stackedBlocks : Usage.Model -> Data -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg)
 stackedBlocks model d =
     let
         orderedComponents : List Component
@@ -223,14 +223,14 @@ stackedBlocks model d =
             Shared.componentCategories
                 |> List.concatMap (\( category, _ ) -> List.filter (\c -> c.category == category) d.components)
 
-        step : Component -> ( Int, List (Element (TypedHtml.Grouping.DivIs s) adm_ Usage.Msg) ) -> ( Int, List (Element (TypedHtml.Grouping.DivIs s) adm_ Usage.Msg) )
+        step : Component -> ( Int, List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg) ) -> ( Int, List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg) )
         step component ( offset, acc ) =
             let
                 examples : List UsageExample
                 examples =
                     Dict.get component.slug d.usage |> Maybe.withDefault []
 
-                block : List (Element (TypedHtml.Grouping.DivIs s) adm_ Usage.Msg)
+                block : List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg)
                 block =
                     if List.isEmpty examples then
                         []

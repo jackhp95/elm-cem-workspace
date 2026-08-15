@@ -35,8 +35,8 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
-import TypedHtml.Sectioning
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -221,7 +221,7 @@ height that the content can never get back -- a permanent ~100px tax on a
 screen. Scrolling it in with the content is also what the other examples do.
 
 -}
-exampleFooter : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -270,7 +270,7 @@ the rail is a plain full-height flex child of the bounded row and stays put on
 its own.
 
 -}
-desktopRail : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+desktopRail : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 desktopRail =
     TypedHtml.div [ TA.class "hidden md:flex shrink-0" ]
         [ M3e.navRail []
@@ -296,7 +296,7 @@ stack above. `shrink-0` keeps it at its intrinsic height when the row above
 competes for space.
 
 -}
-mobileBar : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+mobileBar : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 mobileBar =
     TypedHtml.div [ TA.class "md:hidden shrink-0" ]
         [ M3e.navBar []
@@ -329,7 +329,7 @@ the FAB itself keeps the full-width sticky row from blanketing the content it
 floats over.
 
 -}
-fab : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+fab : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 fab =
     TypedHtml.div [ TA.class "pointer-events-none sticky bottom-6 flex justify-end pr-4 md:pr-6" ]
         [ TypedHtml.div [ TA.class "pointer-events-auto" ]
@@ -366,7 +366,7 @@ above them) rather than costing the viewport a permanent row each. The old
 floats over this box any more.
 
 -}
-mainContent : Element (TypedHtml.Sectioning.SectionIs s) adm_ msg
+mainContent : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 mainContent =
     TypedHtml.section [ TA.class "flex-1 min-w-0 min-h-0 overflow-y-auto" ]
         -- `fab` is `sticky`, and a sticky element's stick range is its
@@ -394,7 +394,7 @@ mainContent =
         ]
 
 
-pageHeader : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+pageHeader : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 pageHeader =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
         [ Doc.sectionLabelCaps "Overview"
@@ -407,7 +407,7 @@ pageHeader =
 -- KPI ROW ---------------------------------------------------------------------
 
 
-kpiRow : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+kpiRow : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 kpiRow =
     TypedHtml.div [ TA.class "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" ]
         (List.map kpiCard kpis)
@@ -426,7 +426,7 @@ kpiCard k =
         ]
 
 
-trendDelta : Trend -> String -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+trendDelta : Trend -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 trendDelta trend delta =
     let
         ( iconName, role ) =
@@ -455,7 +455,7 @@ accountsSection =
         )
 
 
-accountRow : Account -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+accountRow : Account -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 accountRow a =
     TypedHtml.div
         [ TA.class "bg-surface-container-high text-on-surface rounded-md-corner-large flex items-center gap-3 p-3" ]
@@ -481,7 +481,7 @@ budgetsSection =
         )
 
 
-budgetRow : Budget -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+budgetRow : Budget -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 budgetRow b =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div [ TA.class "flex items-center justify-between gap-2" ]

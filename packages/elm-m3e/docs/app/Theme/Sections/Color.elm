@@ -15,26 +15,26 @@ import Theme.Tokens as Tokens exposing (ColorToken)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
+import TypedHtml.Component.Grouping
+import TypedHtml.Component.Sectioning
 import TypedHtml.Events
-import TypedHtml.Grouping
-import TypedHtml.Sectioning
 
 
-view : Theme.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         (List.map (groupView model) Tokens.colorGroups)
 
 
-groupView : Theme.Model -> ( String, List ColorToken ) -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+groupView : Theme.Model -> ( String, List ColorToken ) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 groupView model ( groupName, tokens ) =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
-        (TypedHtml.Sectioning.h3 [] [ M3e.text groupName ]
+        (TypedHtml.Component.Sectioning.h3 [] [ M3e.text groupName ]
             :: List.map (tokenRow model) tokens
         )
 
 
-tokenRow : Theme.Model -> ColorToken -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+tokenRow : Theme.Model -> ColorToken -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 tokenRow model token =
     let
         inputId : String

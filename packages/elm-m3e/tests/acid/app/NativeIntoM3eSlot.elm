@@ -12,7 +12,7 @@ substrate — so a native wrapper enters an M3e slot **as itself**, with no
 
 The second value pins the direction that has always worked: `M3e.text` and
 `M3e.icon` are shared atoms (`sharedText` / `sharedIcon`), and
-`TypedHtml.Text.SpanContent` names both, so they sit inside native phrasing
+`TypedHtml.Component.Text.SpanContent` names both, so they sit inside native phrasing
 content directly. Compare `bad/M3eHeadingIntoNativeSpan.elm`, which pins that
 a BRANDED M3e kind does not.
 
@@ -25,7 +25,7 @@ import M3e
 import M3e.Component.AppBar
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Text
+import TypedHtml.Component.Text
 
 
 nativeWrapperInM3eSlot : M3e.Element free freeAdmittedBy msg
@@ -38,7 +38,7 @@ nativeWrapperInM3eSlot =
         )
 
 
-sharedAtomsInNativePhrasing : M3e.Element (TypedHtml.Text.SpanIs s) admittedBy msg
+sharedAtomsInNativePhrasing : M3e.Element (TypedHtml.Component.Text.SpanIs s) admittedBy msg
 sharedAtomsInNativePhrasing =
     TypedHtml.span []
         [ M3e.text "shared text atom"

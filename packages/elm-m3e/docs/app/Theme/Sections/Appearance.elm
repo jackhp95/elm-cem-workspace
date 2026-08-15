@@ -6,10 +6,10 @@ import M3e.Values as Value exposing (Value)
 import Theme exposing (Msg(..))
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ contrastSegmented model

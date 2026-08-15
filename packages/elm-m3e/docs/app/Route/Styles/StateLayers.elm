@@ -22,7 +22,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -81,7 +81,7 @@ states =
     ]
 
 
-stateRow : ( String, String, String ) -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+stateRow : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 stateRow ( token, value, trigger ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1 py-2.5" ]
         [ TypedHtml.div [ TA.class "flex flex-wrap items-baseline justify-between gap-2" ]
@@ -92,7 +92,7 @@ stateRow ( token, value, trigger ) =
         ]
 
 
-demoButtons : Element (TypedHtml.Grouping.DivIs s) adm_ msg
+demoButtons : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 demoButtons =
     TypedHtml.div [ TA.class "flex flex-wrap gap-3 p-2" ]
         [ M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Filled" ]

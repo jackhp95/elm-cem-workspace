@@ -18,10 +18,10 @@ import Theme.Sections.Shared as Shared
 import Theme.Tokens as Tokens
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ fontSelect "Display font" "display-font" model.displayFont SetDisplayFont
@@ -38,7 +38,7 @@ event's `target.value` via `M3e.Events.onChangeWith` (the select binding's
 plain `onChange` carries no value). Picking a font fires `SetDisplayFont` /
 `SetBodyFont`, which loads the webfont AND applies it globally.
 -}
-fontSelect : String -> String -> String -> (String -> Msg) -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+fontSelect : String -> String -> String -> (String -> Msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 fontSelect labelText idSuffix current toMsg =
     let
         inputId : String
@@ -63,7 +63,7 @@ fontSelect labelText idSuffix current toMsg =
         ]
 
 
-preview : Theme.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+preview : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 preview model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
         (List.map

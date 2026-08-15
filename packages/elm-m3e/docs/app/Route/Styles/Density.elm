@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -85,7 +85,7 @@ densityScaleClass n =
         "[--md-sys-density-scale:0]"
 
 
-demoBar : Int -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+demoBar : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 demoBar scaleValue =
     TypedHtml.div [ TA.class "space-y-2" ]
         [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ]

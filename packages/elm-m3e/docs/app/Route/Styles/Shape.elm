@@ -26,7 +26,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -95,7 +95,7 @@ cornerScale =
     ]
 
 
-cornerSwatch : ( String, String, String ) -> Element (TypedHtml.Grouping.DivIs s) adm_ msg
+cornerSwatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 cornerSwatch ( rounded, label, value ) =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div
@@ -114,7 +114,7 @@ tokens' open phantom rows unify into one wide record in the list literal, and
 passing the token through (rather than a literal enum) keeps the barrel-flatten
 rule from firing on a per-shape enum value.
 -}
-namedShapes : List (Element (TypedHtml.Grouping.DivIs s) adm_ msg)
+namedShapes : List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
 namedShapes =
     -- The lambda is inlined (no top-level `namedSwatch` signature) on purpose:
     -- `Shape.name` wants a wide closed record, and the tokens' open phantom rows

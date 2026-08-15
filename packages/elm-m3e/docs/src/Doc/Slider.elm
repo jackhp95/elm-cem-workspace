@@ -30,7 +30,7 @@ import M3e.Unsafe.Attributes
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Grouping
+import TypedHtml.Component.Grouping
 
 
 {-| Mount `panels` in a sliding track, showing the one at `activeIndex`.
@@ -40,7 +40,7 @@ renders the single panel plainly — no viewport/track wrapper — so the slider
 appears when there is actually something to slide between.
 
 -}
-slidingPanels : Int -> List (Element childAccepts (TypedHtml.Grouping.DivChildAdmittedBy childAdm) msg) -> Element (TypedHtml.Grouping.DivIs r) freeAdm msg
+slidingPanels : Int -> List (Element childAccepts (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg) -> Element (TypedHtml.Component.Grouping.DivIs r) freeAdm msg
 slidingPanels activeIndex panels =
     case panels of
         [] ->
@@ -62,7 +62,7 @@ slidingPanels activeIndex panels =
                 idx =
                     clamp 0 (count - 1) activeIndex
 
-                track : Element (TypedHtml.Grouping.DivIs k) trackAdm msg
+                track : Element (TypedHtml.Component.Grouping.DivIs k) trackAdm msg
                 track =
                     TypedHtml.div
                         [ TA.class "sp-track"
@@ -79,7 +79,7 @@ slidingPanels activeIndex panels =
 
 {-| One panel wrapper: inactive panels get `aria-hidden="true"` and `inert`.
 -}
-panel : Int -> Int -> Element childAccepts (TypedHtml.Grouping.DivChildAdmittedBy childAdm) msg -> Element (TypedHtml.Grouping.DivIs k) freeAdm msg
+panel : Int -> Int -> Element childAccepts (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg -> Element (TypedHtml.Component.Grouping.DivIs k) freeAdm msg
 panel activeIndex i child =
     let
         inactive : Bool
