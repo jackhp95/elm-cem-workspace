@@ -2582,3 +2582,51 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   slot; switched a test to `heading`). Fresh Opus critic verified zero example titles + real search filtering +
   grouping + reusable signature + existing tests not weakened → PASS. Directly fixes §1.1. Next free IDs:
   **D-063**, **R-023**.
+
+---
+
+## Successor manager (fresh context, 2026-08-15) — resumed the IA rework
+
+- **D-066 (tree reconciliation + correction of the §1.3 record).** Inherited a dirty tree and TWO
+  CONTRADICTORY §1.3 diagnoses. Resolved both empirically.
+  **Tree:** the IA spike and the 1.3 diagnosis were already committed (`33c5e7c`); a leftover
+  opus-4-8 agent committed the doc edits as `12267e3` mid-session. The only genuinely dirty state
+  was `dist/**` (372 files, no clean provenance) — **regenerated from source rather than committed
+  as stale output** (`build:site` exit 0 → `6b1835d`), which also proved the merge compiles. It
+  added `dist/components/compose/`, which the committed dist predated entirely. Tree clean.
+  **The §1.3 record was wrong and is hereby corrected.** D-061 concluded "dev-server artifact;
+  pressed ≡ applied BY CONSTRUCTION; divergence structurally impossible; no fix needed," and M-IA1
+  passed on that basis with positive-path-only tests. The 1.3-diagnosis spike concluded the
+  opposite, citing `ButtonElement.ts:639`. **The spike is right; D-061's "structurally impossible"
+  was FALSE when written.** With `toggle True` present, m3e-button self-flipped its own reflected
+  `selected` on the MENU-OPENING click, and Elm could not repair it (`isSet` stayed False→False, so
+  the vdom emitted no patch). D-061's tests could not observe this because they only checked state
+  AFTER a value was applied, where both explanations predict "pressed."
+  **The fix landed as an EVIL MERGE.** Both parents of `0e7bceb` carry 3 `toggle True`; the merge
+  commit carries 0. The removal was introduced during conflict resolution (alongside an unrelated
+  `TypedHtml.Grouping` → `TypedHtml.Component.Grouping` rename) — so the §1.3 fix **never passed a
+  gate and was never seen by a critic**, and no `pass` line covers it. Remaining §3.3 work was
+  therefore not "apply the fix" but "**retro-gate** it" → M-IA1b. Next free IDs: **D-067**, **R-023**.
+
+- **M-IA1b: pass** (build:site exit 0; Playwright 16/16; critic clean; builder claude/sonnet-5;
+  loop `795b46c7`). Commit `6a27127`, **test-only** (+31/-0, source bit-identical to HEAD after).
+  Locks the negative path the old suite was blind to: open the `variant` chip's menu, dismiss with
+  Escape WITHOUT choosing → chip must NOT be `selected` and the snippet must NOT gain the setter;
+  then the positive path in the same test (select `segmented` → chip IS `selected`, snippet DOES
+  contain the setter) so a "fix" cannot over-correct to never-pressed.
+  Asserts on **`selected`, deliberately NOT `variant`** — `variant` (elevated/filled) was always
+  derived from `info.isSet` and never exhibited the bug, so a negative assertion on it would pass
+  even with `toggle` present and would be worthless.
+  **A/B DISCRIMINATION PROOF (manager-run — the bar the deterministic gates cannot demonstrate):**
+  with `toggle True` restored on `discreteAttrButtonElement`, the NEW test **FAILS** at the
+  `not.toHaveAttribute("selected")` assertion while **all 15 pre-existing tests PASS**; on pristine
+  source, **16/16 PASS**. This is positive evidence that the previous suite could not have caught
+  the defect and that M-IA1's "pass" rested on an inadequate bar. **§3.3 is now genuinely gated.**
+
+- **Constraint found (blocks the audit's literal §3.1 prescription for M-IA2b).**
+  `M3e.Internal.Types.MenuItemGroup.Content` admits ONLY `menuItem`/`menuItemCheckbox`/
+  `menuItemRadio`, and `MenuItemGroupElement` renders a bare unlabeled `<slot>`. So the audit's
+  "clearly headed 'Load an example' subsection" is **impossible inside an `m3e-menu`** via the
+  type-safe API — the same wall M-IA2a hit, which it resolved by making the picker a plain
+  positioned panel. M-IA2b must follow that precedent (plain panel, not `m3e-menu`). Recorded as an
+  autonomous decision following established precedent rather than a blocking escalation; revertible.
