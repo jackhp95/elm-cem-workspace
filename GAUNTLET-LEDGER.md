@@ -1690,3 +1690,22 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   router, ran the guard from clean -> regenerated + elm-review found no errors; FULL
   `pnpm --filter elm-m3e run check` = exit 0 (cem/acid, review, format, samples, nav, drift, vendor,
   spike). `elm-m3e: check` is GREEN. Next free IDs: **D-048**, **R-028**.
+
+- `M8.b: integrated (node tools/gate-all.mjs GREEN — 28/30 passed, 2 skipped, 0 failed, exit 0). The
+  2 skips are the sanctioned R-023 docs-pipeline/browser skips (elm-m3e:check via check:drift docs
+  data — reference.json generated+gitignored+absent; elm-m3e:test via test:browser). Manager ran
+  gate-all itself (D-015). The full R-025 Build-split landed: emitter change (D-045), genericity
+  fix + re-blessed goldens (fbbac5d), Face A re-baselined to a committed generator bundle (D-046),
+  TypedHtml consumer migration (R-027), check:review elm-pages guard (D-047), copy-fidelity extra
+  authorized. Commits 5bc2ae4..HEAD, all revertible. Move 2 is COMPLETE to the pre-publish boundary.`
+
+- **BOUNDARY — DO NOT PUBLISH; ONE acceptance item needs a HUMAN product decision (R-026).** The
+  5-package split is landed, verify:split green, gate-all green-with-explained-skips, Face A + snapshot
+  cache re-baselined, elm-typed-html a verified no-op, all committed and revertible. The single
+  unmet acceptance criterion is **`elm-m3e-icons` docs.json = 1,075,308 B (140% of the 768,000-B hard
+  registry cap)** — PRE-EXISTING (unchanged by R-025; ~4083 typed Material-Symbols helpers), gate-all
+  does not gate on it, and it needs a human product call (R-026: split icons N-ways / leaner surface /
+  different typed-name representation). NOT published, no tags, no registry push — stopped at the
+  boundary per the brief. Also handed back for the human: whether to upstream the R-025 emitter change
+  to elm-cem `main` (it currently lives only in-workspace; Face A now compares against the committed
+  bundle, D-046).
