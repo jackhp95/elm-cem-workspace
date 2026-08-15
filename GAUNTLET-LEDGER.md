@@ -1977,3 +1977,14 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   with labels QUALIFIED by source component (fixes the dup "Label Small"). Reuse Doc.Data reference.json (each
   entry has category+label+slug; already decoded in Doc.Data) for grouping/labels, and allUsage/FromHtml for
   examples. M-IA2a first (builds the picker). Next free IDs: **D-063**, **R-023**.
+
+- **M-IA2a: pass** (build:site exit 0; Playwright 15/15; critic clean; builder claude/sonnet). Commit `3dce992`
+  (2 files: route +335, spec +108). Change-component control rebuilt from the flat ~300-item polluted `m3e-menu`
+  into a grouped, searchable custom `componentPicker { search, onSearch, onPick, options, reference }` panel: ONLY
+  real component types (examples removed from this menu), grouped by `Shared.componentCategories` (7 nav
+  categories) with visible captions + a trailing "Other" group (no `componentOptions` entry dropped), and a
+  "Search components" input that filters by name/editorial-label. Route now also loads `reference.json` (category/
+  label) alongside `allUsage`. Builder found a real facts detail (`avatar` has `slotKinds=[]` → no addable text
+  slot; switched a test to `heading`). Fresh Opus critic verified zero example titles + real search filtering +
+  grouping + reusable signature + existing tests not weakened → PASS. Directly fixes §1.1. Next free IDs:
+  **D-063**, **R-023**.
