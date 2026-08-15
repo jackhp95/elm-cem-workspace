@@ -1855,3 +1855,39 @@ strict); reordering → **up/down buttons**, not drag-drop. Landed in four commi
   Playwright 10/10 (added: edit-as-iconButton menu still works via tests 4/5; collapse hides/restores body;
   prefill-off adds empty). Both commits: build:site, check:review, check:compose-attrs, copy-fidelity green.
   Next free IDs: **D-059**, **R-023**.
+
+---
+
+# COMPOSE EXAMPLES-PREFILL FEATURE — branch `compose-poc` (approved follow-on, original manager resumed)
+
+Human-approved: prefill Compose's per-component add/change-component menu with REAL examples from
+`docs/data/examples.json` (additive to the D-058 lorem-ipsum toggle; do not remove it). Original gauntlet manager
+(d79872b) resumed after confirming the handoff agent `262daa97` is IDLE (finished its styling round at D-058) and
+the tree is clean — no collision. Same discipline: builder=claude/sonnet, fresh critic=claude/claude-opus-4-8,
+reference-bar gates, ledger entries. Decomposed into 2 parts.
+
+- **D-059 (feature plan + design decisions, verified on disk).**
+  - **Data source / reuse:** `Doc.Data.allUsage : BackendTask FatalError (Dict String (List Doc.Usage.UsageExample))`
+    already decodes `data/examples.json` (keyed by LOWERCASED slug, e.g. `"appbar"`); `UsageExample.html : String`
+    is literal `<m3e-*>` markup. REUSE it (Part 2 route data) — no second JSON path. Fact.component is camelCase
+    (`appBar`) → normalize with `String.toLower` before the key match (a silent case bug would show zero examples).
+  - **Opaque-Node constraint (load-bearing):** `Cem.Compose.Node` is OPAQUE and the reference bar forbids touching
+    `elm-cem-compose/src`. So `FromHtml` CANNOT produce a `Node`; it produces an intermediate + a `List
+    Cem.Compose.Msg` that rebuilds the subtree via the core's PUBLIC api (AddChild/SetAttr/AddTextChild/
+    AddIconChild/SetChildContent/SetComponent). Brand-agnostic: `FromHtml` takes `facts` + `attrKinds` as params
+    (imports Cem.Facts, Cem.Compose, hecrj/html-parser — NOT M3e).
+  - **tag→component:** invert `Compose.Render.tagFor` (`"m3e-" ++ toKebabCase`): strip `m3e-`, un-kebab to
+    camelCase, check against facts; unknown tag → drop (don't fail the whole example). `m3e-icon` (name attr) →
+    ChildIcon; bare text → ChildText; `slot="x"` → parent slot (unslotted → unnamed); attrs classified via the
+    GENERATED `Compose.Attrs` table (unknown attr dropped).
+  - **Test convention:** docs project has NO elm-test runner; the established pure-unit-test pattern is a
+    `port module … Platform.worker` self-checking module (see `docs/tests/FoldTest.elm`) run via `node
+    scripts/run-elm-worker-test.cjs <compiled.js> <Module>` (exit code off a `RESULT ok=X/Y` line). FromHtml tests
+    follow THIS pattern.
+  - **Deps:** add `hecrj/html-parser` 2.4.0 (cached) to `docs/elm.json` direct + `rtfeldman/elm-hex` 1.0.0 indirect
+    (elm/parser/html/core/virtual-dom already present). Try `npx elm install`; offline → edit elm.json manually.
+  - **Modules under `app/Compose/`** (helpers, NOT `app/Route/` — elm-pages routing, D-045); new files →
+    copy-fidelity AUTHORIZED_EXTRA.
+  - **Part split:** G-Ex1 = `Compose.FromHtml` parser (html→intermediate ExampleNode) + `toMsgs` + worker-test.
+    G-Ex2 = menu wiring (example options in the add/change menu) + route `data`=allUsage + apply-on-pick + Playwright.
+  Next free IDs: **D-060**, **R-023**.
