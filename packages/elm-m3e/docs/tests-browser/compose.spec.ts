@@ -300,6 +300,37 @@ test("selecting an attribute value updates the chip, the live preview, and the s
   await expect(snippet).toContainText("M3e.Values.segmented");
 });
 
+test("dismissing an attribute chip's menu without picking a value does not mark it selected", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Regression for the fix removing `M3e.Attributes.toggle True` from these
+  // chips: `m3e-button`'s own ButtonElement self-flips its reflected
+  // `selected` on the menu-OPENING click when `toggle` is set, independent of
+  // whether anything was actually applied. `selected` must instead be purely
+  // model-derived (`info.isSet`), so opening-then-dismissing must leave it
+  // unset. (`variant`, elevated/filled, was always model-derived and never
+  // exhibited the bug — assert on `selected`, not `variant`.)
+  const variantButton = page.getByRole("button", { name: /^variant/ }).first();
+  await variantButton.click();
+
+  const menu = page.locator("m3e-menu:visible");
+  await expect(menu).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+
+  await expect(variantButton).not.toHaveAttribute("selected", /.*/);
+  await expect(page.locator(".cf-root").first()).not.toContainText("M3e.Attributes.variant");
+
+  // Positive path in the same test: this guards against a "fix" that simply
+  // never sets `selected` at all.
+  await variantButton.click();
+  await page.getByRole("menuitem", { name: "segmented", exact: true }).click();
+
+  await expect(variantButton).toHaveAttribute("selected", /.*/);
+  await expect(page.locator(".cf-root").first()).toContainText("M3e.Attributes.variant");
+});
+
 test("adding slot content updates the preview and the snippet", async ({ page }) => {
   await page.goto("/components/compose");
 
