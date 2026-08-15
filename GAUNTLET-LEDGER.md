@@ -1709,3 +1709,755 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   boundary per the brief. Also handed back for the human: whether to upstream the R-025 emitter change
   to elm-cem `main` (it currently lives only in-workspace; Face A now compares against the committed
   bundle, D-046).
+||||||| b3d20ed
+
+---
+
+# COMPOSE GAUNTLET — branch `compose-poc` (worktree `/Users/jhp/.paseo/worktrees/358ycm5n/compose-poc`)
+
+Isolated effort: implement `docs/superpowers/plans/2026-08-13-compose-implementation.md` (Phase A Tasks 1–7,
+Phase B Tasks 8–14). Manager = Opus 4.8 (this context). Builder = `claude/sonnet`. Critic/Integrator =
+`claude/claude-opus-4-8`. Entries below are scoped to this branch and do NOT touch main's ledger until a
+human merges. Gauntlet part IDs are `A<task>` / `B<task>`.
+
+### Bootstrap decisions
+
+- **D-034 (Phase 0 boundary, human-pre-resolved — recorded, not re-litigated).** The manager brief carries the
+  human's answer verbatim: *"All of the layers are swap-able with elm review rules"* — i.e. whichever module
+  spelling is live and compiling in `packages/elm-m3e/src` right now IS the Phase B target. Verified on disk
+  2026-08-13: `packages/elm-m3e/src/M3e/Component/Card.elm` exists and `M3e/Component/` + `M3e/Build/` are the
+  committed layout — the D-031c/Move-2 flat `M3e.<Component>` cut has NOT landed. **Phase B therefore uses the
+  `M3e.Component.Card` spelling.** If `origin/main`'s 4-package layout or the flat cut merges later, the rename
+  is accepted rename debt (mechanical, elm-review-driven), not blocking. The remaining §11.1 "which boundary
+  story wins" question stays a human decision but is NOT a Phase-B blocker per the human's answer. Phase A is
+  boundary-independent (imports only `Cem.Facts`) and starts immediately.
+
+- **D-035 (provider/model resolution).** Resolved fresh from `~/.paseo/orchestration-preferences.json`:
+  builder=`claude/sonnet`, critic/integrator/controller=`claude/claude-opus-4-8` (NEVER bare `claude/opus`
+  → resolves to banned opus-5). **Decision: builder stays on Sonnet for ALL parts, no Haiku.** The manager
+  brief allows Haiku for "the most mechanical fully-specified sub-parts under an integrity gate," but the prefs
+  file states `claude/haiku` is "for tests only — do not use it for production work." Prefs win; Sonnet is
+  cheap enough and the risk of Haiku on production Elm is not worth it. Reversible: revisit if Sonnet proves
+  slow/expensive on the transcription-heavy tasks.
+
+- **BASELINE.** Fresh worktree had no `node_modules` → first `gate:all` was RED purely environmentally
+  (`run-p: command not found`). Ran `pnpm install` (exit 0), then re-baselined `gate:all` on the pristine
+  branch point (no Compose changes yet). Result: **18/30 passed, 6 skipped, 6 failed.** The 6 skipped are the
+  off-machine snapshot gates (D-033, expected). The **6 pre-existing FAILURES are the reference fingerprint**:
+    1. `elm-cem: test`
+    2. `elm-m3e: check`
+    3. `elm-m3e: test`
+    4. `elm-review-cem: check`
+    5. `elm-review-cem: test`
+    6. `workspace: check-drift (M4.b cross-cutting drift gate)`
+  These are pre-existing Move-1 migration debt on `main` (ledger D-033: "the five real clone failures … the
+  remaining Move 1 work"), NOT caused by Compose and explicitly out of this effort's scope to fix. Note
+  `m3e-builder-docs` (the package Phase B gates on) is NOT in the failing set — it passes at baseline.
+
+- **D-036 (gate:all acceptance reinterpreted — autonomous, reversible).** Plan Task 7 & Task 14 say "`pnpm
+  gate:all` green." That absolute-green target is unattainable on this branch because of the 6 pre-existing
+  unrelated failures above. **Reinterpreted acceptance: gate:all shows NO NEW failures beyond the 6-item
+  baseline fingerprint, the 6 skipped stay skipped, AND all Compose-owned items are green** — i.e.
+  `elm-cem-compose: check` + `elm-cem-compose: test` (Phase A) and `m3e-builder-docs: check` (Phase B) pass, and
+  no 7th failure appears. A regression in any baseline-passing item counts as mine. This is recorded so the
+  human can override; the alternative (fixing unrelated Move-1 debt) is out of scope and a rabbit hole.
+  Next free IDs: **D-037**, **R-023**.
+
+### Phase A parts
+
+- **D-037 (Task 1 reference-bar defect — corrected autonomously, verified). PLAN DEFECT.** Plan Task 1 Step 3
+  specifies `check:compile: "node bin/stage-facts-elm-home.mjs && elm make --docs=/dev/null"`. This CANNOT pass
+  and is architecturally impossible on this repo. The A1 builder (Sonnet) correctly diagnosed it and STOPPED
+  without committing (good discipline). I independently reproduced + confirmed the root cause:
+  - Raw `elm make` on a `type: package` elm.json resolves version-range deps against the **live registry**, not
+    the ELM_HOME cache. `jackhp95/elm-cem-facts` is unpublished → `INCOMPATIBLE DEPENDENCIES`, staging notwith-
+    standing. Reproduced directly (facts cache present, still fails). The boundary spike (§3 step 2) confirms:
+    unpublished workspace deps must be **vendored as unexposed source**, never declared — but our manifest MUST
+    declare `elm-cem-facts` (registry-faithful is a hard requirement gated by check-headless). Irreconcilable
+    for raw `elm make`.
+  - The precedent Task 1 copies from, `packages/elm-review-cem`, has **NO raw `elm make` anywhere**; it proves
+    compilation registry-free via `elm-review --compiler` + its `tests/` application. Confirmed
+    `pnpm --filter elm-review-cem run check` is GREEN with that strategy.
+  **Correction (elm-review-cem-style, no new deps):** removed `check:compile` from `elm-cem-compose/package.json`.
+  Standalone-compile proof = `test:elm` — the `tests/` application compiles `../src/Cem/Compose.elm` against the
+  real `Cem.Facts` (`../../elm-cem/facts/src`) via source-directories + exact pins, no registry. It runs under
+  `gate` (`run-s check test`). Verified: `pnpm --filter elm-cem-compose run gate` → GREEN (check:format []`,
+  check:headless OK, test:elm 1 passed). Consequence: **ELM_HOME staging is no longer load-bearing for the
+  compose gate** (test:elm uses source-directories); the `stage-facts-elm-home.mjs` script is kept present (the
+  documented pattern, harmless, future publish/elm-review may use it) but vestigial-for-now.
+  **Phase A acceptance criterion 2 (spec §15 / plan Task 7) reinterpreted:** "the package compiles standalone"
+  is proven by the tests application (test:elm) against the real facts, NOT by raw `elm make --docs` (impossible
+  for a registry-faithful manifest declaring an unpublished dep). Reversible: restore the line if the facts
+  package is ever published. Task 7's headless gate + the 3-dep check-headless still fully enforce the "no
+  view / no brand / registry-faithful" invariants.
+  Also validated the builder's two necessary deviations: (1) added `elm-tooling.json` (elm 0.19.1, elm-format
+  0.8.7, elm-test-rs 3.0.0) + `postinstall: elm-tooling install`, matching the
+  elm-html-intermediate-representation / elm-typed-html / elm-review-cem precedent — required because workspace-
+  root elm-test-rs 1.0.0 bundles a test-runner needing `elm-explorations/test 1.x` while tests pin 2.2.1;
+  3.0.0 is the repo-consistent version. Accepted. (2) the `/tmp` docs path is moot (line removed).
+  Next free IDs: **D-038**, **R-023**.
+
+- **A1: pass** (gate green, critic clean, builder claude/sonnet). Commit `9064dd2`. Scaffold: elm.json (3 deps
+  only), package.json (check:compile removed per D-037), stage-facts script, check-headless placeholder,
+  Cem/Compose.elm exposing only `version`, tests/elm.json + SmokeTest, README, LICENSE, elm-tooling.json.
+  Round 1 stopped on the D-037 plan defect (builder correct); round 2 committed against the corrected bar.
+  Integrity: 11 files / +254 / -0, only compose/* + pnpm-lock.yaml, no golden/test mutated elsewhere. Fresh
+  Opus critic independently re-ran all gates + reproduced the INCOMPATIBLE DEPENDENCIES root cause → PASS.
+
+- **A2: pass** (test:elm 18/18, critic clean, builder claude/sonnet). Commit `33c8111`. Node/Child/AttrValue/
+  AttrKind/PathStep/Path/MenuKind + Model/init/Msg/update + nodeAt/factAt + componentOf/attrsOf/slotsOf +
+  updateAt. `Node` opaque (no `(..)`), `update : Msg -> Model -> Model` (no Cmd/Effect), insertChild holds the
+  append-iff-multi-else-replace invariant. Integrity: 4 files (Compose.elm mod, FakeFacts+StructureTest added,
+  SmokeTest deleted per plan). Fresh Opus critic confirmed StructureTest.elm + FakeFacts.elm are BYTE-IDENTICAL
+  to the plan (tests not weakened) and all fixture traps intact (ghost absent, dup label, self-recursive
+  container/single) → PASS.
+
+- **A3: pass** (test:elm 32/32, critic clean, builder claude/sonnet). Commit `7682ac3`. `SlotAffordances`
+  (`{text,icon,components}`), `SlotChipInfo`, `slotChips` — the §8.7 amendment. `affordancesFor` computes the
+  three modes INDEPENDENTLY (no winner-takes-all); `textKinds` includes shared:flow/shared:phrasing; components
+  filtered to `:`-free names present in facts. Integrity: 2 files (Compose.elm mod, SlotTest added). Fresh Opus
+  critic confirmed the decisive coexistence assertions (mixed.any text+icon+widget; mixed.flowy; unconstrained
+  text-only; container components-only) are full-record equals, unaltered → PASS.
+
+- **D-038 (Task 2/Task 4 cross-task defect — corrected autonomously). PLAN DEFECT.** A4's affordance-gated
+  `addIfAfforded` (correctly transcribed from Task 4 Step 4) broke a *pre-existing* StructureTest case committed
+  in A2: "RemoveChild at index 0 shifts the former index 1 down" seeds the second child with `C.AddChild []
+  "unnamed" "single"`, but `container.unnamed` names `["widget","ghost","container"]` — `"single"` is a fact yet
+  NOT afforded by that slot. Under A2/A3's loose `Dict.member … facts` guard the add succeeded (exploiting the
+  gap §8.7 exists to close); under A4's correct guard it is a no-op, so `RemoveChild 0` empties the slot and the
+  test's `Just "single"` assertion fails. The A4 builder (Sonnet) caught this and STOPPED rather than touch the
+  test unilaterally — good discipline. **Decision: option 1** — change the probe's second child from `"single"`
+  to `"container"` (a component the slot DOES name) and the expected value to `Just "container"`. The test's
+  INTENT (removal shifts the former index-1 child down to index 0, keeping its identity) is preserved exactly;
+  it now uses a validly-nestable component, consistent with §8.7. NOT test-weakening — the assertion is still a
+  full identity check. Rejected option 2 (widening the fixture) because Task 3's committed "components-only slot"
+  test asserts container.unnamed's afforded set is exactly `["widget","container"]` and would ripple. This edit
+  lands in the A4 commit alongside the slotMenuOptions work. Reversible. Next free IDs: **D-039**, **R-023**.
+
+- **A4: pass** (test:elm 42/42, critic clean, builder claude/sonnet). Commit `4b66551`. `SlotOption`,
+  `slotMenuOptions`, and `update` tightened so all three `Add*` route through `addIfAfforded` (insert iff the
+  slot's affordances permit; old `Dict.member … facts` guard deleted). Includes the D-038 2-line StructureTest
+  probe correction. Round 1 stopped on D-038 (builder correct); round 2 committed. Integrity: 3 files. Fresh
+  Opus critic confirmed the "every offered option changes the model" property test (7 slots) + 3 no-op tests are
+  real/unweakened, tightening is genuine, and the StructureTest change is EXACTLY the 2 authorized lines → PASS.
+
+- **A5: pass** (test:elm 51/51, critic clean, builder claude/sonnet). Commit `8ad4342`. `AttrChipKind`
+  (`EnumChip`/`PlainChip`), `AttrChipInfo`, `attrChips` — enum chips in fact order, then plain chips (attrRewrites
+  values minus enum names, deduped, sorted, filtered to attrKinds-present). Genuine unset state (`isSet = current
+  /= Nothing`), NO always-first-token fallback (the deliberate Builder.elm divergence). Integrity: 2 files. Fresh
+  Opus critic confirmed the ordered load-bearing assertion `[variant,count,disabled,label,ratio]` + isSet/Clear
+  tests are full-value equals, unweakened → PASS.
+
+- **A6: pass** (test:elm 59/59, critic clean, builder claude/sonnet). Commit `43aa010`. `NumberKind`,
+  `MenuOptions`, `attrMenuOptions` (delegates to attrChips → inherits offer/path resolution), `menuOptionsFor`,
+  `rawText`. Raw-number round-trip preserved verbatim (`AttrFloat "1."` → `NumberInput FloatNumber "1."`, no
+  reparse). Integrity: 2 files, additive. Fresh Opus critic confirmed all 8 menu-shape assertions are exact
+  equals, unweakened → PASS. **Phase A core queries (A2–A6) complete; A7 is the determinism + headless-gate
+  close-out.**
+
+- **A7: pass — PHASE A GREEN** (test:elm 62/62, critic+sign-off clean, builder claude/sonnet). Commit `9ecff06`.
+  Determinism block (equal-models, stable attrsOf ordering, and the unbounded-depth self-recursive-`container`
+  nest-to-10 proof of §8.3 — no cap/guard); REAL headless gate replacing the placeholder; README. The headless
+  script needed ONE edit vs the plan's verbatim text — adding the package's own name `jackhp95/elm-cem-compose`
+  to the `allowed` alternation (the plan's own Step-2 note authorized this; it does not weaken the separate
+  elm/html/virtual-dom/elm-m3e forbidden loop). Integrity: 3 files. Fresh Opus critic+integrator INDEPENDENTLY:
+  (i) proved the headless gate BITES (injected elm/html on a copy → exit 1 with two FAIL lines; clean → exit 0);
+  (ii) ran full `node tools/gate-all.mjs` → `elm-cem-compose: check` + `test` both PASS, and the 5 failures are a
+  strict subset of the 6-item baseline fingerprint (elm-review-cem:check improved to PASS) — NO 7th failure, no
+  compose item red; (iii) confirmed all 4 spec-§15 Phase-A criteria (as amended by D-037) → **PHASE A: GREEN**.
+  Phase A (a tested, headless, registry-faithful package carrying the portability claim) is an independently
+  valuable artifact, done. Next free IDs: **D-040**, **R-023**.
+
+## Phase B parts
+
+- **D-039 (Phase B gate-command defects — found during prep, corrections to apply per-task). PLAN DEFECT.**
+  Verified on disk before starting Phase B: the docs app `packages/elm-m3e/docs/package.json` (pnpm name
+  `m3e-builder-docs`) has **NO top-level `check` script and NO `start` script**. The plan's Phase B reference
+  bars invoke `pnpm --filter m3e-builder-docs run check` (Tasks 8/11/12/13) and `npm run start` (Task 11) — both
+  non-existent. Also note `tools/gate-all.mjs` only runs per-package `check`/`test` scripts, so the docs app is
+  NOT gated by `gate:all` at all (why `m3e-builder-docs` never appears in gate-all output). **Corrected Phase B
+  gates (to inject into each builder brief):** for "the app still compiles/reviews" use
+  `pnpm --filter m3e-builder-docs run check:review` (`elm-review --config ../review --compiler
+  node_modules/.bin/elm` — compiles the whole app source set + runs rules) PLUS a targeted
+  `cd packages/elm-m3e/docs && npx elm make app/<the new module>.elm --output=/dev/null`; for the dev server
+  (Task 11 browser view) use `npm run dev` (elm-pages dev), NOT `start`; browser tests remain `npx playwright
+  test` (Task 14). The plan's other Phase B commands that DO exist — `check:review`, `check:nav`, `elm make`,
+  `playwright test`, `build:site` — stand. Spelling confirmed for D-034: the docs Feed.elm template imports
+  `M3e.Component.Card`/`M3e.Component.AppBar`/`M3e.Component.NavItem` — the live per-component layout — so Phase B
+  uses the `M3e.Component.*` spelling. Reversible/mechanical. Next free IDs: **D-040**, **R-023**.
+
+- **D-040 (copy-fidelity AUTHORIZED_EXTRA requirement for Phase B new files — found during prep).** Read
+  `tools/copy-fidelity-elm-m3e.sh`: it compares git-tracked PATH SETS (not content) between workspace
+  `packages/elm-m3e` and the source oracle checkout, BIDIRECTIONALLY — flags `missing` (source∖workspace) AND
+  `extra` (workspace∖source, minus an `AUTHORIZED_EXTRA` allowlist). Consequences for Compose:
+  (1) **Content edits** to existing tracked files (docs/elm.json B8, Shared.elm B11, review/CodegenReviewConfig
+  B10) are INVISIBLE to this gate — safe. (2) **Each NEW file** Phase B adds under `packages/elm-m3e/` —
+  `docs/scripts/gen-compose-attrs.mjs`, `docs/app/Route/Components/Compose/Attrs.elm` (B9),
+  `.../Compose/Render.elm` (B10), `.../Compose.elm` (B11), `.../Compose/Codegen.elm` (B13),
+  `docs/tests-browser/compose.spec.ts` (B14) — will register as `extra` → copy-fidelity RED against the oracle
+  UNLESS added to `AUTHORIZED_EXTRA` in `tools/copy-fidelity-elm-m3e.sh` with a one-line reason (the script's own
+  sanctioned mechanism for "deliberate monorepo adaptations"). Editing that tool file is safe (it lives under
+  `tools/`, not `packages/elm-m3e/`, so it's invisible to the gate itself). **In THIS worktree copy-fidelity
+  SKIPs** (its `SOURCE_ELM_M3E` defaults to a nonexistent worktree-sibling), so it does not redden the in-worktree
+  `gate:all`; but for the deliverable to be correct/mergeable, the allowlist must be maintained. Baseline verified
+  read-only: `SOURCE_ELM_M3E=/Users/jhp/code/jackhp95/elm-m3e bash tools/copy-fidelity-elm-m3e.sh` → GREEN
+  (source=1245, workspace=1199) pre-Phase-B. **Plan: each Phase-B task that ADDS a file under packages/elm-m3e/
+  also appends it to AUTHORIZED_EXTRA; manager verifies copy-fidelity GREEN vs the real oracle (read-only, never
+  editing the oracle) after each.** B8 needs no entry (edits + deletes scratch only). Next free IDs: **D-041**,
+  **R-023**.
+
+- **D-041 (Task 8 §14-risk-5 collision — corrected autonomously, verified). PLAN GAP.** Adding
+  `../../elm-cem-compose/src` + `../../elm-cem/facts/src` to the docs app's `source-directories` (Task 8's whole
+  job) made the docs app's `check:review` gate RED with **45 errors** — because `elm-review` reviews every file in
+  the project's source-directories, so it began linting the compose + facts SIBLING packages (and compose's
+  `tests/src`, pulled via the sibling `tests/` convention) against the docs app's strict ReviewConfig
+  (NoMissingTypeAnnotationInLetIn, NoUnused.*, NoRedundantlyQualifiedType, NoPrematureLetComputation). The B8
+  builder (Sonnet) caught this — it IS the §14-risk-5 fail-fast Task 8 exists for, manifesting as a review-ruleset
+  collision rather than module shadowing — and STOPPED. Root cause bisected: facts/src alone = 2 errors,
+  compose/src alone = 43. **Decision: exclude the two new sibling source trees from the docs review**, exactly as
+  the config ALREADY excludes the other sibling workspace packages it compiles against. `ReviewConfig.elm`'s
+  `ignoreGeneratedSubstrate` helper (applied to every main-list rule) already lists `../../elm-typed-html/src/`
+  and `../../elm-html-intermediate-representation/src/`; added `../../elm-cem/facts/src/`,
+  `../../elm-cem-compose/src/`, `../../elm-cem-compose/tests/src/` alongside them. Verified:
+  `pnpm --filter m3e-builder-docs run check:review` → "I found no errors!" (all 45 cleared). REJECTED the
+  alternative of retrofitting compose's already-committed Phase-A code to satisfy the docs app's lint rules —
+  that would couple the headless published core to a consumer's style config, the exact inversion the whole design
+  forbids; you don't lint your dependencies. **Observation (not a blocker):** elm-cem-compose's own code is not
+  elm-reviewed by anything (its gate is format+headless+tests, per the spec's minimal toolchain); giving it its
+  own elm-review is out of this plan's scope. B8 commit now includes TWO files: `docs/elm.json` (+2 source-dirs)
+  and `review/src/ReviewConfig.elm` (+3 sibling exclusions); both are content edits, invisible to copy-fidelity.
+  Reversible. Next free IDs: **D-042**, **R-023**.
+
+- **B8: pass** (check:review green, critic clean, builder claude/sonnet). Commit `c25ee40`. `docs/elm.json` gains
+  the two canonical source-dirs (`../../elm-cem/facts/src`, `../../elm-cem-compose/src`); `ReviewConfig.elm`
+  excludes the two sibling trees from docs review (D-041). Round 1 stopped on the D-041 45-error collision
+  (builder correct); round 2 committed. Integrity: 2 files, content-only (invisible to copy-fidelity, re-verified
+  GREEN vs real oracle). Fresh Opus critic confirmed exact source-dir list, check:review "no errors", the
+  ReviewConfig change is ONLY the 3 sibling entries (no rule loosened), no scratch committed, external oracle
+  untouched → PASS. **Phase B wiring in place; the docs app now compiles against Cem.Facts + Cem.Compose.**
+
+- **D-042 (B9 count-sanity drift — investigated, ACCEPTED, independently reconciled).** The B9 generator
+  produced `kinds`=**166** rows (spec §4.1 baseline 182, ~9% short) and `witness`=**204** distinct (attr,token)
+  enum pairs (baseline 201). Plan Task 9 flags "within a few of 182" as the sanity heuristic and "wildly
+  different = regex misparse / dropped half" as the failure trigger. The Sonnet builder investigated and STOPPED
+  rather than commit. I INDEPENDENTLY reconciled (did not trust the builder): parsed
+  `packages/elm-m3e/src/M3e/Attributes.elm` myself → first-arg Bool 80 + String 64 + Float 24 + Int 2 = **170
+  classifiable non-enum setters**, plus 39 `Value`-typed (enum) setters. Generated `kinds`=166 = exactly the
+  170 classifiable minus 4 that no component's `attrRewrites` names (unreachable). `witness` total M3e.Attributes
+  refs = **370 = 166 setter witnesses + 204 enum-pair witnesses** — reconciles to the byte. Builder's barrel
+  accounting also closes: 225 distinct reachable barrel names = 166 non-enum-classified + ~25 reachable
+  enum-typed + ~34 event handlers. **Conclusion: NOT a misparse and NOT a silent drop — every classifiable AND
+  reachable setter is in the table.** 166 is 91% of 182 (not half); the 182→166 / 201→204 drift is genuine input
+  evolution — the active migration reclassifying some non-enum setters as portmanteau enums, precisely the
+  `b85cb563` change spec §11.1 predicted would touch `M3e.Attributes` (non-enum ↓, enum ↑, the observed
+  direction). The table is COMPLETE and CORRECT for this workspace's real inputs; it is generated + deterministic
+  + A/B-gated (check:compose-attrs), so it is the specification. Accepted as current-baseline. If a human later
+  wants the 182 figure restored, that is an upstream M3e.Attributes question, not a Compose bug. Next free IDs:
+  **D-043**, **R-023**.
+
+- **B9: pass** (all gates green, critic clean, builder claude/sonnet). Commit `487e7d9`. `gen-compose-attrs.mjs`
+  (deterministic generator) + generated `Attrs.elm` (kinds/toAttribute/witness/codeLineFor) + package.json
+  scripts (gen/check:compose-attrs) + ReviewConfig `ignoreGeneratedComposeAttrs` (file-scoped exclusion of the
+  generated Attrs.elm ONLY) + 2 copy-fidelity AUTHORIZED_EXTRA entries. kinds=166, witness=204 enum pairs
+  (accepted per D-042). Round 1 stopped on the count anomaly (builder correct to check); I independently
+  reconciled → accept. Fresh Opus critic INDEPENDENTLY: determinism (regen → 0 diff), A/B bite (hand-edit →
+  check:compose-attrs exit 1, restore → 0), Attrs.elm compiles, **count bijection 166 = classifiable∩reachable
+  with MISSING=0/EXTRA=0** (no silent drop), review-exclusion is file-scoped (Render/Codegen stay reviewed),
+  copy-fidelity GREEN vs oracle, integrity 5 files → PASS. Hardest Phase B part done.
+
+- **D-043 (B10/B11 sequencing — Render.elm orphaned until the route consumes it).** The docs `NoUnused.Exports`
+  rule applies to app modules (`ignorePublicApi` only covers `src/M3e/`), so B10's hand-written `Render.elm`
+  (`renderNode`/`tagFor`) is an unused export until a route imports it — a transient artifact of the plan's
+  B10-before-B11 order. Render is HAND-WRITTEN, so it must stay reviewed (NOT excluded like the generated
+  Attrs.elm). Resolution: **B10 gate = `Render.elm` compiles (elm make) + the one `M3e.Unsafe.fromHtml`
+  allow-list entry added correctly + copy-fidelity GREEN (Render in AUTHORIZED_EXTRA); full check:review-green is
+  DEFERRED to B11**, whose route imports `renderNode` into a live-preview pane via `M3e.Unsafe.fromHtml` —
+  consuming it AND exercising the allow-list entry. Builders must NOT fake a consumer or review-exclude Render
+  to force B10 green. Reversible. Next free IDs: **D-044**, **R-023**.
+
+- **D-044 (elm-format must NOT touch the generated Attrs.elm — process rule for B11–B13).** The plan's per-task
+  formatting step `elm-format packages/elm-m3e/docs/app/Route/Components/Compose/ --yes` formats the WHOLE
+  directory, including the generator-owned `Attrs.elm`. `elm-format` changes Attrs.elm (the generator does not
+  emit elm-format-compliant output), which diverges it from the generator's raw output and RED-lines
+  `check:compose-attrs` (byte-identity). The B10 builder caught this and reverted Attrs.elm. **Rule for all
+  remaining Phase-B tasks: format ONLY the hand-written files just created/edited (e.g. `elm-format
+  app/Route/Components/Compose/Render.elm Codegen.elm ... --yes`), NEVER the directory, and NEVER Attrs.elm.**
+  check:compose-attrs is the gate that catches a violation. Reversible. Next free IDs: **D-045**, **R-023**.
+
+- **B10: pass** (compile + allow-list + copy-fidelity green; review-green deferred per D-043; critic clean;
+  builder claude/sonnet). Commit `bb8e969`. `Render.elm` (tagFor/toKebabCase/renderNode/renderSlot/placement/
+  withSlot — no double-render, ChildNode→withSlot renders once) + ONE documented `NoUnsafeImportOutsideAllowed`
+  allow-list entry (`Route.Components.Compose`) + Render.elm in copy-fidelity AUTHORIZED_EXTRA. Builder caught &
+  reverted an elm-format-on-Attrs.elm hazard (→ D-044). check:review = exactly the 2 expected "Render unused"
+  findings (D-043 transient, resolves at B11); check:compose-attrs still OK (Attrs intact). Fresh Opus critic
+  confirmed no-double-render, single allow-list entry, integrity 3 files, copy-fidelity GREEN → PASS.
+
+- **D-045 (Phase B file-layout is framework-incompatible — corrected autonomously; the effort's MOST SIGNIFICANT
+  deviation from the plan's stated structure — FLAG FOR HUMAN REVIEW). PLAN ARCHITECTURAL FLAW.** The plan's
+  File-Structure section places the three helper modules under the route directory:
+  `docs/app/Route/Components/Compose/{Attrs,Render,Codegen}.elm`. But **elm-pages treats EVERY module under
+  `app/Route/` as a page route** — so `elm-pages gen` emits a `.elm-pages/Main.elm` that references
+  `Route.Components.Compose.Attrs.route.data`, `.Model`, `.Msg`, `.Data`, `.ActionData`, `.subscriptions`,
+  `.onAction` (and same for `.Render`). Those helper modules expose only `(kinds,toAttribute,witness,codeLineFor)`
+  / `(renderNode,tagFor)` — NO route interface — so the generated Main cannot compile and **`elm-pages build`
+  fails**. Latent since B9 (Attrs.elm landed under Route/); B11's `gen:pages` exposed it. My per-task gates
+  (check:review, single-file `elm make`) MISSED it because none ran a full elm-pages gen/build — check:review
+  uses elm-review's AST analysis, not `elm make`, so it never compiled the generated Main. **GATE GAP now closed:
+  Phase B's build-truth gate is `elm-pages build` (what B14's playwright already runs), not check:review.**
+  **Fix (one correct answer, mechanical):** move the 3 helpers OUT of `app/Route/` to `app/Compose/`, renaming
+  modules `Route.Components.Compose.{Attrs,Render,Codegen}` → `Compose.{Attrs,Render,Codegen}`. Only the actual
+  route `app/Route/Components/Compose.elm` stays under Route/. The spec's module DECOMPOSITION (route + 3 folds +
+  generated adapter) is preserved unchanged — ONLY the directory/module-prefix changes. Touches: the B9 generator
+  (`gen-compose-attrs.mjs` output path + emitted module name), `check:compose-attrs`, the ReviewConfig
+  generated-Attrs exclusion path, the copy-fidelity AUTHORIZED_EXTRA paths (B9/B10), and Render's `tagFor`
+  un-exposed (it is module-internal — the plan's "Produces: tagFor" over-specified; NoUnused.Exports correctly
+  flags it). `.elm-pages/` is regenerated + committed (maintained routing manifest; build regenerates it anyway,
+  but committing keeps check:review's NoUnused.Modules green and the tree consistent); the new
+  `.elm-pages/Fetcher/Components/Compose.elm` gets an AUTHORIZED_EXTRA entry. Reversible via git revert. Recorded
+  here and surfaced in the final report because it deviates from the plan's explicit file paths. Next free IDs:
+  **D-046**, **R-023**.
+
+- **B11: pass** (build:site exit 0 w/ /components/compose prerendered; check:review green; critic clean; builder
+  claude/sonnet). Commits `555c116` + fixup `1d0448e`. Implements the D-045 layout fix (helpers → `app/Compose/`,
+  modules `Compose.Attrs`/`Compose.Render`; tagFor un-exposed) + the route `Route.Components.Compose` (init
+  root="list", view consumes `Render.renderNode` via `M3e.Unsafe.fromHtml`) + nav link + regenerated committed
+  `.elm-pages/`. Builder self-caught a failed multi-path `git add` that left the rename unstaged and fixed it with
+  a follow-up commit (transparent, verified). Fresh Opus critic INDEPENDENTLY ran the full `build:site` → exit 0,
+  `/components/compose` prerendered (proving generated Main.elm compiles — the gate check:review can't provide),
+  confirmed helpers no longer routed (Route.elm has Components__Compose only), route wiring, nav, check:review
+  green, check:compose-attrs OK, copy-fidelity GREEN, integrity of both commits → PASS. **The route is live and
+  the app builds; §8.7 editor UI + snippet are B12/B13.**
+
+- **B12: pass** (build:site exit 0 w/ editor prerendered; check:review green; critic clean; builder
+  claude/sonnet). Commit `e6c1e9d` (1 file, route only, +258/-5). Recursive `viewNode` editor: attr/slot chip-set,
+  `attrMenuView`/`slotMenuView`, `childCards` recursion, inline `SetChildContent` text fields, `RemoveChild`
+  controls; live preview retained. **§8.7 non-collapse preserved in the consumer:** `slotMenuView` renders one
+  item per `SlotOption` via 3 independent case branches (single-option→fire-directly shortcut lives in
+  slotChipView). Builder fixed a real `MissingRequiredAttribute` (iconButton needs aria-label) with `Aria.label`,
+  matching the app pattern. NO new allow-list/exclusions. Fresh Opus critic ran build:site (exit 0, compose
+  prerendered), confirmed §8.7 non-collapse + recursion wiring + integrity 1 file + copy-fidelity GREEN → PASS.
+
+- **B13: pass** (build:site exit 0 w/ all 3 panes prerendered; snippet-compile proof; check:review green; critic
+  clean; builder claude/sonnet). Commit `8c26e55` (3 files: `app/Compose/Codegen.elm` added [D-045 layout], route
+  +14, copy-fidelity +4). `Compose.Codegen.codeFor` recursive fold: `M3e.Html.<component>` + `bracketed` attr/child
+  lists + depth indentation + `"unnamed"` default-slot special-case (no slot=) + `ChildText`→`M3e.text`,
+  `ChildIcon`→`M3e.Html.icon` + `Attrs.codeLineFor`. Snippet pane wired via `Doc.codeBlock Doc.Elm`; editor +
+  live preview retained. Builder fixed a real `NoMissingTypeAnnotationInLetIn`. **Snippet/preview agreement
+  (spec §15) proven by scratch-compile** (worked example + set enum + set bool → `elm make` Success). Codegen is
+  hand-written + fully reviewed (no exclusion). Fresh Opus critic ran build:site (exit 0), re-did the
+  scratch-compile, verified codeFor structure + integrity 3 files + copy-fidelity GREEN → PASS. **All three folds
+  done; only B14 (browser sign-off) remains.**
+
+- **B14: pass — PHASE B GREEN — EFFORT COMPLETE** (Playwright 4/4; gate:all no-new-failures; critic+sign-off
+  clean; builder claude/sonnet). Commit `f17a3ba` (5 files). Created `tests-browser/compose.spec.ts` (4 tests) +
+  AUTHORIZED_EXTRA. **The browser layer earned its keep: it caught TWO real runtime defects invisible to every
+  compile/type/review gate**, both fixed in-commit: (1) `m3e-menu` needs an `m3e-menu-trigger` — B12's chips
+  never opened a menu; reworked slot/discrete-attr chips as `m3e-button` toggles + sibling `m3e-menu` by id/for
+  (§8.7 non-collapse preserved — verified); (2) the B9 generator's `setterFor` was built only from the non-enum
+  subset, so `codeLineFor` silently dropped ENUM attributes from the snippet (a spec-§15 preview/snippet
+  DISAGREEMENT); fixed in `gen-compose-attrs.mjs`, `Attrs.elm` regenerated deterministically (diff=0,
+  check:compose-attrs OK). Fresh Opus critic+integrator INDEPENDENTLY: ran Playwright → 4/4 PASS; confirmed the
+  §8.7 test genuinely asserts `toHaveText(["Text","Icon","avatar","checkbox","heading","radio","switch"])` then
+  renders a real `m3e-checkbox`; the attr test asserts BOTH live element AND snippet; non-collapse preserved;
+  enum fix + determinism; check:review green (one fromHtml entry, no new suppressions); integrity 5 files →
+  **B14 PASS, PHASE B GREEN**. Final `node tools/gate-all.mjs` (manager, independent): **22/32 passed, 6 skipped,
+  4 failed** — `elm-cem-compose: check`+`test` PASS; the 4 failures (`elm-cem: test`, `elm-m3e: check`,
+  `elm-review-cem: test`, `workspace: check-drift`) are all a strict subset of the 6-item pre-existing baseline
+  (D-036; elm-m3e:test + elm-review-cem:check improved to PASS) — NO new/Compose-attributable failure.
+
+## EFFORT COMPLETE — summary for the human
+
+**All 14 tasks green and committed on branch `compose-poc`** (worktree `/Users/jhp/.paseo/worktrees/358ycm5n/
+compose-poc`). Phase A (A1–A7): the headless `jackhp95/elm-cem-compose` package — tested (62 elm-test cases),
+registry-faithful (exactly elm/core + list-extra + elm-cem-facts, no elm/html), `grep -ri m3e src` empty; the
+portability claim holds by dependency shape. Phase B (B8–B14): the `/components/compose` route in elm-m3e's docs
+app — three folds (editor/preview/codegen) + generated adapter, live and demonstrated in a real browser (§8.7
+`listItem.trailing` offers checkbox; 3-level nesting; attr→live+snippet agreement; drawer link). NOT pushed, NOT
+merged — that is the human's call. **13 autonomous decisions recorded (D-034…D-046 range used through D-045);
+the one to review first is D-045** (the plan's file layout put helper modules under `app/Route/`, which elm-pages
+mis-routes; relocated to `app/Compose/` — a deviation from the plan's explicit paths, mechanical + reversible).
+Also flag: D-037 (compile gate), D-042 (attr count 166 vs spec's 182 — genuine input drift, reconciled),
+D-039/D-040/D-041/D-043/D-044 (docs-app gate mechanics). The 4 red `gate:all` items are pre-existing Move-1
+migration debt, out of this effort's scope. Next free IDs: **D-046**, **R-023**.
+
+---
+
+# COMPOSE UX INCREMENT — branch `compose-poc` (post-POC, human-requested)
+
+Human (2026-08-14) asked to make the editor support the DOM modifications a user expects — add child (exists),
+remove node (exists), **edit the tag** (NEW), and move the slot/attr count numbers onto **m3e-badge** — then run
+an **m3e-okf** (correct-Material-usage) audit. Run as another gauntlet loop (human's choice). Parts: C1 (core),
+D1 (consumer UX), E1 (audit). Same providers (builder claude/sonnet, critic claude/claude-opus-4-8).
+
+- **D-046 (edit-tag feature — human-approved scope step BEYOND the POC spec §5.7).** The spec froze a node's
+  component at creation ("cannot be replaced"). Human approved adding in-place component-change with **type-directed
+  choices** and **keep-valid-content** pruning. This EXTENDS the published `elm-cem-compose` core API (new `Msg`
+  variant + query) — a deliberate, recorded deviation from Phase A's "done" surface; bump the package minor
+  version. **Core semantics (C1 reference bar):**
+  - `componentOptions : Path -> Model -> List String` — the components this node may become, EXCLUDING its current
+    component. Root (`[]`): all `Dict.keys facts`, sorted. Nested: the PARENT slot's afforded components (via the
+    parent fact's `affordancesFor … .components` for the slot named in the last `PathStep`) — already
+    facts-present/deduped. Unresolvable path → `[]`. (Type-directed: a nested node can only become something its
+    parent slot legally accepts; the tree stays valid.)
+  - `SetComponent Path String` — if the target ∉ `componentOptions path model` → no-op + close menu (menu/update
+    agreement, as A4). Else, at `path`: set component := target, then PRUNE to keep only valid content:
+    (a) attrs → keep exactly the attrs the target offers (same set `attrChips` would produce for the target:
+    name ∈ target.enums OR (name ∈ target.attrRewrites-values AND ∈ model.attrKinds)); drop the rest.
+    (b) children → for each slot with children: keep the slot iff target declares it (target `slotNames`); within
+    a kept slot keep each child iff the target's slot still affords its kind (ChildText→text, ChildIcon→icon,
+    ChildNode→componentOf ∈ that slot's afforded components); then enforce the target's cap (if the slot ∉
+    target.multiSlots, keep only the first survivor). Clear `openMenu`.
+  - Node stays opaque; `update : Msg -> Model -> Model` (no Cmd). New tests: componentOptions (root/nested/
+    unresolvable), SetComponent no-op-when-unoffered, component swap, attr pruning (kept vs dropped), child
+    pruning (slot-not-declared dropped, kind-not-afforded dropped, survivor kept), non-multi cap after swap,
+    openMenu cleared, and the property "every componentOptions entry changes the model when SetComponent applied."
+  Next free IDs: **D-047**, **R-023**.
+
+- **C1: pass** (test:elm 74/74, critic clean, builder claude/sonnet). Commit `a6848ae` (5 files, all in
+  elm-cem-compose; version→1.1.0). `componentOptions` (root=all-facts-sorted-minus-current; nested=parent-slot
+  afforded-minus-current, type-directed; unresolvable=[]) + `SetComponent Path String` (no-op if unoffered; else
+  swap + prune attrs to `offeredByTarget` + prune children to target-declared/afforded slots + non-multi cap via
+  List.take 1 + clear openMenu). Fixture extended ADDITIVELY (`gadget` shares attrs w/ widget; `narrow`
+  slot-kind-change/cap) — original six byte-unchanged; builder self-caught + fixed an illegal fixture kind. Fresh
+  Opus critic verified all semantics + 12 exact-equal tests (none weakened) + Node opaque + no Cmd + grep-m3e
+  empty + 3 deps → PASS. **Core edit-tag done; D1 wires it into the route UI + badges + add/remove polish.**
+
+- **D1: pass** (build:site exit 0; Playwright 6/6; check:review green; critic clean; builder claude/sonnet).
+  Commit `fea1f3c` (route + spec, 2 files). Edit-tag UI: `editTagControl`/`componentMenuElement` — a header
+  "Change component" menu from `componentOptions` firing `SetComponent` (renders nothing when options empty; root's
+  long list height-capped `overflow-y-auto`). Counts moved to `M3e.badge` (slot chips always; attr chips when
+  set). Remove controls retained on children (root none). +2 Playwright tests (edit-tag rewrites tree:
+  m3e-list→m3e-accordion + snippet; nested type-directed menu = exactly [divider,expandableListItem,listAction,
+  listOption]). 3 prior tests updated ONLY their button-name locators for the badge rename (assertions unchanged —
+  critic verified not weakened). Builder fixed 2 Simplify findings. Fresh Opus critic ran build:site + Playwright
+  6/6, verified real assertions + no weakening + badge/menu API + integrity 2 files + copy-fidelity GREEN → PASS.
+  **Editor now supports add-child + remove-node + edit-tag (type-directed) with count badges. E1 = m3e-okf audit.**
+
+- **E1: m3e-okf Material-correctness audit — DONE (findings reported to human; fixes are a separate decision).**
+  OKF checkout `/Users/jhp/code/jackhp95/m3e-okf` verified current (state:current, HEAD 8275e26). Audited the
+  Compose route's M3E usage against the OKF knowledge bundle (applying-material-design skill). **4 findings, ranked
+  + cited; all recommended alternatives confirmed to exist in M3e (inputChip/assistChip/tree/treeItem):**
+  1. **HIGH — recursive editor uses NESTED `M3e.card`; the intent-correct container is `M3e.tree`/`treeItem`.**
+     Card = single-subject surface; nesting elevated cards → ambiguous containment/elevation. The thing being
+     edited IS a hierarchical node tree, and M3E ships Tree ("hierarchical list whose nodes expand/collapse").
+     Real redesign.
+  2. **MEDIUM — `filterChip` is the wrong chip type.** Filter chips = narrow a result set; `selected` = filter
+     active. Compose uses filterChip + `selected=isSet` for attribute editors and for "+add" slot actions
+     (neither is filtering), and MIXES attribute chips + add-action chips in one chip-set (OKF explicitly: "don't
+     mix chip types with conflicting behaviors"; "don't use chips as a substitute for buttons"). Fix: set-attr →
+     `inputChip` (an editable token); "+add" → `assistChip`/button; split the sets.
+  3. **LOW-MED — `attrValueBadge` puts an attribute's VALUE string in `M3e.badge`.** Badge = count/status marker,
+     not a value label. Slot COUNT badges are a defensible count use (and honor the human's "numbers→badge" ask);
+     the attr-value-in-badge overreaches — show a set value via the chip's own label/supporting text.
+  4. **LOW — emphasis density** (stacked elevated cards + chips + badges + buttons in a dense tool → "too many
+     emphasis levels"); largely resolved if #1 (tree) is adopted.
+  **Already correct (noted):** menus use the `menuTrigger[for=id]` + sibling `menu[id]` self-positioning pattern
+  (avoids the "wrapping self-positioning components" anti-pattern); icon-only controls have accessible names
+  (`Aria.label`); remove action separately reachable/named. **No code changed by the audit itself** — awaiting
+  the human's pick of which findings to fix (each fixable as a further gauntlet part). Next free IDs: **D-047**,
+  **R-023**.
+
+- **D-047 (audit-fix FEASIBILITY — the abstract Material advice partly collides with concrete M3E component
+  capabilities).** Human approved fixing all of F1/F2/F3. Before dispatching I verified each against the real M3E
+  component facts and found two collisions (the same class of wall B14 hit):
+  - **F1 `m3e-tree` INFEASIBLE.** `treeItem` facts: `label` admits only `[heading,shared:text]`, `unnamed` admits
+    only `[treeItem]` — a pure text hierarchy; it cannot host a node's chip-set/menus/inline-inputs/remove. So
+    "use m3e-tree" is not realizable. MITIGANT: the node cards are ALREADY `variant=outlined` (no elevation
+    stacking), so the primary nested-card anti-pattern is largely avoided; realistic fix = swap the nesting
+    `M3e.card` for a plain outlined container (drops "card" semantics), small + safe.
+  - **F2 chip-types PARTLY COLLIDE.** `assistChip`/`inputChip` slotKinds admit only `[heading,shared:text]`(+icon)
+    — like `filterChip` they CANNOT host a `menuTrigger` (B14's exact finding; only `M3e.button` scopes a trigger).
+    So set-attr-as-inputChip-that-opens-a-menu needs the menu mechanism switched from m3e popover(`menuTrigger[for]`)
+    to Elm `openMenu`-state inline menus — a real interaction re-architecture. `assistChip`/`inputChip` DO have
+    `onClick`/`onRemove`/`removable`, so the achievable subset is real (see below).
+  - **F3 clean.** Drop `attrValueBadge`; a set attr shows its value in the chip label; keep `slotCountBadge`.
+  Escalated to human to choose scope (realizable-now vs deeper chip re-architecture) rather than sink a builder in
+  the popover/inline-menu swamp. Next free IDs: **D-048**, **R-023**.
+
+- **D-048 (audit-fix scope chosen by human).** F1 → **plain outlined container** (swap nesting `M3e.card` for a
+  bordered `TypedHtml.div`, drop card semantics for the recursion). F2 → **extra-small `M3e.button`s** instead of
+  chips (human's call — cleanly resolves the OKF "don't use chips as a substitute for buttons" finding AND the
+  chips-can't-host-menus wall in one move; unifies the editor on the button+`menuTrigger[for]`+menu pattern B14
+  proved works; also split attribute controls vs slot/add controls into separate groups). F3 → badges for slot
+  COUNTS only; a set attr's value goes in its button label, drop `attrValueBadge`. One gauntlet part F2 (task
+  #18). Next free IDs: **D-049**, **R-023**.
+
+- **F2: pass — AUDIT-FIX INCREMENT COMPLETE** (build:site exit 0; Playwright 6/6; check:review green; critic clean;
+  builder claude/sonnet). Commit `905c82d` (1 file, route, +116/-83). F1: each node is now a plain outlined
+  `TypedHtml.div` (`rounded-md-corner-medium border border-outline-variant`), no `M3e.card`. F2: attr + slot
+  affordances are extra-small `M3e.button`s (no `filterChip`/`chipSet`), split into separate "Attributes" and
+  "Slots" groups, menu-openers keep the `menuTrigger[for]`+sibling-menu pattern. F3: `attrValueBadge` deleted
+  (set value → button label `name: value`); `slotCountBadge` retained. Playwright spec UNCHANGED (the tested
+  affordances were already buttons). Fresh Opus critic ran build:site + Playwright 6/6, verified no live
+  card/chip/chipSet, xs buttons, group split, value-in-label, count-badge kept, no new suppressions, integrity 1
+  file, copy-fidelity GREEN → PASS.
+
+## AUDIT INCREMENT — summary for the human
+Editor now supports all expected DOM edits — **add child, remove node, edit tag (type-directed, keep-valid)** —
+and the m3e-okf audit fixes landed: **outlined containers not nested cards, extra-small buttons not misused chips
+(Attributes/Slots split), badges for counts only**. The two audit recommendations that collided with concrete
+M3E limits (`m3e-tree` can't host the editor; chips can't host menus) are documented (D-047) and resolved the
+realizable way the human chose (D-048). All green on branch `compose-poc`; not pushed/merged. Next free IDs:
+**D-049**, **R-023**.
+
+- **D-049 (further human UI feedback → part F3, task #19).** (1) Prefers **nested outlined cards** over F2's plain
+  divs — reverts F1; acceptable since outlined cards don't stack elevation (the audit concern was elevated cards;
+  already voiced, human decided). (2) Count badges **trailing** — realized as `M3e.badge [for=host, position=after]`
+  (button `trailing-icon` slot admits only `shared:icon`, not badge, so trailing is via badge `position=after`,
+  not a slot). (3) Tag name = **text-variant button** opening the change-component menu (drop the separate
+  edit-icon button); and **`m3e-icon` was built wrong** — must use `TA.name "edit"` attribute, NOT text content
+  `[M3e.text "edit"]` (app precedent: `M3e.icon [ TA.name "search" ] []`). Same bug in the remove button
+  (Compose.elm:600) AND the live-preview `Render.elm:60` (`Html.node "m3e-icon" .. [Html.text glyph]` → needs a
+  `name` attribute, else preview icons don't render) AND Codegen's icon emission — fix all. (4) Buttons
+  **`variant=elevated` when unselected, `filled` when selected/filled>0**. Touches Compose.elm + Render.elm (+
+  Codegen.elm for the icon snippet). Next free IDs: **D-050**, **R-023**.
+
+- **F3 round 1 (gate red: codegen icon snippet does not compile; strategy: use the compiling `TypedHtml.Attributes.name` form).**
+  Commit `ca7c9c4` got 4 of 5 refinements right, but the fresh Opus critic caught a real bug via the snippet
+  scratch-compile (spec §15): `Codegen.elm` emits `M3e.Html.icon [ M3e.Attributes.name "glyph" ] []`, but
+  `M3e.Attributes.name : Value M3e.Values.Name -> …` needs a `Value`, not a `String` → the copy-paste snippet for
+  an icon does NOT compile. (The editor + preview were correct — they use `TypedHtml.Attributes.name : String`.)
+  Manager verified the fix: `M3e.Html.icon [ TypedHtml.Attributes.name "close" ] []` compiles (scratch, Success).
+  Sent builder back to align Codegen's icon emission to `TypedHtml.Attributes.name` and re-run the scratch-compile.
+
+- **F3: pass** (round 2; build:site exit 0; Playwright 6/6; icon snippet compiles; builder claude/sonnet).
+  Commit `ca7c9c4` (4 files: the 5 refinements) + fixup `1bf7e9e` (Codegen icon → `TypedHtml.Attributes.name`,
+  the compiling form). Delivered: (1) nested outlined `M3e.card`; (2) trailing count badges (`position=after`);
+  (3) tag NAME is a text-variant button opening the change-tag menu (no edit-icon button) + `m3e-icon name=` fix
+  across editor/preview/codegen (preview icons + the remove `×` now render); (4) buttons elevated(unset)/
+  filled(set) with the set value in the label. Round-1 critic caught the codegen snippet-compile bug (spec §15);
+  manager verified the fix form + independently re-ran build:site + Playwright 6/6 on round 2. **UI-refinement
+  round complete.** Next free IDs: **D-050**, **R-023**.
+
+
+- **D-050 (human: inline badges via slot, not positioning → part F4, task #20).** Replace the `for`+`position`
+  overlay badge with an inline `M3e.badge [] [ M3e.text count ]` sibling next to the slot button — content in the
+  badge's own `unnamed` slot, no `for`/`position`/host-id. Feasible + precedent-backed: app already uses
+  `M3e.badge [] [ M3e.text "3" ]` at `docs/app/Route/Guide/Seams.elm:188`; scratch inline badge compiles. Next
+  free IDs: **D-051**, **R-023**.
+
+- **F4: pass** (build:site exit 0; Playwright 6/6; manager-verified incl. visual; builder claude/sonnet).
+  Commit `bdaa69b` (1 file, +14/-25). `slotCountBadge` → inline `M3e.badge [] [ M3e.text count ]` (content in the
+  badge's own slot), wrapped inline-flex as a trailing sibling of each slot button; dropped `for`/`position` and
+  the now-unused `slotButtonHostId`; slot-menu wiring untouched (still opens). Matches app precedent
+  (Seams.elm:188). Screenshot confirms inline pills, not corner overlays. Small precedent-matching visual change —
+  accepted on manager verification (build:site + Playwright + visual) without a separate critic. Next free IDs:
+  **D-051**, **R-023**.
+
+- **D-051 (HANDOFF to a fresh Opus-4.8 UI agent, 2026-08-14).** Human requested `/paseo-handoff` to continue the
+  editor styling/UX interactively and will DETACH to work with the new agent directly. New requirements handed
+  off (styling round): (1) padding is inconsistent — normalize. (2) Text/icon child inputs → LABELED form fields,
+  with the field's TRAILING icon = delete button and LEADING icon = drag/drop handle for ordering. (3) Attributes
+  & Slots sections → form fields containing BUTTON GROUPS. (4) The count badge should be the button's TRAILING
+  ICON — OPEN TYPE QUESTION the human raised: a button's `trailing-icon` slot admits only `shared:icon`, not
+  `badge` (verified, D-047) — "is that not possible with the types? should we recast?" → the new agent must
+  investigate whether to recast/extend the M3e type (or the elm-cem facts) to admit a badge in that slot, vs an
+  alternative. (5) The `+` prefix on slot buttons → an ICON, not the literal "+". (6) Card header stays the tag
+  name, but add a LEADING drag/drop handle icon and TRAILING edit + delete icons. NOTE reordering (2/6 drag-drop)
+  is spec NON-GOAL #1 and needs a new core `MoveChild` Msg in `elm-cem-compose` — a real core extension. Receiving
+  agent: claude/claude-opus-4-8 (ui role), same worktree/branch. Next free IDs: **D-052**, **R-023**.
+
+## STYLING ROUND (D-051 handoff — new UI agent, `claude-opus-4-8`, working interactively with the human)
+
+Manager = the receiving Opus UI agent (this context). Builders = `claude/sonnet` background agents for the
+mechanical/parallel work; recast + consumer-wiring done directly by the manager (prefs: styling/visual = Opus).
+Human decided both open questions live: item 4 → **recast the button type** (their instinct: button type too
+strict); reordering → **up/down buttons**, not drag-drop. Landed in four commits.
+
+- **G1 (safe styling pass) — pass.** Commit `33358e3` (`Compose.elm` + `compose.spec.ts`, sonnet builder).
+  Items 1/5/3/2: normalized spacing (card body `gap-3`, groups `gap-2`, child indent `pl-4`); slot-button `+`
+  literal → leading `M3e.icon [ TA.name "add" ] []`; Attributes/Slots buttons now sit in `M3e.buttonGroup`
+  under their plain label (human chose buttonGroup-under-label over the literal "formField-wrapped group",
+  which would misuse formField); `ChildText`/`ChildIcon` → `M3e.formField` (label slot + raw `<input>` in
+  unnamed + delete `iconButton` in the `suffix` slot; no fallback needed). Gates: build:site, check:review,
+  check:compose-attrs, Playwright 6/6, copy-fidelity all green. **A11Y FINDING (open for human):**
+  `m3e-button-group` gives any `toggle` child `role="radio"` and the group `role="radiogroup"` — implying a
+  single-select exclusivity our INDEPENDENT attribute/slot toggles do NOT have. Builder updated 4 Playwright
+  locators `button`→`radio` (assertions unchanged). Candidate fix: set `multi=True` on the groups (buttonGroup's
+  own attribute) so children read as independent, or reconsider buttonGroup for these non-selection controls.
+  Recorded, NOT yet fixed.
+
+- **D-052 (up/down reorder = new core capability; human chose it over drag-drop). CORE EXTENSION.** Spec
+  NON-GOAL #1. Human picked up/down buttons over HTML5 drag-and-drop (simpler, accessible, browser-testable).
+  Added `MoveChild Path String Int Int` (`parentPath slotName fromIndex toIndex`) to `Cem.Compose` (v1.1.0 →
+  **1.2.0**), TDD'd. Semantics: resolve parentPath (unresolvable = no-op); `fromIndex` OOB = no-op; `toIndex`
+  clamped to `[0, len-1]` (so move-up-from-top / move-down-from-bottom are no-ops); pure list reorder, NO
+  validity re-check/pruning (moving within a slot can't invalidate); `openMenu` cleared via the existing `edit`
+  helper (mirrors `RemoveChild`). Commit `86d4d5c` (sonnet builder, TDD): tests 74 → **85** (new `MoveTest.elm`
+  incl. full-tree sibling-slot identity checks). `gate` green, `grep -ri m3e src` empty, 3 deps. Note:
+  `List.Extra.insertAt` absent in this list-extra range → hand-rolled `take/drop` splice, no new dep. Next free
+  IDs: **D-055**, **R-023**.
+
+- **D-053 (item-4 badge-in-button-trailing-slot recast; human chose recast over the no-type-change overlay).
+  GENERATED-CODE DEVIATION — FLAG.** The button `trailing-icon` slot admitted only `shared:icon`, so a count
+  badge could not sit in the button chrome. **Material-valid** (the type is stricter than needed): `NavMenuItem`
+  ALREADY admits `badge` in a slot, and badge-decorates-host is canonical Material. The clean flow (edit config
+  + regen) is BLOCKED: `src/` is the committed `M3e.Component.*`/`M3e.Build.*` layout, but a fresh `gen:src`
+  emits the generator's current FLAT `M3e.*` layout — **271 files differ** (measured; D-012/D-034 Move-1/flat-cut
+  debt). So the recast is: (a) `config/slots.json` — add `"badge"` to Button `trailing-icon` kinds (the durable,
+  correct, mergeable source-of-truth edit); PLUS (b) a **targeted hand-edit of 2 generated files** —
+  `M3e/Internal/Types/Button.elm` (`TrailingIconSlot` gains `badge : Brand`) and `M3e/Review/Facts.elm` (button
+  `trailing-icon` slotKinds gains `"badge"`), both alphabetically ordered to match generator output and
+  mirroring NavMenuItem's existing admission. This is a documented, minimal, reversible deviation from the
+  family's "never hand-edit generated output" rule, forced ONLY because a clean regen is blocked by unrelated
+  layout debt; when the flat-cut reconciliation lands on main, a regen reproduces the same admission from the
+  config edit alone. PROVEN: a badge now typechecks into a button trailing-icon slot (scratch `elm make`:
+  Success). Commit `55ab1cb` (3 files, manager). build:site + check:review + copy-fidelity green (content edits
+  only, no new files). **The "merge the fix in main" the human wants = the `config/slots.json` change.** Next
+  free IDs: **D-055**, **R-023**.
+
+- **D-054 (consumer wiring — reorder UI + header relayout + badge into the recast slot; item-6 "no edit pencil"
+  judgment). UX DECISION.** Commit `3a04052` (`Compose.elm` + `compose.spec.ts`, manager, direct — prefs: styling
+  = Opus). (1) Reorder: `reorderControls` renders leading up/down `iconButton`s firing `MoveChild` (disabled at
+  the end each can't move toward; hidden when a slot holds ≤1); a node derives its own `(parentPath, slotName,
+  index)` from the last step of its path (`nodePosition`). (2) Header (item 6): `headerRow` = leading reorder +
+  tag-name change-tag button + trailing delete; root (empty path) shows only the name; per-node delete MOVED off
+  the child row into the header. **JUDGMENT CALL (flag):** item 6 asked for a trailing EDIT icon too, but the
+  tag-name button ALREADY opens the change-component menu (it IS the edit affordance, per D-049) — a second
+  control opening the identical menu is confusing, so NO separate edit pencil was added. Reversible if the human
+  wants the explicit icon. (3) Item 4 usage: `slotCountBadge` moved into each slot button's `trailing-icon` slot
+  (`M3e.Component.Button.trailingIcon (slotCountBadge info)`), dropping the detached badge row. Gates: build:site
+  exit 0, check:review clean, check:compose-attrs OK, **Playwright 7/7** (added a reorder test that swaps two
+  siblings and asserts the live-preview DOM order flips — scoped past m3e-list's internal `<slot>` child and the
+  nav; caught two real locator pitfalls before landing), copy-fidelity GREEN. Manager verified visually
+  (screenshot): badge renders inside the button trailing edge, header shows ▲▼/name/×, `+` is the add icon.
+  **OPEN POLISH (for the human, not yet fixed):** (i) the slot button-GROUP row overflows horizontally and gets
+  clipped when a node has many slots; (ii) red `0/1` count badges on EMPTY slots read as alarming (red =
+  notification). Plus the D-052-round buttonGroup `role=radiogroup` a11y question above. Next free IDs: **D-055**,
+  **R-023**.
+
+- **D-055 (human feedback: buttonGroup is the wrong primitive + want a pre-filled starter). UX FIX.**
+  Commit `608a9d2` (`Compose.elm` + `compose.spec.ts`, manager). (1) **buttonGroup → `flex flex-wrap gap-2`.**
+  The human called the horizontal overflow "not acceptable" — `m3e-button-group` overflows/clips instead of
+  wrapping, and (the open a11y issue) stamps `role=radiogroup`/`role=radio` on our INDEPENDENT attribute/slot
+  toggles. Both `attrGroup` and `slotGroup` now wrap the buttons in a plain `flex flex-wrap` row; buttons are
+  plain `role=button` again → RESOLVES the radiogroup a11y concern AND the overflow in one move. (2) **Starter
+  tree.** `init` now folds `starterEdits` (2 `listItem`s, each with an `unnamed` text label "First item"/"Second
+  item") over `Cem.Compose.init` — the editor opens with content to work from, and because reorder arrows only
+  render when a slot holds >1 child (the human "wasn't seeing the arrows" on the previously EMPTY root — working
+  as designed, just nothing to reorder), the starter surfaces them immediately. All of it is deletable.
+  (3) **Playwright reworked** for the new starting DOM: `radio`→`button`; scratch-built tests add their own node
+  and scope to it via `.last()` (a new child appends last) + `:visible` (all menus are always in the DOM, only
+  the clicked one shows); the reorder test now drives the starter's two items directly and asserts the labels
+  swap. 7/7. Gates: build:site, check:review, check:compose-attrs, copy-fidelity green. **STILL OPEN (flagged,
+  not fixed):** red `0/1` count badges on EMPTY slots read as alarming (`m3e-badge` default is the error color) —
+  a color/variant tweak awaiting the human's call; and the item-6 "no separate edit pencil" judgment (D-054)
+  still stands for confirmation. Next free IDs: **D-056**, **R-023**.
+
+- **D-056 (human: neutral badge, numerator only, hidden at zero). UX POLISH — resolves D-055's open badge item.**
+  Commit `574dbc7` (`Compose.elm`, manager). The slot-count badge now: (1) shows just `info.filled` (no `/max`
+  denominator); (2) renders NOTHING when `filled == 0` — `slotCountTrailing` returns `[]`, spliced into the button
+  content list via `trailingIcon`'s polymorphic result type; (3) is NEUTRAL, not the `m3e-badge` default error
+  color — since badge has no color/variant attribute, its `--m3e-badge-container-color`/`--m3e-badge-color` CSS
+  custom properties are overridden to `surface-container-highest`/`on-surface-variant`. `slotCountText`
+  (the old filled/max helper) deleted. Verified visually: empty slot buttons are clean, filled ones carry a quiet
+  grey count. Gates: build:site, check:review, check:compose-attrs, Playwright 7/7, copy-fidelity green. **STILL
+  OPEN:** only the item-6 "no separate edit pencil" judgment (D-054) awaits human confirmation. Next free IDs:
+  **D-057**, **R-023**.
+
+- **D-057 (human feedback: card padding, heading tag, explicit edit icon, reorder-row-at-trailing, text default).
+  UX ROUND — supersedes the D-054 "no edit pencil" judgment (human DID want the edit icon).** Commit `f0cc72b`
+  (`Compose.elm` + `compose.spec.ts`, manager). (1) **Padding:** attr/slot groups were flush to the card's left
+  edge — the whole card body is now one `p-3` container (children keep `pl-4`). (2) **Tag → `M3e.heading`**
+  (title/small): the tag name is a plain heading; `nameControl` split into `tagHeading` + `editControl`.
+  (3) **Explicit edit icon button** (`editControl`): a "Change component" `M3e.button` (icon-only, hosts the
+  `menuTrigger` — the only host that scopes a trigger) opens the change-component menu; renders nothing when
+  `componentOptions` is empty. (4) **Reorder = horizontal row at the TRAILING end** (`flex-row`, after the edit
+  control in the header and after the field in text/icon rows), not a leading vertical stack. (5) **New text
+  children default to "lorem ipsum":** the route `update` intercepts `AddTextChild` (via `applyCompose`) and seeds
+  the just-added empty `ChildText` with `SetChildContent` — the headless core stays content-agnostic (adds `""`);
+  the placeholder is a consumer/demo choice, guarded (`childAt … == Just (ChildText "")`) so it never clobbers
+  real content. Playwright 8/8: tests 4/5 now open the "Change component" icon button (`.first()`/`.last()`); added
+  a test asserting a new text child renders "lorem ipsum" in the preview. build:site, check:review,
+  check:compose-attrs, copy-fidelity green. No remaining open styling items. Next free IDs: **D-058**, **R-023**.
+
+- **D-058 (human feedback batch — 6 items, split into a no-state pass + a stateful pass). UX ROUND.** Two commits.
+  **`aa3a31f` (no state):** (1) `tagHeading` → `variant title, size medium` (was small). (2) removed `pl-4` from the
+  children container — nesting still reads via the card border. (3) Attributes/Slots: the group LABEL now sits
+  inside the same `flex flex-wrap items-center` row as the buttons, so label + buttons wrap together (was a fixed
+  label line above a separate wrapping row). (4) `editControl` → `M3e.iconButton` (its `Content` admits
+  `menuTrigger`; **verified the trigger still scopes** — Playwright tests 4/5 open its menu and pass), matching the
+  reorder/delete iconButtons. **`62c02ed` (stateful):** (5) **Collapsible cards** — each node card gets a leading
+  chevron `iconButton` toggling its `pathId` in new `Model.collapsed : Set String`; collapsed hides the body
+  (attrs/slots/children), header stays. (6) **"Prefill examples" toggle** — an `M3e.switch` in a new `panelBar`
+  drives `Model.prefill`; `applyCompose` (now `Bool -> Msg -> Model -> Model`) seeds a fresh text child with
+  "lorem ipsum" AND gives a fresh child COMPONENT an example text child in its first text-affording slot
+  (`firstTextSlot`) when on, empty when off — every seed guarded against clobbering real content. **Architecture:**
+  the editor view now emits the route `Msg`; leaf editor fns still produce `Cem.Compose.Msg` and are lifted with
+  `M3e.mapMsg ComposeMsg` at the `viewNode`/`childRow` boundaries, while the chevron + switch emit `Msg` directly
+  (`view` drops its old blanket `ComposeMsg` wrap; static heading/preview/snippet are msg-polymorphic and unify).
+  Playwright 10/10 (added: edit-as-iconButton menu still works via tests 4/5; collapse hides/restores body;
+  prefill-off adds empty). Both commits: build:site, check:review, check:compose-attrs, copy-fidelity green.
+  Next free IDs: **D-059**, **R-023**.
+
+---
+
+# COMPOSE EXAMPLES-PREFILL FEATURE — branch `compose-poc` (approved follow-on, original manager resumed)
+
+Human-approved: prefill Compose's per-component add/change-component menu with REAL examples from
+`docs/data/examples.json` (additive to the D-058 lorem-ipsum toggle; do not remove it). Original gauntlet manager
+(d79872b) resumed after confirming the handoff agent `262daa97` is IDLE (finished its styling round at D-058) and
+the tree is clean — no collision. Same discipline: builder=claude/sonnet, fresh critic=claude/claude-opus-4-8,
+reference-bar gates, ledger entries. Decomposed into 2 parts.
+
+- **D-059 (feature plan + design decisions, verified on disk).**
+  - **Data source / reuse:** `Doc.Data.allUsage : BackendTask FatalError (Dict String (List Doc.Usage.UsageExample))`
+    already decodes `data/examples.json` (keyed by LOWERCASED slug, e.g. `"appbar"`); `UsageExample.html : String`
+    is literal `<m3e-*>` markup. REUSE it (Part 2 route data) — no second JSON path. Fact.component is camelCase
+    (`appBar`) → normalize with `String.toLower` before the key match (a silent case bug would show zero examples).
+  - **Opaque-Node constraint (load-bearing):** `Cem.Compose.Node` is OPAQUE and the reference bar forbids touching
+    `elm-cem-compose/src`. So `FromHtml` CANNOT produce a `Node`; it produces an intermediate + a `List
+    Cem.Compose.Msg` that rebuilds the subtree via the core's PUBLIC api (AddChild/SetAttr/AddTextChild/
+    AddIconChild/SetChildContent/SetComponent). Brand-agnostic: `FromHtml` takes `facts` + `attrKinds` as params
+    (imports Cem.Facts, Cem.Compose, hecrj/html-parser — NOT M3e).
+  - **tag→component:** invert `Compose.Render.tagFor` (`"m3e-" ++ toKebabCase`): strip `m3e-`, un-kebab to
+    camelCase, check against facts; unknown tag → drop (don't fail the whole example). `m3e-icon` (name attr) →
+    ChildIcon; bare text → ChildText; `slot="x"` → parent slot (unslotted → unnamed); attrs classified via the
+    GENERATED `Compose.Attrs` table (unknown attr dropped).
+  - **Test convention:** docs project has NO elm-test runner; the established pure-unit-test pattern is a
+    `port module … Platform.worker` self-checking module (see `docs/tests/FoldTest.elm`) run via `node
+    scripts/run-elm-worker-test.cjs <compiled.js> <Module>` (exit code off a `RESULT ok=X/Y` line). FromHtml tests
+    follow THIS pattern.
+  - **Deps:** add `hecrj/html-parser` 2.4.0 (cached) to `docs/elm.json` direct + `rtfeldman/elm-hex` 1.0.0 indirect
+    (elm/parser/html/core/virtual-dom already present). Try `npx elm install`; offline → edit elm.json manually.
+  - **Modules under `app/Compose/`** (helpers, NOT `app/Route/` — elm-pages routing, D-045); new files →
+    copy-fidelity AUTHORIZED_EXTRA.
+  - **Part split:** G-Ex1 = `Compose.FromHtml` parser (html→intermediate ExampleNode) + `toMsgs` + worker-test.
+    G-Ex2 = menu wiring (example options in the add/change menu) + route `data`=allUsage + apply-on-pick + Playwright.
+  Next free IDs: **D-060**, **R-023**.
+
+- **G-Ex1: pass** (worker-test 4/4 incl. toMsgs→update replay; check:review green; critic clean; builder
+  claude/sonnet). Commit `0ef9234` (4 files: FromHtml.elm + FromHtmlTest.elm new, elm.json +hecrj/html-parser
+  2.4.0, copy-fidelity AUTHORIZED_EXTRA). `Compose.FromHtml` (brand-agnostic — params facts+attrKinds, imports
+  only Cem.Compose/Cem.Facts/Dict/Html.Parser): `parse : {facts,attrKinds} -> String -> Maybe ExampleNode`
+  (tag→component = inverse tagFor ∩ facts, drop unknowns; m3e-icon→ChildIcon(name); text→ChildText; slot=
+  placement; attrs via enums/attrKinds, drop unknown) + `toMsgs : Path -> ExampleNode -> List Cem.Compose.Msg`
+  (public Msgs only, no core change). Fresh Opus critic verified the 3 embedded example strings are BYTE-IDENTICAL
+  to examples.json, assertions genuine (enum→AttrEnum, non-classified attr dropped, slot placement, child kinds),
+  and the toMsgs replay folds through update + asserts via accessors → PASS. Next free IDs: **D-060**, **R-023**.
+
+- **D-060 (branch regression from D-053 badge recast — caught by G-Ex2's gate:all, fixed).** `gate:all` on the
+  G-Ex2 run showed a NEW failure `workspace: check-bundle-provenance cem-figma-connect` — the G-Ex2 builder
+  MIS-ATTRIBUTED it as "pre-existing/unrelated". Manager verified: it is a REAL branch regression. The handoff
+  agent's badge type-recast (D-053, branch commit `55ab1cb`, "admit badge in button trailing-icon slot") changed
+  `elm-m3e/config/slots.json` + `M3e` types → changed elm-cem's GENERATED facts (button.trailing-icon now emits
+  `"badge"`), but the DERIVED `packages/cem-figma-connect/profiles/m3-kit/facts/elm-api-facts.json` bundle was
+  never regenerated → drift → provenance FAIL. Passes on `main` (no recast), fails on the branch. Latent since
+  D-053 because the handoff agent's per-part gates were docs-scoped (never ran `gate:all`); G-Ex2's run is the
+  first `gate:all` since D-053, surfacing it. **Fix:** `pnpm --filter cem-figma-connect run gen:facts` → the golden
+  regenerates with EXACTLY one added line (`+"badge"` under trailing-icon), matching the recast; provenance now
+  "byte-identical to a fresh regeneration" (PASS). Committed as a separate corrective commit (NOT folded into
+  G-Ex2). Completes the D-053 recast properly. Next free IDs: **D-061**, **R-023**.
+
+- **G-Ex2: pass — EXAMPLES-PREFILL FEATURE COMPLETE** (build:site exit 0; Playwright 11/11; gate:all no new
+  failures; critic clean; builder claude/sonnet). Commit `0ecd65e` (2 files: route + spec, +226/-64). Route
+  `data` now loads `Doc.Data.allUsage`; the change-component AND slot add-child menus each gain one option per real
+  example a component has (via `examplesFor` = lowercase-normalized `Dict.get` + `FromHtml.parse` + root-component
+  match), ALONGSIDE the retained empty option and the D-058 lorem toggle. Picking an example fires
+  `LoadExample (SetComponent/AddChild … :: FromHtml.toMsgs …)` — a consumer-side batch folded through
+  `Cem.Compose.update` (NO core change). New Playwright test asserts CONCRETE recovered content (appBar "Anatomy"
+  → `m3e-icon[name=arrow_back]`, a `variant=tonal` icon-button, and "arrow_back" in the snippet); 2 prior tests
+  refined locators (`:not(.compose-example-item)`) without weakening. Fresh Opus critic ran build:site + Playwright
+  11/11 + full gate:all (22/32, 4 failed — all baseline; cem-figma-connect PASS per D-060) → PASS.
+  **Feature done: Compose's add/change-component menu now prefills real docs examples. All green on `compose-poc`;
+  not pushed/merged.** Next free IDs: **D-061**, **R-023**.

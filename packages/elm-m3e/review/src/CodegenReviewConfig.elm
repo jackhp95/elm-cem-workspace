@@ -86,6 +86,9 @@ config =
       --   `Recast` — reserved `ExtractToSeam` destination (see docstring); the
       --     hoisted module itself is allowed to hold the `M3e.Unsafe` import
       --     it wraps.
+      --   `Route.Components.Compose` — the Compose preview renders a
+      --     runtime-chosen custom element, so no typed constructor can produce
+      --     it; one documented `fromHtml` at the render boundary.
       NoUnsafeImportOutsideAllowed.rule
         [ "M3e"
         , "TypedHtml"
@@ -95,6 +98,7 @@ config =
         , "Route.Examples.Shop"
         , "Route.Guide"
         , "Recast"
+        , "Route.Components.Compose"
         ]
 
     -- The recast-containment fence for the reserved `Recast` destination

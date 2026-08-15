@@ -15,6 +15,7 @@
     "gen:examples": "node scripts/build-examples-data.mjs",
     "gen:examples-source": "node scripts/examples-gen/extract-matraic-examples.mjs",
     "gen:samples": "node scripts/samples-gen/extract-samples.mjs",
+    "gen:compose-attrs": "node scripts/gen-compose-attrs.mjs",
     "gen:pages": "elm-pages gen",
     "build:site": "elm-pages build && node scripts/search-index-gen/build-search-index.mjs",
     "build:ci": "pnpm run gen:reference && pnpm run check:nav && pnpm run build:site",
@@ -30,6 +31,7 @@
     "check:vendor": "node scripts/check-vendor-drift.mjs",
     "check:samples": "node scripts/samples-gen/verify-samples.mjs",
     "check:roundtrip": "node scripts/verify-roundtrip.mjs",
+    "check:compose-attrs": "node scripts/gen-compose-attrs.mjs --check",
     "dev": "elm-pages dev",
     "serve": "node scripts/serve-dist.mjs dist",
     "check:review": "node scripts/check-review-guard.mjs"

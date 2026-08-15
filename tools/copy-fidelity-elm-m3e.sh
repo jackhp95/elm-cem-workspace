@@ -99,6 +99,14 @@ AUTHORIZED_EXTRA=$(cat <<'EOF'
 docs/scripts/fix-native-bins.mjs
 docs/scripts/browser-guard.mjs
 docs/scripts/check-review-guard.mjs
+docs/scripts/gen-compose-attrs.mjs
+docs/app/Compose/Attrs.elm
+docs/app/Compose/Render.elm
+docs/app/Route/Components/Compose.elm
+docs/app/Compose/Codegen.elm
+docs/tests-browser/compose.spec.ts
+docs/app/Compose/FromHtml.elm
+docs/tests/FromHtmlTest.elm
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -120,6 +128,32 @@ EOF
 #   The guard generates the router first, then runs elm-review, and SKIPs-with-reason
 #   where the router codegen can't run. A monorepo-clone concern the source repo
 #   never had (upstream runs check:review only after a full docs build).
+# docs/scripts/gen-compose-attrs.mjs — Compose B9: derives the attr kind +
+#   dispatch table from M3e.Attributes/M3e.Review.Facts; new to this
+#   monorepo's Compose POC, absent from the upstream elm-m3e checkout.
+# docs/app/Compose/Attrs.elm — the committed OUTPUT of the generator above
+#   (Compose B9, relocated out of app/Route/ in B11 so elm-pages does not
+#   misgenerate it as a route); new to this monorepo's Compose POC, absent
+#   from the upstream elm-m3e checkout.
+# docs/app/Compose/Render.elm — Compose B10: the hand-written renderNode
+#   preview fold (relocated out of app/Route/ in B11 for the same reason);
+#   new to this monorepo's Compose POC, absent from the upstream elm-m3e
+#   checkout.
+# docs/app/Route/Components/Compose.elm — Compose B11: the route at
+#   /components/compose; new to this monorepo's Compose POC, absent from the
+#   upstream elm-m3e checkout.
+# docs/app/Compose/Codegen.elm — Compose B13: the hand-written recursive
+#   generated-code snippet fold; new to this monorepo's Compose POC, absent
+#   from the upstream elm-m3e checkout.
+# docs/tests-browser/compose.spec.ts — Compose B14: Playwright browser
+#   coverage for the /components/compose route; new to this monorepo's
+#   Compose POC, absent from the upstream elm-m3e checkout.
+# docs/app/Compose/FromHtml.elm — Compose G-Ex1: brand-agnostic parser from a
+#   real example's HTML into a Cem.Compose message sequence; new to this
+#   monorepo's Compose POC, absent from the upstream elm-m3e checkout.
+# docs/tests/FromHtmlTest.elm — Compose G-Ex1: worker-test for the parser
+#   above; new to this monorepo's Compose POC, absent from the upstream
+#   elm-m3e checkout.
 
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 

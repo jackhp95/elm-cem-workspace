@@ -5,6 +5,8 @@
         "src",
         ".elm-pages",
         "../src",
+        "../../elm-cem/facts/src",
+        "../../elm-cem-compose/src",
         "vendor/elm-foundation"
     ],
     "elm-version": "0.19.1",
@@ -33,6 +35,7 @@
             "elm-community/list-extra": "8.7.0",
             "elm-community/maybe-extra": "5.3.0",
             "elm-community/result-extra": "2.4.0",
+            "hecrj/html-parser": "2.4.0",
             "jluckyiv/elm-utc-date-strings": "1.0.0",
             "justinmimbs/date": "4.1.0",
             "mdgriffith/elm-codegen": "6.0.3",

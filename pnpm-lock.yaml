@@ -62,6 +62,15 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
 
+  packages/elm-cem-compose:
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
   packages/elm-html-intermediate-representation:
     devDependencies:
       elm-format:

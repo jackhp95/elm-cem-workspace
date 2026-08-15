@@ -619,7 +619,8 @@
       },
       "trailing-icon": {
         "kinds": [
-          "shared:icon"
+          "shared:icon",
+          "badge"
         ],
         "multi": false,
         "required": false
