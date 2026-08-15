@@ -51,6 +51,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
+import TypedHtml.Button
 import TypedHtml.Events as TE
 import TypedHtml.Grouping
 import UrlPath exposing (UrlPath)
@@ -61,6 +62,8 @@ type alias Model =
     { compose : Cem.Compose.Model
     , collapsed : Set String
     , prefill : Bool
+    , componentPicker : Maybe Cem.Compose.Path
+    , componentSearch : String
     }
 
 
@@ -69,19 +72,26 @@ type Msg
     | ToggleCollapse String
     | TogglePrefill
     | LoadExample (List Cem.Compose.Msg)
+    | ToggleComponentPicker Cem.Compose.Path
+    | SetComponentSearch String
+    | PickComponent Cem.Compose.Path String
 
 
 type alias RouteParams =
     {}
 
 
-{-| The real per-component examples from `data/examples.json`, keyed by slug
-(lowercase component name) — the same shape `Route.Components.Name_` loads via
-`Doc.Data.allUsage`. The menus use these to offer "fill me with a real
-example" options alongside the plain/empty ones.
+{-| The consumer-level data every node's menus close over: the real
+per-component examples from `data/examples.json` (`usage`, keyed by
+lowercase slug — the add-child menu's "real example" options), and the
+editorial component reference from `data/reference.json` (`reference`, keyed
+by lowercase slug — the change-component picker's category/label grouping).
+Both loaded the same way `Route.Components.Name_` does via `Doc.Data`.
 -}
 type alias Data =
-    { usage : Dict String (List Doc.Usage.UsageExample) }
+    { usage : Dict String (List Doc.Usage.UsageExample)
+    , reference : Dict String Doc.Data.Component
+    }
 
 
 type alias ActionData =
@@ -101,7 +111,9 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Doc.Data.allUsage |> BackendTask.map Data
+    BackendTask.map2 Data
+        Doc.Data.allUsage
+        (Doc.Data.allComponents |> BackendTask.map (List.map (\c -> ( c.slug, c )) >> Dict.fromList))
 
 
 {-| Root component `"list"` is a deliberate starting choice: `list.unnamed`
@@ -123,6 +135,8 @@ init _ _ =
                 starterEdits
       , collapsed = Set.empty
       , prefill = True
+      , componentPicker = Nothing
+      , componentSearch = ""
       }
     , Effect.none
     )
@@ -173,6 +187,31 @@ update _ _ msg model =
             -- on a multi slot it would land as an unwanted extra sibling AND shift
             -- every subsequent message's hard-coded index off by one.
             ( { model | compose = List.foldl Cem.Compose.update model.compose msgs }, Effect.none )
+
+        ToggleComponentPicker path ->
+            ( { model
+                | componentPicker =
+                    if model.componentPicker == Just path then
+                        Nothing
+
+                    else
+                        Just path
+                , componentSearch = ""
+              }
+            , Effect.none
+            )
+
+        SetComponentSearch text ->
+            ( { model | componentSearch = text }, Effect.none )
+
+        PickComponent path name ->
+            ( { model
+                | compose = applyCompose model.prefill (Cem.Compose.SetComponent path name) model.compose
+                , componentPicker = Nothing
+                , componentSearch = ""
+              }
+            , Effect.none
+            )
 
 
 {-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety governed by the
@@ -264,25 +303,43 @@ head _ =
 view : App Data ActionData RouteParams -> Shared.Model -> Model -> View (PagesMsg Msg)
 view app _ model =
     View.fromElement "Compose"
-        (M3e.mapMsg PagesMsg.fromMsg (Doc.pane [ screen app.data.usage model ]))
+        (M3e.mapMsg PagesMsg.fromMsg
+            (Doc.pane
+                [ screen { usage = app.data.usage, reference = app.data.reference } model ]
+            )
+        )
 
 
 {-| A heading, the panel bar, the live preview, the recursive editor, and the
 generated-code snippet. Only the panel bar and the editor emit real messages;
 the heading/preview/snippet are static (msg-polymorphic), so they sit in the
-same `Msg`-typed tree without wrapping. `usage` (this component's real
-examples, keyed by lowercase slug) threads down into the editor so its
-menus can offer "fill me with a real example" options.
+same `Msg`-typed tree without wrapping. `ctx` (this route's `usage`/
+`reference` data) threads down into the editor so its menus can offer "fill
+me with a real example" options and the change-component picker can group by
+category.
 -}
-screen : Dict String (List Doc.Usage.UsageExample) -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-screen usage model =
+screen : MenuCtx -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+screen ctx model =
     TypedHtml.div [ TA.class "space-y-4" ]
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
         , panelBar model
         , M3e.Unsafe.fromHtml (Render.renderNode model.compose.root)
-        , viewNode usage [] model.compose.root model
+        , viewNode ctx [] model.compose.root model
         , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
         ]
+
+
+{-| The consumer-level data every node's menus close over: `usage`
+(`data/examples.json`, for the add-child menu's "real example" options) and
+`reference` (`data/reference.json`, for the change-component picker's
+editorial labels/categories). Bundled together since both are threaded down
+the exact same recursive path (`screen` → `viewNode` → `headerRow`/
+`childCards` → …) to every node in the tree.
+-}
+type alias MenuCtx =
+    { usage : Dict String (List Doc.Usage.UsageExample)
+    , reference : Dict String Doc.Data.Component
+    }
 
 
 {-| The compose panel bar: a "Prefill examples" switch. When on, adding a text
@@ -314,8 +371,8 @@ groups (mixing "set an attribute" and "add a child" controls in one row
 reads as one affordance when they are two), that node's menu (if open), and
 a recursive card per child node.
 -}
-viewNode : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
-viewNode usage path node model =
+viewNode : MenuCtx -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
+viewNode ctx path node model =
     let
         collapsed : Bool
         collapsed =
@@ -326,7 +383,7 @@ viewNode usage path node model =
         [ TypedHtml.div [ TA.class "flex flex-col gap-3 p-3" ]
             (TypedHtml.div [ TA.class "flex items-center gap-2" ]
                 [ collapseChevron path collapsed
-                , headerRow usage path node model.compose
+                , headerRow ctx path node model
                 ]
                 :: (if collapsed then
                         []
@@ -339,10 +396,10 @@ viewNode usage path node model =
                                     , freeTextMenuFor path model.compose
                                     ]
                                 )
-                            , slotGroup usage path model.compose
+                            , slotGroup ctx.usage path model.compose
                             ]
                         , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                            (childCards usage path node model)
+                            (childCards ctx path node model)
                         ]
                    )
             )
@@ -385,20 +442,20 @@ The reorder + delete controls derive the node's sibling position from the last
 `PathStep` of its own path; the root (empty path) has no siblings, so it shows
 only its tag and edit control.
 -}
-headerRow : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-headerRow usage path node model =
+headerRow : MenuCtx -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+headerRow ctx path node model =
     case nodePosition path of
         Nothing ->
             TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
                 [ TypedHtml.div [ TA.class "flex-1" ] [ M3e.mapMsg ComposeMsg (tagHeading node) ]
-                , editControl usage path model
+                , editControl ctx path model
                 ]
 
         Just ( parentPath, slotName, index ) ->
             TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
                 [ TypedHtml.div [ TA.class "flex-1" ] [ M3e.mapMsg ComposeMsg (tagHeading node) ]
-                , editControl usage path model
-                , M3e.mapMsg ComposeMsg (reorderControls parentPath slotName index model)
+                , editControl ctx path model
+                , M3e.mapMsg ComposeMsg (reorderControls parentPath slotName index model.compose)
                 , M3e.mapMsg ComposeMsg (removeButton (Cem.Compose.RemoveChild parentPath slotName index))
                 ]
 
@@ -534,52 +591,179 @@ groupLabel label =
     TypedHtml.p [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ] [ TypedHtml.text label ]
 
 
-{-| The edit-tag control: an icon button that opens the change-component menu.
-`Cem.Compose.componentOptions` is type-directed — a nested node only offers what
-its parent slot accepts, and the current component is already excluded — so an
-empty list means there is nothing valid to change to and no control renders.
-An `M3e.iconButton` hosting the `menuTrigger` (its `Content` admits
-`menuTrigger`; the always-present `menu` is its sibling, addressed by id). The
-root's option list is every known component, so that menu is height-capped and
-scrolls rather than overflowing the page.
+{-| The edit-tag control: an icon button that toggles the change-component
+picker (`componentPicker`) open/closed. `Cem.Compose.componentOptions` is
+type-directed — a nested node only offers what its parent slot accepts, and
+the current component is already excluded — so an empty list means there is
+nothing valid to change to and no control renders.
+
+Per §3.1 of the IA review, this is real component TYPES only — no example
+options mixed in (those stayed on the add-child menu, where "fill this new
+child with a real example" is the coherent affordance; picking a type here is
+a structural decision, not a content one).
+
 -}
-editControl : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-editControl usage path model =
-    case Cem.Compose.componentOptions path model of
+editControl : MenuCtx -> Cem.Compose.Path -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+editControl ctx path model =
+    case Cem.Compose.componentOptions path model.compose of
         [] ->
             TypedHtml.div [] []
 
-        _ ->
-            TypedHtml.div [ TA.class "inline-flex" ]
-                [ M3e.iconButton
-                    [ Aria.label "Change component" ]
-                    [ M3e.menuTrigger [ M3e.Attributes.for (componentMenuId path) ]
-                        [ M3e.icon [ TA.name "edit" ] [] ]
+        options ->
+            TypedHtml.div [ TA.class "relative inline-flex" ]
+                (M3e.iconButton
+                    [ Aria.label "Change component"
+                    , M3e.Events.onClick (ToggleComponentPicker path)
                     ]
-                , componentMenuElement usage path model
-                ]
+                    [ M3e.icon [ TA.name "edit" ] [] ]
+                    :: (if model.componentPicker == Just path then
+                            [ componentPicker
+                                { search = model.componentSearch
+                                , onSearch = SetComponentSearch
+                                , onPick = PickComponent path
+                                , options = options
+                                , reference = ctx.reference
+                                }
+                            ]
 
-
-{-| The always-present menu the edit-tag control's `menuTrigger` points at by
-id — one plain `SetComponent` item per `componentOptions` entry, PLUS (via
-`exampleMenuItemsForChangeComponent`) one extra item per real example that
-component has, alongside the plain option rather than replacing it. Capped in
-height so the root's (potentially long) list scrolls instead of overflowing
-the page.
--}
-componentMenuElement : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (M3e.Component.Menu.Is s) admittedBy Msg
-componentMenuElement usage path model =
-    M3e.menu
-        [ M3e.Attributes.id (componentMenuId path)
-        , M3e.Attributes.class "max-h-64 overflow-y-auto"
-        ]
-        (Cem.Compose.componentOptions path model
-            |> List.concatMap
-                (\name ->
-                    menuItemViewMsg name (ComposeMsg (Cem.Compose.SetComponent path name))
-                        :: exampleMenuItemsForChangeComponent usage path name
+                        else
+                            []
+                       )
                 )
+
+
+{-| A grouped, searchable component-type picker — the change-component
+control's popup panel, reusable (constrained to a slot's own afforded set)
+by M-IA2b's "nest a component" affordance.
+
+NOT an `m3e-menu`: its `Content` only admits `menuItem`/`menuItemCheckbox`/
+`menuItemGroup`/`menuItemRadio`/`divider` (see `M3e.Internal.Types.Menu`) —
+none of which can host a search `<input>` or a plain category caption. So
+this is a plain positioned panel instead, toggled by route `Model` state
+(`componentPicker`/`componentSearch`) rather than the web component's own
+`popover="manual"`/`menuTrigger` machinery.
+
+-}
+componentPicker :
+    { search : String
+    , onSearch : String -> Msg
+    , onPick : String -> Msg
+    , options : List String
+    , reference : Dict String Doc.Data.Component
+    }
+    -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+componentPicker config =
+    let
+        query : String
+        query =
+            String.toLower config.search
+
+        matches : PickerEntry -> Bool
+        matches entry =
+            String.isEmpty query
+                || String.contains query (String.toLower entry.name)
+                || String.contains query (String.toLower entry.label)
+
+        entries : List PickerEntry
+        entries =
+            config.options
+                |> List.map (pickerEntry config.reference)
+                |> List.filter matches
+
+        categorized : List ( String, List PickerEntry )
+        categorized =
+            Shared.componentCategories
+                |> List.filterMap
+                    (\( category, _ ) ->
+                        case List.filter (\e -> e.category == Just category) entries of
+                            [] ->
+                                Nothing
+
+                            es ->
+                                Just ( category, es )
+                    )
+
+        other : List PickerEntry
+        other =
+            List.filter (\e -> e.category == Nothing) entries
+
+        sections : List ( String, List PickerEntry )
+        sections =
+            categorized
+                ++ (if List.isEmpty other then
+                        []
+
+                    else
+                        [ ( "Other", other ) ]
+                   )
+    in
+    TypedHtml.div
+        [ TA.class "compose-component-picker absolute z-10 mt-1 w-64 max-h-80 overflow-y-auto rounded-md-corner-medium border border-outline-variant bg-surface-container p-2 flex flex-col gap-2 shadow-md-level2"
+        ]
+        (TypedHtml.input
+            [ TA.value config.search
+            , TA.placeholder "Search components"
+            , TE.onInput config.onSearch
+            , TA.class "w-full rounded-md-corner-small border border-outline-variant px-2 py-1 text-body-md"
+            ]
+            []
+            :: (if List.isEmpty sections then
+                    [ TypedHtml.p [ TA.class "text-body-sm text-on-surface-variant px-2" ] [ TypedHtml.text "No matches" ] ]
+
+                else
+                    List.map (pickerSection config.onPick) sections
+               )
         )
+
+
+{-| One option in the picker: its raw `componentOptions` name (what
+`onPick` fires), its display label, and its canonical nav category (`Nothing`
+⇒ the trailing "Other" group).
+-}
+type alias PickerEntry =
+    { name : String
+    , label : String
+    , category : Maybe String
+    }
+
+
+{-| An option's display label and canonical nav category, from
+`data/reference.json` by lowercased slug — but only when BOTH the entry
+exists and its category is one of `Shared.componentCategories`' known set. A
+component with no reference entry, an empty category, or an unrecognized one
+gets `category = Nothing` (the picker's trailing "Other" group) and its own
+raw name as the label: `reference.json` falls its OWN `label` back to a raw
+qualified module name for these (e.g. `"Component.Accordion"`), which reads
+worse as a picker item than the plain `"accordion"` `componentOptions`
+already gives us.
+-}
+pickerEntry : Dict String Doc.Data.Component -> String -> PickerEntry
+pickerEntry reference name =
+    case Dict.get (String.toLower name) reference of
+        Just component ->
+            if List.member component.category (List.map Tuple.first Shared.componentCategories) then
+                { name = name, label = component.label, category = Just component.category }
+
+            else
+                { name = name, label = name, category = Nothing }
+
+        Nothing ->
+            { name = name, label = name, category = Nothing }
+
+
+pickerSection : (String -> Msg) -> ( String, List PickerEntry ) -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+pickerSection onPick ( category, entries ) =
+    TypedHtml.div [ TA.class "flex flex-col gap-1" ]
+        (groupLabel category :: List.map (pickerItem onPick) entries)
+
+
+pickerItem : (String -> Msg) -> PickerEntry -> Element (TypedHtml.Button.Is s) admittedBy Msg
+pickerItem onPick entry =
+    TypedHtml.button
+        [ TA.class "text-left w-full rounded-md-corner-small px-2 py-1 text-body-md hover:bg-surface-container-high"
+        , TE.onClick (onPick entry.name)
+        ]
+        [ TypedHtml.text entry.label ]
 
 
 {-| The real examples for component `name` (`data/examples.json`, keyed by
@@ -604,27 +788,6 @@ examplesFor usage name =
                                 Nothing
                         )
             )
-
-
-{-| One extra change-component menu item per real example of `name`, alongside
-the plain option `componentMenuElement` already adds — never replacing it.
-Each fires `LoadExample`: `SetComponent path name` (become the target
-component, pruned like any other swap), then the parsed example's own message
-batch (`FromHtml.toMsgs`) to fill it in.
--}
-exampleMenuItemsForChangeComponent : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> List (Element (M3e.Component.MenuItem.Is s) admittedBy Msg)
-exampleMenuItemsForChangeComponent usage path name =
-    examplesFor usage name
-        |> List.map
-            (\( example, exampleNode ) ->
-                exampleMenuItemView example.title
-                    (LoadExample (Cem.Compose.SetComponent path name :: FromHtml.toMsgs path exampleNode))
-            )
-
-
-componentMenuId : Cem.Compose.Path -> String
-componentMenuId path =
-    "compose-component-menu-" ++ pathId path
 
 
 {-| Every attribute control is an extra-small `M3e.button`, never a chip
@@ -1059,14 +1222,14 @@ exampleMenuItemView label msg =
 reorder-prefixed labeled `M3e.formField` for `ChildText`/`ChildIcon` whose
 built-in `suffix` slot carries the delete control.
 -}
-childCards : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Msg)
-childCards usage path node model =
+childCards : MenuCtx -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Msg)
+childCards ctx path node model =
     Cem.Compose.slotsOf node
         |> List.concatMap
             (\( slotName, children ) ->
                 children
                     |> List.indexedMap
-                        (\i child -> childRow usage path slotName i child model)
+                        (\i child -> childRow ctx path slotName i child model)
             )
 
 
@@ -1074,12 +1237,12 @@ childCards usage path node model =
 `ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
 `M3e.mapMsg ComposeMsg` at this boundary.
 -}
-childRow : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-childRow usage path slotName index child model =
+childRow : MenuCtx -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+childRow ctx path slotName index child model =
     case child of
         Cem.Compose.ChildNode inner ->
             TypedHtml.div []
-                [ viewNode usage (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
+                [ viewNode ctx (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
 
         Cem.Compose.ChildText text ->
             M3e.mapMsg ComposeMsg (childFieldRow "Text" text path slotName index model.compose)

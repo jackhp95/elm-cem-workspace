@@ -97,10 +97,14 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
   await page.goto("/components/compose");
 
   // The root starts as "list". The tag name is an m3e-heading; editing is a
-  // separate "Change component" icon button (`.first()` = the root's). Its menu
-  // offers every known component (the root has no parent slot to constrain it).
+  // separate "Change component" icon button (`.first()` = the root's) that
+  // opens the grouped/searchable picker panel (M-IA2a) — not an `m3e-menu`.
+  // It offers every known component (the root has no parent slot to
+  // constrain it); "accordion" has no reference category, so it's a plain
+  // button labeled with its raw name in the picker's "Other" group.
   await page.getByRole("button", { name: "Change component" }).first().click();
-  await page.getByRole("menuitem", { name: "accordion", exact: true }).click();
+  const picker = page.locator(".compose-component-picker");
+  await picker.getByRole("button", { name: "accordion", exact: true }).click();
 
   // The live preview: the root element's own tag changed.
   await expect(page.locator("m3e-list")).toHaveCount(0);
@@ -110,33 +114,77 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
   await expect(page.locator(".cf-root").first()).toContainText("M3e.Html.accordion");
 });
 
+test("the change-component picker is grouped, searchable, and offers no example items (M-IA2a)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  await page.getByRole("button", { name: "Change component" }).first().click();
+  const picker = page.locator(".compose-component-picker");
+  await expect(picker).toBeVisible();
+
+  // (a) Real component types only — no example titles mixed in. The plain
+  // appBar option exists (labeled with its editorial name, "App Bar" — it
+  // has a reference category, unlike "accordion" below); a real example
+  // titled "Anatomy" does NOT — G-Ex2's examples stayed on the add-child
+  // menu, never this one (§3.1).
+  await expect(picker.getByRole("button", { name: "App Bar", exact: true })).toBeVisible();
+  await expect(picker.getByText("Anatomy")).toHaveCount(0);
+  await expect(picker.locator(".compose-example-item")).toHaveCount(0);
+
+  // Grouped by nav category: "App Bar" (category "Navigation") sits under a
+  // visible "Navigation" caption; "accordion" (no reference category) sits
+  // under the trailing "Other" group.
+  await expect(picker.getByText("Navigation", { exact: true })).toBeVisible();
+  await expect(picker.getByText("Other", { exact: true })).toBeVisible();
+  await expect(picker.getByRole("button", { name: "accordion", exact: true })).toBeVisible();
+
+  const before = await picker.getByRole("button").count();
+
+  // (b) Typing a query narrows the list — "accordion" is a unique-enough
+  // substring that only it should remain.
+  await picker.getByPlaceholder("Search components").fill("accordion");
+  await expect(picker.getByRole("button")).toHaveCount(1);
+  await expect(picker.getByRole("button", { name: "accordion", exact: true })).toBeVisible();
+
+  const after = await picker.getByRole("button").count();
+  expect(after).toBeLessThan(before);
+});
+
 test("loading a real example (G-Ex2) fills the node with its actual content", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // The root starts as "list"; its change-component menu offers every known
-  // component (no parent slot to constrain it), each with an extra
-  // `.compose-example-item` per real example that component has in
-  // data/examples.json. Many components share an example titled "Anatomy",
-  // so scope to the one immediately following the exact "appBar" plain
-  // option — its own sibling example item, not some other component's.
-  await page.getByRole("button", { name: "Change component" }).first().click();
-  const appBarAnatomy = page.locator(
-    'm3e-menu:visible m3e-menu-item:text-is("appBar") + m3e-menu-item.compose-example-item'
-  );
-  await expect(appBarAnatomy).toHaveText("Anatomy");
-  await appBarAnatomy.click();
+  // Add a fresh listItem, then open ITS "trailing" slot menu — one of the
+  // five components it affords is "heading", which (via data/examples.json)
+  // has a real "Typescale variants and sizes" example (root
+  // `<m3e-heading variant="display" size="large">Display Large</m3e-heading>`),
+  // offered as an extra `.compose-example-item` alongside the plain
+  // "heading" option. (M-IA2a removed examples from the CHANGE-COMPONENT
+  // menu only — see the picker test above; the add-child menu keeps them.)
+  // ("avatar", also offered here, is NOT usable for this: its Fact declares
+  // no slots at all, so it can never receive slot content through
+  // `Cem.Compose` regardless of FromHtml — a real, pre-existing modeling
+  // limit, not something this test should paper over.)
+  await page.getByRole("button", { name: "unnamed" }).first().click();
+  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.getByRole("button", { name: "trailing" }).last().click();
 
-  // The live preview: a real m3e-app-bar, carrying the "Anatomy" example's
-  // ACTUAL recovered content — its leading/trailing m3e-icon-buttons' own
-  // nested m3e-icons and the trailing button's "tonal" variant attribute.
-  // (The example's title/subtitle <span>s have no matching Fact and are
-  // dropped by Compose.FromHtml's parser — by design, not asserted here.)
-  await expect(page.locator("main m3e-app-bar")).toHaveCount(1);
-  await expect(page.locator("m3e-app-bar m3e-icon-button m3e-icon[name='arrow_back']")).toHaveCount(1);
-  await expect(page.locator("m3e-app-bar m3e-icon-button[variant='tonal'] m3e-icon[name='bookmark']")).toHaveCount(1);
+  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
+  const headingExample = trailingMenu.locator(
+    'm3e-menu-item:text-is("heading") + m3e-menu-item.compose-example-item'
+  );
+  await expect(headingExample).toHaveText("Typescale variants and sizes");
+  await headingExample.click();
+
+  // The live preview: a real m3e-heading in the trailing slot, carrying the
+  // example's ACTUAL recovered content and attributes.
+  const heading = page.locator("m3e-list-item m3e-heading");
+  await expect(heading).toContainText("Display Large");
+  await expect(heading).toHaveAttribute("variant", "display");
+  await expect(heading).toHaveAttribute("size", "large");
 
   // The generated-code snippet reflects the same recovered content.
-  await expect(page.locator(".cf-root").first()).toContainText("arrow_back");
+  await expect(page.locator(".cf-root").first()).toContainText("Display Large");
 });
 
 test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
@@ -151,11 +199,13 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
   // listOption — never anything list.unnamed doesn't name, and never the
-  // current component ("listItem") itself. Only the opened menu is visible.
-  // `.compose-example-item` items (real-example options, G-Ex2) are excluded
-  // — see the note on the slot-menu test above.
-  await expect(page.locator("m3e-menu:visible m3e-menu-item:not(.compose-example-item)")).toHaveText([
-    "divider",
+  // current component ("listItem") itself. "divider" has a reference
+  // category ("Containment"), so it renders under that group with its
+  // editorial label ("Divider"); the other three have none, so they land in
+  // the trailing "Other" group under their raw names.
+  const picker = page.locator(".compose-component-picker");
+  await expect(picker.getByRole("button")).toHaveText([
+    "Divider",
     "expandableListItem",
     "listAction",
     "listOption",
