@@ -1,16 +1,25 @@
 # elm-cem-workspace
 
-An empty monorepo shell that hosts both a pnpm JS graph and an Elm `elm.json`
-graph side by side. Nothing is migrated in yet — this repo currently holds
-only the skeleton plus a living probe that proves the layout works end to
-end (JS workspace tooling + Elm compiler, both operating from the same
-`packages/` tree).
+The consolidated home for the **elm-cem codegen family** — the forge that turns a
+component library's Custom Elements Manifest (CEM) into typed Elm packages, Figma
+Code Connect, Tailwind utilities, and agent skills, and keeps them in sync as the
+library changes.
+
+**Start here:** [`VISION.md`](VISION.md) — what this is and where it's headed. ·
+Live status: [`GAUNTLET-LEDGER.md`](GAUNTLET-LEDGER.md). · Phase-0 design:
+[`docs/superpowers/specs/2026-08-12-elm-cem-workspace-spine-design.md`](docs/superpowers/specs/2026-08-12-elm-cem-workspace-spine-design.md).
+
+The workspace hosts a pnpm JS graph and an Elm `elm.json` graph side by side. The
+family packages live under `packages/` (elm-cem, elm-m3e, cem-figma-connect, m3e-okf,
+tailwind-m3e-web, elm-cem-compose, and the shared substrate), with a root task runner
+and gate that operate over both graphs. The `packages/_probe/` pair is the living,
+executable test of the coexistence convention below.
 
 ## Layout
 
 ```
 packages/
-  <name>/                  one directory per (future) absorbed repo,
+  <name>/                  one directory per absorbed package,
                             internal structure preserved verbatim
 tools/
   tasks.mjs                enumerates the whole family graph (JS + Elm)
@@ -21,7 +30,7 @@ elm-tooling.json             pins the Elm toolchain at the workspace root
 
 ## The convention
 
-1. **`packages/<name>/`, one directory per (future) absorbed repo**,
+1. **`packages/<name>/`, one directory per absorbed package**,
    internal structure preserved verbatim. A package dir may host both
    ecosystems at once.
 2. **pnpm owns the JS graph.** `pnpm-workspace.yaml` globs `packages/*` and
