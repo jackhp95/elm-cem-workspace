@@ -2468,12 +2468,17 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
 Took over at HEAD `9080da9` (post compose-poc merge). Two autonomous tasks (gate-guarded, revertible)
 and three PLAN-ONLY tasks. NOTHING published/pushed/tagged/branched.
 
-- **D-061 (housekeeping — orphaned diff3 conflict marker removed).** `GAUNTLET-LEDGER.md:1712` carried a
+> **ID-collision fix (post-merge):** this parallel session originally used D-061/D-062, which
+> collided with the concurrent M-IA effort's compose-poc chain (its D-061 milestone plan / D-062
+> M-IA2 split, merged at `0e7bceb`). This session's two entries are renumbered to **D-064/D-065**;
+> the M-IA chain keeps D-061/D-062. Next free across both chains is now **D-066**.
+
+- **D-064 (housekeeping — orphaned diff3 conflict marker removed).** `GAUNTLET-LEDGER.md:1712` carried a
   lone `||||||| b3d20ed` (a diff3 base marker orphaned by the compose-poc merge — no matching
   `<<<<<<<`/`=======`/`>>>>>>>`). Removed that one line. Verified: `git grep -nE '^(<<<<<<< |\|\|\|\|\|\|\| |>>>>>>> )'`
   returns nothing; broader `^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>)` scan also clean. Doc-only edit; no product code.
-- **D-062 (Compose §1.3 "pressed ≠ applied" ROOT-CAUSED — DISPLAY-ONLY, not a model bug; fix proposed, NOT
-  applied).** Full finding: `docs/superpowers/spikes/2026-08-15-compose-1.3-diagnosis.md`. Reproduced the audit's
+- **D-065 (Compose §1.3 "pressed ≠ applied" ROOT-CAUSED — DISPLAY-ONLY, not a model bug; fix subsequently
+  LANDED via the concurrent M-IA effort).** Full finding: `docs/superpowers/spikes/2026-08-15-compose-1.3-diagnosis.md`. Reproduced the audit's
   exact §1.3 scenarios against the real browser: `node scripts/browser-guard.mjs compose.spec.ts` = **11/11 pass**
   at HEAD — including test `:65` (the literal §1.3 action #1: `variant → segmented` updates `m3e-list[variant=
   segmented]` AND the snippet), `:183` (AddTextChild → "lorem ipsum" renders), `:29` (AddChild → real element),
@@ -2484,7 +2489,12 @@ and three PLAN-ONLY tasks. NOTHING published/pushed/tagged/branched.
   `isSet` stays `False`, so Elm's vdom diff (False→False) emits no patch and never resets the DOM `selected` — the
   chip lies. **Proposed fix (consumer route only, NOT the published core):** drop `toggle True` from the three chip
   builders in `app/Route/Components/Compose.elm` so `selected` is purely model-derived. Scoped as Part 1 of the IA
-  plan. Per the brief, reported for human sign-off; NOT applied. `packages/elm-cem-compose` untouched.
+  plan. Per the brief, reported for human sign-off; NOT applied by this session. `packages/elm-cem-compose` untouched.
+  **UPDATE (post-merge):** the human directed folding the fix into the in-flight M-IA effort, which then landed
+  it at merge `0e7bceb` (M-IA1) — `M3e.Attributes.toggle True` removed from all three chip builders
+  (`grep -c` = 0) plus two §1.3 lock-in Playwright tests added. That effort framed the cause as a "dev-server
+  artifact"; this diagnosis (m3e-button `toggle` self-select, display-only) converges on the same non-bug verdict
+  and the same fix. Ready regression test preserved in the finding doc §6.
 - **PLAN C (Compose IA rework — Gauntlet):** `docs/superpowers/plans/2026-08-15-compose-ia-rework-gauntlet.md`.
   6 parts in the audit's priority order (§3.3 pressed-fix → §3.1 menu split → §3.2 attr/slot separation →
   §3.4 indentation → §3.5/§3.6 preview frame + explainer), objective gates (build:site, check:review,
@@ -2506,9 +2516,11 @@ and three PLAN-ONLY tasks. NOTHING published/pushed/tagged/branched.
   *deliberately* (re-tracked via a nested `.gitignore` un-ignore). Untracking 375 build-output files is a
   separate, clearly-scoped consideration with a real tradeoff (Netlify/deploy expectations) — recommended for a
   future dedicated decision, NOT unilaterally changed here. Left as-is.
-- `session 2026-08-15: pass — conflict marker gone (git grep clean); §1.3 root-caused display-only (compose
-  spec 11/11); 3 plans written; gate-all re-run GREEN; committed to main. No core edit, no publish/push/tag/branch.`
-  Next free IDs: **D-063**, **R-028**.
+- `session 2026-08-15: pass — conflict marker gone (git grep clean, D-064); §1.3 root-caused display-only
+  (compose spec 11/11, D-065) and subsequently landed by the concurrent M-IA effort (0e7bceb); 3 plans written
+  (IA rework / publish runbook / upstream); gate-all GREEN; committed to main. Publish + upstream kept PLAN-ONLY
+  per the human. No core edit, no publish/push/tag/branch.`
+  Next free IDs: **D-066**, **R-028**.
 
 ---
 

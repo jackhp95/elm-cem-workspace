@@ -84,8 +84,17 @@ and fix.
   3. all existing `compose.spec.ts` stay green (menus still open on these buttons).
 - **Escalation guard:** if removing `toggle` breaks `menuTrigger` popover opening, STOP and report —
   do not reach for a core change; the fix is a consumer-side host/markup adjustment.
-- **Human sign-off:** required before dispatch (per the brief — even a consumer-route fix is reported
-  first). This part is pre-approved to dispatch only once the human okays the diagnosis's proposed fix.
+- **Human sign-off:** given 2026-08-15 — the fix is approved and **folded into this IA effort** as
+  Part 1 (do not apply it standalone). The ready-made regression test lives in
+  `../spikes/2026-08-15-compose-1.3-diagnosis.md` §6; drop it into `compose.spec.ts`.
+
+> **Status (2026-08-15): Parts 1 and 2a have LANDED** via the concurrent M-IA effort (merge
+> `0e7bceb`): M-IA1 removed the three `toggle True`s + added §1.3 lock-in tests; M-IA2a built the
+> grouped/searchable change-component picker (`.compose-component-picker`, real types only, no
+> example pollution). **Remaining open parts for this plan: 2b (add-child menu primitives-first +
+> qualified examples), 2c (§1.2 identical-menu investigation), 3 (attr/slot separation + empty/filled
+> chip states), 4 (indentation), 5–6 (preview frame + root explainer).** Reconcile those against the
+> landed picker markup before dispatch.
 
 ### Part 2 — §3.1 split "change component" from "add child" (highest IA leverage)
 
