@@ -1957,3 +1957,23 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   Small") IS real and confirmed → M-IA2. **M-IA1 = write the §3.3/§1.9 locking Playwright tests (chip pressed +
   preview HTML + snippet + computed body-visibility all move together) — NO model fix needed (proven works); if a
   test surfaces a real production failure, fix the actual bug, don't paper over.** Next free IDs: **D-062**, **R-023**.
+
+- **M-IA1: pass** (Playwright 14/14; critic clean; builder claude/sonnet). Commit `7ff3710` (spec only, +64/-0,
+  purely additive, NO source change). Three correctness-lock tests on the production build: (1) attr-select →
+  variant button `variant=filled`+`"variant: segmented"` AND `m3e-list variant=segmented` AND snippet
+  `M3e.Attributes.variant`+`M3e.Values.segmented` — all three together (anti-§1.3); (2) add Text to overline →
+  preview `[slot='overline']` shows content AND snippet `TypedHtml.Attributes.slot "overline"`; (3) collapse →
+  the card's "Slots" caption `toBeHidden()` then Expand → `toBeVisible()` (computed visibility, not chevron).
+  Fresh Opus critic confirmed all three assert the full guarantee, no weakening, no route patch (consistent with
+  the D-061 dev-artifact root cause) → PASS. **Correctness gate satisfied; §1.3/§1.9 resolved as dev-artifacts +
+  locked.**
+
+- **D-062 (M-IA2 split — manager decomposition).** §3.1 (the highest-leverage fix) splits cleanly into two
+  independently-gateable parts that share a reusable grouped+searchable component picker:
+  **M-IA2a** = the CHANGE-COMPONENT menu → only real component types (REMOVE the G-Ex2 example options from THIS
+  menu), grouped by the Components-sidebar nav categories, with a search box. **M-IA2b** = the ADD-CHILD slot menu
+  → lead with exactly `Text`, `Icon`, `Nest a component…` (the last reuses M-IA2a's picker, constrained to the
+  slot's afforded components), then a distinctly-headed "Load an example" section (only when examples exist)
+  with labels QUALIFIED by source component (fixes the dup "Label Small"). Reuse Doc.Data reference.json (each
+  entry has category+label+slug; already decoded in Doc.Data) for grouping/labels, and allUsage/FromHtml for
+  examples. M-IA2a first (builds the picker). Next free IDs: **D-063**, **R-023**.
