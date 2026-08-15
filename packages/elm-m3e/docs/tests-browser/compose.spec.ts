@@ -42,7 +42,10 @@ test("a slot menu offers every valid kind, not just text", async ({ page }) => {
   const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
   await expect(trailingMenu).toBeVisible();
 
-  const items = trailingMenu.getByRole("menuitem");
+  // `.compose-example-item` items (one per real example a component has) are
+  // excluded here — this asserts the plain option set, not the real-example
+  // options G-Ex2 adds alongside them (see the "real example" test below).
+  const items = trailingMenu.locator("m3e-menu-item:not(.compose-example-item)");
   await expect(items).toHaveText([
     "Text",
     "Icon",
@@ -107,6 +110,35 @@ test("changing a node's component (edit the tag) rewrites the tree", async ({ pa
   await expect(page.locator(".cf-root").first()).toContainText("M3e.Html.accordion");
 });
 
+test("loading a real example (G-Ex2) fills the node with its actual content", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // The root starts as "list"; its change-component menu offers every known
+  // component (no parent slot to constrain it), each with an extra
+  // `.compose-example-item` per real example that component has in
+  // data/examples.json. Many components share an example titled "Anatomy",
+  // so scope to the one immediately following the exact "appBar" plain
+  // option — its own sibling example item, not some other component's.
+  await page.getByRole("button", { name: "Change component" }).first().click();
+  const appBarAnatomy = page.locator(
+    'm3e-menu:visible m3e-menu-item:text-is("appBar") + m3e-menu-item.compose-example-item'
+  );
+  await expect(appBarAnatomy).toHaveText("Anatomy");
+  await appBarAnatomy.click();
+
+  // The live preview: a real m3e-app-bar, carrying the "Anatomy" example's
+  // ACTUAL recovered content — its leading/trailing m3e-icon-buttons' own
+  // nested m3e-icons and the trailing button's "tonal" variant attribute.
+  // (The example's title/subtitle <span>s have no matching Fact and are
+  // dropped by Compose.FromHtml's parser — by design, not asserted here.)
+  await expect(page.locator("main m3e-app-bar")).toHaveCount(1);
+  await expect(page.locator("m3e-app-bar m3e-icon-button m3e-icon[name='arrow_back']")).toHaveCount(1);
+  await expect(page.locator("m3e-app-bar m3e-icon-button[variant='tonal'] m3e-icon[name='bookmark']")).toHaveCount(1);
+
+  // The generated-code snippet reflects the same recovered content.
+  await expect(page.locator(".cf-root").first()).toContainText("arrow_back");
+});
+
 test("a nested node's edit-tag menu only offers what its parent slot accepts", async ({ page }) => {
   await page.goto("/components/compose");
 
@@ -120,7 +152,9 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
   // listOption — never anything list.unnamed doesn't name, and never the
   // current component ("listItem") itself. Only the opened menu is visible.
-  await expect(page.getByRole("menuitem")).toHaveText([
+  // `.compose-example-item` items (real-example options, G-Ex2) are excluded
+  // — see the note on the slot-menu test above.
+  await expect(page.locator("m3e-menu:visible m3e-menu-item:not(.compose-example-item)")).toHaveText([
     "divider",
     "expandableListItem",
     "listAction",

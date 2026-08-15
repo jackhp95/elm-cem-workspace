@@ -17,13 +17,18 @@ when open, that node's menu.
 
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
 import Cem.Compose
 import Compose.Attrs as Attrs
 import Compose.Codegen as Codegen
+import Compose.FromHtml as FromHtml
 import Compose.Render as Render
+import Dict exposing (Dict)
 import Doc
+import Doc.Data
+import Doc.Usage
 import Effect exposing (Effect)
+import FatalError exposing (FatalError)
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
@@ -63,14 +68,20 @@ type Msg
     = ComposeMsg Cem.Compose.Msg
     | ToggleCollapse String
     | TogglePrefill
+    | LoadExample (List Cem.Compose.Msg)
 
 
 type alias RouteParams =
     {}
 
 
+{-| The real per-component examples from `data/examples.json`, keyed by slug
+(lowercase component name) — the same shape `Route.Components.Name_` loads via
+`Doc.Data.allUsage`. The menus use these to offer "fill me with a real
+example" options alongside the plain/empty ones.
+-}
 type alias Data =
-    {}
+    { usage : Dict String (List Doc.Usage.UsageExample) }
 
 
 type alias ActionData =
@@ -79,13 +90,18 @@ type alias ActionData =
 
 route : StatefulRoute RouteParams Data ActionData Model Msg
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildWithLocalState
             { view = view
             , init = init
             , update = update
             , subscriptions = subscriptions
             }
+
+
+data : BackendTask FatalError Data
+data =
+    Doc.Data.allUsage |> BackendTask.map Data
 
 
 {-| Root component `"list"` is a deliberate starting choice: `list.unnamed`
@@ -147,6 +163,16 @@ update _ _ msg model =
 
         TogglePrefill ->
             ( { model | prefill = not model.prefill }, Effect.none )
+
+        LoadExample msgs ->
+            -- Deliberately `Cem.Compose.update`, not `applyCompose model.prefill`: an
+            -- example already carries its own real content, so running it through the
+            -- placeholder-seeding nicety would plant an extra "lorem ipsum" text child
+            -- in the freshly-added node's own first text slot BEFORE these messages
+            -- fill it in — harmless on a non-multi slot (the seed gets replaced), but
+            -- on a multi slot it would land as an unwanted extra sibling AND shift
+            -- every subsequent message's hard-coded index off by one.
+            ( { model | compose = List.foldl Cem.Compose.update model.compose msgs }, Effect.none )
 
 
 {-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety governed by the
@@ -236,23 +262,25 @@ head _ =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> Model -> View (PagesMsg Msg)
-view _ _ model =
+view app _ model =
     View.fromElement "Compose"
-        (M3e.mapMsg PagesMsg.fromMsg (Doc.pane [ screen model ]))
+        (M3e.mapMsg PagesMsg.fromMsg (Doc.pane [ screen app.data.usage model ]))
 
 
 {-| A heading, the panel bar, the live preview, the recursive editor, and the
 generated-code snippet. Only the panel bar and the editor emit real messages;
 the heading/preview/snippet are static (msg-polymorphic), so they sit in the
-same `Msg`-typed tree without wrapping.
+same `Msg`-typed tree without wrapping. `usage` (this component's real
+examples, keyed by lowercase slug) threads down into the editor so its
+menus can offer "fill me with a real example" options.
 -}
-screen : Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-screen model =
+screen : Dict String (List Doc.Usage.UsageExample) -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+screen usage model =
     TypedHtml.div [ TA.class "space-y-4" ]
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
         , panelBar model
         , M3e.Unsafe.fromHtml (Render.renderNode model.compose.root)
-        , viewNode [] model.compose.root model
+        , viewNode usage [] model.compose.root model
         , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
         ]
 
@@ -286,8 +314,8 @@ groups (mixing "set an attribute" and "add a child" controls in one row
 reads as one affordance when they are two), that node's menu (if open), and
 a recursive card per child node.
 -}
-viewNode : Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
-viewNode path node model =
+viewNode : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
+viewNode usage path node model =
     let
         collapsed : Bool
         collapsed =
@@ -298,21 +326,23 @@ viewNode path node model =
         [ TypedHtml.div [ TA.class "flex flex-col gap-3 p-3" ]
             (TypedHtml.div [ TA.class "flex items-center gap-2" ]
                 [ collapseChevron path collapsed
-                , M3e.mapMsg ComposeMsg (headerRow path node model.compose)
+                , headerRow usage path node model.compose
                 ]
                 :: (if collapsed then
                         []
 
                     else
-                        [ M3e.mapMsg ComposeMsg
-                            (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                                [ attrGroup path model.compose
-                                , slotGroup path model.compose
-                                , freeTextMenuFor path model.compose
-                                ]
-                            )
+                        [ TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                            [ M3e.mapMsg ComposeMsg
+                                (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                                    [ attrGroup path model.compose
+                                    , freeTextMenuFor path model.compose
+                                    ]
+                                )
+                            , slotGroup usage path model.compose
+                            ]
                         , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                            (childCards path node model)
+                            (childCards usage path node model)
                         ]
                    )
             )
@@ -355,21 +385,21 @@ The reorder + delete controls derive the node's sibling position from the last
 `PathStep` of its own path; the root (empty path) has no siblings, so it shows
 only its tag and edit control.
 -}
-headerRow : Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-headerRow path node model =
+headerRow : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+headerRow usage path node model =
     case nodePosition path of
         Nothing ->
             TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
-                [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
-                , editControl path model
+                [ TypedHtml.div [ TA.class "flex-1" ] [ M3e.mapMsg ComposeMsg (tagHeading node) ]
+                , editControl usage path model
                 ]
 
         Just ( parentPath, slotName, index ) ->
             TypedHtml.div [ TA.class "flex items-center gap-2 flex-1" ]
-                [ TypedHtml.div [ TA.class "flex-1" ] [ tagHeading node ]
-                , editControl path model
-                , reorderControls parentPath slotName index model
-                , removeButton (Cem.Compose.RemoveChild parentPath slotName index)
+                [ TypedHtml.div [ TA.class "flex-1" ] [ M3e.mapMsg ComposeMsg (tagHeading node) ]
+                , editControl usage path model
+                , M3e.mapMsg ComposeMsg (reorderControls parentPath slotName index model)
+                , M3e.mapMsg ComposeMsg (removeButton (Cem.Compose.RemoveChild parentPath slotName index))
                 ]
 
 
@@ -485,8 +515,8 @@ never sharing a row with the Attributes group above. Same `flex flex-wrap`
 row + sibling-menus shape as `attrGroup`; each slot's fill-count badge rides
 in its own button's `trailing-icon` slot, so there is no separate badge row.
 -}
-slotGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-slotGroup path model =
+slotGroup : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+slotGroup usage path model =
     case Cem.Compose.slotChips path model of
         [] ->
             TypedHtml.div [] []
@@ -495,7 +525,7 @@ slotGroup path model =
             TypedHtml.div [ TA.class "flex flex-col gap-2" ]
                 (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
                     (groupLabel "Slots" :: List.map (slotButtonElement path model) chips)
-                    :: slotMenusFor path model chips
+                    :: slotMenusFor usage path model chips
                 )
 
 
@@ -513,8 +543,8 @@ An `M3e.iconButton` hosting the `menuTrigger` (its `Content` admits
 root's option list is every known component, so that menu is height-capped and
 scrolls rather than overflowing the page.
 -}
-editControl : Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
-editControl path model =
+editControl : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+editControl usage path model =
     case Cem.Compose.componentOptions path model of
         [] ->
             TypedHtml.div [] []
@@ -526,24 +556,70 @@ editControl path model =
                     [ M3e.menuTrigger [ M3e.Attributes.for (componentMenuId path) ]
                         [ M3e.icon [ TA.name "edit" ] [] ]
                     ]
-                , componentMenuElement path model
+                , componentMenuElement usage path model
                 ]
 
 
 {-| The always-present menu the edit-tag control's `menuTrigger` points at by
-id — one item per `componentOptions` entry, each firing `SetComponent`.
-Capped in height so the root's (potentially long) list scrolls instead of
-overflowing the page.
+id — one plain `SetComponent` item per `componentOptions` entry, PLUS (via
+`exampleMenuItemsForChangeComponent`) one extra item per real example that
+component has, alongside the plain option rather than replacing it. Capped in
+height so the root's (potentially long) list scrolls instead of overflowing
+the page.
 -}
-componentMenuElement : Cem.Compose.Path -> Cem.Compose.Model -> Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg
-componentMenuElement path model =
+componentMenuElement : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> Element (M3e.Component.Menu.Is s) admittedBy Msg
+componentMenuElement usage path model =
     M3e.menu
         [ M3e.Attributes.id (componentMenuId path)
         , M3e.Attributes.class "max-h-64 overflow-y-auto"
         ]
         (Cem.Compose.componentOptions path model
-            |> List.map (\name -> menuItemView name (Cem.Compose.SetComponent path name))
+            |> List.concatMap
+                (\name ->
+                    menuItemViewMsg name (ComposeMsg (Cem.Compose.SetComponent path name))
+                        :: exampleMenuItemsForChangeComponent usage path name
+                )
         )
+
+
+{-| The real examples for component `name` (`data/examples.json`, keyed by
+lowercase slug) whose `html` both parses and is actually rooted at `name` —
+`Compose.FromHtml.parse` already drops anything it can't account for, and a
+parsed root of some OTHER component (a copy/paste mismatch in the example
+data) is skipped here too, never surfaced as a menu item for `name`.
+-}
+examplesFor : Dict String (List Doc.Usage.UsageExample) -> String -> List ( Doc.Usage.UsageExample, FromHtml.ExampleNode )
+examplesFor usage name =
+    Dict.get (String.toLower name) usage
+        |> Maybe.withDefault []
+        |> List.filterMap
+            (\example ->
+                FromHtml.parse { facts = M3e.Review.Facts.facts, attrKinds = Attrs.kinds } example.html
+                    |> Maybe.andThen
+                        (\node ->
+                            if node.component == name then
+                                Just ( example, node )
+
+                            else
+                                Nothing
+                        )
+            )
+
+
+{-| One extra change-component menu item per real example of `name`, alongside
+the plain option `componentMenuElement` already adds — never replacing it.
+Each fires `LoadExample`: `SetComponent path name` (become the target
+component, pruned like any other swap), then the parsed example's own message
+batch (`FromHtml.toMsgs`) to fill it in.
+-}
+exampleMenuItemsForChangeComponent : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> List (Element (M3e.Component.MenuItem.Is s) admittedBy Msg)
+exampleMenuItemsForChangeComponent usage path name =
+    examplesFor usage name
+        |> List.map
+            (\( example, exampleNode ) ->
+                exampleMenuItemView example.title
+                    (LoadExample (Cem.Compose.SetComponent path name :: FromHtml.toMsgs path exampleNode))
+            )
 
 
 componentMenuId : Cem.Compose.Path -> String
@@ -742,7 +818,7 @@ slot holds at least one child; an empty slot shows no badge at all (a `0` badge
 is noise). Returned as a list so it can be `[]` when empty; `trailingIcon`'s
 result type is fully polymorphic, so it slots into the button's content list.
 -}
-slotCountTrailing : Cem.Compose.SlotChipInfo -> List (Element free freeAdmittedBy Cem.Compose.Msg)
+slotCountTrailing : Cem.Compose.SlotChipInfo -> List (Element free freeAdmittedBy msg)
 slotCountTrailing info =
     if info.filled > 0 then
         [ M3e.Component.Button.trailingIcon (slotCountBadge info) ]
@@ -756,7 +832,7 @@ neutral badge. `m3e-badge` has no color/variant attribute and defaults to the
 error color, so its container/text CSS custom properties are overridden to a
 quiet surface pair rather than red.
 -}
-slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy Cem.Compose.Msg
+slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy msg
 slotCountBadge info =
     M3e.badge
         [ M3e.Attributes.style "--m3e-badge-container-color" "var(--md-sys-color-surface-container-highest)"
@@ -777,7 +853,7 @@ the slot is non-empty) in the button's own `trailing-icon` slot. Sits in a
 plain `flex flex-wrap` row, so
 the (when present) menu is built as a sibling by `slotGroup`, not nested here.
 -}
-slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
+slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Msg
 slotButtonElement path model info =
     case Cem.Compose.slotMenuOptions path info.name model of
         [ only ] ->
@@ -791,7 +867,7 @@ slotButtonElement path model info =
                         Value.elevated
                     )
                 , M3e.Attributes.selected (info.filled > 0)
-                , M3e.Events.onClick (msgForOption path info.name only)
+                , M3e.Events.onClick (ComposeMsg (msgForOption path info.name only))
                 ]
                 ([ M3e.icon [ TA.name "add" ] []
                  , M3e.text info.name
@@ -811,7 +887,7 @@ slotButtonElement path model info =
                     )
                 , M3e.Attributes.selected (info.filled > 0)
                 , M3e.Attributes.toggle True
-                , M3e.Events.onClick (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name))
+                , M3e.Events.onClick (ComposeMsg (Cem.Compose.OpenMenu path (Cem.Compose.SlotMenu info.name)))
                 ]
                 (M3e.menuTrigger [ M3e.Attributes.for (slotMenuId path info.name) ]
                     [ M3e.icon [ TA.name "add" ] []
@@ -825,8 +901,8 @@ slotButtonElement path model info =
 row half of the `slotButtonElement` split (a single-option slot fires
 its message directly and has no menu at all).
 -}
-slotMenusFor : Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.SlotChipInfo -> List (Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg)
-slotMenusFor path model chips =
+slotMenusFor : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.SlotChipInfo -> List (Element (M3e.Component.Menu.Is s) admittedBy Msg)
+slotMenusFor usage path model chips =
     chips
         |> List.filterMap
             (\info ->
@@ -835,7 +911,7 @@ slotMenusFor path model chips =
                         Nothing
 
                     _ ->
-                        Just (slotMenuElement path model info.name)
+                        Just (slotMenuElement usage path model info.name)
             )
 
 
@@ -888,26 +964,56 @@ freeTextAttrView path name model =
 
 
 {-| The always-present menu a slot chip's `menuTrigger` points at by id — one
-item per `SlotOption`, built directly from `slotMenuOptions`, not gated on
-`model.openMenu`.
+plain item per `SlotOption`, built directly from `slotMenuOptions` (not gated
+on `model.openMenu`), PLUS — for an `OptionComponent name` — one extra item
+per real example of `name` (`exampleMenuItemsForAddChild`), alongside the
+plain option rather than replacing it.
 -}
-slotMenuElement : Cem.Compose.Path -> Cem.Compose.Model -> String -> Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg
-slotMenuElement path model slotName =
+slotMenuElement : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Model -> String -> Element (M3e.Component.Menu.Is s) admittedBy Msg
+slotMenuElement usage path model slotName =
     M3e.menu [ M3e.Attributes.id (slotMenuId path slotName) ]
         (Cem.Compose.slotMenuOptions path slotName model
-            |> List.map
+            |> List.concatMap
                 (\option ->
                     case option of
                         Cem.Compose.OptionText ->
-                            menuItemView "Text" (Cem.Compose.AddTextChild path slotName)
+                            [ menuItemViewMsg "Text" (ComposeMsg (Cem.Compose.AddTextChild path slotName)) ]
 
                         Cem.Compose.OptionIcon ->
-                            menuItemView "Icon" (Cem.Compose.AddIconChild path slotName)
+                            [ menuItemViewMsg "Icon" (ComposeMsg (Cem.Compose.AddIconChild path slotName)) ]
 
                         Cem.Compose.OptionComponent name ->
-                            menuItemView name (Cem.Compose.AddChild path slotName name)
+                            menuItemViewMsg name (ComposeMsg (Cem.Compose.AddChild path slotName name))
+                                :: exampleMenuItemsForAddChild usage path slotName model name
                 )
         )
+
+
+{-| One extra add-child menu item per real example of `name`, alongside the
+plain option `slotMenuElement` already adds — never replacing it. Fires
+`LoadExample`: `AddChild path slotName name` (create the new child, appended
+at the slot's current fill count), then the parsed example's own message
+batch (`FromHtml.toMsgs`), addressed at that new child's own resulting path
+— `IntoSlot slotName filled`, since an `Add*` only ever appends (or replaces
+at `0` on a non-multi slot, where `filled` is already `0`).
+-}
+exampleMenuItemsForAddChild : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> Cem.Compose.Model -> String -> List (Element (M3e.Component.MenuItem.Is s) admittedBy Msg)
+exampleMenuItemsForAddChild usage path slotName model name =
+    let
+        filled : Int
+        filled =
+            slotChildCount path slotName model
+    in
+    examplesFor usage name
+        |> List.map
+            (\( example, exampleNode ) ->
+                exampleMenuItemView example.title
+                    (LoadExample
+                        (Cem.Compose.AddChild path slotName name
+                            :: FromHtml.toMsgs (path ++ [ Cem.Compose.IntoSlot slotName filled ]) exampleNode
+                        )
+                    )
+            )
 
 
 textInputRow : String -> (String -> Cem.Compose.Msg) -> Element (TypedHtml.Grouping.DivIs s) admittedBy Cem.Compose.Msg
@@ -926,19 +1032,41 @@ menuItemView label msg =
     M3e.menuItem [ M3e.Events.onClick msg ] [ M3e.text label ]
 
 
+{-| `menuItemView`'s route-`Msg` sibling — used where a menu item must fire
+something other than a bare `Cem.Compose.Msg` (a real-example item fires the
+route-level `LoadExample`, not a single core message).
+-}
+menuItemViewMsg : String -> Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Msg
+menuItemViewMsg label msg =
+    M3e.menuItem [ M3e.Events.onClick msg ] [ M3e.text label ]
+
+
+{-| A real-example menu item — same shape as `menuItemViewMsg`, but marked
+with a `compose-example-item` class so it's distinguishable (from tests, and
+from any future styling) from the plain option it sits alongside.
+-}
+exampleMenuItemView : String -> Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Msg
+exampleMenuItemView label msg =
+    M3e.menuItem
+        [ M3e.Attributes.class "compose-example-item"
+        , M3e.Events.onClick msg
+        ]
+        [ M3e.text label ]
+
+
 {-| One row per child across every slot: a recursive card for `ChildNode`
 (whose own header carries its reorder + delete controls), and a
 reorder-prefixed labeled `M3e.formField` for `ChildText`/`ChildIcon` whose
 built-in `suffix` slot carries the delete control.
 -}
-childCards : Cem.Compose.Path -> Cem.Compose.Node -> Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Msg)
-childCards path node model =
+childCards : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> List (Element (TypedHtml.Grouping.DivIs s) admittedBy Msg)
+childCards usage path node model =
     Cem.Compose.slotsOf node
         |> List.concatMap
             (\( slotName, children ) ->
                 children
                     |> List.indexedMap
-                        (\i child -> childRow path slotName i child model)
+                        (\i child -> childRow usage path slotName i child model)
             )
 
 
@@ -946,12 +1074,12 @@ childCards path node model =
 `ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
 `M3e.mapMsg ComposeMsg` at this boundary.
 -}
-childRow : Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
-childRow path slotName index child model =
+childRow : Dict String (List Doc.Usage.UsageExample) -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (TypedHtml.Grouping.DivIs s) admittedBy Msg
+childRow usage path slotName index child model =
     case child of
         Cem.Compose.ChildNode inner ->
             TypedHtml.div []
-                [ viewNode (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
+                [ viewNode usage (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
 
         Cem.Compose.ChildText text ->
             M3e.mapMsg ComposeMsg (childFieldRow "Text" text path slotName index model.compose)
