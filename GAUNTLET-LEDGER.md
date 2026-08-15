@@ -1507,3 +1507,26 @@ claims HOLD, and the previous manager's fundamental Move 2 framing is CORRECT, n
   packages/elm-m3e/packages.json. Bar: node tools/check-m3e-5pkg.mjs (5-pkg shape, fails-now) +
   pnpm --filter elm-m3e run verify:split (per-pkg standalone compile + DAG, 5.2s). Manager measures
   each docs.json under the 768KB cap after pass.`
+
+- `M8.b: round 1 (loop 348f0002, worker claude-sonnet-5, verifier claude-opus-4-8) — HUNG (R-011:
+  running, no update ~1h47m, past max-time). Manager stopped it and verified substance: the worker
+  got the 5-package SHAPE right (check-m3e-5pkg OK) but verify:split FAILED. Two issues found: (1)
+  worker wrongly added exposeInternal:[M3e.Internal.Types.] to components -> IMPLICIT EXPOSING
+  (removed); (2) the REAL wall.`
+
+- **R-025 (M8.b — the Build-separate split needs a GENERATOR change; config alone cannot do it).**
+  `M3e.Build.<X>` imports `M3e.Internal.Types.<X>` (130 modules) — the shared phantom-type modules
+  that BOTH `M3e.Component.<X>` and `M3e.Build.<X>` depend on. When Build lives IN components
+  (main's 4-package shape) this is an intra-package import. Splitting Build into its own package
+  makes it a CROSS-package import of an UNEXPOSED module: `M3e.Internal.Types.*` are emitted with
+  `exposing (..)`, which a published package cannot expose (elm: IMPLICIT EXPOSING). `exposeInternal`
+  does not help — unlike `M3e.Forge.Internal`, which is emitted with EXPLICIT exposing and therefore
+  CAN be exposeInternal'd (that is how html shares the forge). **This is why upstream main keeps
+  Build in components.** Achieving the human's Build-separate split requires an `elm-cem` codegen
+  change, one of: (a) emit `M3e.Internal.Types.*` with EXPLICIT exposing + exposeInternal them in
+  components (makes the phantom-type modules public API — adds docs bytes, cascades to Face A +
+  elm-typed-html); or (b) emit `M3e.Build.<X>` to import the phantom types from the EXPOSED
+  `M3e.Component.<X>` surface instead of `M3e.Internal.Types.<X>` (keeps internals unexposed; needs
+  Component.* to expose every type Build needs). Either is real emitter work that cascades. The
+  alternative is to keep Build merged in components (main's shape). This is a genuine
+  architecture/product decision — surfaced to the human.
