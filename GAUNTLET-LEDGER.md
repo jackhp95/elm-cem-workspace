@@ -1891,3 +1891,13 @@ reference-bar gates, ledger entries. Decomposed into 2 parts.
   - **Part split:** G-Ex1 = `Compose.FromHtml` parser (html→intermediate ExampleNode) + `toMsgs` + worker-test.
     G-Ex2 = menu wiring (example options in the add/change menu) + route `data`=allUsage + apply-on-pick + Playwright.
   Next free IDs: **D-060**, **R-023**.
+
+- **G-Ex1: pass** (worker-test 4/4 incl. toMsgs→update replay; check:review green; critic clean; builder
+  claude/sonnet). Commit `0ef9234` (4 files: FromHtml.elm + FromHtmlTest.elm new, elm.json +hecrj/html-parser
+  2.4.0, copy-fidelity AUTHORIZED_EXTRA). `Compose.FromHtml` (brand-agnostic — params facts+attrKinds, imports
+  only Cem.Compose/Cem.Facts/Dict/Html.Parser): `parse : {facts,attrKinds} -> String -> Maybe ExampleNode`
+  (tag→component = inverse tagFor ∩ facts, drop unknowns; m3e-icon→ChildIcon(name); text→ChildText; slot=
+  placement; attrs via enums/attrKinds, drop unknown) + `toMsgs : Path -> ExampleNode -> List Cem.Compose.Msg`
+  (public Msgs only, no core change). Fresh Opus critic verified the 3 embedded example strings are BYTE-IDENTICAL
+  to examples.json, assertions genuine (enum→AttrEnum, non-classified attr dropped, slot placement, child kinds),
+  and the toMsgs replay folds through update + asserts via accessors → PASS. Next free IDs: **D-060**, **R-023**.
