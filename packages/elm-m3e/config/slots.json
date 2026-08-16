@@ -24,6 +24,332 @@
       }
     }
   },
+  "_families": {
+    "lib": "M3e",
+    "namespace": "Family",
+    "package": {
+      "dir": "elm-m3e-families",
+      "name": "jackhp95/elm-m3e-families",
+      "summary": "Family-grouped nested module organization for elm-m3e components.",
+      "version": "1.0.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-core": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-components": "1.0.0 <= v < 2.0.0"
+      }
+    },
+    "families": {
+      "NavMenu": {
+        "root": "NavMenu",
+        "members": [
+          {
+            "component": "NavMenuItem",
+            "path": "Item"
+          },
+          {
+            "component": "NavMenuItemGroup",
+            "path": "ItemGroup"
+          }
+        ]
+      },
+      "NavRail": {
+        "root": "NavRail",
+        "members": [
+          {
+            "component": "NavRailToggle",
+            "path": "Toggle"
+          }
+        ]
+      },
+      "DrawerContainer": {
+        "root": "DrawerContainer",
+        "members": [
+          {
+            "component": "DrawerToggle",
+            "path": "Toggle"
+          }
+        ]
+      },
+      "Menu": {
+        "root": "Menu",
+        "members": [
+          {
+            "component": "MenuItem",
+            "path": "Item"
+          },
+          {
+            "component": "MenuItemCheckbox",
+            "path": "ItemCheckbox"
+          },
+          {
+            "component": "MenuItemGroup",
+            "path": "ItemGroup"
+          },
+          {
+            "component": "MenuItemRadio",
+            "path": "ItemRadio"
+          },
+          {
+            "component": "MenuTrigger",
+            "path": "Trigger"
+          }
+        ]
+      },
+      "Dialog": {
+        "root": "Dialog",
+        "members": [
+          {
+            "component": "DialogAction",
+            "path": "Action"
+          },
+          {
+            "component": "DialogTrigger",
+            "path": "Trigger"
+          }
+        ]
+      },
+      "BottomSheet": {
+        "root": "BottomSheet",
+        "members": [
+          {
+            "component": "BottomSheetAction",
+            "path": "Action"
+          },
+          {
+            "component": "BottomSheetTrigger",
+            "path": "Trigger"
+          }
+        ]
+      },
+      "FabMenu": {
+        "root": "FabMenu",
+        "members": [
+          {
+            "component": "FabMenuItem",
+            "path": "Item"
+          },
+          {
+            "component": "FabMenuTrigger",
+            "path": "Trigger"
+          }
+        ]
+      },
+      "RichTooltip": {
+        "root": "RichTooltip",
+        "members": [
+          {
+            "component": "RichTooltipAction",
+            "path": "Action"
+          }
+        ]
+      },
+      "Datepicker": {
+        "root": "Datepicker",
+        "members": [
+          {
+            "component": "DatepickerToggle",
+            "path": "Toggle"
+          }
+        ]
+      },
+      "Timepicker": {
+        "root": "Timepicker",
+        "members": [
+          {
+            "component": "TimepickerToggle",
+            "path": "Toggle"
+          },
+          {
+            "component": "TimepickerDial",
+            "path": "Dial"
+          },
+          {
+            "component": "TimepickerInput",
+            "path": "Input"
+          },
+          {
+            "component": "TimepickerInputPeriodToggle",
+            "path": "InputPeriodToggle"
+          }
+        ]
+      },
+      "Calendar": {
+        "root": "Calendar",
+        "members": [
+          {
+            "component": "MonthView",
+            "path": "MonthView"
+          },
+          {
+            "component": "YearView",
+            "path": "YearView"
+          },
+          {
+            "component": "MultiYearView",
+            "path": "MultiYearView"
+          }
+        ]
+      },
+      "Stepper": {
+        "root": "Stepper",
+        "members": [
+          {
+            "component": "Step",
+            "path": "Step"
+          },
+          {
+            "component": "StepPanel",
+            "path": "Panel"
+          },
+          {
+            "component": "StepperNext",
+            "path": "Next"
+          },
+          {
+            "component": "StepperPrevious",
+            "path": "Previous"
+          },
+          {
+            "component": "StepperReset",
+            "path": "Reset"
+          }
+        ]
+      },
+      "List": {
+        "root": "List",
+        "members": [
+          {
+            "component": "ListItem",
+            "path": "Item"
+          },
+          {
+            "component": "ListAction",
+            "path": "Action"
+          },
+          {
+            "component": "ListOption",
+            "path": "Option"
+          }
+        ]
+      },
+      "Breadcrumb": {
+        "root": "Breadcrumb",
+        "members": [
+          {
+            "component": "BreadcrumbItem",
+            "path": "Item"
+          }
+        ]
+      },
+      "Tabs": {
+        "root": "Tabs",
+        "members": [
+          {
+            "component": "Tab",
+            "path": "Tab"
+          },
+          {
+            "component": "TabPanel",
+            "path": "TabPanel"
+          }
+        ]
+      },
+      "Tree": {
+        "root": "Tree",
+        "members": [
+          {
+            "component": "TreeItem",
+            "path": "Item"
+          }
+        ]
+      },
+      "Toc": {
+        "root": "Toc",
+        "members": [
+          {
+            "component": "TocItem",
+            "path": "Item"
+          }
+        ]
+      },
+      "Chip": {
+        "root": "Chip",
+        "members": [
+          {
+            "component": "AssistChip",
+            "path": "Assist"
+          },
+          {
+            "component": "FilterChip",
+            "path": "Filter"
+          },
+          {
+            "component": "InputChip",
+            "path": "Input"
+          },
+          {
+            "component": "SuggestionChip",
+            "path": "Suggestion"
+          },
+          {
+            "component": "ChipSet",
+            "path": "Set"
+          },
+          {
+            "component": "FilterChipSet",
+            "path": "FilterSet"
+          },
+          {
+            "component": "InputChipSet",
+            "path": "InputSet"
+          }
+        ]
+      },
+      "SegmentedButton": {
+        "root": "SegmentedButton",
+        "members": [
+          {
+            "component": "ButtonSegment",
+            "path": "Segment"
+          },
+          {
+            "component": "ButtonGroup",
+            "path": "Group"
+          }
+        ]
+      },
+      "Accordion": {
+        "root": "Accordion",
+        "members": [
+          {
+            "component": "ExpansionPanel",
+            "path": "Panel"
+          }
+        ]
+      },
+      "Progress": {
+        "root": null,
+        "members": [
+          {
+            "component": "CircularProgressIndicator",
+            "path": "Circular"
+          },
+          {
+            "component": "LinearProgressIndicator",
+            "path": "Linear"
+          },
+          {
+            "component": "LoadingIndicator",
+            "path": "Loading"
+          }
+        ]
+      }
+    }
+  },
   "_atoms": {
     "text": {}
   },

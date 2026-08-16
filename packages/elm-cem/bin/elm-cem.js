@@ -255,6 +255,11 @@ if (outputDir) {
     else if (a === "--config-from" && process.argv[i + 1]) { configFromPaths.push(process.argv[i + 1]); i++; }
   }
   require("./gen-icon-module").run(process.argv.slice(2), configFromPaths, outputDir);
+  // Family-grouped standalone package (item 4): re-exports the freshly generated
+  // flat M3e.Component.* surface under nested M3e.Family.* paths. Runs AFTER the
+  // flat gen so it re-exports the current surface; purely additive (a separate
+  // package tree), never touches the flat src just written.
+  require("./gen-family-package").run(process.argv.slice(2), configFromPaths, outputDir);
 }
 
 // The generator knows exactly which modules it wrote, so it owns the package's

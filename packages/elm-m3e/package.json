@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "gen": "run-s gen:src gen:vendor gen:reference gen:samples",
-    "gen:src": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --output=src && npm run format:src && npm run format:icons",
+    "gen:src": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --output=src && npm run format:src && npm run format:icons && npm run format:families",
     "gen:vendor": "npm --prefix docs run gen:vendor",
     "gen:reference": "npm --prefix docs run gen:reference",
     "gen:samples": "npm --prefix docs run gen:samples",
@@ -38,6 +38,8 @@
     "format": "node_modules/.bin/elm-format --yes docs/app docs/src review/src",
     "format:src": "node_modules/.bin/elm-format --yes src",
     "format:icons": "node_modules/.bin/elm-format --yes elm-m3e-icons/src",
+    "format:families": "node_modules/.bin/elm-format --yes elm-m3e-families/src",
+    "check:families": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/docs/vendor/elm-foundation}\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" regen-drift --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --nested-pkg=elm-m3e-families",
     "hooks:install": "git config core.hooksPath hooks",
     "postinstall": "node scripts/fix-native-bins.mjs",
     "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ../../node_modules/.bin/elm make app/IconUse.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotPlacersOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/EnumNarrowingOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotApiOk.elm --output=/dev/null && ../../node_modules/.bin/elm make bad/SlotPlacersWrongKind.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingSplitButton.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingBuilder.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/SlotApiWrongKind.elm --output=/dev/null 2>/dev/null"
