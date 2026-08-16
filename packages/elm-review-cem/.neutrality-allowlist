@@ -237,3 +237,18 @@ src/ExtractToSeam.elm::`[ ( "M3e.Unsafe", [ "recast", "recastAll" ] ) ]`). These
 src/ExtractToSeam.elm::`M3e.Unsafe.recast`, `Value.small`, `Doc.markdown`). Classified later into self /
 src/ExtractToSeam.elm::-- `M3e.Unsafe.recast …`, which is what we want.
 src/NoRedundantElementEscape.elm::(`M3e.button …`, `M3e.Component.Button.component …`, a barrel or component shorthand) whose
+
+# NoMergedPipeAndSetter.elm: a rule module whose doc comments explain the
+# elm-cem-generated `M3e.<Component>` (setters) vs `M3e.<Component>.Build`
+# (pipes) split it enforces — M3e is the worked example, not baked into rule
+# logic (the rule is config-driven via `allowedModules`). Added by the
+# component-merge branch (K5/#58) but never allowlisted there, so it was
+# inherited-RED on the adopt-component base; reviewed + brought GREEN at the
+# R-026 integration (L7).
+src/NoMergedPipeAndSetter.elm::family (from a builder module like `M3e.<Component>.Build`) and the setter family
+src/NoMergedPipeAndSetter.elm::(from a component module like `M3e.<Component>`) into one flat namespace.
+src/NoMergedPipeAndSetter.elm::`M3e.<Component>.Build`, setters live in `M3e.<Component>`. Any barrel or adapter
+src/NoMergedPipeAndSetter.elm::Generated component and builder modules (`M3e.Button`, `M3e.Button.Build`) are
+src/NoMergedPipeAndSetter.elm::{ allowedModules = [ "M3e", "Sl", "Wa" ] }
+src/NoMergedPipeAndSetter.elm::brand roots like `"M3e"`, `"Sl"`, `"Wa"`).
+src/NoMergedPipeAndSetter.elm::[ "The K5/#58 structural guarantee requires pipes (with<X> family) to live in M3e.<Component>.Build modules and bare setters (<x> family) to live in M3e.<Component> modules. Merging both into one module recreates the name collision the 3‑package split was designed to avoid."

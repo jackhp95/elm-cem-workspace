@@ -44,6 +44,14 @@ codegen/Generate/Types.elm
 # (73fe86e); never allowlisted before now, brought GREEN here (batch-4).
 bin/gen-icon-module.js
 
+# gen-family-package.js: same class as gen-icon-module.js — M3e is the worked
+# example throughout its doc comments and the `M3e.Family.*` docstring templates
+# for the standalone families sub-package generator (families layer). Added by
+# the component-merge branch (families L3) but never allowlisted there, so it was
+# inherited-RED on the adopt-component base; brought GREEN at the R-026
+# integration (L7).
+bin/gen-family-package.js
+
 # --- Tests: m3e-like manifests / golden fixtures ---
 tests/compile-gate.mjs
 tests/exclude-cli.test.mjs

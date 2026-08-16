@@ -24,11 +24,11 @@ Generator seam for a real implementation:
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import M3e exposing (text)
+import M3e exposing (icon, text)
 import M3e.Action exposing (onClick)
 import M3e.Build exposing (ButtonIs, IconButtonIs)
 import M3e.Build.Button as Button
-import M3e.Component.IconButton as IconButton
+import M3e.Build.IconButton as IconButton
 import M3e.Internal.Types.SplitButton as SBTypes
 
 
@@ -131,12 +131,13 @@ placedLeading =
 {-| An IconButton element — kind row { s | iconButton : Brand }.
 Satisfies TrailingButtonSlot = { iconButton : Brand }. Good placement.
 
-Using the view constructor with empty children (icon content omitted for
-brevity — the slot ergonomics, not the content, is what we prove here).
+Built through the required-content ctor (R-025) — the slot ergonomics, not
+the content, is what we prove here.
 -}
 myIconButton : Element (IconButtonIs s) admittedBy Msg
 myIconButton =
-    IconButton.view [] []
+    IconButton.build { content = icon [] [], ariaLabel = "icon", action = onClick Save }
+        |> IconButton.toElement
 
 
 {-| A good placement: IconButton kind { iconButton : Brand } into
