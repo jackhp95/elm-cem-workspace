@@ -24,13 +24,15 @@ jackhp95/elm-html-intermediate-representation   (substrate — exposes HtmlIr.*)
 jackhp95/elm-cem-facts                           (substrate — exposes Cem.Facts)
    ├── jackhp95/elm-m3e-html      (deps: IR)                         docs.json 269,345 B  ✅ under
    ├── jackhp95/elm-m3e-facts     (deps: elm-cem-facts)             docs.json tiny        ✅ under
-   ├── jackhp95/elm-m3e-icons     (deps: IR)                         docs.json 1,075,308 B ❌ 140% OVER
+   ├── jackhp95/elm-m3e-icons     (deps: IR)                         docs.json   475,578 B ✅ under (was 1,075,308 / 140% — R-026 fixed)
    ├── jackhp95/elm-m3e-components(deps: IR, html)                   docs.json 568,132 B  ✅ under
    └── jackhp95/elm-m3e-builder   (deps: IR, html, components)       docs.json 586,177 B  ✅ under
 ```
 
 Hard registry cap = **768,000 B uncompressed `docs.json`** (`Register.hs`; gzip does not help).
-Sizes are manager-measured (D-045). **`elm-m3e-icons` is the one hard publish blocker** (§4).
+Sizes are manager-measured (D-045); the icons figure is re-measured post-fix with
+`node tools/measure-docs-size.mjs`. **`elm-m3e-icons` was the one hard publish blocker; it is now
+resolved** (§4, R-026) — all five packages are under the cap, so no size blocker remains.
 
 Note: `elm-typed-html` is a docs-app dependency, **not** a dependency of any of the five m3e
 packages, so it is out of this publish scope. The DAG above is the complete set.
@@ -50,7 +52,7 @@ packages, so it is out of this publish scope. The DAG above is the complete set.
 | 9 | public GitHub repo whose `owner/name` == elm.json `name`, tag pushed | ❌ these 5 (and 2 substrate) repos **do not exist yet** (§3, O-2) |
 | 10 | working tree identical to the tagged commit | ✅ satisfied inside the fresh mirror checkout |
 | 11 | `github.com/<name>/zipball/<version>` downloads and **rebuilds from scratch** | ⚠️ requires `elm.json` at the **zipball root** — forces a mirror repo (§3) |
-| 12 | `docs.json` ≤ 768,000 B, README ≤ 512,000 B, elm.json ≤ 128,000 B | ❌ **icons over docs cap** (§4); others ✅ |
+| 12 | `docs.json` ≤ 768,000 B, README ≤ 512,000 B, elm.json ≤ 128,000 B | ✅ all five — icons resolved to 475,578 B (61.9%), R-026/§4; re-checkable with `tools/measure-docs-size.mjs` |
 
 **Two facts that shape everything (spike §5.1):**
 - `elm publish` **never inspects `origin`.** It resolves GitHub from the *name* in `elm.json`
@@ -95,31 +97,46 @@ after a failed package stalls (its dependents can't resolve it).
 `jackhp95/elm-probe-pkg` end-to-end publish to observe #8–#12 against the *real* registry before
 touching the real coordinates (spike §7 open-question 2). Recommend doing this first.
 
-## 4. The hard blocker — `elm-m3e-icons` is 140% over the docs cap (R-026)
+## 4. ~~The hard blocker~~ — RESOLVED: `elm-m3e-icons` is at 61.9% of the docs cap (R-026)
 
-`M3e.Icon` exposes ~4083 typed Material-Symbols helper functions (a 40,869-line generated module),
-one `docs.json` entry each → **1,075,308 B vs the 768,000 B cap.** This is **pre-existing**
-(unchanged by the R-025 emitter change; `M3e.Icon` imports only IR) and gate-all does **not** gate
-on it, so the tree is green while this stays unpublishable. It is a **product decision for the
-human** — options, each trading the typed-icon ergonomics against the cap:
+**DECIDED (O-3) and LANDED on branch `exec/r026-icon-cap` — option (c).
+1,075,308 B → 475,578 B = 140.0% → 61.9% of the 768,000 B hard cap** (67.9% of the 700,000 B soft
+gate). Not merged, not published. Full evidence in `GAUNTLET-LEDGER.md` under D-067/R-026.
 
-- **(a) Split `M3e.Icon` into N sub-packages** (`elm-m3e-icons-a…`, by name range), each under cap —
-  mirrors the components/builder split. Cleanest for the cap; multiplies the icon package count and
-  the import a consumer writes. `1,075,308 / 768,000 = 1.4` → **2 packages suffice by arithmetic**,
-  but the split must be validated by measuring each half's `docs.json`, not by function count (doc
-  entry sizes are non-uniform; cf. spike §4.3).
-- **(b) Leaner per-function docs / grouped helpers** — shrink the docstring each of the 4083 entries
-  carries, or expose grouped helpers instead of one-per-symbol. Keeps one package; changes the API
-  ergonomics and the generator (`gen-icon-module.js`).
-- **(c) A different typed-name representation** that doesn't expand 4083 names into 4083 doc
-  entries (e.g. one polymorphic constructor + a name type). Biggest API change; ties to D-036 (the
-  human's "new Material Symbols name set, typesafe").
+The original framing below was **wrong about the cause**, and one of its three options was
+arithmetically impossible. Measured decomposition of the real 1,075,308-B `docs.json`:
+**type signatures 661,625 B (61.5%)** · doc comments 185,442 B (17.2%) · JSON scaffolding
+118,436 B (11.0%) · module `@docs` block 55,234 B (5.1%) · names 54,485 B (5.1%). The driver is one
+162-byte fully-qualified signature repeated verbatim 4083 times, not the docstrings.
 
-This is a generator/config change (generated code is the spec — never hand-edit `M3e/Icon.elm`),
-and whichever option is chosen must re-run the split + `elm-cem validate` size measurement to prove
-every resulting icons package lands under 768,000 B. **Until this is decided and landed, the icons
-package cannot publish and its dependents are unaffected (nothing depends on icons).** The other
-four packages could technically publish without it, but see O-1/O-2 before treating that as a plan.
+- **(a) Split `M3e.Icon` into N sub-packages** — viable but **not chosen**. Measured: split-2 =
+  539,882 / 537,511 B (70.3% worst), split-3 = ≤360,165 B (46.9%). Rejected because it divides the
+  cost instead of fixing it: it leaves only ~42% growth headroom before a third package is forced,
+  and **a split can never carry a barrel** — a barrel re-exporting `menu = Icons.A.menu` needs a
+  per-icon annotation, so the barrel package would itself be ~1,075,308 B. Consumers would pay
+  permanent bucket-lookup ("is `menu` in `-a` or `-b`?") with no escape hatch.
+- **(b) Leaner per-function docs — STRUCK, arithmetically impossible.** Measured: lean comments
+  971,134 B (126.4%) · *empty* comments 908,300 B (118.3%) · **the absolute floor, single-letter type
+  variables AND lean comments, 779,233 B (101.5%)** — still over the cap with zero headroom. No
+  variant of (b) clears it. Note also that **Elm expands type aliases in `docs.json`**: annotating
+  every icon with a shared `type alias` measured 1,077,621 B, *worse* than baseline. The repetition
+  is not factorable.
+- **(c) A different typed-name representation — CHOSEN.** An opaque `type Name = Name String` plus a
+  single `icon : Name -> …` renderer; per-entry type drops 162 B → 15 B. **475,578 B (61.9%)** with
+  full per-icon doc comments retained, one package, one import, and **+2,500 icons (+61%) of
+  headroom**. `Name` is also strictly more expressive than the old surface — an icon becomes a
+  first-class value storable in a Model or a List, which a six-type-variable function could not
+  express. Satisfies D-036's "new Material Symbols name set, typesafe".
+
+Call site: `M3e.Icon.menu [] []` → `M3e.Icon.icon M3e.Icon.menu [] []`. The old function-per-icon
+surface is **retained but unpublished**, behind `_iconModule.shape: "functions"`, for anyone
+vendoring the module (it reproduces the pre-change emitter byte-identically).
+
+This was a generator/config change (generated code is the spec — `M3e/Icon.elm` was never
+hand-edited): `gen-icon-module.js` + `config/slots.json`. Size is now provable on any machine with
+**`node tools/measure-docs-size.mjs`** (path-independent; replaces the `tools/move2/measure-*.mjs`
+harnesses, which hardcoded a dead `/Users/jhp/...` path and could not run). It exits non-zero over
+the cap and is **not yet wired into `gate-all`** — see the checklist below.
 
 ## 5. Open decisions to put to the human (surface, do not decide)
 
@@ -133,8 +150,10 @@ four packages could technically publish without it, but see O-1/O-2 before treat
   plus `jackhp95/elm-html-intermediate-representation`, `jackhp95/elm-cem-facts`). Confirm the org
   (`jackhp95`), the names, public visibility, and that none already exist / collide. Creating them
   and pushing tags is irreversible-ish (a published package name cannot be reused for something else).
-- **O-3 — Icons cap (R-026).** Which of §4 (a)/(b)/(c). Blocks the icons package; does not block a
-  decision to publish the other four first if O-1/O-2 allow a partial release.
+- **O-3 — Icons cap (R-026). ✅ ANSWERED — option (c), opaque `Name`.** 475,578 B = 61.9% of cap,
+  landed on `exec/r026-icon-cap` (not merged, not published). Full per-icon doc comments kept; the
+  old function-per-icon surface retained unpublished behind `_iconModule.shape: "functions"`.
+  Call site changes to `M3e.Icon.icon M3e.Icon.menu [] []`. No longer blocks anything.
 - **O-4 — README ≥ 300 B.** `split.js` emits a README with a copy-only banner + summary; verify each
   of the five is ≥ 300 bytes (requirement #3) — the tiny `elm-m3e-facts` summary is the one at risk.
   If short, enrich the README template in `split.js`/`packages.json` (generator change, regenerate).
@@ -148,11 +167,18 @@ four packages could technically publish without it, but see O-1/O-2 before treat
 
 ## 6. Pre-publish checklist (all must be green before the human authorizes any publish)
 
-- [ ] O-1…O-6 answered by the human.
-- [ ] `elm-m3e-icons` under 768,000 B (R-026 resolved + re-measured), OR an explicit decision to
-      publish the other four without icons.
+- [ ] O-1, O-2, O-4, O-5, O-6 answered by the human. (**O-3 ✅ answered** — §4/§5.)
+- [x] `elm-m3e-icons` under 768,000 B — **475,578 B (61.9%), R-026 resolved and re-measured** via
+      `node tools/measure-docs-size.mjs` (exit 0; proven to bite by re-running it against the old
+      shape → 1,071,223 B, exit 1). Landed on `exec/r026-icon-cap`, **not yet merged to main**.
+- [ ] `exec/r026-icon-cap` reviewed and merged (carries the icons fix + the size tool).
+- [ ] `pnpm install` at the workspace root — **currently no `node_modules` here**, which makes
+      `verify:split`, `check:cem`, `check:drift` and every docs/browser gate unrunnable. This was
+      the blocker on finishing verification for R-026 and it blocks most of the rows below.
 - [ ] `pnpm --filter elm-m3e run verify:split` green (all packages compile registry-faithfully).
 - [ ] `elm-cem validate` size check green for all five (< 700,000 B soft gate / < 768,000 B hard).
+- [ ] `tools/measure-docs-size.mjs` wired into `gate-all` and run over **all five** packages — it
+      currently defaults to the icons package only, and nothing gates on size automatically.
 - [ ] Each `dist-packages/<short>/README.md` ≥ 300 B; `LICENSE` present.
 - [ ] Substrate packages (`IR`, `elm-cem-facts`) published (or a plan for them) — deps resolve.
 - [ ] `elm-probe-pkg` dry run completed and understood.

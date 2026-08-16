@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "jackhp95/elm-m3e-icons",
-    "summary": "Type-safe Material Symbols icon element helpers for elm-m3e.",
+    "summary": "Type-safe Material Symbols icon names for elm-m3e.",
     "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
