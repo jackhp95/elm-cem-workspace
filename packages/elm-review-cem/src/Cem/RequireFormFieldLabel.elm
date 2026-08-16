@@ -34,7 +34,7 @@ when it can positively see a control that has none of the three signals.
 
 ## Scope & limitations (static Elm analysis only)
 
-  - **Only the Standard/barrel facet** (`<root>.FormField.view …`,
+  - **Only the Standard/barrel facet** (`<root>.Component.FormField.component …`,
     `<root>.formField …`) is checked. The `build`/pipeline (`Build`) facet is not
     analysed.
   - A `<label for>` is **never verified** — only proxied by the control's `id`
@@ -292,7 +292,7 @@ classifyDefaultChildUnwrapped context fact element =
 
 {-| Unwrap the form-field's own default-slot setter (`<root>.FormField.child x`)
 to the wrapped control `x`. Recognised by resolving to the form-field's module
-with a name that is neither `view` nor one of its named-slot setters (those don't
+with a name that is neither `component` nor one of its named-slot setters (those don't
 reach here — they fail `fillsDefaultSlot`).
 -}
 unwrapDefaultChild : Context -> Fact -> Node Expression -> Maybe (Node Expression)
@@ -301,7 +301,7 @@ unwrapDefaultChild context fact element =
         Expression.Application (headNode :: [ inner ]) ->
             case Node.value headNode of
                 Expression.FunctionOrValue _ name ->
-                    if name /= "view" && Lookup.moduleNameFor context.lookup headNode == Just (formFieldModule fact) then
+                    if name /= "component" && Lookup.moduleNameFor context.lookup headNode == Just (formFieldModule fact) then
                         Just inner
 
                     else

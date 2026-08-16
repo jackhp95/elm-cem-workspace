@@ -51,7 +51,7 @@ translate between facets.
     is re-exposed flat under the barrel by its own name (identity: `circular` →
     `circular`), so `Cem.PreferBarrel` rewrites `<root>.<Group>.circular` →
     `<root>.circular`. Empty for an ordinary component (its sole constructor is
-    `view`, handled separately).
+    the component's own lowercased name, handled separately).
   - `facets` — the facets this component emits at.
   - `requiredAttrs` — HTML attribute names the component requires.
   - `actionMap` — action attribute name → its action constructor name.

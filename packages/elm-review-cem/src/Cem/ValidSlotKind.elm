@@ -4,17 +4,23 @@ module Cem.ValidSlotKind exposing (Unresolved(..), rule, ruleWith)
 list must be a kind the enclosing component's slot actually accepts.
 
 This backstops the guarantee the phantom `Content` wrapper used to give once the
-top layer drops it (ADR 15). Two shapes are checked on `<root>.<Comp>.view`
-(Standard) and `<root>.Record.<Comp>.view` (Record) calls:
+top layer drops it (ADR 15). Three shapes are checked on
+`<root>.Component.<Comp>.component` calls:
 
   - **Raw default children** — a component call sitting directly in the content
-    list (e.g. `M3e.Card.view [] [ M3e.iconButton [] [] ]`) targets the default
+    list (e.g. `M3e.Component.Card.component [] [ M3e.iconButton [] [] ]`) targets the default
     slot. Its kind (the component noun, `iconButton`) must be in that slot's
     `slotKinds`.
   - **Named-slot setters** — a `<root>.<Comp>.<setter>` call in the content list
     (e.g. `M3e.Card.actions (M3e.iconButton [] [])`) targets the slot the setter
     names. The slot must be one the component declares (`slotRewrites`), and the
     wrapped child's kind must be in that slot's `slotKinds`.
+  - **Loose barrel placers** — a `<root>.slot<Name> child` call in the content
+    list (e.g. `M3e.Component.Button.component [] [ M3e.slotIcon (M3e.icon [] []) ]`) uses the
+    Design-C shared slot placer. The placer is recognised by its barrel-root
+    module + `"slot"` prefix; it resolves to the parent's raw slot via the
+    parent fact's `slotUpgrades` list. The wrapped child's kind must be in that
+    slot's `slotKinds`.
 
 When a child's kind can't be resolved statically (a `let`-bound value, a
 parameter, a `List.map`-produced element, …) the `Unresolved` posture decides:
@@ -188,12 +194,17 @@ checkCall context site fact args =
   - `DefaultChild kind` — a component call in the default slot; `kind` is its
     resolved component noun (or `Nothing` when unresolvable).
   - `SlotChild setter kind` — a `<root>.<Comp>.<setter>` call targeting a named
-    slot; `kind` is the wrapped child's resolved noun.
+    slot; `kind` is the wrapped child's resolved noun. `setter` is the
+    PER-COMPONENT setter name (used to look up the raw slot via `slotRewrites`).
+  - `LoosePlacerChild rawSlot kind` — a `<root>.slot<Name> child` barrel placer
+    in the content list (Design C). `rawSlot` is the already-resolved raw HTML
+    slot name (from `slotUpgrades`); `kind` is the wrapped child's resolved noun.
 
 -}
 type Classified
     = DefaultChild (Maybe String)
     | SlotChild String (Maybe String)
+    | LoosePlacerChild String (Maybe String)
 
 
 checkChild : Context -> Fact -> Node Expression -> List (Error {})
@@ -214,6 +225,9 @@ checkChild context fact element =
                 Nothing ->
                     [ undeclaredSlotError fact setterName element ]
 
+        LoosePlacerChild rawSlot maybeKind ->
+            checkKindInSlot context fact (Just rawSlot) maybeKind element
+
 
 classify : Context -> List String -> Node Expression -> Classified
 classify context containerModuleParts element =
@@ -224,7 +238,23 @@ classify context containerModuleParts element =
         Expression.Application (headNode :: innerArgs) ->
             case Facts.callSite context.namespaces context.lookup headNode of
                 Just childSite ->
-                    DefaultChild (resolvedKind context childSite)
+                    case resolvedKind context childSite of
+                        Just kind ->
+                            -- A known component in the index: raw default child.
+                            DefaultChild (Just kind)
+
+                        Nothing ->
+                            -- callSite resolved to a barrel-root namespace, but the
+                            -- noun isn't a known component. This is either a
+                            -- non-component helper (`M3e.text`, `M3e.none`) OR a
+                            -- Design-C loose slot placer (`M3e.slotIcon`).
+                            -- Try the loose placer path first; fall back to DefaultChild.
+                            case loosePlacerSlot context containerModuleParts headNode of
+                                Just rawSlot ->
+                                    LoosePlacerChild rawSlot (List.head innerArgs |> Maybe.andThen (kindOf context))
+
+                                Nothing ->
+                                    DefaultChild Nothing
 
                 Nothing ->
                     case slotSetterName context containerModuleParts headNode of
@@ -257,10 +287,10 @@ resolvedKind context site =
             Nothing
 
 
-{-| If `headNode` resolves to the container's own module (and isn't its `view`
+{-| If `headNode` resolves to the container's own module (and isn't its `component`
 constructor), it's a named-slot setter — return the setter name.
 
-NOTE: `containerModuleParts` is the STANDARD component module (e.g. `M3e.Card`).
+NOTE: `containerModuleParts` is the STANDARD component module (e.g. `M3e.Component.Card`).
 Per-component slot setters live there and are re-exported, so a slot child is
 written `M3e.Card.actions …` whether the parent call is Standard or Record —
 this recognises both. A hypothetical `M3e.Record.Card.<slot>` child would fall
@@ -272,7 +302,7 @@ slotSetterName : Context -> List String -> Node Expression -> Maybe String
 slotSetterName context containerModuleParts headNode =
     case Node.value headNode of
         Expression.FunctionOrValue _ name ->
-            if name /= "view" && Lookup.moduleNameFor context.lookup headNode == Just containerModuleParts then
+            if name /= "component" && Lookup.moduleNameFor context.lookup headNode == Just containerModuleParts then
                 Just name
 
             else
@@ -280,6 +310,135 @@ slotSetterName context containerModuleParts headNode =
 
         _ ->
             Nothing
+
+
+{-| If `headNode` is a loose barrel placer for one of the parent's declared
+slots, return the raw slot name. A loose placer resolves to a barrel-root
+namespace (e.g. `["M3e"]`) and has a name that is a known barrel slot setter for
+the parent component (from `slotUpgrades`, e.g. `"slotIcon"` → raw slot `"icon"`).
+
+This is the Design-C shape: `M3e.slotIcon child` inside
+`M3e.Component.Button.component [] [ … ]` — the placer lives in the barrel module, not the
+per-component module, so `slotSetterName` (which requires the container module)
+can't see it. We check that the resolved module is a known barrel-root namespace
+(using `context.namespaces`, which already contains every barrel root derived by
+`buildIndex`/`namespaces`) and then look the name up in the parent's `slotUpgrades`.
+
+-}
+loosePlacerSlot : Context -> List String -> Node Expression -> Maybe String
+loosePlacerSlot context containerModuleParts headNode =
+    case Node.value headNode of
+        Expression.FunctionOrValue _ name ->
+            case Lookup.moduleNameFor context.lookup headNode of
+                Just resolvedModule ->
+                    -- The head must resolve to a known barrel-root namespace (e.g.
+                    -- ["M3e"]). `context.namespaces` contains every barrel root that
+                    -- `buildIndex`/`namespaces` derived from the facts, so membership
+                    -- here is the right check — it is also what `callSite` resolves
+                    -- against, keeping this consistent with the rest of the rule.
+                    if List.member resolvedModule context.namespaces then
+                        rawSlotForBarrelPlacer context containerModuleParts name
+
+                    else
+                        Nothing
+
+                Nothing ->
+                    Nothing
+
+        _ ->
+            Nothing
+
+
+{-| Look up the raw slot name for a barrel-placer identifier by checking every
+namespace's facts. `containerModuleParts` is the parent's STANDARD module (e.g.
+`["M3e", "Button"]`); we only check the PARENT's own fact (already resolved at
+the `checkCall`/`checkChild` level).
+
+We can't reach the parent's fact here directly, so we scan all facts in the
+index for one whose component module matches the container, and look up the
+barrel placer in that fact's `slotUpgrades`.
+
+-}
+rawSlotForBarrelPlacer : Context -> List String -> String -> Maybe String
+rawSlotForBarrelPlacer context containerModuleParts placerName =
+    -- Find the parent fact by matching its Standard module parts
+    -- against the container module parts.
+    context.factsIndex
+        |> Dict.values
+        |> firstMaybe
+            (\fact ->
+                let
+                    factParts =
+                        Facts.factNamespaceParts fact ++ [ Facts.capitalize fact.component ]
+                in
+                if factParts == containerModuleParts then
+                    rawSlotForUpgrade fact placerName
+
+                else
+                    Nothing
+            )
+
+
+{-| Given a parent fact and a barrel placer name (e.g. `"slotIcon"`), find the
+raw slot name it targets.
+
+The loose placer identifier is the generator's `"slot" ++ pascalCase(rawSlot)`
+(e.g. raw slot `"leading-button"` → placer `slotLeadingButton`, `"icon"` →
+`slotIcon`). We recover the raw slot by scanning the component's declared slot
+names (`slotKinds` keys, excluding the `"unnamed"` default) and matching the one
+whose derived placer identifier equals `placerName`.
+
+NB: this is derived from `slotKinds`/`slotRewrites`, which are populated in the
+real generated facts — NOT from `slotUpgrades`, which is empty for barrel
+components in the real facts (an earlier draft zipped `slotUpgrades` and so
+silently no-op'd on real code even though it passed synthetic-fixture tests).
+
+Returns `Nothing` if the placer isn't a named slot of this component.
+
+-}
+rawSlotForUpgrade : Fact -> String -> Maybe String
+rawSlotForUpgrade fact placerName =
+    fact.slotKinds
+        |> List.map Tuple.first
+        |> List.filter (\rawSlot -> rawSlot /= "unnamed")
+        |> firstMaybe
+            (\rawSlot ->
+                if slotPlacerIdent rawSlot == placerName then
+                    Just rawSlot
+
+                else
+                    Nothing
+            )
+
+
+{-| The generator's loose slot-placer identifier for a raw html slot name:
+`"slot" ++ pascalCase(rawSlot)`, where pascalCase splits on `-` and capitalises
+each segment (`"leading-button"` → `"LeadingButton"`). Mirrors elm-cem's
+`Emit.looseSlotPlacers` naming so the review rule inverts it exactly.
+-}
+slotPlacerIdent : String -> String
+slotPlacerIdent rawSlot =
+    "slot"
+        ++ (rawSlot
+                |> String.split "-"
+                |> List.map Facts.capitalize
+                |> String.concat
+           )
+
+
+firstMaybe : (a -> Maybe b) -> List a -> Maybe b
+firstMaybe f xs =
+    case xs of
+        [] ->
+            Nothing
+
+        x :: rest ->
+            case f x of
+                Just y ->
+                    Just y
+
+                Nothing ->
+                    firstMaybe f rest
 
 
 {-| Resolve an expression's kind to a component noun, where statically possible.

@@ -65,10 +65,10 @@ all =
                 """module A exposing (v)
 import M3e.Fab
 import M3e.Icon
-v = M3e.Fab.view [] [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component [] [ M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "flags the barrel facet too" <|
             \() ->
                 """module A exposing (v)
@@ -81,16 +81,16 @@ v = M3e.fab [] [ M3e.icon [] [] ]
             \() ->
                 """module A exposing (v)
 import M3e.Fab
-v = M3e.Fab.view [] []
+v = M3e.Fab.component [] []
 """
                     |> Review.Test.run (rule fabFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "accepts a slot=label child (M3e.Fab.label)" <|
             \() ->
                 """module A exposing (v)
 import M3e.Fab
 import M3e.Icon
-v = M3e.Fab.view [] [ M3e.Fab.label [ M3e.Fab.text "Add" ], M3e.Icon.view [] [] ]
+v = M3e.Fab.component [] [ M3e.Fab.label [ M3e.Fab.text "Add" ], M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -100,7 +100,7 @@ v = M3e.Fab.view [] [ M3e.Fab.label [ M3e.Fab.text "Add" ], M3e.Icon.view [] [] 
 import M3e.Fab
 import M3e.Icon
 import M3e.Aria
-v = M3e.Fab.view [ M3e.Aria.label "Add" ] [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component [ M3e.Aria.label "Add" ] [ M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -110,7 +110,7 @@ v = M3e.Fab.view [ M3e.Aria.label "Add" ] [ M3e.Icon.view [] [] ]
 import M3e.Fab
 import M3e.Icon
 import TypedHtml.Aria
-v = M3e.Fab.view [ TypedHtml.Aria.labelledby "lbl" ] [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component [ TypedHtml.Aria.labelledby "lbl" ] [ M3e.Icon.component [] [] ]
 """
                 , """module TypedHtml.Aria exposing (labelledby)
 labelledby : String -> Int
@@ -132,7 +132,7 @@ v = M3e.fab [ M3e.ariaLabel "Add" ] [ M3e.icon [] [] ]
                 """module A exposing (v)
 import M3e.Fab
 import M3e.Icon
-v = M3e.Fab.view [ M3e.Fab.id "add" ] [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component [ M3e.Fab.id "add" ] [ M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -142,7 +142,7 @@ v = M3e.Fab.view [ M3e.Fab.id "add" ] [ M3e.Icon.view [] [] ]
 import M3e.Fab
 import M3e.Icon
 import M3e.Html.Attr
-v = M3e.Fab.view [ M3e.Html.Attr.attribute "aria-label" "Add" ] [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component [ M3e.Html.Attr.attribute "aria-label" "Add" ] [ M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -151,7 +151,7 @@ v = M3e.Fab.view [ M3e.Html.Attr.attribute "aria-label" "Add" ] [ M3e.Icon.view 
                 """module A exposing (v)
 import M3e.Fab
 import Seam
-v = M3e.Fab.view [] (Seam.fabBody cfg)
+v = M3e.Fab.component [] (Seam.fabBody cfg)
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -160,7 +160,7 @@ v = M3e.Fab.view [] (Seam.fabBody cfg)
                 """module A exposing (v)
 import M3e.Fab
 import M3e.Icon
-v = M3e.Fab.view dynAttrs [ M3e.Icon.view [] [] ]
+v = M3e.Fab.component dynAttrs [ M3e.Icon.component [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -169,7 +169,7 @@ v = M3e.Fab.view dynAttrs [ M3e.Icon.view [] [] ]
                 """module A exposing (v)
 import M3e.Fab
 import Html
-v = M3e.Fab.view [] [ Html.div [] [] ]
+v = M3e.Fab.component [] [ Html.div [] [] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -177,7 +177,7 @@ v = M3e.Fab.view [] [ Html.div [] [] ]
             \() ->
                 """module A exposing (v)
 import M3e.Fab
-v = M3e.Fab.view [] [ someChild ]
+v = M3e.Fab.component [] [ someChild ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -185,7 +185,7 @@ v = M3e.Fab.view [] [ someChild ]
             \() ->
                 """module A exposing (v)
 import M3e.Card
-v = M3e.Card.view [] []
+v = M3e.Card.component [] []
 """
                     |> Review.Test.run
                         (rule [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
@@ -197,18 +197,18 @@ import M3e.Fab
 import M3e.Icon
 v =
     let
-        content = [ M3e.Icon.view [] [] ]
+        content = [ M3e.Icon.component [] [] ]
     in
-    M3e.Fab.view [] content
+    M3e.Fab.component [] content
 """
                     |> Review.Test.run (rule fabFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "does not analyse the Build/pipeline facet" <|
             \() ->
                 """module A exposing (v)
 import M3e.Fab
 import M3e.Icon
-v = M3e.Fab.build |> M3e.Fab.withIcon (M3e.Icon.view [] []) |> M3e.Fab.toElement
+v = M3e.Fab.build |> M3e.Fab.withIcon (M3e.Icon.component [] []) |> M3e.Fab.toElement
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors

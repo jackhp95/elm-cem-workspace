@@ -11,6 +11,7 @@ module Cem exposing
     , requireFormFieldLabel
     , requireFabLabel
     , fences
+    , noMergedPipeAndSetter
     )
 
 {-| Codegen-aware, namespace-agnostic `elm-review` rules driven by a generated
@@ -51,7 +52,7 @@ Each takes the generated facts and can be enabled on its own (or omitted from
 
 ## Opt-in Standard→surface translators
 
-Rewrite a per-component Standard `view` call to another surface of the same
+Rewrite a per-component Standard `component` call to another surface of the same
 component module, with autofix. Opt-in transforms for a docs harness; not part of
 `all`.
 
@@ -74,6 +75,11 @@ component module, with autofix. Opt-in transforms for a docs harness; not part o
 
 @docs fences
 
+
+## K5/#58 pipe/setter merge guard
+
+@docs noMergedPipeAndSetter
+
 -}
 
 import Cem.Facts exposing (Fact)
@@ -92,6 +98,7 @@ import Cem.TranslateToRecord
 import Cem.ValidEnumValue
 import Cem.ValidSlotKind
 import NoInternalImportOutsideAllowed
+import NoMergedPipeAndSetter
 import NoRedundantAttributeEscape
 import NoRedundantElementEscape
 import NoRedundantElementForge
@@ -247,10 +254,10 @@ preferComponentSetters =
     Cem.PreferComponentSetters.rule
 
 
-{-| Rewrite a per-component Standard `<root>.<Comp>.view attrs children` call to
-the required-record form `<root>.<Comp>.el { … } attrs children`, hoisting the
+{-| Rewrite a per-component Standard `<root>.Component.<Comp>.component attrs children` call to
+the required-record form `<root>.Component.<Comp>.component { … } attrs children`, hoisting the
 required fields out of the attrs/children with autofix. Applies only to the
-components that expose an `el`/required record; a clean no-op for the rest. Opt-in;
+components that expose a required record (the `component` ctor's leading-record arity); a clean no-op for the rest. Opt-in;
 not part of `all`. See `Cem.TranslateToRecord` for the exact contract and its
 facts gaps.
 -}
@@ -259,7 +266,7 @@ translateToRecord =
     Cem.TranslateToRecord.rule
 
 
-{-| Rewrite a per-component Standard `<root>.<Comp>.view attrs children` call to
+{-| Rewrite a per-component Standard `<root>.Component.<Comp>.component attrs children` call to
 the phantom-typed builder pipeline
 `<root>.<Comp>.build … |> <root>.<Comp>.withX … |> <root>.<Comp>.toElement`, with
 autofix. Opt-in; not part of `all`. See `Cem.TranslateToBuild` for the exact
@@ -382,6 +389,11 @@ It bundles:
     their own `Internal` siblings), and your `allowedModules` (the blessed
     `Seam`/`Native`/`Kit`/… adapters).
 
+    Under the 3‑package split (Phase 2a), builder modules (`M3e.<Component>.Build`)
+    are legitimate consumers of `M3e.Build.Internal`. The `brandRoots` prefix
+    covers them automatically: a brand root of `"M3e"` allows `M3e.Build`,
+    `M3e.Button.Build`, `M3e.Card.Build`, etc. to import `M3e.Build.Internal`.
+
   - **`NoSeamOutsideAllowedModules`** (the seam gate) keeping applied `seamModules`
     escapes inside those same `allowedModules`.
 
@@ -389,6 +401,8 @@ It bundles:
     `typedHtmlFacts` so a blessed adapter can't re-forge a plain covered tag.
 
   - `brandRoots` — the generated library root namespaces (e.g. `[ "M3e" ]`).
+    Under the builder package, this also covers all `M3e.<Component>.Build`
+    modules.
 
   - `seamModules` — the modules whose functions are seam escapes (e.g. `[ "Seam" ]`).
 
@@ -408,6 +422,7 @@ config =
             , allowedModules = [ "Seam", "Native", "Kit", "Layout" ]
             , typedHtmlFacts = TypedHtml.Review.Facts.facts
             }
+        ++ [ Cem.noMergedPipeAndSetter { allowedModules = [ "M3e", "Sl", "Wa" ] } ]
 ```
 
 -}
@@ -429,3 +444,21 @@ fences config =
         }
     , NoRedundantElementForge.rule config.typedHtmlFacts
     ]
+
+
+{-| Flag a module whose exposing list merges a pipe (`with<X>`) and a bare setter
+(`<x>`) for the same concept into one flat namespace — which would recreate the
+K5/#58 collision that the 3‑package split was designed to avoid (pipes in
+`M3e.<Component>.Build`, setters in `M3e.<Component>`).
+
+Opt‑in — not in `Cem.all` and not in the `fences` preset. Enable it on a
+known‑good project to prevent accidental barrel merges:
+
+    config =
+        [ Cem.noMergedPipeAndSetter { allowedModules = [ "M3e", "Sl", "Wa" ] }
+        ]
+
+-}
+noMergedPipeAndSetter : { allowedModules : List String } -> Rule
+noMergedPipeAndSetter config =
+    NoMergedPipeAndSetter.rule config

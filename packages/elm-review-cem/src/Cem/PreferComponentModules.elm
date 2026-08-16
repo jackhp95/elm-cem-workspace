@@ -13,6 +13,19 @@ Autofix atomically inserts `import <root>.<Comp>` when the module is not yet
 imported, placing it after the last existing import (or after the module
 definition line if there are no imports).
 
+This is the exact inverse of `Cem.PreferBarrel`, and resolves the flat barrel the
+same way. The barrel producers/setters/tokens/aria a call references live at the
+BARREL ROOT (`Cem.Internal.Facts.barrelRoot` — `Lib`), which in a four-package
+shape is one level UP from the per-component namespace (`Lib.Component`); detection
+must strip the barrel root, and the barrel-root-level replacements (`Lib.Aria`,
+`Lib.Token`, the slot-upgrade setters) target it too. Only the per-component
+replacement (`Lib.Component.<Comp>.<setter>`) uses the fact namespace. Using the
+fact namespace where the barrel root is meant is the bug that made this rule inert
+in the four-package shape. The constructor case additionally skips a record-form
+`component` (`Facts.hasRecordFormConstructor`): the loose barrel producer and the
+record-form smart ctor are different functions, so specialising one to the other
+is a type error — the mirror of `PreferBarrel`'s record-form skip.
+
 @docs rule
 
 -}
@@ -146,8 +159,8 @@ expressionVisitor node context =
                     case Facts.find site context.factsIndex of
                         Just fact ->
                             -- An ordinary constructor: the barrel form `<root>.<noun>`
-                            -- specialises to `<root>.<Comp>.view`.
-                            ( checkCall context site fact fnNode "view" args, context )
+                            -- specialises to `<root>.Component.<Comp>.component`.
+                            ( checkCall context site fact fnNode "component" args, context )
 
                         Nothing ->
                             -- A variant-group member (`<root>.circular`) whose noun is
@@ -231,14 +244,24 @@ checkCall context site fact fnNode constructorMember args =
 
 {-| The constructor case: the barrel form `<root>.<noun>` (`<root>.button`, or a
 variant-group member `<root>.circular`) specialises to `<root>.<Comp>.<member>`
-(`<root>.Button.view`, `<root>.Progress.circular`). Fires only when `fnNode`
-resolves to the barrel ROOT — an already-specific `<root>.<Comp>.view` is left
+(`<root>.Component.Button.component`, `<root>.Progress.circular`). Fires only when `fnNode`
+resolves to the barrel ROOT — an already-specific `<root>.Component.<Comp>.component` is left
 alone (its attrs/slots may still be barrel forms and get rewritten separately).
 Inverse of `PreferBarrel.barrelReplacement`'s constructor branch.
 -}
 constructorErrorFor : Context -> Fact -> Node Expression -> String -> Maybe (Error {})
 constructorErrorFor context fact fnNode constructorMember =
-    if Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup fnNode) == Just [] then
+    if constructorMember == "component" && Facts.hasRecordFormConstructor fact then
+        -- Record-form smart ctor: the per-component `component` takes a leading
+        -- required-fields record (`{ content, … } -> attrs -> children`) and is a
+        -- DIFFERENT function from the loose barrel producer `<root>.<noun>`
+        -- (`attrs -> children`). Specialising the loose barrel call to it is a type
+        -- error, so leave it — the exact mirror of `PreferBarrel`'s record-form
+        -- skip. A variant-group member (`constructorMember /= "component"`) is
+        -- always a loose producer, so it is never skipped here.
+        Nothing
+
+    else if Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup fnNode) == Just [] then
         let
             compModule =
                 Facts.factNamespace fact ++ "." ++ Facts.capitalize fact.component
@@ -306,7 +329,7 @@ attrErrorFor : Context -> Fact -> Node Expression -> Maybe (Error {})
 attrErrorFor context fact element =
     case Node.value element of
         Expression.Application (setterNode :: _) ->
-            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
+            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
                 ( Expression.FunctionOrValue _ name, Just [] ) ->
                     fact.attrRewrites
                         |> List.filter (\( barrelName, _ ) -> barrelName == name)
@@ -372,17 +395,17 @@ ariaErrorFor context fact element =
     setterNode
         |> Maybe.andThen
             (\node ->
-                case ( Node.value node, Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup node) ) of
+                case ( Node.value node, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup node) ) of
                     ( Expression.FunctionOrValue _ barrelName, Just [] ) ->
                         ariaSpecificName barrelName
                             |> Maybe.map
                                 (\setter ->
                                     let
                                         ariaModule =
-                                            Facts.factNamespace fact ++ ".Aria"
+                                            Facts.barrelRoot fact ++ ".Aria"
 
                                         ariaModuleParts =
-                                            Facts.factNamespaceParts fact ++ [ "Aria" ]
+                                            Facts.barrelRootParts fact ++ [ "Aria" ]
 
                                         replacement =
                                             ariaModule ++ "." ++ setter
@@ -419,15 +442,12 @@ share a combined), which is why this lives in `checkCall`. Inverse of
 -}
 combinedErrorFor : Context -> Fact -> Node Expression -> Maybe (Error {})
 combinedErrorFor context fact element =
-    case ( Node.value element, Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup element) ) of
+    case ( Node.value element, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup element) ) of
         ( Expression.FunctionOrValue _ combined, Just [] ) ->
             combinedExpansion fact combined
                 |> Maybe.map
                     (\( attr, token ) ->
                         let
-                            root =
-                                Facts.factNamespace fact
-
                             compModule =
                                 Facts.factNamespace fact ++ "." ++ Facts.capitalize fact.component
 
@@ -435,7 +455,10 @@ combinedErrorFor context fact element =
                                 Facts.factNamespaceParts fact ++ [ Facts.capitalize fact.component ]
 
                             valueModule =
-                                root ++ ".Token"
+                                -- `Token` is re-exported flat at the BARREL ROOT
+                                -- (`Lib.Token`), one level up from the intermediate
+                                -- component namespace in the four-package shape.
+                                Facts.barrelRoot fact ++ ".Token"
 
                             replacement =
                                 compModule ++ "." ++ attr ++ " " ++ valueModule ++ "." ++ token
@@ -443,7 +466,7 @@ combinedErrorFor context fact element =
                             fixes =
                                 Fix.replaceRangeBy (Node.range element) replacement
                                     :: (importFixIfMissing context compModule compModuleParts
-                                            ++ importFixIfMissing context valueModule (Facts.factNamespaceParts fact ++ [ "Token" ])
+                                            ++ importFixIfMissing context valueModule (Facts.barrelRootParts fact ++ [ "Token" ])
                                        )
                         in
                         Rule.errorWithFix
@@ -538,7 +561,7 @@ slotErrorFor : Context -> Fact -> Node Expression -> Maybe (Error {})
 slotErrorFor context fact element =
     case Node.value element of
         Expression.Application (setterNode :: setterArgs) ->
-            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
+            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
                 ( Expression.FunctionOrValue _ "slot", Just [ "Content" ] ) ->
                     case setterArgs of
                         firstArg :: bodyNode :: _ ->
@@ -624,7 +647,7 @@ slotUpgradeErrorFor : Context -> Fact -> Node Expression -> Maybe (Error {})
 slotUpgradeErrorFor context fact element =
     case Node.value element of
         Expression.Application (setterNode :: _) ->
-            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.factNamespaceParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
+            case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
                 ( Expression.FunctionOrValue _ generic, Just [] ) ->
                     fact.slotUpgrades
                         |> List.filter (\( g, _ ) -> g == generic)
@@ -633,7 +656,11 @@ slotUpgradeErrorFor context fact element =
                             (\( _, specific ) ->
                                 let
                                     root =
-                                        Facts.factNamespace fact
+                                        -- Both the generic (`Lib.slotIcon`) and the
+                                        -- specific (`Lib.buttonSlotIcon`) upgrade
+                                        -- setters are flat re-exports at the BARREL
+                                        -- ROOT, not the intermediate component ns.
+                                        Facts.barrelRoot fact
                                 in
                                 Rule.errorWithFix
                                     { message =

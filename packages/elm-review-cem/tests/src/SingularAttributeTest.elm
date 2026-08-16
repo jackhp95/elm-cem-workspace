@@ -34,7 +34,7 @@ all =
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.id "a", TypedHtml.Attributes.id "b" ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.id "a", TypedHtml.Attributes.id "b" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -50,14 +50,14 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.id "a", TypedHtml.Attributes.id "
                             -- pin the first: the rule reports the earliest
                             -- occurrence (`dedupeByName` keeps insertion order).
                             |> Review.Test.atExactly
-                                { start = { row = 4, column = 27 }, end = { row = 4, column = 50 } }
+                                { start = { row = 4, column = 32 }, end = { row = 4, column = 55 } }
                         ]
         , test "accepts a single attribute" <|
             \() ->
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.id "a" ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.id "a" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -73,7 +73,7 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.id "a" ] []
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.class "w-max", TypedHtml.Attributes.class "p-4" ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.class "w-max", TypedHtml.Attributes.class "p-4" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -82,7 +82,7 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.class "w-max", TypedHtml.Attribut
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.classList [], TypedHtml.Attributes.classList [] ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.classList [], TypedHtml.Attributes.classList [] ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -95,7 +95,7 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.c
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.style "color" "red", TypedHtml.Attributes.style "top" "0" ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.style "color" "red", TypedHtml.Attributes.style "top" "0" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -104,7 +104,7 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.style "color" "red", TypedHtml.At
                 """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Attributes
-v = M3e.IconButton.view [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.class "b", TypedHtml.Attributes.id "x", TypedHtml.Attributes.id "y" ] []
+v = M3e.IconButton.component [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.class "b", TypedHtml.Attributes.id "x", TypedHtml.Attributes.id "y" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -117,6 +117,6 @@ v = M3e.IconButton.view [ TypedHtml.Attributes.class "a", TypedHtml.Attributes.c
                             , under = "TypedHtml.Attributes.id"
                             }
                             |> Review.Test.atExactly
-                                { start = { row = 4, column = 91 }, end = { row = 4, column = 114 } }
+                                { start = { row = 4, column = 96 }, end = { row = 4, column = 119 } }
                         ]
         ]

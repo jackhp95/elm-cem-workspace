@@ -1,83 +1,73 @@
 module ExtractToSeam exposing (rule)
 
-{-| **Autofix companion to `NoSeamOutsideAllowedModules`.**
+{-| **Autofix companion for containing library escape functions.**
 
-Where `NoSeamOutsideAllowedModules` merely _flags_ a `Seam.*` escape used outside
-the blessed adapter modules, this rule **lifts that escape into a named function
-in the `Seam` module and rewrites the call site to use it** — a coordinated
-cross-module autofix.
+Where `NoSeamOutsideAllowedModules` / `NoUnsafeImportOutsideAllowed` merely
+_flags_ an escape used outside the blessed adapter modules, this rule **lifts
+that escape into a named function in a configured userland central module and
+rewrites the call site to use it** — a coordinated cross-module autofix.
 
-    Seam.asAttribute (class "flex-auto") -- in Feature (flagged)
+Example with `M3e.Unsafe.recast`:
+
+    -- Feature.elm (flagged)
+    M3e.Unsafe.recast someElement
 
 becomes
 
-    -- Feature
-    Seam.flexAuto
+    -- Feature.elm
+    Recast.wrapChip someElement
 
-    -- Seam  (new top-level function + added to `exposing`)
-    flexAuto =
-        Seam.asAttribute (class "flex-auto")
+    -- Recast.elm  (new top-level function added + added to `exposing`)
+    wrapChip el_ =
+        M3e.Unsafe.recast el_
 
 This rule is **opt-in** and is deliberately **not** part of the shipped
 `ReviewConfig`: it rewrites source across two files, so a team should run it
-under `elm-review --fix` on purpose, review the result, and then keep the seam
-contained with `NoSeamOutsideAllowedModules`. The two rules share detection: this
-rule triggers on exactly the applied `Seam.*` escapes the gate flags.
+under `elm-review --fix` on purpose, review the result, and then keep escapes
+contained with `NoUnsafeImportOutsideAllowed` / `NoSeamOutsideAllowedModules`.
 
     config =
         [ ExtractToSeam.rule
-            { seamModule = "Seam"
-            , allowedModules = [ "Native", "Layout", "Kit" ]
+            { recastModule = "Recast"
+            , escapes =
+                [ ( "M3e.Unsafe", [ "recast", "recastAll" ] )
+                , ( "M3e.Unsafe.Attributes", [ "recastAttr", "recastAttrAll" ] )
+                ]
+            , allowedModules = [ "Recast", "Native", "Layout", "Kit" ]
             }
         ]
 
-**Brand crossings — two tools**
+**How detection and lifting work**
 
-  - **`recast`** (in your seam module) — the general/unrestricted brand escape: it
-    crosses ANY kinds but makes no semantic claim. Use it for one-off or exploratory
-    crossings that don't warrant a named coercion.
-  - **Config-blessed coercions** (WS6 / CX5, e.g. `M3e.Coerce.asButton`) — named
-    loud crossings declared in `_coerce` and emitted by the generator. Use these when
-    a crossing has a stable identity (e.g. "a Chip admitted as a button"). They appear
-    in `<Lib>.Coerce` and are greppable by name.
-
-`ExtractToSeam` extracts `recast` escapes (and other seam calls) into the designated
-seam module; it does NOT extract blessed coercions (those come from the generator).
-
-**How it works**
-
-  - _Detection_ mirrors the gate: an `Expression.Application` whose head resolves
-    (via the module-name lookup table) to the configured seam module, used in a
-    module that is not in `allowedModules` and is not the seam module itself.
+  - _Detection_: an `Expression.Application` whose head resolves (via the
+    module-name lookup table) to one of the configured `escapes` module+name
+    pairs, used in a module that is not in `allowedModules` and is not the
+    `recastModule` itself.
+  - _Destination_: the configured `recastModule` (e.g. `"Recast"`). The lifted
+    body keeps the ORIGINAL qualified escape call (e.g. `M3e.Unsafe.recast …`);
+    `recastModule` gains the appropriate `import M3e.Unsafe` / `import
+    M3e.Unsafe.Attributes` automatically.
   - _Naming_ is deterministic: a camelCase slug is derived from the string
-    literals inside the escape (`"flex-auto"` → `flexAuto`), falling back to
-    `seam<EscapeFn>`; collisions with existing/other names get a stable hash
-    suffix derived from the escape's normalized text.
-  - _Dedup_ is by normalized (whitespace-collapsed) source text: two identical
-    escapes lift to one function and both call sites reuse it; an escape whose
-    text already matches an existing top-level `Seam` function reuses that
-    function and only the call site is rewritten.
-  - _Captured references_ become **arguments** of the lifted function, threaded at
-    the call site: a lowercase local (a parameter, `msg`) verbatim (`Seam.gridCol n`
-    ↔ `gridCol n = Seam.asAttribute (class ("col-" ++ n))`); an uppercase local
-    constructor via a slugified parameter (`Seam.onClick Toggle` ↔ `seamOnClick
-    toggle = onClick toggle`); a reference into a module that imports the seam (a
-    cycle) via a slugified parameter passed the original qualified name. A reference
-    whose module the seam already imports under a different alias is rewritten to the
-    seam's qualifier rather than re-imported; a captured parameter that would shadow
-    an existing seam top-level is renamed.
-  - _Convergence_: already-lifted `Seam` functions — recognized because the lifted
-    body's head **resolves** (via the module-name lookup) to the seam module and is
-    one of its exposed names — are never re-extracted, so `--fix` terminates.
+    literals inside the escape, falling back to `recast<EscapeFn>`; collisions
+    with existing/other names get a stable hash suffix.
+  - _Dedup_ is by normalized (whitespace-collapsed) source text: identical
+    escapes lift to one function; an escape whose text already matches an
+    existing `recastModule` function reuses that function.
+  - _Captured references_ become **arguments** of the lifted function, threaded
+    at the call site: a lowercase local verbatim; an uppercase constructor via a
+    slugified parameter; a cyclic reference via a slugified parameter passed the
+    original qualified name.
+  - _Convergence_: a call already using `recastModule`'s own fns — recognized
+    because the call's head resolves to `recastModule` and is one of its exposed
+    names — is never re-extracted, so `--fix` terminates.
 
-**Punted (fixless) cases** — surfaced as plain errors for manual handling rather
-than emitting a broken fix:
+**Punted (fixless) cases** — surfaced as plain errors for manual handling:
 
-  - point-free / bare `Seam.*` references (`List.map Seam.asElement`);
+  - point-free / bare escape references (`List.map M3e.Unsafe.recast`);
   - escapes that capture a local via a `let`/`case`/lambda/record-update inside
     the escape;
   - escapes that capture a value defined at the top level of the violating
-    module (cannot be lifted into `Seam` cleanly);
+    module (cannot be lifted into the recast module cleanly);
   - multi-line escapes that also capture free variables.
 
 @docs rule
@@ -101,28 +91,52 @@ import Set exposing (Set)
 
 {-| Build the autofix rule.
 
-  - `seamModule` — the dotted name of the module lifted functions go into
-    (e.g. `"Seam"`); the same module whose functions count as escapes.
-  - `allowedModules` — dotted module-name prefixes allowed to use the seam
-    (matching `NoSeamOutsideAllowedModules`); escapes are only extracted _outside_
-    these.
+  - `recastModule` — the dotted name of the DESTINATION module where lifted
+    functions land (e.g. `"Recast"`). Must not be in `escapes`.
+  - `escapes` — the library escape functions to detect at call sites. Each pair
+    is `( moduleName, [ fnName, … ] )` (e.g.
+    `[ ( "M3e.Unsafe", [ "recast", "recastAll" ] ) ]`). These are the SOURCE;
+    lifted bodies keep the original qualified calls to these fns.
+  - `allowedModules` — dotted module-name prefixes allowed to use the escapes
+    without extraction. Usually includes `recastModule` itself plus designated
+    adapter layers.
 
 -}
-rule : { seamModule : String, allowedModules : List String } -> Rule
+rule :
+    { recastModule : String
+    , escapes : List ( String, List String )
+    , allowedModules : List String
+    }
+    -> Rule
 rule config =
     let
-        seamModuleName : ModuleName
-        seamModuleName =
-            String.split "." config.seamModule
+        recastModuleName : ModuleName
+        recastModuleName =
+            String.split "." config.recastModule
+
+        -- Dict from ModuleName (as joined String) → Set of fn names to detect.
+        escapeIndex : Dict String (Set String)
+        escapeIndex =
+            List.foldl
+                (\( modStr, fns ) acc ->
+                    Dict.insert modStr (Set.fromList fns) acc
+                )
+                Dict.empty
+                config.escapes
+
+        -- All escape module names as ModuleName lists, for coverage filtering.
+        escapeModuleNames : List ModuleName
+        escapeModuleNames =
+            List.map (\( modStr, _ ) -> String.split "." modStr) config.escapes
     in
     Rule.newProjectRuleSchema "ExtractToSeam" initialProjectContext
         |> Rule.withModuleVisitor moduleVisitor
         |> Rule.withModuleContextUsingContextCreator
-            { fromProjectToModule = fromProjectToModule seamModuleName config.allowedModules
+            { fromProjectToModule = fromProjectToModule recastModuleName escapeIndex escapeModuleNames config.allowedModules
             , fromModuleToProject = fromModuleToProject
             , foldProjectContexts = foldProjectContexts
             }
-        |> Rule.withFinalProjectEvaluation (finalEvaluation seamModuleName)
+        |> Rule.withFinalProjectEvaluation (finalEvaluation recastModuleName)
         |> Rule.fromProjectRuleSchema
 
 
@@ -149,8 +163,10 @@ type alias ModuleContext =
     , lookup : ModuleNameLookupTable
     , extract : Range -> String
     , ast : File
-    , seamModuleName : ModuleName
-    , isSeamModule : Bool
+    , recastModuleName : ModuleName
+    , escapeIndex : Dict String (Set String)
+    , escapeModuleNames : List ModuleName
+    , isRecastModule : Bool
     , gated : Bool
     , escapes : List Escape
     , bareRefs : List BareRef
@@ -158,7 +174,7 @@ type alias ModuleContext =
     }
 
 
-{-| Everything the final evaluation needs about the target seam module.
+{-| Everything the final evaluation needs about the target recast module.
 -}
 type alias SeamInfo =
     { moduleKey : Rule.ModuleKey
@@ -189,11 +205,13 @@ type alias Escape =
     , importedRefs : List QualRef
     , baseName : String
     , support : Support
+    , callSiteAlreadyImportsRecast : Bool
+    , callSiteImportInsertAt : Maybe Location
     }
 
 
 {-| A module-qualified reference found inside an escape's arguments (e.g.
-`Seam.title`, `Value.small`, `Doc.markdown`). Classified later into self /
+`M3e.Unsafe.recast`, `Value.small`, `Doc.markdown`). Classified later into self /
 thread / import buckets once the project-wide import graph is known.
 -}
 type alias QualRef =
@@ -220,32 +238,35 @@ type Support
     | Punt String
 
 
-{-| A point-free / bare `Seam.*` reference we cannot cleanly extract.
+{-| A point-free / bare escape reference we cannot cleanly extract.
 -}
 type alias BareRef =
     { moduleKey : Rule.ModuleKey
     , moduleName : ModuleName
     , range : Range
     , fnName : String
+    , qualifier : String
     }
 
 
-fromProjectToModule : ModuleName -> List String -> Rule.ContextCreator ProjectContext ModuleContext
-fromProjectToModule seamModuleName allowed =
+fromProjectToModule : ModuleName -> Dict String (Set String) -> List ModuleName -> List String -> Rule.ContextCreator ProjectContext ModuleContext
+fromProjectToModule recastModuleName escapeIndex escapeModuleNames allowed =
     Rule.initContextCreator
         (\moduleKey moduleName lookup extract ast _ ->
             let
-                isSeam =
-                    moduleName == seamModuleName
+                isRecast =
+                    moduleName == recastModuleName
             in
             { moduleKey = moduleKey
             , moduleName = moduleName
             , lookup = lookup
             , extract = extract
             , ast = ast
-            , seamModuleName = seamModuleName
-            , isSeamModule = isSeam
-            , gated = not isSeam && not (isAllowed allowed (String.join "." moduleName))
+            , recastModuleName = recastModuleName
+            , escapeIndex = escapeIndex
+            , escapeModuleNames = escapeModuleNames
+            , isRecastModule = isRecast
+            , gated = not isRecast && not (isAllowed allowed (String.join "." moduleName))
             , escapes = []
             , bareRefs = []
             , coveredHeads = Set.empty
@@ -263,7 +284,7 @@ fromModuleToProject =
     Rule.initContextCreator
         (\ctx ->
             { seam =
-                if ctx.isSeamModule then
+                if ctx.isRecastModule then
                     Just (seamInfoFromModule ctx)
 
                 else
@@ -285,7 +306,7 @@ importedModuleNames ast =
 
 {-| Each imported module paired with the qualifier this module refers to it by:
 its alias if it has one, else its full dotted name. Lets a carried reference be
-rewritten to whatever the seam already calls that module.
+rewritten to whatever the recast module already calls that module.
 -}
 importQualifiers : File -> List ( String, String )
 importQualifiers ast =
@@ -325,8 +346,7 @@ foldProjectContexts new previous =
     }
 
 
-{-| Allow-list check, identical to `NoSeamOutsideAllowedModules`: dot-boundary
-prefix match.
+{-| Allow-list check: dot-boundary prefix match.
 -}
 isAllowed : List String -> String -> Bool
 isAllowed allowed currentModule =
@@ -353,12 +373,11 @@ expressionVisitor node ctx =
     else
         case Node.value node of
             Expression.Application (head :: args) ->
-                case seamRef ctx head of
+                case escapeRef ctx head of
                     Just fnName ->
                         if Set.member (locKey (.start (Node.range head))) ctx.coveredHeads then
-                            -- A nested `Seam.*` application inside an outer escape we
-                            -- already collected: it is de-qualified in the lifted body,
-                            -- not lifted on its own.
+                            -- A nested escape application inside an outer escape we
+                            -- already collected: cover it but don't lift independently.
                             ( [], ctx )
 
                         else
@@ -377,7 +396,7 @@ expressionVisitor node ctx =
                         ( [], ctx )
 
             Expression.FunctionOrValue _ fnName ->
-                case seamRef ctx node of
+                case escapeRef ctx node of
                     Just _ ->
                         if Set.member (locKey (.start (Node.range node))) ctx.coveredHeads then
                             ( [], ctx )
@@ -390,6 +409,7 @@ expressionVisitor node ctx =
                                     , moduleName = ctx.moduleName
                                     , range = Node.range node
                                     , fnName = fnName
+                                    , qualifier = qualifierOf node
                                     }
                                         :: ctx.bareRefs
                               }
@@ -403,35 +423,49 @@ expressionVisitor node ctx =
 
 
 {-| Locations to mark "covered" for an escape: the escape head, plus every nested
-`Seam.*` reference inside its arguments. Covering the nested seam refs stops them
-being reported independently (as their own escape or as a point-free bareRef);
-they are de-qualified in the lifted body instead.
+escape reference inside its arguments. Covering the nested escape refs stops them
+being reported independently (as their own escape or as a point-free bareRef).
 -}
 coverEscapeHeads : ModuleContext -> Escape -> Node Expression -> Set ( Int, Int )
 coverEscapeHeads ctx escape head =
     let
-        nestedSeamLocs =
+        nestedEscapeLocs =
             escape.qualRefs
-                |> List.filter (\r -> r.resolvedModule == Just ctx.seamModuleName)
+                |> List.filter (\r -> List.member r.resolvedModule (List.map Just ctx.escapeModuleNames))
                 |> List.map (\r -> locKey (.start r.range))
     in
     List.foldl Set.insert
         (Set.insert (locKey (.start (Node.range head))) ctx.coveredHeads)
-        nestedSeamLocs
+        nestedEscapeLocs
 
 
-{-| If `node` is a `FunctionOrValue` resolving (via the lookup table) to the seam
-module, return the function name.
+{-| If `node` is a `FunctionOrValue` resolving (via the lookup table) to one of
+the configured escape modules, and the fn name is in that module's escape list,
+return the function name.
 -}
-seamRef : ModuleContext -> Node Expression -> Maybe String
-seamRef ctx node =
+escapeRef : ModuleContext -> Node Expression -> Maybe String
+escapeRef ctx node =
     case Node.value node of
         Expression.FunctionOrValue _ name ->
-            if Lookup.moduleNameFor ctx.lookup node == Just ctx.seamModuleName then
-                Just name
+            case Lookup.moduleNameFor ctx.lookup node of
+                Just resolvedModule ->
+                    let
+                        moduleKey =
+                            String.join "." resolvedModule
+                    in
+                    case Dict.get moduleKey ctx.escapeIndex of
+                        Just fnSet ->
+                            if Set.member name fnSet then
+                                Just name
 
-            else
-                Nothing
+                            else
+                                Nothing
+
+                        Nothing ->
+                            Nothing
+
+                Nothing ->
+                    Nothing
 
         _ ->
             Nothing
@@ -443,10 +477,11 @@ buildEscape ctx node head fnName args =
         text =
             ctx.extract (Node.range node)
 
-        -- Analyze the head too, not just the args: a `Seam.*` head is a
-        -- self-reference that must be de-qualified when the body lands in the
-        -- seam module (`Seam.title …` → `title …`). It resolves to the seam
-        -- module, so it classifies as `Self` like any other self-reference.
+        -- Analyze head + args. Unlike the old Seam rule, the head resolves to an
+        -- ESCAPE module (not recastModule), so it will be carried as an import
+        -- (CarryImport bucket) rather than de-qualified (Self bucket). This means
+        -- the lifted body keeps the original qualified escape call, e.g.
+        -- `M3e.Unsafe.recast …`, which is what we want.
         analysis =
             mergeMany (List.map (analyzeExpr ctx.lookup) (head :: args))
 
@@ -478,6 +513,11 @@ buildEscape ctx node head fnName args =
     , importedRefs = analysis.importedRefs
     , baseName = deriveBaseName analysis.literals fnName
     , support = support
+    , callSiteAlreadyImportsRecast =
+        List.any
+            (\imp -> Node.value (Node.value imp).moduleName == ctx.recastModuleName)
+            ctx.ast.imports
+    , callSiteImportInsertAt = importOrHeaderFallback ctx.ast
     }
 
 
@@ -534,9 +574,9 @@ analyzeExpr lookup node =
                 case Lookup.moduleNameFor lookup node of
                     Just ((_ :: _) as m) ->
                         -- Imported unqualified value/constructor: usually available where the
-                        -- escape lands, but if its bare name also names a seam top-level it
-                        -- would rebind to the seam's own definition once lifted. Record it so
-                        -- the body can be re-qualified in that case (see `prepareEscape`).
+                        -- escape lands, but if its bare name also names a recast top-level it
+                        -- would rebind to the recast module's own definition once lifted.
+                        -- Record it so the body can be re-qualified in that case.
                         { emptyAnalysis
                             | importedRefs =
                                 [ { range = Node.range node
@@ -548,11 +588,10 @@ analyzeExpr lookup node =
                         }
 
                     _ ->
-                        -- Resolves to nothing or to this module (elm-review reports locals and
-                        -- current-module definitions as `Nothing`/`Just []`): not in scope in the
-                        -- seam module, so it must be captured. A lowercase value threads verbatim
-                        -- as a free variable; an uppercase constructor threads via a slugified
-                        -- parameter (a constructor name cannot itself be a parameter name).
+                        -- Resolves to nothing or to this module: not in scope in the
+                        -- recast module, so it must be captured. A lowercase value threads
+                        -- verbatim as a free variable; an uppercase constructor threads via
+                        -- a slugified parameter.
                         let
                             ref =
                                 { range = Node.range node, name = name }
@@ -564,9 +603,9 @@ analyzeExpr lookup node =
                             { emptyAnalysis | captures = [ ref ] }
 
             else
-                -- Module-qualified reference (`Seam.title`, `Value.small`, `Doc.markdown`).
-                -- Record it with its resolved module so it can be classified (self /
-                -- thread / import) once the project-wide import graph is known.
+                -- Module-qualified reference. Record it with its resolved module so it
+                -- can be classified (self / thread / import) once the project-wide
+                -- import graph is known.
                 { emptyAnalysis
                     | qualRefs =
                         [ { range = Node.range node
@@ -634,7 +673,7 @@ isLowerIdent name =
 
 
 
--- SEAM MODULE ANALYSIS
+-- RECAST MODULE ANALYSIS
 
 
 seamInfoFromModule : ModuleContext -> SeamInfo
@@ -656,7 +695,7 @@ seamInfoFromModule ctx =
     , existingNames = Set.fromList (List.filterMap declName decls)
     , liftedNames =
         functions
-            |> List.filter (\f -> isLiftedHelperBody ctx.lookup ctx.seamModuleName exposedNames_ f.body)
+            |> List.filter (\f -> isLiftedHelperBody ctx.lookup ctx.recastModuleName exposedNames_ f.body)
             |> List.map .name
             |> Set.fromList
     , bodyKeyToName =
@@ -667,10 +706,20 @@ seamInfoFromModule ctx =
     , exposedNames = exposedNames_
     , exposingAll = isExposingAll exposing_
     , exposingInsertAt = exposingInsertLocation exposing_
-    , declInsertAt = lastDeclarationEnd decls
+    , declInsertAt =
+        case lastDeclarationEnd decls of
+            Just loc ->
+                Just loc
+
+            Nothing ->
+                -- Empty destination module (first-adoption case): no
+                -- declaration to anchor after, so fall back to the same
+                -- spot a fresh import would land (after the last import,
+                -- else after the module header line).
+                importOrHeaderFallback ctx.ast
     , existingImports =
         Dict.fromList (importQualifiers ctx.ast)
-    , importInsertAt = lastImportEnd ctx.ast.imports
+    , importInsertAt = importOrHeaderFallback ctx.ast
     }
 
 
@@ -715,51 +764,46 @@ declName node =
 
 {-| Recognize an already-lifted helper so its call sites are not re-extracted.
 Its body (unwrapping parens) is an application whose head **resolves to** the
-seam module and is one of the module's **exposed** functions.
+recast module and is one of the module's **exposed** functions.
 
-Resolving the head (via the lookup table) rather than matching a written `Seam.`
-prefix means the marker still holds after the head is de-qualified — a lifted
-body reads `title Value.small […]`, not `Seam.title …`. Requiring the head to be
-exported is what separates a lifted helper (which always composes the public
-vocab: `title`, `asAttribute`, `div`, …) from a hand-written base-vocab function
-whose head is an internal helper (`el`, `typescale`) or an external producer
-(`TypedHtml.text`) — those must stay extractable.
+This is the convergence check: lifted fns live in `recastModule` (which is in
+`allowedModules`), so they're never re-extracted on a second `--fix` pass.
 
 -}
 isLiftedHelperBody : ModuleNameLookupTable -> ModuleName -> Set String -> Node Expression -> Bool
-isLiftedHelperBody lookup seamModuleName exposedNames body =
+isLiftedHelperBody lookup recastModuleName exposedNames body =
     case Node.value body of
         Expression.ParenthesizedExpression x ->
-            isLiftedHelperBody lookup seamModuleName exposedNames x
+            isLiftedHelperBody lookup recastModuleName exposedNames x
 
         Expression.Application (head :: _) ->
-            headResolvesToSeamExport lookup seamModuleName exposedNames head
+            headResolvesToRecastExport lookup recastModuleName exposedNames head
 
         Expression.FunctionOrValue _ _ ->
-            headResolvesToSeamExport lookup seamModuleName exposedNames body
+            headResolvesToRecastExport lookup recastModuleName exposedNames body
 
         _ ->
             False
 
 
-headResolvesToSeamExport : ModuleNameLookupTable -> ModuleName -> Set String -> Node Expression -> Bool
-headResolvesToSeamExport lookup seamModuleName exposedNames head =
+headResolvesToRecastExport : ModuleNameLookupTable -> ModuleName -> Set String -> Node Expression -> Bool
+headResolvesToRecastExport lookup recastModuleName exposedNames head =
     case Node.value head of
         Expression.FunctionOrValue _ name ->
             let
-                resolvesToSeam =
+                resolvesToRecast =
                     case Lookup.moduleNameFor lookup head of
                         Just [] ->
-                            -- Unqualified ref that resolves to this (the seam) module.
+                            -- Unqualified ref that resolves to this (the recast) module.
                             True
 
                         Just m ->
-                            m == seamModuleName
+                            m == recastModuleName
 
                         Nothing ->
                             False
             in
-            resolvesToSeam && Set.member name exposedNames
+            resolvesToRecast && Set.member name exposedNames
 
         _ ->
             False
@@ -835,6 +879,21 @@ lastImportEnd imports =
         |> List.foldl maxLocation Nothing
 
 
+{-| Where a fresh top-of-body insertion (an `import` line, or — for an empty
+destination module — the first lifted declaration) belongs: right after the
+last existing `import`, or if there are none, right after the module header
+line.
+-}
+importOrHeaderFallback : File -> Maybe Location
+importOrHeaderFallback ast =
+    case lastImportEnd ast.imports of
+        Just loc ->
+            Just loc
+
+        Nothing ->
+            Just (.end (Node.range ast.moduleDefinition))
+
+
 maxLocation : Location -> Maybe Location -> Maybe Location
 maxLocation loc acc =
     case acc of
@@ -854,18 +913,18 @@ maxLocation loc acc =
 
 
 finalEvaluation : ModuleName -> ProjectContext -> List (Error { useErrorForModule : () })
-finalEvaluation seamModuleName project =
+finalEvaluation recastModuleName project =
     case project.seam of
         Nothing ->
             []
 
         Just seam ->
             let
-                -- Modules that transitively import the seam module: a reference into
+                -- Modules that transitively import the recast module: a reference into
                 -- one of these must be threaded (not carried as an import) to avoid a
                 -- cycle.
                 cyclicSet =
-                    modulesDependingOnSeam seamModuleName project.moduleImports
+                    modulesDependingOnSeam recastModuleName project.moduleImports
 
                 -- Escapes that are genuinely extractable (not already lifted).
                 live =
@@ -884,12 +943,12 @@ finalEvaluation seamModuleName project =
 
                 groups =
                     fixable
-                        |> List.map (prepareEscape seamModuleName cyclicSet seam)
+                        |> List.map (prepareEscape recastModuleName cyclicSet seam)
                         |> groupByKey
 
                 ( groupErrors, _ ) =
                     List.foldl
-                        (assignAndEmit seamModuleName seam)
+                        (assignAndEmit recastModuleName seam)
                         ( [], seam.existingNames )
                         groups
             in
@@ -908,15 +967,15 @@ groupByKey prepared =
         |> Dict.toList
 
 
-{-| The set of modules that (transitively) import the seam module. A qualified
-reference into one of these cannot be carried as a seam import (it would form
-an import cycle), so it is threaded as a parameter instead.
+{-| The set of modules that (transitively) import the recast module. A qualified
+reference into one of these cannot be carried as an import (it would form an
+import cycle), so it is threaded as a parameter instead.
 -}
 modulesDependingOnSeam : ModuleName -> List ( ModuleName, List ModuleName ) -> Set String
-modulesDependingOnSeam seamModuleName moduleImports =
+modulesDependingOnSeam recastModuleName moduleImports =
     let
-        seamStr =
-            String.join "." seamModuleName
+        recastStr =
+            String.join "." recastModuleName
 
         edges =
             List.map (\( m, imps ) -> ( String.join "." m, List.map (String.join ".") imps )) moduleImports
@@ -927,7 +986,7 @@ modulesDependingOnSeam seamModuleName moduleImports =
                     if Set.member m acc then
                         acc
 
-                    else if List.any (\i -> i == seamStr || Set.member i acc) imps then
+                    else if List.any (\i -> i == recastStr || Set.member i acc) imps then
                         Set.insert m acc
 
                     else
@@ -961,27 +1020,27 @@ type Bucket
 
 
 classifyRef : ModuleName -> Set String -> Dict String String -> QualRef -> Bucket
-classifyRef seamModuleName cyclicSet seamImports ref =
+classifyRef recastModuleName cyclicSet recastImports ref =
     case ref.resolvedModule of
         Just m ->
-            if m == seamModuleName then
+            if m == recastModuleName then
                 Self
 
             else if Set.member (String.join "." m) cyclicSet then
                 Thread (slugify (ref.writtenQualifier ++ " " ++ ref.name))
 
             else
-                case Dict.get (String.join "." m) seamImports of
-                    Just seamQualifier ->
-                        if seamQualifier == ref.writtenQualifier then
+                case Dict.get (String.join "." m) recastImports of
+                    Just recastQualifier ->
+                        if recastQualifier == ref.writtenQualifier then
                             -- Already imported under the same qualifier: leave the
                             -- reference as written (its import is filtered out below).
                             CarryImport m ref.writtenQualifier
 
                         else
                             -- Already imported under a different qualifier (or unaliased):
-                            -- rewrite the reference to the seam's qualifier; add no import.
-                            Requalify seamQualifier
+                            -- rewrite the reference to the recast module's qualifier.
+                            Requalify recastQualifier
 
                     Nothing ->
                         CarryImport m ref.writtenQualifier
@@ -993,8 +1052,9 @@ classifyRef seamModuleName cyclicSet seamImports ref =
 {-| An escape whose qualified references have been classified and whose lifted
 body has been rewritten accordingly: self references de-qualified, cyclic
 references replaced by threaded parameters, importable references kept qualified
-(with the module recorded so the seam gains the import). The dedup key is the
-normalized rewritten body, so identical results merge and `--fix` converges.
+(with the module recorded so the recast module gains the import). The dedup key
+is the normalized rewritten body, so identical results merge and `--fix`
+converges.
 -}
 type alias Prepared =
     { escape : Escape
@@ -1007,10 +1067,10 @@ type alias Prepared =
 
 
 prepareEscape : ModuleName -> Set String -> SeamInfo -> Escape -> Prepared
-prepareEscape seamModuleName cyclicSet seam escape =
+prepareEscape recastModuleName cyclicSet seam escape =
     let
         classified =
-            List.map (\ref -> ( ref, classifyRef seamModuleName cyclicSet seam.existingImports ref )) escape.qualRefs
+            List.map (\ref -> ( ref, classifyRef recastModuleName cyclicSet seam.existingImports ref )) escape.qualRefs
 
         -- Body edits that introduce no parameter: self-references de-qualified.
         fixedEdits =
@@ -1018,9 +1078,6 @@ prepareEscape seamModuleName cyclicSet seam escape =
 
         -- The lifted function's parameters, in a stable order: captured free
         -- variables, then captured constructors, then threaded cyclic refs.
-        -- Repeated same-argument occurrences merge; a parameter whose name would
-        -- shadow an existing seam top-level (or an earlier parameter) is renamed.
-        -- Each carries the body ranges to rewrite to its final name.
         assignedParams =
             mergeParams
                 (freeRawParams escape.freeRefs
@@ -1036,7 +1093,7 @@ prepareEscape seamModuleName cyclicSet seam escape =
 
         importedEdits =
             List.filterMap
-                (importedRequalify seamModuleName seam.existingNames seam.existingImports)
+                (importedRequalify recastModuleName seam.existingNames seam.existingImports)
                 escape.importedRefs
 
         body =
@@ -1064,8 +1121,7 @@ prepareEscape seamModuleName cyclicSet seam escape =
     }
 
 
-{-| A lifted-function parameter before its final name is chosen: a desired name,
-the argument to pass at the call site, and the body ranges to rewrite.
+{-| A lifted-function parameter before its final name is chosen.
 -}
 type alias RawParam =
     { desired : String
@@ -1081,24 +1137,21 @@ type alias FinalParam =
     }
 
 
-{-| Captured lowercase locals become parameters named verbatim (the call site
-passes the same name from its own scope).
+{-| Captured lowercase locals become parameters named verbatim.
 -}
 freeRawParams : List LocalRef -> List RawParam
 freeRawParams refs =
     List.map (\r -> { desired = r.name, callArg = r.name, ranges = [ r.range ] }) refs
 
 
-{-| Captured uppercase constructors become parameters named by a lowercase slug
-of the constructor; the call site passes the constructor itself.
+{-| Captured uppercase constructors become parameters named by a lowercase slug.
 -}
 captureRawParams : List LocalRef -> List RawParam
 captureRawParams caps =
     List.map (\c -> { desired = slugify c.name, callArg = c.name, ranges = [ c.range ] }) caps
 
 
-{-| Threaded cyclic references become parameters named by a slug; the call site
-passes the original qualified reference.
+{-| Threaded cyclic references become parameters named by a slug.
 -}
 threadRawParams : List ( QualRef, Bucket ) -> List RawParam
 threadRawParams classified =
@@ -1120,7 +1173,6 @@ threadRawParams classified =
 
 {-| Merge parameter occurrences sharing both a desired name and a call-site
 argument (the same value used more than once), concatenating their body ranges.
-Occurrences sharing only the name are a genuine clash, left distinct for renaming.
 -}
 mergeParams : List RawParam -> List RawParam
 mergeParams raws =
@@ -1144,9 +1196,8 @@ mergeParams raws =
         raws
 
 
-{-| Give each parameter a final name colliding with neither an existing seam
-top-level name nor an earlier parameter, appending `_` until free. Deterministic,
-so identical escapes still rewrite to identical bodies (and so dedup together).
+{-| Give each parameter a final name colliding with neither an existing recast
+top-level name nor an earlier parameter, appending `_` until free.
 -}
 assignParamNames : Set String -> List RawParam -> List FinalParam
 assignParamNames existingNames raws =
@@ -1188,8 +1239,7 @@ bodyEdit ( ref, bucket ) =
             Just { start = ref.range.start, end = ref.range.end, replacement = newQualifier ++ "." ++ ref.name }
 
         Thread _ ->
-            -- Threaded cyclic refs are rewritten via `threadRawParams`/`paramEdits`,
-            -- so the parameter name can be de-collided first. No fixed edit here.
+            -- Threaded cyclic refs are rewritten via `threadRawParams`/`paramEdits`.
             Nothing
 
         CarryImport _ _ ->
@@ -1199,17 +1249,17 @@ bodyEdit ( ref, bucket ) =
             Nothing
 
 
-{-| An unqualified imported value normally lands fine in the seam module. But if
-its bare name also names a seam top-level, the lifted body would rebind it to the
-seam's own definition. When that happens and the seam imports the value's real
-module, re-qualify the reference to the seam's qualifier for that module.
+{-| An unqualified imported value normally lands fine in the recast module. But
+if its bare name also names a recast top-level, the lifted body would rebind it.
+When that happens and the recast module imports the value's real module,
+re-qualify the reference to the recast module's qualifier for that module.
 -}
 importedRequalify : ModuleName -> Set String -> Dict String String -> QualRef -> Maybe BodyEdit
-importedRequalify seamModuleName existingNames seamImports ref =
+importedRequalify recastModuleName existingNames recastImports ref =
     case ref.resolvedModule of
         Just m ->
-            if m /= seamModuleName && Set.member ref.name existingNames then
-                case Dict.get (String.join "." m) seamImports of
+            if m /= recastModuleName && Set.member ref.name existingNames then
+                case Dict.get (String.join "." m) recastImports of
                     Just qualifier ->
                         Just { start = ref.range.start, end = ref.range.end, replacement = qualifier ++ "." ++ ref.name }
 
@@ -1223,10 +1273,7 @@ importedRequalify seamModuleName existingNames seamImports ref =
             Nothing
 
 
-{-| Apply range-based edits to the escape text. Offsets are computed relative to
-the escape's start and spliced right-to-left so earlier edits never shift the
-offsets of later ones. Tailwind string literals inside the escape are never
-touched because only qualifier/reference ranges are edited.
+{-| Apply range-based edits to the escape text.
 -}
 applyBodyEdits : Location -> String -> List BodyEdit -> String
 applyBodyEdits textStart text edits =
@@ -1245,7 +1292,7 @@ applyBodyEdits textStart text edits =
 
 
 {-| Character offset of a source `Location` into `text`, where `text` begins at
-`textStart`. Assumes `\n` line separators (Elm source files).
+`textStart`. Assumes `\n` line separators.
 -}
 locOffset : Location -> String -> Location -> Int
 locOffset textStart text loc =
@@ -1294,7 +1341,7 @@ assignAndEmit :
     -> ( String, List Prepared )
     -> ( List (Error { useErrorForModule : () }), Set String )
     -> ( List (Error { useErrorForModule : () }), Set String )
-assignAndEmit seamModuleName seam ( key, prepared ) ( errorsAcc, takenNames ) =
+assignAndEmit recastModuleName seam ( key, prepared ) ( errorsAcc, takenNames ) =
     case sortPrepared prepared of
         [] ->
             ( errorsAcc, takenNames )
@@ -1322,12 +1369,15 @@ assignAndEmit seamModuleName seam ( key, prepared ) ( errorsAcc, takenNames ) =
                 needsExpose =
                     needsInsert || (not seam.exposingAll && not (Set.member name seam.exposedNames))
 
+                recastModuleStr =
+                    String.join "." recastModuleName
+
                 callSiteFixes =
                     preparedByModule prepared
                         |> List.map
                             (\( moduleKey, modulePrepared ) ->
                                 Rule.editModule moduleKey
-                                    (List.map (callSiteFix seamModuleName name) modulePrepared)
+                                    (callSiteFixList recastModuleName name modulePrepared)
                             )
 
                 seamFixes =
@@ -1339,10 +1389,10 @@ assignAndEmit seamModuleName seam ( key, prepared ) ( errorsAcc, takenNames ) =
 
                 emitted =
                     Rule.errorForModule escape.moduleKey
-                        { message = "`" ++ escape.qualifier ++ "." ++ escape.fnName ++ "` escape can be lifted into `" ++ String.join "." seamModuleName ++ "." ++ name ++ "`"
+                        { message = "`" ++ escape.qualifier ++ "." ++ escape.fnName ++ "` escape can be lifted into `" ++ recastModuleStr ++ "." ++ name ++ "`"
                         , details =
-                            [ "This `" ++ escape.qualifier ++ ".*` escape discards a type guarantee in a module that is not allowed to use the seam. The fix lifts it into `" ++ String.join "." seamModuleName ++ "` as `" ++ name ++ "` and rewrites this call site to `" ++ String.join "." seamModuleName ++ "." ++ name ++ "`."
-                            , "Naming and de-duplication are deterministic, so re-running `--fix` converges: identical escapes share one lifted function, and an already-lifted `" ++ String.join "." seamModuleName ++ "` function is never re-extracted."
+                            [ "This `" ++ escape.qualifier ++ ".*` escape discards a type guarantee in a module that is not allowed to use the seam. The fix lifts it into `" ++ recastModuleStr ++ "` as `" ++ name ++ "` and rewrites this call site to `" ++ recastModuleStr ++ "." ++ name ++ "`."
+                            , "Naming and de-duplication are deterministic, so re-running `--fix` converges: identical escapes share one lifted function, and an already-lifted `" ++ recastModuleStr ++ "` function is never re-extracted."
                             ]
                         }
                         escape.range
@@ -1368,23 +1418,50 @@ preparedByModule prepared =
         |> Dict.values
 
 
+{-| All fixes for a single call-site module: one `replaceRangeBy` per escape
+rewrite, plus (at most) one `insertAt` for `import Recast` if the module does
+not already import the recast module.
+-}
+callSiteFixList : ModuleName -> String -> List Prepared -> List Fix
+callSiteFixList recastModuleName name modulePrepared =
+    let
+        rewriteFixes =
+            List.map (callSiteFix recastModuleName name) modulePrepared
+
+        importFix =
+            case modulePrepared of
+                [] ->
+                    []
+
+                first :: _ ->
+                    let
+                        escape =
+                            first.escape
+                    in
+                    if escape.callSiteAlreadyImportsRecast then
+                        []
+
+                    else
+                        case escape.callSiteImportInsertAt of
+                            Just loc ->
+                                [ Fix.insertAt loc ("\nimport " ++ String.join "." recastModuleName) ]
+
+                            Nothing ->
+                                []
+    in
+    rewriteFixes ++ importFix
+
+
 callSiteFix : ModuleName -> String -> Prepared -> Fix
-callSiteFix seamModuleName name prepared =
+callSiteFix recastModuleName name prepared =
     let
         escape =
             prepared.escape
 
-        qualifier =
-            if String.isEmpty escape.qualifier then
-                String.join "." seamModuleName
-
-            else
-                escape.qualifier
-
         args =
             String.concat (List.map (\v -> " " ++ v) prepared.callArgs)
     in
-    Fix.replaceRangeBy escape.range (qualifier ++ "." ++ name ++ args)
+    Fix.replaceRangeBy escape.range (String.join "." recastModuleName ++ "." ++ name ++ args)
 
 
 seamFixList : SeamInfo -> String -> Prepared -> Bool -> Bool -> List Fix
@@ -1472,8 +1549,8 @@ puntError escape =
     Rule.errorForModule escape.moduleKey
         { message = "`" ++ escape.qualifier ++ "." ++ escape.fnName ++ "` escape cannot be auto-extracted"
         , details =
-            [ "This seam escape " ++ reason ++ ", so `ExtractToSeam` will not emit a fix that could be wrong."
-            , "Lift it into the seam module by hand (as a named function taking the captured values as arguments), then use it here."
+            [ "This escape " ++ reason ++ ", so `ExtractToSeam` will not emit a fix that could be wrong."
+            , "Lift it into the recast module by hand (as a named function taking the captured values as arguments), then use it here."
             ]
         }
         escape.range
@@ -1482,10 +1559,10 @@ puntError escape =
 bareRefError : BareRef -> Error { useErrorForModule : () }
 bareRefError ref =
     Rule.errorForModule ref.moduleKey
-        { message = "`Seam." ++ ref.fnName ++ "` is used point-free and cannot be auto-extracted"
+        { message = "`" ++ ref.qualifier ++ "." ++ ref.fnName ++ "` is used point-free and cannot be auto-extracted"
         , details =
-            [ "This is a bare (point-free) reference to a seam function rather than an applied escape expression, so there is nothing self-contained to lift."
-            , "Refactor it into an applied escape, or lift the surrounding expression into the seam module by hand."
+            [ "This is a bare (point-free) reference to an escape function rather than an applied escape expression, so there is nothing self-contained to lift."
+            , "Refactor it into an applied escape, or lift the surrounding expression into the recast module by hand."
             ]
         }
         ref.range
@@ -1496,7 +1573,7 @@ bareRefError ref =
 
 
 {-| Derive a readable camelCase base name from the escape's string literals,
-falling back to `seam<EscapeFn>`.
+falling back to `recast<EscapeFn>`.
 -}
 deriveBaseName : List String -> String -> String
 deriveBaseName literals fnName =
@@ -1505,7 +1582,7 @@ deriveBaseName literals fnName =
             slugify (String.join " " literals)
     in
     if String.isEmpty fromLiterals then
-        "seam" ++ capitalizeFirst fnName
+        "recast" ++ capitalizeFirst fnName
 
     else
         fromLiterals

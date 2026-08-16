@@ -53,7 +53,7 @@ all =
             \() ->
                 """module A exposing (v)
 import M3e.IconButton
-v = M3e.IconButton.view [] []
+v = M3e.IconButton.component [] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -63,7 +63,7 @@ v = M3e.IconButton.view [] []
                                 [ "The component declares `aria-label` as required for iconButton (and accessibility guidance treats an accessible name as non-optional)."
                                 , "Add `M3e.Aria.label \"...\"` to the attrs list."
                                 ]
-                            , under = "M3e.IconButton.view"
+                            , under = "M3e.IconButton.component"
                             }
                         ]
         , test "accepts Standard call with M3e.Aria.label" <|
@@ -71,7 +71,7 @@ v = M3e.IconButton.view [] []
                 """module A exposing (v)
 import M3e.IconButton
 import M3e.Aria
-v = M3e.IconButton.view [ M3e.Aria.label "Close" ] []
+v = M3e.IconButton.component [ M3e.Aria.label "Close" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -80,7 +80,7 @@ v = M3e.IconButton.view [ M3e.Aria.label "Close" ] []
                 [ """module A exposing (v)
 import M3e.IconButton
 import TypedHtml.Aria
-v = M3e.IconButton.view [ TypedHtml.Aria.label "Close" ] []
+v = M3e.IconButton.component [ TypedHtml.Aria.label "Close" ] []
 """
                 , """module TypedHtml.Aria exposing (label)
 label : String -> Int
@@ -94,7 +94,7 @@ label _ = 0
                 """module A exposing (v)
 import M3e.IconButton
 import M3e.Html.Attr
-v = M3e.IconButton.view [ M3e.Html.Attr.attribute "aria-label" "Close" ] []
+v = M3e.IconButton.component [ M3e.Html.Attr.attribute "aria-label" "Close" ] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -102,7 +102,7 @@ v = M3e.IconButton.view [ M3e.Html.Attr.attribute "aria-label" "Close" ] []
             \() ->
                 """module A exposing (v)
 import M3e.Record.IconButton
-v = M3e.Record.IconButton.view { content = a } [] []
+v = M3e.Record.IconButton.component { content = a } [] []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -112,14 +112,14 @@ v = M3e.Record.IconButton.view { content = a } [] []
                                 [ "The component declares `aria-label` as required for iconButton (and accessibility guidance treats an accessible name as non-optional)."
                                 , "Add `M3e.Aria.label \"...\"` to the attrs list."
                                 ]
-                            , under = "M3e.Record.IconButton.view"
+                            , under = "M3e.Record.IconButton.component"
                             }
                         ]
         , test "silent when attrs list is unresolved" <|
             \() ->
                 """module A exposing (v)
 import M3e.IconButton
-v = M3e.IconButton.view dynamicAttrs []
+v = M3e.IconButton.component dynamicAttrs []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectNoErrors
@@ -127,7 +127,7 @@ v = M3e.IconButton.view dynamicAttrs []
             \() ->
                 """module A exposing (v)
 import M3e.Card
-v = M3e.Card.view [] []
+v = M3e.Card.component [] []
 """
                     |> Review.Test.run
                         (rule [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
@@ -140,7 +140,7 @@ v =
     let
         attrs = []
     in
-    M3e.IconButton.view attrs []
+    M3e.IconButton.component attrs []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -150,7 +150,7 @@ v =
                                 [ "The component declares `aria-label` as required for iconButton (and accessibility guidance treats an accessible name as non-optional)."
                                 , "Add `M3e.Aria.label \"...\"` to the attrs list."
                                 ]
-                            , under = "M3e.IconButton.view"
+                            , under = "M3e.IconButton.component"
                             }
                         ]
         , test "scope reset: second declaration does not inherit let-bindings of first" <|
@@ -162,12 +162,12 @@ v1 =
     let
         attrs = [ M3e.Aria.label "Close" ]
     in
-    M3e.IconButton.view attrs []
+    M3e.IconButton.component attrs []
 v2 =
     let
         attrs = []
     in
-    M3e.IconButton.view attrs []
+    M3e.IconButton.component attrs []
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -177,15 +177,15 @@ v2 =
                                 [ "The component declares `aria-label` as required for iconButton (and accessibility guidance treats an accessible name as non-optional)."
                                 , "Add `M3e.Aria.label \"...\"` to the attrs list."
                                 ]
-                            , under = "M3e.IconButton.view"
+                            , under = "M3e.IconButton.component"
                             }
-                            |> Review.Test.atExactly { start = { row = 13, column = 5 }, end = { row = 13, column = 24 } }
+                            |> Review.Test.atExactly { start = { row = 13, column = 5 }, end = { row = 13, column = 29 } }
                         ]
         , test "Fab with label slot filled does not flag aria-label" <|
             \() ->
                 """module A exposing (v)
 import M3e.Fab
-v = M3e.Fab.view [] [ M3e.Fab.label [ M3e.Fab.child icon ] ]
+v = M3e.Fab.component [] [ M3e.Fab.label [ M3e.Fab.child icon ] ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -193,7 +193,7 @@ v = M3e.Fab.view [] [ M3e.Fab.label [ M3e.Fab.child icon ] ]
             \() ->
                 """module A exposing (v)
 import M3e.IconButton
-v = M3e.IconButton.view [] [ M3e.IconButton.child icon ]
+v = M3e.IconButton.component [] [ M3e.IconButton.child icon ]
 """
                     |> Review.Test.run (rule iconButtonFacts)
                     |> Review.Test.expectErrors
@@ -203,7 +203,7 @@ v = M3e.IconButton.view [] [ M3e.IconButton.child icon ]
                                 [ "The component declares `aria-label` as required for iconButton (and accessibility guidance treats an accessible name as non-optional)."
                                 , "Add `M3e.Aria.label \"...\"` to the attrs list."
                                 ]
-                            , under = "M3e.IconButton.view"
+                            , under = "M3e.IconButton.component"
                             }
                         ]
 

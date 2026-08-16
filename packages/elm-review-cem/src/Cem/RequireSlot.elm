@@ -53,20 +53,22 @@ type alias Index =
 
 buildIndex : List Fact -> Index
 buildIndex facts =
-    facts
-        |> List.map
-            (\f ->
-                ( Facts.factKey f
-                , { setters =
-                        f.requiredSlots
-                            |> List.filter (\s -> List.member s f.multiSlots)
-                            |> List.map (slotSetter f)
-                  , named = Facts.namedSlotSetters f
-                  }
-                )
+    -- Derive from the canonical barrel-aware `Facts.buildIndex` (inserts the
+    -- barrel-alias key alongside the `factKey`) so barrel call sites (`M3e.grid …`)
+    -- resolve. A private `factKey`-only index was DEAD on the barrel surface on
+    -- real generated facts; flat test fixtures (`module_ = "M3e.Grid"`) masked it.
+    -- See docs/decisions.md "Facts-index canonicality".
+    Facts.buildIndex facts
+        |> Dict.map
+            (\_ f ->
+                { setters =
+                    f.requiredSlots
+                        |> List.filter (\s -> List.member s f.multiSlots)
+                        |> List.map (slotSetter f)
+                , named = Facts.namedSlotSetters f
+                }
             )
-        |> List.filter (\( _, info ) -> not (List.isEmpty info.setters))
-        |> Dict.fromList
+        |> Dict.filter (\_ info -> not (List.isEmpty info.setters))
 
 
 {-| The content-setter name for a slot. Checks slotRewrites first (e.g. "unnamed" -> "child"),
@@ -156,11 +158,30 @@ expressionVisitor node context =
             ( [], context )
 
 
-{-| The content is the _last_ argument of a fully-applied constructor.
+{-| The content is the _last_ argument of a fully-applied constructor — UNLESS
+the default/repeatable `child` slot is required, in which case the two-arity
+`component` ctor threads its content through the leading required
+record's `content` field instead: `component required_ attrs children = H.select
+attrs (required_.content :: children)`. That record is a THIRD, LEADING
+argument (`component : { content : Element ... } -> attrs -> children -> Element`),
+so a call site with this shape has 3 args, not 2 — a call site without a
+required default slot, or the bare `component attrs children` arity, still has exactly 2
+(`attrs children`), and `args[0]` there is `attrs`, never a content record.
+
+Once the leading record is visible at all, Elm's own type system already
+guarantees its `content` field is set (exactly the posture
+`MissingRequiredSingularSlot` takes for required-singular slots) — we don't
+need to also classify what kind of element it holds, unlike a raw entry in
+the trailing content list. If the record can't be resolved statically (a
+variable, a helper call, …), stay silent about the default slot specifically
+(advisory posture) rather than false-positive; other required-multi setters,
+if any, are still checked against the trailing list as before.
+
 Uses `Facts.tracedList` to look through dynamic expressions (List.map, concat, etc.).
 We only flag when we have enough args (>=2 for Standard, >=3 for Record).
 When `unresolved = True` we still check the known setters but stay silent if
 there are zero known (we can't distinguish "truly empty" from "all-dynamic").
+
 -}
 checkCall : Context -> List String -> String -> RequiredInfo -> { start : { row : Int, column : Int }, end : { row : Int, column : Int } } -> List (Node Expression) -> List (Error {})
 checkCall context namespace componentNoun info range args =
@@ -168,31 +189,62 @@ checkCall context namespace componentNoun info range args =
         case List.reverse args of
             last :: _ ->
                 let
+                    -- A leading content-record argument can only be present
+                    -- when the default slot is required (`component`'s codegen only
+                    -- adds that leading param in that case) AND there are
+                    -- enough args for one to exist ahead of `attrs, children`.
+                    hasCandidateRecord : Bool
+                    hasCandidateRecord =
+                        List.member "child" info.setters && List.length args >= 3
+
+                    leadingRecordFields : Maybe (Dict String (Node Expression))
+                    leadingRecordFields =
+                        if hasCandidateRecord then
+                            args
+                                |> List.head
+                                |> Maybe.andThen (Facts.resolveRecordFields context.scope)
+
+                        else
+                            Nothing
+
+                    defaultSatisfiedByRecord : Bool
+                    defaultSatisfiedByRecord =
+                        leadingRecordFields
+                            |> Maybe.map (Dict.member "content")
+                            |> Maybe.withDefault False
+
+                    defaultRecordUnresolved : Bool
+                    defaultRecordUnresolved =
+                        hasCandidateRecord && leadingRecordFields == Nothing
+
                     traced =
                         Facts.tracedList context.lookup context.scope last
+
+                    present =
+                        List.filterMap (elementSetter context namespace componentNoun) traced.known
+
+                    -- The default (`unnamed`→`child`) slot is filled by raw
+                    -- default children in the content list, an explicit
+                    -- `<Comp>.child` setter never appears there — or, since
+                    -- el-unification, by the leading record's `content` field
+                    -- (`defaultSatisfiedByRecord`).
+                    hasDefaultChild =
+                        defaultSatisfiedByRecord
+                            || List.any
+                                (Facts.fillsDefaultSlot [ namespace ] context.lookup info.named componentNoun)
+                                traced.known
                 in
-                if traced.unresolved && List.isEmpty traced.known then
+                if traced.unresolved && List.isEmpty traced.known && not defaultSatisfiedByRecord then
                     -- Truly opaque — stay silent rather than false-positive
                     []
 
                 else
-                    let
-                        present =
-                            List.filterMap (elementSetter context namespace componentNoun) traced.known
-
-                        -- The default (`unnamed`→`child`) slot is filled by raw
-                        -- default children in the content list, not by an
-                        -- explicit `<Comp>.child` setter.
-                        hasDefaultChild =
-                            List.any
-                                (Facts.fillsDefaultSlot [ namespace ] context.lookup info.named componentNoun)
-                                traced.known
-                    in
                     info.setters
                         |> List.filter
                             (\name ->
                                 not (List.member name present)
                                     && not (name == "child" && hasDefaultChild)
+                                    && not (name == "child" && defaultRecordUnresolved)
                             )
                         |> List.map (\name -> error name range)
 

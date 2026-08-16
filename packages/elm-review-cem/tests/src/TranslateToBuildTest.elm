@@ -12,7 +12,7 @@ is BOTH an attr and a slot (so the slot setter takes the `Slot` suffix).
 buttonFacts : List Facts.Fact
 buttonFacts =
     [ { component = "button"
-      , module_ = "M3e.Button"
+      , module_ = "M3e.Component.Button"
       , enums = [ ( "variant", [ "elevated", "filled", "tonal" ] ) ]
       , requiredSlots = [ "unnamed" ]
       , multiSlots = []
@@ -34,7 +34,7 @@ buttonFacts =
 avatarFacts : List Facts.Fact
 avatarFacts =
     [ { component = "avatar"
-      , module_ = "M3e.Avatar"
+      , module_ = "M3e.Component.Avatar"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -53,7 +53,7 @@ avatarFacts =
 
 message : String
 message =
-    "This Standard `view` call can be rewritten to the builder pipeline (`build … |> toElement`) surface"
+    "This Standard `component` call can be rewritten to the builder pipeline (`build … |> toElement`) surface"
 
 
 details : List String
@@ -69,97 +69,97 @@ all =
             \() ->
                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Component.Button
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.view [ M3e.Button.variant v, M3e.Button.onClick DoThing ] [ M3e.Button.child c, M3e.Button.icon i ]
+    M3e.Component.Button.button [ M3e.Component.Button.variant v, M3e.Component.Button.onClick DoThing ] [ M3e.Component.Button.child c, M3e.Component.Button.icon i ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.Button.view [ M3e.Button.variant v, M3e.Button.onClick DoThing ] [ M3e.Button.child c, M3e.Button.icon i ]"
+                            , under = "M3e.Component.Button.button [ M3e.Component.Button.variant v, M3e.Component.Button.onClick DoThing ] [ M3e.Component.Button.child c, M3e.Component.Button.icon i ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Component.Button
 import M3e.Action
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.build { content = c, action = M3e.Action.onClick DoThing } |> M3e.Button.withVariant v |> M3e.Button.withIcon i |> M3e.Button.toElement
+    M3e.Build.Button.build { content = c, action = M3e.Action.onClick DoThing } |> M3e.Build.Button.withVariant v |> M3e.Build.Button.withIcon i |> M3e.Build.Button.toElement
 """
                         ]
         , test "the selected slot setter takes a Slot suffix (collides with the selected attr)" <|
             \() ->
                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 
 view =
-    M3e.Button.view [ M3e.Button.selected True ] [ M3e.Button.child c, M3e.Button.selected s ]
+    M3e.Component.Button.button [ M3e.Component.Button.selected True ] [ M3e.Component.Button.child c, M3e.Component.Button.selected s ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.Button.view [ M3e.Button.selected True ] [ M3e.Button.child c, M3e.Button.selected s ]"
+                            , under = "M3e.Component.Button.button [ M3e.Component.Button.selected True ] [ M3e.Component.Button.child c, M3e.Component.Button.selected s ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 import M3e.Action
 
 view =
-    M3e.Button.build { content = c, action = M3e.Action.none } |> M3e.Button.withSelected True |> M3e.Button.withSelectedSlot s |> M3e.Button.toElement
+    M3e.Build.Button.build { content = c, action = M3e.Action.none } |> M3e.Build.Button.withSelected True |> M3e.Build.Button.withSelectedSlot s |> M3e.Build.Button.toElement
 """
                         ]
         , test "a component with no required record has an argument-less build" <|
             \() ->
                 """module A exposing (view)
 
-import M3e.Avatar
+import M3e.Component.Avatar
 
 view =
-    M3e.Avatar.view [] [ c ]
+    M3e.Component.Avatar.avatar [] [ c ]
 """
                     |> Review.Test.run (rule avatarFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.Avatar.view [] [ c ]"
+                            , under = "M3e.Component.Avatar.avatar [] [ c ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (view)
 
-import M3e.Avatar
+import M3e.Component.Avatar
 
 view =
-    M3e.Avatar.build |> M3e.Avatar.withChild c |> M3e.Avatar.toElement
+    M3e.Build.Avatar.build |> M3e.Build.Avatar.withChild c |> M3e.Build.Avatar.toElement
 """
                         ]
         , test "IDEMPOTENCE: a build pipeline is left untouched (single-pass fixpoint)" <|
             \() ->
                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Build.Button
 import M3e.Action
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.build { content = c, action = M3e.Action.onClick DoThing } |> M3e.Button.withVariant v |> M3e.Button.withIcon i |> M3e.Button.toElement
+    M3e.Build.Button.build { content = c, action = M3e.Action.onClick DoThing } |> M3e.Build.Button.withVariant v |> M3e.Build.Button.withIcon i |> M3e.Build.Button.toElement
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectNoErrors
@@ -167,10 +167,10 @@ view =
             \() ->
                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 
 view =
-    M3e.Button.view [ someOtherAttr ] [ M3e.Button.child c ]
+    M3e.Component.Button.button [ someOtherAttr ] [ M3e.Component.Button.child c ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectNoErrors

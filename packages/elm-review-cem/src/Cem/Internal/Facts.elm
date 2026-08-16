@@ -3,11 +3,13 @@ module Cem.Internal.Facts exposing
     , buildIndex, find
     , TracedList, tracedList
     , camelize, capitalize
-    , rootParts, namespaces, factNamespaceParts, factNamespace, factComponentSegment, htmlTagOf, safeValue
+    , rootParts, namespaces, barrelNamespaceParts, barrelRootParts, barrelRoot, hasRecordFormConstructor, factNamespaceParts, factNamespace, factComponentSegment, htmlTagOf, safeValue
     , factKey, siteKey
     , isTopLayerModule, dropPrefix, remainderUnder
     , namedSlotSetters, fillsDefaultSlot
     , attrBarrelName, ariaBarrelName, barrelSlotSetter
+    , resolveRecordFields
+    , decapitalize
     )
 
 {-| Shared helpers for the codegen-aware rules that consume `Cem.Facts`.
@@ -20,11 +22,12 @@ hardcoded. Rules pass the derived `rootParts` into `callSite` / `isTopLayerModul
 @docs buildIndex, find
 @docs TracedList, tracedList
 @docs camelize, capitalize
-@docs rootParts, namespaces, factNamespaceParts, factNamespace, factComponentSegment, htmlTagOf, safeValue
+@docs rootParts, namespaces, barrelNamespaceParts, barrelRootParts, barrelRoot, hasRecordFormConstructor, factNamespaceParts, factNamespace, factComponentSegment, htmlTagOf, safeValue
 @docs factKey, siteKey
 @docs isTopLayerModule, dropPrefix, remainderUnder
 @docs namedSlotSetters, fillsDefaultSlot
 @docs attrBarrelName, ariaBarrelName, barrelSlotSetter
+@docs resolveRecordFields
 
 -}
 
@@ -56,45 +59,147 @@ rootParts facts =
             []
 
 
-{-| Every DISTINCT namespace (and its ancestor prefixes) present in the
-facts, sorted longest-first. Includes ancestors so that sibling sub-trees
-(e.g. `M3e.Unsafe.Attributes` alongside `M3e.Component.Button`) share the
-common root (`M3e`). Longest-first ordering ensures `callSiteUnder` matches
-the most specific root before falling through to a shorter barrel prefix.
+{-| Every DISTINCT namespace present in the facts, in first-seen order
+(`M3e.Button … ++ TypedHtml.Div …` → `[ ["M3e"], ["TypedHtml"] ]`). This is what
+rules resolve call sites against, so concatenated multi-library facts each take
+effect instead of only the first library's.
+
+When a component module lives under an intermediate sub-namespace (e.g.
+`M3e.Component.Button` → namespace `["M3e", "Component"]`), the barrel functions
+(`M3e.toHtml`, `M3e.iconButton`, `M3e.Unsafe.*`) live at the root (`["M3e"]`).
+Both must be included so call-site resolution handles barrel calls AND per-component
+calls. `barrelNamespaceParts` derives the barrel root generically: any namespace
+with two or more segments has an intermediate, and the barrel root is all-but-last.
+This handles ANY future intermediate segment without code changes here.
+
 -}
 namespaces : List Fact -> List (List String)
 namespaces facts =
-    let
-        allPrefixes ns =
-            case ns of
-                [] ->
-                    []
+    List.foldl
+        (\fact acc ->
+            let
+                ns =
+                    factNamespaceParts fact
 
-                _ ->
-                    ns :: allPrefixes (dropLast ns)
+                barrel =
+                    barrelNamespaceParts ns
 
-        unique =
-            List.foldl
-                (\fact acc ->
-                    let
-                        prefixes =
-                            allPrefixes (factNamespaceParts fact)
-                    in
-                    List.foldl
-                        (\p a ->
-                            if List.member p a then
-                                a
-
-                            else
-                                a ++ [ p ]
-                        )
+                acc1 =
+                    if List.member ns acc then
                         acc
-                        prefixes
-                )
-                []
-                facts
+
+                    else
+                        acc ++ [ ns ]
+            in
+            case barrel of
+                Just barrelNs ->
+                    if List.member barrelNs acc1 then
+                        acc1
+
+                    else
+                        -- Barrel root goes FIRST: barrel calls are resolved
+                        -- before per-component calls, matching firstJust order.
+                        barrelNs :: acc1
+
+                Nothing ->
+                    acc1
+        )
+        []
+        facts
+
+
+{-| When a component namespace has MORE than one segment, return all-but-last
+as the barrel root namespace. `["M3e", "Component"]` → `Just ["M3e"]`.
+Single-segment namespaces (`["M3e"]`) return `Nothing` — they are already
+at the root, no intermediate segment exists.
+
+**Design choice — pragmatic single-brand-root assumption:** every brand
+supported by elm-cem has a SINGLE-segment root (`"M3e"`, `"TypedHtml"`,
+`"HtmlIr"`, etc.). An intermediate segment always occupies exactly ONE
+position between the brand root and the component leaf. Therefore,
+`dropLast ns` when `List.length ns >= 2` correctly yields the barrel root.
+This avoids hardcoding individual segment names (`"Component"`, `"Build"`)
+so any FUTURE intermediate segment (e.g. `"Layout"`, `"Overlay"`) is
+handled automatically without code changes here.
+
+If a hypothetical brand ever used a multi-segment root (e.g. `My.Lib.Button`
+with no intermediate → namespace `["My","Lib"]`), this would WRONGLY derive
+`["My"]` as a barrel root. That case doesn't exist today; the
+`RealFactsShapeTest` meta-guard + `check:index` will catch it if the
+assumption is ever violated by a future facts shape.
+
+-}
+barrelNamespaceParts : List String -> Maybe (List String)
+barrelNamespaceParts ns =
+    case ns of
+        _ :: _ :: _ ->
+            -- At least two segments → intermediate exists; barrel root = all-but-last.
+            Just (dropLast ns)
+
+        _ ->
+            -- Zero or one segment → already at root, no intermediate.
+            Nothing
+
+
+{-| The BARREL ROOT namespace parts for a single fact — the namespace where the
+flat barrel (`Lib.button`, `Lib.attrDisabled`, `Lib.slotDefault`) lives.
+
+For a single-package shape (`module_ = "Lib.Button"` → namespace `["Lib"]`) the
+barrel is already at the namespace root, so this is just `["Lib"]`. For a
+four-package shape with an intermediate segment (`module_ = "Lib.Component.Button"`
+→ namespace `["Lib", "Component"]`) the barrel lives one level UP, at `["Lib"]` —
+so `barrelNamespaceParts` strips the intermediate. Rules that compute a flat
+barrel replacement MUST use this, not `factNamespaceParts`/`factNamespace`, or
+they emit `Lib.Component.button` (a module that does not exist) instead of the real
+barrel `Lib.button`.
+
+-}
+barrelRootParts : Fact -> List String
+barrelRootParts fact =
+    let
+        ns =
+            factNamespaceParts fact
     in
-    List.sortWith (\a b -> compare (List.length b) (List.length a)) unique
+    barrelNamespaceParts ns
+        |> Maybe.withDefault ns
+
+
+{-| The flat barrel root a fact's replacements target, dotted (`"Lib"`), NOT the
+fact's own namespace (`"Lib.Component"`). In a four-package shape the per-component
+modules live under an intermediate segment (`Lib.Component.Button`) while the flat
+barrel (`Lib.button`, `Lib.Aria`, `Lib.Token`) lives one level up at the root;
+`barrelRootParts` strips that intermediate. Using `factNamespace` where a barrel
+root is meant is the bug that made both barrel-autofix rules emit the nonexistent
+`Lib.Component.button` / `Lib.Component.Aria` — see the two rules' constructor and
+aria/token branches.
+-}
+barrelRoot : Fact -> String
+barrelRoot fact =
+    String.join "." (barrelRootParts fact)
+
+
+{-| Does this component's `component` constructor take a required-fields RECORD as
+its first argument (the record-form smart ctor), rather than being the plain
+`attrs -> children` loose producer?
+
+In the four-package shape the canonical `<root>.Component.<X>.component` is a
+record-form smart ctor (`{ content, ariaLabel, action } -> attrs -> children -> …`)
+whenever the component has required content, required attributes, or an action —
+and it is NOT the same function as the loose barrel producer `<root>.<x>`
+(`attrs -> children`). The two barrel-autofix rules are exact inverses, and BOTH
+must treat this pair asymmetrically: `PreferBarrel` must not flatten the
+record-form ctor to the loose producer, and `PreferComponentModules` must not
+specialise the loose barrel producer to the record-form ctor — either rewrite is
+a type error. Only when the component has NO required fields does `component`
+coincide with the loose producer (`Lib.Component.Icon.component = Lib.icon`), and
+only then is the rewrite signature-preserving and worth suggesting.
+
+-}
+hasRecordFormConstructor : Fact -> Bool
+hasRecordFormConstructor fact =
+    not (List.isEmpty fact.requiredSlots)
+        || not (List.isEmpty fact.requiredAttrs)
+        || fact.usesAction
 
 
 {-| A namespace-qualified index key for a fact (`"M3e.Button"` fact →
@@ -272,10 +377,8 @@ namespace whose prefix matches wins.
 
 With `namespaces = [ ["Lib"] ]`, handles four forms:
 
-  - `Lib.Button.view` → `{ noun = "button", facet = Standard, namespace = ["Lib"] }`
-  - `Lib.Record.Button.view` → `{ noun = "button", facet = Record, … }`
-  - `Lib.button` (barrel) → `{ noun = "button", facet = Standard, … }`
-  - `Lib.Record.button` (Record barrel) → `{ noun = "button", facet = Record, … }`
+  - `Lib.Component.Button.component` → `{ noun = "button", facet = Standard, namespace = ["Lib"] }`
+  - `Lib.button` (barrel Html producer) → `{ noun = "button", facet = Standard, … }`
 
 Returns `Nothing` for non-top-layer references (`Lib.Html.*`, `Html.*`, etc.).
 
@@ -305,36 +408,27 @@ callSiteUnder root name moduleName =
             Just { noun = name, facet = Record, namespace = root }
 
         Just [ comp ] ->
-            if name == "view" then
+            -- The per-component constructor is the module's single `component`
+            -- ctor (`Lib.Component.Button.component`), two-arity: a leading
+            -- required-content record iff the component has required pieces,
+            -- bare `component attrs children` otherwise. One name across every
+            -- component module (the elm-cem four-package generator emits exactly
+            -- `component`).
+            if name == "component" then
                 Just { noun = decapitalize comp, facet = Standard, namespace = root }
 
             else
                 Nothing
 
         Just [ "Record", comp ] ->
-            if name == "view" then
+            if name == "component" then
                 Just { noun = decapitalize comp, facet = Record, namespace = root }
 
             else
                 Nothing
 
         _ ->
-            -- Barrel case: moduleName is a parent of root (e.g. M3e re-exports
-            -- M3e.Component.IconButton.iconButton as M3e.iconButton). The
-            -- resolved module is shorter than the namespace, but the function
-            -- name still matches the component noun — use the full root so the
-            -- index key aligns with factKey.
-            case moduleName of
-                [] ->
-                    Nothing
-
-                _ ->
-                    case dropPrefix moduleName root of
-                        Just _ ->
-                            Just { noun = name, facet = Standard, namespace = root }
-
-                        Nothing ->
-                            Nothing
+            Nothing
 
 
 firstJust : (a -> Maybe b) -> List a -> Maybe b
@@ -420,11 +514,11 @@ namedSlotSetters fact =
 {-| Does a content-list element fill a component's DEFAULT (`unnamed`) slot?
 
 In the top-layer idiom, raw default children live directly in the content list
-(e.g. `SliderThumb.view …`, `ButtonSegment.view …`, a userland `Kit.text …`) —
+(e.g. `SliderThumb.component …`, `ButtonSegment.component …`, a userland `Kit.text …`) —
 they are NOT wrapped in a `<Comp>.child` setter. So an element fills the default
 slot unless it is one of the component's own NAMED-slot setters (head name in
 `namedSetters` AND resolving to the component's top-layer module). Every other
-element — another component's `view`, a native element, a userland helper — is a
+element — another component's `component`, a native element, a userland helper — is a
 raw default child.
 
 -}
@@ -454,11 +548,37 @@ fillsDefaultSlot roots lookup namedSetters componentNoun element =
 
 {-| Build a namespace-qualified index (`factKey` → fact) from a facts list, so
 components with the same noun in two libraries stay distinct.
+
+When a component namespace has a barrel root (e.g. `["M3e","Component"]` →
+barrel `["M3e"]`), the fact is also indexed under the barrel key so that barrel
+call sites (`M3e.iconButton`, resolved via namespace `["M3e"]`) find the right
+fact. Both keys point at the same fact — the canonical entry is the `factKey`
+one; the barrel key is an alias.
+
 -}
 buildIndex : List Fact -> Dict String Fact
 buildIndex facts =
     facts
-        |> List.map (\f -> ( factKey f, f ))
+        |> List.concatMap
+            (\f ->
+                let
+                    ns =
+                        factNamespaceParts f
+
+                    canonical =
+                        ( factKey f, f )
+                in
+                case barrelNamespaceParts ns of
+                    Just barrelNs ->
+                        let
+                            barrelKey =
+                                String.join "." barrelNs ++ "\u{0000}" ++ f.component
+                        in
+                        [ canonical, ( barrelKey, f ) ]
+
+                    Nothing ->
+                        [ canonical ]
+            )
         |> Dict.fromList
 
 
@@ -687,6 +807,8 @@ capitalize s =
             s
 
 
+{-| Lowercase the first character of a string.
+-}
 decapitalize : String -> String
 decapitalize s =
     case String.uncons s of
@@ -754,3 +876,52 @@ barrelSlotSetter fact slotName =
         |> List.filter (\( slot, _ ) -> slot == slotName)
         |> List.head
         |> Maybe.map Tuple.second
+
+
+{-| Resolve a call argument to the field-name -> value-expression map of the
+record LITERAL it statically is, following simple let-bound variable
+references (with cycle protection) the same way `tracedList` follows
+list-valued ones. Returns `Nothing` for anything else (a function call, a
+piped/point-free argument, an unbound or external variable) — callers should
+stay silent (advisory posture) rather than false-positive on those.
+
+In the four-package shape, every required slot (singular or the repeatable
+default slot) is threaded through the `component` ctor's leading record — a rule that wants to
+know what content a call statically provides for a given field must resolve
+this record, not just the trailing content-list argument.
+
+-}
+resolveRecordFields : Dict String (Node Expression) -> Node Expression -> Maybe (Dict String (Node Expression))
+resolveRecordFields scope node =
+    resolveRecordFieldsWith scope Dict.empty node
+
+
+resolveRecordFieldsWith : Dict String (Node Expression) -> Dict String Bool -> Node Expression -> Maybe (Dict String (Node Expression))
+resolveRecordFieldsWith scope seen node =
+    case Node.value node of
+        Expression.RecordExpr setters ->
+            setters
+                |> List.map
+                    (\setter ->
+                        let
+                            ( nameNode, valueNode ) =
+                                Node.value setter
+                        in
+                        ( Node.value nameNode, valueNode )
+                    )
+                |> Dict.fromList
+                |> Just
+
+        Expression.ParenthesizedExpression inner ->
+            resolveRecordFieldsWith scope seen inner
+
+        Expression.FunctionOrValue [] name ->
+            if Dict.member name seen then
+                Nothing
+
+            else
+                Dict.get name scope
+                    |> Maybe.andThen (resolveRecordFieldsWith scope (Dict.insert name True seen))
+
+        _ ->
+            Nothing

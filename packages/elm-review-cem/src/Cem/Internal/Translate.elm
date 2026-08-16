@@ -4,11 +4,13 @@ module Cem.Internal.Translate exposing (Target(..), rule)
 `Cem.TranslateToRecord` and `Cem.TranslateToBuild`, driven by `Cem.Facts`.
 
 Both rules start from the SAME shape — a per-component Standard constructor call
-`<root>.<Comp>.view [attrs] [children]` — and re-express it on another surface of
-the SAME component module:
+`<root>.<Comp>.<slug> [attrs] [children]` (where `<slug>` is the whole-word
+lowercased component segment, e.g. `M3e.Component.Button.button`) — and re-express
+it on another surface of the SAME component:
 
-  - `Record` → `<root>.<Comp>.el { <requiredFields> } [residualAttrs] [residualChildren]`
-  - `Build` → `<root>.<Comp>.build <requiredRecord?> |> <root>.<Comp>.withX … |> <root>.<Comp>.toElement`
+  - `Record` → `<root>.<Comp>.component { <requiredFields> } [residualAttrs] [residualChildren]`
+  - `Build` → `<buildRoot>.<Comp>.build <requiredRecord?> |> <buildRoot>.<Comp>.withX … |> <buildRoot>.<Comp>.toElement`
+    (the Build surface lives in a SEPARATE module — `M3e.Component.<X>` → `M3e.Build.<X>`)
 
 The required record is reconstructed from the facts: one field per `requiredSlots`
 entry (`unnamed` → `content`, every other slot → its camelCase name), plus an
@@ -16,14 +18,16 @@ entry (`unnamed` → `content`, every other slot → its camelCase name), plus a
 Standard call's children (the required-slot fillers) and attrs (the action
 setter), leaving the rest in place.
 
-Because the target is the SAME module the input already imports, residual
-per-component setters need no re-qualification and no import — the only import a
-fix can add is `<root>.Action` (for a synthesised `action` field).
+For the Record surface (same module the input already imports) residual
+per-component setters need no re-qualification. The Build surface targets a
+separate `<buildRoot>.<Comp>` module, so its `withX`/`toElement` are emitted
+fully qualified against that module. The only import a fix can add is the
+root-level `Action` module (for a synthesised `action` field).
 
 **Deliberately conservative.** The rule reports NOTHING (a clean no-op) unless the
 whole call is statically resolvable and every part maps to a known surface form:
 
-  - only the per-component Standard form `<root>.<Comp>.view` is a source (never the
+  - only the per-component Standard form `<root>.<Comp>.<slug>` is a source (never the
     flat barrel `<root>.<comp>` — run `PreferComponentModules` first);
   - both argument lists must be literal `[ … ]` (a dynamic `++` tail, `List.map`,
     or a bare variable list makes the call unresolvable → skip);
@@ -33,12 +37,12 @@ whole call is statically resolvable and every part maps to a known surface form:
     another module — makes the withX name unknown → skip);
   - a component whose required record carries an `aria-label` (its `requiredAttrs`
     contains `"aria-label"`, e.g. `fab`/`iconButton`) is skipped entirely: the
-    `aria-label` string has no setter on the Standard `view` surface, so the
-    required `ariaLabel : String` field cannot be sourced. See the module docs of
-    the two public rules for the full gap list.
+    `aria-label` string has no setter on the Standard surface, so the required
+    `ariaLabel : String` field cannot be sourced. See the module docs of the two
+    public rules for the full gap list.
 
-Each transform is a single-pass fixpoint: its output uses `el`/`build`/`withX`/
-`toElement`, never `view`, so re-running the rule matches nothing.
+Each transform is a single-pass fixpoint: its output uses `component`/`build`/
+`withX`/`toElement`, never the Standard slug, so re-running the rule matches nothing.
 
 @docs Target, rule
 
@@ -163,8 +167,8 @@ planFor target context _ fnNode attrsNode childrenNode =
         |> Maybe.andThen
             (\fact ->
                 if target == ToRecord && not (List.member Record fact.facets) then
-                    -- TranslateToRecord only applies to the components that HAVE an
-                    -- `el`/required record.
+                    -- TranslateToRecord only applies to the components that HAVE a
+                    -- required record (the `component` ctor's leading-record arity).
                     Nothing
 
                 else if List.member "aria-label" fact.requiredAttrs then
@@ -183,18 +187,93 @@ planFor target context _ fnNode attrsNode childrenNode =
             )
 
 
-{-| The fact for a per-component Standard `<root>.<Comp>.view` reference, or
-`Nothing` for anything else (the flat barrel, `.el`, another module).
+{-| The fact for a per-component Standard `<root>.<Comp>.<slug>` reference (where
+`<slug>` is the whole-word-lowercased component module segment, e.g.
+`M3e.Component.AppBar.appbar`), or `Nothing` for anything else (the flat barrel,
+the record `.component` ctor, another module).
 -}
 resolveViewCall : Context -> Node Expression -> Maybe Fact
 resolveViewCall context fnNode =
     case Node.value fnNode of
-        Expression.FunctionOrValue _ "view" ->
+        Expression.FunctionOrValue _ name ->
             Lookup.moduleNameFor context.lookup fnNode
                 |> Maybe.andThen (\parts -> Dict.get (String.join "." parts) context.byModule)
+                |> Maybe.andThen
+                    (\fact ->
+                        if name == standardSlug fact then
+                            Just fact
+
+                        else
+                            Nothing
+                    )
 
         _ ->
             Nothing
+
+
+{-| The Standard top-layer constructor name for a component: its module's last
+segment, whole-word-lowercased (`AppBar` → `appbar`, `Accordion` → `accordion`).
+This is the elm-cem/generator convention (whole-word lowercase), and is NOT the
+same as `fact.component` (which is camelCase, e.g. `appBar`), so it must be
+derived from the module segment, not the noun field.
+-}
+standardSlug : Fact -> String
+standardSlug fact =
+    String.toLower (Facts.factComponentSegment fact)
+
+
+{-| The Build-surface module for a component: its Standard module with the
+component-namespace segment swapped for `Build`. `M3e.Component.AppBar` →
+`M3e.Build.AppBar`. For a flat `<root>.<Comp>` library (no intermediate segment)
+this degrades to `<root>.Build.<Comp>` — acceptable, as every namespace carrying
+the Build facet today is the nested `Component` layout.
+-}
+buildModule : Fact -> String
+buildModule fact =
+    String.join "." (buildNamespaceParts fact ++ [ Facts.factComponentSegment fact ])
+
+
+{-| The Build namespace: the component's namespace with its last segment
+(`Component`) replaced by `Build`. `["M3e","Component"]` → `["M3e","Build"]`.
+A single-segment namespace (`["M3e"]`) gains a `Build` segment → `["M3e","Build"]`.
+-}
+buildNamespaceParts : Fact -> List String
+buildNamespaceParts fact =
+    case List.reverse (Facts.factNamespaceParts fact) of
+        _ :: restReversed ->
+            List.reverse ("Build" :: restReversed)
+
+        [] ->
+            [ "Build" ]
+
+
+{-| The module the synthesised `action` field's constructors live in. In the
+elm-m3e library `Action` stayed at the ROOT namespace (`M3e.Action`), NOT under
+the intermediate `Component` segment — so it is the barrel root plus `Action`,
+never `factNamespaceParts` (which would wrongly yield `M3e.Component.Action`).
+For a flat single-segment library it degrades to `<root>.Action`.
+-}
+actionModuleParts : Fact -> List String
+actionModuleParts fact =
+    let
+        ns =
+            Facts.factNamespaceParts fact
+
+        root =
+            case ns of
+                _ :: _ :: _ ->
+                    -- Intermediate segment present → barrel root is all-but-last.
+                    dropLastPart ns
+
+                _ ->
+                    ns
+    in
+    root ++ [ "Action" ]
+
+
+dropLastPart : List a -> List a
+dropLastPart xs =
+    List.take (List.length xs - 1) xs
 
 
 buildPlan : Target -> Context -> Fact -> List (Node Expression) -> List (Node Expression) -> Maybe Plan
@@ -202,9 +281,6 @@ buildPlan target context fact attrElems childElems =
     let
         compModule =
             fact.module_
-
-        root =
-            Facts.factNamespace fact
 
         childResult =
             partitionChildren context fact childElems
@@ -220,7 +296,7 @@ buildPlan target context fact attrElems childElems =
                         if fact.usesAction then
                             [ ( "action"
                               , attrResult.actionValue
-                                    |> Maybe.withDefault (root ++ ".Action.none")
+                                    |> Maybe.withDefault (String.join "." (actionModuleParts fact) ++ ".none")
                               )
                             ]
 
@@ -232,7 +308,7 @@ buildPlan target context fact attrElems childElems =
 
                     actionImport =
                         if fact.usesAction then
-                            Just (Facts.factNamespaceParts fact ++ [ "Action" ])
+                            Just (actionModuleParts fact)
 
                         else
                             Nothing
@@ -242,7 +318,7 @@ buildPlan target context fact attrElems childElems =
                         Just
                             { replacement =
                                 compModule
-                                    ++ ".el "
+                                    ++ ".component "
                                     ++ recordLiteral fields
                                     ++ " "
                                     ++ listLiteral attrResult.residual
@@ -252,10 +328,10 @@ buildPlan target context fact attrElems childElems =
                             }
 
                     ToBuild ->
-                        buildPipes context fact attrResult.residualNodes residualNodes
+                        buildPipes context fact (buildModule fact) attrResult.residualNodes residualNodes
                             |> Maybe.map
                                 (\pipes ->
-                                    { replacement = buildReplacement compModule fields pipes
+                                    { replacement = buildReplacement (buildModule fact) fields pipes
                                     , actionImport = actionImport
                                     }
                                 )
@@ -416,9 +492,6 @@ isActionSetter context fact elem =
 actionExpression : Context -> Fact -> Node Expression -> String
 actionExpression context fact elem =
     let
-        root =
-            Facts.factNamespace fact
-
         constructor =
             attrHeadName context fact elem
                 |> Maybe.andThen
@@ -430,7 +503,7 @@ actionExpression context fact elem =
                     )
                 |> Maybe.withDefault "none"
     in
-    root ++ ".Action." ++ constructor ++ " " ++ setterArgSource context elem
+    String.join "." (actionModuleParts fact) ++ "." ++ constructor ++ " " ++ setterArgSource context elem
 
 
 
@@ -441,8 +514,8 @@ actionExpression context fact elem =
 element does not resolve to a known per-component setter (so its `withX` name is
 unknowable). Attrs first, then children, both in source order.
 -}
-buildPipes : Context -> Fact -> List (Node Expression) -> List (Node Expression) -> Maybe (List String)
-buildPipes context fact attrNodes childNodes =
+buildPipes : Context -> Fact -> String -> List (Node Expression) -> List (Node Expression) -> Maybe (List String)
+buildPipes context fact buildMod attrNodes childNodes =
     let
         roots =
             [ Facts.factNamespaceParts fact ]
@@ -452,36 +525,36 @@ buildPipes context fact attrNodes childNodes =
 
         attrPipes =
             attrNodes
-                |> List.map (attrPipe context fact)
+                |> List.map (attrPipe context fact buildMod)
                 |> combineMaybes
 
         childPipes =
             childNodes
-                |> List.map (childPipe context fact roots namedSetters)
+                |> List.map (childPipe context fact buildMod roots namedSetters)
                 |> combineMaybes
     in
     Maybe.map2 (++) attrPipes childPipes
 
 
-attrPipe : Context -> Fact -> Node Expression -> Maybe String
-attrPipe context fact elem =
+attrPipe : Context -> Fact -> String -> Node Expression -> Maybe String
+attrPipe context fact buildMod elem =
     attrHeadName context fact elem
         |> Maybe.map
             (\name ->
-                fact.module_ ++ "." ++ withSetterName fact name False ++ " " ++ setterArgSource context elem
+                buildMod ++ "." ++ withSetterName fact name False ++ " " ++ setterArgSource context elem
             )
 
 
-childPipe : Context -> Fact -> List (List String) -> List String -> Node Expression -> Maybe String
-childPipe context fact roots namedSetters elem =
+childPipe : Context -> Fact -> String -> List (List String) -> List String -> Node Expression -> Maybe String
+childPipe context fact buildMod roots namedSetters elem =
     if Facts.fillsDefaultSlot roots context.lookup namedSetters fact.component elem then
-        Just (fact.module_ ++ ".withChild " ++ parenValue (defaultChildValue context fact elem))
+        Just (buildMod ++ ".withChild " ++ parenValue (defaultChildValue context fact elem))
 
     else
         attrHeadName context fact elem
             |> Maybe.map
                 (\name ->
-                    fact.module_ ++ "." ++ withSetterName fact name True ++ " " ++ setterArgSource context elem
+                    buildMod ++ "." ++ withSetterName fact name True ++ " " ++ setterArgSource context elem
                 )
 
 
@@ -669,7 +742,7 @@ toError target context node plan =
         surface =
             case target of
                 ToRecord ->
-                    "required-record (`el`)"
+                    "required-record (`component`)"
 
                 ToBuild ->
                     "builder pipeline (`build … |> toElement`)"
@@ -690,7 +763,7 @@ toError target context node plan =
                     []
     in
     Rule.errorWithFix
-        { message = "This Standard `view` call can be rewritten to the " ++ surface ++ " surface"
+        { message = "This Standard `component` call can be rewritten to the " ++ surface ++ " surface"
         , details =
             [ "The generated component module exposes the same element on another surface; this opt-in transform rewrites the call in place, hoisting the required fields out of the attrs/children per the facts."
             ]

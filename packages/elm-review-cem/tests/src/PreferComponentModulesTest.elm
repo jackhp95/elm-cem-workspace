@@ -2,6 +2,7 @@ module PreferComponentModulesTest exposing (all)
 
 import Cem.Facts as Facts exposing (Facet(..))
 import Cem.PreferComponentModules exposing (rule)
+import RealFactsFixture
 import Review.Test
 import Test exposing (Test, describe, test)
 
@@ -75,13 +76,127 @@ progressFacts =
 all : Test
 all =
     describe "PreferComponentModules"
-        [ describe "attr case"
+        [ describe "four-package shape (real generated facts, barrel-root resolution)"
+            -- Runs against the VERBATIM `RealFactsFixture.facts` snapshot, whose
+            -- every `module_` carries the `.Component.` intermediate segment. The
+            -- rule builds its index via `Cem.Internal.Facts.buildIndex`, so a barrel
+            -- call (`M3e.appBar`, resolved under the barrel root `["M3e"]`) finds the
+            -- `M3e.Component.AppBar` fact through the barrel-alias key. Before the
+            -- barrel-root fix this whole rule was INERT on this shape (it detected
+            -- and replaced against `["M3e","Component"]`, which no barrel reference
+            -- resolves to). These pins would all report NO errors on the buggy rule.
+            [ test "rewrites a loose barrel producer M3e.appBar to M3e.Component.AppBar.component (no-required-field component)" <|
+                \() ->
+                    """module A exposing (v)
+import M3e
+v = M3e.appBar [] []
+"""
+                        |> Review.Test.run (rule RealFactsFixture.facts)
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = "The barrel call can be replaced with the component-module `M3e.Component.AppBar.component`"
+                                , details =
+                                    [ "The component-module constructor scopes this call's attrs and slots to appBar, so the compiler rejects another component's setters."
+                                    ]
+                                , under = "M3e.appBar"
+                                }
+                                |> Review.Test.whenFixed
+                                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+v = M3e.Component.AppBar.component [] []
+"""
+                            ]
+            , test "does NOT specialise a record-form barrel producer M3e.button (requiredSlots + usesAction)" <|
+                -- The loose barrel producer `M3e.button` and the record-form
+                -- `M3e.Component.Button.component` (`{ content, action } -> …`) are
+                -- different functions; specialising one to the other is a type
+                -- error, so the constructor case is skipped. Mirror of PreferBarrel.
+                \() ->
+                    """module A exposing (v)
+import M3e
+v = M3e.button [] []
+"""
+                        |> Review.Test.run (rule RealFactsFixture.facts)
+                        |> Review.Test.expectNoErrors
+            , test "specialises a barrel attr M3e.size inside a four-package per-component call" <|
+                \() ->
+                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+v = M3e.Component.AppBar.component [ M3e.size s ] []
+"""
+                        |> Review.Test.run (rule RealFactsFixture.facts)
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = "`size` can be replaced with the component setter `M3e.Component.AppBar.size`"
+                                , details =
+                                    [ "The barrel-level setter accepts every component's tokens; the component setter only accepts appBar's."
+                                    ]
+                                , under = "M3e.size"
+                                }
+                                |> Review.Test.whenFixed
+                                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+v = M3e.Component.AppBar.component [ M3e.Component.AppBar.size s ] []
+"""
+                            ]
+            , test "targets the BARREL-ROOT aria module M3e.Aria (not M3e.Component.Aria)" <|
+                \() ->
+                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+v = M3e.Component.AppBar.component [ M3e.ariaLabel "Menu" ] []
+"""
+                        |> Review.Test.run (rule RealFactsFixture.facts)
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = "`ariaLabel` can be replaced with the universal setter `M3e.Aria.label`"
+                                , details =
+                                    [ "`M3e.Aria` is the canonical home for the accessible-name setters; the barrel `ariaLabel` is a flat re-export of it." ]
+                                , under = "M3e.ariaLabel"
+                                }
+                                |> Review.Test.whenFixed
+                                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+import M3e.Aria
+v = M3e.Component.AppBar.component [ M3e.Aria.label "Menu" ] []
+"""
+                            ]
+            , test "targets the BARREL-ROOT token module M3e.Token when un-folding a combined constant" <|
+                \() ->
+                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+v = M3e.Component.AppBar.component [ M3e.sizeLarge ] []
+"""
+                        |> Review.Test.run (rule RealFactsFixture.facts)
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = "`sizeLarge` can be replaced with the component-module `M3e.Component.AppBar.size M3e.Token.large`"
+                                , details =
+                                    [ "The barrel constant folds the setter and its token into one; the component setter names the appBar setter and the token separately, so only this component's tokens typecheck."
+                                    ]
+                                , under = "M3e.sizeLarge"
+                                }
+                                |> Review.Test.whenFixed
+                                    """module A exposing (v)
+import M3e
+import M3e.Component.AppBar
+import M3e.Token
+v = M3e.Component.AppBar.component [ M3e.Component.AppBar.size M3e.Token.large ] []
+"""
+                            ]
+            ]
+        , describe "attr case"
             [ test "rewrites M3e.variant to M3e.Button.variant" <|
                 \() ->
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.variant filled ] []
+v = M3e.Button.component [ M3e.variant filled ] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -96,7 +211,7 @@ v = M3e.Button.view [ M3e.variant filled ] []
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.Button.variant filled ] []
+v = M3e.Button.component [ M3e.Button.variant filled ] []
 """
                             ]
             , test "rewrites shape-collision-suffixed name" <|
@@ -104,7 +219,7 @@ v = M3e.Button.view [ M3e.Button.variant filled ] []
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.shapeAttr rounded ] []
+v = M3e.Button.component [ M3e.shapeAttr rounded ] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -119,7 +234,7 @@ v = M3e.Button.view [ M3e.shapeAttr rounded ] []
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.Button.shape rounded ] []
+v = M3e.Button.component [ M3e.Button.shape rounded ] []
 """
                             ]
             ]
@@ -129,7 +244,7 @@ v = M3e.Button.view [ M3e.Button.shape rounded ] []
                     """module A exposing (v)
 import M3e.Button
 import M3e.Content
-v = M3e.Button.view [] [ M3e.Content.slot "icon" someIcon ]
+v = M3e.Button.component [] [ M3e.Content.slot "icon" someIcon ]
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -144,7 +259,7 @@ v = M3e.Button.view [] [ M3e.Content.slot "icon" someIcon ]
                                     """module A exposing (v)
 import M3e.Button
 import M3e.Content
-v = M3e.Button.view [] [ M3e.Button.icon (someIcon) ]
+v = M3e.Button.component [] [ M3e.Button.icon (someIcon) ]
 """
                             ]
             , test "wraps multi-arg application body in parens" <|
@@ -153,7 +268,7 @@ v = M3e.Button.view [] [ M3e.Button.icon (someIcon) ]
 import M3e.Button
 import M3e.Content
 import M3e.Icon
-v = M3e.Button.view [] [ M3e.Content.slot "icon" (M3e.Icon.view [] []) ]
+v = M3e.Button.component [] [ M3e.Content.slot "icon" (M3e.Icon.component [] []) ]
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -162,26 +277,26 @@ v = M3e.Button.view [] [ M3e.Content.slot "icon" (M3e.Icon.view [] []) ]
                                 , details =
                                     [ "The typed setter enforces the slot's kinds at compile time."
                                     ]
-                                , under = "M3e.Content.slot \"icon\" (M3e.Icon.view [] [])"
+                                , under = "M3e.Content.slot \"icon\" (M3e.Icon.component [] [])"
                                 }
                                 |> Review.Test.whenFixed
                                     """module A exposing (v)
 import M3e.Button
 import M3e.Content
 import M3e.Icon
-v = M3e.Button.view [] [ M3e.Button.icon ((M3e.Icon.view [] [])) ]
+v = M3e.Button.component [] [ M3e.Button.icon ((M3e.Icon.component [] [])) ]
 """
                             ]
             ]
         , describe "slot upgrade case (generalized barrel slot -> specific)"
             [ test "upgrades M3e.slotIcon to M3e.buttonSlotIcon inside a per-component call" <|
-                -- Uses M3e.Button.view (already specific) so this stays focused on
+                -- Uses M3e.Button.component (already specific) so this stays focused on
                 -- the slot-upgrade class without also triggering a constructor rewrite.
                 \() ->
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] [ M3e.slotIcon theIcon ]
+v = M3e.Button.component [] [ M3e.slotIcon theIcon ]
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -196,7 +311,7 @@ v = M3e.Button.view [] [ M3e.slotIcon theIcon ]
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] [ M3e.buttonSlotIcon theIcon ]
+v = M3e.Button.component [] [ M3e.buttonSlotIcon theIcon ]
 """
                             ]
             , test "leaves M3e.slotIcon alone outside any known call site" <|
@@ -214,7 +329,7 @@ v = M3e.slotIcon theIcon
 import M3e
 import M3e.Button
 import M3e.Record.Button
-v = M3e.Record.Button.view {} [ M3e.variant filled ] []
+v = M3e.Record.Button.component {} [ M3e.variant filled ] []
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
@@ -230,14 +345,14 @@ v = M3e.Record.Button.view {} [ M3e.variant filled ] []
 import M3e
 import M3e.Button
 import M3e.Record.Button
-v = M3e.Record.Button.view {} [ M3e.Button.variant filled ] []
+v = M3e.Record.Button.component {} [ M3e.Button.variant filled ] []
 """
                         ]
         , test "inserts missing import M3e.Button when only M3e is imported" <|
             \() ->
                 """module A exposing (v)
 import M3e
-v = M3e.Button.view [ M3e.variant filled ] []
+v = M3e.Button.component [ M3e.variant filled ] []
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
@@ -252,11 +367,11 @@ v = M3e.Button.view [ M3e.variant filled ] []
                                 """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.Button.variant filled ] []
+v = M3e.Button.component [ M3e.Button.variant filled ] []
 """
                         ]
         , describe "constructor case (barrel noun -> per-component view)"
-            [ test "rewrites M3e.button to M3e.Button.view and inserts the import" <|
+            [ test "rewrites M3e.button to M3e.Button.component and inserts the import" <|
                 \() ->
                     """module A exposing (v)
 import M3e
@@ -265,7 +380,7 @@ v = M3e.button [] []
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "The barrel call can be replaced with the component-module `M3e.Button.view`"
+                                { message = "The barrel call can be replaced with the component-module `M3e.Button.component`"
                                 , details =
                                     [ "The component-module constructor scopes this call's attrs and slots to button, so the compiler rejects another component's setters."
                                     ]
@@ -275,14 +390,14 @@ v = M3e.button [] []
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                             ]
-            , test "leaves an already-specific M3e.Button.view alone" <|
+            , test "leaves an already-specific M3e.Button.component alone" <|
                 \() ->
                     """module A exposing (v)
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectNoErrors
@@ -315,7 +430,7 @@ v = M3e.Progress.circular [] []
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.ariaLabel "Save" ] []
+v = M3e.Button.component [ M3e.ariaLabel "Save" ] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -330,7 +445,7 @@ v = M3e.Button.view [ M3e.ariaLabel "Save" ] []
 import M3e
 import M3e.Button
 import M3e.Aria
-v = M3e.Button.view [ M3e.Aria.label "Save" ] []
+v = M3e.Button.component [ M3e.Aria.label "Save" ] []
 """
                             ]
             ]
@@ -340,7 +455,7 @@ v = M3e.Button.view [ M3e.Aria.label "Save" ] []
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.variantFilled ] []
+v = M3e.Button.component [ M3e.variantFilled ] []
 """
                         |> Review.Test.run (rule enumFacts)
                         |> Review.Test.expectErrors
@@ -356,7 +471,7 @@ v = M3e.Button.view [ M3e.variantFilled ] []
 import M3e
 import M3e.Button
 import M3e.Token
-v = M3e.Button.view [ M3e.Button.variant M3e.Token.filled ] []
+v = M3e.Button.component [ M3e.Button.variant M3e.Token.filled ] []
 """
                             ]
             , test "un-folds a keyword-attr combined (typeButton -> type_ M3e.Token.button)" <|
@@ -364,7 +479,7 @@ v = M3e.Button.view [ M3e.Button.variant M3e.Token.filled ] []
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.typeButton ] []
+v = M3e.Button.component [ M3e.typeButton ] []
 """
                         |> Review.Test.run (rule enumFacts)
                         |> Review.Test.expectErrors
@@ -380,7 +495,7 @@ v = M3e.Button.view [ M3e.typeButton ] []
 import M3e
 import M3e.Button
 import M3e.Token
-v = M3e.Button.view [ M3e.Button.type_ M3e.Token.button ] []
+v = M3e.Button.component [ M3e.Button.type_ M3e.Token.button ] []
 """
                             ]
             ]
@@ -389,7 +504,7 @@ v = M3e.Button.view [ M3e.Button.type_ M3e.Token.button ] []
                 """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [ M3e.Button.variant filled ] []
+v = M3e.Button.component [ M3e.Button.variant filled ] []
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectNoErrors
@@ -402,7 +517,7 @@ v =
     let
         attrs = [ M3e.variant filled ]
     in
-    M3e.Button.view attrs []
+    M3e.Button.component attrs []
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
@@ -421,7 +536,7 @@ v =
     let
         attrs = [ M3e.Button.variant filled ]
     in
-    M3e.Button.view attrs []
+    M3e.Button.component attrs []
 """
                         ]
         ]

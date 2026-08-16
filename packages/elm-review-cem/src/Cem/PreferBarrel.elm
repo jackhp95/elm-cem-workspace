@@ -13,9 +13,20 @@ genuine `<root>.<Comp>.*` / `<root>.Token.*` facets are touched — never
 `<root>.Html.*`, `<root>.Record.*`, `<root>.Build.*`, `<root>.Raw.*`, or
 `<root>.Aria`:
 
-  - Constructor: `<root>.<Comp>.view` → `<root>.<noun>` (the barrel constructor).
+  - Constructor: `<root>.<Comp>.component` → `<root>.<noun>` (the barrel producer) —
+    but ONLY when `component` is the plain loose producer (`attrs -> children`),
+    i.e. the component has NO required content/attrs/action. A component WITH
+    required fields has a record-form smart ctor
+    (`{ content, … } -> attrs -> children -> …`) that is a DIFFERENT function from
+    the loose barrel producer `<root>.<noun>` — flattening it is a type error, so it
+    is left per-component (see `hasRecordFormConstructor`). In the four-package shape
+    the per-component module sits under an intermediate segment
+    (`<root>.<Intermediate>.<Comp>`) while the barrel producer lives at the root
+    `<root>.<noun>`; `Facts.barrelRootParts` strips the intermediate segment so the
+    replacement never targets the nonexistent `<root>.<Intermediate>.<noun>` (see
+    `barrelRoot`).
     A VARIANT-GROUP module (`<root>.Progress`, members `circular`/`linear`) has no
-    `view`; its member constructors (listed in `fact.groupConstructors`) are
+    `component`; its member constructors (listed in `fact.groupConstructors`) are
     re-exposed flat under their own names, so `<root>.Progress.circular` →
     `<root>.circular`.
   - Attr: `<root>.<Comp>.<attr>` → `<root>.<barrelAttr>` via `attrRewrites` (the
@@ -176,10 +187,10 @@ combinedCollapse context fnNode argNode =
                         Just fact ->
                             let
                                 rootParts =
-                                    Facts.factNamespaceParts fact
+                                    Facts.barrelRootParts fact
 
                                 root =
-                                    Facts.factNamespace fact
+                                    Facts.barrelRoot fact
                             in
                             if Maybe.andThen (Facts.dropPrefix rootParts) (Lookup.moduleNameFor context.lookup (unwrapParens argNode)) == Just [ "Token" ] then
                                 combinedName fact attrName tokenName
@@ -299,7 +310,7 @@ errorsFor context node name moduleParts =
                     barrelReplacement fact name
                         |> Maybe.map
                             (\( replacement, kind ) ->
-                                [ barrelError context (Facts.factNamespaceParts fact) node (fact.module_ ++ "." ++ name) replacement kind ]
+                                [ barrelError context (Facts.barrelRootParts fact) node (fact.module_ ++ "." ++ name) replacement kind ]
                             )
                         |> Maybe.withDefault []
 
@@ -308,28 +319,36 @@ errorsFor context node name moduleParts =
 
 
 {-| Given a per-component reference name, decide its flat barrel form (and a label
-for the message), or `Nothing` if the name has no barrel equivalent.
+for the message), or `Nothing` if the name has no barrel equivalent. `barrelRoot`
+and the record-form discriminator live in `Cem.Internal.Facts`, shared with
+`PreferComponentModules` (the inverse rule) so the two stay in lockstep.
 -}
 barrelReplacement : Fact -> String -> Maybe ( String, String )
 barrelReplacement fact name =
-    if name == "view" then
-        Just ( Facts.factNamespace fact ++ "." ++ fact.component, "constructor" )
+    if name == "component" then
+        if Facts.hasRecordFormConstructor fact then
+            -- Record-form smart ctor: canonical, and NOT the loose producer.
+            -- Flattening it to `<root>.<noun>` is a type error, so never suggest it.
+            Nothing
+
+        else
+            Just ( Facts.barrelRoot fact ++ "." ++ fact.component, "constructor" )
 
     else if List.member name fact.groupConstructors then
         -- A variant-group member constructor (`<root>.Progress.circular`). The
         -- barrel re-exposes it flat under the SAME name (identity), so the flat
         -- form is just `<root>.<name>`.
-        Just ( Facts.factNamespace fact ++ "." ++ name, "constructor" )
+        Just ( Facts.barrelRoot fact ++ "." ++ name, "constructor" )
 
     else
         case attrBarrelName fact name of
             Just barrelName ->
-                Just ( Facts.factNamespace fact ++ "." ++ barrelName, "attribute setter" )
+                Just ( Facts.barrelRoot fact ++ "." ++ barrelName, "attribute setter" )
 
             Nothing ->
                 case slotBarrelName fact name of
                     Just generic ->
-                        Just ( Facts.factNamespace fact ++ "." ++ generic, "slot setter" )
+                        Just ( Facts.barrelRoot fact ++ "." ++ generic, "slot setter" )
 
                     Nothing ->
                         -- No scalar `value`/`name` fallback: those attributes are

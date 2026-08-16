@@ -33,7 +33,13 @@ rule facts =
         |> Rule.fromModuleRuleSchema
 
 
-{-| component noun -> set of setter names that MAY repeat (the multi slots, camelCased).
+{-| component key -> the component's SINGULAR slot-setter names (the setters that
+render one element and so must not repeat). A repeated head is flagged ONLY if it
+is in this set, so a non-slot barrel function applied to several children — e.g. a
+message mapper `M3e.mapMsg toMsg child` used once per child — is NOT mistaken for a
+doubled slot. (Keying on the setter names, not "any top-layer function", is what
+distinguishes a slot from a wrapper: only actual slots appear in `slotKinds` /
+`slotRewrites`.)
 -}
 type alias Index =
     Dict String (List String)
@@ -41,9 +47,51 @@ type alias Index =
 
 buildIndex : List Fact -> Index
 buildIndex facts =
-    facts
-        |> List.map (\f -> ( Facts.factKey f, List.map (slotSetter f) f.multiSlots ))
-        |> Dict.fromList
+    -- Derive from the canonical barrel-aware index, NOT a private `factKey`-only
+    -- one: `Facts.buildIndex` inserts BOTH the `factKey` (`"M3e.Component\0button"`)
+    -- and the barrel-alias key (`"M3e\0button"`) for components under a
+    -- `Component`/`Build` segment, so a barrel call site (`M3e.button …`, whose
+    -- `siteKey` is `"M3e\0button"`) resolves. A private `factKey`-only index was
+    -- DEAD on the entire barrel surface on real generated facts (flat test
+    -- fixtures hid it because `factKey == siteKey` when `module_` has no
+    -- `.Component.` segment). See docs/decisions.md "Facts-index canonicality".
+    Facts.buildIndex facts
+        |> Dict.map (\_ f -> singularSlotSetters f)
+
+
+{-| The setter names for a component's SINGULAR slots (every declared slot that is
+not in `multiSlots`), in both forms a content-list element can take: the re-exposed
+per-component setter (`slotSetter`, e.g. `title`) and the loose Design-C barrel
+placer (`slot<Name>`, e.g. `slotTitle`). Both name the same singular slot, so a
+repeat of either is a doubled singular slot.
+
+The slot names themselves come from the facts (`slotKinds` keys and `slotRewrites`
+sources) — NEVER from "whatever function appears in the content list" — so wrappers
+and raw children that are not slots (a `mapMsg`, another component's `component`) are
+correctly excluded.
+
+-}
+singularSlotSetters : Fact -> List String
+singularSlotSetters fact =
+    (List.map Tuple.first fact.slotKinds ++ List.map Tuple.first fact.slotRewrites)
+        |> List.filter (\slot -> not (List.member slot fact.multiSlots))
+        |> List.concatMap
+            (\slot ->
+                [ slotSetter fact slot
+                , "slot" ++ Facts.capitalize (Facts.camelize slot)
+                ]
+            )
+        -- a slot may appear in both `slotKinds` and `slotRewrites`; dedupe so the
+        -- membership set is tidy (harmless either way — `List.member` is used).
+        |> List.foldr
+            (\name acc ->
+                if List.member name acc then
+                    acc
+
+                else
+                    name :: acc
+            )
+            []
 
 
 {-| The content-setter name for a slot. Checks slotRewrites first (e.g. "unnamed" -> "child"),
@@ -120,7 +168,7 @@ expressionVisitor node context =
             case Facts.callSite context.namespaces context.lookup fnNode of
                 Just site ->
                     case Dict.get (Facts.siteKey site) context.index of
-                        Just multi ->
+                        Just singular ->
                             if List.length args >= 2 then
                                 case List.reverse args of
                                     last :: _ ->
@@ -128,7 +176,7 @@ expressionVisitor node context =
                                             traced =
                                                 Facts.tracedList context.lookup context.scope last
                                         in
-                                        ( checkArg context site.namespace site.noun multi traced.known, context )
+                                        ( checkArg context site.namespace site.noun singular traced.known, context )
 
                                     [] ->
                                         ( [], context )
@@ -146,10 +194,12 @@ expressionVisitor node context =
             ( [], context )
 
 
-{-| Flag any singular setter that appears more than once in the content list.
+{-| Flag any SINGULAR slot setter that appears more than once in the content list.
+`singular` is the component's singular slot-setter names; a repeated head not in it
+(a multi setter, or a non-slot wrapper like `mapMsg`) is left alone.
 -}
 checkArg : Context -> List String -> String -> List String -> List (Node Expression) -> List (Error {})
-checkArg context namespace componentNoun multi elements =
+checkArg context namespace componentNoun singular elements =
     let
         setters =
             List.filterMap (elementSetter context namespace componentNoun) elements
@@ -157,7 +207,7 @@ checkArg context namespace componentNoun multi elements =
         repeated =
             setters
                 |> List.filter (\( name, _ ) -> countBy name setters > 1)
-                |> List.filter (\( name, _ ) -> not (List.member name multi))
+                |> List.filter (\( name, _ ) -> List.member name singular)
     in
     -- report each repeated singular setter once (dedupe by name via a fold)
     repeated

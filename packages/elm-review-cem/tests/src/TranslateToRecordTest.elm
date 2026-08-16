@@ -7,12 +7,12 @@ import Test exposing (Test, describe, test)
 
 
 {-| `button` — required unnamed slot (`content`) and an action record
-(`usesAction`), matching elm-m3e's `M3e.Button`.
+(`usesAction`), matching elm-m3e's `M3e.Component.Button`.
 -}
 buttonFacts : List Facts.Fact
 buttonFacts =
     [ { component = "button"
-      , module_ = "M3e.Button"
+      , module_ = "M3e.Component.Button"
       , enums = [ ( "variant", [ "elevated", "filled", "tonal" ] ) ]
       , requiredSlots = [ "unnamed" ]
       , multiSlots = []
@@ -35,7 +35,7 @@ False), so an `onClick` stays a plain attr.
 assistChipFacts : List Facts.Fact
 assistChipFacts =
     [ { component = "assistChip"
-      , module_ = "M3e.AssistChip"
+      , module_ = "M3e.Component.AssistChip"
       , enums = []
       , requiredSlots = [ "unnamed" ]
       , multiSlots = []
@@ -57,7 +57,7 @@ assistChipFacts =
 expansionPanelFacts : List Facts.Fact
 expansionPanelFacts =
     [ { component = "expansionPanel"
-      , module_ = "M3e.ExpansionPanel"
+      , module_ = "M3e.Component.ExpansionPanel"
       , enums = []
       , requiredSlots = [ "header" ]
       , multiSlots = [ "actions" ]
@@ -80,7 +80,7 @@ rule must skip it.
 fabFacts : List Facts.Fact
 fabFacts =
     [ { component = "fab"
-      , module_ = "M3e.Fab"
+      , module_ = "M3e.Component.Fab"
       , enums = []
       , requiredSlots = [ "unnamed" ]
       , multiSlots = []
@@ -102,7 +102,7 @@ fabFacts =
 avatarFacts : List Facts.Fact
 avatarFacts =
     [ { component = "avatar"
-      , module_ = "M3e.Avatar"
+      , module_ = "M3e.Component.Avatar"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -121,7 +121,7 @@ avatarFacts =
 
 message : String
 message =
-    "This Standard `view` call can be rewritten to the required-record (`el`) surface"
+    "This Standard `component` call can be rewritten to the required-record (`component`) surface"
 
 
 details : List String
@@ -137,128 +137,128 @@ all =
             \() ->
                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Component.Button
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.view [ M3e.Button.variant v, M3e.Button.onClick DoThing ] [ M3e.Button.child c, M3e.Button.icon i ]
+    M3e.Component.Button.button [ M3e.Component.Button.variant v, M3e.Component.Button.onClick DoThing ] [ M3e.Component.Button.child c, M3e.Component.Button.icon i ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.Button.view [ M3e.Button.variant v, M3e.Button.onClick DoThing ] [ M3e.Button.child c, M3e.Button.icon i ]"
+                            , under = "M3e.Component.Button.button [ M3e.Component.Button.variant v, M3e.Component.Button.onClick DoThing ] [ M3e.Component.Button.child c, M3e.Component.Button.icon i ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Component.Button
 import M3e.Action
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.el { content = c, action = M3e.Action.onClick DoThing } [ M3e.Button.variant v ] [ M3e.Button.icon i ]
+    M3e.Component.Button.component { content = c, action = M3e.Action.onClick DoThing } [ M3e.Component.Button.variant v ] [ M3e.Component.Button.icon i ]
 """
                         ]
         , test "usesAction component with no action setter defaults action = M3e.Action.none" <|
             \() ->
                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 
 view =
-    M3e.Button.view [] [ M3e.Button.child c ]
+    M3e.Component.Button.button [] [ M3e.Component.Button.child c ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.Button.view [] [ M3e.Button.child c ]"
+                            , under = "M3e.Component.Button.button [] [ M3e.Component.Button.child c ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 import M3e.Action
 
 view =
-    M3e.Button.el { content = c, action = M3e.Action.none } [] []
+    M3e.Component.Button.component { content = c, action = M3e.Action.none } [] []
 """
                         ]
         , test "a component without an action record keeps onClick as a plain attr, no action field" <|
             \() ->
                 """module A exposing (Msg, view)
 
-import M3e.AssistChip
+import M3e.Component.AssistChip
 
 type Msg
     = DoThing
 
 view =
-    M3e.AssistChip.view [ M3e.AssistChip.onClick DoThing ] [ M3e.AssistChip.child c ]
+    M3e.Component.AssistChip.assistchip [ M3e.Component.AssistChip.onClick DoThing ] [ M3e.Component.AssistChip.child c ]
 """
                     |> Review.Test.run (rule assistChipFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.AssistChip.view [ M3e.AssistChip.onClick DoThing ] [ M3e.AssistChip.child c ]"
+                            , under = "M3e.Component.AssistChip.assistchip [ M3e.Component.AssistChip.onClick DoThing ] [ M3e.Component.AssistChip.child c ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (Msg, view)
 
-import M3e.AssistChip
+import M3e.Component.AssistChip
 
 type Msg
     = DoThing
 
 view =
-    M3e.AssistChip.el { content = c } [ M3e.AssistChip.onClick DoThing ] []
+    M3e.Component.AssistChip.component { content = c } [ M3e.Component.AssistChip.onClick DoThing ] []
 """
                         ]
         , test "hoists a NAMED required slot (header) into its record field" <|
             \() ->
                 """module A exposing (view)
 
-import M3e.ExpansionPanel
+import M3e.Component.ExpansionPanel
 
 view =
-    M3e.ExpansionPanel.view [] [ M3e.ExpansionPanel.header h, body ]
+    M3e.Component.ExpansionPanel.expansionpanel [] [ M3e.Component.ExpansionPanel.header h, body ]
 """
                     |> Review.Test.run (rule expansionPanelFacts)
                     |> Review.Test.expectErrors
                         [ Review.Test.error
                             { message = message
                             , details = details
-                            , under = "M3e.ExpansionPanel.view [] [ M3e.ExpansionPanel.header h, body ]"
+                            , under = "M3e.Component.ExpansionPanel.expansionpanel [] [ M3e.Component.ExpansionPanel.header h, body ]"
                             }
                             |> Review.Test.whenFixed
                                 """module A exposing (view)
 
-import M3e.ExpansionPanel
+import M3e.Component.ExpansionPanel
 
 view =
-    M3e.ExpansionPanel.el { header = h } [] [ body ]
+    M3e.Component.ExpansionPanel.component { header = h } [] [ body ]
 """
                         ]
-        , test "IDEMPOTENCE: an el call is left untouched (single-pass fixpoint)" <|
+        , test "IDEMPOTENCE: a component call is left untouched (single-pass fixpoint)" <|
             \() ->
                 """module A exposing (Msg, view)
 
-import M3e.Button
+import M3e.Component.Button
 import M3e.Action
 
 type Msg
     = DoThing
 
 view =
-    M3e.Button.el { content = c, action = M3e.Action.onClick DoThing } [ M3e.Button.variant v ] [ M3e.Button.icon i ]
+    M3e.Component.Button.component { content = c, action = M3e.Action.onClick DoThing } [ M3e.Component.Button.variant v ] [ M3e.Component.Button.icon i ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectNoErrors
@@ -266,10 +266,10 @@ view =
             \() ->
                 """module A exposing (view)
 
-import M3e.Fab
+import M3e.Component.Fab
 
 view =
-    M3e.Fab.view [] [ M3e.Fab.child icon ]
+    M3e.Component.Fab.fab [] [ M3e.Component.Fab.child icon ]
 """
                     |> Review.Test.run (rule fabFacts)
                     |> Review.Test.expectNoErrors
@@ -277,10 +277,10 @@ view =
             \() ->
                 """module A exposing (view)
 
-import M3e.Avatar
+import M3e.Component.Avatar
 
 view =
-    M3e.Avatar.view [] [ c ]
+    M3e.Component.Avatar.avatar [] [ c ]
 """
                     |> Review.Test.run (rule avatarFacts)
                     |> Review.Test.expectNoErrors
@@ -288,10 +288,10 @@ view =
             \() ->
                 """module A exposing (view)
 
-import M3e.Button
+import M3e.Component.Button
 
 view =
-    M3e.Button.view (extra ++ [ M3e.Button.onClick DoThing ]) [ M3e.Button.child c ]
+    M3e.Component.Button.button (extra ++ [ M3e.Component.Button.onClick DoThing ]) [ M3e.Component.Button.child c ]
 """
                     |> Review.Test.run (rule buttonFacts)
                     |> Review.Test.expectNoErrors

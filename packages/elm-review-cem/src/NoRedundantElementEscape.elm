@@ -44,7 +44,7 @@ when
       - `coerce`/`coerceAll`/`fromHtml` resolving to `<Lib>.Unsafe`;
       - any of the fully-qualified `seamEscapes` names (`"Seam.fromHtml"`);
   - _and the argument is a known family producer_ — a direct call
-    (`M3e.button …`, `M3e.Button.view …`, a barrel or Record shorthand) whose
+    (`M3e.button …`, `M3e.Component.Button.component …`, a barrel or component shorthand) whose
     head `callSite`-resolves to a fact in the passed facts.
 
 **Three further redundancies on the raw-tag side**, all keyed on the covered-tag

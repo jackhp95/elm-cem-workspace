@@ -1,10 +1,14 @@
 module Cem.TranslateToBuild exposing (rule)
 
 {-| Opt-in autofix: rewrite a per-component Standard call
-`<root>.<Comp>.view attrs children` to the phantom-typed builder pipeline
-`<root>.<Comp>.build <required?> |> <root>.<Comp>.withX … |> <root>.<Comp>.toElement`,
-driven by `Cem.Facts`. Every component emits a `build`/`toElement` pair, so this
-applies to all of them (128 in elm-m3e) — unlike `TranslateToRecord`.
+`<root>.<Comp>.<slug> attrs children` (slug = whole-word-lowercased component
+segment, e.g. `M3e.Component.Button.button`) to the phantom-typed builder pipeline
+`<buildRoot>.<Comp>.build <required?> |> <buildRoot>.<Comp>.withX … |> <buildRoot>.<Comp>.toElement`,
+driven by `Cem.Facts`. The Build surface lives in a SEPARATE module — the
+component namespace's intermediate segment is swapped for `Build`
+(`M3e.Component.Button` → `M3e.Build.Button`). Every component emits a
+`build`/`toElement` pair, so this applies to all of them (130 in elm-m3e) —
+unlike `TranslateToRecord`.
 
 It is the surface companion of `PreferBarrel` — NOT part of `Cem.all`; it exists
 so a docs harness (or a consumer who prefers the pipe form) can rewrite a Standard
@@ -12,8 +16,8 @@ example with `elm-review --fix`.
 
 The rewrite:
 
-  - seeds `build` with the required record (identical to the `el` record — see
-    `Cem.TranslateToRecord`) when the component HAS one (its `facts` list the
+  - seeds `build` with the required record (identical to the `component` record —
+    see `Cem.TranslateToRecord`) when the component HAS one (its `facts` list the
     `Record` facet); otherwise `build` takes no argument;
   - turns every residual attr into a `withX` pipe stage (`variant v` →
     `withVariant v`, `onClick m` → `withOnClick m`, `type_ t` → `withType t`);
@@ -24,8 +28,8 @@ The rewrite:
 The rewrite fires only when the whole call is statically resolvable (literal
 attr/child lists) AND every residual attr/child resolves to a known
 per-component setter; otherwise it stays silent. It is a single-pass fixpoint —
-its output uses `build`/`withX`/`toElement`, never `view`, so re-running the rule
-matches nothing.
+its output uses `build`/`withX`/`toElement`, never the Standard slug, so
+re-running the rule matches nothing.
 
 
 ## Facts gaps (blockers for the docs pipeline / package 2)

@@ -12,6 +12,8 @@
         "NoRedundantElementForge",
         "NoRedundantElementEscape",
         "NoRedundantAttributeEscape",
+        "NoMergedPipeAndSetter",
+        "NoMissingComponentApiNames",
         "ExtractToSeam",
         "Cem.PreferBarrel",
         "Cem.TranslateToRecord",

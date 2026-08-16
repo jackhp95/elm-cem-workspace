@@ -17,7 +17,7 @@ facts =
       , multiSlots = [ "default" ]
       , attrRewrites = []
       , slotRewrites = []
-      , slotKinds = []
+      , slotKinds = [ ( "default", [] ), ( "trailing", [] ) ]
       , slotUpgrades = []
       , facets = [ Standard ]
       , requiredAttrs = []
@@ -37,9 +37,41 @@ shape4Facts =
       , multiSlots = [ "default" ]
       , attrRewrites = []
       , slotRewrites = []
-      , slotKinds = []
+      , slotKinds = [ ( "default", [] ), ( "trailing", [] ) ]
       , slotUpgrades = []
       , facets = [ Standard, Record ]
+      , requiredAttrs = []
+      , actionMap = []
+      , groupConstructors = []
+      , usesAction = False
+      }
+    ]
+
+
+{-| REAL-SHAPED facts: `module_` carries the `.Component.` segment exactly like the
+generated `M3e.Review.Facts` (all 130 real facts are `"M3e.Component.<X>"`). The
+`trailing` slot is singular. A BARREL call (`M3e.listItem`, resolved under namespace
+`["M3e"]` → `siteKey = "M3e\0listItem"`) only resolves if the index carries the
+barrel-alias key that `Cem.Internal.Facts.buildIndex` inserts. A private
+`factKey`-only index holds only `"M3e.Component\0listItem"` → barrel MISS → DEAD.
+
+This fixture is the one the flat `M3e.ListItem` fixtures above CANNOT express: with a
+flat `module_`, `factKey == siteKey`, so the barrel call resolves even against the
+buggy private index — which is exactly why the barrel bug hid behind green tests.
+
+-}
+realShapeFacts : List Facts.Fact
+realShapeFacts =
+    [ { component = "listItem"
+      , module_ = "M3e.Component.ListItem"
+      , enums = []
+      , requiredSlots = []
+      , multiSlots = [ "default" ]
+      , attrRewrites = []
+      , slotRewrites = []
+      , slotKinds = [ ( "default", [] ), ( "trailing", [] ) ]
+      , slotUpgrades = []
+      , facets = [ Standard ]
       , requiredAttrs = []
       , actionMap = []
       , groupConstructors = []
@@ -51,7 +83,44 @@ shape4Facts =
 all : Test
 all =
     describe "SingularSlot"
-        [ test "flags a singular slot filled twice" <|
+        [ test "flags a repeated singular slot on a BARREL call with real-shaped facts (module_ = M3e.Component.ListItem)" <|
+            \() ->
+                -- Regression for the barrel-alias index bug. RED against a private
+                -- `factKey`-only index (barrel call does not resolve → no error);
+                -- GREEN once `buildIndex` derives from `Facts.buildIndex`.
+                """module A exposing (v)
+
+import M3e exposing (listItem, trailing)
+
+v =
+    listItem [] [ trailing a, trailing b ]
+"""
+                    |> Review.Test.run (rule realShapeFacts)
+                    |> Review.Test.expectErrors
+                        [ Review.Test.error
+                            { message = "Singular slot `trailing` is filled more than once"
+                            , details =
+                                [ "This slot renders a single element, but it's set multiple times here — the extra will silently win or be dropped."
+                                , "Keep one, or (if this component genuinely repeats the slot) it should be in the multi set — check the component's slot config."
+                                ]
+                            , under = "trailing a"
+                            }
+                        ]
+        , test "does NOT flag a repeated non-slot barrel wrapper (e.g. mapMsg) in the content list" <|
+            \() ->
+                -- False-positive guard found by live check:review on real elm-m3e code:
+                -- `M3e.mapMsg` is a message mapper, not a slot setter, and is legitimately
+                -- applied once per child. Only actual singular SLOT setters may be flagged.
+                """module A exposing (v)
+
+import M3e exposing (listItem, mapMsg)
+
+v =
+    listItem [] [ mapMsg f (child a), mapMsg f (child b) ]
+"""
+                    |> Review.Test.run (rule realShapeFacts)
+                    |> Review.Test.expectNoErrors
+        , test "flags a singular slot filled twice" <|
             \() ->
                 """module A exposing (v)
 
@@ -101,7 +170,7 @@ import M3e.Record.ListItem
 import M3e exposing (trailing)
 
 v =
-    M3e.Record.ListItem.view {} [] [ trailing a, trailing b ]
+    M3e.Record.ListItem.component {} [] [ trailing a, trailing b ]
 """
                     |> Review.Test.run (rule shape4Facts)
                     |> Review.Test.expectErrors
@@ -122,7 +191,7 @@ import M3e.Record.ListItem
 import M3e exposing (child)
 
 v =
-    M3e.Record.ListItem.view {} [] [ child a, child b, child c ]
+    M3e.Record.ListItem.component {} [] [ child a, child b, child c ]
 """
                     |> Review.Test.run (rule shape4Facts)
                     |> Review.Test.expectNoErrors

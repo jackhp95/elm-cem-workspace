@@ -149,22 +149,145 @@ shapeFacts =
     ]
 
 
+{-| FOUR-PACKAGE shape: the per-component module lives under the `Component`
+intermediate segment (`module_ = "M3e.Component.Heading"`), and `component` is the
+RECORD-FORM smart ctor — it has required content (`requiredSlots = [ "unnamed" ]`),
+so its signature is `{ content } -> attrs -> children -> …`. The loose barrel
+producer `M3e.heading` is a DIFFERENT function (`attrs -> children`, no record), so
+flattening the record-form ctor to it is a type error. PreferBarrel MUST leave it
+per-component. Regression pin for the four-package reconciliation false positive
+(146 wrong `M3e.Component.<X>.component → M3e.Component.<noun>` suggestions).
+-}
+headingFacts : List Facts.Fact
+headingFacts =
+    [ { component = "heading"
+      , module_ = "M3e.Component.Heading"
+      , enums = [ ( "variant", [ "display", "headline", "label", "title" ] ) ]
+      , requiredSlots = [ "unnamed" ]
+      , multiSlots = []
+      , attrRewrites = [ ( "variant", "variant" ), ( "size", "size" ) ]
+      , slotRewrites = []
+      , slotKinds = [ ( "unnamed", [ "heading", "shared:text" ] ) ]
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Record, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = False
+      }
+    ]
+
+
+{-| FOUR-PACKAGE shape with NO required fields (`requiredSlots`/`requiredAttrs`
+empty, `usesAction = False`): `M3e.Component.Icon.component` IS the plain loose
+producer and coincides with the barrel `M3e.icon`, so flattening is
+signature-preserving and PreferBarrel SHOULD fire. Its replacement and inserted
+import must target the BARREL ROOT (`M3e.icon`, `import M3e`), NEVER the
+intermediate `M3e.Component.icon` / `import M3e.Component` — the second half of the
+barrel-root bug.
+-}
+iconFacts : List Facts.Fact
+iconFacts =
+    [ { component = "icon"
+      , module_ = "M3e.Component.Icon"
+      , enums = [ ( "variant", [ "outlined", "rounded", "sharp" ] ) ]
+      , requiredSlots = []
+      , multiSlots = []
+      , attrRewrites = [ ( "variant", "variant" ) ]
+      , slotRewrites = []
+      , slotKinds = []
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = False
+      }
+    ]
+
+
+{-| FOUR-PACKAGE shape with NO required slots/attrs but `usesAction = True`: the
+`component` ctor still takes a required-fields record (`{ action } -> …`), so it is
+NOT the loose producer and must NOT be flattened. Pins the `usesAction` arm of the
+record-form discriminator.
+-}
+fabLikeFacts : List Facts.Fact
+fabLikeFacts =
+    [ { component = "fabMenu"
+      , module_ = "M3e.Component.FabMenu"
+      , enums = []
+      , requiredSlots = []
+      , multiSlots = []
+      , attrRewrites = []
+      , slotRewrites = []
+      , slotKinds = []
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Record, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = True
+      }
+    ]
+
+
 all : Test
 all =
     describe "PreferBarrel"
-        [ describe "constructor class"
-            [ test "rewrites M3e.Button.view to M3e.button" <|
+        [ describe "four-package shape (Component intermediate segment)"
+            [ test "does NOT flatten a record-form `M3e.Component.<X>.component` (canonical form stays)" <|
+                \() ->
+                    -- The record-form smart ctor is a DIFFERENT function from the
+                    -- loose barrel producer `M3e.heading`; flattening it is a type
+                    -- error, so PreferBarrel must leave it per-component.
+                    """module A exposing (v)
+import M3e.Component.Heading
+v = M3e.Component.Heading.component { content = body } [] []
+"""
+                        |> Review.Test.run (rule headingFacts)
+                        |> Review.Test.expectNoErrors
+            , test "does NOT flatten an action-bearing `component` (usesAction record-form)" <|
+                \() ->
+                    """module A exposing (v)
+import M3e.Component.FabMenu
+v = M3e.Component.FabMenu.component { action = act } [] []
+"""
+                        |> Review.Test.run (rule fabLikeFacts)
+                        |> Review.Test.expectNoErrors
+            , test "flattens a no-required-field `component` to the BARREL ROOT (M3e.icon, not M3e.Component.icon)" <|
+                \() ->
+                    """module A exposing (v)
+import M3e.Component.Icon
+v = M3e.Component.Icon.component [] []
+"""
+                        |> Review.Test.run (rule iconFacts)
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = "`M3e.Component.Icon.component` can be flattened to the barrel constructor `M3e.icon`"
+                                , details = detailsFor "constructor"
+                                , under = "M3e.Component.Icon.component"
+                                }
+                                |> Review.Test.whenFixed
+                                    """module A exposing (v)
+import M3e.Component.Icon
+import M3e
+v = M3e.icon [] []
+"""
+                            ]
+            ]
+        , describe "constructor class"
+            [ test "rewrites M3e.Button.component to M3e.button" <|
                 \() ->
                     """module A exposing (v)
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "`M3e.Button.view` can be flattened to the barrel constructor `M3e.button`"
+                                { message = "`M3e.Button.component` can be flattened to the barrel constructor `M3e.button`"
                                 , details = detailsFor "constructor"
-                                , under = "M3e.Button.view"
+                                , under = "M3e.Button.component"
                                 }
                                 |> Review.Test.whenFixed
                                     """module A exposing (v)
@@ -439,8 +562,8 @@ import M3e.Html.Button
 import M3e.Record.Button
 import M3e.Build.Button
 v =
-    ( M3e.Html.Button.view [] []
-    , M3e.Record.Button.view {} [] []
+    ( M3e.Html.Button.component [] []
+    , M3e.Record.Button.component {} [] []
     , M3e.Build.Button.button
     )
 """
@@ -512,14 +635,14 @@ v = M3e.nameValue4LeafClover
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                         |> Review.Test.run (rule buttonFacts)
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "`M3e.Button.view` can be flattened to the barrel constructor `M3e.button`"
+                                { message = "`M3e.Button.component` can be flattened to the barrel constructor `M3e.button`"
                                 , details = detailsFor "constructor"
-                                , under = "M3e.Button.view"
+                                , under = "M3e.Button.component"
                                 }
                                 |> Review.Test.whenFixed
                                     """module A exposing (v)

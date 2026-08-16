@@ -95,19 +95,19 @@ all : Test
 all =
     describe "RoundTrip (PreferBarrel ∘ PreferComponentModules)"
         [ describe "constructor — clean identity round trip"
-            [ test "PreferBarrel: M3e.Button.view [] [] -> M3e.button [] []" <|
+            [ test "PreferBarrel: M3e.Button.component [] [] -> M3e.button [] []" <|
                 \() ->
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                         |> Review.Test.run (preferBarrel buttonFacts)
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "`M3e.Button.view` can be flattened to the barrel constructor `M3e.button`"
+                                { message = "`M3e.Button.component` can be flattened to the barrel constructor `M3e.button`"
                                 , details = flattenDetails "constructor"
-                                , under = "M3e.Button.view"
+                                , under = "M3e.Button.component"
                                 }
                                 |> Review.Test.whenFixed
                                     """module A exposing (v)
@@ -116,7 +116,7 @@ import M3e.Button
 v = M3e.button [] []
 """
                             ]
-            , test "PreferComponentModules: M3e.button [] [] -> M3e.Button.view [] []" <|
+            , test "PreferComponentModules: M3e.button [] [] -> M3e.Button.component [] []" <|
                 \() ->
                     """module A exposing (v)
 import M3e
@@ -126,7 +126,7 @@ v = M3e.button [] []
                         |> Review.Test.run (Cem.PreferComponentModules.rule buttonFacts)
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "The barrel call can be replaced with the component-module `M3e.Button.view`"
+                                { message = "The barrel call can be replaced with the component-module `M3e.Button.component`"
                                 , details = [ "The component-module constructor scopes this call's attrs and slots to button, so the compiler rejects another component's setters." ]
                                 , under = "M3e.button"
                                 }
@@ -134,7 +134,7 @@ v = M3e.button [] []
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] []
+v = M3e.Button.component [] []
 """
                             ]
             ]
@@ -209,7 +209,7 @@ v = M3e.button [] [ M3e.slotIcon someIcon ]
                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] [ M3e.slotIcon someIcon ]
+v = M3e.Button.component [] [ M3e.slotIcon someIcon ]
 """
                         |> Review.Test.run (Cem.PreferComponentModules.rule buttonFacts)
                         |> Review.Test.expectErrors
@@ -222,7 +222,7 @@ v = M3e.Button.view [] [ M3e.slotIcon someIcon ]
                                     """module A exposing (v)
 import M3e
 import M3e.Button
-v = M3e.Button.view [] [ M3e.buttonSlotIcon someIcon ]
+v = M3e.Button.component [] [ M3e.buttonSlotIcon someIcon ]
 """
                             ]
             ]

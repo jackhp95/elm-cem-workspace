@@ -36,7 +36,7 @@ when it can positively see a FAB that has none of the three signals.
 
 ## Scope & limitations (static Elm analysis only)
 
-  - **Only the Standard/barrel facet** (`<root>.Fab.view …`, `<root>.fab …`) is
+  - **Only the Standard/barrel facet** (`<root>.Component.Fab.component …`, `<root>.fab …`) is
     checked. The `build`/pipeline (`Build`) and record (`Record`) facets are not
     analysed.
   - A `<label for>` is **never verified** — only proxied by the FAB's `id`

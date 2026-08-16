@@ -64,10 +64,10 @@ all =
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view [] [ M3e.TextField.view [] [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component [] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "flags the barrel facet too" <|
             \() ->
                 """module A exposing (v)
@@ -81,7 +81,7 @@ v = M3e.formField [] [ M3e.textField [] [] ]
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view [] [ M3e.FormField.label [ M3e.TextField.view [] [] ], M3e.TextField.view [] [] ]
+v = M3e.FormField.component [] [ M3e.FormField.label [ M3e.TextField.component [] [] ], M3e.TextField.component [] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -91,7 +91,7 @@ v = M3e.FormField.view [] [ M3e.FormField.label [ M3e.TextField.view [] [] ], M3
 import M3e.FormField
 import M3e.TextField
 import M3e.Aria
-v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.Aria.label "Email" ] [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.Aria.label "Email" ] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -101,7 +101,7 @@ v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.Aria.label "Email" ] [] ]
 import M3e.FormField
 import M3e.TextField
 import TypedHtml.Aria
-v = M3e.FormField.view [] [ M3e.TextField.view [ TypedHtml.Aria.labelledby "lbl" ] [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component [ TypedHtml.Aria.labelledby "lbl" ] [] ]
 """
                 , """module TypedHtml.Aria exposing (labelledby)
 labelledby : String -> Int
@@ -115,7 +115,7 @@ labelledby _ = 0
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.TextField.id "email" ] [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.TextField.id "email" ] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -125,7 +125,7 @@ v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.TextField.id "email" ] [] ]
 import M3e.FormField
 import M3e.TextField
 import M3e.Html.Attr
-v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.Html.Attr.attribute "aria-label" "Email" ] [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.Html.Attr.attribute "aria-label" "Email" ] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -135,7 +135,7 @@ v = M3e.FormField.view [] [ M3e.TextField.view [ M3e.Html.Attr.attribute "aria-l
 import M3e.FormField
 import M3e.TextField
 import M3e.Aria
-v = M3e.FormField.view [ M3e.Aria.label "Email" ] [ M3e.TextField.view [] [] ]
+v = M3e.FormField.component [ M3e.Aria.label "Email" ] [ M3e.TextField.component [] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -144,17 +144,17 @@ v = M3e.FormField.view [ M3e.Aria.label "Email" ] [ M3e.TextField.view [] [] ]
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view [] [ M3e.FormField.child (M3e.TextField.view [] []) ]
+v = M3e.FormField.component [] [ M3e.FormField.child (M3e.TextField.component [] []) ]
 """
                     |> Review.Test.run (rule formFieldFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "unwraps M3e.FormField.child and accepts an aria-labelled control" <|
             \() ->
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
 import M3e.Aria
-v = M3e.FormField.view [] [ M3e.FormField.child (M3e.TextField.view [ M3e.Aria.label "Email" ] []) ]
+v = M3e.FormField.component [] [ M3e.FormField.child (M3e.TextField.component [ M3e.Aria.label "Email" ] []) ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -163,7 +163,7 @@ v = M3e.FormField.view [] [ M3e.FormField.child (M3e.TextField.view [ M3e.Aria.l
                 """module A exposing (v)
 import M3e.FormField
 import Seam
-v = M3e.FormField.view [] (Seam.field "email" cfg)
+v = M3e.FormField.component [] (Seam.field "email" cfg)
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -172,7 +172,7 @@ v = M3e.FormField.view [] (Seam.field "email" cfg)
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view dynAttrs [ M3e.TextField.view [] [] ]
+v = M3e.FormField.component dynAttrs [ M3e.TextField.component [] [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -182,7 +182,7 @@ v = M3e.FormField.view dynAttrs [ M3e.TextField.view [] [] ]
 import M3e.FormField
 import M3e.TextField
 import Html
-v = M3e.FormField.view [] [ Html.div [] [ M3e.TextField.view [] [] ] ]
+v = M3e.FormField.component [] [ Html.div [] [ M3e.TextField.component [] [] ] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -191,7 +191,7 @@ v = M3e.FormField.view [] [ Html.div [] [ M3e.TextField.view [] [] ] ]
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.view [] [ M3e.TextField.view dynAttrs [] ]
+v = M3e.FormField.component [] [ M3e.TextField.component dynAttrs [] ]
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -199,7 +199,7 @@ v = M3e.FormField.view [] [ M3e.TextField.view dynAttrs [] ]
             \() ->
                 """module A exposing (v)
 import M3e.FormField
-v = M3e.FormField.view [] []
+v = M3e.FormField.component [] []
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
@@ -207,7 +207,7 @@ v = M3e.FormField.view [] []
             \() ->
                 """module A exposing (v)
 import M3e.Card
-v = M3e.Card.view [] []
+v = M3e.Card.component [] []
 """
                     |> Review.Test.run
                         (rule [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
@@ -219,18 +219,18 @@ import M3e.FormField
 import M3e.TextField
 v =
     let
-        content = [ M3e.TextField.view [] [] ]
+        content = [ M3e.TextField.component [] [] ]
     in
-    M3e.FormField.view [] content
+    M3e.FormField.component [] content
 """
                     |> Review.Test.run (rule formFieldFacts)
-                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.view" ]
+                    |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "does not analyse the Build/pipeline facet" <|
             \() ->
                 """module A exposing (v)
 import M3e.FormField
 import M3e.TextField
-v = M3e.FormField.build |> M3e.FormField.withChild (M3e.TextField.view [] []) |> M3e.FormField.toElement
+v = M3e.FormField.build |> M3e.FormField.withChild (M3e.TextField.component [] []) |> M3e.FormField.toElement
 """
                     |> Review.Test.run (rule formFieldFacts)
                     |> Review.Test.expectNoErrors
