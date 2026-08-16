@@ -10,10 +10,11 @@
     "lib": "M3e",
     "iconComp": "Icon",
     "catalogFrom": "config/icons-catalog.json",
+    "shape": "names",
     "package": {
       "dir": "elm-m3e-icons",
       "name": "jackhp95/elm-m3e-icons",
-      "summary": "Type-safe Material Symbols icon element helpers for elm-m3e.",
+      "summary": "Type-safe Material Symbols icon names for elm-m3e.",
       "version": "1.0.0",
       "deps": {
         "elm/core": "1.0.0 <= v < 2.0.0",

@@ -2630,3 +2630,89 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   type-safe API — the same wall M-IA2a hit, which it resolved by making the picker a plain
   positioned panel. M-IA2b must follow that precedent (plain panel, not `m3e-menu`). Recorded as an
   autonomous decision following established precedent rather than a blocking escalation; revertible.
+
+- **D-067 / R-026 RESOLVED — `elm-m3e-icons` is UNDER the registry cap: 1,075,308 B → 475,578 B
+  (140.0% → 61.9% of the 768,000-B hard cap, 67.9% of the 700,000-B soft gate).** Human product
+  decision (O-3, taken via AskUserQuestion after a measured options survey): **option (c), an opaque
+  `Name` value type**, with full per-icon doc comments retained and the old function-per-icon surface
+  kept as an unpublished, locally-generatable shape.
+
+  **The cause was NOT doc comments — it was the type signature, and the prior framing of the options
+  was wrong on the arithmetic.** Byte decomposition of the real 1,075,308-B `docs.json` (4083 icons
+  + `custom`): **type signatures 661,625 B (61.5%)** · doc comments 185,442 B (17.2%) · per-value
+  JSON scaffolding 118,436 B (11.0%) · module `@docs` block 55,234 B (5.1%) · value names 54,485 B
+  (5.1%). One 162-byte fully-qualified signature
+  (`List.List (HtmlIr.Attribute.Attr attrs msg) -> … -> HtmlIr.Element.Element produced admittedBy msg`)
+  repeated verbatim 4083 times.
+
+  **Two structural findings, both measured, both non-obvious:**
+  1. **Elm EXPANDS type aliases in `docs.json`.** Introducing
+     `type alias Icon attrs msg children childAdmittedBy produced admittedBy = …` and annotating
+     every icon with it emitted the *expanded* 162-byte string in every entry plus a new alias entry
+     — **1,077,621 B, 2,313 B WORSE than baseline.** The repetition is not factorable by aliasing.
+     Only shortening type-variable names (162 → 117 B) or changing what the value *is*
+     (162 → 15 B) moves it. This is worth remembering for any future Elm package sized near the cap.
+  2. **A split can never carry a barrel.** A barrel re-exporting `menu = Icons.A.menu` needs a per-icon
+     annotation, regenerating a full `docs.json` entry each — the barrel package would itself be
+     ~1,075,308 B. Under any N-way split, consumers permanently pay bucket-lookup with no escape.
+
+  **Runbook §4 option (b) is arithmetically impossible and has been struck.** Measured: lean comments
+  971,134 B (126.4%) · *empty* comments 908,300 B (118.3%) · short type-vars + full comments
+  893,800 B (116.4%) · **the absolute floor of (b) — single-letter type vars AND lean comments —
+  779,233 B (101.5%), still over the cap with zero headroom.** No variant of (b) clears it.
+
+  **Full measured option set** (`elm make --docs`, elm 0.19.1, IR vendored unexposed — the D-031a /
+  D-035 / V-C7 method, which this reproduced to the byte at 1,075,308 B):
+
+  | option | `docs.json` | % hard cap | B/icon | max icons |
+  |---|---:|---:|---:|---:|
+  | V0 today (functions) | 1,075,308 | 140.0% ✗ | 263.3 | 2,917 |
+  | (b) floor: 1-char vars + lean comments | 779,233 | 101.5% ✗ | 190.8 | 4,024 |
+  | (a) split 2, API unchanged | 539,882 / 537,511 | 70.3% ✓ | 263.7 | 2,917/pkg |
+  | (a) split 3, API unchanged | ≤360,165 | 46.9% ✓ | 263.7 | 2,917/pkg |
+  | **(c) opaque `Name`, full comments — LANDED** | **475,578** | **61.9% ✓** | **116.4** | **6,598** |
+  | (c) opaque `Name` + lean comments | 371,404 | 48.4% ✓ | 90.9 | 8,450 |
+
+  (c) was chosen over (a) because it fixes the actual cause rather than dividing it, leaves **+2,500
+  icons (+61%) of headroom** against a catalog Google keeps growing (split-2 leaves only ~42% before a
+  third package is forced), keeps one package / one import / no bucket-lookup, keeps full hover docs,
+  and is **strictly more expressive**: `Name` is a first-class value that can live in a Model or a
+  List, which a six-type-variable function could not express at all. It also satisfies D-036's
+  "new Material Symbols name set, typesafe".
+
+  **Implementation** (branch `exec/r026-icon-cap`, worktree `.worktrees/r026-icons`, NOT merged):
+  `packages/elm-cem/bin/gen-icon-module.js` gains `_iconModule.shape` — `"names"` (default, published)
+  | `"functions"` (retained, unpublished). `config/slots.json` sets `shape: "names"` explicitly and
+  corrects the package summary ("icon element helpers" → "icon names"). Emitter now produces
+  `type Name = Name String` (opaque), `icon : Name -> …`, `custom : String -> Name`, and `menu : Name`
+  per icon. `"icon"` added to `ELM_RESERVED` so a future ligature cannot shadow the renderer (`Name`
+  needs no guard — `toElmIdentifier` always yields a lowercase-initial identifier).
+
+  **Evidence (captured, from a clean worktree):**
+  - `shape:"functions"` reproduces the pre-change emitter **byte-identically** (sha256
+    `2c021d9dd50a88c3…`, 1,467,735 B) — the retained shape is a proven no-op, not a rewrite.
+  - Regenerated: 4083 ligatures, elm-format **0.8.7** (the pinned version, not the 0.8.8 also on
+    this box), `--validate` clean. Source 1,447,315 B → 553,581 B. Both emitted trees
+    (`src/M3e/Icon.elm` and `elm-m3e-icons/src/M3e/Icon.elm`) sha256-identical.
+  - `node tools/measure-docs-size.mjs` → **475,578 B, 61.9% hard, 67.9% soft, exit 0.**
+  - **Gate proven to bite:** same tool against a `shape:"functions"` tree → **1,071,223 B, 139.5%,
+    exit 1.** (Δ4,085 B from the 1,075,308 baseline is exactly 1 B/icon — unformatted `{-| … -}`
+    one-liners vs elm-format's trailing newline. Accounted for, not drift.)
+  - `check:spike` GREEN — all 6 positive modules compile, all 4 `bad/` negatives still rejected.
+  - `elm-test-rs` in `tests/`: **13/13 passed.**
+  - README regenerated with the new call syntax, **940 B** (clears runbook O-4's ≥300 B bar).
+
+  **New tool: `tools/measure-docs-size.mjs`** — path-independent replacement for
+  `tools/move2/measure-*.mjs`, which hardcoded `/Users/jhp/code/jackhp95/elm-cem-workspace`, an
+  ephemeral `/tmp/m2/out`, and an uninstalled `node_modules/.bin/elm`, and therefore **could not run
+  at all** on this machine (same defect class as R-020 item 2; the repo's own documented way to
+  reproduce its headline cap figures was dead). Root derived from `pnpm-workspace.yaml`; elm resolved
+  via `$ELM_BIN` → `node_modules/.bin/elm` → `~/.elm/bin/elm` → PATH; family deps vendored unexposed
+  from `$IR_SRC`/`$FACTS_SRC` or the in-workspace dirs. Exits non-zero over the hard cap, so it is
+  usable as a gate — it is NOT yet wired into `gate-all`.
+
+  **NOT done / explicitly out of scope of this pass:** nothing published (the boundary holds); branch
+  not merged and not pushed; `verify:split`, `check:cem`, `check:drift` and the docs/browser gates
+  not run (this workspace has **no `node_modules` installed** — `pnpm install` was never run here, so
+  those gates were unreachable, not skipped by choice); `measure-docs-size.mjs` not wired into
+  `gate-all`; the other four packages not re-measured under the new tool. Next free IDs: **D-068**, **R-023**.

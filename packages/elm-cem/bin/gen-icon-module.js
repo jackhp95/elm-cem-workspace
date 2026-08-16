@@ -45,8 +45,11 @@ const ELM_RESERVED = new Set([
   "as",
   "port",
   // Additionally: these are not keywords but are top-level names we emit ourselves
-  // (custom) so they must not collide.
+  // (custom, and — in the "names" shape — the `icon` renderer) so they must not
+  // collide. `Name` needs no guard: toElmIdentifier always produces a
+  // lowercase-initial identifier, so no ligature can ever shadow the type.
   "custom",
+  "icon",
 ]);
 
 // Convert a snake_case ligature name to an Elm identifier.
@@ -78,13 +81,44 @@ function toElmIdentifier(snake) {
 // Generate the full Elm source for the <Lib>.Icon module.
 //
 // Self-contained producer — imports ONLY IR + elm/html, not M3e.Component.Icon.
-// Each icon helper:
-//   menu : List (Attr attrs msg) -> List (Element children childAdmittedBy msg) -> Element produced admittedBy msg
-//   menu attrs kids =
-//       Ir.fromNode (Ir.node "m3e-icon" (Ir.attribute "name" "menu" :: attrs) (List.map HtmlIr.Element.toNode kids))
 //
-// Plus `custom : String -> same signature`.
-function generateIconModule(lib, names) {
+// TWO SHAPES, selected by `_iconModule.shape`:
+//
+//   "names" (DEFAULT, the published shape) — one opaque `Name` value per icon,
+//   rendered by a single `icon` function:
+//       type Name = Name String
+//       icon : Name -> List (Attr attrs msg) -> List (Element ...) -> Element ...
+//       menu : Name
+//       menu = Name "menu"
+//
+//   "functions" (retained, NOT published) — the original one-element-helper-per-icon
+//   surface, for anyone vendoring the module and wanting the terser `Icon.menu []
+//   []` call site:
+//       menu : List (Attr attrs msg) -> List (Element ...) -> Element ...
+//       menu attrs kids = Ir.fromNode (Ir.node "m3e-icon" ...)
+//
+// WHY "names" is the published default (R-026 / publish-runbook O-3): the Elm
+// registry rejects any package whose `docs.json` exceeds 768,000 bytes. Under
+// "functions", each of the 4083 icons carries a 162-byte fully-qualified type
+// signature — 661,625 B, 61.5% of the file — and the package compiled to
+// 1,075,308 B = 140% of the cap. Elm EXPANDS type aliases in `docs.json`, so the
+// repetition cannot be factored out with a `type alias`; annotating every icon
+// with one measured 1,077,621 B, i.e. WORSE than the baseline. Trimming doc
+// comments cannot close the gap either: empty comments plus single-letter type
+// variables still lands at 779,233 B, over the cap with no headroom. Under
+// "names" the per-entry type is `M3e.Icon.Name` (15 B) and the package fits with
+// ~60% of the cap to spare. `Name` is also strictly more expressive — an icon
+// becomes a first-class value that can live in a Model or a List, which a
+// six-type-variable function could not.
+//
+// Both shapes emit `custom` as the escape hatch for unenumerated ligatures.
+function generateIconModule(lib, names, shape = "names") {
+  if (shape !== "names" && shape !== "functions") {
+    console.error(
+      `elm-cem gen-icon-module: unknown _iconModule.shape "${shape}" — expected "names" (default) or "functions"`
+    );
+    process.exit(1);
+  }
   // Collision check — fail loudly
   const seen = new Map(); // identifier → first snake name
   for (const snake of names) {
@@ -100,23 +134,51 @@ function generateIconModule(lib, names) {
   }
 
   const allIds = names.map((s) => toElmIdentifier(s));
-  const exposingList = ["custom", ...allIds].join("\n    , ");
+  const namesShape = shape === "names";
+
+  // Exposed surface. The "names" shape additionally exposes the `Name` type
+  // (opaque — the constructor is NOT exposed) and the single `icon` renderer.
+  const exposingList = (namesShape ? ["Name", "icon", "custom", ...allIds] : ["custom", ...allIds])
+    .join("\n    , ");
 
   const moduleLine = `module ${lib}.Icon exposing\n    ( ${exposingList}\n    )`;
 
+  const headlineDoc = namesShape
+    ? [
+        `{-| Type-safe icon names for the full Material Symbols ligature set.`,
+        ``,
+        `Every ligature is a \`Name\` value, and \`icon\` renders one as an \`m3e-icon\``,
+        `element with the ligature pre-filled as the \`name\` attribute, using the IR`,
+        `directly — no components dependency. So`,
+        `\`${lib}.Icon.icon ${lib}.Icon.menu attrs kids\` emits an \`m3e-icon\` element`,
+        `with \`name="menu"\` prepended to \`attrs\`.`,
+        ``,
+        `\`Name\` is an ordinary opaque value, so an icon can be stored in a model, held`,
+        `in a list, or taken as a function argument.`,
+        ``,
+        `Use \`custom\` for any ligature not enumerated here — teams updating the`,
+        `underlying font or using app-specific icons should reach for \`custom\`.`,
+        ``,
+        `Elm's dead-code elimination prunes every name you do not reference, so`,
+        `importing this module has no size cost beyond what you use.`,
+      ]
+    : [
+        `{-| Type-safe icon element helpers for the full Material Symbols ligature set.`,
+        ``,
+        `Each helper produces an \`m3e-icon\` element with the icon name pre-filled`,
+        `as the \`name\` attribute, using the IR directly — no components dependency.`,
+        `So \`${lib}.Icon.menu attrs kids\` emits an \`m3e-icon\` element with`,
+        `\`name="menu"\` prepended to \`attrs\`.`,
+        ``,
+        `Use \`custom\` for any name not enumerated here — teams updating the underlying`,
+        `font or using app-specific icons should reach for \`custom\`.`,
+        ``,
+        `Elm's dead-code elimination prunes every helper you do not call, so importing`,
+        `this module has no size cost beyond what you use.`,
+      ];
+
   const moduleDoc = [
-    `{-| Type-safe icon element helpers for the full Material Symbols ligature set.`,
-    ``,
-    `Each helper produces an \`m3e-icon\` element with the icon name pre-filled`,
-    `as the \`name\` attribute, using the IR directly — no components dependency.`,
-    `So \`M3e.Icon.menu attrs kids\` emits an \`m3e-icon\` element with`,
-    `\`name="menu"\` prepended to \`attrs\`.`,
-    ``,
-    `Use \`custom\` for any name not enumerated here — teams updating the underlying`,
-    `font or using app-specific icons should reach for \`custom\`.`,
-    ``,
-    `Elm's dead-code elimination prunes every helper you do not call, so importing`,
-    `this module has no size cost beyond what you use.`,
+    ...headlineDoc,
     ``,
     `Source: Material Symbols ligature names from @iconify-json/material-symbols`,
     `(base icons, style-suffix-free). ${names.length} icons total.`,
@@ -128,7 +190,9 @@ function generateIconModule(lib, names) {
     // the class of bug `registry-check`'s package-shaped `elm make --docs`
     // compile exists to catch, once it is actually run against this module —
     // see registry-check.js's --nested-pkg addition, same batch).
-    `@docs custom, ${allIds.join(", ")}`,
+    namesShape
+      ? `@docs Name, icon, custom, ${allIds.join(", ")}`
+      : `@docs custom, ${allIds.join(", ")}`,
     `-}`,
   ].join("\n");
 
@@ -160,28 +224,76 @@ function generateIconModule(lib, names) {
     return lines.join("\n");
   }
 
-  // custom escape hatch
-  const customDecl = [
-    `{-| Use any ligature name not enumerated above — for teams updating the`,
-    `underlying font or using app-specific icons.`,
-    `-}`,
-    formatSig("custom", ["String", ...sigParts.slice(0, 2)], sigParts[2]),
-    `custom ligature attrs kids =`,
-    `    Ir.fromNode (Ir.node "m3e-icon" (Ir.attribute "name" ligature :: attrs) (List.map HtmlIr.Element.toNode kids))`,
-  ].join("\n");
+  // The element producer itself. Identical IR call in both shapes — the only
+  // difference is where the ligature string comes from (an unwrapped `Name`, or
+  // the closed-over literal in a per-icon helper).
+  const produce = (ligatureExpr) =>
+    `    Ir.fromNode (Ir.node "m3e-icon" (Ir.attribute "name" ${ligatureExpr} :: attrs) (List.map HtmlIr.Element.toNode kids))`;
 
-  // Per-icon helpers
-  const iconDecls = names.map((snake) => {
-    const id = toElmIdentifier(snake);
-    return [
-      `{-| The \`${snake}\` Material Symbol icon. -}`,
-      formatSig(id, sigParts.slice(0, 2), sigParts[2]),
-      `${id} attrs kids =`,
-      `    Ir.fromNode (Ir.node "m3e-icon" (Ir.attribute "name" "${snake}" :: attrs) (List.map HtmlIr.Element.toNode kids))`,
-    ].join("\n");
-  });
+  // Shape-specific preamble + per-icon declarations.
+  const preambleDecls = [];
+  let iconDecls;
 
-  const sections = [moduleLine, moduleDoc, imports, customDecl, ...iconDecls];
+  if (namesShape) {
+    preambleDecls.push(
+      [
+        `{-| An opaque Material Symbols ligature name.`,
+        ``,
+        `Construct one from the enumerated values below, or with \`custom\`.`,
+        `-}`,
+        `type Name`,
+        `    = Name String`,
+      ].join("\n"),
+      [
+        `{-| Render an icon \`Name\` as an \`m3e-icon\` element.`,
+        `-}`,
+        formatSig("icon", ["Name", ...sigParts.slice(0, 2)], sigParts[2]),
+        `icon (Name ligature) attrs kids =`,
+        produce("ligature"),
+      ].join("\n"),
+      [
+        `{-| Use any ligature name not enumerated below — for teams updating the`,
+        `underlying font or using app-specific icons.`,
+        `-}`,
+        `custom : String -> Name`,
+        `custom =`,
+        `    Name`,
+      ].join("\n")
+    );
+
+    iconDecls = names.map((snake) => {
+      const id = toElmIdentifier(snake);
+      return [
+        `{-| The \`${snake}\` Material Symbol icon. -}`,
+        `${id} : Name`,
+        `${id} =`,
+        `    Name "${snake}"`,
+      ].join("\n");
+    });
+  } else {
+    preambleDecls.push(
+      [
+        `{-| Use any ligature name not enumerated above — for teams updating the`,
+        `underlying font or using app-specific icons.`,
+        `-}`,
+        formatSig("custom", ["String", ...sigParts.slice(0, 2)], sigParts[2]),
+        `custom ligature attrs kids =`,
+        produce("ligature"),
+      ].join("\n")
+    );
+
+    iconDecls = names.map((snake) => {
+      const id = toElmIdentifier(snake);
+      return [
+        `{-| The \`${snake}\` Material Symbol icon. -}`,
+        formatSig(id, sigParts.slice(0, 2), sigParts[2]),
+        `${id} attrs kids =`,
+        produce(`"${snake}"`),
+      ].join("\n");
+    });
+  }
+
+  const sections = [moduleLine, moduleDoc, imports, ...preambleDecls, ...iconDecls];
   return sections.join("\n\n\n") + "\n";
 }
 
@@ -192,7 +304,7 @@ function generateIconModule(lib, names) {
 //   <repoRoot>/<pkg.dir>/elm.json           — package manifest
 //   <repoRoot>/<pkg.dir>/README.md          — minimal banner
 //   <repoRoot>/<pkg.dir>/LICENSE            — copied from repo root
-function writePackageTree(repoRoot, pkg, elmSrc, lib) {
+function writePackageTree(repoRoot, pkg, elmSrc, lib, shape = "names") {
   const pkgDir = path.join(repoRoot, pkg.dir);
 
   // src/M3e/Icon.elm
@@ -236,13 +348,28 @@ function writePackageTree(repoRoot, pkg, elmSrc, lib) {
       `## Usage`,
       ``,
       `\`\`\`elm`,
-      `import M3e.Icon`,
+      `import ${lib}.Icon`,
       ``,
-      `-- A named icon`,
-      `M3e.Icon.menu [] []`,
-      ``,
-      `-- A custom / app-specific icon`,
-      `M3e.Icon.custom "my_custom_icon" [] []`,
+      ...(shape === "names"
+        ? [
+            `-- A named icon`,
+            `${lib}.Icon.icon ${lib}.Icon.menu [] []`,
+            ``,
+            `-- A custom / app-specific icon`,
+            `${lib}.Icon.icon (${lib}.Icon.custom "my_custom_icon") [] []`,
+            ``,
+            `-- \`Name\` is an ordinary value, so icons can be stored and passed around`,
+            `favourites : List ${lib}.Icon.Name`,
+            `favourites =`,
+            `    [ ${lib}.Icon.menu, ${lib}.Icon.search, ${lib}.Icon.settings ]`,
+          ]
+        : [
+            `-- A named icon`,
+            `${lib}.Icon.menu [] []`,
+            ``,
+            `-- A custom / app-specific icon`,
+            `${lib}.Icon.custom "my_custom_icon" [] []`,
+          ]),
       `\`\`\``,
       ``,
       `## License`,
@@ -276,6 +403,7 @@ function run(argv, configFromPaths, outputDir) {
   let iconComp = null;
   let catalogPath = null;
   let pkg = null; // optional `package` sub-object for standalone package emission
+  let shape = "names"; // "names" (published, under the docs.json cap) | "functions"
 
   for (const p of configFromPaths) {
     if (!/\.json$/.test(p)) continue;
@@ -287,6 +415,7 @@ function run(argv, configFromPaths, outputDir) {
         if (m.iconComp) iconComp = m.iconComp;
         if (m.catalogFrom) catalogPath = m.catalogFrom;
         if (m.package && typeof m.package === "object") pkg = m.package;
+        if (m.shape) shape = m.shape;
       }
       // Also read _brand as fallback for lib
       if (!lib && c._brand) lib = c._brand;
@@ -318,7 +447,7 @@ function run(argv, configFromPaths, outputDir) {
     process.exit(1);
   }
 
-  const src = generateIconModule(lib, names);
+  const src = generateIconModule(lib, names, shape);
 
   // Write to <outputDir>/M3e/Icon.elm (flat src — internal, unexposed artifact)
   const outDir = path.resolve(process.cwd(), outputDir);
@@ -328,13 +457,15 @@ function run(argv, configFromPaths, outputDir) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, src, "utf8");
 
-  console.log(`elm-cem: generated ${lib}.Icon (${names.length} ligatures + custom) → ${outPath}`);
+  console.log(
+    `elm-cem: generated ${lib}.Icon (${names.length} ligatures + custom, shape="${shape}") → ${outPath}`
+  );
 
   // Optionally write the standalone package tree (config-declared, spec §3.1B).
   // The repo root is one level above the --output=src dir.
   if (pkg) {
     const repoRoot = path.dirname(outDir);
-    writePackageTree(repoRoot, pkg, src, lib);
+    writePackageTree(repoRoot, pkg, src, lib, shape);
   }
 }
 
