@@ -152,14 +152,14 @@ suite =
             -- attaches its click handler to `this.parentElement`, and toggles/
             -- anchors against `this.parentElement`. So it MUST be emitted as a
             -- CHILD of the clickable host, wrapping the label — never as an outer
-            -- wrapper around the host. `M3e.Component.Button.el` does this by placing
+            -- wrapper around the host. `M3e.Component.Button.component` does this by placing
             -- `Action.wrapContent action content` among the `m3e-button` children.
             -- These tests pin that nesting direction so a regen or an `Action`
             -- refactor that inverted it (host inside the toggle) fails loudly here
             -- instead of silently mis-anchoring the popup at runtime.
             [ test "togglesDatepicker emits <m3e-datepicker-toggle for> as a child of the host, wrapping the label" <|
                 \_ ->
-                    M3e.Component.Button.el
+                    M3e.Component.Button.component
                         { content = M3e.text "Pick date"
                         , action = Action.togglesDatepicker "cal1"
                         }
@@ -181,7 +181,7 @@ suite =
                     -- Also a compile-lock: `togglesTimepicker` only type-checks here
                     -- if `M3e.Button`'s ActionCaps admits `timepickerToggle`, i.e.
                     -- the config mirror landed in the required.action roster too.
-                    M3e.Component.Button.el
+                    M3e.Component.Button.component
                         { content = M3e.text "Pick time"
                         , action = Action.togglesTimepicker "clock1"
                         }
@@ -198,7 +198,7 @@ suite =
                             ]
             , test "the toggle is INNER — no clickable host nested inside it (anti-inversion)" <|
                 \_ ->
-                    M3e.Component.Button.el
+                    M3e.Component.Button.component
                         { content = M3e.text "Pick date"
                         , action = Action.togglesDatepicker "cal1"
                         }
@@ -210,7 +210,7 @@ suite =
                         |> Query.count (Expect.equal 0)
             , test "an opens-trigger wrapper (opensMenu) nests the same way — the whole family shares the contract" <|
                 \_ ->
-                    M3e.Component.Button.el
+                    M3e.Component.Button.component
                         { content = M3e.text "Open menu"
                         , action = Action.opensMenu "menu1"
                         }

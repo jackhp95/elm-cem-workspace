@@ -1,5 +1,5 @@
 module M3e.Component.Fab exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
     , Size, size, Type, type_, Variant, variant
     , disabled, disabledInteractive, download, extended, href, lowered, name, rel, target, value, defaultValue, onClick
@@ -10,7 +10,7 @@ module M3e.Component.Fab exposing
 
 A floating action button (FAB) used to present important actions.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
 @docs Size, size, Type, type_, Variant, variant
 @docs disabled, disabledInteractive, download, extended, href, lowered, name, rel, target, value, defaultValue, onClick
@@ -110,31 +110,21 @@ type alias SlotCaps =
     M3e.Internal.Types.Fab.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.fab
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { content : Element Content (ChildAdmittedBy childAdm) msg
     , action : Ac.Action ActionCaps msg
     }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
+component required_ attrs children =
     let
         actioned =
             Ir.fromNode (Ac.wrapContent required_.action (El.toNode required_.content))
     in
-    view
+    H.fab
         (Ac.toAttrs required_.action ++ attrs)
         (actioned :: children)
 

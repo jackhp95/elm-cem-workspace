@@ -1,5 +1,5 @@
 module M3e.Component.MenuItem exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
     , disabled, download, href, rel, target, onClick
     , icon, trailingIcon, child
@@ -9,7 +9,7 @@ module M3e.Component.MenuItem exposing
 
 An item of a menu.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy
 @docs disabled, download, href, rel, target, onClick
 @docs icon, trailingIcon, child
@@ -83,11 +83,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.menuItem
 
 

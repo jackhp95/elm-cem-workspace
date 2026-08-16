@@ -1,5 +1,5 @@
 module M3e.Component.Icon exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Grade, grade, Variant, variant
     , filled, name, opticalSize, weight
@@ -9,7 +9,7 @@ module M3e.Component.Icon exposing
 
 A small symbol used to easily identify an action or category.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Grade, grade, Variant, variant
 @docs filled, name, opticalSize, weight
@@ -79,11 +79,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.icon
 
 

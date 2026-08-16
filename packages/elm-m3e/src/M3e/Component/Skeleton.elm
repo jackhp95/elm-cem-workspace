@@ -1,5 +1,5 @@
 module M3e.Component.Skeleton exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Animation, animation, Shape, shape
     , loaded
@@ -10,7 +10,7 @@ module M3e.Component.Skeleton exposing
 
 A visual placeholder that mimics the layout of content while it's still loading.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Animation, animation, Shape, shape
 @docs loaded
@@ -82,11 +82,11 @@ kind-permissive (`any`): children of any kind compose, but each child's OWN
 admittedBy must still admit this context — a restricted-parent element is
 rejected here at compile time.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.skeleton
 
 

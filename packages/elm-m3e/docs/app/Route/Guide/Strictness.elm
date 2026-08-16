@@ -129,7 +129,7 @@ shapesCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 -- required-record form (`el`) — the compiler now DEMANDS the parts a button can't do without
-M3e.Component.Button.el
+M3e.Component.Button.component
     { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }
     []
     []
@@ -149,7 +149,7 @@ recordError : String
 recordError =
     """The 1st argument to `el` is not what I expect:
 
-4| M3e.Component.Button.el { content = M3e.text "Save" } [] []
+4| M3e.Component.Button.component { content = M3e.text "Save" } [] []
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This argument is a record of type:
 

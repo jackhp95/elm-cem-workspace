@@ -1,5 +1,5 @@
 module M3e.Component.ThemeIcon exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Scheme, scheme, Variant, variant
     , color
@@ -9,7 +9,7 @@ module M3e.Component.ThemeIcon exposing
 
 An icon that visually presents a preview of a theme.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Scheme, scheme, Variant, variant
 @docs color
@@ -77,11 +77,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.themeIcon
 
 

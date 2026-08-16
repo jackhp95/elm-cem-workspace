@@ -1,5 +1,5 @@
 module M3e.Component.SearchView exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
     , Mode, mode
     , clearLabel, closeLabel, contained, hideSearchIcon, open, onQuery, onClear, onBeforetoggle, onToggle
@@ -10,7 +10,7 @@ module M3e.Component.SearchView exposing
 
 A surface that presents suggestions and results for a search.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ClearIconSlot, CloseIconSlot, ClosedLeadingSlot, ClosedTrailingSlot, OpenLeadingSlot, OpenTrailingSlot, SearchIconSlot, ChildAdmittedBy
 @docs Mode, mode
 @docs clearLabel, closeLabel, contained, hideSearchIcon, open, onQuery, onClear, onBeforetoggle, onToggle
@@ -114,28 +114,15 @@ type alias SlotCaps =
     M3e.Internal.Types.SearchView.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`. The default slot is
-kind-permissive (`any`): children of any kind compose, but each child's OWN
-admittedBy must still admit this context — a restricted-parent element is
-rejected here at compile time.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.searchView
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { input : Element childAccepts (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "input") (El.toNode required_.input)) :: children)
+component required_ attrs children =
+    H.searchView attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "input") (El.toNode required_.input)) :: children)
 
 
 {-| The behavior mode of the view. (default: `"docked"`)

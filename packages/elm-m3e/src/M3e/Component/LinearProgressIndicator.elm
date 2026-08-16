@@ -1,5 +1,5 @@
 module M3e.Component.LinearProgressIndicator exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Mode, mode, Variant, variant
     , bufferValue, max, value, defaultValue
@@ -9,7 +9,7 @@ module M3e.Component.LinearProgressIndicator exposing
 
 A horizontal bar for indicating progress and activity.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Mode, mode, Variant, variant
 @docs bufferValue, max, value, defaultValue
@@ -78,11 +78,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.linearProgressIndicator
 
 

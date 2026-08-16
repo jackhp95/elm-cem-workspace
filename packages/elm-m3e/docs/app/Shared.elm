@@ -826,7 +826,7 @@ settingsBottomSheet model =
 
 {-| One accordion entry: a header (plain text label) plus the section's body.
 `M3e.Unsafe.recast` re-kinds both the header and body to the free rows that
-`M3e.Component.ExpansionPanel.el`'s `childAccepts` type variable unifies to. This is the
+`M3e.Component.ExpansionPanel.component`'s `childAccepts` type variable unifies to. This is the
 sanctioned escape hatch (see `src/M3e/Unsafe.elm`) for exactly this
 "wrap already-built content into a slot it wasn't originally typed for" case.
 Lives here (allow-listed) rather than in `Theme.elm` (not allow-listed) per the
@@ -834,7 +834,7 @@ Lives here (allow-listed) rather than in `Theme.elm` (not allow-listed) per the
 -}
 sectionPanel : String -> Element cs adm msg -> Element { s | expansionPanel : M3e.Kind.Brand } admittedBy msg
 sectionPanel label body =
-    M3e.Component.ExpansionPanel.el
+    M3e.Component.ExpansionPanel.component
         { header = M3e.expansionHeader [] [ M3e.text label ] |> M3e.Unsafe.recast }
         []
         [ M3e.Unsafe.recast body ]

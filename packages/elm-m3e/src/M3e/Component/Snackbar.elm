@@ -1,5 +1,5 @@
 module M3e.Component.Snackbar exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
     , action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
     , closeIcon, child
@@ -9,7 +9,7 @@ module M3e.Component.Snackbar exposing
 
 Presents short updates about application processes at the bottom of the screen.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
 @docs action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
 @docs closeIcon, child
@@ -75,25 +75,15 @@ type alias SlotCaps =
     M3e.Internal.Types.Snackbar.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.snackbar
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { content : Element Content (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (required_.content :: children)
+component required_ attrs children =
+    H.snackbar attrs (required_.content :: children)
 
 
 {-| See `M3e.Attributes.action`.

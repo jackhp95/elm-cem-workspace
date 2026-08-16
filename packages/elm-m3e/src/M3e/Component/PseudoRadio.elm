@@ -1,5 +1,5 @@
 module M3e.Component.PseudoRadio exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , checked, disabled, defaultChecked
     )
@@ -8,7 +8,7 @@ module M3e.Component.PseudoRadio exposing
 
 An element which looks like a radio button.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs checked, disabled, defaultChecked
 
@@ -62,11 +62,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.pseudoRadio
 
 

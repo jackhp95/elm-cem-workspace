@@ -1,5 +1,5 @@
 module M3e.Component.Option exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , HighlightMode, highlightMode
     , disableHighlight, disabled, selected, term, value, defaultSelected, defaultValue
@@ -10,7 +10,7 @@ module M3e.Component.Option exposing
 
 An option that can be selected.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs HighlightMode, highlightMode
 @docs disableHighlight, disabled, selected, term, value, defaultSelected, defaultValue
@@ -77,25 +77,15 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.option
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { content : Element Content (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (required_.content :: children)
+component required_ attrs children =
+    H.option attrs (required_.content :: children)
 
 
 {-| The mode in which to highlight a term. (default: `"contains"`)

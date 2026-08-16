@@ -1,5 +1,5 @@
 module M3e.Component.YearView exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , active, activeDate, date, maxDate, minDate, today, onChange, onActiveChange
     )
@@ -8,7 +8,7 @@ module M3e.Component.YearView exposing
 
 An internal component used to display a single year in a calendar.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs active, activeDate, date, maxDate, minDate, today, onChange, onActiveChange
 
@@ -63,11 +63,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.yearView
 
 

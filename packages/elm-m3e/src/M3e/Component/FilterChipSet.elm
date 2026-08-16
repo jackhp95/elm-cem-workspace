@@ -1,5 +1,5 @@
 module M3e.Component.FilterChipSet exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, hideSelectionIndicator, multi, name, vertical, onChange, onBeforeinput, onInput
     , child
@@ -10,7 +10,7 @@ module M3e.Component.FilterChipSet exposing
 A container that organizes filter chips into a cohesive group, enabling selection and
 deselection of values used to refine content or trigger contextual behavior.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, hideSelectionIndicator, multi, name, vertical, onChange, onBeforeinput, onInput
 @docs child
@@ -73,11 +73,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.filterChipSet
 
 

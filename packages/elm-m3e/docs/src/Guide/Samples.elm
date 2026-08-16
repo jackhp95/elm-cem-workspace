@@ -91,10 +91,10 @@ seamsLinkNav =
     """linkNav =
     -- the label slot admits { text : M3e.Kind.Brand, link : M3e.Kind.Brand }, so a
     -- typed `TypedHtml.a` fills it directly — a nav item that IS an anchor. The
-    -- required-record form (`M3e.Component.NavMenuItem.el`) enforces the required `label`.
+    -- required-record form (`M3e.Component.NavMenuItem.component`) enforces the required `label`.
     M3e.navMenu []
-        [ M3e.Component.NavMenuItem.el { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/seams" ] [ M3e.text "Seams" ] } [] []
-        , M3e.Component.NavMenuItem.el { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/the-layers" ] [ M3e.text "The surfaces" ] } [] []
+        [ M3e.Component.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/seams" ] [ M3e.text "Seams" ] } [] []
+        , M3e.Component.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/the-layers" ] [ M3e.text "The surfaces" ] } [] []
         ]"""
 
 

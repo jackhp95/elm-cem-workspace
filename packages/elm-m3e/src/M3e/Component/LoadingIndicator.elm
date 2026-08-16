@@ -1,5 +1,5 @@
 module M3e.Component.LoadingIndicator exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Variant, variant
     )
@@ -8,7 +8,7 @@ module M3e.Component.LoadingIndicator exposing
 
 Shows indeterminate progress for a short wait time.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Variant, variant
 
@@ -69,11 +69,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.loadingIndicator
 
 

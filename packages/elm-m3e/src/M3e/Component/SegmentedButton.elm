@@ -1,5 +1,5 @@
 module M3e.Component.SegmentedButton exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, hideSelectionIndicator, multi, name, onChange, onBeforeinput, onInput
     , child
@@ -9,7 +9,7 @@ module M3e.Component.SegmentedButton exposing
 
 A button that allows a user to select from a limited set of options.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, hideSelectionIndicator, multi, name, onChange, onBeforeinput, onInput
 @docs child
@@ -70,25 +70,15 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.segmentedButton
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { content : Element Content (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (required_.content :: children)
+component required_ attrs children =
+    H.segmentedButton attrs (required_.content :: children)
 
 
 {-| See `M3e.Attributes.disabled`.

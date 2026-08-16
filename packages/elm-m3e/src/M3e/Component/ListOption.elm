@@ -1,5 +1,5 @@
 module M3e.Component.ListOption exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
     , disabled, selected, value, defaultSelected, defaultValue, onBeforeinput, onInput, onChange, onClick
     , leading, overline, supportingText, trailing, child
@@ -9,7 +9,7 @@ module M3e.Component.ListOption exposing
 
 A selectable option in a list.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
 @docs disabled, selected, value, defaultSelected, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs leading, overline, supportingText, trailing, child
@@ -95,11 +95,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.listOption
 
 

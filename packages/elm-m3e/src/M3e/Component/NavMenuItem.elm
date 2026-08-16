@@ -1,5 +1,5 @@
 module M3e.Component.NavMenuItem exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
     , disabled, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
     , badge, icon, label, selectedIcon, toggleIcon, child
@@ -9,7 +9,7 @@ module M3e.Component.NavMenuItem exposing
 
 An expandable item, selectable item within a navigation menu.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
 @docs disabled, open, selected, defaultSelected, onOpening, onOpened, onClosing, onClosed, onClick
 @docs badge, icon, label, selectedIcon, toggleIcon, child
@@ -99,25 +99,15 @@ type alias SlotCaps =
     M3e.Internal.Types.NavMenuItem.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.navMenuItem
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { label : Element LabelSlot (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "label") (El.toNode required_.label)) :: children)
+component required_ attrs children =
+    H.navMenuItem attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "label") (El.toNode required_.label)) :: children)
 
 
 {-| See `M3e.Attributes.disabled`.

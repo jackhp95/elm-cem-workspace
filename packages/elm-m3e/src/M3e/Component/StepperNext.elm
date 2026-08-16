@@ -1,5 +1,5 @@
 module M3e.Component.StepperNext exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     )
 
@@ -7,7 +7,7 @@ module M3e.Component.StepperNext exposing
 
 An element, nested within a clickable element, used to move a stepper to the next step.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 
 -}
@@ -60,9 +60,9 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.stepperNext

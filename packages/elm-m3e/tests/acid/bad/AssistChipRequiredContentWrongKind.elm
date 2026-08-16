@@ -2,10 +2,10 @@ module AssistChipRequiredContentWrongKind exposing (broken)
 
 {-| NEGATIVE probe — REQUIRED content is typed, not merely present.
 
-Components with mandatory content expose `el` / `build` taking a record of the
-required slots, so the content cannot be forgotten:
+Components with mandatory content expose `component` / `build` taking a record
+of the required slots, so the content cannot be forgotten:
 
-    el :
+    component :
         { content : Element Content (ChildAdmittedBy childAdm) msg }
         -> List (Attr Attrs msg)
         -> List (Element Content (ChildAdmittedBy childAdm) msg)
@@ -26,4 +26,4 @@ import M3e.Component.AssistChip
 
 broken : M3e.Element (M3e.Component.AssistChip.Is s) admittedBy msg
 broken =
-    M3e.Component.AssistChip.el { content = M3e.badge [] [] } [] []
+    M3e.Component.AssistChip.component { content = M3e.badge [] [] } [] []

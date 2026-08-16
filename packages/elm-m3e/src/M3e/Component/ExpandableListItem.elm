@@ -1,5 +1,5 @@
 module M3e.Component.ExpandableListItem exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
     , disabled, open, onOpening, onOpened, onClosing, onClosed
     , items, leading, overline, supportingText, toggleIcon, child
@@ -9,7 +9,7 @@ module M3e.Component.ExpandableListItem exposing
 
 An item in a list that can be expanded to show more items.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
 @docs disabled, open, onOpening, onOpened, onClosing, onClosed
 @docs items, leading, overline, supportingText, toggleIcon, child
@@ -95,11 +95,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.expandableListItem
 
 

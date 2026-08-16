@@ -1,5 +1,5 @@
 module M3e.Component.InputChipSet exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, name, required, validationmessages, vertical, onChange
     , input, child
@@ -9,7 +9,7 @@ module M3e.Component.InputChipSet exposing
 
 A container that transforms user input into a cohesive set of interactive chips, supporting entry, editing, and removal of discrete values.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, name, required, validationmessages, vertical, onChange
 @docs input, child
@@ -72,11 +72,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.inputChipSet
 
 

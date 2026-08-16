@@ -1,5 +1,5 @@
 module M3e.Component.SplitButton exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
     , Size, size, Variant, variant
     , leadingButton, trailingButton
@@ -9,7 +9,7 @@ module M3e.Component.SplitButton exposing
 
 A button used to show an action with a menu of related actions.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
 @docs Size, size, Variant, variant
 @docs leadingButton, trailingButton
@@ -87,27 +87,17 @@ type alias SlotCaps =
     M3e.Internal.Types.SplitButton.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.splitButton
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { leadingButton : Element LeadingButtonSlot (ChildAdmittedBy childAdm) msg
     , trailingButton : Element TrailingButtonSlot (ChildAdmittedBy childAdm) msg
     }
     -> List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "leading-button") (El.toNode required_.leadingButton)) :: Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trailing-button") (El.toNode required_.trailingButton)) :: children)
+component required_ attrs children =
+    H.splitButton attrs (Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "leading-button") (El.toNode required_.leadingButton)) :: Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trailing-button") (El.toNode required_.trailingButton)) :: children)
 
 
 {-| The size of the button. (default: `"small"`)

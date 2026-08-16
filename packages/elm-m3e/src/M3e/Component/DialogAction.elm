@@ -1,5 +1,5 @@
 module M3e.Component.DialogAction exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , returnValue
     , child
@@ -9,7 +9,7 @@ module M3e.Component.DialogAction exposing
 
 An element, nested within a clickable element, used to close a parenting dialog.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs returnValue
 @docs child
@@ -67,11 +67,11 @@ kind-permissive (`any`): children of any kind compose, but each child's OWN
 admittedBy must still admit this context — a restricted-parent element is
 rejected here at compile time.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.dialogAction
 
 

@@ -1,5 +1,5 @@
 module M3e.Component.Ripple exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , centered, disabled, for, radius, unbounded
     )
@@ -8,7 +8,7 @@ module M3e.Component.Ripple exposing
 
 Connects user input to screen reactions using ripples.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs centered, disabled, for, radius, unbounded
 
@@ -62,11 +62,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.ripple
 
 

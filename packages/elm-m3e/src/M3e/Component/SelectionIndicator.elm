@@ -1,5 +1,5 @@
 module M3e.Component.SelectionIndicator exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , bounce, centered, disabled, for, selected, defaultSelected
     )
@@ -8,7 +8,7 @@ module M3e.Component.SelectionIndicator exposing
 
 Provides selection, focus, and hover state layer treatment for an interactive element that supports selection.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs bounce, centered, disabled, for, selected, defaultSelected
 
@@ -62,11 +62,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.selectionIndicator
 
 

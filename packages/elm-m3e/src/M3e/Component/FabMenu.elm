@@ -1,5 +1,5 @@
 module M3e.Component.FabMenu exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Variant, variant
     , onBeforetoggle, onToggle
@@ -10,7 +10,7 @@ module M3e.Component.FabMenu exposing
 
 A menu, opened from a floating action button (FAB), used to display multiple related actions.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Variant, variant
 @docs onBeforetoggle, onToggle
@@ -80,11 +80,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.fabMenu
 
 

@@ -1,5 +1,5 @@
 module M3e.Component.Stepper exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, PanelSlot, StepSlot, ChildAdmittedBy
     , HeaderPosition, headerPosition, LabelPosition, labelPosition, Orientation, orientation
     , linear, onChange, onBeforeinput, onInput
@@ -10,7 +10,7 @@ module M3e.Component.Stepper exposing
 
 Provides a wizard-like workflow by dividing content into logical steps.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, PanelSlot, StepSlot, ChildAdmittedBy
 @docs HeaderPosition, headerPosition, LabelPosition, labelPosition, Orientation, orientation
 @docs linear, onChange, onBeforeinput, onInput
@@ -98,11 +98,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.stepper
 
 

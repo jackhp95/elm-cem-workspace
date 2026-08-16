@@ -1,5 +1,5 @@
 module M3e.Component.ButtonSegment exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , checked, disabled, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
     , icon, child
@@ -9,7 +9,7 @@ module M3e.Component.ButtonSegment exposing
 
 A option that can be selected within a segmented button.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs checked, disabled, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, child
@@ -77,11 +77,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.buttonSegment
 
 

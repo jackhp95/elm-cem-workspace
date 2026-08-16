@@ -6,7 +6,7 @@ module M3e.Action exposing
     )
 
 {-| Behavioural actions: exactly one of the supported behaviours, consumed
-by a component's `el`/`build` required record. Attribute behaviours
+by a component's `component`/`build` required record. Attribute behaviours
 (`onClick`/`link`/`remove`) become host attributes; wrapper behaviours nest
 the content in their trigger element.
 
