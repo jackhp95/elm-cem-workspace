@@ -40,74 +40,74 @@ import Mini.Component.Toolbar
 import Mini.Kind
 
 
-{-| See `Mini.Component.Button.view`.
+{-| The loose `mini-button` producer — open attribute/child rows, no required record. See `Mini.Component.Button.component` for the required-content form.
 -}
 button :
     List (Attr Mini.Component.Button.Attrs msg)
     -> List (Element Mini.Component.Button.Content (Mini.Component.Button.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Button.Is s) admittedBy msg
-button =
-    Mini.Component.Button.view
+button attrs children =
+    Ir.fromNode (Ir.node "mini-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Chip.view`.
+{-| See `Mini.Component.Chip.component`.
 -}
 chip :
     List (Attr Mini.Component.Chip.Attrs msg)
     -> List (Element Mini.Component.Chip.Content (Mini.Component.Chip.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Chip.Is s) admittedBy msg
 chip =
-    Mini.Component.Chip.view
+    Mini.Component.Chip.component
 
 
-{-| See `Mini.Component.Icon.view`.
+{-| See `Mini.Component.Icon.component`.
 -}
 icon :
     List (Attr Mini.Component.Icon.Attrs msg)
     -> List (Element Mini.Component.Icon.Content (Mini.Component.Icon.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Icon.Is s) admittedBy msg
 icon =
-    Mini.Component.Icon.view
+    Mini.Component.Icon.component
 
 
-{-| See `Mini.Component.Surface.view`.
+{-| See `Mini.Component.Surface.component`.
 -}
 surface :
     List (Attr Mini.Component.Surface.Attrs msg)
     -> List (Element childAccepts (Mini.Component.Surface.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Surface.Is s) admittedBy msg
 surface =
-    Mini.Component.Surface.view
+    Mini.Component.Surface.component
 
 
-{-| See `Mini.Component.Tab.view`.
+{-| See `Mini.Component.Tab.component`.
 -}
 tab :
     List (Attr Mini.Component.Tab.Attrs msg)
     -> List (Element Mini.Component.Tab.Content (Mini.Component.Tab.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Tab.Is s) Mini.Component.Tab.AdmittedBy msg
 tab =
-    Mini.Component.Tab.view
+    Mini.Component.Tab.component
 
 
-{-| See `Mini.Component.Tabs.view`.
+{-| See `Mini.Component.Tabs.component`.
 -}
 tabs :
     List (Attr Mini.Component.Tabs.Attrs msg)
     -> List (Element Mini.Component.Tabs.Content (Mini.Component.Tabs.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Tabs.Is s) admittedBy msg
 tabs =
-    Mini.Component.Tabs.view
+    Mini.Component.Tabs.component
 
 
-{-| See `Mini.Component.Toolbar.view`.
+{-| See `Mini.Component.Toolbar.component`.
 -}
 toolbar :
     List (Attr Mini.Component.Toolbar.Attrs msg)
     -> List (Element Mini.Kind.Actions (Mini.Component.Toolbar.ChildAdmittedBy childAdm) msg)
     -> Element (Mini.Component.Toolbar.Is s) admittedBy msg
 toolbar =
-    Mini.Component.Toolbar.view
+    Mini.Component.Toolbar.component
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

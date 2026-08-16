@@ -1,5 +1,5 @@
 module Mini.Component.Tab exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
     , child
     )
@@ -8,7 +8,7 @@ module Mini.Component.Tab exposing
 
 A single tab. Only valid inside mini-tabs.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
 @docs child
 
@@ -77,11 +77,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) AdmittedBy msg
-view =
+component =
     H.tab
 
 

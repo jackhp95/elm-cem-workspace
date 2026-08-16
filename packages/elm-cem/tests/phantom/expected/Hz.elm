@@ -41,94 +41,94 @@ import Hz.Component.Text
 import Hz.Component.TextElement
 
 
-{-| See `Hz.Component.AttrSlot.view`.
+{-| See `Hz.Component.AttrSlot.component`.
 -}
 attrSlot :
     List (Attr Hz.Component.AttrSlot.Attrs msg)
     -> List (Element childAccepts (Hz.Component.AttrSlot.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.AttrSlot.Is s) admittedBy msg
 attrSlot =
-    Hz.Component.AttrSlot.view
+    Hz.Component.AttrSlot.component
 
 
-{-| See `Hz.Component.Blocked.view`.
+{-| See `Hz.Component.Blocked.component`.
 -}
 blocked :
     List (Attr Hz.Component.Blocked.Attrs msg)
     -> List (Element Hz.Component.Blocked.Content (Hz.Component.Blocked.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.Blocked.Is s) admittedBy msg
 blocked =
-    Hz.Component.Blocked.view
+    Hz.Component.Blocked.component
 
 
-{-| See `Hz.Component.Duplicate.view`.
+{-| See `Hz.Component.Duplicate.component`.
 -}
 duplicate :
     List (Attr Hz.Component.Duplicate.Attrs msg)
     -> List (Element Hz.Component.Duplicate.Content (Hz.Component.Duplicate.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.Duplicate.Is s) admittedBy msg
 duplicate =
-    Hz.Component.Duplicate.view
+    Hz.Component.Duplicate.component
 
 
-{-| See `Hz.Component.ErrorOnly.view`.
+{-| See `Hz.Component.ErrorOnly.component`.
 -}
 errorOnly :
     List (Attr Hz.Component.ErrorOnly.Attrs msg)
     -> List (Element childAccepts (Hz.Component.ErrorOnly.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.ErrorOnly.Is s) admittedBy msg
 errorOnly =
-    Hz.Component.ErrorOnly.view
+    Hz.Component.ErrorOnly.component
 
 
-{-| See `Hz.Component.EventClash.view`.
+{-| See `Hz.Component.EventClash.component`.
 -}
 eventClash :
     List (Attr Hz.Component.EventClash.Attrs msg)
     -> List (Element Hz.Component.EventClash.Content (Hz.Component.EventClash.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.EventClash.Is s) admittedBy msg
 eventClash =
-    Hz.Component.EventClash.view
+    Hz.Component.EventClash.component
 
 
-{-| See `Hz.Component.Global.view`.
+{-| See `Hz.Component.Global.component`.
 -}
 global :
     List (Attr Hz.Component.Global.Attrs msg)
     -> List (Element Hz.Component.Global.Content (Hz.Component.Global.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.Global.Is s) admittedBy msg
 global =
-    Hz.Component.Global.view
+    Hz.Component.Global.component
 
 
-{-| See `Hz.Component.Placement.view`.
+{-| See `Hz.Component.Placement.component`.
 -}
 placement :
     List (Attr Hz.Component.Placement.Attrs msg)
     -> List (Element Hz.Component.Placement.Content (Hz.Component.Placement.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.Placement.Is s) admittedBy msg
 placement =
-    Hz.Component.Placement.view
+    Hz.Component.Placement.component
 
 
-{-| See `Hz.Component.Text.view`.
+{-| See `Hz.Component.Text.component`.
 -}
 hzCapitalText :
     List (Attr Hz.Component.Text.Attrs msg)
     -> List (Element Hz.Component.Text.Content (Hz.Component.Text.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.Text.Is s) admittedBy msg
 hzCapitalText =
-    Hz.Component.Text.view
+    Hz.Component.Text.component
 
 
-{-| See `Hz.Component.TextElement.view`.
+{-| See `Hz.Component.TextElement.component`.
 -}
 textElement :
     List (Attr Hz.Component.TextElement.Attrs msg)
     -> List (Element Hz.Component.TextElement.Content (Hz.Component.TextElement.ChildAdmittedBy childAdm) msg)
     -> Element (Hz.Component.TextElement.Is s) admittedBy msg
 textElement =
-    Hz.Component.TextElement.view
+    Hz.Component.TextElement.component
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

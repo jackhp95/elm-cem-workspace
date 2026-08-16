@@ -1,5 +1,5 @@
 module Hz.Component.Placement exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Position, position
     , child
@@ -9,7 +9,7 @@ module Hz.Component.Placement exposing
 
 Tests K1: enum with both \_top and top tokens.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Position, position
 @docs child
@@ -77,11 +77,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.placement
 
 

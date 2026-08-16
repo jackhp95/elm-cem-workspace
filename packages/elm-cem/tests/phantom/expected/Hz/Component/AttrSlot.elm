@@ -1,5 +1,5 @@
 module Hz.Component.AttrSlot exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, HintSlot, LabelSlot, ChildAdmittedBy
     , withHint, withLabel
     , hint, label
@@ -9,7 +9,7 @@ module Hz.Component.AttrSlot exposing
 
 Tests K5: attr with-hint + slot hint collision, and with-label/label.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, HintSlot, LabelSlot, ChildAdmittedBy
 @docs withHint, withLabel
 @docs hint, label
@@ -76,11 +76,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.attrSlot
 
 

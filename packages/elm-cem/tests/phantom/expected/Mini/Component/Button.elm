@@ -1,5 +1,5 @@
 module Mini.Component.Button exposing
-    ( view, el
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , Variant, variant
     , disabled, weight, weightAsNumber, onClick
@@ -10,7 +10,7 @@ module Mini.Component.Button exposing
 
 An action chip trigger.
 
-@docs view, el
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
 @docs Variant, variant
 @docs disabled, weight, weightAsNumber, onClick
@@ -85,25 +85,15 @@ type alias SlotCaps =
     Mini.Internal.Types.Button.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
--}
-view :
-    List (Attr Attrs msg)
-    -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) admittedBy msg
-view =
-    H.button
-
-
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
-el :
+component :
     { content : Element Content (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-el required_ attrs children =
-    view attrs (required_.content :: children)
+component required_ attrs children =
+    H.button attrs (required_.content :: children)
 
 
 {-| Visual variant.

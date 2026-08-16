@@ -1,5 +1,5 @@
 module Hz.Component.ErrorOnly exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , onHzError
     )
@@ -8,7 +8,7 @@ module Hz.Component.ErrorOnly exposing
 
 Tests K4 acid probe: component with only hz-error event, no native error.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs onHzError
 
@@ -63,11 +63,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.errorOnly
 
 

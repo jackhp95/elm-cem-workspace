@@ -1,5 +1,5 @@
 module Mini.Component.Toolbar exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , child
     )
@@ -8,7 +8,7 @@ module Mini.Component.Toolbar exposing
 
 Groups action elements (a set-reference consumer).
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs child
 
@@ -65,11 +65,11 @@ type alias SlotCaps =
 {-| Standard constructor: `[attributes] [children]`. The default slot admits
 the `actions` kind set — see `Mini.Kind.Actions`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Actions (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.toolbar
 
 

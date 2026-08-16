@@ -36,7 +36,7 @@ view =
                 -- `Value` spelling. See `Attr.AttrType`.
                 , Eo.Attributes.maxVisible "all"
                 ]
-                [ Eo.Component.Bar.view
+                [ Eo.Component.Bar.component
                     -- The per-component setters narrow to the SAME pooled tokens.
                     [ Eo.Component.Bar.disablePagination Eo.Values.auto
                     , Eo.Component.Bar.mode Eo.Values.wide
@@ -46,7 +46,7 @@ view =
                     -- MAP form. The Elm name is `always`; the string it writes is "true".
                     [ Eo.Attributes.strict Eo.Values.always ]
                     []
-                , Eo.Component.Gate.view [ Eo.Component.Gate.strict Eo.Values.never ] []
+                , Eo.Component.Gate.component [ Eo.Component.Gate.strict Eo.Values.never ] []
 
                 -- The builder pipes carry the same rows.
                 , Eo.Build.Bar.build

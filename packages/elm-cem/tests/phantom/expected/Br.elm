@@ -27,14 +27,14 @@ import HtmlIr.Element
 import HtmlIr.Node
 
 
-{-| See `Br.Component.Barren.view`.
+{-| See `Br.Component.Barren.component`.
 -}
 barren :
     List (Attr Br.Component.Barren.Attrs msg)
     -> List (Element Br.Component.Barren.Content (Br.Component.Barren.ChildAdmittedBy childAdm) msg)
     -> Element (Br.Component.Barren.Is s) admittedBy msg
 barren =
-    Br.Component.Barren.view
+    Br.Component.Barren.component
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.

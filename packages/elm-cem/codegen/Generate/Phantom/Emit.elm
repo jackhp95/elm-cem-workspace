@@ -652,7 +652,7 @@ guardValuesModule brand =
 guardCompModule : Brand -> Comp -> List String
 guardCompModule brand comp =
     -- The 3-package layout splits each component's surface across two modules:
-    --   Wa.Component.<Name>  — view/el, re-exports, events, slot values
+    --   Wa.Component.<Name>  — component, re-exports, events, slot values
     --   Wa.Build.<Name>      — build/toElement, attr pipes, slot pipes
     -- Guard each namespace independently so attrReExportNames and attrPipeNames
     -- never collide (they live in different modules). This dissolves K5.
@@ -686,16 +686,11 @@ guardComponentModule brand comp =
         eventNames =
             comp.events |> List.map (handlerName brand)
 
-        -- Component module top-level values: view, el, enums, re-exports, events, slot values.
+        -- Component module top-level values: component, enums, re-exports, events, slot values.
         -- Does NOT include attrPipeNames (those live in Build module only).
         topLevelValues =
             List.concat
-                [ [ "view" ]
-                , if not (List.isEmpty (comp.slots |> List.filter .required)) || comp.actionCaps /= Nothing then
-                    [ "el" ]
-
-                  else
-                    []
+                [ [ "component" ]
                 , comp.enums |> List.concatMap (\e -> [ e.elmName ])
                 , attrReExportNames
                 , eventNames
@@ -758,12 +753,7 @@ guardComponentModule brand comp =
         -- Rich pairs for top-level value collision messages.
         topLevelValuePairs =
             List.concat
-                [ [ ( "view", "static decl" ) ]
-                , if not (List.isEmpty (comp.slots |> List.filter .required)) || comp.actionCaps /= Nothing then
-                    [ ( "el", "static decl" ) ]
-
-                  else
-                    []
+                [ [ ( "component", "static decl" ) ]
                 , comp.enums |> List.concatMap (\e -> [ ( e.elmName, "enum attr \"" ++ e.elmName ++ "\"" ) ])
                 , attrReExportNames |> List.map (\n -> ( n, "attr re-export \"" ++ n ++ "\"" ))
                 , eventNames |> List.map (\n -> ( n, "event handler" ))
@@ -2706,7 +2696,7 @@ compModule brand comp =
 
         -- config `requiredAttrs` (kebab manifest names, e.g. `aria-label`) as
         -- ( elm record field, html attr name ) pairs. These become REQUIRED
-        -- fields on the `el`/`build` record — an accessible name can't be
+        -- fields on the `component`/`build` record — an accessible name can't be
         -- omitted on an icon-only control (a11y by construction).
         reqAttrFields =
             comp.requiredAttrs |> List.map (\a -> ( Naming.camel a, a ))
@@ -2795,13 +2785,7 @@ compModule brand comp =
             comp.events |> List.map (handlerName brand)
 
         exposeGroups =
-            [ [ "view" ]
-                ++ (if hasEl then
-                        [ "el" ]
-
-                    else
-                        []
-                   )
+            [ [ "component" ]
             , [ "Is", "Attrs", "Builder", "AttrCaps", "SlotCaps" ]
                 ++ List.map .alias_ contentAliases
                 ++ [ "ChildAdmittedBy" ]
@@ -3061,19 +3045,22 @@ compModule brand comp =
                 _ ->
                     "Standard constructor: `[attributes] [children]`."
 
-        viewDecl =
-            [ doc viewDocText
-            , "view :"
-            , "    List (Attr Attrs msg)"
-            , "    -> " ++ childrenSig
-            , "    -> " ++ returnType
-            , "view ="
-            , "    H." ++ comp.resolvedCtor
-            ]
-
+        -- The single per-component constructor, `component`. TWO ARITIES:
+        --   * zero required fields  -> bare `component : attrs -> children -> Element`
+        --     (formerly the `view` function),
+        --   * >=1 required field    -> record-arg
+        --     `component : { .. } -> attrs -> children -> Element`.
+        -- Exactly one public function name per component either way.
         elDecl =
             if not hasEl then
-                []
+                [ doc viewDocText
+                , "component :"
+                , "    List (Attr Attrs msg)"
+                , "    -> " ++ childrenSig
+                , "    -> " ++ returnType
+                , "component ="
+                , "    H." ++ comp.resolvedCtor
+                ]
 
             else
                 let
@@ -3132,19 +3119,21 @@ compModule brand comp =
                     body =
                         case comp.actionCaps of
                             Just _ ->
-                                [ "el required_ attrs children ="
+                                [ "component required_ attrs children ="
                                 , "    let"
                                 , "        actioned ="
                                 , "            Ir.fromNode (" ++ "Ac.wrapContent required_.action (El.toNode required_.content))"
                                 , "    in"
-                                , "    view"
+                                , "    H." ++ comp.resolvedCtor
                                 , "        (" ++ reqAttrsPrefix ++ "Ac.toAttrs required_.action ++ attrs)"
                                 , "        (" ++ consed ++ ")"
                                 ]
 
                             Nothing ->
-                                [ "el required_ attrs children ="
-                                , "    view "
+                                [ "component required_ attrs children ="
+                                , "    H."
+                                    ++ comp.resolvedCtor
+                                    ++ " "
                                     ++ (if String.isEmpty reqAttrsPrefix then
                                             "attrs"
 
@@ -3156,10 +3145,8 @@ compModule brand comp =
                                     ++ ")"
                                 ]
                 in
-                [ ""
-                , ""
-                , doc "Required-content (and action) constructor — omissions are unwritable."
-                , "el :"
+                [ doc "Required-content (and action) constructor — omissions are unwritable."
+                , "component :"
                 , "    " ++ reqRecord
                 , "    -> List (Attr Attrs msg)"
                 , "    -> " ++ childrenSig
@@ -3317,7 +3304,6 @@ compModule brand comp =
                 , [ "", "" ]
                 , aliasDecls
                 , [ "", "" ]
-                , viewDecl
                 , elDecl
                 , enumSetters
                 , attrReExports
@@ -4487,10 +4473,18 @@ generalModule brand =
                 q n =
                     lib ++ ".Component." ++ ref.module_ ++ "." ++ ref.prefix ++ n
 
+                -- Single per-component constructor, `component` (post view/el unification).
+                -- For home members the flat re-export decl still lives at `comp.ctor`
+                -- inside the home module (a loose, everything-optional producer built
+                -- directly from `Ir.node`), so those keep re-exporting `comp.ctor`.
+                -- Flat members whose `component` demands a required record get the SAME
+                -- treatment inline (see `looseBody` below) rather than a point-free
+                -- re-export, so the barrel stays the loose, elm/html-shaped surface for
+                -- EVERY element — required-ness is a `Component`-surface-only concept.
                 target =
                     case homeOf comp of
                         Nothing ->
-                            lib ++ ".Component." ++ comp.name ++ ".view"
+                            lib ++ ".Component." ++ comp.name ++ ".component"
 
                         Just _ ->
                             lib ++ ".Component." ++ ref.module_ ++ "." ++ comp.ctor
@@ -4533,17 +4527,118 @@ generalModule brand =
                 -- form; otherwise it equals ctor.
                 rCtor =
                     comp.resolvedCtor
+
+                -- The barrel re-exports the SAME single `component` function. When a
+                -- component has required fields, `component` carries a leading required
+                -- record, so the barrel re-export must carry it too (arity match).
+                -- Home members keep the loose `comp.ctor` producer, which never has
+                -- a required record — only flat (no-home) members can be required.
+                requiredRecord =
+                    case homeOf comp of
+                        Just _ ->
+                            Nothing
+
+                        Nothing ->
+                            let
+                                requiredSlots =
+                                    comp.slots |> List.filter .required
+
+                                reqAttrFields =
+                                    comp.requiredAttrs |> List.map Naming.camel
+
+                                slotField s =
+                                    ( if s.name == "unnamed" then
+                                        "content"
+
+                                      else
+                                        Naming.camel s.name
+                                    , "Element "
+                                        ++ (case s.content of
+                                                Fields _ ->
+                                                    if s.name == "unnamed" then
+                                                        q "Content"
+
+                                                    else
+                                                        q (Naming.pascal s.name ++ "Slot")
+
+                                                SetContent set ->
+                                                    lib ++ ".Kind." ++ set.pascal
+
+                                                Permissive ->
+                                                    "childAccepts"
+                                           )
+                                        ++ " ("
+                                        ++ q "ChildAdmittedBy"
+                                        ++ " childAdm) msg"
+                                    )
+
+                                reqFields =
+                                    (requiredSlots |> List.map slotField)
+                                        ++ (reqAttrFields |> List.map (\f -> ( f, "String" )))
+                                        ++ (case comp.actionCaps of
+                                                Just _ ->
+                                                    [ ( "action", "Ac.Action (" ++ q "ActionCaps" ++ ") msg" ) ]
+
+                                                Nothing ->
+                                                    []
+                                           )
+                            in
+                            if List.isEmpty reqFields then
+                                Nothing
+
+                            else
+                                Just
+                                    ("{ "
+                                        ++ (reqFields |> List.map (\( n, t ) -> n ++ " : " ++ t) |> String.join "\n    , ")
+                                        ++ " }"
+                                    )
+
+                -- The barrel is the loose, elm/html-shaped surface for every element —
+                -- ALWAYS two positional lists (attrs, children), regardless of whether
+                -- the tightened `Component.<E>.component` demands a required record.
+                -- (Required-ness is a `Component`-surface concept; the barrel's own
+                -- narrowed types still come from that module, only the arity/body
+                -- diverge when a record would otherwise be forced.)
+                sigLines =
+                    [ "    List (Attr " ++ q "Attrs" ++ " msg)"
+                    , "    -> List (Element " ++ childType ++ " (" ++ q "ChildAdmittedBy" ++ " childAdm) msg)"
+                    , "    -> " ++ ret
+                    ]
+
+                -- When `component` requires a record, the barrel can't point-free
+                -- re-export it (arity mismatch) — build the loose `Ir.node "<tag>"`
+                -- producer directly instead, same as `M3e.Html`'s internal layer,
+                -- but keeping this component's own narrowed types.
+                looseBody =
+                    [ rCtor ++ " attrs children ="
+                    , "    Ir.fromNode (Ir.node \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
+                    ]
+
+                bodyLines =
+                    case requiredRecord of
+                        Just _ ->
+                            looseBody
+
+                        Nothing ->
+                            [ rCtor ++ " ="
+                            , "    " ++ target
+                            ]
+
+                docLine =
+                    case requiredRecord of
+                        Just _ ->
+                            "The loose `" ++ comp.tag ++ "` producer — open attribute/child rows, no required record. See `" ++ target ++ "` for the required-content form."
+
+                        Nothing ->
+                            "See `" ++ target ++ "`."
             in
             [ ""
             , ""
-            , doc ("See `" ++ target ++ "`.")
+            , doc docLine
             , rCtor ++ " :"
-            , "    List (Attr " ++ q "Attrs" ++ " msg)"
-            , "    -> List (Element " ++ childType ++ " (" ++ q "ChildAdmittedBy" ++ " childAdm) msg)"
-            , "    -> " ++ ret
-            , rCtor ++ " ="
-            , "    " ++ target
             ]
+                ++ sigLines
+                ++ bodyLines
 
         atoms =
             brand.atoms
@@ -4597,9 +4692,24 @@ generalModule brand =
                                 False
                     )
 
-        -- Ir is needed for atoms AND for slot placers (Ir.fromNode, Ir.addAttribute, Ir.attribute).
+        -- A flat component whose `component` ctor requires a record forces the
+        -- barrel's loose Ir.node body (see `ctorSig`'s `looseBody`).
+        anyFlatRequiredContent =
+            brand.comps
+                |> List.any
+                    (\c ->
+                        homeOf c
+                            == Nothing
+                            && (not (List.isEmpty (c.slots |> List.filter .required))
+                                    || not (List.isEmpty c.requiredAttrs)
+                                    || c.actionCaps /= Nothing
+                               )
+                    )
+
+        -- Ir is needed for atoms, slot placers (Ir.fromNode, Ir.addAttribute,
+        -- Ir.attribute), AND any flat required-content component's loose body.
         needsIrImport =
-            not (List.isEmpty brand.atoms) || not (List.isEmpty slotPlacerResult.placers)
+            not (List.isEmpty brand.atoms) || not (List.isEmpty slotPlacerResult.placers) || anyFlatRequiredContent
 
         imports =
             (substrateReExportImports
@@ -6470,7 +6580,7 @@ actionModule brand =
                           , exposeBlock exposeGroups
                           , ""
                           , "{-| Behavioural actions: exactly one of the supported behaviours, consumed"
-                          , "by a component's `el`/`build` required record. Attribute behaviours"
+                          , "by a component's `component`/`build` required record. Attribute behaviours"
                           , "(`onClick`/`link`/`remove`) become host attributes; wrapper behaviours nest"
                           , "the content in their trigger element."
                           , ""
@@ -6890,13 +7000,25 @@ surfacesOf brand tokenModule actionModule_ comp =
         moduleName =
             brand.lib ++ "." ++ (memberRef brand comp).module_
 
+        -- The single `component` ctor IS the top surface. Its form is the loose
+        -- double-list when nothing is required, and the required-record form when
+        -- a slot/attr/action is mandatory (post view/el unification — there is no
+        -- separate `el` function anymore, so no separate `record` surface).
         top =
             ( "top"
             , Encode.object
                 [ ( "facet", Encode.string "Standard" )
                 , ( "module", Encode.string moduleName )
-                , ( "entry", Encode.string "view" )
-                , ( "form", Encode.string "double-list" )
+                , ( "entry", Encode.string "component" )
+                , ( "form"
+                  , Encode.string
+                        (if hasElOf comp then
+                            "record-double-list"
+
+                         else
+                            "double-list"
+                        )
+                  )
                 , ( "finalizer", Encode.null )
                 ]
             )
@@ -6912,21 +7034,10 @@ surfacesOf brand tokenModule actionModule_ comp =
                 ]
             )
 
+        -- No separate `record` surface post view/el unification: the required-
+        -- record form is carried by `top` (see `component`'s conditional form).
         record =
-            if hasElOf comp then
-                [ ( "record"
-                  , Encode.object
-                        [ ( "facet", Encode.string "Record" )
-                        , ( "module", Encode.string moduleName )
-                        , ( "entry", Encode.string "el" )
-                        , ( "form", Encode.string "record-double-list" )
-                        , ( "finalizer", Encode.null )
-                        ]
-                  )
-                ]
-
-            else
-                []
+            []
 
         html =
             if homeOf comp == Nothing then

@@ -1,5 +1,5 @@
 module Hz.Component.TextElement exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
@@ -8,7 +8,7 @@ module Hz.Component.TextElement exposing
 
 Tests K7 (lowercase-name shape): hz-text element, ctor is textElement, no atom collision.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs child
 
@@ -68,11 +68,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.textElement
 
 

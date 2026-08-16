@@ -28,24 +28,24 @@ import Or.Component.Plain
 import Or.Component.Widget
 
 
-{-| See `Or.Component.Plain.view`.
+{-| See `Or.Component.Plain.component`.
 -}
 plain :
     List (Attr Or.Component.Plain.Attrs msg)
     -> List (Element Or.Component.Plain.Content (Or.Component.Plain.ChildAdmittedBy childAdm) msg)
     -> Element (Or.Component.Plain.Is s) admittedBy msg
 plain =
-    Or.Component.Plain.view
+    Or.Component.Plain.component
 
 
-{-| See `Or.Component.Widget.view`.
+{-| See `Or.Component.Widget.component`.
 -}
 widget :
     List (Attr Or.Component.Widget.Attrs msg)
     -> List (Element Or.Component.Widget.Content (Or.Component.Widget.ChildAdmittedBy childAdm) msg)
     -> Element (Or.Component.Widget.Is s) admittedBy msg
 widget =
-    Or.Component.Widget.view
+    Or.Component.Widget.component
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.

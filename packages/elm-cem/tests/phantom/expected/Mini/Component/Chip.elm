@@ -1,5 +1,5 @@
 module Mini.Component.Chip exposing
-    ( view
+    ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Size, size
     , disabled
@@ -10,7 +10,7 @@ module Mini.Component.Chip exposing
 
 A compact labelled element.
 
-@docs view
+@docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Size, size
 @docs disabled
@@ -80,11 +80,11 @@ type alias SlotCaps =
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
-view :
+component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
-view =
+component =
     H.chip
 
 
