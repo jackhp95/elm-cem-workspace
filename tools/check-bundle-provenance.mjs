@@ -24,14 +24,19 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { runFactsGenerator } from "./lib/regen.mjs";
+import { runFactsGenerator, deriveIconNamesFromOutput, serializeIconNames } from "./lib/regen.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const pkgDir = path.join(repoRoot, "packages", "cem-figma-connect");
 const factsDir = path.join(pkgDir, "profiles", "m3-kit", "facts");
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
 
+// cem-facts/elm-api-facts are copied verbatim from the producer's bundle;
+// icon-names.json is DERIVED from the producer's Face-A icon module (R-026
+// opaque-Name catalog). Both are committed generated artifacts and must not
+// drift from a fresh regeneration.
 const FILES = ["cem-facts.json", "elm-api-facts.json"];
+const ICON_NAMES_FILE = "icon-names.json";
 
 function isGitTracked(absPath) {
     const relPath = path.relative(repoRoot, absPath);
@@ -51,7 +56,7 @@ function regenerateBundle(outDir) {
     if (result.status !== 0) {
         throw new Error(`elm-cem --facts-bundle exited ${result.status}`);
     }
-    return bundleDir;
+    return { outputDir, bundleDir };
 }
 
 function diffSummary(committedPath, freshPath) {
@@ -68,7 +73,7 @@ function main() {
 
     const failures = [];
 
-    for (const file of FILES) {
+    for (const file of [...FILES, ICON_NAMES_FILE]) {
         const committedPath = path.join(factsDir, file);
         if (!fs.existsSync(committedPath)) {
             failures.push(`${path.relative(repoRoot, committedPath)} is missing.`);
@@ -92,9 +97,9 @@ function main() {
     const work = fs.mkdtempSync(path.join(os.tmpdir(), "check-bundle-provenance-"));
     try {
         console.log(`check-bundle-provenance: regenerating from the producer (elm-cem) against ${path.relative(repoRoot, ELM_M3E)}'s config...`);
-        let bundleDir;
+        let outputDir, bundleDir;
         try {
-            bundleDir = regenerateBundle(work);
+            ({ outputDir, bundleDir } = regenerateBundle(work));
         } catch (e) {
             console.error(`\ncheck-bundle-provenance: FAIL — regeneration threw: ${e.message}`);
             process.exit(1);
@@ -120,6 +125,34 @@ function main() {
                 continue;
             }
             console.log(`  ok  ${file} — byte-identical to a fresh regeneration.`);
+        }
+
+        // The opaque-Name icon catalog is DERIVED from the fresh Face-A output
+        // (not the bundle) via the same deriveIconNames the writer uses.
+        {
+            const committedPath = path.join(factsDir, ICON_NAMES_FILE);
+            let freshBytes;
+            try {
+                freshBytes = Buffer.from(serializeIconNames(deriveIconNamesFromOutput(outputDir)), "utf8");
+            } catch (e) {
+                failures.push(`could not derive ${ICON_NAMES_FILE} from the fresh output: ${e.message}`);
+                freshBytes = null;
+            }
+            if (freshBytes) {
+                const committedBytes = fs.readFileSync(committedPath);
+                if (!committedBytes.equals(freshBytes)) {
+                    const freshPath = path.join(work, ICON_NAMES_FILE);
+                    fs.writeFileSync(freshPath, freshBytes);
+                    const summary = diffSummary(committedPath, freshPath);
+                    const lines = summary.split("\n").slice(0, 40).join("\n");
+                    failures.push(
+                        `${path.relative(repoRoot, committedPath)} DRIFTED from what the producer generates today. ` +
+                            `Regenerate via \`pnpm --filter cem-figma-connect run gen:facts\` and commit the result. First diff lines:\n${lines}`,
+                    );
+                } else {
+                    console.log(`  ok  ${ICON_NAMES_FILE} — byte-identical to a fresh derivation.`);
+                }
+            }
         }
     } finally {
         fs.rmSync(work, { recursive: true, force: true });

@@ -646,8 +646,9 @@ test("T2 (elm): figmaSet with inline example skips content getString + renders t
 
   // The getString const must NOT appear (it would be dead).
   assert.doesNotMatch(file.contents, /getString\("Label text"\)/, "getString skipped in examples-mode (elm)");
-  // Defect D: the inline-example span text renders as a real Kit.text child in
-  // the view's child list, NOT the old empty [] shell.
-  assert.match(file.contents, /\n    \[ Kit\.text "Toggle label"\n    \]/, "inline-example child rendered (defect D)");
+  // Defect D: the inline-example span text renders as a real Kit.text child, NOT
+  // the old empty [] shell. m3e-button is a record-form component post-ctor-
+  // rename, so the single child folds into the record `content =`.
+  assert.match(file.contents, /content = Kit\.text "Toggle label"/, "inline-example child rendered (defect D)");
   assert.match(file.contents, /"import Kit"/, "the Kit text seam is imported when used");
 });

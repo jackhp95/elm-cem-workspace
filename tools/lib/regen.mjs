@@ -71,3 +71,74 @@ export function generateBundleToTemp({ repoRoot, elmM3e, workDir, streamOutput =
     }
     return { outputDir, bundleDir };
 }
+
+// ── the opaque-`Name` icon catalog (R-026) ──────────────────────────────────
+// After R-026 the generated icon module is NOT the generic `component` ctor
+// shape every other component uses: it is `icon : Name -> …` with one opaque
+// `Name` value per Material Symbols ligature (`menu = Name "menu"`), plus
+// `custom : String -> Name` as the escape hatch. The facts bundle's Face C
+// still projects the icon component onto the GENERIC ctor entry ("component",
+// a `name` string setter) — it has no way to know the icon module is special-
+// cased — so a facts-only emitter would emit `M3e.Icon.component [ M3e.Icon.name
+// "menu" ] []`, which does not exist in the real API.
+//
+// deriveIconNames reads the GENERATED icon module (the `--output` Face A
+// `<Lib>/Icon.elm`) and extracts, from the source itself (never hardcoded),
+// everything the emitter needs to emit the real opaque-`Name` shape:
+//   { cemTag, module, iconFn, customFn, names }
+// where `names` maps each ligature -> its exposed Elm `Name` constant
+// ("10k" -> "icon10k", "menu" -> "menu"). A ligature absent from `names`
+// (e.g. the Figma display-name artifact "GIF", whose real ligature is "gif")
+// is emitted via `customFn` — the documented escape hatch — never guessed.
+//
+// This is the sole writer's source of truth for cem-figma-connect's committed
+// `profiles/m3-kit/facts/icon-names.json`; the same derivation runs in the
+// provenance drift gate, so the committed catalog can never go stale silently.
+export function deriveIconNames(iconElmSource) {
+    const src = iconElmSource;
+    const moduleMatch = src.match(/module\s+(\S+)\s+exposing/);
+    if (!moduleMatch) throw new Error("deriveIconNames: no `module … exposing` line in the icon source");
+    const module = moduleMatch[1];
+
+    // The render function: the exposed value whose first argument type is `Name`.
+    const iconFnMatch = src.match(/\n(\w+) :\n {4}Name\n {4}->/);
+    if (!iconFnMatch) throw new Error("deriveIconNames: could not find the `icon : Name -> …` render function");
+    const iconFn = iconFnMatch[1];
+
+    // The escape hatch: `custom : String -> Name`.
+    const customFnMatch = src.match(/\n(\w+) : String -> Name\n/);
+    if (!customFnMatch) throw new Error("deriveIconNames: could not find the `custom : String -> Name` escape hatch");
+    const customFn = customFnMatch[1];
+
+    // The CEM tag the icon function renders (`Ir.node "m3e-icon" …`).
+    const tagMatch = src.match(/Ir\.node "(m3e-[^"]+)"/);
+    if (!tagMatch) throw new Error("deriveIconNames: could not find the `Ir.node \"m3e-…\"` tag in the render function");
+    const cemTag = tagMatch[1];
+
+    // Per-icon opaque `Name` constants: `<constant> =\n    Name "<ligature>"`.
+    const names = {};
+    const re = /\n([a-zA-Z]\w*) =\n {4}Name "([^"]+)"\n/g;
+    let m;
+    while ((m = re.exec(src)) !== null) names[m[2]] = m[1];
+    if (Object.keys(names).length === 0) throw new Error("deriveIconNames: parsed zero icon Name constants — the source shape changed");
+
+    // Sort the ligature keys for byte-stable, deterministic output.
+    const sortedNames = {};
+    for (const lig of Object.keys(names).sort()) sortedNames[lig] = names[lig];
+
+    return { cemTag, module, iconFn, customFn, names: sortedNames };
+}
+
+// The byte-exact serialization of the icon catalog (the sole committed form).
+export function serializeIconNames(catalog) {
+    return JSON.stringify(catalog, null, 2) + "\n";
+}
+
+/** Read a generated Face-A output dir's `<Module>/Icon.elm` and derive the catalog. */
+export function deriveIconNamesFromOutput(outputDir) {
+    const iconElm = path.join(outputDir, "M3e", "Icon.elm");
+    if (!fs.existsSync(iconElm)) {
+        throw new Error(`deriveIconNamesFromOutput: no generated icon module at ${iconElm}`);
+    }
+    return deriveIconNames(fs.readFileSync(iconElm, "utf8"));
+}

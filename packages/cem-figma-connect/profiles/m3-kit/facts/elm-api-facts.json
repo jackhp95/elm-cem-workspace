@@ -4,7 +4,6 @@
   "surfaceKeys": [
     "build",
     "html",
-    "record",
     "top"
   ],
   "defaultSurface": "top",
@@ -20,12 +19,6 @@
       "facet": "Build",
       "form": "pipeline",
       "finalizer": "toElement"
-    },
-    {
-      "key": "record",
-      "facet": "Record",
-      "form": "record-double-list",
-      "finalizer": null
     },
     {
       "key": "html",
@@ -92,18 +85,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Accordion",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Accordion",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -186,7 +172,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ActionList",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -322,7 +308,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.AppBar",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -466,18 +452,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.AssistChip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.AssistChip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -621,7 +600,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Autocomplete",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -674,7 +653,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Avatar",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -820,7 +799,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Badge",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -920,7 +899,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.BottomSheet",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -978,7 +957,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.BottomSheetAction",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -1047,7 +1026,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.BottomSheetTrigger",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -1115,18 +1094,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Breadcrumb",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Breadcrumb",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -1263,7 +1235,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.BreadcrumbItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -1390,7 +1362,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.BreadcrumbItemButton",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -1658,18 +1630,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Button",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Button",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -1792,7 +1757,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ButtonGroup",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -1880,7 +1845,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ButtonSegment",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2006,7 +1971,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Calendar",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2184,7 +2149,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Card",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2273,7 +2238,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Checkbox",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2370,18 +2335,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Chip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Chip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -2448,7 +2406,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ChipSet",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2533,7 +2491,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.CircularProgressIndicator",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2632,7 +2590,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Collapsible",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2687,7 +2645,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ContentPane",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -2858,7 +2816,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DateInput",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3030,7 +2988,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Datepicker",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3088,7 +3046,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DatepickerToggle",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3193,7 +3151,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Dialog",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3251,7 +3209,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DialogAction",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3309,7 +3267,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DialogTrigger",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3376,7 +3334,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Divider",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3517,7 +3475,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DrawerContainer",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3575,7 +3533,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.DrawerToggle",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3639,7 +3597,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Elevation",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3756,7 +3714,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ExpandableListItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -3876,7 +3834,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ExpansionHeader",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4006,18 +3964,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.ExpansionPanel",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.ExpansionPanel",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -4228,18 +4179,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Fab",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Fab",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -4332,7 +4276,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FabMenu",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4414,7 +4358,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FabMenuItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4472,7 +4416,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FabMenuTrigger",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4589,18 +4533,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.FilterChip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.FilterChip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -4682,7 +4619,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FilterChipSet",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4771,7 +4708,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FloatingPanel",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4835,7 +4772,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FocusRing",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -4895,7 +4832,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FocusTrap",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -5045,7 +4982,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.FormField",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -5172,18 +5109,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Heading",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Heading",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -5302,7 +5232,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Icon",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -5568,18 +5498,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.IconButton",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.IconButton",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -5700,18 +5623,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.InputChip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.InputChip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -5794,7 +5710,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.InputChipSet",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -5911,7 +5827,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.LinearProgressIndicator",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -5997,7 +5913,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.List",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6138,7 +6054,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ListAction",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6243,7 +6159,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ListItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6371,7 +6287,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ListItemButton",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6498,7 +6414,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ListOption",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6574,7 +6490,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.LoadingIndicator",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6708,7 +6624,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Menu",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6816,7 +6732,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MenuItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6901,7 +6817,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MenuItemCheckbox",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -6962,7 +6878,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MenuItemGroup",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7047,7 +6963,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MenuItemRadio",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7105,7 +7021,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MenuTrigger",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7189,7 +7105,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MonthView",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7267,7 +7183,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.MultiYearView",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7362,7 +7278,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavBar",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7490,7 +7406,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavItem",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7551,7 +7467,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavMenu",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7669,18 +7585,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.NavMenuItem",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.NavMenuItem",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -7747,7 +7656,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavMenuItemGroup",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7844,7 +7753,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavRail",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7902,7 +7811,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.NavRailToggle",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -7970,7 +7879,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Optgroup",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8071,18 +7980,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Option",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Option",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -8217,7 +8119,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.OptionPanel",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8359,7 +8261,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Paginator",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8423,7 +8325,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.PseudoCheckbox",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8484,7 +8386,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.PseudoRadio",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8565,7 +8467,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Radio",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -8643,18 +8545,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.RadioGroup",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.RadioGroup",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -8824,18 +8719,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.RichTooltip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.RichTooltip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -8896,18 +8784,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.RichTooltipAction",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.RichTooltipAction",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -8976,7 +8857,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Ripple",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -9069,7 +8950,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ScrollContainer",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -9161,18 +9042,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SearchBar",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SearchBar",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -9334,18 +9208,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SearchView",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SearchView",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -9423,18 +9290,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SegmentedButton",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SegmentedButton",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -9535,18 +9395,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Select",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Select",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -9615,7 +9468,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.SelectionIndicator",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -9718,7 +9571,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.SelectionList",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -9992,7 +9845,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Shape",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -10111,7 +9964,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Skeleton",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -10171,7 +10024,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Slide",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -10258,7 +10111,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.SlideGroup",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -10378,18 +10231,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Slider",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Slider",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -10463,7 +10309,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.SliderThumb",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -10547,18 +10393,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Snackbar",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Snackbar",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -10698,18 +10537,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SplitButton",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SplitButton",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -10835,18 +10667,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SplitPane",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SplitPane",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -10912,7 +10737,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.StateLayer",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11043,18 +10868,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Step",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Step",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -11111,7 +10929,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.StepPanel",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11261,7 +11079,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Stepper",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11314,7 +11132,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.StepperNext",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11367,7 +11185,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.StepperPrevious",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11420,7 +11238,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.StepperReset",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11564,18 +11382,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.SuggestionChip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.SuggestionChip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -11682,7 +11493,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Switch",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11770,7 +11581,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Tab",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11823,7 +11634,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TabPanel",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -11988,7 +11799,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Tabs",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12084,7 +11895,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TextHighlight",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12142,7 +11953,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TextOverflow",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12209,7 +12020,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TextareaAutosize",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12413,7 +12224,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Theme",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12560,7 +12371,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.ThemeIcon",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12766,7 +12577,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Timepicker",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -12919,7 +12730,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TimepickerDial",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13091,7 +12902,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TimepickerInput",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13173,7 +12984,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TimepickerInputPeriodToggle",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13231,7 +13042,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.TimepickerToggle",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13309,7 +13120,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Toc",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13379,18 +13190,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.TocItem",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.TocItem",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -13493,7 +13297,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Toolbar",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13623,18 +13427,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.Tooltip",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.Tooltip",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -13703,7 +13500,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.Tree",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }
@@ -13822,18 +13619,11 @@
           "form": "double-list",
           "finalizer": null
         },
-        "record": {
-          "facet": "Record",
-          "module": "M3e.TreeItem",
-          "entry": "el",
-          "form": "record-double-list",
-          "finalizer": null
-        },
         "top": {
           "facet": "Standard",
           "module": "M3e.TreeItem",
-          "entry": "view",
-          "form": "double-list",
+          "entry": "component",
+          "form": "record-double-list",
           "finalizer": null
         }
       }
@@ -13910,7 +13700,7 @@
         "top": {
           "facet": "Standard",
           "module": "M3e.YearView",
-          "entry": "view",
+          "entry": "component",
           "form": "double-list",
           "finalizer": null
         }

@@ -211,13 +211,16 @@ function main() {
     console.log("\nbump: regenerating the facts bundle ONCE from the producer (elm-m3e's own config)...");
     const work = fs.mkdtempSync(path.join(os.tmpdir(), "bump-facts-"));
     let bundleDir;
+    let outputDir;
     try {
-        ({ bundleDir } = generateBundleToTemp({ repoRoot, elmM3e: ELM_M3E, workDir: work }));
+        ({ outputDir, bundleDir } = generateBundleToTemp({ repoRoot, elmM3e: ELM_M3E, workDir: work }));
 
         console.log("\nbump: fanning out the SAME bundle to every consumer, in order...");
         for (const { pkgName, committed } of CONSUMERS) {
             const ok = run(`gen:facts (${pkgName})`, "pnpm", ["--filter", pkgName, "run", "gen:facts"], {
-                env: { ...process.env, PREGENERATED_BUNDLE_DIR: bundleDir },
+                // PREGENERATED_OUTPUT_DIR lets cem-figma-connect derive its
+                // opaque-`Name` icon catalog from the same one-shot Face-A output.
+                env: { ...process.env, PREGENERATED_BUNDLE_DIR: bundleDir, PREGENERATED_OUTPUT_DIR: outputDir },
             });
             if (!ok) fail(`gen:facts failed for ${pkgName}.`);
             for (const { path: committedPath } of committed) {

@@ -77,6 +77,31 @@ for (const comp of Object.values(RAW_FACTS.components)) {
 }
 const FACTS = RAW_FACTS;
 
+// The opaque-`Name` icon catalog (R-026), a sibling committed fact derived by
+// scripts/gen-facts.mjs from the generated icon module itself (tools/lib/
+// regen.mjs's deriveIconNames). Post-R-026 the icon module is NOT the generic
+// `component` ctor shape Face C projects it onto: it is `icon : Name -> …` with
+// one opaque `Name` value per ligature (`menu = Name "menu"`) plus
+// `custom : String -> Name`. This catalog — { cemTag, module, iconFn, customFn,
+// names } — is what lets this emitter render the REAL shape
+// (`M3e.Icon.icon M3e.Icon.menu …`) instead of the non-existent
+// `M3e.Icon.component [ M3e.Icon.name "menu" ]`. Every name is sourced here,
+// never hardcoded (CARDINAL RULE); a ligature with no exposed constant uses the
+// documented `custom` escape hatch, never a guessed identifier.
+const ICON_NAMES = JSON.parse(
+  fs.readFileSync(path.join(here, "..", "facts", "icon-names.json"), "utf8")
+);
+
+// iconNameExpr(symbolName) -> the Elm opaque-`Name` expression for a ligature:
+// `M3e.Icon.<constant>` when the ligature has an exposed Name constant, else the
+// escape hatch `M3e.Icon.custom "<ligature>"` (e.g. the Figma display-name
+// artifact "GIF", whose real ligature is the lowercase "gif").
+function iconNameExpr(symbolName) {
+  const constant = ICON_NAMES.names[symbolName];
+  if (constant) return `${ICON_NAMES.module}.${constant}`;
+  return `${ICON_NAMES.module}.${ICON_NAMES.customFn} ${JSON.stringify(symbolName)}`;
+}
+
 const IDENT_RE = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 function objKey(key) {
   return IDENT_RE.test(key) ? key : JSON.stringify(key);
@@ -316,22 +341,38 @@ function renderExample(surfaceDef, comp, setterLines, contentExpr, childrenExprs
         childrenList !== null ? childrenList : contentExpr === null ? "[]" : `[ ${contentExpr} ]`;
       return `${mod}.${entry}\n    ${attrList}\n    ${body}`;
     }
-    case "record-double-list":
-      // <Module>.<entry> { content, action } [attrs] []
-      if (contentExpr === null) {
-        throw new Error(
-          `elm emitter: surface ${surfaceDef.surface} (record form) requires a content element — ` +
-            `a no-content ([]) entry cannot be rendered here.`
-        );
+    case "record-double-list": {
+      // <Module>.<entry> { content, action } [attrs] [children]. When
+      // examples-children are present (childrenExprs), the FIRST is the record's
+      // `content` and the rest are the trailing child list — the ctor prepends
+      // `content` to `children`, so this preserves child order with no stray
+      // node (same mapping as the nested renderChildElement record path).
+      // Otherwise a single `contentExpr` with an empty trailing list.
+      let recordContent;
+      let recordChildren;
+      if (childrenExprs !== null && childrenExprs.length > 0) {
+        recordContent = childrenExprs[0];
+        const rest = childrenExprs.slice(1);
+        recordChildren = rest.length === 0 ? "[]" : "[ " + rest.join("\n    , ") + "\n    ]";
+      } else {
+        if (contentExpr === null) {
+          throw new Error(
+            `elm emitter: surface ${surfaceDef.surface} (record form) requires a content element — ` +
+              `a no-content ([]) entry cannot be rendered here.`
+          );
+        }
+        recordContent = contentExpr;
+        recordChildren = "[]";
       }
       return (
         `${mod}.${entry}\n` +
-        `    { content = ${contentExpr}\n` +
+        `    { content = ${recordContent}\n` +
         `    , action = ${actionNoneOf(comp, `surface ${surfaceDef.surface}`)}\n` +
         `    }\n` +
         `    ${attrList}\n` +
-        `    []`
+        `    ${recordChildren}`
       );
+    }
     case "pipeline": {
       // <Module>.<entry> { content, action } |> setter |> ... |> build
       if (contentExpr === null) {
@@ -493,6 +534,34 @@ function renderChildElement(spec, config, acc, ctxLabel) {
     );
   }
   usedImportsAdd(acc, comp.module);
+
+  // Opaque-`Name` icon (R-026): the ligature moves out of a `name` string
+  // setter into the positional `Name` argument of `M3e.Icon.icon`; every other
+  // attr (filled/weight/…) stays in the attr list. Sourced from ICON_NAMES,
+  // never the generic `component`/`name` facts projection.
+  if (spec.tag === ICON_NAMES.cemTag) {
+    const symbol = spec.attrs?.name;
+    if (symbol == null) {
+      throw new Error(
+        `elm emitter: ${ctxLabel} — <${ICON_NAMES.cemTag}> child has no "name" attribute to resolve an icon Name.`
+      );
+    }
+    const nameExpr = iconNameExpr(symbol);
+    const iconAttrExprs = Object.entries(spec.attrs ?? {})
+      .filter(([k]) => k !== "name")
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([attr, value]) => {
+        const setter = setterOf(comp, attr, `${ctxLabel} attr "${attr}"`);
+        const expr = resolveChildAttrExpr(comp, attr, value, `${ctxLabel} attr "${attr}"`);
+        if (isTokenExpr(comp, expr)) usedImportsAdd(acc, comp.tokenModule);
+        return `${comp.module}.${setter} ${expr}`;
+      });
+    const iconChildExprs = collectChildExprs(spec, comp, config, acc, ctxLabel);
+    const iconAttrList = iconAttrExprs.length ? `[ ${iconAttrExprs.join(", ")} ]` : "[]";
+    const iconChildList = iconChildExprs.length ? `[ ${iconChildExprs.join(", ")} ]` : "[]";
+    return `${comp.module}.${ICON_NAMES.iconFn} ${nameExpr} ${iconAttrList} ${iconChildList}`;
+  }
+
   const surfaceDef = comp.surfaces.top;
   if (!surfaceDef) {
     throw new Error(`elm emitter: ${ctxLabel} — component "${comp.component}" has no "top" surface.`);
@@ -509,8 +578,34 @@ function renderChildElement(spec, config, acc, ctxLabel) {
   const childExprs = collectChildExprs(spec, comp, config, acc, ctxLabel);
 
   const attrList = attrExprs.length ? `[ ${attrExprs.join(", ")} ]` : "[]";
-  const childList = childExprs.length ? `[ ${childExprs.join(", ")} ]` : "[]";
-  return `${comp.module}.${surfaceDef.entry} ${attrList} ${childList}`;
+
+  // The nested call shape follows the component's own top-surface form (the
+  // ctor-rename cascade moved several composed components — Button, Fab,
+  // IconButton, chips, … — from `double-list` to `record-double-list`, so a
+  // nested one MUST carry the `{ content, action }` record or it will not
+  // type-check as `M3e.X.component [attrs] [children]`).
+  if (surfaceDef.form === "double-list") {
+    const childList = childExprs.length ? `[ ${childExprs.join(", ")} ]` : "[]";
+    return `${comp.module}.${surfaceDef.entry} ${attrList} ${childList}`;
+  }
+  if (surfaceDef.form === "record-double-list") {
+    // The record `content` is prepended to the child list by the ctor
+    // (`content :: children`), so mapping the FIRST collected child to
+    // `content` and the rest to the trailing list preserves child order with no
+    // stray node. No children -> an empty text-seam content element.
+    const textSeam = textSeamOf(config);
+    const contentExpr = childExprs.length ? childExprs[0] : `${textSeam}.text ""`;
+    if (!childExprs.length) usedImportsAdd(acc, textSeam);
+    const restExprs = childExprs.slice(1);
+    const restList = restExprs.length ? `[ ${restExprs.join(", ")} ]` : "[]";
+    const actionNone = actionNoneOf(comp, ctxLabel);
+    usedImportsAdd(acc, comp.actionModule);
+    return `${comp.module}.${surfaceDef.entry} { content = ${contentExpr}, action = ${actionNone} } ${attrList} ${restList}`;
+  }
+  throw new Error(
+    `elm emitter: ${ctxLabel} — component "${comp.component}" top surface has form "${surfaceDef.form}", ` +
+      `which the nested-child renderer does not support (only double-list / record-double-list).`
+  );
 }
 
 function usedImportsAdd(acc, module) {
@@ -688,8 +783,11 @@ export function emitEntry(entry, config) {
     const setHasExamplesEntry = setHasInlineExample || hasExamplesEntry;
 
     // Defect-D fix: the examples.json / per-set-inline ChildSpecs for this set,
-    // rendered as real Elm children (double-list surface only — record/pipeline
-    // forms take one content element and keep the pre-fix seam-text behavior).
+    // rendered as real Elm children. Both the double-list AND record-double-list
+    // forms carry a trailing child list (the ctor-rename cascade moved many
+    // composed components — Segmented Button, chips, Search View, … — to the
+    // record form), so example children must render for BOTH; renderExample
+    // folds the first child into the record `content` for the record form.
     const exampleChildrenSpecs = setHasInlineExample
       ? figmaSet.example.children
       : hasExamplesEntry
@@ -697,7 +795,8 @@ export function emitEntry(entry, config) {
         : null;
     const childAcc = { imports: new Set(), skipped: [] };
     const childrenExprs =
-      exampleChildrenSpecs && surfaceDef.form === "double-list"
+      exampleChildrenSpecs &&
+      (surfaceDef.form === "double-list" || surfaceDef.form === "record-double-list")
         ? renderExampleChildrenElm(exampleChildrenSpecs, comp, config, childAcc)
         : null;
 
@@ -792,6 +891,11 @@ export function emitEntry(entry, config) {
       // Sorted for deterministic, byte-stable, tidy output.
       const imps = new Set([`import ${surfaceDef.module}`]);
       if (usesToken) imps.add(`import ${comp.tokenModule}`);
+      // A record/pipeline parent renders `action = <Module>.none`, so it must
+      // import the action module even when the children pulled in none.
+      if (surfaceDef.form !== "double-list") {
+        imps.add(`import ${actionNoneOf(comp, `surface ${surfaceDef.surface}`).replace(/\.none$/, "")}`);
+      }
       for (const m of childAcc.imports) imps.add(`import ${m}`);
       importsArr = [...imps]
         .sort()
@@ -867,11 +971,13 @@ export function emitEntry(entry, config) {
 // emitIconTableEntry(entry, config) -> [{ path, contents, id }]
 //
 // The Elm mirror of html-label.mjs's emitIconTableEntry (kind:"iconTable", the
-// 141-row m3e-icon table): ONE file per icon row, each mapping a real Figma
-// icon node -> `M3e.Icon.view [ M3e.Icon.name "<symbol>" (, M3e.Icon.filled True) ] []`
-// — elm-m3e's own documented icon idiom (children EMPTY per amendment A2; no
-// text seam). Names are facts-resolved (CARDINAL RULE): module/entry from the
-// surface fact, name/filled via setterOf (verified-or-throw).
+// 141-row m3e-icon table): ONE file per icon row. Post-R-026 each maps a real
+// Figma icon node -> the opaque-`Name` idiom
+// `M3e.Icon.icon M3e.Icon.<constant> [ (M3e.Icon.filled True) ] []` — the
+// ligature is the positional `Name` argument (NOT a `name` string setter), and
+// children stay EMPTY (amendment A2). The icon module/render-fn/Name constant
+// all come from the ICON_NAMES catalog (CARDINAL RULE — sourced from the
+// generated icon module, never hardcoded); `filled` stays a facts setter.
 //
 // Collision handling mirrors html-label byte-for-byte in spirit: duplicate
 // (symbolName, filled) filenames get -2/-3… in icons-array order (first
@@ -881,21 +987,6 @@ function emitIconTableEntry(entry, config) {
   const comp = FACTS.components[entry.cemTag];
   if (!comp) return []; // no elm facts for this tag — same quiet no-op as emitEntry
 
-  const surfaceKey = config.surface;
-  if (!FACTS.surfaceKeys.includes(surfaceKey)) {
-    throw new Error(
-      `elm emitter: elmSurface "${surfaceKey}" is not one of ${FACTS.surfaceKeys.join(", ")}.`
-    );
-  }
-  const surfaceDef = comp.surfaces[surfaceKey];
-  if (!surfaceDef) {
-    throw new Error(
-      `elm emitter: component "${comp.component}" does not emit at surface "${surfaceKey}" ` +
-        `(available: ${Object.keys(comp.surfaces).join(", ")}).`
-    );
-  }
-
-  const nameSetter = setterOf(comp, "name", "iconTable name");
   const filledSetter = setterOf(comp, "filled", "iconTable filled");
 
   const files = [];
@@ -908,17 +999,21 @@ function emitIconTableEntry(entry, config) {
     const id = `${baseName}${suffix}-elm`;
 
     const url = buildNodeUrl(config, row.figmaNodeId);
-    const setterLines = [
-      { setter: nameSetter, expr: JSON.stringify(row.symbolName) },
-      ...(row.filled ? [{ setter: filledSetter, expr: "True" }] : []),
-    ];
-    const example = renderExample(surfaceDef, comp, setterLines, null);
+    const nameExpr = iconNameExpr(row.symbolName);
+    const attrList = row.filled ? `[ ${comp.module}.${filledSetter} True ]` : "[]";
+    const example = `${comp.module}.${ICON_NAMES.iconFn} ${nameExpr} ${attrList} []`;
+    const usesCustom = nameExpr.includes(`${ICON_NAMES.module}.${ICON_NAMES.customFn} `);
 
     const headerLines = [
       ` * GENERATED by cem-figma-connect (profiles/m3-kit/emitters/elm.mjs) — do not edit by hand.`,
-      ` * ${entry.cemTag} (iconTable row "${row.figmaName}") -> ${surfaceDef.module}.${surfaceDef.entry} (elmSurface: "${surfaceKey}", surface ${surfaceDef.surface}).`,
+      ` * ${entry.cemTag} (iconTable row "${row.figmaName}") -> ${comp.module}.${ICON_NAMES.iconFn} ${nameExpr} (opaque-Name icon, R-026).`,
       ` * bound to Figma icon node ${row.figmaNodeId}; symbol "${row.symbolName}"${row.filled ? " (filled)" : ""}.`,
-      ` * names resolved from the elm-cem facts bundle Face C (profiles/m3-kit/facts/elm-api-facts.json); provenance stamp lives in that file's provenance object.`,
+      ...(usesCustom
+        ? [
+            ` * "${row.symbolName}" has no exposed Name constant — emitted via the ${comp.module}.${ICON_NAMES.customFn} escape hatch (not guessed).`,
+          ]
+        : []),
+      ` * icon Name resolved from the opaque-Name catalog (profiles/m3-kit/facts/icon-names.json), derived from the generated ${comp.module} module; filled from the elm-cem facts bundle Face C.`,
     ];
 
     const contents =
@@ -929,7 +1024,7 @@ function emitIconTableEntry(entry, config) {
       `\n` +
       `export default {\n` +
       `  example: figma.code\`${example}\`,\n` +
-      `  imports: [${JSON.stringify(`import ${surfaceDef.module}`)}],\n` +
+      `  imports: [${JSON.stringify(`import ${comp.module}`)}],\n` +
       `  id: ${JSON.stringify(id)},\n` +
       `  metadata: {\n` +
       `    nestable: true,\n` +
@@ -960,7 +1055,9 @@ export const _internal = {
   resolveChildAttrExpr,
   renderChildElement,
   renderExampleChildrenElm,
+  iconNameExpr,
   FACTS,
+  ICON_NAMES,
 };
 
 // emitter — the emitter-api.mjs (task B2) conformant object. run.mjs's loader
