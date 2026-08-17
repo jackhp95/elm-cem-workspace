@@ -2630,3 +2630,34 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   type-safe API — the same wall M-IA2a hit, which it resolved by making the picker a plain
   positioned panel. M-IA2b must follow that precedent (plain panel, not `m3e-menu`). Recorded as an
   autonomous decision following established precedent rather than a blocking escalation; revertible.
+
+---
+
+# COMPOSE IA-REWORK — remaining parts 2b–6 — branch `exec/compose-ia-2b6` (autonomous execution)
+
+Resumed from `main` @ `a69a427` (Parts 1 + 2a already landed via merge `0e7bceb`). Worktree
+`.worktrees/compose-ia`. Driver = `docs/superpowers/plans/2026-08-15-compose-ia-rework-gauntlet.md`
+(Parts 2b, 2c, 3, 4, 5–6) + `spikes/2026-08-15-compose-ia-review.md`. Surface = docs-app consumer
+route ONLY (`app/Route/Components/Compose.elm` + `tests-browser/compose.spec.ts`); published core
+`packages/elm-cem-compose` untouched (`git diff --quiet` verified per part). Commit per part, no
+push/merge. Baseline before any edit: `compose.spec.ts` 16/16 green on the production build. Commits
+stage explicit source paths only (route + spec + ledger); the tracked `dist/**` build output churns
+on every build and is left for a final regenerate, per D-066 precedent + the "stage explicit paths"
+convention (D-009/D-021).
+
+- **Part 2b: pass** (elm compile 334 modules; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 16/16 on the production build via `REQUIRE_CLONE_GATES=1 browser-guard`). The
+  multi-option add-child affordance is rebuilt from a flat `m3e-menu` into a plain positioned
+  `.compose-slot-panel` (following M-IA2a's picker precedent — an `m3e-menu`'s `Content` cannot host
+  captioned subsections, per the constraint recorded above). The panel leads with the structural
+  primitives the slot affords (`Text`/`Icon`), then a captioned **"Nest a component"** group listing
+  the afforded component types with the picker's editorial labels (M-IA2a's `pickerEntry`/`pickerItem`
+  reused), then a captioned **"Load an example"** group whose items are QUALIFIED by source component
+  ("Heading — Typescale variants and sizes") — fixing audit §1.2's duplicate bare titles. Panel
+  open/close is route `Model` state (`slotPicker : Maybe (Path, String)`); single-option slots keep
+  the direct-fire shortcut (no panel). Removed the dead menu machinery (`slotMenuElement`,
+  `slotMenusFor`, `exampleMenuItemsForAddChild`, `menuItemViewMsg`, `exampleMenuItemView`,
+  `slotMenuId`, the `LoadExample` Msg variant). Spec: 6 tests updated (selectors swapped from
+  `m3e-menu`/`menuitem` to `.compose-slot-panel` buttons — intent preserved per the plan's explicit
+  allowance), incl. the "offers every valid kind" acceptance test now asserting Text+Icon primitives
+  AND all five component types present (none collapsed) in the panel.

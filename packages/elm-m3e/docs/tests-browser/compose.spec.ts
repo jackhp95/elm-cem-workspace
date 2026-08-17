@@ -11,13 +11,17 @@ import { test, expect } from "@playwright/test";
  * highest-precedence one. Under the superseded rule `listItem.trailing`
  * collapsed to a text box and the checkbox was unreachable.
  *
- * A slot chip that affords more than one option is a toggle `M3e.button` (not
- * an `m3e-filter-chip` — `M3e.filterChip`'s `Content` cannot host `menuTrigger`
- * at all). The attribute/slot buttons wrap in a plain `flex flex-wrap` row, so
- * they carry `role="button"` (an earlier `M3e.buttonGroup` was dropped: it
- * overflowed instead of wrapping and stamped `role="radiogroup"`/`role="radio"`
- * on these independent toggles). Their accessible name is a leading `add` icon
- * plus the slot/attribute name (never a literal "+"), matched here by substring.
+ * A slot that affords more than one option opens an add-child PANEL (M-IA2b):
+ * a plain positioned `.compose-slot-panel` (NOT an `m3e-menu`, whose `Content`
+ * cannot host the panel's "Nest a component"/"Load an example" captions),
+ * addressed by route `Model` state per `(path, slot)`. Its options are plain
+ * `<button>`s (primitives `Text`/`Icon`, editorially-labeled component types,
+ * and source-qualified `.compose-example-item` examples). The attribute/slot
+ * buttons wrap in a plain `flex flex-wrap` row, so they carry `role="button"`
+ * (an earlier `M3e.buttonGroup` was dropped: it overflowed instead of wrapping
+ * and stamped `role="radiogroup"`/`role="radio"` on these independent toggles).
+ * Their accessible name is a leading `add` icon plus the slot/attribute name
+ * (never a literal "+"), matched here by substring.
  *
  * The editor opens with a STARTER tree (see `init`/`starterEdits`): a root
  * `m3e-list` holding two `listItem`s labeled "First item" / "Second item". So
@@ -26,39 +30,41 @@ import { test, expect } from "@playwright/test";
  * (every menu is always in the DOM, only the clicked one is shown).
  */
 
-test("a slot menu offers every valid kind, not just text", async ({ page }) => {
+test("a slot's add-child panel offers every valid kind, not just text (M-IA2b)", async ({
+  page,
+}) => {
   await page.goto("/components/compose");
 
-  // Add a fresh listItem via the ROOT list's "unnamed" slot (`.first()` — the
-  // starter's own listItems each expose an "unnamed" button too).
+  // Add a fresh listItem via the ROOT list's "unnamed" slot. That slot affords
+  // only component types, so its add-child panel (M-IA2b — a plain
+  // `.compose-slot-panel`, NOT an `m3e-menu`) leads straight into the "Nest a
+  // component" group; pick `listItem` there (`.first()` — the starter's own
+  // listItems each expose an "unnamed" button too).
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  const rootPanel = page.locator(".compose-slot-panel");
+  await rootPanel.getByRole("button", { name: "listItem", exact: true }).click();
 
   // The new listItem is last; its "trailing" slot is the §8.7 acceptance case:
   // it affords text, an icon, AND five components at once.
   await page.getByRole("button", { name: "trailing" }).last().click();
+  const panel = page.locator(".compose-slot-panel");
+  await expect(panel).toBeVisible();
 
-  // Every menu is in the DOM; only the just-opened one is visible.
-  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
-  await expect(trailingMenu).toBeVisible();
+  // The panel leads with the two structural primitives, then a captioned
+  // "Nest a component" group holding the five component types (by editorial
+  // label; `radio` has no reference category so it keeps its raw name) — NONE
+  // collapsed away. The intent of the old flat-menu assertion, preserved
+  // against the new grouped panel.
+  await expect(panel.getByRole("button", { name: "Text", exact: true })).toBeVisible();
+  await expect(panel.getByRole("button", { name: "Icon", exact: true })).toBeVisible();
+  await expect(panel.getByText("Nest a component", { exact: true })).toBeVisible();
+  for (const label of ["Avatar", "Checkbox", "Heading", "radio", "Switch"]) {
+    await expect(panel.getByRole("button", { name: label, exact: true })).toBeVisible();
+  }
 
-  // `.compose-example-item` items (one per real example a component has) are
-  // excluded here — this asserts the plain option set, not the real-example
-  // options G-Ex2 adds alongside them (see the "real example" test below).
-  const items = trailingMenu.locator("m3e-menu-item:not(.compose-example-item)");
-  await expect(items).toHaveText([
-    "Text",
-    "Icon",
-    "avatar",
-    "checkbox",
-    "heading",
-    "radio",
-    "switch",
-  ]);
-
-  // Picking `checkbox` — one of five component options this menu did NOT
+  // Picking `Checkbox` — one of five component options this panel did NOT
   // collapse away — puts a real `m3e-checkbox` in the rendered tree.
-  await trailingMenu.getByRole("menuitem", { name: "checkbox", exact: true }).click();
+  await panel.getByRole("button", { name: "Checkbox", exact: true }).click();
   await expect(page.locator("m3e-list-item m3e-checkbox")).toHaveCount(1);
 });
 
@@ -83,12 +89,12 @@ test("setting an attribute updates both the live element and the snippet", async
 test("nesting three levels deep works with chips alone", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // list > listItem > (trailing) checkbox — three levels, buttons and menus
+  // list > listItem > (trailing) checkbox — three levels, buttons and panels
   // only, no hand-authored code. Add a fresh listItem and drive ITS trailing.
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "trailing" }).last().click();
-  await page.locator("m3e-menu[id*='trailing']:visible").getByRole("menuitem", { name: "checkbox", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "Checkbox", exact: true }).click();
 
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
 });
@@ -154,26 +160,29 @@ test("the change-component picker is grouped, searchable, and offers no example 
 test("loading a real example (G-Ex2) fills the node with its actual content", async ({ page }) => {
   await page.goto("/components/compose");
 
-  // Add a fresh listItem, then open ITS "trailing" slot menu — one of the
+  // Add a fresh listItem, then open ITS "trailing" slot panel — one of the
   // five components it affords is "heading", which (via data/examples.json)
   // has a real "Typescale variants and sizes" example (root
   // `<m3e-heading variant="display" size="large">Display Large</m3e-heading>`),
-  // offered as an extra `.compose-example-item` alongside the plain
-  // "heading" option. (M-IA2a removed examples from the CHANGE-COMPONENT
-  // menu only — see the picker test above; the add-child menu keeps them.)
-  // ("avatar", also offered here, is NOT usable for this: its Fact declares
-  // no slots at all, so it can never receive slot content through
-  // `Cem.Compose` regardless of FromHtml — a real, pre-existing modeling
-  // limit, not something this test should paper over.)
+  // offered under the panel's captioned "Load an example" group as a
+  // `.compose-example-item` QUALIFIED by its source component ("Heading —
+  // Typescale variants and sizes", M-IA2b). (M-IA2a removed examples from the
+  // CHANGE-COMPONENT menu only — see the picker test above; the add-child
+  // panel keeps them.) ("avatar", also offered here, is NOT usable for this:
+  // its Fact declares no slots at all, so it can never receive slot content
+  // through `Cem.Compose` regardless of FromHtml — a real, pre-existing
+  // modeling limit, not something this test should paper over.)
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "trailing" }).last().click();
 
-  const trailingMenu = page.locator("m3e-menu[id*='trailing']:visible");
-  const headingExample = trailingMenu.locator(
-    'm3e-menu-item:text-is("heading") + m3e-menu-item.compose-example-item'
+  const panel = page.locator(".compose-slot-panel");
+  await expect(panel.getByText("Load an example", { exact: true })).toBeVisible();
+  const headingExample = panel.locator(
+    "button.compose-example-item",
+    { hasText: "Heading — Typescale variants and sizes" }
   );
-  await expect(headingExample).toHaveText("Typescale variants and sizes");
+  await expect(headingExample).toHaveText("Heading — Typescale variants and sizes");
   await headingExample.click();
 
   // The live preview: a real m3e-heading in the trailing slot, carrying the
@@ -194,7 +203,7 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
   // component" icon button on the just-added node (`.last()`; the starter and
   // the root have their own).
   await page.getByRole("button", { name: "unnamed" }).first().click();
-  await page.getByRole("menuitem", { name: "listItem", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "listItem", exact: true }).click();
   await page.getByRole("button", { name: "Change component" }).last().click();
 
   // list.unnamed affords divider/expandableListItem/listAction/listItem/
@@ -234,10 +243,10 @@ test("a newly added text child defaults to placeholder copy", async ({ page }) =
   await page.goto("/components/compose");
 
   // Add a text child to the first list item's "supporting-text" slot (it
-  // affords text AND a heading, so it opens a menu; pick "Text"). The consumer
-  // seeds a fresh text node with "lorem ipsum" rather than an empty string.
+  // affords text AND a heading, so it opens the add-child panel; click "Text").
+  // The consumer seeds a fresh text node with "lorem ipsum" rather than empty.
   await page.getByRole("button", { name: "supporting-text" }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   // It shows up in the live preview as real content.
   await expect(page.locator("m3e-list").first()).toContainText("lorem ipsum");
@@ -266,9 +275,9 @@ test("prefill off adds empty content instead of placeholder", async ({ page }) =
   await page.getByRole("switch", { name: "Prefill examples" }).click();
 
   // Add a text child to the first item's supporting-text slot (affords text +
-  // heading, so a menu; pick "Text"). With prefill off, no "lorem ipsum".
+  // heading, so a panel; click "Text"). With prefill off, no "lorem ipsum".
   await page.getByRole("button", { name: "supporting-text" }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   await expect(page.locator("m3e-list").first()).not.toContainText("lorem ipsum");
 });
@@ -335,10 +344,10 @@ test("adding slot content updates the preview and the snippet", async ({ page })
   await page.goto("/components/compose");
 
   // Lock-in for the IA review's §1.3 finding, slot side: the first listItem's
-  // "overline" slot affords text (and a heading, so it opens a menu); pick
-  // "Text". (Not `list.unnamed` — that slot doesn't afford text at all.)
+  // "overline" slot affords text (and a heading, so it opens the add-child
+  // panel); click "Text". (Not `list.unnamed` — it doesn't afford text at all.)
   await page.getByRole("button", { name: /overline/ }).first().click();
-  await page.locator("m3e-menu:visible").getByRole("menuitem", { name: "Text", exact: true }).click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "Text", exact: true }).click();
 
   // The live preview: a real slotted child under the first listItem, seeded
   // (prefill is on by default) with placeholder copy.
