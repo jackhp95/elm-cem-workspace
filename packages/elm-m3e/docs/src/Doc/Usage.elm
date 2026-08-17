@@ -28,7 +28,7 @@ import TypedHtml.Kind
 {-| Which API surface a Usage example is shown in:
 
   - `Top` — the barrel `M3e.*` form (the Standard surface, always present)
-  - `Record` — `M3e.<Comp>.el { … }` (the required-record surface; per-example)
+  - `Record` — `M3e.<Comp>.component { … }` (the required-record surface; per-example)
   - `Build` — `M3e.<Comp>.build |> … |> toElement` (the builder-pipe surface; per-example)
   - `Raw` — the raw `<m3e-*>` HTML (always present)
 
@@ -72,7 +72,7 @@ update (SelectSurface index surface) model =
 
 {-| A verified Usage example: its live-preview HTML and the derived Elm in each
 API surface. Every Elm surface is optional — `top` (M3e) and `record`
-(`M3e.<Comp>.el`) / `build` (`M3e.<Comp>.build`) are each present only when that
+(`M3e.<Comp>.component`, required-record form) / `build` (`M3e.<Comp>.build`) are each present only when that
 surface compiled to a distinct form for this example (else `Nothing`; the UI hides
 the `top` tab, but keeps `record`/`build` as an identical-by-design rationale tab).
 `html` is the one guaranteed surface — its live preview always renders. `section`
@@ -161,7 +161,7 @@ sectionBlock model ( sec, examples ) =
 
 
 {-| A live preview paired with a per-example tab strip that switches its code
-between the API surfaces (optionally `M3e`, then the `el` / `build` surfaces, and
+between the API surfaces (optionally `M3e`, then the required-record `component` / `build` surfaces, and
 always `HTML`). The selection lives in
 `model.surfaces` keyed by this example's index, defaulting to the first available
 surface (`defaultSurfaceFor`). Grouped as one
@@ -203,9 +203,9 @@ activeIndexFor surface ex =
 
 
 {-| The surfaces offered for one example, in fixed order. Each Elm surface
-(`M3e`, `el`, `build`) appears only when it compiled for this example
+(`M3e`, required-record `component`, `build`) appears only when it compiled for this example
 (its field is non-null); `HTML` is the one universal surface and is always offered
-last. Order: M3e, el, build, HTML.
+last. Order: M3e, component, build, HTML.
 -}
 surfacesFor : UsageExample -> List ( String, Surface )
 surfacesFor ex =

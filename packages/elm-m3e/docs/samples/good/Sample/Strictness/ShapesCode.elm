@@ -17,12 +17,12 @@ import M3e.Values as Value
 import Sample.Support exposing (Msg(..))
 
 
--- the standard form (`view`) — everything optional; the tersest, easiest form
+-- the standard form — everything optional; the tersest, easiest form
 shown0_ =
     M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 
--- required-record form (`el`) — the compiler now DEMANDS the parts a button can't do without
+-- required-record form (`component`) — the compiler now DEMANDS the parts a button can't do without
 shown1_ =
     M3e.Component.Button.component
         { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }

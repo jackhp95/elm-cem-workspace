@@ -22,7 +22,7 @@ result is identical across every surface tab):
 
   - **Repeated-sibling `…` folds** (Phase 2): a run of `>= 3` consecutive
     single-line siblings at equal indent whose leading construct is identical
-    (e.g. `M3e.Option.view …` or `<m3e-option …`) collapses into one `…`
+    (e.g. `M3e.Option.component …` or `<m3e-option …`) collapses into one `…`
     affordance. The detector is deliberately conservative — it groups only when
     the leading `M3e.<name>` / `<tag` head matches exactly, so distinct lines
     (differing slot names, args, etc.) are never mis-collapsed. If real examples
@@ -217,7 +217,7 @@ spanMatchingLeaves head indent nodes =
 
 {-| The normalized leading construct of a line, used to match repeated siblings.
 Strips a leading list `[`/`,` separator, then captures either an XML/HTML opening
-tag (`<m3e-option`) or an Elm value head (`M3e.Option.view`). `Nothing` if the
+tag (`<m3e-option`) or an Elm value head (`M3e.Option.component`). `Nothing` if the
 line has no such construct (closing brackets, punctuation) — those never group.
 -}
 siblingHead : String -> Maybe String

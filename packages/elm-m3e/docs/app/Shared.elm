@@ -31,7 +31,7 @@ distinction is load-bearing.
 The scheme/contrast/direction state is held as generated `Value` tokens — there is
 no local shadow union — so `M3e.Theme` takes the model field directly and the
 settings controls render from the generated `<enum>Values` lists. Every
-constructor is `Module.view [attrs] [content]`.
+constructor is `Module.component [attrs] [content]`.
 
 -}
 

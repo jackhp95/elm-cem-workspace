@@ -2,7 +2,7 @@ module Route.Guide.TheLayers exposing (ActionData, Data, Model, Msg, route)
 
 {-| Guide (`/guide/the-layers`): the orienting map. A component is not a
 stack of layers you descend; it is one typed value you can write through a
-handful of interchangeable **surfaces** (barrel, `view`, `el`, `build`), plus a
+handful of interchangeable **surfaces** (barrel, `component`, `build`), plus a
 few loud **escapes** for leaving the typed tree. The running example doesn't
 change; the same Save button is shown live once and its surfaces are shown as
 code, with the "hand-writing raw HTML the library already ships" tell.
@@ -113,8 +113,8 @@ layers =
 layersDiagram : String
 layersDiagram =
     """SURFACES — same typed value, different call shape (a horizontal choice)
-  M3e.button …                     barrel: one import, every component's `view`
-  M3e.Component.Button.view …                the standard/list form
+  M3e.button …                     barrel: one import, every component's `component`
+  M3e.Component.Divider.component [ … ] …           the standard/list form (no required record)
   M3e.Component.Button.component { … } …            required-record form (the 29 with a required record)
   M3e.Build.Button.build { … } |> …      builder pipe, closed by M3e.Build.Button.toElement
 
@@ -157,7 +157,7 @@ tell =
 
 recap : String
 recap =
-    """- A component is **one typed value**, written through interchangeable **surfaces** (barrel `view`, `el`, `build`) — **peers, not a ranking**.
+    """- A component is **one typed value**, written through interchangeable **surfaces** (barrel, `component`, `build`) — **peers, not a ranking**.
 - `M3e.Html.*` is the **loose** producer: opt out of strict phantom rows while staying in the IR (it is *not* plain HTML).
 - You leave the typed tree only through loud, named **escapes**: `M3e.Unsafe` / `M3e.Unsafe.Attributes` (`fromHtml`, `fromNode`, `recast`, `customElement`, …) — shipped with the library, built on the raw forge `HtmlIr.Internal` that application code never touches directly — plus `M3e.Coerce` for the config-blessed kind crossings a brand declares.
 - The tell that you over-escaped: **hand-writing raw HTML the library already ships as a component.**

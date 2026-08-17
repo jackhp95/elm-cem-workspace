@@ -228,7 +228,7 @@ apiSection members =
 
 {-| The API groups, in render order, each with the member roles it collects. The
 constructor group also carries any exposed `type` aliases/unions so a caps/record
-type sits beside the `view` that consumes it. The trailing group catches helper
+type sits beside the `component` that consumes it. The trailing group catches helper
 values (e.g. `M3e.Action` combinators) that are neither attrs, slots, nor events.
 -}
 apiGroups : List ( String, List String )
