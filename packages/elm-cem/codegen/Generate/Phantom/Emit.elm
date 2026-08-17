@@ -104,13 +104,6 @@ files brand =
                 ++ [ factsModule brand ]
                 ++ unsafeModule brand
                 ++ actionModule brand
-                -- WS6/CX5: config-blessed brand crossings (`_coerce`). `coerceModule`
-                -- was fully specified (signature, guard, doc comment) but never
-                -- threaded into `allFiles` — a config with a `_coerce` block validated
-                -- cleanly and silently emitted no `<Lib>.Coerce` module at all. Omits
-                -- itself already when `brand.coercions` is empty, matching the Values
-                -- (K6) and Build (R3) conditionals above.
-                ++ coerceModule brand
                 -- R3: the shared pipe-builder mechanics live once per brand.
                 -- Only emitted when at least one rich per-component module
                 -- exists (native/home-only brands have no `Builder`).
@@ -5686,80 +5679,6 @@ kindModule brand =
                 ]
             )
         )
-
-
-
--- COERCE MODULE
-
-
-coerceModule : Brand -> List Elm.File
-coerceModule brand =
-    if List.isEmpty brand.coercions then
-        []
-
-    else
-        let
-            lib =
-                brand.lib
-
-            -- Both ends name a kind FIELD, so both honour the `shared:` prefix — the
-            -- convention `Generate.Types.Coercion` has documented all along, minus the
-            -- resolution step, which did not exist. Without it the config string went
-            -- straight into the annotation and emitted `shared:icon : Brand`: not Elm,
-            -- and wrong in the marker too, since a shared atom is `Shared`.
-            markerType f =
-                case f.marker of
-                    MShared ->
-                        "Shared"
-
-                    MBrand ->
-                        "Brand"
-
-            row var f =
-                "Element { " ++ var ++ " | " ++ f.field ++ " : " ++ markerType f ++ " }"
-
-            decl c =
-                [ ""
-                , ""
-                , doc ("A " ++ c.from ++ " admitted where a " ++ c.to ++ " kind is expected.")
-                , c.name ++ " :"
-                , "    " ++ row "k" (M.kindFieldOfSpelling c.fromKind) ++ " admittedBy msg"
-                , "    -> " ++ row "s" (M.kindFieldOfSpelling c.to) ++ " admittedBy2 msg"
-                , c.name ++ " element ="
-                , "    Ir.fromNode (HtmlIr.Element.toNode element)"
-                ]
-
-            -- Expose exactly the markers the emitted signatures mention: a brand whose
-            -- every crossing targets a shared atom must not import an unused `Brand`.
-            markersUsed =
-                brand.coercions
-                    |> List.concatMap
-                        (\c -> [ markerType (M.kindFieldOfSpelling c.fromKind), markerType (M.kindFieldOfSpelling c.to) ])
-                    |> (\ms -> List.filter (\m -> List.member m ms) [ "Brand", "Shared" ])
-        in
-        [ file [ lib, "Coerce" ]
-            (String.join "\n"
-                (List.concat
-                    [ [ "module " ++ lib ++ ".Coerce exposing (" ++ (brand.coercions |> List.map .name |> String.join ", ") ++ ")"
-                      , ""
-                      , "{-| Config-blessed brand crossings — the one loud, greppable re-kind concept."
-                      , "Each function is declared in config (`_coerce`) and reviewed there; nothing"
-                      , "else in the library moves an element between kinds."
-                      , ""
-                      , docsBlock [ brand.coercions |> List.map .name ]
-                      , ""
-                      , "-}"
-                      , ""
-                      , "import HtmlIr.Element exposing (Element)"
-                      , "import HtmlIr.Internal as Ir"
-                      , "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " markersUsed ++ ")"
-                      ]
-                    , brand.coercions |> List.concatMap decl
-                    , [ "" ]
-                    ]
-                )
-            )
-        ]
 
 
 

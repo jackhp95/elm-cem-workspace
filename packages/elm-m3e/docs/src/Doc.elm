@@ -372,24 +372,29 @@ elmSignature s =
 carrying the outline/hover chrome).
 
 The ideal fix is `m3e-assist-chip` (a chip that "carries a native `href`" per
-its own docs — exactly this pill's job). `M3e.Coerce.asPhrasing` now exists
-(config `978acce`) and DOES cross `{ s | assistChip : Brand }` to a shared
-kind — but it targets `shared:phrasing` (`{ s | sharedPhrasing : Shared }`),
-not `shared:text`, while this function's signature is pinned verbatim (also
-by `app/Route/Guide.elm`'s `chapterLink`, outside this burn-down's file scope)
-to `{ s | sharedText : M3e.Kind.Shared }`. Those are two DIFFERENT named kind
-rows, and `anchorPill`'s type annotation makes `s` rigid in its body, so the
-compiler cannot pad the missing `sharedText` field onto `asPhrasing`'s
-`sharedPhrasing`-only output (verified against the compiler — `elm make`
-reports a straight `TYPE MISMATCH`: `asPhrasing` produces
-`{ a | sharedPhrasing : Shared, sharedText : Shared }` but the annotation
-demands `{ s | sharedText : Shared }`). The real fix is a `_coerce` target of
-`shared:text` (or an `asText`/`asPhrasing`-with-`sharedText` variant) in
-config, out of this file's scope. So this stays a native `<a>` with layout
-classes only. Its former pill chrome (shape, border, hover state, label type
-scale) is dropped rather than recreated in a stylesheet — filed as an m3e
-gap, because the fix is for `m3e-assist-chip` to be reachable here, not for
-this app to own CSS.
+its own docs — exactly this pill's job). Getting a chip's
+`{ s | assistChip : Brand }` into this function's pinned
+`{ s | sharedText : M3e.Kind.Shared }` needs a kind crossing, and the two
+candidates for that have both been ruled out:
+
+  - **`coerce` is gone.** A `_coerce` entry was briefly added for this, then
+    removed along with the whole mechanism: `coerce` served no case that
+    `admits` or `recast` does not already cover. Do not reach for it.
+  - **Widening `admits` does not apply.** `admits` fixes what a SLOT accepts;
+    here the mismatch is in a hand-written function's own return annotation,
+    which no config change reaches.
+
+So the remaining route, per the standing rule, is **`recast`** — the sanctioned,
+centralized, reviewed escape for a crossing that genuinely conflicts with
+Material guidance. That is deliberately NOT done here: a recast needs its own
+justification, and "an assist-chip is phrasing content, not text" argues the
+honest fix is instead to widen this signature (and `chapterLink`'s, in
+`app/Route/Guide.elm`) to accept phrasing — a call-site change, not an escape.
+TODO: pick one of those two before restoring the chip.
+
+Until then this stays a native `<a>` with layout classes only. Its former pill
+chrome (shape, border, hover state, label type scale) is dropped rather than
+recreated in a stylesheet.
 
 -}
 anchorPill : { href : String, label : String } -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
