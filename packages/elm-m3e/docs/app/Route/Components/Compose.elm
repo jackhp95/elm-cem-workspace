@@ -576,13 +576,16 @@ slotChildrenAt parentPath slotName model =
 
 
 {-| The Attributes group — every attribute button, under its own label,
-never sharing a row with the Slots group below. The buttons wrap in a plain
-`flex flex-wrap` row (an `M3e.buttonGroup` was rejected: it overflows rather
-than wraps, and it stamps `role="radiogroup"`/`role="radio"` on these
-independent toggles, implying a single-select exclusivity they do not have).
-Each discrete attribute's always-present menu is a sibling rather than nested
-— `menuTrigger`/`menu` are addressed by id, so their DOM position doesn't
-matter.
+never sharing a row with the Slots group below. Structurally set apart from the
+Slots group by a primary-colored left border + a faint container tint (IA
+review §3.2: attributes-vs-slots must be a real visual DISTINCTION, not just two
+captions over similar rows) and marked `compose-attr-group` so tests can assert
+the two kinds are distinguishable. The buttons wrap in a plain `flex flex-wrap`
+row (an `M3e.buttonGroup` was rejected: it overflows rather than wraps, and it
+stamps `role="radiogroup"`/`role="radio"` on these independent toggles, implying
+a single-select exclusivity they do not have). Each discrete attribute's
+always-present menu is a sibling rather than nested — `menuTrigger`/`menu` are
+addressed by id, so their DOM position doesn't matter.
 -}
 attrGroup : Cem.Compose.Path -> Cem.Compose.Model -> Element (Grouping.DivIs s) admittedBy Cem.Compose.Msg
 attrGroup path model =
@@ -591,15 +594,17 @@ attrGroup path model =
             TypedHtml.div [] []
 
         chips ->
-            TypedHtml.div [ TA.class "flex flex-col gap-2" ]
+            TypedHtml.div [ TA.class "compose-attr-group flex flex-col gap-2 border-l-4 border-primary bg-surface-container-lowest rounded-md-corner-small pl-3 pr-2 py-2" ]
                 (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                    (groupLabel "Attributes" :: List.map (attrButtonElement path) chips)
+                    (groupLabel "text-primary" "Attributes" :: List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
 
 {-| The Slots (add-child) group — every slot control, under its own label,
-never sharing a row with the Attributes group above. Each slot's fill-count
+never sharing a row with the Attributes group above. Set apart from the
+Attributes group by a tertiary-colored left border + container tint and marked
+`compose-slot-group` (IA review §3.2; see `attrGroup`). Each slot's fill-count
 badge rides in its own button's `trailing-icon` slot; a multi-option slot's
 add-child panel is a sibling of its button inside a `relative` wrapper
 (`slotControl`), not a shared `m3e-menu` — an `m3e-menu`'s `Content` cannot
@@ -614,13 +619,17 @@ slotGroup ctx path model =
             TypedHtml.div [] []
 
         chips ->
-            TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                (groupLabel "Slots" :: List.map (slotControl ctx path model) chips)
+            TypedHtml.div [ TA.class "compose-slot-group flex flex-wrap items-center gap-2 border-l-4 border-tertiary bg-surface-container-lowest rounded-md-corner-small pl-3 pr-2 py-2" ]
+                (groupLabel "text-tertiary" "Slots" :: List.map (slotControl ctx path model) chips)
 
 
-groupLabel : String -> Element (Grouping.PIs s) admittedBy msg
-groupLabel label =
-    TypedHtml.p [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ] [ TypedHtml.text label ]
+{-| A group's caption — the color class ties the caption to its group's
+left-border color (primary for Attributes, tertiary for Slots), reinforcing the
+§3.2 attributes-vs-slots distinction.
+-}
+groupLabel : String -> String -> Element (Grouping.PIs s) admittedBy msg
+groupLabel colorClass label =
+    TypedHtml.p [ TA.class ("text-label-sm uppercase tracking-wide " ++ colorClass) ] [ TypedHtml.text label ]
 
 
 {-| The edit-tag control: an icon button that toggles the change-component
@@ -786,7 +795,7 @@ pickerEntry reference name =
 pickerSection : (String -> Msg) -> ( String, List PickerEntry ) -> Element (Grouping.DivIs s) admittedBy Msg
 pickerSection onPick ( category, entries ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
-        (groupLabel category :: List.map (pickerItem onPick) entries)
+        (groupLabel "text-on-surface-variant" category :: List.map (pickerItem onPick) entries)
 
 
 pickerItem : (String -> Msg) -> PickerEntry -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
@@ -1068,15 +1077,28 @@ slotControl ctx path model info =
 
 {-| The add-child button itself — the same extra-small `M3e.button` (never a
 chip) for both the single-option case (fires the add directly) and the
-multi-option case (toggles the panel); only the `onClick` message differs. Its
-content is a leading `add` icon (never a literal "+") then the slot name, with
-the fill-count badge (only when the slot is non-empty) in its own
-`trailing-icon` slot.
+multi-option case (toggles the panel); only the `onClick` message differs.
+
+An EMPTY slot and a FILLED slot are categorically different chip kinds (IA
+review §3.2/§1.5, "stop overloading the `+`"): an empty slot leads with the
+`add` icon (its affordance is "add your first child") and carries no badge; a
+filled slot drops the `add` icon entirely and shows just its name + fill-count
+badge at the heavier `filled` weight (its content, not an add affordance).
+Marked `compose-slot-empty`/`compose-slot-filled` so the distinction is
+test-assertable.
+
 -}
 slotButton : Cem.Compose.SlotChipInfo -> Msg -> Element (M3e.Component.Button.Is s) admittedBy Msg
 slotButton info onClick =
     M3e.button
-        [ M3e.Attributes.size Value.extraSmall
+        [ M3e.Attributes.class
+            (if info.filled > 0 then
+                "compose-slot-filled"
+
+             else
+                "compose-slot-empty"
+            )
+        , M3e.Attributes.size Value.extraSmall
         , M3e.Attributes.variant
             (if info.filled > 0 then
                 Value.filled
@@ -1087,10 +1109,14 @@ slotButton info onClick =
         , M3e.Attributes.selected (info.filled > 0)
         , M3e.Events.onClick onClick
         ]
-        ([ M3e.icon [ TA.name "add" ] []
-         , M3e.text info.name
-         ]
-            ++ slotCountTrailing info
+        ((if info.filled > 0 then
+            []
+
+          else
+            [ M3e.icon [ TA.name "add" ] [] ]
+         )
+            ++ M3e.text info.name
+            :: slotCountTrailing info
         )
 
 
@@ -1141,12 +1167,12 @@ slotAddPanel ctx path slotName compose =
                 []
 
               else
-                groupLabel "Nest a component" :: List.map (nestButton ctx path slotName) componentNames
+                groupLabel "text-on-surface-variant" "Nest a component" :: List.map (nestButton ctx path slotName) componentNames
             , if List.isEmpty examples then
                 []
 
               else
-                groupLabel "Load an example" :: List.map (exampleButton ctx path slotName compose) examples
+                groupLabel "text-on-surface-variant" "Load an example" :: List.map (exampleButton ctx path slotName compose) examples
             ]
         )
 

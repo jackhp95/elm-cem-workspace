@@ -102,6 +102,34 @@ test("§1.2 diagnosis: identical unnamed/overline slot menus are correct-by-fact
   await expect(supportingPanel.getByRole("button", { name: "Heading", exact: true })).toBeVisible();
 });
 
+test("attributes and slots are visually separated, and empty vs filled slot chips differ (Part 3)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // (a) §3.2: the ATTRIBUTES and SLOTS groups are real, distinguishable
+  // structural kinds (primary- vs tertiary-bordered tinted containers), not
+  // just two captions — asserted via the stable marker classes.
+  await expect(page.locator(".compose-attr-group").first()).toBeVisible();
+  await expect(page.locator(".compose-slot-group").first()).toBeVisible();
+
+  // (b) §1.5/§3.2: a FILLED slot chip (the root list's "unnamed" holds the two
+  // starter listItems) drops the `add` icon and shows its count badge — it
+  // reads as content, not an add affordance. Its button also carries the
+  // `compose-slot-filled` marker.
+  const filledSlot = page.getByRole("button", { name: "unnamed" }).first();
+  await expect(filledSlot).toHaveClass(/compose-slot-filled/);
+  await expect(filledSlot.locator("m3e-badge")).toHaveCount(1);
+  await expect(filledSlot.locator('m3e-icon[name="add"]')).toHaveCount(0);
+
+  // (c) An EMPTY slot chip (a listItem's "overline") keeps the `add`
+  // affordance and shows no count badge — categorically the other chip kind.
+  const emptySlot = page.getByRole("button", { name: /overline/ }).first();
+  await expect(emptySlot).toHaveClass(/compose-slot-empty/);
+  await expect(emptySlot.locator('m3e-icon[name="add"]')).toHaveCount(1);
+  await expect(emptySlot.locator("m3e-badge")).toHaveCount(0);
+});
+
 test("setting an attribute updates both the live element and the snippet", async ({ page }) => {
   await page.goto("/components/compose");
 

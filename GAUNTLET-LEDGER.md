@@ -2675,3 +2675,16 @@ convention (D-009/D-021).
   (open `overline` then `supporting-text` on the same listItem: each shows Text + Heading, only one
   panel at a time) — locks both the correct-by-facts behavior and the no-leak structure.
   `compose.spec.ts` 17/17.
+
+- **Part 3: pass** (elm compile clean; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 18/18 on the production build). §3.2 + §1.5/§1.6: the Attributes and Slots groups
+  are now real, distinguishable structural kinds — each a container with a colored left border
+  (primary for Attributes, tertiary for Slots) + a faint `bg-surface-container-lowest` tint + a
+  color-matched caption, marked `compose-attr-group`/`compose-slot-group`. And empty vs filled slot
+  chips are categorically different: `slotButton` now leads with the `add` icon ONLY when
+  `info.filled == 0` (marker `compose-slot-empty`); a filled slot drops the `add` icon entirely and
+  shows just name + count badge at the heavier `filled` weight (`compose-slot-filled`), so the `+` is
+  no longer overloaded onto slots that already hold content. `groupLabel` gained a color-class
+  parameter (all call sites updated). New Playwright test asserts (a) both group-marker classes
+  present, (b) the root's FILLED `unnamed` slot has a badge + no `add` icon + `compose-slot-filled`,
+  (c) an EMPTY `overline` slot has the `add` icon + no badge + `compose-slot-empty`.
