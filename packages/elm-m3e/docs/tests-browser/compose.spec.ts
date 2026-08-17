@@ -183,6 +183,19 @@ test("child cards are indented per nesting level (Part 4 / §3.4)", async ({ pag
   expect(b2!.x).toBeGreaterThan(b1!.x);
 });
 
+test("the live preview has a labeled output frame (Part 5 / §3.5)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // §3.5: the rendered tree reads as an OUTPUT region, not incidental page
+  // copy — a labeled `.compose-preview` frame (accessible region + visible
+  // caption) that the test can locate, holding the live custom elements.
+  const preview = page.locator(".compose-preview");
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAttribute("aria-label", "Live preview");
+  await expect(preview.getByText("Live preview", { exact: true })).toBeVisible();
+  await expect(preview.locator("m3e-list")).toHaveCount(1);
+});
+
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 

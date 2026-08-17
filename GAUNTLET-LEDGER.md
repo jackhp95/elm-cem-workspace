@@ -2698,3 +2698,12 @@ convention (D-009/D-021).
   own path length). New Playwright test builds list > listItem > checkbox and asserts the depth-2
   card's `boundingBox().x` is strictly greater than the depth-1 card's — indentation objectively
   present, not just visually claimed.
+
+- **Part 5: pass** (elm compile clean; `check:review` clean; `compose.spec.ts` 20/20 on the
+  production build). §3.5: the rendered custom-element tree is wrapped in a labeled output frame
+  (`livePreview`) — a semantic `<section aria-label="Live preview">` (accessible region) with a
+  visible "Live preview" caption + a subtle bordered/tinted container, marked `compose-preview` — so
+  it reads as an output region rather than incidental page copy. `M3e.Unsafe.fromHtml` erasure is now
+  inside the frame. New Playwright test asserts the frame is visible, carries `aria-label="Live
+  preview"`, shows the visible caption, and contains the live `m3e-list`. Copy (heading "Live
+  preview") owned by the Opus builder per the plan's UX-copy note.

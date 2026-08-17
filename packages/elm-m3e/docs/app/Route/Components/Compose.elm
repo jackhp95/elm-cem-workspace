@@ -53,6 +53,7 @@ import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import TypedHtml.Component.Button
 import TypedHtml.Component.Grouping as Grouping
+import TypedHtml.Component.Sectioning as Sectioning
 import TypedHtml.Events as TE
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -354,9 +355,29 @@ screen ctx model =
     TypedHtml.div [ TA.class "space-y-4" ]
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
         , panelBar model
-        , M3e.Unsafe.fromHtml (Render.renderNode model.compose.root)
+        , livePreview model.compose.root
         , viewNode ctx [] model.compose.root model
         , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
+        ]
+
+
+{-| §3.5: the rendered custom-element tree, wrapped in a labeled output frame so
+it reads as "the live preview" rather than incidental page copy. A semantic
+`section` named "Live preview" (accessible region) with a visible caption + a
+subtle bordered/tinted container; the raw element tree is erased once through
+`M3e.Unsafe.fromHtml` inside it (which component is on screen is only known at
+runtime). Marked `compose-preview` for the test.
+-}
+livePreview : Cem.Compose.Node -> Element (Sectioning.SectionIs s) admittedBy Msg
+livePreview root =
+    TypedHtml.section
+        [ TA.class "compose-preview flex flex-col gap-2 rounded-md-corner-medium border border-outline-variant bg-surface-container-lowest p-4"
+        , Aria.label "Live preview"
+        ]
+        [ TypedHtml.p
+            [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ]
+            [ TypedHtml.text "Live preview" ]
+        , M3e.Unsafe.fromHtml (Render.renderNode root)
         ]
 
 
