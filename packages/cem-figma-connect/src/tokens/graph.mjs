@@ -286,12 +286,20 @@ export function splitDeclarations(css) {
 //   prose "[0,-1,-2,-3]".
 // baseUnit: --md-sys-density-size's value from sys/density.css.
 export function measureDensity(scopeCss, sysDensityCss) {
+  // Strip CSS comments first: both density files mention these tokens in their
+  // prose headers (e.g. "--md-sys-density-size:  0.25rem → base spatial unit"),
+  // which would otherwise pollute the measured value.
+  const stripComments = (css) => css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const scope = stripComments(scopeCss);
+  const sysDensity = stripComments(sysDensityCss);
+
   const domain = [];
   const re = /--md-sys-density-scale:\s*(-?\d+)\s*;/g;
   let m;
-  while ((m = re.exec(scopeCss))) domain.push(Number(m[1]));
+  while ((m = re.exec(scope))) domain.push(Number(m[1]));
   const uniqueSorted = [...new Set(domain)].sort((a, b) => b - a); // 0, -1, -2, -3
-  const sizeMatch = sysDensityCss.match(/--md-sys-density-size:\s*([^;]+);/);
+
+  const sizeMatch = sysDensity.match(/--md-sys-density-size:\s*([^;]+);/);
   const baseUnit = sizeMatch ? sizeMatch[1].trim() : null;
   return { domain: uniqueSorted, baseUnit };
 }
@@ -316,12 +324,26 @@ export function buildGraph(paths = {}) {
     if (file.endsWith(".css")) sysCssByFile[file] = readText(path.join(p.sysDir, file));
   }
   const colorCss = sysCssByFile["color.css"] ?? "";
+  const densityScopeCss = readText(p.densityScopeCssPath);
+  const sysDensityCss = sysCssByFile["density.css"] ?? "";
   const cemFacts = readJson(p.cemFactsPath);
 
   const seedNodes = buildSeedNodes(seedCss);
   const refNodes = buildRefNodes(paletteCss);
   const systemNodes = buildSystemNodes(sysCssByFile);
   const componentNodes = buildComponentNodes(cemFacts);
+
+  // L5: density is a first-class system family. Enrich the density-scale node
+  // with the MEASURED domain ([0,-1,-2,-3], parsed from density.css's scope
+  // utilities) + base unit (from sys/density.css) — replacing the density
+  // docs' prose generalization. Per-component minScale stays unmodeled (5a).
+  const density = measureDensity(densityScopeCss, sysDensityCss);
+  for (const node of systemNodes) {
+    if (node.name === "--md-sys-density-scale") {
+      node.domain = density.domain;
+      node.baseUnit = density.baseUnit;
+    }
+  }
 
   const nodes = [...seedNodes, ...refNodes, ...systemNodes, ...componentNodes].sort(
     (a, b) => TIER_RANK[a.tier] - TIER_RANK[b.tier] || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
@@ -346,6 +368,9 @@ export function buildGraph(paths = {}) {
       component: componentNodes.length,
     },
     componentCount: componentTags.size,
+    // L5: the measured density model (domain + base unit), also attached to the
+    // --md-sys-density-scale node. Surfaced at top level for easy consumption.
+    density,
     // System color roles that resolve to a literal (e.g. --md-sys-color-shadow
     // → --shadow → #000000), NOT a ref alias — an honest flag, never a
     // silently-missing edge (L3 acceptance: each sys color role has >=1 ref

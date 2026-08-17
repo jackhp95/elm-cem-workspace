@@ -11,7 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
-import { buildGraph, DEFAULT_PATHS } from "./graph.mjs";
+import { buildGraph, measureDensity, DEFAULT_PATHS } from "./graph.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const graphModule = path.join(here, "graph.mjs");
@@ -144,6 +144,46 @@ test("L4: component nodes are leaves — present, but never a source or target o
     graph.notes.some((n) => /edge-less.*Decision 2b/i.test(n) && /@m3e\/web dist/i.test(n)),
     "the edge-less component-tier reason must be recorded in graph.notes",
   );
+});
+
+// -- L5: density as a first-class system family, MEASURED (not hardcoded) -----
+
+test("L5: the density family carries a measured domain + base unit", () => {
+  const graph = buildGraph();
+
+  // Top-level density model.
+  assert.deepEqual(graph.density.domain, [0, -1, -2, -3]);
+  assert.equal(graph.density.baseUnit, "0.25rem");
+
+  // Attached to the --md-sys-density-scale system node too.
+  const scale = graph.nodes.find((n) => n.name === "--md-sys-density-scale");
+  assert.equal(scale.tier, "system");
+  assert.equal(scale.family, "density");
+  assert.deepEqual(scale.domain, [0, -1, -2, -3]);
+  assert.equal(scale.baseUnit, "0.25rem");
+
+  // --md-sys-density-size is in the same family.
+  const size = graph.nodes.find((n) => n.name === "--md-sys-density-size");
+  assert.equal(size.family, "density");
+});
+
+test("L5: the density domain/baseUnit are MEASURED from the CSS, not hardcoded", () => {
+  // Feed doctored CSS with a different scale set + base unit; the model must
+  // follow the source, proving it's parsed rather than a constant. Comments
+  // mentioning the tokens must NOT pollute the value.
+  const fakeScope = `
+    /* prose: --md-sys-density-scale: -9 and --md-sys-density-size: 99rem should be ignored */
+    @utility density-0 { --md-sys-density-scale: 0; }
+    @utility density-1 { --md-sys-density-scale: -1; }
+    @utility density-2 { --md-sys-density-scale: -2; }
+  `;
+  const fakeSys = `
+    /* --md-sys-density-size:  99rem → prose */
+    :root { --md-sys-density-size: 0.5rem; }
+  `;
+  const measured = measureDensity(fakeScope, fakeSys);
+  assert.deepEqual(measured.domain, [0, -1, -2], "domain follows the (doctored) source");
+  assert.equal(measured.baseUnit, "0.5rem", "base unit follows the (doctored) source, ignoring the comment");
 });
 
 test("L1: graph.mjs --check is byte-stable (committed == fresh regeneration)", () => {

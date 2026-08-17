@@ -7,6 +7,15 @@
     "component": 2251
   },
   "componentCount": 99,
+  "density": {
+    "domain": [
+      0,
+      -1,
+      -2,
+      -3
+    ],
+    "baseUnit": "0.25rem"
+  },
   "documentedLiteralSystemColors": [
     "--md-sys-color-scrim",
     "--md-sys-color-shadow"
@@ -574,7 +583,14 @@
     {
       "name": "--md-sys-density-scale",
       "tier": "system",
-      "family": "density"
+      "family": "density",
+      "domain": [
+        0,
+        -1,
+        -2,
+        -3
+      ],
+      "baseUnit": "0.25rem"
     },
     {
       "name": "--md-sys-density-size",
