@@ -107,6 +107,7 @@ docs/app/Compose/Codegen.elm
 docs/tests-browser/compose.spec.ts
 docs/app/Compose/FromHtml.elm
 docs/tests/FromHtmlTest.elm
+src/M3e/Coerce.elm
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -154,6 +155,15 @@ EOF
 # docs/tests/FromHtmlTest.elm — Compose G-Ex1: worker-test for the parser
 #   above; new to this monorepo's Compose POC, absent from the upstream
 #   elm-m3e checkout.
+# src/M3e/Coerce.elm — GENERATED, and new to the workspace only because the
+#   generator was broken upstream. `_coerce` in config/slots.json has always
+#   declared `asButton` (Chip->button), but elm-cem's `coerceModule` was
+#   implemented and never appended to the emitted file list, so M3e.Coerce was
+#   never written — while five docs pages (Glossary, CheatSheet, Seams,
+#   TheLayers, and the Compose route's prose) documented it as a shipped escape
+#   hatch. The generator is fixed here, so the module now exists; the upstream
+#   snapshot predates the fix and therefore lacks the file. Remove this entry
+#   once the elm-cem fix has propagated upstream and the snapshot advances.
 # elm-m3e-families/ — the FAMILIES layer (L3): a monorepo-only nested package
 # elm-cem generates alongside the components (its own README/LICENSE/elm.json +
 # one M3e/Family/*.elm module per component family). Like elm-m3e-icons/ it is a

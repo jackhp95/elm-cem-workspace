@@ -138,6 +138,7 @@
         "M3e.Build.Tree",
         "M3e.Build.TreeItem",
         "M3e.Build.YearView",
+        "M3e.Coerce",
         "M3e.Events",
         "M3e.Kind",
         "M3e.Unsafe",

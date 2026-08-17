@@ -104,6 +104,13 @@ files brand =
                 ++ [ factsModule brand ]
                 ++ unsafeModule brand
                 ++ actionModule brand
+                -- WS6/CX5: config-blessed brand crossings (`_coerce`). `coerceModule`
+                -- was fully specified (signature, guard, doc comment) but never
+                -- threaded into `allFiles` — a config with a `_coerce` block validated
+                -- cleanly and silently emitted no `<Lib>.Coerce` module at all. Omits
+                -- itself already when `brand.coercions` is empty, matching the Values
+                -- (K6) and Build (R3) conditionals above.
+                ++ coerceModule brand
                 -- R3: the shared pipe-builder mechanics live once per brand.
                 -- Only emitted when at least one rich per-component module
                 -- exists (native/home-only brands have no `Builder`).

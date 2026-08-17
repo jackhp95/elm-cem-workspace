@@ -29,6 +29,7 @@ type alias Attrs =
 
 type alias Content =
     { heading : Brand
+    , sharedPhrasing : Shared
     , sharedText : Shared
     }
 
