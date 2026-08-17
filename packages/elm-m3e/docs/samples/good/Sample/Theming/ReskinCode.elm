@@ -32,6 +32,7 @@ shown1_ =
         , Theme.contrast M3e.Values.medium -- a touch more contrast for the new palette
         , Theme.density -1                 -- slightly more compact
         ]
-        -- Shapes are not a Theme input: set the corner where the surface is built,
-        -- e.g. TA.class "rounded-md-corner-large" on that surface.
+        -- Shapes are not a Theme input: set the corner on the COMPONENT that owns
+        -- the surface -- its shape attribute, or its own generated utility, e.g.
+        -- TA.class "m3e-card-shape-md-corner-large" on that card.
         [ appBody ]

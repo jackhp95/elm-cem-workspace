@@ -257,7 +257,7 @@ M3e.card
     [ M3e.Attributes.variant M3e.Values.filled
     , TypedHtml.Attributes.class "m3e-card-shape-md-corner-large"
     ]
-    [ body ]
+    rows
 
 -- WRONG: token classes hand-painting a card. Themed, yes — but it is an
 -- `m3e-card` reimplemented in CSS, with no state layer and no density.
