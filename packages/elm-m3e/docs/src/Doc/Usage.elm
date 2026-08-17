@@ -175,7 +175,7 @@ exampleBlock model ( index, ex ) =
             Dict.get index model.surfaces |> Maybe.withDefault (defaultSurfaceFor ex)
     in
     TypedHtml.div [ TA.class "space-y-3" ]
-        [ TypedHtml.p [ TA.class "max-w-2xl doc-muted" ] [ M3e.text ex.title ]
+        [ TypedHtml.p [ TA.class "max-w-2xl" ] [ M3e.text ex.title ]
         , Doc.showcase (Doc.rawPreview ex.html)
         , surfaceTabs index surface ex
         , Doc.Slider.slidingPanels

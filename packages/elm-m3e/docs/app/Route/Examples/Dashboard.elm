@@ -399,7 +399,7 @@ pageHeader =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
         [ Doc.sectionLabelCaps "Overview"
         , M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small ] [ M3e.text "Good morning, Jack" ]
-        , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text "Here is how your business is doing today." ]
+        , TypedHtml.span [] [ M3e.text "Here is how your business is doing today." ]
         ]
 
 
@@ -418,7 +418,7 @@ kpiCard k =
     M3e.card [ M3e.Attributes.variant Value.filled ]
         [ M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-2 p-4" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-muted" ] [ M3e.text k.label ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text k.label ]
                 , M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small ] [ M3e.text k.value ]
                 , trendDelta k.trend k.delta
                 ]
@@ -492,7 +492,7 @@ budgetRow b =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div [ TA.class "flex items-center justify-between gap-2" ]
             [ TypedHtml.span [] [ M3e.text b.category ]
-            , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-muted" ] [ M3e.text b.amount ]
+            , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text b.amount ]
             ]
         , M3e.linearProgressIndicator
             [ M3e.Component.LinearProgressIndicator.value b.used, M3e.Attributes.max b.max ]

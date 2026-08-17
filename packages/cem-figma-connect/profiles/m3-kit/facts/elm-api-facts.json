@@ -3942,6 +3942,9 @@
         "actions"
       ],
       "slotKinds": {
+        "header": [
+          "expansionHeader"
+        ],
         "toggle-icon": [
           "shared:icon"
         ]

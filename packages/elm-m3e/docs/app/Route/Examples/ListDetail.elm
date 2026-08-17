@@ -38,8 +38,10 @@ import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
+import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import TypedHtml.Component.Grouping
+import TypedHtml.Values
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -241,19 +243,20 @@ against the base surface.
 -}
 contactRow : Int -> Int -> Contact -> Element { s | listAction : M3e.Kind.Brand } adm_ Msg
 contactRow selected index contact =
-    let
-        rowSurface : String
-        rowSurface =
-            if index == selected then
-                "doc-row-selected"
-
-            else
-                ""
-    in
     M3e.listAction
-        [ TA.class rowSurface
-        , M3e.Component.ListAction.onClick (SelectContact index)
-        ]
+        (M3e.Component.ListAction.onClick (SelectContact index)
+            :: (if index == selected then
+                    -- `m3e-list-action` exposes no selected/activated attribute,
+                    -- so the selected row can no longer paint itself. It still
+                    -- ANNOUNCES itself: aria-current keeps the state real for
+                    -- assistive tech instead of dropping it entirely. The visual
+                    -- marker is an m3e gap, filed, not recreated in CSS.
+                    [ Aria.current TypedHtml.Values.true ]
+
+                else
+                    []
+               )
+        )
         [ M3e.Component.ListAction.leading (M3e.avatar [] [ M3e.text contact.initials ])
         , M3e.text contact.name
         , M3e.Component.ListAction.supportingText (M3e.text contact.role)
@@ -277,7 +280,7 @@ header contact =
     TypedHtml.div [ TA.class "flex flex-col items-center gap-3 pt-2" ]
         [ M3e.avatar [] [ M3e.text contact.initials ]
         , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text contact.name ]
-        , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text contact.role ]
+        , TypedHtml.span [] [ M3e.text contact.role ]
         ]
 
 

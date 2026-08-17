@@ -389,7 +389,7 @@ rootExplainer dismissed =
                 [ M3e.Attributes.variant Value.outlined ]
                 [ TypedHtml.div [ TA.class "flex items-center gap-2 px-3 py-2" ]
                     [ M3e.icon [ TA.name "info" ] []
-                    , TypedHtml.span [ TA.class "doc-muted flex-1" ]
+                    , TypedHtml.span [ TA.class "flex-1" ]
                         [ TypedHtml.text "The root card can’t be reordered or removed; use the sidebar to start over with a different root component." ]
                     , M3e.iconButton
                         [ Aria.label "Dismiss"
@@ -420,7 +420,6 @@ livePreview root =
                 [ M3e.heading
                     [ M3e.Attributes.variant Value.label
                     , M3e.Attributes.size Value.small
-                    , TA.class "doc-muted"
                     ]
                     [ M3e.text "Live preview" ]
                 , M3e.Unsafe.fromHtml (Render.renderNode root)
@@ -455,7 +454,7 @@ panelBar model =
             , M3e.Events.onClick TogglePrefill
             ]
             []
-        , TypedHtml.span [ TA.class "doc-muted" ]
+        , TypedHtml.span []
             [ TypedHtml.text "Prefill examples" ]
         ]
 
@@ -687,7 +686,7 @@ attrGroup path model =
         chips ->
             TypedHtml.div [ TA.class "compose-attr-group flex flex-col gap-2" ]
                 (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                    (groupLabel "doc-accent" "Attributes" :: List.map (attrButtonElement path) chips)
+                    (groupLabel "" "Attributes" :: List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
@@ -712,7 +711,7 @@ slotGroup ctx path model =
 
         chips ->
             TypedHtml.div [ TA.class "compose-slot-group flex flex-wrap items-center gap-2" ]
-                (groupLabel "doc-accent-tertiary" "Slots" :: List.map (slotControl ctx path model) chips)
+                (groupLabel "" "Slots" :: List.map (slotControl ctx path model) chips)
 
 
 {-| A group's caption — the color class ties the caption to its group's
@@ -856,7 +855,7 @@ componentPicker config =
                         []
                     ]
                     :: (if List.isEmpty sections then
-                            [ TypedHtml.p [ TA.class "doc-muted px-2" ] [ TypedHtml.text "No matches" ] ]
+                            [ TypedHtml.p [ TA.class "px-2" ] [ TypedHtml.text "No matches" ] ]
 
                         else
                             List.map (pickerSection config.onPick) sections
@@ -904,7 +903,7 @@ pickerEntry reference name =
 pickerSection : (String -> Msg) -> ( String, List PickerEntry ) -> Element (Grouping.DivIs s) admittedBy Msg
 pickerSection onPick ( category, entries ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
-        [ groupLabel "doc-muted" category
+        [ groupLabel "" category
         , M3e.list [] (List.map (pickerItem onPick) entries)
         ]
 
@@ -1295,14 +1294,14 @@ slotAddPanel ctx path slotName compose =
                         []
 
                       else
-                        [ groupLabel "doc-muted" "Nest a component"
+                        [ groupLabel "" "Nest a component"
                         , M3e.list [] (List.map (nestButton ctx path slotName) componentNames)
                         ]
                     , if List.isEmpty examples then
                         []
 
                       else
-                        [ groupLabel "doc-muted" "Load an example"
+                        [ groupLabel "" "Load an example"
                         , M3e.list [] (List.map (exampleButton ctx path slotName compose) examples)
                         ]
                     ]

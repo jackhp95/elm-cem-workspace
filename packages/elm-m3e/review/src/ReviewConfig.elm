@@ -315,15 +315,24 @@ what a seam or kit may contain. The structural boundary rules
 gate) likewise enforce WHERE crossings live, not WHAT they contain, so they are
 in-bounds too.
 
-**`Route/Styles/` and `Route/Guide/Theming.elm` are exempt.** Those pages apply
-token utilities as LIVE SPECIMENS — a typography page whose job is to show what
-`text-body-lg` renders has to actually apply `text-body-lg`, and the theming
-chapter teaches the Tailwind bridge by demonstrating it. Linting them would
-delete the documentation of a real feature rather than fix a styling mistake.
-The exemption is per-directory/file, so it necessarily also lifts the
-proprietary-token check on those pages; that is acceptable because they carry no
-`ds-`/`t-` tokens, and splitting the rule in two to recover it would buy nothing
-today.
+**`Route/Styles/` is exempt.** Those pages apply token utilities as LIVE
+SPECIMENS — a typography page whose job is to show what `text-body-lg` renders has
+to actually apply `text-body-lg`. Linting them would delete the documentation of a
+real feature rather than fix a styling mistake. The exemption is per-directory, so
+it necessarily also lifts the proprietary-token check there; acceptable because
+those pages carry no `ds-`/`t-` tokens, and splitting the rule in two to recover it
+would buy nothing today.
+
+`Route/Guide/Theming.elm` was exempt too and **is not any more.** It was exempt on
+the theory that it "teaches the Tailwind bridge by demonstrating it" — but what it
+actually taught was the anti-pattern: it presented `bg-primary text-on-primary` and
+`rounded-md-corner-large` as _the right move_, and its "Paint with roles, not hex"
+section demonstrated colour roles as `class` tokens on bare `<div>`s. The exemption
+was hiding a page that contradicted the policy the rest of the app is held to. The
+prose now teaches the real order (component → its attributes/slots → its own `m3e-*`
+property → file a gap), its wrong-example blocks are string literals the rule
+correctly ignores, and its live `class` calls are layout-only — so it passes on its
+own merits and needs no exemption.
 
 -}
 materialDiscipline : List Rule
@@ -331,16 +340,13 @@ materialDiscipline =
     [ NoProprietaryDsClasses.rule
         |> Rule.ignoreErrorsForDirectories
             [ "app/Route/Styles/", "docs/app/Route/Styles/" ]
+        -- The theme editor's own live previews, exempt for exactly the same
+        -- reason as `Route/Styles/`: the swatch that shows you which corner
+        -- radius you just picked has to APPLY that radius, and the type-scale
+        -- preview has to apply the computed font size. They are specimens of
+        -- the token being edited, not surfaces that forgot to use a component.
         |> Rule.ignoreErrorsForFiles
-            [ "app/Route/Guide/Theming.elm"
-            , "docs/app/Route/Guide/Theming.elm"
-
-            -- The theme editor's own live previews, exempt for exactly the same
-            -- reason as `Route/Styles/`: the swatch that shows you which corner
-            -- radius you just picked has to APPLY that radius, and the type-scale
-            -- preview has to apply the computed font size. They are specimens of
-            -- the token being edited, not surfaces that forgot to use a component.
-            , "app/Theme/Sections/Shape.elm"
+            [ "app/Theme/Sections/Shape.elm"
             , "docs/app/Theme/Sections/Shape.elm"
             , "app/Theme/Sections/Typography.elm"
             , "docs/app/Theme/Sections/Typography.elm"

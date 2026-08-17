@@ -682,7 +682,6 @@ colorOptions model =
             [ M3e.heading
                 [ M3e.Attributes.variant Value.label
                 , M3e.Attributes.size Value.small
-                , TypedHtml.Attributes.class "doc-muted"
                 ]
                 [ M3e.text "Source color" ]
             ]
@@ -742,16 +741,18 @@ across hues.
 colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 colorAvatar model hex =
     TypedHtml.div
-        [ TypedHtml.Attributes.class
-            ("relative inline-flex "
-                ++ (if model.seed == hex then
-                        "theme-swatch-selected"
+        (TypedHtml.Attributes.class "relative inline-flex"
+            :: (if model.seed == hex then
+                    -- `m3e-avatar` has no selected state and no outline property,
+                    -- so the selected swatch can no longer show a ring. It still
+                    -- announces itself via aria-current; the visual marker is a
+                    -- filed m3e gap rather than a CSS class.
+                    [ Aria.current TypedHtml.Values.true ]
 
-                    else
-                        ""
-                   )
-            )
-        ]
+                else
+                    []
+               )
+        )
         [ TypedHtml.div []
             [ M3e.theme [ M3e.Component.Theme.color hex ]
                 [ M3e.avatar

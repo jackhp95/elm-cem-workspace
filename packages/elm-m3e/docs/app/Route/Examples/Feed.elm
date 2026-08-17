@@ -263,12 +263,11 @@ postCard post =
                 [ M3e.heading
                     [ M3e.Attributes.variant Value.label
                     , M3e.Attributes.size Value.small
-                    , TA.class "doc-accent"
                     ]
                     [ M3e.text (String.toUpper post.category) ]
                 , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text post.title ]
-                , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text post.excerpt ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "doc-muted" ] [ M3e.text (post.author ++ " · " ++ post.when) ]
+                , TypedHtml.span [] [ M3e.text post.excerpt ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text (post.author ++ " · " ++ post.when) ]
                 ]
             )
         ]

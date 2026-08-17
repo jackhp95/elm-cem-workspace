@@ -55,7 +55,40 @@ three buckets:
 
 Unknown tokens are **allowed** deliberately. Tailwind's painting surface is
 enumerable, a project's semantic hooks are not, so denying by styling family
-catches the regressions that matter without flagging every new CSS/test hook.
+catches the regressions that matter without flagging every new test hook.
+
+
+## A custom CSS class is NOT the way out of this rule
+
+Read this before "fixing" an error by inventing a class name.
+
+Because unknown tokens pass, `class "doc-muted"` with a matching
+`.doc-muted { color: var(--md-sys-color-on-surface-variant) }` in `style.css`
+will silence this rule. **That is worse than the error it silences**, and it is
+explicitly forbidden: hand-written CSS is never an acceptable styling mechanism in
+this app, not even when built from `--md-sys-*` design tokens. A class in a
+stylesheet is invisible at the call site, cannot be purged when it stops being
+used, and — worst — it hides the missing component knob that should have been
+reported.
+
+The order to reach for, and it is not a menu:
+
+1.  the **m3e component** that owns the surface (`m3e-card` for a panel,
+    `m3e-list` + `m3e-list-item` for rows, `m3e-divider` for a rule);
+2.  that component's **attributes and slots** (`variant`, `size`, and named slots
+    like `m3e-list-item`'s `supporting-text`, which already carries the
+    de-emphasized colour role _and_ its type scale, so it needs no class);
+3.  that component's **own CSS custom properties**, via the generated `m3e-*`
+    utilities (`m3e-filled-card-container-color-primary-container`,
+    `m3e-card-shape-md-corner-large`) — ordinary Tailwind classes, one per public
+    `--m3e-*` property, and the only sanctioned way to set a visual value from a
+    class;
+4.  nothing. If 1–3 cannot express it, that is an **m3e gap to file**. Leave it
+    unstyled and report it.
+
+This rule cannot see stylesheets, so step 4 is enforced by review, not by the
+compiler. If you are reading this because the rule flagged you, the fix is up the
+list, never sideways into CSS.
 
 
 ## Known limit

@@ -178,7 +178,7 @@ primary : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 primary =
     TypedHtml.div [ TA.class "flex flex-1 flex-col gap-4 min-w-0" ]
         [ M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Project overview" ]
-        , TypedHtml.span [ TA.class "doc-muted" ]
+        , TypedHtml.span []
             [ M3e.text "The Rally redesign moves the metric cards to the top row and swaps the donut for a stacked bar so the trend reads at a glance. This quarter's focus is the motion pass and the adaptive navigation." ]
         , summaryCard
         , milestonesCard
@@ -205,10 +205,9 @@ metric value label =
         [ M3e.heading
             [ M3e.Attributes.variant Value.headline
             , M3e.Attributes.size Value.medium
-            , TA.class "doc-accent"
             ]
             [ M3e.text value ]
-        , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-muted" ] [ M3e.text label ]
+        , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text label ]
         ]
 
 

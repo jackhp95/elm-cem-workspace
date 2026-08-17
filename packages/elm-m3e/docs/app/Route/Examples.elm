@@ -120,7 +120,7 @@ view _ _ =
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
                 , TypedHtml.div [ TA.class "max-w-2xl" ]
-                    [ TypedHtml.p [ TA.class "doc-muted" ]
+                    [ TypedHtml.p []
                         [ M3e.text "Examples are composed, real-world app screens that show many elm-m3e components working together — the way the library is meant to be used. Each one is a real, responsive route, not a screenshot." ]
                     ]
                 ]

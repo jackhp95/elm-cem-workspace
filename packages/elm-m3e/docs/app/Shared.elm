@@ -702,7 +702,7 @@ skipLink : Element { s | sharedText : M3e.Kind.Shared } adm_ msg
 skipLink =
     TypedHtml.a
         [ TypedHtml.Attributes.href "#main-content"
-        , TypedHtml.Attributes.class "skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
+        , TypedHtml.Attributes.class "sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
         ]
         [ M3e.text "Skip to main content" ]
 
@@ -1040,19 +1040,19 @@ searchResults : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admitted
 searchResults model =
     case model.searchIndex of
         Nothing ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Loading..." ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Loading..." ]
 
         Just (Err _) ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Search unavailable" ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Search unavailable" ]
 
         Just (Ok entries) ->
             if String.isEmpty (String.trim model.searchQuery) then
-                TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Type to search" ]
+                TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Type to search" ]
 
             else
                 case filterSearchEntries model.searchQuery entries of
                     [] ->
-                        TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "No results" ]
+                        TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "No results" ]
 
                     matches ->
                         TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1 p-2" ]
@@ -1099,13 +1099,13 @@ searchResultLink : SearchEntry -> Element { s | sharedText : M3e.Kind.Shared, sh
 searchResultLink entry =
     TypedHtml.a
         [ TypedHtml.Attributes.href (entry.url ++ (entry.anchor |> Maybe.map (\a -> "#" ++ a) |> Maybe.withDefault ""))
-        , TypedHtml.Attributes.class "search-result-link flex flex-col gap-0.5 px-3 py-2"
+        , TypedHtml.Attributes.class "flex flex-col gap-0.5 px-3 py-2"
         , TypedHtml.Events.onClick CloseSearch
         ]
         (M3e.text (Maybe.withDefault entry.title entry.heading)
             :: (case entry.heading of
                     Just _ ->
-                        [ TypedHtml.div [ TypedHtml.Attributes.class "doc-muted" ] [ M3e.text entry.title ] ]
+                        [ TypedHtml.div [] [ M3e.text entry.title ] ]
 
                     Nothing ->
                         []

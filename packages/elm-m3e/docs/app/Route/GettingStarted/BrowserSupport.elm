@@ -69,7 +69,7 @@ supportRow : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) 
 supportRow browser note =
     TypedHtml.div [ TA.class "flex items-baseline justify-between gap-4 py-2.5" ]
         [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small ] [ M3e.text browser ]
-        , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text note ]
+        , TypedHtml.span [] [ M3e.text note ]
         ]
 
 
@@ -95,7 +95,7 @@ view _ _ =
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
-                , TypedHtml.p [ TA.class "doc-muted" ]
+                , TypedHtml.p []
                     [ M3e.text "elm-m3e renders @m3e/web custom elements, so it runs anywhere standard Web Components and ES modules run — the modern-browser baseline." ]
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]

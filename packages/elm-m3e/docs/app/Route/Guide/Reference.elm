@@ -142,7 +142,7 @@ view app _ =
     View.fromElement "Full API reference"
         (Doc.pane
             [ pageHeading
-            , TypedHtml.div [ TA.class "mt-2 max-w-2xl doc-muted" ]
+            , TypedHtml.div [ TA.class "mt-2 max-w-2xl" ]
                 [ TypedHtml.p []
                     [ M3e.text "Every "
                     , TypedHtml.code [] [ M3e.text "M3e.*" ]
@@ -174,7 +174,7 @@ twoForms =
         [ M3e.Component.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
         [ M3e.Component.Card.content
             (TypedHtml.div [ TA.class "space-y-2" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-accent" ] [ M3e.text "Two forms" ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "Two forms" ]
                 , Doc.markdown twoFormsText
                 ]
             )
@@ -213,7 +213,7 @@ barrelBlock c =
         [ TA.id c.slug, TA.class "mt-12 scroll-mt-6 space-y-6" ]
         [ M3e.divider [] []
         , M3e.heading
-            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2, TA.class "doc-accent" ]
+            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2 ]
             [ M3e.text (c.moduleName ++ "  · the barrel") ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , barrelGroup "Component constructors" isBarrelConstructor c.members
@@ -268,7 +268,7 @@ componentBlock c =
         [ TA.id c.slug, TA.class "scroll-mt-6 space-y-4" ]
         [ M3e.divider [] []
         , M3e.heading
-            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2, TA.class "doc-accent" ]
+            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2 ]
             [ M3e.text c.moduleName ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , TypedHtml.div [ TA.class "space-y-3" ]
@@ -318,6 +318,6 @@ prose layoutCls bodyCls s =
                 (\para ->
                     TypedHtml.p
                         [ TA.class "mt-2 first:mt-0 whitespace-pre-line" ]
-                        [ TypedHtml.span [ TA.class (bodyCls ++ " doc-muted") ] [ M3e.text para ] ]
+                        [ TypedHtml.span [ TA.class (bodyCls ++ "") ] [ M3e.text para ] ]
                 )
         )

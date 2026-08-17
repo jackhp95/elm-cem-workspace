@@ -77,7 +77,7 @@ view _ _ =
             [ TypedHtml.div [ TA.class "space-y-10" ]
                 [ TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.pageHeading "Cheat sheet"
-                    , TypedHtml.div [ TA.class "max-w-2xl doc-muted" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown intro ]
                     , Doc.userlandNote
                     ]
                 , card "The surfaces" [ Doc.markdown layers ]

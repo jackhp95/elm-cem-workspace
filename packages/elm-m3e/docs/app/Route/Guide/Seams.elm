@@ -207,7 +207,7 @@ view _ _ =
             [ TypedHtml.div [ TypedHtml.Attributes.class "space-y-12" ]
                 [ TypedHtml.section [ TypedHtml.Attributes.class "space-y-4" ]
                     [ Doc.pageHeading "Your own seam — one place for your escapes"
-                    , TypedHtml.div [ TypedHtml.Attributes.class "max-w-2xl doc-muted" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TypedHtml.Attributes.class "max-w-2xl" ] [ Doc.markdown intro ]
                     ]
                 , TypedHtml.section [ TypedHtml.Attributes.class "space-y-4" ]
                     [ Doc.markdown userland

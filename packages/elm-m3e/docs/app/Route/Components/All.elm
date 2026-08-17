@@ -196,11 +196,11 @@ overview d =
                 ++ " categories"
     in
     TypedHtml.div [ TA.class "max-w-2xl space-y-6" ]
-        [ TypedHtml.p [ TA.class "doc-muted" ]
+        [ TypedHtml.p []
             [ M3e.text "This page stacks every component's live Usage examples on a single page. Loading them all at once upgrades hundreds of interactive custom elements, so it can take a moment to become fully interactive." ]
         , TypedHtml.p []
             [ M3e.text summary ]
-        , TypedHtml.p [ TA.class "doc-muted" ]
+        , TypedHtml.p []
             [ M3e.text (Shared.componentCategories |> List.map Tuple.first |> String.join " · ") ]
         , M3e.button
             [ M3e.Attributes.variant Value.filled

@@ -89,7 +89,7 @@ view _ _ =
             [ TypedHtml.div [ TA.class "space-y-12" ]
                 [ TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.pageHeading "Accessibility you can't forget"
-                    , TypedHtml.div [ TA.class "max-w-2xl doc-muted" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown intro ]
                     ]
                 , TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.markdown labeled

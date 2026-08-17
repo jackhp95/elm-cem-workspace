@@ -239,7 +239,7 @@ appBar : Model -> Element { s | appBar : M3e.Kind.Brand } adm_ (PagesMsg Msg)
 appBar model =
     M3e.appBar
         [ TA.class "px-2" ]
-        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True, TA.class "doc-accent" ] [])
+        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True ] [])
         , M3e.Component.AppBar.title (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Maru Market" ])
         , M3e.Component.AppBar.trailing (iconAction "search")
         , M3e.Component.AppBar.trailing (cartAction model.cart)
@@ -403,7 +403,7 @@ productCard product =
         , M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-0.5 px-1" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text product.name ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-muted" ] [ M3e.text product.category ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text product.category ]
                 ]
             )
         , M3e.Component.Card.actions
@@ -411,7 +411,6 @@ productCard product =
                 [ M3e.heading
                     [ M3e.Attributes.variant Value.title
                     , M3e.Attributes.size Value.large
-                    , TA.class "doc-accent"
                     ]
                     [ M3e.text product.price ]
                 , M3e.iconButton

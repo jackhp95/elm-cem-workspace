@@ -357,7 +357,7 @@ hero =
         [ M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-4 p-6 md:p-8" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Where to next?" ]
-                , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text "Search destinations, dates, and guests." ]
+                , TypedHtml.span [] [ M3e.text "Search destinations, dates, and guests." ]
                 , searchBar
                 ]
             )
@@ -417,13 +417,12 @@ placeCard place =
             , M3e.Component.Card.content
                 (TypedHtml.div [ TA.class "flex flex-col gap-2" ]
                     [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text place.name ]
-                    , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text place.region ]
+                    , TypedHtml.span [] [ M3e.text place.region ]
                     , TypedHtml.div [ TA.class "flex items-center justify-between" ]
                         [ ratingChip place.rating
                         , M3e.heading
                             [ M3e.Attributes.variant Value.label
                             , M3e.Attributes.size Value.large
-                            , TA.class "doc-accent"
                             ]
                             [ M3e.text place.price ]
                         ]

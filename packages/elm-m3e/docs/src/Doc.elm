@@ -103,7 +103,7 @@ codeBlock lang s =
 
         wrapperClass : String
         wrapperClass =
-            "overflow-x-auto doc-code-block p-4"
+            "overflow-x-auto p-4"
     in
     -- Auto-derived folding: the fold tree is computed from the raw
     -- string and highlighted per line, so we assemble nested `<details>`
@@ -241,7 +241,7 @@ recapBox md =
                 , M3e.Component.Heading.size Value.large
                 ]
                 [ M3e.text "Recap" ]
-            , TypedHtml.div [ TA.class "doc-muted" ] [ markdown md ]
+            , TypedHtml.div [] [ markdown md ]
             ]
         ]
 
@@ -256,7 +256,6 @@ sectionLabel s =
     M3e.heading
         [ M3e.Component.Heading.variant Value.label
         , M3e.Component.Heading.size Value.large
-        , TA.class "doc-muted"
         ]
         [ M3e.text s ]
 
@@ -319,7 +318,7 @@ callout label body =
                 , M3e.Component.Heading.size Value.medium
                 ]
                 [ M3e.text label ]
-            , TypedHtml.div [ TA.class "doc-prose doc-muted" ]
+            , TypedHtml.div [ TA.class "doc-prose" ]
                 (List.map M3e.Unsafe.fromHtml (markdownBody body))
             ]
         ]
@@ -370,16 +369,16 @@ its own docs — exactly this pill's job), but its producer kind
 M3e.Kind.Shared }` signature (verified against the compiler: the `assistChip`
 tag is an EXTRA field a rigid `s` can't absorb), and that signature is pinned
 verbatim by `app/Route/Guide.elm`'s `chapterLink`, outside this burn-down's file
-scope. So this stays a native `<a>`, carrying `doc-pill` — the token-backed
-pill chrome (shape, border, hover state, label type scale) style.css now
-provides for exactly this case.
+scope. So this stays a native `<a>` with layout classes only. Its former pill
+chrome (shape, border, hover state, label type scale) is dropped rather than
+recreated in a stylesheet — filed as an m3e gap, because the fix is for
+`m3e-assist-chip` to be reachable here, not for this app to own CSS.
 
 -}
 anchorPill : { href : String, label : String } -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
 anchorPill link =
     TypedHtml.a
         [ TA.href link.href
-        , TA.class "doc-pill"
         ]
         [ M3e.text link.label ]
 

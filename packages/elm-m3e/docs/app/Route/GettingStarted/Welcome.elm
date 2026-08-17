@@ -139,7 +139,7 @@ hero =
             ]
             [ M3e.text "Type-safe Material 3 Expressive for Elm" ]
         , TypedHtml.div [ TA.class "max-w-2xl" ]
-            [ TypedHtml.p [ TA.class "doc-muted" ]
+            [ TypedHtml.p []
                 [ M3e.text "Material 3 Expressive for Elm, over matraic's "
                 , TypedHtml.code [] [ M3e.text "@m3e/web" ]
                 , M3e.text " web components — where invalid UIs don't compile. Typed slots, enforced accessible names, and docs whose every example is machine-proven against the real components."
@@ -181,7 +181,7 @@ highlightCard iconName cardTitle cardBody =
         , M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex gap-3" ]
                 [ TypedHtml.div [ TA.class "shrink-0" ]
-                    [ M3e.icon [ M3e.Component.Icon.name iconName, TA.class "doc-accent" ] [] ]
+                    [ M3e.icon [ M3e.Component.Icon.name iconName ] [] ]
                 , TypedHtml.p [] [ M3e.text cardBody ]
                 ]
             )
@@ -215,6 +215,6 @@ statusGrid : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
 statusGrid =
     TypedHtml.section [ TA.class "space-y-3" ]
         [ Doc.sectionHeadingWithId (Doc.slugify "Status") "Status"
-        , TypedHtml.div [ TA.class "max-w-2xl doc-muted" ]
+        , TypedHtml.div [ TA.class "max-w-2xl" ]
             [ Doc.markdown "Prerelease — breaking changes are embraced while the API settles. Every example in these docs is round-tripped against the real components; the [report](/guide/roundtrip) shows the current score." ]
         ]

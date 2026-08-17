@@ -52,6 +52,7 @@ import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import TypedHtml.Component.Grouping
 import TypedHtml.Component.Sectioning
+import TypedHtml.Values
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -458,19 +459,18 @@ divider =
 
 messageRow : Int -> Int -> Message -> Element { s | listAction : M3e.Kind.Brand } adm_ Msg
 messageRow selected index message =
-    let
-        rowSurface : String
-        rowSurface =
-            if index == selected then
-                "doc-row-selected"
-
-            else
-                ""
-    in
     M3e.listAction
-        [ TA.class rowSurface
-        , M3e.Component.ListAction.onClick (SelectMessage index)
-        ]
+        (M3e.Component.ListAction.onClick (SelectMessage index)
+            :: (if index == selected then
+                    -- See ListDetail.contactRow: `m3e-list-action` has no
+                    -- selected attribute, so selection survives as aria-current
+                    -- rather than as a hand-painted background.
+                    [ Aria.current TypedHtml.Values.true ]
+
+                else
+                    []
+               )
+        )
         [ M3e.Component.ListAction.leading (M3e.avatar [] [ M3e.text message.initials ])
         , M3e.Component.ListAction.overline (M3e.text message.sender)
         , M3e.text message.subject
@@ -497,13 +497,13 @@ readingPane message =
             [ M3e.avatar [] [ M3e.text message.initials ]
             , TypedHtml.div [ TA.class "flex flex-col" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text message.sender ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "doc-muted" ] [ M3e.text ("to me · " ++ message.time) ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text ("to me · " ++ message.time) ]
                 ]
             ]
         , M3e.chipSet [ Aria.label "Labels" ]
             (List.map labelChip message.labels)
         , TypedHtml.div [ TA.class "flex flex-col gap-4" ]
-            (List.map (\p -> TypedHtml.p [ TA.class "doc-muted" ] [ M3e.text p ]) message.body)
+            (List.map (\p -> TypedHtml.p [] [ M3e.text p ]) message.body)
         ]
 
 
