@@ -55,7 +55,6 @@ import M3e.Component.ExpansionPanel
 import M3e.Component.Fab
 import M3e.Component.Icon
 import M3e.Component.IconButton
-import M3e.Component.ListAction
 import M3e.Component.NavItem
 import M3e.Component.NavMenuItem
 import M3e.Component.NavRailToggle
@@ -85,6 +84,7 @@ import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
 import TypedHtml.Component.Grouping
 import TypedHtml.Component.Sectioning
+import TypedHtml.Events
 import TypedHtml.Values
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -1055,8 +1055,8 @@ searchResults model =
                         TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "No results" ]
 
                     matches ->
-                        TypedHtml.div [ TypedHtml.Attributes.class "p-2" ]
-                            [ M3e.list [] (List.map searchResultLink matches) ]
+                        TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1 p-2" ]
+                            (List.map searchResultLink matches)
 
 
 {-| Case-insensitive substring match against `heading` (falling back to
@@ -1095,16 +1095,17 @@ id) and fires `CloseSearch` -- the same "navigate closes the panel"
 convention `tocPanel`'s jump-links already follow for `CloseToc`.
 
 -}
-searchResultLink : SearchEntry -> Element { s | listAction : M3e.Kind.Brand } admittedBy Msg
+searchResultLink : SearchEntry -> Element { s | sharedText : M3e.Kind.Shared, sharedFlow : M3e.Kind.Shared } admittedBy Msg
 searchResultLink entry =
-    M3e.listAction
-        [ M3e.Component.ListAction.href (entry.url ++ (entry.anchor |> Maybe.map (\a -> "#" ++ a) |> Maybe.withDefault ""))
-        , M3e.Component.ListAction.onClick CloseSearch
+    TypedHtml.a
+        [ TypedHtml.Attributes.href (entry.url ++ (entry.anchor |> Maybe.map (\a -> "#" ++ a) |> Maybe.withDefault ""))
+        , TypedHtml.Attributes.class "flex flex-col gap-0.5 px-3 py-2"
+        , TypedHtml.Events.onClick CloseSearch
         ]
         (M3e.text (Maybe.withDefault entry.title entry.heading)
             :: (case entry.heading of
                     Just _ ->
-                        [ M3e.Component.ListAction.supportingText (M3e.text entry.title) ]
+                        [ TypedHtml.div [] [ M3e.text entry.title ] ]
 
                     Nothing ->
                         []
