@@ -223,3 +223,174 @@ function renderComponentCallMultiline(parts) {
       throw new Error(`elm-shape: unknown surface form "${form}"`);
   }
 }
+
+// ── Layer 1: the Face-C resolvers (discriminated result) ───────────────────
+//
+// Each resolver returns a DISCRIMINATED result — `{ ok: true, value }` or
+// `{ ok: false, reason }` — rather than throwing. This is the one policy knob the
+// two consumers legitimately differ on: B (cem-figma-connect) maps `err` to a
+// THROW (a binding must never guess a name), A (elm-m3e docs) maps `err` to a
+// SkipError (never emit non-compiling Elm). Same code path, both contracts.
+//
+// The `reason` strings are the CORE of B's current error messages (everything
+// after `elm emitter: ${ctxLabel} — `). B's L3 wrappers re-add the
+// `elm emitter: ${ctxLabel} — ` prefix, so B's thrown messages stay byte-identical.
+//
+// Extraction provenance: B's `canon`/`setterOf`/`resolveToken`/`resolveSetAttrExpr`/
+// `resolveChildAttrExpr`/`slotSetterOf`/`slotAttr`/`actionNoneOf`/`iconNameExpr`
+// (profiles/m3-kit/emitters/elm.mjs).
+
+export const ok = (value) => ({ ok: true, value });
+export const err = (reason) => ({ ok: false, reason });
+
+// canonical comparison key bridging CEM kebab values and Elm camel values.
+export function canon(value) {
+  return String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// setterOf(comp, attr) -> ok(setterName) | err. `comp.setters[attr]` is `null`
+// (not merely absent) when the producer measured the name but could NOT verify it
+// is exposed by the component's module — the falsy check covers both.
+export function setterOf(comp, attr) {
+  const setter = comp.setters[attr];
+  if (!setter) {
+    return err(
+      `attribute "${attr}" is not a known/verified setter for component ` +
+        `"${comp.component}" (setters: ${Object.keys(comp.setters).join(", ")}).`
+    );
+  }
+  return ok(setter);
+}
+
+// resolveEnumToken(comp, setter, cemValue) -> ok("M3e.Values.<ctor>") | err.
+// Elm identifiers cannot start with a digit, so the producer prefixes digit-leading
+// enum values with "value" (CEM "4-sided-cookie" -> Elm ctor "value4SidedCookie",
+// keyed "value4sidedcookie"). canon() strips to "4sidedcookie", so fall back to the
+// value-prefixed key when the value is digit-leading.
+export function resolveEnumToken(comp, setter, cemValue) {
+  const enumFact = comp.enums[setter];
+  if (!enumFact) {
+    return err(
+      `no enum "${setter}" in elm-facts for component "${comp.component}" ` +
+        `(setters: ${Object.keys(comp.enums).join(", ")}). ` +
+        `Cannot resolve a token name; refusing to guess.`
+    );
+  }
+  const key = canon(cemValue);
+  let hit = enumFact.values.find((v) => v.key === key);
+  if (!hit && /^[0-9]/.test(key)) hit = enumFact.values.find((v) => v.key === `value${key}`);
+  if (!hit) {
+    return err(
+      `CEM value "${cemValue}" (key "${key}") has no matching Elm enum value in ` +
+        `"${setter}" (available: ${enumFact.values.map((v) => v.elm).join(", ")}). ` +
+        `Refusing to guess a token name.`
+    );
+  }
+  if (!hit.token) {
+    return err(
+      `Elm enum value "${hit.elm}" is not exposed in the token module ` +
+        `(elm-facts recorded token:null). Refusing to emit an unexposed token name.`
+    );
+  }
+  return ok(hit.token);
+}
+
+// resolveAttrExpr(comp, attr, value, { boolPresentTrue }) -> ok(elmExpr) | err.
+// Resolution chain: enum setter -> token; float/int setter -> bare number literal
+// (numeric-validated); "true"/"false" -> Bool literal; else JSON-quoted string.
+// `boolPresentTrue` (the child path): an empty-string value on a Bool setter is
+// boolean-PRESENT -> True (the CEM/WC `selected=""` convention).
+export function resolveAttrExpr(comp, attr, value, { boolPresentTrue = false } = {}) {
+  const s = setterOf(comp, attr);
+  if (!s.ok) return s;
+  const setter = s.value;
+  if (boolPresentTrue && comp.setterArgTypes?.[setter] === "bool" && value === "") {
+    return ok("True");
+  }
+  const enumFact = comp.enums[setter];
+  if (enumFact) return resolveEnumToken(comp, setter, value);
+  const argType = comp.setterArgTypes?.[setter];
+  if (argType === "float" || argType === "int") {
+    if (!/^-?[0-9]+(\.[0-9]+)?$/.test(String(value))) {
+      return err(
+        `value "${value}" is not numeric, but setter "${setter}" takes ` +
+          `${argType === "float" ? "Float" : "Int"} (facts setterArgTypes). ` +
+          `Refusing to emit a malformed literal.`
+      );
+    }
+    return ok(String(value));
+  }
+  if (value === "true") return ok("True");
+  if (value === "false") return ok("False");
+  return ok(JSON.stringify(value));
+}
+
+// slotFnOf(comp, slotName) -> ok(slotFn) | err. Matched by exact name or canonical
+// key (WC slot "selected-icon" canon-matches the elm slot fn "selectedIcon").
+export function slotFnOf(comp, slotName) {
+  const slots = comp.slotSetters ?? [];
+  if (slots.includes(slotName)) return ok(slotName);
+  const c = canon(slotName);
+  const hit = slots.find((s) => canon(s) === c);
+  if (!hit) {
+    return err(
+      `slot "${slotName}" is not a known slot function of ${comp.module} ` +
+        `(slots: ${slots.join(", ") || "none"}). Refusing to guess a slot name.`
+    );
+  }
+  return ok(hit);
+}
+
+// slotAttrOf(comp, attr) -> the matching slot-setter name when a CEM attr maps to
+// an Elm SLOT (not a settable attr) on this component, else null. Used to DROP
+// slot-typed attrs from the setter lines (emitting `M3e.Button.selected True` would
+// not type-check against a slot function). NOT a discriminated result — a null is a
+// legitimate "this attr is not a slot," not an error.
+export function slotAttrOf(comp, attr) {
+  const slots = comp.slotSetters ?? [];
+  if (slots.includes(attr)) return attr;
+  const c = canon(attr);
+  return slots.find((s) => canon(s) === c) ?? null;
+}
+
+// actionNoneOf(comp) -> ok("<ActionModule>.none") | err. comp.actionModule is null
+// when the producer could not verify "none" in the action module's exposing list.
+export function actionNoneOf(comp) {
+  if (!comp.actionModule) {
+    return err(
+      `no verified action module for component "${comp.component}" ` +
+        `(elm-facts recorded actionModule:null — Action.none is not exposed, or the action module ` +
+        `could not be parsed). Refusing to emit an unverified ".none" call.`
+    );
+  }
+  return ok(`${comp.actionModule}.none`);
+}
+
+// entryOf(comp, surfaceKey) -> ok({ module, entry, form, finalizer }) | err.
+export function entryOf(comp, surfaceKey) {
+  const surfaceDef = comp.surfaces?.[surfaceKey];
+  if (!surfaceDef) {
+    return err(
+      `component "${comp.component}" does not emit at surface "${surfaceKey}" ` +
+        `(available: ${Object.keys(comp.surfaces ?? {}).join(", ")}).`
+    );
+  }
+  return ok({
+    module: surfaceDef.module,
+    entry: surfaceDef.entry,
+    form: surfaceDef.form,
+    finalizer: surfaceDef.finalizer ?? null,
+  });
+}
+
+// iconNameExpr(symbol, catalog) -> the Elm opaque-`Name` expression for a ligature
+// (R-026): `<module>.<constant>` when the ligature has an exposed Name constant,
+// else the escape hatch `<module>.<customFn> "<ligature>"`. `catalog` = the
+// icon-names.json shape ({ module, customFn, names }). Pure (a ligature with no
+// exposed constant uses the documented `custom` escape, never a guessed identifier),
+// so it returns a bare string, not a discriminated result.
+export function iconNameExpr(symbol, catalog) {
+  const constant = catalog.names[symbol];
+  if (constant) return `${catalog.module}.${constant}`;
+  return `${catalog.module}.${catalog.customFn} ${JSON.stringify(symbol)}`;
+}

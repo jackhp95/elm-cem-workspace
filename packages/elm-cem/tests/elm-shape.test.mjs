@@ -21,7 +21,43 @@ import {
   renderTextSeam,
   renderNativeAttr,
   renderTypedHtml,
+  canon,
+  setterOf,
+  resolveEnumToken,
+  resolveAttrExpr,
+  slotFnOf,
+  slotAttrOf,
+  actionNoneOf,
+  entryOf,
+  iconNameExpr,
 } from "../src/elm-shape.mjs";
+
+// A minimal Face-C-shaped `comp` fixture for the Layer-1 resolver tests.
+const comp = {
+  component: "Button",
+  module: "M3e.Button",
+  tokenModule: "M3e.Values",
+  actionModule: "M3e.Button.Action",
+  setters: { variant: "variant", href: "href", "optical-size": "opticalSize", nope: null },
+  setterArgTypes: { opticalSize: "float", disabled: "bool" },
+  enums: {
+    variant: {
+      values: [
+        { key: "filled", elm: "filled", token: "M3e.Values.filled" },
+        { key: "rounded", elm: "rounded", token: "M3e.Values.rounded" },
+        // digit-leading: producer prefixes ctor + key with "value"
+        { key: "value4sidedcookie", elm: "value4SidedCookie", token: "M3e.Values.value4SidedCookie" },
+        // a measured-but-unexposed value (token:null)
+        { key: "ghost", elm: "ghost", token: null },
+      ],
+    },
+  },
+  slotSetters: ["header", "selectedIcon"],
+  surfaces: {
+    top: { module: "M3e.Button", entry: "component", form: "record-double-list", finalizer: null },
+    build: { module: "M3e.Button", entry: "build", form: "pipeline", finalizer: "toElement" },
+  },
+};
 
 // ── renderComponentCall: multiline (top-level) — the three forms ───────────
 
@@ -219,4 +255,102 @@ test("seam helpers", () => {
     `TypedHtml.div [ Native.attribute "class" "g" ] [ Kit.text "x" ]`);
   assert.equal(renderTypedHtml("TypedHtml", "img", [`Native.attribute "src" "/x"`], []),
     `TypedHtml.img [ Native.attribute "src" "/x" ] []`);
+});
+
+// ── Layer 1 resolvers (discriminated result) ───────────────────────────────
+
+test("canon bridges kebab and camel", () => {
+  assert.equal(canon("extra-small"), "extrasmall");
+  assert.equal(canon("value4SidedCookie"), "value4sidedcookie");
+});
+
+test("setterOf: verified setter vs unverified/absent -> err", () => {
+  assert.deepEqual(setterOf(comp, "variant"), { ok: true, value: "variant" });
+  const bad = setterOf(comp, "nope"); // measured-but-null
+  assert.equal(bad.ok, false);
+  assert.match(bad.reason, /attribute "nope" is not a known\/verified setter for component "Button"/);
+  const absent = setterOf(comp, "wat");
+  assert.equal(absent.ok, false);
+});
+
+test("resolveEnumToken: digit-leading value4SidedCookie via value-prefix fallback", () => {
+  // CEM "4-sided-cookie" canons to "4sidedcookie" (digit-leading) -> falls back to
+  // the "value4sidedcookie" key -> the correct value-prefixed token.
+  assert.deepEqual(resolveEnumToken(comp, "variant", "4-sided-cookie"), {
+    ok: true,
+    value: "M3e.Values.value4SidedCookie",
+  });
+  // plain values resolve directly
+  assert.deepEqual(resolveEnumToken(comp, "variant", "rounded"), { ok: true, value: "M3e.Values.rounded" });
+});
+
+test("resolveEnumToken: unexposed token (token:null) -> err, never guessed", () => {
+  const r = resolveEnumToken(comp, "variant", "ghost");
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /not exposed in the token module \(elm-facts recorded token:null\)/);
+});
+
+test("resolveEnumToken: no matching enum value -> err", () => {
+  const r = resolveEnumToken(comp, "variant", "made-up");
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /has no matching Elm enum value in "variant"/);
+});
+
+test("resolveEnumToken: no enum for setter -> err", () => {
+  const r = resolveEnumToken(comp, "href", "x");
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /no enum "href" in elm-facts/);
+});
+
+test("resolveAttrExpr: enum, number, bool-present, string", () => {
+  assert.deepEqual(resolveAttrExpr(comp, "variant", "filled"), { ok: true, value: "M3e.Values.filled" });
+  assert.deepEqual(resolveAttrExpr(comp, "optical-size", "24"), { ok: true, value: "24" });
+  assert.deepEqual(resolveAttrExpr(comp, "href", "/a"), { ok: true, value: `"/a"` });
+  assert.deepEqual(resolveAttrExpr(comp, "href", "true"), { ok: true, value: "True" });
+  // non-numeric on a float setter -> err
+  const bad = resolveAttrExpr(comp, "optical-size", "big");
+  assert.equal(bad.ok, false);
+  assert.match(bad.reason, /is not numeric, but setter "opticalSize" takes Float/);
+});
+
+test("slotFnOf: exact + canonical match, else err", () => {
+  assert.deepEqual(slotFnOf(comp, "header"), { ok: true, value: "header" });
+  assert.deepEqual(slotFnOf(comp, "selected-icon"), { ok: true, value: "selectedIcon" });
+  const r = slotFnOf(comp, "footer");
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /slot "footer" is not a known slot function of M3e.Button/);
+});
+
+test("slotAttrOf: returns slot name or null (not an err)", () => {
+  assert.equal(slotAttrOf(comp, "header"), "header");
+  assert.equal(slotAttrOf(comp, "selected-icon"), "selectedIcon");
+  assert.equal(slotAttrOf(comp, "variant"), null);
+});
+
+test("actionNoneOf: verified module vs null", () => {
+  assert.deepEqual(actionNoneOf(comp), { ok: true, value: "M3e.Button.Action.none" });
+  const r = actionNoneOf({ ...comp, actionModule: null });
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /no verified action module for component "Button"/);
+});
+
+test("entryOf: known surface vs unknown", () => {
+  assert.deepEqual(entryOf(comp, "top"), {
+    ok: true,
+    value: { module: "M3e.Button", entry: "component", form: "record-double-list", finalizer: null },
+  });
+  assert.deepEqual(entryOf(comp, "build").value, {
+    module: "M3e.Button",
+    entry: "build",
+    form: "pipeline",
+    finalizer: "toElement",
+  });
+  const r = entryOf(comp, "nope");
+  assert.equal(r.ok, false);
+});
+
+test("iconNameExpr: exposed constant vs custom escape", () => {
+  const catalog = { module: "M3e.Icon", customFn: "custom", names: { add: "add", menu: "menu" } };
+  assert.equal(iconNameExpr("add", catalog), "M3e.Icon.add");
+  assert.equal(iconNameExpr("GIF", catalog), `M3e.Icon.custom "GIF"`);
 });
