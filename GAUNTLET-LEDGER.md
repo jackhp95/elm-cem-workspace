@@ -2661,3 +2661,17 @@ convention (D-009/D-021).
   `m3e-menu`/`menuitem` to `.compose-slot-panel` buttons — intent preserved per the plan's explicit
   allowance), incl. the "offers every valid kind" acceptance test now asserting Text+Icon primitives
   AND all five component types present (none collapsed) in the panel.
+
+- **Part 2c: pass (diagnosis — FALSE ALARM confirmed; NO source change; +1 lock test).** The audit
+  §1.2 saw a listItem's `unnamed` slot menu show the same options as another listItem's `overline`
+  menu and feared a leaked/stale popover or broken slot filtering. Confirmed against the facts
+  (`M3e/Review/Facts.elm`): `listItem`'s `unnamed`, `overline`, and `supporting-text` slots all carry
+  IDENTICAL `slotKinds = [ heading, shared:flow, shared:phrasing, shared:text ]`, so identical
+  add-child options (Text + Heading + heading's examples) is TYPE-DIRECTED-CORRECT, not a bug —
+  matching D-061's earlier read. The "leaked popover" hypothesis is additionally made structurally
+  impossible by Part 2b: each add-child panel is a plain positioned panel addressed by route `Model`
+  state per `(path, slotName)`, so only one `.compose-slot-panel` is ever in the DOM and toggling to
+  another slot REPLACES it (no shared `m3e-menu` id to collide). Added a confirming Playwright test
+  (open `overline` then `supporting-text` on the same listItem: each shows Text + Heading, only one
+  panel at a time) — locks both the correct-by-facts behavior and the no-leak structure.
+  `compose.spec.ts` 17/17.

@@ -68,6 +68,40 @@ test("a slot's add-child panel offers every valid kind, not just text (M-IA2b)",
   await expect(page.locator("m3e-list-item m3e-checkbox")).toHaveCount(1);
 });
 
+test("§1.2 diagnosis: identical unnamed/overline slot menus are correct-by-facts, not a leaked popover (M-IA2c)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // The audit's §1.2 flagged the `unnamed` slot menu (on one listItem) showing
+  // the SAME options as the `overline` menu (on another) as a possible
+  // "stale/leaked popover" or broken slot filtering. It is neither. A
+  // `listItem`'s `unnamed`, `overline`, and `supporting-text` slots share
+  // IDENTICAL facts kinds — `[heading, shared:flow, shared:phrasing,
+  // shared:text]` (M3e/Review/Facts.elm) — so their add-child options being
+  // identical (Text + Heading + heading's examples) is TYPE-DIRECTED-CORRECT,
+  // not a bug. And after M-IA2b each panel is a plain positioned panel
+  // addressed by route `Model` state per `(path, slotName)`, so a stale/leaked
+  // popover is structurally impossible: only one `.compose-slot-panel` is ever
+  // in the DOM, and toggling to another slot REPLACES it.
+  //
+  // Open the first listItem's `overline` panel: Text + Heading.
+  await page.getByRole("button", { name: /overline/ }).first().click();
+  const overlinePanel = page.locator(".compose-slot-panel");
+  await expect(overlinePanel).toHaveCount(1);
+  await expect(overlinePanel.getByRole("button", { name: "Text", exact: true })).toBeVisible();
+  await expect(overlinePanel.getByRole("button", { name: "Heading", exact: true })).toBeVisible();
+
+  // Open a DIFFERENT slot (`supporting-text`) on the SAME listItem: the
+  // `overline` panel is GONE (not leaked/accumulated) and the new panel offers
+  // the same type-directed options, because the two slots genuinely share kinds.
+  await page.getByRole("button", { name: "supporting-text" }).first().click();
+  const supportingPanel = page.locator(".compose-slot-panel");
+  await expect(supportingPanel).toHaveCount(1);
+  await expect(supportingPanel.getByRole("button", { name: "Text", exact: true })).toBeVisible();
+  await expect(supportingPanel.getByRole("button", { name: "Heading", exact: true })).toBeVisible();
+});
+
 test("setting an attribute updates both the live element and the snippet", async ({ page }) => {
   await page.goto("/components/compose");
 
