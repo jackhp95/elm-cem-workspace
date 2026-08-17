@@ -36,16 +36,23 @@ import {
 // docs/scripts/examples-gen/verify-examples.mjs -> elm-m3e root is three up.
 const M3E_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const LIB_SRC = `${M3E_ROOT}/src`;
-const KIT_SRC = `${M3E_ROOT}/docs/kit`;
 const ELM_BIN = `${M3E_ROOT}/docs/node_modules/.bin/elm`;
 // Phantom substrate: HtmlIr.* and TypedHtml.* live in UNPUBLISHED sibling repos,
 // so their source is vendored (committed) into docs/vendor/elm-foundation — the
 // same single source-directory docs/elm.json points at. Use the vendored copy so
 // example verification runs against a self-contained tree (`pnpm run build:vendor`
 // re-syncs it; see vendor/elm-foundation/VENDORED_FROM.txt).
+//
+// Phase 1 (L5 revive): the former `docs/kit` seam (Kit.*/Native.*) was DELETED in
+// the concern-separated-packages refactor. Engine A now targets the current
+// userland seam directly — `M3e.text` / `TypedHtml.*` / the `M3e.Unsafe.*` +
+// `TypedHtml.Unsafe.*` escapes — all of which live in LIB_SRC (M3e.*) and
+// FOUNDATION_SRC (TypedHtml.*). So SRC_DIRS points only at substrate that EXISTS
+// and compiles; the deleted docs/kit is gone from the list (it FATAL'd the
+// harness — a non-existent source-directory).
 const DOCS_DIR = `${M3E_ROOT}/docs`;
 const FOUNDATION_SRC = resolve(DOCS_DIR, "vendor/elm-foundation");
-const SRC_DIRS = [LIB_SRC, KIT_SRC, FOUNDATION_SRC];
+const SRC_DIRS = [LIB_SRC, FOUNDATION_SRC];
 
 // Re-export the reference walker unchanged, and a 1-arg `moduleResolves` bound to
 // this project's library source dirs. verify-roundtrip.mjs and

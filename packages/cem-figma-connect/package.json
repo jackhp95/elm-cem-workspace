@@ -22,7 +22,8 @@
     "hooks:install": "git config core.hooksPath hooks"
   },
   "dependencies": {
-    "@figma/code-connect": "^1.4.9"
+    "@figma/code-connect": "^1.4.9",
+    "elm-cem": "workspace:*"
   },
   "devDependencies": {
     "@fontsource-variable/material-symbols-outlined": "^5.2.45",

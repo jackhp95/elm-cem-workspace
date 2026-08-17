@@ -35,7 +35,13 @@ export function consumerOutputDescriptors(repoRoot) {
             // these excludes just skip large, irrelevant subtrees to keep the scratch copy
             // fast — research/ is NOT excluded: figma.mjs reads its figma-export dump as input.
             exclude: ["render-cache", "test", "plans"],
-            symlinks: [],
+            // Phase 1 (L3): the m3-kit Elm emitter now imports the canonical
+            // Face-C→Elm engine from `elm-cem/elm-shape` (a workspace:* dep),
+            // resolved via node_modules/elm-cem → ../../elm-cem. rsync excludes
+            // node_modules, so symlink just that one package back in read-only —
+            // same pattern as m3e-okf's .cache below. Without it, `emit` throws
+            // "Cannot find package 'elm-cem'" in the scratch copy.
+            symlinks: ["node_modules/elm-cem"],
             paths: ["generated/m3-kit"],
             generate: (dest) => runNodeScript(dest, "src/cli.mjs", ["emit", "--profile", "m3-kit"]),
         },
