@@ -59,6 +59,38 @@ import { fileURLToPath } from "node:url";
 
 import { buildNodeUrl } from "../../../src/emit/emitter-api.mjs";
 
+// The ONE canonical Face-C→Elm-syntax engine (elm-cem-workspace Phase 1). This
+// emitter no longer carries its own copy of the shape grammar — the Layer-1
+// resolvers (attr→setter, enum→token, slot→fn, icon→Name, action) and the Layer-2
+// call/slot/list/seam renderers all live in elm-shape and are shared with the
+// elm-m3e docs consumer. The dependency arrow is one-way: elm-cem → this profile.
+// The resolvers return a discriminated result; `must()` maps `err` to THIS
+// consumer's fail mode (throw, re-adding the `elm emitter: <ctx> — ` prefix so
+// messages stay identical). See packages/elm-cem/src/elm-shape.mjs.
+import {
+  renderComponentCall,
+  renderSlot,
+  renderTextSeam,
+  renderNativeAttr,
+  renderTypedHtml,
+  canon,
+  setterOf as shapeSetterOf,
+  resolveEnumToken,
+  resolveAttrExpr,
+  slotFnOf,
+  slotAttrOf,
+  actionNoneOf as shapeActionNoneOf,
+  iconNameExpr as shapeIconNameExpr,
+} from "elm-cem/elm-shape";
+
+// Map a resolver's discriminated result to this emitter's fail-loud contract,
+// re-adding the historical `elm emitter: ${ctxLabel} — ` prefix so a refused name
+// throws the SAME message it always has (the CARDINAL RULE: never guess a name).
+function must(result, ctxLabel) {
+  if (!result.ok) throw new Error(`elm emitter: ${ctxLabel} — ${result.reason}`);
+  return result.value;
+}
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 // Static committed facts, loaded once at module init (see PURITY note above).
@@ -97,9 +129,7 @@ const ICON_NAMES = JSON.parse(
 // escape hatch `M3e.Icon.custom "<ligature>"` (e.g. the Figma display-name
 // artifact "GIF", whose real ligature is the lowercase "gif").
 function iconNameExpr(symbolName) {
-  const constant = ICON_NAMES.names[symbolName];
-  if (constant) return `${ICON_NAMES.module}.${constant}`;
-  return `${ICON_NAMES.module}.${ICON_NAMES.customFn} ${JSON.stringify(symbolName)}`;
+  return shapeIconNameExpr(symbolName, ICON_NAMES);
 }
 
 const IDENT_RE = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
@@ -146,11 +176,6 @@ function setSlugOf(figmaSet, figmaAxisNames = new Set()) {
   return kebab(figmaSet.setName);
 }
 
-// canonical comparison key bridging CEM kebab values and Elm camel values.
-function canon(value) {
-  return String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
 // slotAttr(comp, attr) -> the matching slot-setter name when a CEM attr
 // corresponds to an Elm SLOT (not a settable attr) on this component, else null.
 // Post-review Button/IconButton `selected` is a slot function `Element … ->
@@ -158,96 +183,30 @@ function canon(value) {
 // `M3e.Button.selected True` would NOT type-check — such attrs are dropped from
 // the setter lines and surfaced as a header note (task B), never emitted.
 // FilterChip/NavItem `selected` is a real Bool attr (absent from their
-// slotSetters) and is unaffected. Matched by exact name or canonical key.
+// slotSetters) and is unaffected. Canonical `slotAttrOf` from elm-shape.
 function slotAttr(comp, attr) {
-  const slots = comp.slotSetters ?? [];
-  if (slots.includes(attr)) return attr;
-  const c = canon(attr);
-  return slots.find((s) => canon(s) === c) ?? null;
+  return slotAttrOf(comp, attr);
 }
 
 // resolveToken(comp, setter, cemValue) -> "M3e.Token.<ctor>" | throws.
-// Every step is facts-driven; an unresolved value is a loud failure, never a
-// guessed name.
+// Thin wrapper over elm-shape's resolveEnumToken (which owns the value-prefix
+// fallback for digit-leading enum values). `must` re-adds the throw + prefix.
 function resolveToken(comp, setter, cemValue, ctxLabel) {
-  const enumFact = comp.enums[setter];
-  if (!enumFact) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — no enum "${setter}" in elm-facts for component ` +
-        `"${comp.component}" (setters: ${Object.keys(comp.enums).join(", ")}). ` +
-        `Cannot resolve a token name; refusing to guess.`
-    );
-  }
-  const key = canon(cemValue);
-  // Elm identifiers cannot start with a digit, so elm-facts prefixes digit-leading
-  // enum values with "value" (e.g. CEM "4-sided-cookie" -> Elm ctor "value4SidedCookie",
-  // keyed "value4sidedcookie"). canon(cemValue) is the un-prefixed "4sidedcookie", so
-  // fall back to the value-prefixed key when the value is digit-leading (7 of 35 shapes).
-  let hit = enumFact.values.find((v) => v.key === key);
-  if (!hit && /^[0-9]/.test(key)) hit = enumFact.values.find((v) => v.key === `value${key}`);
-  if (!hit) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — CEM value "${cemValue}" (key "${key}") has no matching Elm ` +
-        `enum value in "${setter}" (available: ${enumFact.values.map((v) => v.elm).join(", ")}). ` +
-        `Refusing to guess a token name.`
-    );
-  }
-  if (!hit.token) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — Elm enum value "${hit.elm}" is not exposed in the token module ` +
-        `(elm-facts recorded token:null). Refusing to emit an unexposed token name.`
-    );
-  }
-  return hit.token;
+  return must(resolveEnumToken(comp, setter, cemValue), ctxLabel);
 }
 
-// setterOf(comp, attr) -> the facts per-component setter name for a mapped
-// axis/fixed attr, or throws (never assume the attr name is a valid setter).
-// `comp.setters[attr]` is `null` (not merely absent) when elm-cem's producer
-// measured the name but could NOT verify it's exposed by the component's own
-// module — the falsy check below covers both "unknown attr" and
-// "known but unverified setter" the same way: refuse, never emit it.
+// setterOf(comp, attr) -> the facts per-component setter name, or throws (never
+// assume the attr name is a valid setter). Wrapper over elm-shape's setterOf.
 function setterOf(comp, attr, ctxLabel) {
-  const setter = comp.setters[attr];
-  if (!setter) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — attribute "${attr}" is not a known/verified setter for component ` +
-        `"${comp.component}" (setters: ${Object.keys(comp.setters).join(", ")}).`
-    );
-  }
-  return setter;
+  return must(shapeSetterOf(comp, attr), ctxLabel);
 }
 
 // resolveSetAttrExpr(comp, attr, value, ctxLabel) -> Elm expression string.
-// Resolves a per-set static attr value (from set-attrs.json) to an Elm
-// expression suitable for a setter line. Resolution chain:
-//   - Enum attr (comp has enum facts for the setter): resolveToken.
-//   - Boolean attr (value is "true"/"false"): Elm Bool literal (True/False).
-//   - Otherwise: JSON-quoted string literal (e.g. href values, number strings).
-// Never guesses — throws if the attr is not a verified setter.
+// Wrapper over elm-shape's resolveAttrExpr (enum→token, Float/Int literal,
+// True/False, else JSON string). Never guesses — throws if the attr is not a
+// verified setter.
 function resolveSetAttrExpr(comp, attr, value, ctxLabel) {
-  const setter = setterOf(comp, attr, ctxLabel);
-  const enumFact = comp.enums[setter];
-  if (enumFact) {
-    return resolveToken(comp, setter, value, ctxLabel);
-  }
-  // Primitive: facts-typed Float/Int (bare Elm number literal), else boolean,
-  // else opaque string. `setterArgTypes` is Face C's per-setter Elm argument
-  // kind (docs/facts-bundle/schema.json's faceCComponent.setterArgTypes);
-  // absent -> opaque string fallback below.
-  const argType = comp.setterArgTypes?.[setter];
-  if (argType === "float" || argType === "int") {
-    if (!/^-?[0-9]+(\.[0-9]+)?$/.test(String(value))) {
-      throw new Error(
-        `elm emitter: ${ctxLabel} — value "${value}" is not numeric, but setter "${setter}" ` +
-          `takes ${argType === "float" ? "Float" : "Int"} (facts setterArgTypes). Refusing to emit a malformed literal.`
-      );
-    }
-    return String(value); // digits verbatim -> deterministic bare Elm number literal
-  }
-  if (value === "true") return "True";
-  if (value === "false") return "False";
-  return JSON.stringify(value);
+  return must(resolveAttrExpr(comp, attr, value), ctxLabel);
 }
 
 // textSeamOf(config) -> the userland SEAM module to call `.text` on for text
@@ -290,18 +249,9 @@ function attrSeamOf(config) {
 }
 
 // actionNoneOf(comp) -> comp's verified "<ActionModule>.none", or throws.
-// comp.actionModule is `null` when elm-cem's producer could not verify
-// "none" in the action module's own `exposing` list — fail loud here
-// rather than emit an unverified ".none" call.
+// Wrapper over elm-shape's actionNoneOf.
 function actionNoneOf(comp, ctxLabel) {
-  if (!comp.actionModule) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — no verified action module for component "${comp.component}" ` +
-        `(elm-facts recorded actionModule:null — Action.none is not exposed, or the action module ` +
-        `could not be parsed). Refusing to emit an unverified ".none" call.`
-    );
-  }
-  return `${comp.actionModule}.none`;
+  return must(shapeActionNoneOf(comp), ctxLabel);
 }
 
 // The example `figma.code` body per surface form. `parts` carries the
@@ -315,89 +265,26 @@ function actionNoneOf(comp, ctxLabel) {
 // composed component (Card/Dialog/NavBar/…) emits its real children instead of
 // the empty `[]` shell. `null` preserves the pre-fix single-content behavior.
 function renderExample(surfaceDef, comp, setterLines, contentExpr, childrenExprs = null) {
-  const mod = surfaceDef.module;
-  const entry = surfaceDef.entry;
-  const attrList =
-    "[ " +
-    setterLines.map((l) => `${mod}.${l.setter} ${l.expr}`).join("\n    , ") +
-    "\n    ]";
-
-  // A rendered examples-children list (multiline, one child per line) — only
-  // meaningful on the double-list form (record/pipeline take one content elem).
-  const childrenList =
-    childrenExprs === null
+  // The top-level (multiline) call shape now comes from the canonical Layer-2
+  // renderer (elm-shape). The one comp-dependent piece — the resolved
+  // `action = <Mod>.none` record field — is resolved here (record/pipeline forms
+  // only) and handed in as a string, so Layer 2 stays pure string composition.
+  const actionNone =
+    surfaceDef.form === "double-list"
       ? null
-      : childrenExprs.length === 0
-        ? "[]"
-        : "[ " + childrenExprs.join("\n    , ") + "\n    ]";
-
-  switch (surfaceDef.form) {
-    case "double-list": {
-      // <Module>.<entry> [attrs] [children]. When examples-children are present
-      // (childrenList !== null) they ARE the child list. Otherwise a null
-      // contentExpr means NO children -> the empty list [] (elm-m3e's own
-      // no-content idiom, e.g. `M3e.Icon.view [ … ] []`; amendment A2).
-      const body =
-        childrenList !== null ? childrenList : contentExpr === null ? "[]" : `[ ${contentExpr} ]`;
-      return `${mod}.${entry}\n    ${attrList}\n    ${body}`;
-    }
-    case "record-double-list": {
-      // <Module>.<entry> { content, action } [attrs] [children]. When
-      // examples-children are present (childrenExprs), the FIRST is the record's
-      // `content` and the rest are the trailing child list — the ctor prepends
-      // `content` to `children`, so this preserves child order with no stray
-      // node (same mapping as the nested renderChildElement record path).
-      // Otherwise a single `contentExpr` with an empty trailing list.
-      let recordContent;
-      let recordChildren;
-      if (childrenExprs !== null && childrenExprs.length > 0) {
-        recordContent = childrenExprs[0];
-        const rest = childrenExprs.slice(1);
-        recordChildren = rest.length === 0 ? "[]" : "[ " + rest.join("\n    , ") + "\n    ]";
-      } else {
-        if (contentExpr === null) {
-          throw new Error(
-            `elm emitter: surface ${surfaceDef.surface} (record form) requires a content element — ` +
-              `a no-content ([]) entry cannot be rendered here.`
-          );
-        }
-        recordContent = contentExpr;
-        recordChildren = "[]";
-      }
-      return (
-        `${mod}.${entry}\n` +
-        `    { content = ${recordContent}\n` +
-        `    , action = ${actionNoneOf(comp, `surface ${surfaceDef.surface}`)}\n` +
-        `    }\n` +
-        `    ${attrList}\n` +
-        `    ${recordChildren}`
-      );
-    }
-    case "pipeline": {
-      // <Module>.<entry> { content, action } |> setter |> ... |> build
-      if (contentExpr === null) {
-        throw new Error(
-          `elm emitter: surface ${surfaceDef.surface} (pipeline form) requires a content element — ` +
-            `a no-content ([]) entry cannot be rendered here.`
-        );
-      }
-      const pipe = setterLines
-        .map((l) => `    |> ${mod}.${l.setter} ${l.expr}`)
-        .join("\n");
-      const finalizer = surfaceDef.finalizer
-        ? `\n    |> ${mod}.${surfaceDef.finalizer}`
-        : "";
-      return (
-        `${mod}.${entry}\n` +
-        `    { content = ${contentExpr}\n` +
-        `    , action = ${actionNoneOf(comp, `surface ${surfaceDef.surface}`)}\n` +
-        `    }\n` +
-        `${pipe}${finalizer}`
-      );
-    }
-    default:
-      throw new Error(`elm emitter: unknown surface form "${surfaceDef.form}"`);
-  }
+      : actionNoneOf(comp, `surface ${surfaceDef.surface}`);
+  return renderComponentCall({
+    module: surfaceDef.module,
+    entry: surfaceDef.entry,
+    form: surfaceDef.form,
+    finalizer: surfaceDef.finalizer ?? null,
+    setters: setterLines,
+    content: contentExpr,
+    children: childrenExprs,
+    actionNone,
+    label: `surface ${surfaceDef.surface}`,
+    multiline: true,
+  });
 }
 
 // importsFor(surfaceDef, comp, usesToken) -> the `imports` array, facts-derived:
@@ -455,26 +342,14 @@ function isTokenExpr(comp, expr) {
 // for a WC slot, or throws. Matched by exact name or canonical key (the WC slot
 // "selected-icon" canon-matches the elm slot fn "selectedIcon").
 function slotSetterOf(parentComp, slotName, ctxLabel) {
-  const slots = parentComp.slotSetters ?? [];
-  if (slots.includes(slotName)) return slotName;
-  const c = canon(slotName);
-  const hit = slots.find((s) => canon(s) === c);
-  if (!hit) {
-    throw new Error(
-      `elm emitter: ${ctxLabel} — slot "${slotName}" is not a known slot function of ` +
-        `${parentComp.module} (slots: ${slots.join(", ") || "none"}). Refusing to guess a slot name.`
-    );
-  }
-  return hit;
+  return must(slotFnOf(parentComp, slotName), ctxLabel);
 }
 
 // resolveChildAttrExpr(comp, attr, value) -> Elm expr. Like resolveSetAttrExpr,
 // but an empty-string value on a Bool setter is boolean-PRESENT -> True (the
 // CEM/WC `selected=""` convention: a bare boolean attribute means true).
 function resolveChildAttrExpr(comp, attr, value, ctxLabel) {
-  const setter = setterOf(comp, attr, ctxLabel);
-  if (comp.setterArgTypes?.[setter] === "bool" && value === "") return "True";
-  return resolveSetAttrExpr(comp, attr, value, ctxLabel);
+  return must(resolveAttrExpr(comp, attr, value, { boolPresentTrue: true }), ctxLabel);
 }
 
 // renderChildElement(spec, config, acc, ctxLabel) -> single-line Elm Element
@@ -506,11 +381,10 @@ function renderChildElement(spec, config, acc, ctxLabel) {
     const attrExprs = Object.entries(spec.attrs ?? {})
       .filter(([k]) => k !== "slot")
       .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-      .map(([k, v]) => `${attrSeam}.attribute ${JSON.stringify(k)} ${JSON.stringify(v)}`);
+      .map(([k, v]) => renderNativeAttr(attrSeam, k, v));
     usedImportsAdd(acc, htmlSeam);
     if (attrExprs.length) usedImportsAdd(acc, attrSeam);
-    const attrList = attrExprs.length ? `[ ${attrExprs.join(", ")} ]` : "[]";
-    return `${htmlSeam}.${spec.tag} ${attrList} [ ${inner.join(", ")} ]`;
+    return renderTypedHtml(htmlSeam, spec.tag, attrExprs, inner);
   }
 
   const comp = FACTS.components[spec.tag];
@@ -567,40 +441,56 @@ function renderChildElement(spec, config, acc, ctxLabel) {
     throw new Error(`elm emitter: ${ctxLabel} — component "${comp.component}" has no "top" surface.`);
   }
 
-  const attrExprs = Object.entries(spec.attrs ?? {})
+  const setterPairs = Object.entries(spec.attrs ?? {})
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([attr, value]) => {
       const setter = setterOf(comp, attr, `${ctxLabel} attr "${attr}"`);
       const expr = resolveChildAttrExpr(comp, attr, value, `${ctxLabel} attr "${attr}"`);
       if (isTokenExpr(comp, expr)) usedImportsAdd(acc, comp.tokenModule);
-      return `${comp.module}.${setter} ${expr}`;
+      return { setter, expr };
     });
   const childExprs = collectChildExprs(spec, comp, config, acc, ctxLabel);
-
-  const attrList = attrExprs.length ? `[ ${attrExprs.join(", ")} ]` : "[]";
 
   // The nested call shape follows the component's own top-surface form (the
   // ctor-rename cascade moved several composed components — Button, Fab,
   // IconButton, chips, … — from `double-list` to `record-double-list`, so a
   // nested one MUST carry the `{ content, action }` record or it will not
-  // type-check as `M3e.X.component [attrs] [children]`).
+  // type-check as `M3e.X.component [attrs] [children]`). It is rendered by the
+  // canonical Layer-2 inline renderer (elm-shape) — the SAME grammar as the
+  // top-level `renderExample`, only inline (single-line) instead of multiline.
   if (surfaceDef.form === "double-list") {
-    const childList = childExprs.length ? `[ ${childExprs.join(", ")} ]` : "[]";
-    return `${comp.module}.${surfaceDef.entry} ${attrList} ${childList}`;
+    return renderComponentCall({
+      module: comp.module,
+      entry: surfaceDef.entry,
+      form: "double-list",
+      setters: setterPairs,
+      children: childExprs,
+      multiline: false,
+    });
   }
   if (surfaceDef.form === "record-double-list") {
     // The record `content` is prepended to the child list by the ctor
-    // (`content :: children`), so mapping the FIRST collected child to
-    // `content` and the rest to the trailing list preserves child order with no
-    // stray node. No children -> an empty text-seam content element.
-    const textSeam = textSeamOf(config);
-    const contentExpr = childExprs.length ? childExprs[0] : `${textSeam}.text ""`;
-    if (!childExprs.length) usedImportsAdd(acc, textSeam);
-    const restExprs = childExprs.slice(1);
-    const restList = restExprs.length ? `[ ${restExprs.join(", ")} ]` : "[]";
+    // (`content :: children`): the first collected child folds into `content`,
+    // the rest trail. No children -> an empty text-seam content element.
+    let content = null;
+    if (childExprs.length === 0) {
+      const textSeam = textSeamOf(config);
+      content = renderTextSeam(textSeam, "");
+      usedImportsAdd(acc, textSeam);
+    }
     const actionNone = actionNoneOf(comp, ctxLabel);
     usedImportsAdd(acc, comp.actionModule);
-    return `${comp.module}.${surfaceDef.entry} { content = ${contentExpr}, action = ${actionNone} } ${attrList} ${restList}`;
+    return renderComponentCall({
+      module: comp.module,
+      entry: surfaceDef.entry,
+      form: "record-double-list",
+      setters: setterPairs,
+      content,
+      children: childExprs,
+      actionNone,
+      label: ctxLabel,
+      multiline: false,
+    });
   }
   throw new Error(
     `elm emitter: ${ctxLabel} — component "${comp.component}" top surface has form "${surfaceDef.form}", ` +
@@ -623,7 +513,7 @@ function collectChildExprs(spec, parentComp, config, acc, ctxLabel) {
   const exprs = [];
   if (spec.text != null && spec.text !== "") {
     usedImportsAdd(acc, textSeam);
-    exprs.push(`${textSeam}.text ${JSON.stringify(spec.text)}`);
+    exprs.push(renderTextSeam(textSeam, spec.text));
   }
   for (const child of spec.children ?? []) {
     const childLabel = `${ctxLabel} > <${child.tag}>`;
@@ -638,7 +528,7 @@ function collectChildExprs(spec, parentComp, config, acc, ctxLabel) {
       }
       const slotFn = slotSetterOf(parentComp, child.slot, childLabel);
       usedImportsAdd(acc, parentComp.module);
-      exprs.push(`${parentComp.module}.${slotFn} (${el})`);
+      exprs.push(renderSlot(parentComp.module, slotFn, el));
     } else {
       exprs.push(el);
     }
