@@ -38,9 +38,9 @@ import M3e.Component.Card
 import M3e.Component.FormField
 import M3e.Component.Heading
 import M3e.Component.IconButton
+import M3e.Component.ListAction
 import M3e.Component.Menu
 import M3e.Component.MenuItem
-import M3e.Component.ListAction
 import M3e.Events
 import M3e.Kind
 import M3e.Review.Facts
@@ -465,14 +465,6 @@ viewNode ctx path node model =
         collapsed : Bool
         collapsed =
             Set.member (pathId path) model.collapsed
-
-        hasAttrs : Bool
-        hasAttrs =
-            not (List.isEmpty (Cem.Compose.attrChips path model.compose))
-
-        hasSlots : Bool
-        hasSlots =
-            not (List.isEmpty (Cem.Compose.slotChips path model.compose))
     in
     M3e.card
         [ M3e.Attributes.variant Value.outlined ]
@@ -485,6 +477,19 @@ viewNode ctx path node model =
                         []
 
                     else
+                        let
+                            -- Only the expanded branch asks whether this node has
+                            -- both groups (the divider between them is the only
+                            -- consumer), so computing it above the `if` would walk
+                            -- the chip lists for every collapsed node too.
+                            hasAttrs : Bool
+                            hasAttrs =
+                                not (List.isEmpty (Cem.Compose.attrChips path model.compose))
+
+                            hasSlots : Bool
+                            hasSlots =
+                                not (List.isEmpty (Cem.Compose.slotChips path model.compose))
+                        in
                         [ TypedHtml.div [ TA.class "flex flex-col gap-3" ]
                             (List.concat
                                 [ [ M3e.mapMsg ComposeMsg

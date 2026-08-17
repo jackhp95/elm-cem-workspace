@@ -294,22 +294,45 @@ correctness =
 configurable `NoSeamOutsideAllowedModules`), `PreferBadgeCount` (`M3e.Badge` has no
 `count`/`label`), and `NoMissingFacadeEntry` (the facade epic #52 is closed).
 
-`NoProprietaryDsClasses` survives unchanged — it still inspects `Attr.class` string
-literals for proprietary `ds-`/`t-` tokens.
+`NoProprietaryDsClasses` was **strengthened** from "no `ds-`/`t-` tokens" into the
+full **layout-only** classifier: Tailwind may position, size and space, but every
+painting utility — background, colour, border, radius, elevation/shadow,
+typography — is an error, because styling belongs to an m3e component. It also
+resolves `class` through `TypedHtml.Attributes`, `M3e.Attributes` and
+`Svg.Attributes` on top of `Html.Attributes`; resolving only the last left it
+toothless on this docs app, where 503 of 591 class call sites go through
+`TypedHtml.Attributes`. See the rule's own docs for the three-bucket
+classification (proprietary / styling / allowed) and why unknown tokens are
+allowed by default.
 
 Opinion-leak audit (the "packages stay unopinionated about seam/kit content"
-principle that retired `NoActionlessButton`): `NoProprietaryDsClasses` is a
-CORRECTNESS check, not a content opinion. A `ds-`/`t-` class renders nothing in
-this component system, so flagging it catches dead markup — it does not dictate
-what a seam or kit may contain. It stays. The structural boundary rules
+principle that retired `NoActionlessButton`): the proprietary half is a
+CORRECTNESS check — a `ds-`/`t-` class renders nothing in this component system,
+so flagging it catches dead markup. The layout-only half is a stated PROJECT
+POLICY, and it is scoped accordingly: it polices the docs app's own surfaces, not
+what a seam or kit may contain. The structural boundary rules
 (`NoSeamOutsideAllowedModules`, `NoInternalImportOutsideAllowed`, the `toHtml`
 gate) likewise enforce WHERE crossings live, not WHAT they contain, so they are
 in-bounds too.
+
+**`Route/Styles/` and `Route/Guide/Theming.elm` are exempt.** Those pages apply
+token utilities as LIVE SPECIMENS — a typography page whose job is to show what
+`text-body-lg` renders has to actually apply `text-body-lg`, and the theming
+chapter teaches the Tailwind bridge by demonstrating it. Linting them would
+delete the documentation of a real feature rather than fix a styling mistake.
+The exemption is per-directory/file, so it necessarily also lifts the
+proprietary-token check on those pages; that is acceptable because they carry no
+`ds-`/`t-` tokens, and splitting the rule in two to recover it would buy nothing
+today.
 
 -}
 materialDiscipline : List Rule
 materialDiscipline =
     [ NoProprietaryDsClasses.rule
+        |> Rule.ignoreErrorsForDirectories
+            [ "app/Route/Styles/", "docs/app/Route/Styles/" ]
+        |> Rule.ignoreErrorsForFiles
+            [ "app/Route/Guide/Theming.elm", "docs/app/Route/Guide/Theming.elm" ]
     ]
 
 
