@@ -124,7 +124,7 @@ convert =
 convertBefore : String
 convertBefore =
     """-- the per-component surface — what you might write, or arrive with
-M3e.Component.Button.view [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Save" ]"""
+M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []"""
 
 
 convertAfter : String

@@ -5,6 +5,7 @@ module Main exposing (main)
 import Browser
 import Html
 import M3e
+import M3e.Action
 import M3e.Component.Button as Button
 import M3e.Component.Theme as Theme
 import M3e.Values as Value
@@ -18,12 +19,13 @@ main =
 view : () -> Html.Html ()
 view _ =
     M3e.toHtml
-        (Theme.view
+        (Theme.component
             [ Theme.color "#6750A4"
             , Theme.scheme Value.auto
             ]
-            [ Button.view
+            [ Button.component
+                { content = M3e.text "It works", action = M3e.Action.none }
                 [ Button.variant Value.filled ]
-                [ M3e.text "It works" ]
+                []
             ]
         )

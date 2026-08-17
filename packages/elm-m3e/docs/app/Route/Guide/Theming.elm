@@ -122,7 +122,7 @@ rootCode : String
 rootCode =
     """import M3e.Component.Theme as Theme
 
-Theme.view
+Theme.component
     [ Theme.color model.seed                    -- the brand/seed color, e.g. "#4285F4"
     , Theme.scheme model.scheme                 -- M3e.Values.light | M3e.Values.dark
     , Theme.contrast model.contrast             -- standard | medium | high
@@ -179,7 +179,7 @@ reskinBody =
 reskinCode : String
 reskinCode =
     """-- Before: the default seed, standard density, default corners.
-Theme.view
+Theme.component
     [ Theme.color "#4285F4"
     , Theme.scheme M3e.Values.light
     , Theme.density 0
@@ -188,7 +188,7 @@ Theme.view
 
 -- After: a brand re-skin. New seed re-derives the ENTIRE palette;
 -- density and corner language shift globally. appBody is untouched.
-Theme.view
+Theme.component
     [ Theme.color "#6750A4"          -- brand accent — every role re-derives
     , Theme.scheme M3e.Values.light
     , Theme.contrast M3e.Values.medium -- a touch more contrast for the new palette

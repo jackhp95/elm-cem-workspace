@@ -24,7 +24,7 @@ shown0_ =
 
 -- required-record form (`el`) — the compiler now DEMANDS the parts a button can't do without
 shown1_ =
-    M3e.Component.Button.el
+    M3e.Component.Button.component
         { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }
         []
         []

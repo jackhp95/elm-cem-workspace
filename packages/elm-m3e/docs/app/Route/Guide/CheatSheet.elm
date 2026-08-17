@@ -124,7 +124,7 @@ barrelVsSpecificCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.Component.Button.icon (M3e.icon [ TA.name "save" ] []), M3e.text "Save" ]
 
 -- component module — component-scoped setters, compile-tight tokens
-M3e.Component.Button.view [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Save" ]"""
+M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []"""
 
 
 shapes : String

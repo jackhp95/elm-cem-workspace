@@ -8,6 +8,7 @@ Change the sample there; this file follows.
 -}
 
 import M3e
+import M3e.Action
 import M3e.Attributes
 import M3e.Component.Button
 import M3e.Values as Value
@@ -21,4 +22,4 @@ shown0_ =
 
 -- component module — component-scoped setters, compile-tight tokens
 shown1_ =
-    M3e.Component.Button.view [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Save" ]
+    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []

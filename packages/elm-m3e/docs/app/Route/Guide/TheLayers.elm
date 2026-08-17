@@ -139,7 +139,7 @@ descentCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 -- component module: same output, component-scoped tighter types
-M3e.Component.Button.view [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Save" ]
+M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []
 
 -- required-record form: the compiler demands the parts a button can't omit
 M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []

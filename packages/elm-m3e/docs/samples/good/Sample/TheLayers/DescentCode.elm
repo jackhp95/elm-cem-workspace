@@ -24,12 +24,12 @@ shown0_ =
 
 -- component module: same output, component-scoped tighter types
 shown1_ =
-    M3e.Component.Button.view [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Save" ]
+    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []
 
 
 -- required-record form: the compiler demands the parts a button can't omit
 shown2_ =
-    M3e.Component.Button.el { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
+    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
 
 
 -- builder pipe: a one-only setter is unwritable twice; order-free

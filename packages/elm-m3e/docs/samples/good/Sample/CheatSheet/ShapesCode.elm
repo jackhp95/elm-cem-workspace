@@ -24,7 +24,7 @@ shown0_ =
 
 -- required-record form — the compiler demands the parts it can't do without
 shown1_ =
-    M3e.Component.Button.el { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
+    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
 
 
 -- builder pipe — a one-only setter is unwritable twice; order-free

@@ -117,7 +117,7 @@ shippedCode : String
 shippedCode =
     """import M3e.Component.Theme as Theme
 
-Theme.view
+Theme.component
     [ Theme.color model.seed
     , Theme.motion M3e.Values.expressive  -- spring-like emphasis (M3E's signature)
     -- , Theme.motion M3e.Values.standard   -- functional, restrained transitions

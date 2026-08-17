@@ -12,7 +12,7 @@ import Sample.Support exposing (appBody, model)
 
 
 shown0_ =
-    Theme.view
+    Theme.component
         [ Theme.color model.seed                    -- the brand/seed color, e.g. "#4285F4"
         , Theme.scheme model.scheme                 -- M3e.Values.light | M3e.Values.dark
         , Theme.contrast model.contrast             -- standard | medium | high

@@ -14,7 +14,7 @@ import Sample.Support exposing (appBody, model)
 
 
 shown0_ =
-    Theme.view
+    Theme.component
         [ Theme.color model.seed
         , Theme.motion M3e.Values.expressive  -- spring-like emphasis (M3E's signature)
         -- , Theme.motion M3e.Values.standard   -- functional, restrained transitions

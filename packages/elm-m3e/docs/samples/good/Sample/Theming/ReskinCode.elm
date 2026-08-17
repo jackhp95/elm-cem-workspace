@@ -15,7 +15,7 @@ import Sample.Support exposing (appBody)
 
 -- Before: the default seed, standard density, default corners.
 shown0_ =
-    Theme.view
+    Theme.component
         [ Theme.color "#4285F4"
         , Theme.scheme M3e.Values.light
         , Theme.density 0
@@ -26,7 +26,7 @@ shown0_ =
 -- After: a brand re-skin. New seed re-derives the ENTIRE palette;
 -- density and corner language shift globally. appBody is untouched.
 shown1_ =
-    Theme.view
+    Theme.component
         [ Theme.color "#6750A4"          -- brand accent — every role re-derives
         , Theme.scheme M3e.Values.light
         , Theme.contrast M3e.Values.medium -- a touch more contrast for the new palette
