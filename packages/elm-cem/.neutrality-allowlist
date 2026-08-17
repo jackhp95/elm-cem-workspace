@@ -186,3 +186,19 @@ plans/2026-08-05-open-global-attributes.md
 # not shipped generator source. Re-applied after the 2026-08-14 rebase onto main,
 # which does not carry this workspace-only file.
 tests/facts-bundle-schema.test.mjs
+
+# ============================================================================
+# Phase-1 canonical html↔elm shape engine (workspace L1/L2).
+# --- Generator source: pedagogical comment examples (same class as codegen/*) ---
+# src/elm-shape.mjs is the brand-neutral Face-C→Elm-syntax engine. Every M3e/m3e
+# mention is in a docstring/comment ONLY (verified: grep for non-comment hits is
+# empty) — the worked example (M3e.Button / M3e.Values.rounded / M3e.Card.header)
+# used to teach the resolver + renderer contract. No non-comment code references
+# any design-system token; the engine takes module/entry/token strings as inputs.
+src/elm-shape.mjs
+# --- Tests: golden fixtures (same class as tests/src/GoldenTest.elm et al.) ---
+# tests/elm-shape.test.mjs asserts the renderer/resolver output byte-for-byte; its
+# golden strings ARE m3e brand output (M3e.Button.component, M3e.Values.rounded,
+# the digit-leading value4SidedCookie case, R-026 opaque-Name icons). Fixture, not
+# shipped generator source.
+tests/elm-shape.test.mjs
