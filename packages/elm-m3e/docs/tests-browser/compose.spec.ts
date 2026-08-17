@@ -161,6 +161,28 @@ test("nesting three levels deep works with chips alone", async ({ page }) => {
   await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
 });
 
+test("child cards are indented per nesting level (Part 4 / §3.4)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Build list > listItem > (trailing) checkbox — three levels.
+  await page.getByRole("button", { name: "unnamed" }).first().click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "listItem", exact: true }).click();
+  await page.getByRole("button", { name: "trailing" }).last().click();
+  await page.locator(".compose-slot-panel").getByRole("button", { name: "Checkbox", exact: true }).click();
+
+  // §3.4: the depth-2 card (the checkbox) sits objectively further right than
+  // the depth-1 card (its parent listItem) — indentation is present, not just
+  // visually claimed. Each `childRow` wraps a node in a fixed left indent that
+  // compounds with depth, marked `compose-depth-N`.
+  const depth1Card = page.locator(".compose-depth-1 > m3e-card").last();
+  const depth2Card = page.locator(".compose-depth-2 > m3e-card").last();
+  const b1 = await depth1Card.boundingBox();
+  const b2 = await depth2Card.boundingBox();
+  expect(b1).not.toBeNull();
+  expect(b2).not.toBeNull();
+  expect(b2!.x).toBeGreaterThan(b1!.x);
+});
+
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 

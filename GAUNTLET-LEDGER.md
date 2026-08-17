@@ -2688,3 +2688,13 @@ convention (D-009/D-021).
   parameter (all call sites updated). New Playwright test asserts (a) both group-marker classes
   present, (b) the root's FILLED `unnamed` slot has a badge + no `add` icon + `compose-slot-filled`,
   (c) an EMPTY `overline` slot has the `add` icon + no badge + `compose-slot-empty`.
+
+- **Part 4: pass** (elm compile clean; `check:review` clean; `compose.spec.ts` 19/19 on the
+  production build). §3.4: each recursive `ChildNode` card is wrapped in a fixed per-level left
+  indent (`pl-6`) + a thin left connector line (`border-l border-outline-variant`), applied once per
+  `childRow` so it COMPOUNDS with depth automatically (a depth-2 card sits inside its depth-1
+  parent's own indented wrapper) — no depth arithmetic. Leaf `ChildText`/`ChildIcon` rows are not
+  indented (only structural node nesting earns a level). Marker `compose-depth-N` (N = child node's
+  own path length). New Playwright test builds list > listItem > checkbox and asserts the depth-2
+  card's `boundingBox().x` is strictly greater than the depth-1 card's — indentation objectively
+  present, not just visually claimed.

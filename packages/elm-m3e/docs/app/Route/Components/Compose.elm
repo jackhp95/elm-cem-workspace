@@ -1337,13 +1337,31 @@ childCards ctx path node model =
 {-| A `ChildNode` recurses into `viewNode` (route `Msg`); a `ChildText`/
 `ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
 `M3e.mapMsg ComposeMsg` at this boundary.
+
+§3.4: a `ChildNode`'s recursive card is wrapped in a fixed per-level left indent
+
+  - a thin left connector line (`childIndent`), so nesting depth reads at a glance
+    the way the code panel's own indentation already does. The indent is applied
+    once per `childRow` and therefore COMPOUNDS with depth automatically — a
+    depth-2 card sits inside its depth-1 parent's own indented wrapper — with no
+    depth arithmetic. The `compose-depth-N` marker (N = the child node's own path
+    length) lets a test assert the indent is objectively present, not just claimed.
+    `ChildText`/`ChildIcon` rows are leaves (never recurse), so they are not
+    indented — only structural node nesting earns a level.
+
 -}
 childRow : MenuCtx -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (Grouping.DivIs s) admittedBy Msg
 childRow ctx path slotName index child model =
     case child of
         Cem.Compose.ChildNode inner ->
-            TypedHtml.div []
-                [ viewNode ctx (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
+            let
+                childPath : Cem.Compose.Path
+                childPath =
+                    path ++ [ Cem.Compose.IntoSlot slotName index ]
+            in
+            TypedHtml.div
+                [ TA.class ("compose-child compose-depth-" ++ String.fromInt (List.length childPath) ++ " pl-6 border-l border-outline-variant") ]
+                [ viewNode ctx childPath inner model ]
 
         Cem.Compose.ChildText text ->
             M3e.mapMsg ComposeMsg (childFieldRow "Text" text path slotName index model.compose)
