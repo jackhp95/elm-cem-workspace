@@ -315,6 +315,7 @@ export function buildGraph(paths = {}) {
   for (const file of fs.readdirSync(p.sysDir).sort()) {
     if (file.endsWith(".css")) sysCssByFile[file] = readText(path.join(p.sysDir, file));
   }
+  const colorCss = sysCssByFile["color.css"] ?? "";
   const cemFacts = readJson(p.cemFactsPath);
 
   const seedNodes = buildSeedNodes(seedCss);
@@ -326,9 +327,12 @@ export function buildGraph(paths = {}) {
     (a, b) => TIER_RANK[a.tier] - TIER_RANK[b.tier] || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
   );
 
-  // Edges are added in L3 (seed→ref derivesFrom, ref→sys aliases). Component
-  // tier stays edge-less (L4, Decision 2b).
-  const edges = [];
+  // L3 edges: seed→ref (derivesFrom) from palette.css, ref→sys (aliases) from
+  // sys/color.css (resolved transitively through the non-namespaced
+  // convenience aliases). Component tier stays edge-less (L4, Decision 2b).
+  const seedRefEdges = buildSeedRefEdges(paletteCss);
+  const { edges: refSysEdges, literals } = buildRefSysEdges(colorCss);
+  const edges = [...seedRefEdges, ...refSysEdges].sort(byKey((e) => `${e.from} ${e.to} ${e.kind}`));
 
   const componentTags = new Set();
   for (const n of componentNodes) for (const t of n.components) componentTags.add(t);
@@ -342,6 +346,11 @@ export function buildGraph(paths = {}) {
       component: componentNodes.length,
     },
     componentCount: componentTags.size,
+    // System color roles that resolve to a literal (e.g. --md-sys-color-shadow
+    // → --shadow → #000000), NOT a ref alias — an honest flag, never a
+    // silently-missing edge (L3 acceptance: each sys color role has >=1 ref
+    // edge OR a documented-literal flag).
+    documentedLiteralSystemColors: [...literals].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)),
     notes: NOTES,
     nodes,
     edges,

@@ -78,6 +78,52 @@ test("L1: a known var of each tier is present with the right shape", () => {
   assert.ok(byName.get("--m3e-button-container-color").components.includes("m3e-button"));
 });
 
+// -- L3: measured seed→ref (derivesFrom) + ref→sys (aliases) edges -----------
+
+test("L3: every ref palette node derivesFrom its seed", () => {
+  const graph = buildGraph();
+  const derivesFrom = graph.edges.filter((e) => e.kind === "derivesFrom");
+  // 72 ref nodes, each with exactly one seed edge (error→error seed, the rest→primary seed).
+  assert.equal(derivesFrom.length, 72);
+  for (const n of graph.nodes.filter((x) => x.tier === "reference")) {
+    const es = derivesFrom.filter((e) => e.from === n.name);
+    assert.equal(es.length, 1, `${n.name} should derive from exactly one seed`);
+    assert.ok(es[0].to.startsWith("--md-seed-"));
+  }
+  // error palette derives from the independent error seed.
+  const err = derivesFrom.find((e) => e.from === "--md-ref-palette-error-40");
+  assert.equal(err.to, "--md-seed-error");
+  const pri = derivesFrom.find((e) => e.from === "--md-ref-palette-primary-40");
+  assert.equal(pri.to, "--md-seed-primary");
+});
+
+test("L3: every --md-sys-color-* role has >=1 ref alias edge OR a documented-literal flag", () => {
+  const graph = buildGraph();
+  const sysColor = graph.nodes.filter((n) => n.name.startsWith("--md-sys-color-"));
+  const aliasFrom = new Set(graph.edges.filter((e) => e.kind === "aliases").map((e) => e.from));
+  const literal = new Set(graph.documentedLiteralSystemColors);
+  const uncovered = sysColor.filter((n) => !aliasFrom.has(n.name) && !literal.has(n.name));
+  assert.deepEqual(uncovered, [], "no sys-color role may be silently edge-less");
+  // shadow/scrim are the two literals (#000000), not ref aliases.
+  assert.ok(literal.has("--md-sys-color-shadow"));
+  assert.ok(literal.has("--md-sys-color-scrim"));
+});
+
+test("L3: the known on-surface role aliases neutral tone 10/90 (transitive through convenience alias)", () => {
+  const graph = buildGraph();
+  const tos = graph.edges
+    .filter((e) => e.from === "--md-sys-color-on-surface" && e.kind === "aliases")
+    .map((e) => e.to)
+    .sort();
+  assert.deepEqual(tos, ["--md-ref-palette-neutral-10", "--md-ref-palette-neutral-90"]);
+
+  const primary = graph.edges
+    .filter((e) => e.from === "--md-sys-color-primary" && e.kind === "aliases")
+    .map((e) => e.to)
+    .sort();
+  assert.deepEqual(primary, ["--md-ref-palette-primary-40", "--md-ref-palette-primary-80"]);
+});
+
 test("L1: graph.mjs --check is byte-stable (committed == fresh regeneration)", () => {
   // The committed artifact must equal a fresh regeneration — the workspace
   // determinism ground rule. Uses the CLI so this exercises exactly what the

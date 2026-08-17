@@ -7,6 +7,10 @@
     "component": 2251
   },
   "componentCount": 99,
+  "documentedLiteralSystemColors": [
+    "--md-sys-color-scrim",
+    "--md-sys-color-shadow"
+  ],
   "notes": [
     "Component tier is edge-less in v1 (Decision 2b): the sys→comp fallback edges live in @m3e/web dist CSS (var(--m3e-*, var(--md-sys-*))), not in the CEM. Component nodes are leaves; the L6 detector still catches new/renamed component vars via the regenerate-and-diff drift gate.",
     "Per-component density minScale is not modeled in v1 (Decision 5a): the clamp lives in @m3e/web dist DensityToken. The density family carries the uniform measured domain + base unit only."
@@ -17790,5 +17794,716 @@
       ]
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "from": "--md-ref-palette-error-10",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-100",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-20",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-30",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-40",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-50",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-60",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-70",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-80",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-90",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-95",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-error-99",
+      "to": "--md-seed-error",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-10",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-100",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-20",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-30",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-40",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-50",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-60",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-70",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-80",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-90",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-95",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-99",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-10",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-100",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-20",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-30",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-40",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-50",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-60",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-70",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-80",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-90",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-95",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-neutral-variant-99",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-10",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-100",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-20",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-30",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-40",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-50",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-60",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-70",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-80",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-90",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-95",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-primary-99",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-10",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-100",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-20",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-30",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-40",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-50",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-60",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-70",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-80",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-90",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-95",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-secondary-99",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-10",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-100",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-20",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-30",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-40",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-50",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-60",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-70",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-80",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-90",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-95",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-ref-palette-tertiary-99",
+      "to": "--md-seed-primary",
+      "kind": "derivesFrom"
+    },
+    {
+      "from": "--md-sys-color-background",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-background",
+      "to": "--md-ref-palette-neutral-99",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-error",
+      "to": "--md-ref-palette-error-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-error",
+      "to": "--md-ref-palette-error-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-error-container",
+      "to": "--md-ref-palette-error-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-error-container",
+      "to": "--md-ref-palette-error-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-on-surface",
+      "to": "--md-ref-palette-neutral-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-on-surface",
+      "to": "--md-ref-palette-neutral-95",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-primary",
+      "to": "--md-ref-palette-primary-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-primary",
+      "to": "--md-ref-palette-primary-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-surface",
+      "to": "--md-ref-palette-neutral-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-inverse-surface",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-background",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-background",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-error",
+      "to": "--md-ref-palette-error-100",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-error",
+      "to": "--md-ref-palette-error-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-error-container",
+      "to": "--md-ref-palette-error-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-error-container",
+      "to": "--md-ref-palette-error-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-primary",
+      "to": "--md-ref-palette-primary-100",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-primary",
+      "to": "--md-ref-palette-primary-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-primary-container",
+      "to": "--md-ref-palette-primary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-primary-container",
+      "to": "--md-ref-palette-primary-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-secondary",
+      "to": "--md-ref-palette-secondary-100",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-secondary",
+      "to": "--md-ref-palette-secondary-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-secondary-container",
+      "to": "--md-ref-palette-secondary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-secondary-container",
+      "to": "--md-ref-palette-secondary-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-surface",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-surface",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-surface-variant",
+      "to": "--md-ref-palette-neutral-variant-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-surface-variant",
+      "to": "--md-ref-palette-neutral-variant-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-tertiary",
+      "to": "--md-ref-palette-tertiary-100",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-tertiary",
+      "to": "--md-ref-palette-tertiary-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-tertiary-container",
+      "to": "--md-ref-palette-tertiary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-on-tertiary-container",
+      "to": "--md-ref-palette-tertiary-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-outline",
+      "to": "--md-ref-palette-neutral-variant-50",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-outline",
+      "to": "--md-ref-palette-neutral-variant-60",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-outline-variant",
+      "to": "--md-ref-palette-neutral-variant-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-outline-variant",
+      "to": "--md-ref-palette-neutral-variant-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-primary",
+      "to": "--md-ref-palette-primary-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-primary",
+      "to": "--md-ref-palette-primary-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-primary-container",
+      "to": "--md-ref-palette-primary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-primary-container",
+      "to": "--md-ref-palette-primary-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-secondary",
+      "to": "--md-ref-palette-secondary-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-secondary",
+      "to": "--md-ref-palette-secondary-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-secondary-container",
+      "to": "--md-ref-palette-secondary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-secondary-container",
+      "to": "--md-ref-palette-secondary-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface",
+      "to": "--md-ref-palette-neutral-99",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-bright",
+      "to": "--md-ref-palette-neutral-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-bright",
+      "to": "--md-ref-palette-neutral-99",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container",
+      "to": "--md-ref-palette-neutral-95",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-high",
+      "to": "--md-ref-palette-neutral-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-high",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-highest",
+      "to": "--md-ref-palette-neutral-20",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-highest",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-low",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-low",
+      "to": "--md-ref-palette-neutral-95",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-lowest",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-container-lowest",
+      "to": "--md-ref-palette-neutral-100",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-dim",
+      "to": "--md-ref-palette-neutral-10",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-dim",
+      "to": "--md-ref-palette-neutral-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-tint",
+      "to": "--md-ref-palette-primary-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-tint",
+      "to": "--md-ref-palette-primary-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-variant",
+      "to": "--md-ref-palette-neutral-variant-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-surface-variant",
+      "to": "--md-ref-palette-neutral-variant-90",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-tertiary",
+      "to": "--md-ref-palette-tertiary-40",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-tertiary",
+      "to": "--md-ref-palette-tertiary-80",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-tertiary-container",
+      "to": "--md-ref-palette-tertiary-30",
+      "kind": "aliases"
+    },
+    {
+      "from": "--md-sys-color-tertiary-container",
+      "to": "--md-ref-palette-tertiary-90",
+      "kind": "aliases"
+    }
+  ]
 }
