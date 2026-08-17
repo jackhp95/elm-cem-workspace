@@ -2707,3 +2707,16 @@ convention (D-009/D-021).
   inside the frame. New Playwright test asserts the frame is visible, carries `aria-label="Live
   preview"`, shows the visible caption, and contains the live `m3e-list`. Copy (heading "Live
   preview") owned by the Opus builder per the plan's UX-copy note.
+
+- **Part 6: pass** (elm compile clean; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 21/21 on the production build). §3.6/§1.8: a one-line dismissible caption above
+  the root card ("The root card can't be reordered or removed; use the sidebar to start over with a
+  different root component") makes the silent root-asymmetry rule explicit without permanent chrome —
+  an `info` icon, the sentence, and a "Dismiss" icon button, marked `compose-root-explainer`.
+  Dismissal is session-scoped route state (`rootExplainerDismissed`). **Judgment call:** the plan's
+  localStorage-persistence-across-reloads is marked OPTIONAL in its own G-browser gate; wiring it
+  needs a new port + `index.ts` change, i.e. an app-shell edit OUTSIDE this rework's repeatedly-stated
+  "consumer-route-only" surface, so it is deliberately deferred as a small follow-up rather than
+  silently scope-creeping. The REQUIRED gates (renders on first load; dismiss hides it) are met; the
+  optional reload-persistence assertion is not claimed. Copy owned by the Opus builder per the plan's
+  UX-copy note. New Playwright test asserts first-load visibility + dismissal.

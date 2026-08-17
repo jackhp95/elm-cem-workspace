@@ -196,6 +196,21 @@ test("the live preview has a labeled output frame (Part 5 / §3.5)", async ({ pa
   await expect(preview.locator("m3e-list")).toHaveCount(1);
 });
 
+test("the root-card explainer renders on first load and is dismissible (Part 6 / §3.6)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // §3.6: a one-line caption explains why the root card has no Move/Remove
+  // controls (§1.8). It renders on first load and dismisses on click.
+  const explainer = page.locator(".compose-root-explainer");
+  await expect(explainer).toBeVisible();
+  await expect(explainer).toContainText("be reordered or removed");
+
+  await explainer.getByRole("button", { name: "Dismiss" }).click();
+  await expect(page.locator(".compose-root-explainer")).toHaveCount(0);
+});
+
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 

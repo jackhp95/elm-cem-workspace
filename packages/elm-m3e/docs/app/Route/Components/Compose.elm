@@ -66,6 +66,7 @@ type alias Model =
     , componentPicker : Maybe Cem.Compose.Path
     , componentSearch : String
     , slotPicker : Maybe ( Cem.Compose.Path, String )
+    , rootExplainerDismissed : Bool
     }
 
 
@@ -79,6 +80,7 @@ type Msg
     | ToggleSlotPicker Cem.Compose.Path String
     | AddChildAndClose Cem.Compose.Msg
     | LoadExampleAndClose (List Cem.Compose.Msg)
+    | DismissRootExplainer
 
 
 type alias RouteParams =
@@ -142,6 +144,7 @@ init _ _ =
       , componentPicker = Nothing
       , componentSearch = ""
       , slotPicker = Nothing
+      , rootExplainerDismissed = False
       }
     , Effect.none
     )
@@ -229,6 +232,9 @@ update _ _ msg model =
               }
             , Effect.none
             )
+
+        DismissRootExplainer ->
+            ( { model | rootExplainerDismissed = True }, Effect.none )
 
         LoadExampleAndClose msgs ->
             -- Raw `Cem.Compose.update`, deliberately NOT `applyCompose model.prefill`:
@@ -356,9 +362,38 @@ screen ctx model =
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
         , panelBar model
         , livePreview model.compose.root
+        , rootExplainer model.rootExplainerDismissed
         , viewNode ctx [] model.compose.root model
         , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
         ]
+
+
+{-| §3.6: a one-line, dismissible caption above the root card explaining why the
+root looks structurally different from its children (no Move/Remove controls) —
+a silent rule (§1.8) made explicit without adding permanent chrome. Dismissal is
+session-scoped route state (`rootExplainerDismissed`); localStorage persistence
+across reloads (the plan's OPTIONAL extra) is intentionally NOT wired here — it
+would need a new port + `index.ts` change, i.e. an app-shell edit outside this
+rework's "consumer-route-only" surface, so it is left as a small follow-up.
+Marked `compose-root-explainer` for the test.
+-}
+rootExplainer : Bool -> Element (Grouping.DivIs s) admittedBy Msg
+rootExplainer dismissed =
+    if dismissed then
+        TypedHtml.div [] []
+
+    else
+        TypedHtml.div
+            [ TA.class "compose-root-explainer flex items-center gap-2 rounded-md-corner-medium border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface-variant" ]
+            [ M3e.icon [ TA.name "info" ] []
+            , TypedHtml.span [ TA.class "flex-1" ]
+                [ TypedHtml.text "The root card can’t be reordered or removed; use the sidebar to start over with a different root component." ]
+            , M3e.iconButton
+                [ Aria.label "Dismiss"
+                , M3e.Events.onClick DismissRootExplainer
+                ]
+                [ M3e.icon [ TA.name "close" ] [] ]
+            ]
 
 
 {-| §3.5: the rendered custom-element tree, wrapped in a labeled output frame so
