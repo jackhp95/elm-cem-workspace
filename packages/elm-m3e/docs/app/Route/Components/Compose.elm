@@ -1161,6 +1161,7 @@ panel instead, styled like `componentPicker`, toggled by `model.slotAddPanel`:
     afforded component has a real example, each item qualified by its
     source component's label (`"Heading - Label Small"`) so duplicate
     example titles across different components stay distinguishable.
+
 -}
 slotAddPanelElement : MenuCtx -> Cem.Compose.Path -> Model -> Cem.Compose.SlotChipInfo -> Element (Grouping.DivIs s) admittedBy Msg
 slotAddPanelElement ctx path model info =
