@@ -28,6 +28,7 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.AppBar
+import M3e.Component.Card
 import M3e.Component.ListAction
 import M3e.Component.ListItem
 import M3e.Component.NavItem
@@ -171,7 +172,7 @@ overflow class staying put.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ desktopRail
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden" ]
             [ appBar
@@ -218,6 +219,7 @@ body : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 body model =
     TypedHtml.div [ TA.class "flex flex-1 flex-col overflow-hidden md:flex-row" ]
         [ listPane model.selected
+        , M3e.divider [ M3e.Attributes.vertical True, TA.class "hidden md:block" ] []
         , detailPane (selectedContact model.selected)
         ]
 
@@ -226,7 +228,7 @@ body model =
 -}
 listPane : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 listPane selected =
-    TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto border-outline-variant/40 md:w-80 md:flex-none md:shrink-0 md:border-r" ]
+    TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto md:w-80 md:flex-none md:shrink-0" ]
         [ M3e.list []
             (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                 (List.indexedMap (contactRow selected) contacts)
@@ -243,10 +245,10 @@ contactRow selected index contact =
         rowSurface : String
         rowSurface =
             if index == selected then
-                "bg-surface-container text-on-surface"
+                "doc-row-selected"
 
             else
-                "bg-surface text-on-surface"
+                ""
     in
     M3e.listAction
         [ TA.class rowSurface
@@ -274,24 +276,29 @@ header : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 header contact =
     TypedHtml.div [ TA.class "flex flex-col items-center gap-3 pt-2" ]
         [ M3e.avatar [] [ M3e.text contact.initials ]
-        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text contact.name ]
-        , TypedHtml.span [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text contact.role ]
+        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text contact.name ]
+        , TypedHtml.span [ TA.class "doc-muted" ] [ M3e.text contact.role ]
         ]
 
 
 {-| The contact's fields, as a surface-container card of divided rows.
 -}
-detailCard : Contact -> Element { s | list : M3e.Kind.Brand } adm_ msg
+detailCard : Contact -> Element { s | card : M3e.Kind.Brand } adm_ msg
 detailCard contact =
-    M3e.list
-        [ TA.class "bg-surface-container text-on-surface rounded-md-corner-large overflow-hidden"
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class "m3e-card-shape-md-corner-large"
         ]
-        (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
-            [ fieldRow "mail" "Email" contact.email
-            , fieldRow "call" "Phone" contact.phone
-            , fieldRow "sticky_note_2" "Note" contact.note
-            ]
-        )
+        [ M3e.Component.Card.content
+            (M3e.list []
+                (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
+                    [ fieldRow "mail" "Email" contact.email
+                    , fieldRow "call" "Phone" contact.phone
+                    , fieldRow "sticky_note_2" "Note" contact.note
+                    ]
+                )
+            )
+        ]
 
 
 fieldRow : String -> String -> String -> Element { s | listItem : M3e.Kind.Brand } adm_ msg

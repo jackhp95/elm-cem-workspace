@@ -743,9 +743,9 @@ colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) 
 colorAvatar model hex =
     TypedHtml.div
         [ TypedHtml.Attributes.class
-            ("relative inline-flex rounded-full "
+            ("relative inline-flex "
                 ++ (if model.seed == hex then
-                        "ring-2 ring-primary"
+                        "theme-swatch-selected"
 
                     else
                         ""

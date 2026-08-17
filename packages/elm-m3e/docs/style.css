@@ -267,6 +267,13 @@
        tailwind-m3e-web, so this resolves outside the <m3e-theme> subtree too.
        m3e components set their own foreground internally and are unaffected. */
     color: var(--md-sys-color-on-surface);
+    /* The document's default BACKGROUND, for the same reason. Every
+       full-viewport example shell (Dashboard, Shop, Feed, Mail, ListDetail,
+       Settings, Travel) was painting `bg-surface` itself because background is
+       not inherited and nothing upstream set it; that is one token in one place,
+       not seven. Also fixes the white bleed on overscroll that the comment above
+       this rule describes (visual-gap.md P0). */
+    background-color: var(--md-sys-color-surface);
   }
 
   /* De-emphasized body text: the M3 `on-surface-variant` role. This exists
@@ -280,6 +287,89 @@
      ladder (M3 design token), not a Tailwind utility. */
   .doc-muted {
     color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* ACCENT text — the `primary` / `tertiary` roles. The counterpart to
+     .doc-muted, and it exists for the same reason: m3e has no component for a
+     coloured run of text, and `m3e-icon` and `m3e-heading` expose NO colour
+     attribute or CSS custom property at all (verified against the generated
+     utility list — an icon takes its colour from `currentColor`). Without these
+     two classes the only way to accent anything is a `text-primary` utility,
+     which is exactly what the rule forbids. */
+  .doc-accent {
+    color: var(--md-sys-color-primary);
+  }
+
+  .doc-accent-tertiary {
+    color: var(--md-sys-color-tertiary);
+  }
+
+  /* The `error` role, for a failed/mismatched value in a report table. Same
+     rationale as the two accents above: no component owns a coloured text run. */
+  .doc-error {
+    color: var(--md-sys-color-error);
+  }
+
+  /* Selected row in a list. `m3e-list-action` has NO selected/activated
+     attribute (its full setter list is: disabled, download, href, rel, target,
+     onClick, leading, overline, supportingText, trailing, child), so a selected
+     row cannot express itself through the component and the highlight has to be
+     token-backed here. The UNSELECTED row now needs no class at all — the base
+     surface is the document default. Flagged in the handover as an m3e gap. */
+  .doc-row-selected {
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  /* The anchor "pill" in Doc.elm — an inline jump-link shaped like an assist
+     chip. `m3e-assist-chip` is the right component and even carries a native
+     `href`, but it cannot be used here: its kind (`{ s | assistChip : Brand }`)
+     will not satisfy the `{ s | sharedText : Shared }` signature that
+     `Doc.anchorPill` and `Route/Guide.chapterLink` both pin, and Elm will not
+     absorb the extra tag into a rigid type variable. So the chrome lives here
+     against the tokens until that signature can change. */
+  .doc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: var(--md-sys-typescale-label-medium-font-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+  }
+
+  .doc-pill:hover {
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* `Doc.codeBlock`'s surface. Its classes were assembled into a `let`-bound
+     String, which the rule cannot see through (it reads literals, not values),
+     so this was an invisible violation rather than a reported one. The block has
+     42 external call sites and returns a pinned kind, so wrapping it in an
+     `m3e-card` would ripple through all of them; the surface is token-backed
+     here instead and the Elm side keeps its shape. */
+  .doc-code-block {
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: 0.75rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* The Compose editor's nesting guide. `.compose-child` was already a test
+     hook, so the indent rule it implies now lives with it instead of as a
+     `border-l border-outline-variant` pair on every child row. */
+  .compose-child {
+    border-inline-start: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  /* Selected source-colour swatch in the theme editor. `m3e-avatar` has no
+     selected state and no outline property, so the selection ring is here. */
+  .theme-swatch-selected {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+    border-radius: 9999px;
   }
 
   /* The a11y skip link's focus-visible affordance. There is no m3e component

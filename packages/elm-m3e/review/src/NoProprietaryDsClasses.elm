@@ -58,6 +58,17 @@ enumerable, a project's semantic hooks are not, so denying by styling family
 catches the regressions that matter without flagging every new CSS/test hook.
 
 
+## Known limit
+
+The rule reads literals, not values. It descends through `++`, parentheses, and
+`if`/`case` branches to find every literal in a class argument, so
+`class (base ++ " bg-surface")` is caught. But a class assembled entirely out of
+non-literals — a `let`-bound `String`, or a helper like
+`class (densityClass model.density)` — is invisible, because knowing what those
+hold needs dataflow analysis this rule does not attempt. If you are hiding a
+painting class behind a function to dodge this rule, that is on you.
+
+
 ## Fail
 
     Html.div [ Attr.class "bg-surface-container-high rounded-lg" ] []
@@ -108,7 +119,7 @@ checkClassCall context fn arg =
     case fn of
         Node _ (Expression.FunctionOrValue _ name) ->
             if isClassLike context fn name then
-                checkStringLiteral arg
+                checkClassArgument arg
 
             else if name == "classList" && resolvesToClassModule context fn then
                 checkClassList arg
@@ -152,11 +163,35 @@ resolvesToClassModule context fn =
             False
 
 
-checkStringLiteral : Node Expression -> List (Error {})
-checkStringLiteral node =
+{-| A class argument is rarely just a literal. Real call sites concatenate a
+computed part onto a fixed part (`class (bodyCls ++ " text-on-surface-variant")`)
+or pick between literals in a branch, and checking only `Expression.Literal`
+missed every one of those — a painting class hidden behind a `++` was silently
+unenforced. So descend through the shapes that still contain a checkable literal.
+
+The computed halves (a `let`-bound `String`, a function call like
+`densityClass model.theme.density`) remain invisible: knowing what they hold needs
+dataflow analysis this rule does not do. That is a documented limit, not an
+oversight — see the module docs.
+
+-}
+checkClassArgument : Node Expression -> List (Error {})
+checkClassArgument node =
     case Node.value node of
         Expression.Literal str ->
             errorsForClassString node str
+
+        Expression.ParenthesizedExpression inner ->
+            checkClassArgument inner
+
+        Expression.OperatorApplication "++" _ left right ->
+            checkClassArgument left ++ checkClassArgument right
+
+        Expression.IfBlock _ onTrue onFalse ->
+            checkClassArgument onTrue ++ checkClassArgument onFalse
+
+        Expression.CaseExpression { cases } ->
+            List.concatMap (\( _, body ) -> checkClassArgument body) cases
 
         _ ->
             []
@@ -178,7 +213,7 @@ checkClassListEntry : Node Expression -> List (Error {})
 checkClassListEntry node =
     case Node.value node of
         Expression.TupledExpression (keyNode :: _) ->
-            checkStringLiteral keyNode
+            checkClassArgument keyNode
 
         _ ->
             []

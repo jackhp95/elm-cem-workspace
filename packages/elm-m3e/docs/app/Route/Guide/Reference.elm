@@ -142,8 +142,8 @@ view app _ =
     View.fromElement "Full API reference"
         (Doc.pane
             [ pageHeading
-            , TypedHtml.div [ TA.class "mt-2 max-w-2xl" ]
-                [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+            , TypedHtml.div [ TA.class "mt-2 max-w-2xl doc-muted" ]
+                [ TypedHtml.p []
                     [ M3e.text "Every "
                     , TypedHtml.code [] [ M3e.text "M3e.*" ]
                     , M3e.text " module, its overview, and every exposed value — extracted from the library source at build time."
@@ -168,11 +168,16 @@ generic **barrel** teaching form vs the precise **specific-module** form.
 Keeps the reference's terminology aligned with `/guide/the-layers` and
 `/guide/strictness` so a reader never meets a fifth name for the same idea.
 -}
-twoForms : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+twoForms : Element (M3e.Component.Card.Is s) adm_ msg
 twoForms =
-    TypedHtml.div [ TA.class "mt-8 max-w-2xl rounded-md-corner-medium bg-surface-container p-4 space-y-2" ]
-        [ TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-primary" ] [ M3e.text "Two forms" ]
-        , TypedHtml.div [ TA.class "text-on-surface-variant" ] [ Doc.markdown twoFormsText ]
+    M3e.card
+        [ M3e.Component.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "space-y-2" ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-accent" ] [ M3e.text "Two forms" ]
+                , Doc.markdown twoFormsText
+                ]
+            )
         ]
 
 
@@ -207,13 +212,9 @@ barrelBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "mt-12 scroll-mt-6 space-y-6" ]
         [ M3e.divider [] []
-        , TypedHtml.h2
-            []
-            [ TypedHtml.span [ TA.class "text-headline-sm" ]
-                [ TypedHtml.code [ TA.class "text-primary" ] [ M3e.text c.moduleName ]
-                , M3e.text "  · the barrel"
-                ]
-            ]
+        , M3e.heading
+            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2, TA.class "doc-accent" ]
+            [ M3e.text (c.moduleName ++ "  · the barrel") ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , barrelGroup "Component constructors" isBarrelConstructor c.members
         , barrelGroup "Variants" (isPrefixed "variant") c.members
@@ -255,7 +256,7 @@ barrelGroup label pred members =
             TypedHtml.section
                 [ TA.class "space-y-3" ]
                 [ M3e.heading
-                    [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, M3e.Attributes.level 3, TA.class "text-on-surface" ]
+                    [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, M3e.Attributes.level 3 ]
                     [ M3e.text (label ++ " (" ++ String.fromInt (List.length ms) ++ ")") ]
                 , TypedHtml.div [ TA.class "space-y-3" ] (List.map memberRow ms)
                 ]
@@ -266,11 +267,9 @@ componentBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "scroll-mt-6 space-y-4" ]
         [ M3e.divider [] []
-        , TypedHtml.h2
-            []
-            [ TypedHtml.span [ TA.class "text-headline-sm" ]
-                [ TypedHtml.code [ TA.class "text-primary" ] [ M3e.text c.moduleName ] ]
-            ]
+        , M3e.heading
+            [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2, TA.class "doc-accent" ]
+            [ M3e.text c.moduleName ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , TypedHtml.div [ TA.class "space-y-3" ]
             (List.map memberRow c.members)
@@ -319,6 +318,6 @@ prose layoutCls bodyCls s =
                 (\para ->
                     TypedHtml.p
                         [ TA.class "mt-2 first:mt-0 whitespace-pre-line" ]
-                        [ TypedHtml.span [ TA.class (bodyCls ++ " text-on-surface-variant") ] [ M3e.text para ] ]
+                        [ TypedHtml.span [ TA.class (bodyCls ++ " doc-muted") ] [ M3e.text para ] ]
                 )
         )

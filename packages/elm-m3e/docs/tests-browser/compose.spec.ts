@@ -265,7 +265,13 @@ test("the change-component picker is grouped, searchable, and offers no example 
 
   // (b) Typing a query narrows the list — "accordion" is a unique-enough
   // substring that only it should remain.
-  await picker.getByPlaceholder("Search components").fill("accordion");
+  //
+  // Located by LABEL, not placeholder: the search box is an `M3e.formField`
+  // with a real `<label for>` rather than a bare input wearing a placeholder.
+  // Placeholder-as-label is an accessibility anti-pattern (it vanishes on
+  // first keystroke and is not reliably announced), so the field gained a
+  // genuine label when the picker stopped hand-painting its own text field.
+  await picker.getByLabel("Search components").fill("accordion");
   await expect(picker.getByRole("button")).toHaveCount(1);
   await expect(picker.getByRole("button", { name: "accordion", exact: true })).toBeVisible();
 

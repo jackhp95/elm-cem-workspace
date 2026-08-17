@@ -332,7 +332,19 @@ materialDiscipline =
         |> Rule.ignoreErrorsForDirectories
             [ "app/Route/Styles/", "docs/app/Route/Styles/" ]
         |> Rule.ignoreErrorsForFiles
-            [ "app/Route/Guide/Theming.elm", "docs/app/Route/Guide/Theming.elm" ]
+            [ "app/Route/Guide/Theming.elm"
+            , "docs/app/Route/Guide/Theming.elm"
+
+            -- The theme editor's own live previews, exempt for exactly the same
+            -- reason as `Route/Styles/`: the swatch that shows you which corner
+            -- radius you just picked has to APPLY that radius, and the type-scale
+            -- preview has to apply the computed font size. They are specimens of
+            -- the token being edited, not surfaces that forgot to use a component.
+            , "app/Theme/Sections/Shape.elm"
+            , "docs/app/Theme/Sections/Shape.elm"
+            , "app/Theme/Sections/Typography.elm"
+            , "docs/app/Theme/Sections/Typography.elm"
+            ]
     ]
 
 

@@ -296,4 +296,84 @@ view = Csv.class "bg-surface"
                             ]
             , expectAllowed "empty class string" ""
             ]
+        , describe "non-literal class arguments"
+            [ test "finds a painting class concatenated onto a computed part" <|
+                \() ->
+                    """module A exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view bodyCls = TH.span [ TA.class (bodyCls ++ " text-on-surface-variant") ] []
+"""
+                        |> Review.Test.run rule
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "text-on-surface-variant"
+                                , under = "\" text-on-surface-variant\""
+                                }
+                            ]
+            , test "finds a painting class on the left of a concatenation" <|
+                \() ->
+                    """module A exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view shadow = TH.div [ TA.class ("bg-surface-container-high p-4 " ++ shadow) ] []
+"""
+                        |> Review.Test.run rule
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "bg-surface-container-high"
+                                , under = "\"bg-surface-container-high p-4 \""
+                                }
+                            ]
+            , test "checks both branches of an if" <|
+                \() ->
+                    """module A exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view selected = TH.div [ TA.class (if selected then "bg-surface-container" else "flex gap-2") ] []
+"""
+                        |> Review.Test.run rule
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "bg-surface-container"
+                                , under = "\"bg-surface-container\""
+                                }
+                            ]
+            , test "checks every branch of a case" <|
+                \() ->
+                    """module A exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view kind =
+    TH.div
+        [ TA.class
+            (case kind of
+                1 -> "flex"
+                _ -> "rounded-lg"
+            )
+        ]
+        []
+"""
+                        |> Review.Test.run rule
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "rounded-lg"
+                                , under = "\"rounded-lg\""
+                                }
+                            ]
+            , test "a fully computed class is invisible — the documented limit" <|
+                \() ->
+                    """module A exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view density = TH.div [ TA.class (densityClass density) ] []
+densityClass d = "bg-surface"
+"""
+                        |> Review.Test.run rule
+                        |> Review.Test.expectNoErrors
+            ]
         ]

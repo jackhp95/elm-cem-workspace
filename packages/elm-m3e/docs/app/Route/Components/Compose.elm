@@ -687,7 +687,7 @@ attrGroup path model =
         chips ->
             TypedHtml.div [ TA.class "compose-attr-group flex flex-col gap-2" ]
                 (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                    (groupLabel "text-on-surface-variant" "Attributes" :: List.map (attrButtonElement path) chips)
+                    (groupLabel "doc-accent" "Attributes" :: List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
@@ -712,7 +712,7 @@ slotGroup ctx path model =
 
         chips ->
             TypedHtml.div [ TA.class "compose-slot-group flex flex-wrap items-center gap-2" ]
-                (groupLabel "text-on-surface-variant" "Slots" :: List.map (slotControl ctx path model) chips)
+                (groupLabel "doc-accent-tertiary" "Slots" :: List.map (slotControl ctx path model) chips)
 
 
 {-| A group's caption — the color class ties the caption to its group's
@@ -721,7 +721,7 @@ left-border color (primary for Attributes, tertiary for Slots), reinforcing the
 -}
 groupLabel : String -> String -> Element (Grouping.PIs s) admittedBy msg
 groupLabel colorClass label =
-    TypedHtml.p [ TA.class ("text-label-sm uppercase tracking-wide " ++ colorClass) ] [ TypedHtml.text label ]
+    TypedHtml.p [ TA.class colorClass ] [ TypedHtml.text label ]
 
 
 {-| The edit-tag control: an icon button that toggles the change-component
@@ -904,7 +904,7 @@ pickerEntry reference name =
 pickerSection : (String -> Msg) -> ( String, List PickerEntry ) -> Element (Grouping.DivIs s) admittedBy Msg
 pickerSection onPick ( category, entries ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
-        [ groupLabel "text-on-surface-variant" category
+        [ groupLabel "doc-muted" category
         , M3e.list [] (List.map (pickerItem onPick) entries)
         ]
 
@@ -1295,14 +1295,14 @@ slotAddPanel ctx path slotName compose =
                         []
 
                       else
-                        [ groupLabel "text-on-surface-variant" "Nest a component"
+                        [ groupLabel "doc-muted" "Nest a component"
                         , M3e.list [] (List.map (nestButton ctx path slotName) componentNames)
                         ]
                     , if List.isEmpty examples then
                         []
 
                       else
-                        [ groupLabel "text-on-surface-variant" "Load an example"
+                        [ groupLabel "doc-muted" "Load an example"
                         , M3e.list [] (List.map (exampleButton ctx path slotName compose) examples)
                         ]
                     ]
@@ -1492,7 +1492,7 @@ childRow ctx path slotName index child model =
                     path ++ [ Cem.Compose.IntoSlot slotName index ]
             in
             TypedHtml.div
-                [ TA.class ("compose-child compose-depth-" ++ String.fromInt (List.length childPath) ++ " pl-6 border-l border-outline-variant") ]
+                [ TA.class ("compose-child compose-depth-" ++ String.fromInt (List.length childPath) ++ " pl-6") ]
                 [ viewNode ctx childPath inner model ]
 
         Cem.Compose.ChildText text ->

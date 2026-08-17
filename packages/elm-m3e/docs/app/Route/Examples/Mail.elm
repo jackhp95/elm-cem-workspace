@@ -239,7 +239,7 @@ content in both directions -- which is what the `relative` here anchors.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ navRail
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-w-0 min-h-0" ]
             [ topBar
@@ -462,10 +462,10 @@ messageRow selected index message =
         rowSurface : String
         rowSurface =
             if index == selected then
-                "bg-surface-container text-on-surface"
+                "doc-row-selected"
 
             else
-                "bg-surface text-on-surface"
+                ""
     in
     M3e.listAction
         [ TA.class rowSurface
@@ -476,7 +476,7 @@ messageRow selected index message =
         , M3e.text message.subject
         , M3e.Component.ListAction.supportingText (M3e.text message.snippet)
         , M3e.Component.ListAction.trailing
-            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface-variant" ] [ M3e.text message.time ])
+            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text message.time ])
         ]
 
 
@@ -492,18 +492,18 @@ readingPane : Message -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 readingPane message =
     TypedHtml.div [ TA.class "flex flex-col gap-6 p-6" ]
         [ closeReader
-        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text message.subject ]
+        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text message.subject ]
         , TypedHtml.div [ TA.class "flex items-center gap-3" ]
             [ M3e.avatar [] [ M3e.text message.initials ]
             , TypedHtml.div [ TA.class "flex flex-col" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text message.sender ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface-variant" ] [ M3e.text ("to me · " ++ message.time) ]
+                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text message.sender ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "doc-muted" ] [ M3e.text ("to me · " ++ message.time) ]
                 ]
             ]
         , M3e.chipSet [ Aria.label "Labels" ]
             (List.map labelChip message.labels)
         , TypedHtml.div [ TA.class "flex flex-col gap-4" ]
-            (List.map (\p -> TypedHtml.p [ TA.class "text-body-md text-on-surface-variant" ] [ M3e.text p ]) message.body)
+            (List.map (\p -> TypedHtml.p [ TA.class "doc-muted" ] [ M3e.text p ]) message.body)
         ]
 
 

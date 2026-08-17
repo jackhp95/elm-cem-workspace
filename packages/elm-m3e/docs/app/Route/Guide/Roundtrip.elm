@@ -258,8 +258,8 @@ view app _ =
     View.fromElement "Round-trip report"
         (Doc.pane
             [ pageHeading
-            , TypedHtml.div [ TA.class "mt-2 max-w-2xl" ]
-                [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+            , TypedHtml.div [ TA.class "mt-2 max-w-2xl doc-muted" ]
+                [ TypedHtml.p []
                     [ M3e.text "Every example is converted from HTML to Elm and back to HTML. This page reports, per API, how many examples convert, stay clean of escape hatches, and survive the round-trip. A clean round-trip means no functional deviations — cosmetic differences (class/style, unreferenced ids, and typed-layer role/slot normalization) are recorded but not scored. Cells are ranked functional-deviations-first so real regressions surface at the top." ]
                 ]
             , surfaceLegend
@@ -273,12 +273,16 @@ view app _ =
 vocabulary, so the form names aren't undefined jargon. `top`/`record`/`build`/`barrel`
 are the four interchangeable [surfaces](/guide/the-layers).
 -}
-surfaceLegend : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+surfaceLegend : Element (M3e.Component.Card.Is s) adm_ msg
 surfaceLegend =
-    TypedHtml.section
-        [ TA.class "mt-8 max-w-2xl rounded-md-corner-medium bg-surface-container p-4 space-y-2" ]
-        [ TypedHtml.p [ TA.class "text-label-lg tracking-wide text-primary" ] [ M3e.text "What the form names mean" ]
-        , TypedHtml.div [ TA.class "text-on-surface-variant" ] [ Doc.markdown surfaceLegendText ]
+    M3e.card
+        [ M3e.Component.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "space-y-2" ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "doc-accent" ] [ M3e.text "What the form names mean" ]
+                , Doc.markdown surfaceLegendText
+                ]
+            )
         ]
 
 
@@ -317,8 +321,8 @@ surfaceRow ( name, agg ) =
                 [ TA.class "space-y-1" ]
                 [ TypedHtml.div
                     []
-                    [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-primary" ] [ M3e.text name ] ]
-                , TypedHtml.span [ TA.class "text-body-md text-on-surface-variant" ]
+                    [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "doc-accent" ] [ M3e.text name ] ]
+                , TypedHtml.span []
                     [ M3e.text
                         (String.fromInt agg.converted
                             ++ " / "
@@ -330,7 +334,7 @@ surfaceRow ( name, agg ) =
                             ++ " used escape hatch"
                         )
                     ]
-                , TypedHtml.span [ TA.class "text-body-md" ]
+                , TypedHtml.span []
                     [ M3e.text
                         (String.fromInt agg.roundtripFunctionalMatched
                             ++ " functional clean · "
@@ -338,7 +342,7 @@ surfaceRow ( name, agg ) =
                             ++ " functional deviated"
                         )
                     ]
-                , TypedHtml.span [ TA.class "text-body-sm text-on-surface-variant" ]
+                , TypedHtml.span []
                     [ M3e.text
                         ("(strict: "
                             ++ String.fromInt agg.roundtripMatched
@@ -395,10 +399,10 @@ cellRow c =
         deviationColor : String
         deviationColor =
             if c.functionalMatches == Just False then
-                "text-error"
+                "doc-error"
 
             else
-                "text-on-surface-variant"
+                "doc-muted"
     in
     M3e.card
         [ M3e.Component.Card.variant Value.outlined ]
@@ -407,11 +411,9 @@ cellRow c =
                 [ TA.class "space-y-1" ]
                 [ TypedHtml.div
                     []
-                    [ TypedHtml.span [ TA.class "text-title-md" ]
-                        [ TypedHtml.code [] [ M3e.text c.id ] ]
-                    ]
-                , TypedHtml.span [ TA.class ("text-body-md " ++ deviationColor) ] [ M3e.text deviationText ]
-                , TypedHtml.span [ TA.class "text-body-sm text-on-surface-variant" ] [ M3e.text escapeText ]
+                    [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text c.id ] ]
+                , TypedHtml.span [ TA.class deviationColor ] [ M3e.text deviationText ]
+                , TypedHtml.span [] [ M3e.text escapeText ]
                 ]
             )
         ]

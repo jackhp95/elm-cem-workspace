@@ -107,7 +107,6 @@ docs/app/Compose/Codegen.elm
 docs/tests-browser/compose.spec.ts
 docs/app/Compose/FromHtml.elm
 docs/tests/FromHtmlTest.elm
-review/suppressed/NoProprietaryDsClasses.json
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -155,17 +154,6 @@ EOF
 # docs/tests/FromHtmlTest.elm — Compose G-Ex1: worker-test for the parser
 #   above; new to this monorepo's Compose POC, absent from the upstream
 #   elm-m3e checkout.
-# review/suppressed/NoProprietaryDsClasses.json — TRANSIENT. `NoProprietaryDsClasses`
-#   was strengthened from "no ds-/t- tokens" into the full layout-only classifier
-#   (Tailwind may position; only m3e components may paint), which surfaced 166
-#   pre-existing violations in the docs app at once. Per Jack's decision the rule
-#   REPORTS while those burn down rather than blocking the gate on day one, and
-#   elm-review's own suppression system is the mechanism: the gate stays green and
-#   the count can only go DOWN, never up. DELETE this entry together with the JSON
-#   file the moment the count reaches zero — at that point the rule is simply
-#   blocking, which is the end state. If you are reading this comment long after
-#   the fact, the burn-down stalled and that is the bug.
-
 # elm-m3e-families/ — the FAMILIES layer (L3): a monorepo-only nested package
 # elm-cem generates alongside the components (its own README/LICENSE/elm.json +
 # one M3e/Family/*.elm module per component family). Like elm-m3e-icons/ it is a

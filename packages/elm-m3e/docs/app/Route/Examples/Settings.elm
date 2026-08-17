@@ -21,6 +21,7 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.AppBar
+import M3e.Component.Card
 import M3e.Component.ListItem
 import M3e.Component.NavItem
 import M3e.Component.SliderThumb
@@ -195,7 +196,7 @@ but it keeps the bounded-scroll invariant from depending on that.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ desktopRail model.section
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-h-0 overflow-hidden" ]
             [ appBar
@@ -327,16 +328,28 @@ content model =
     ]
 
 
-{-| A settings section: an overline heading above a rounded surface-container card
-whose `ListItem` rows are separated by `Divider`s.
+{-| A settings section: an overline heading above a rounded card grouping the
+section's `ListItem` rows.
 -}
 sectionCard : String -> List (Row msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admOut_ msg
 sectionCard heading rows =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ Doc.sectionLabelCaps heading
-        , TypedHtml.div
-            [ TA.class "bg-surface-container text-on-surface rounded-md-corner-large overflow-hidden flex flex-col" ]
-            (dividize rows)
+        , groupedCard rows
+        ]
+
+
+{-| A card grouping a column of `ListItem` rows, separated by `Divider`s so the
+group reads as a single section.
+-}
+groupedCard : List (Row msg) -> Element { s | card : M3e.Kind.Brand } adm_ msg
+groupedCard rows =
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class "m3e-card-shape-md-corner-large"
+        ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "flex flex-col" ] (dividize rows))
         ]
 
 
@@ -354,19 +367,16 @@ accountCard : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 accountCard =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ Doc.sectionLabelCaps "Account"
-        , TypedHtml.div
-            [ TA.class "bg-surface-container text-on-surface rounded-md-corner-large overflow-hidden flex flex-col" ]
-            (dividize
-                [ M3e.listItem []
-                    [ M3e.Component.ListItem.leading (M3e.avatar [] [ M3e.text "JD" ])
-                    , M3e.text "Jane Doe"
-                    , M3e.Component.ListItem.supportingText (M3e.text "jane@example.com")
-                    , M3e.Component.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
-                    ]
-                , linkRow "manage_accounts" "Manage account" "Password, 2FA, connected apps"
-                , linkRow "sync" "Sync & backup" "Last synced 2 minutes ago"
+        , groupedCard
+            [ M3e.listItem []
+                [ M3e.Component.ListItem.leading (M3e.avatar [] [ M3e.text "JD" ])
+                , M3e.text "Jane Doe"
+                , M3e.Component.ListItem.supportingText (M3e.text "jane@example.com")
+                , M3e.Component.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
                 ]
-            )
+            , linkRow "manage_accounts" "Manage account" "Password, 2FA, connected apps"
+            , linkRow "sync" "Sync & backup" "Last synced 2 minutes ago"
+            ]
         ]
 
 
@@ -453,5 +463,5 @@ infoRow iconName label value =
         [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
         , M3e.Component.ListItem.trailing
-            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ] [ M3e.text value ])
+            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text value ])
         ]
