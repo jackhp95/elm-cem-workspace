@@ -825,31 +825,40 @@ settingsBottomSheet model =
 
 
 {-| One accordion entry: a header (plain text label) plus the section's body.
-`M3e.Unsafe.recast` re-kinds both the header and body to the free rows that
-`M3e.Component.ExpansionPanel.component`'s `childAccepts` type variable unifies to. This is the
-sanctioned escape hatch (see `src/M3e/Unsafe.elm`) for exactly this
-"wrap already-built content into a slot it wasn't originally typed for" case.
-Lives here (allow-listed) rather than in `Theme.elm` (not allow-listed) per the
-`NoUnsafeImportOutsideAllowed` fence.
+
+This used to need TWO `M3e.Unsafe.recast` calls, and they were a codegen-config
+bug rather than a genuine type gap. `config/slots.json` declared the panel's
+`header` slot as `"kinds": ["any"]`, exactly like its `unnamed` slot, so codegen
+gave both the SAME `childAccepts` type variable — forcing the header and the body
+to unify to one kind. A real `M3e.expansionHeader` therefore could never coexist
+with arbitrary body content, and erasing both rows with `recast` was the only way
+through. The config now declares `header` as `["expansionHeader"]` (the way
+`Accordion`'s `unnamed` already declared `["expansionPanel"]`), codegen emits a
+dedicated `HeaderSlot`, and the typed header drops straight in. No escape needed.
+
 -}
-sectionPanel : String -> Element cs adm msg -> Element { s | expansionPanel : M3e.Kind.Brand } admittedBy msg
+sectionPanel :
+    String
+    -> Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    -> Element { s | expansionPanel : M3e.Kind.Brand } admittedBy msg
 sectionPanel label body =
     M3e.Component.ExpansionPanel.component
-        { header = M3e.expansionHeader [] [ M3e.text label ] |> M3e.Unsafe.recast }
+        { header = M3e.expansionHeader [] [ M3e.text label ] }
         []
-        [ M3e.Unsafe.recast body ]
+        [ body ]
 
 
 {-| The 5 theme-editor sections wrapped in an accordion. Assembles the
-`sectionsEl` passed to `Theme.view`. Lives here (allow-listed) because
-`sectionPanel` needs `M3e.Unsafe.recast`.
+`sectionsEl` passed to `Theme.view`. The section bodies carry the expansion
+panel's own `ChildAdmittedBy` row rather than a bare type variable, which is what
+lets `sectionPanel` place them in a typed slot with no escape hatch.
 -}
 sectionsAccordion :
-    { color : Element cs adm msg
-    , typography : Element cs adm msg
-    , shape : Element cs adm msg
-    , appearance : Element cs adm msg
-    , advanced : Element cs adm msg
+    { color : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , typography : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , shape : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , appearance : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , advanced : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
     }
     -> Element { s | accordion : M3e.Kind.Brand } admittedBy msg
 sectionsAccordion themeSections =

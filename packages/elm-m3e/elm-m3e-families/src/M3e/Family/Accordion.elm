@@ -1,4 +1,4 @@
-module M3e.Family.Accordion exposing (AccordionIs, AccordionAttrs, AccordionBuilder, AccordionAttrCaps, AccordionSlotCaps, AccordionContent, AccordionChildAdmittedBy, PanelIs, PanelAttrs, PanelBuilder, PanelAttrCaps, PanelSlotCaps, PanelToggleIconSlot, PanelChildAdmittedBy, PanelToggleDirection, PanelTogglePosition, accordion, accordionMulti, accordionChild, panel, panelToggleDirection, panelTogglePosition, panelDisabled, panelHideToggle, panelOpen, panelOnOpening, panelOnOpened, panelOnClosing, panelOnClosed, panelActions, panelHeader, panelToggleIcon, panelChild)
+module M3e.Family.Accordion exposing (AccordionIs, AccordionAttrs, AccordionBuilder, AccordionAttrCaps, AccordionSlotCaps, AccordionContent, AccordionChildAdmittedBy, PanelIs, PanelAttrs, PanelBuilder, PanelAttrCaps, PanelSlotCaps, PanelHeaderSlot, PanelToggleIconSlot, PanelChildAdmittedBy, PanelToggleDirection, PanelTogglePosition, accordion, accordionMulti, accordionChild, panel, panelToggleDirection, panelTogglePosition, panelDisabled, panelHideToggle, panelOpen, panelOnOpening, panelOnOpened, panelOnClosing, panelOnClosed, panelActions, panelHeader, panelToggleIcon, panelChild)
 
 {-| The **Accordion** family — flat module re-exporting its member elements.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `M3e.Component.*` modules and
 this family module are the same elements, same types.
 
-@docs AccordionIs, AccordionAttrs, AccordionBuilder, AccordionAttrCaps, AccordionSlotCaps, AccordionContent, AccordionChildAdmittedBy, PanelIs, PanelAttrs, PanelBuilder, PanelAttrCaps, PanelSlotCaps, PanelToggleIconSlot, PanelChildAdmittedBy, PanelToggleDirection, PanelTogglePosition, accordion, accordionMulti, accordionChild, panel, panelToggleDirection, panelTogglePosition, panelDisabled, panelHideToggle, panelOpen, panelOnOpening, panelOnOpened, panelOnClosing, panelOnClosed, panelActions, panelHeader, panelToggleIcon, panelChild
+@docs AccordionIs, AccordionAttrs, AccordionBuilder, AccordionAttrCaps, AccordionSlotCaps, AccordionContent, AccordionChildAdmittedBy, PanelIs, PanelAttrs, PanelBuilder, PanelAttrCaps, PanelSlotCaps, PanelHeaderSlot, PanelToggleIconSlot, PanelChildAdmittedBy, PanelToggleDirection, PanelTogglePosition, accordion, accordionMulti, accordionChild, panel, panelToggleDirection, panelTogglePosition, panelDisabled, panelHideToggle, panelOpen, panelOnOpening, panelOnOpened, panelOnClosing, panelOnClosed, panelActions, panelHeader, panelToggleIcon, panelChild
 
 -}
 
@@ -94,7 +94,7 @@ accordionChild =
 {-| The `panel` element of this family — delegates to [`M3e.Component.ExpansionPanel.component`](M3e.Component.ExpansionPanel#component).
 -}
 panel :
-    { header : Element childAccepts (PanelChildAdmittedBy childAdm) msg }
+    { header : Element PanelHeaderSlot (PanelChildAdmittedBy childAdm) msg }
     -> List (Attr PanelAttrs msg)
     -> List (Element childAccepts (PanelChildAdmittedBy childAdm) msg)
     -> Element (PanelIs s) admittedBy msg
@@ -130,6 +130,12 @@ type alias PanelAttrCaps =
 -}
 type alias PanelSlotCaps =
     Panel_.SlotCaps
+
+
+{-| See [`M3e.Component.ExpansionPanel.HeaderSlot`](M3e.Component.ExpansionPanel#HeaderSlot).
+-}
+type alias PanelHeaderSlot =
+    Panel_.HeaderSlot
 
 
 {-| See [`M3e.Component.ExpansionPanel.ToggleIconSlot`](M3e.Component.ExpansionPanel#ToggleIconSlot).
@@ -228,7 +234,7 @@ panelActions =
 
 {-| See [`M3e.Component.ExpansionPanel.header`](M3e.Component.ExpansionPanel#header).
 -}
-panelHeader : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+panelHeader : Element PanelHeaderSlot admittedBy msg -> Element free freeAdmittedBy msg
 panelHeader =
     Panel_.header
 

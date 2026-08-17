@@ -31,6 +31,10 @@ type alias Attrs =
     }
 
 
+type alias HeaderSlot =
+    { expansionHeader : Brand }
+
+
 type alias ToggleIconSlot =
     { sharedIcon : Shared }
 

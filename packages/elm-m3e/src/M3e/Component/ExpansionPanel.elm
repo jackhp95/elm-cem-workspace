@@ -1,6 +1,6 @@
 module M3e.Component.ExpansionPanel exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
     , ToggleDirection, toggleDirection, TogglePosition, togglePosition
     , disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
     , actions, header, toggleIcon, child
@@ -11,7 +11,7 @@ module M3e.Component.ExpansionPanel exposing
 An expandable details-summary view.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
 @docs ToggleDirection, toggleDirection, TogglePosition, togglePosition
 @docs disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
 @docs actions, header, toggleIcon, child
@@ -40,6 +40,12 @@ type alias Is s =
 -}
 type alias Attrs =
     M3e.Internal.Types.ExpansionPanel.Attrs
+
+
+{-| The kinds the `header` slot admits.
+-}
+type alias HeaderSlot =
+    M3e.Internal.Types.ExpansionPanel.HeaderSlot
 
 
 {-| The kinds the `toggle-icon` slot admits.
@@ -87,7 +93,7 @@ type alias SlotCaps =
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
 component :
-    { header : Element childAccepts (ChildAdmittedBy childAdm) msg }
+    { header : Element HeaderSlot (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
@@ -169,7 +175,7 @@ actions element =
 {-| Place an element into the named `header` slot (input constrained to the
 slot's kinds; output row free so it composes into the child list).
 -}
-header : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+header : Element HeaderSlot admittedBy msg -> Element free freeAdmittedBy msg
 header element =
     Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "header") (El.toNode element))
 

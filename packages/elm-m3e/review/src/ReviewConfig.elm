@@ -469,7 +469,7 @@ complexity =
 
 
 
--- toHtml GATE ----------------------------------------------------------------
+-- toHtml GATE + THE RECAST FENCE ----------------------------------------------
 
 
 {-| `M3e.Node.toHtml` is the single escape hatch from the Node IR to Html. It
@@ -483,10 +483,43 @@ The test suite (which lives in `../tests/` relative to docs/elm.json) calls
 `Node.toHtml` to produce `Html` values for assertion; those are acceptable.
 Because the review is run from `docs/` the path prefix is `../tests/`.
 
+
+## The recast fence
+
+`recast` / `recastAll` / `recastAttr` / `recastAttrAll` re-kind an element or
+attribute by throwing away its phantom rows, so anything drops into any slot.
+They exist for CONSUMERS who deliberately deviate from Material patterns and want
+their deviations to stay internally consistent. **This docs app sticks to standard
+Material, so it should never need one** — a recast here means one of exactly two
+things, and both are bugs with a real fix:
+
+1.  a **codegen-config failure** — a slot in `config/slots.json` is declared with
+    the wrong kinds, so the generated type is wrong; or
+2.  **invalid markup** — the page is putting content somewhere Material does not
+    put it.
+
+That is not a theory. The docs app's only two recast call sites were both in
+`Shared.sectionPanel`, and they were case 1: the expansion panel's `header` slot
+was declared `"kinds": ["any"]`, identical to its `unnamed` slot, so codegen gave
+both the SAME type variable and forced the header and body to unify. Fixing the
+config to `["expansionHeader"]` made both escapes evaporate. The count is now
+ZERO, which is why there is no `Recast` module to centralise into — there is
+nothing left to centralise, and an empty designated module would be worse than
+none.
+
+So the fence allows these functions **only in the library module that defines
+them**. If this rule ever fires, do not add the calling module to the allow-list:
+find out which of the two causes above it is and fix that instead.
+
 -}
 toHtmlGate : List Rule
 toHtmlGate =
     [ NoFunctionOutsideOfModules.rule
-        [ ( [ "M3e.Node.toHtml" ], [ "Shared", "M3e.Node" ] ) ]
+        [ ( [ "M3e.Node.toHtml" ], [ "Shared", "M3e.Node" ] )
+        , ( [ "M3e.Unsafe.recast", "M3e.Unsafe.recastAll" ], [ "M3e.Unsafe" ] )
+        , ( [ "M3e.Unsafe.Attributes.recastAttr", "M3e.Unsafe.Attributes.recastAttrAll" ]
+          , [ "M3e.Unsafe.Attributes" ]
+          )
+        ]
         |> Rule.ignoreErrorsForDirectories [ "../tests/", "tests/" ]
     ]

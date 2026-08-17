@@ -1,6 +1,6 @@
 module M3e.Build.ExpansionPanel exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ToggleIconSlot, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
     , withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition
     , actions, header, toggleIcon
     , withHeader, withToggleIcon, withActions, withChild
@@ -9,7 +9,7 @@ module M3e.Build.ExpansionPanel exposing
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ToggleIconSlot, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
 @docs withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition
 @docs actions, header, toggleIcon
 @docs withHeader, withToggleIcon, withActions, withChild
@@ -54,13 +54,18 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias HeaderSlot =
+    Component.HeaderSlot
+
+
+{-| -}
 type alias ToggleIconSlot =
     Component.ToggleIconSlot
 
 
 {-| -}
 build :
-    { header : Element childAccepts (Component.ChildAdmittedBy childAdm) msg }
+    { header : Element Component.HeaderSlot (Component.ChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-expansion-panel" [] [ El.toNode (Component.header required_.header) ]
@@ -82,7 +87,7 @@ actions builder =
 
 {-| -}
 header :
-    B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
     -> Element free freeAdmittedBy msg
 header builder =
     Component.header (B.toElement builder)
@@ -98,7 +103,7 @@ toggleIcon builder =
 
 {-| -}
 withHeader :
-    B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
     -> Builder attrCaps { s | header : Available } msg kind
     -> Builder attrCaps { s | header : Used } msg kind
 withHeader slotBuilder builder_ =
