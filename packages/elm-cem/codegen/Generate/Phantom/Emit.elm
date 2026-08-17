@@ -6997,8 +6997,23 @@ hasElOf comp =
 surfacesOf : Brand -> Maybe String -> Maybe String -> Comp -> Dict.Dict String Encode.Value
 surfacesOf brand tokenModule actionModule_ comp =
     let
-        moduleName =
-            brand.lib ++ "." ++ (memberRef brand comp).module_
+        -- Per-surface module names, mirroring EXACTLY the source modules the
+        -- generator emits: the strict per-component ctor surface lives in
+        -- `<Lib>.Component.<Member>` (barrel imports it at ~L4729;
+        -- `guardComponentModule` names it) and the phantom builder in
+        -- `<Lib>.Build.<Member>` (`guardBuildModule`). The pre-R-025 flat
+        -- `<Lib>.<Member>` no longer exists, so Face C MUST carry the infixed
+        -- names — otherwise every downstream Elm snippet (Code Connect, docs)
+        -- names a module that isn't there. `memberRef` handles home/native
+        -- components (module_ = the home module) so this stays a faithful mirror.
+        surfaceMemberName =
+            (memberRef brand comp).module_
+
+        topSurfaceModule =
+            brand.lib ++ ".Component." ++ surfaceMemberName
+
+        buildSurfaceModule =
+            brand.lib ++ ".Build." ++ surfaceMemberName
 
         -- The single `component` ctor IS the top surface. Its form is the loose
         -- double-list when nothing is required, and the required-record form when
@@ -7008,7 +7023,7 @@ surfacesOf brand tokenModule actionModule_ comp =
             ( "top"
             , Encode.object
                 [ ( "facet", Encode.string "Standard" )
-                , ( "module", Encode.string moduleName )
+                , ( "module", Encode.string topSurfaceModule )
                 , ( "entry", Encode.string "component" )
                 , ( "form"
                   , Encode.string
@@ -7027,7 +7042,7 @@ surfacesOf brand tokenModule actionModule_ comp =
             ( "build"
             , Encode.object
                 [ ( "facet", Encode.string "Build" )
-                , ( "module", Encode.string moduleName )
+                , ( "module", Encode.string buildSurfaceModule )
                 , ( "entry", Encode.string "build" )
                 , ( "form", Encode.string "pipeline" )
                 , ( "finalizer", Encode.string "toElement" )
@@ -7128,8 +7143,15 @@ encodeComponent brand tokenModule actionModule_ comp =
         ref =
             memberRef brand comp
 
+        -- The component's strict per-component surface module (`component` ctor,
+        -- setters, slot placers) — `<Lib>.Component.<Member>`, mirroring the
+        -- emitted source (guardComponentModule) and `surfacesOf`'s `top`
+        -- surface. Consumers (the elm emitter's nested-child + slot rendering)
+        -- read this `module` field to spell a component referenced INSIDE a
+        -- snippet (a Button in a Dialog, the `icon` slot placer). The pre-R-025
+        -- flat `<Lib>.<Member>` no longer exists, so it must carry the infix.
         moduleName =
-            brand.lib ++ "." ++ ref.module_
+            brand.lib ++ ".Component." ++ ref.module_
 
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")

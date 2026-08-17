@@ -290,6 +290,10 @@ function main() {
     runItem("workspace: check-elm-shape-drift (Phase 1 canonical-engine gate)", process.execPath, [
         path.join(repoRoot, "tools", "check-elm-shape-drift.mjs"),
     ]);
+    runItem("workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)", process.execPath, [
+        path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
+        "--strict",
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

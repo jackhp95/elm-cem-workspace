@@ -66,9 +66,13 @@ export function renderTextSeam(textSeam, text) {
   return `${textSeam}.text ${JSON.stringify(text ?? "")}`;
 }
 
-// renderNativeAttr(attrSeam, name, value) -> `<seam>.attribute "n" "v"`.
-export function renderNativeAttr(attrSeam, name, value) {
-  return `${attrSeam}.attribute ${JSON.stringify(name)} ${JSON.stringify(value)}`;
+// renderNativeAttr(attrSeam, name, value, fn) -> `<seam>.<fn> "n" "v"`. `fn`
+// defaults to "attribute" (the historical spelling; keeps existing callers and
+// the golden test stable) but is configurable so a consumer whose custom-attr
+// helper is named differently — e.g. TypedHtml's `customAttribute` — can spell
+// it correctly (`TypedHtml.Unsafe.Attributes.customAttribute "n" "v"`).
+export function renderNativeAttr(attrSeam, name, value, fn = "attribute") {
+  return `${attrSeam}.${fn} ${JSON.stringify(name)} ${JSON.stringify(value)}`;
 }
 
 // renderTypedHtml(htmlSeam, tag, attrExprs, childExprs) -> a plain-HTML carrier:

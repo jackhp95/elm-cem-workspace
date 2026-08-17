@@ -23,13 +23,13 @@
 //   dynamic tag -> `M3e.Unsafe.customElement "tag" [attrs] [children]`
 //   <a href>    -> `TypedHtml.a [ …customAttribute "href" … ] [children]`
 //
-// One CRITICAL bridge: Face C records component modules as `M3e.<Name>` (e.g.
-// `M3e.Button`), but the current library ships them under `M3e.Component.<Name>`
-// (`M3e.Component.Button`; verified total, 0 missing) with `M3e.Values` /
-// `M3e.Action` staying flat. B never trips on this because it emits uncompiled
-// `.figma.ts` template holes; A's output IS compile-verified, so A rewrites the
-// component module `M3e.` → `M3e.Component.` here. (This is a genuine Face-C-vs-
-// library drift the workspace should reconcile B-side; see the L5 worklog.)
+// Component modules: Face C now records them as `M3e.Component.<Name>` directly
+// (reconciled at the elm-cem producer 2026-08-17, Stream 2 — Emit.elm's
+// `surfacesOf`/`encodeComponent` carry the `.Component.` infix; see
+// docs/plans/2026-08-17-stream2-cc-elm-naming-reconciliation.md), matching what
+// the library ships. `M3e.Values` / `M3e.Action` stay flat. A therefore uses
+// `comp.module` verbatim — the former `M3e.` → `M3e.Component.` rewrite is gone
+// (keeping it would double-infix to `M3e.Component.Component.<Name>`).
 //
 // Anything genuinely unmappable short-circuits the example with { skip: reason }
 // (never emit non-compiling Elm; verify-examples.mjs is the compile backstop).
@@ -57,10 +57,11 @@ const ATTR_ESCAPE = "TypedHtml.Unsafe.Attributes.customAttribute"; // raw attr
 const NODE_ESCAPE = "M3e.Unsafe.customElement"; // dynamic/string-tag element
 const UNIVERSAL_ATTRIBUTES = "M3e.Attributes"; // open-row id/class universal setters
 
-/** Component module rewrite: Face C's `M3e.Button` -> the real `M3e.Component.Button`.
- * tokenModule (`M3e.Values`) / actionModule (`M3e.Action`) are already correct. */
+/** Component module: Face C now carries the real `M3e.Component.<Name>` directly
+ * (producer-reconciled, Stream 2), so A uses it verbatim. tokenModule
+ * (`M3e.Values`) / actionModule (`M3e.Action`) stay flat and are already correct. */
 function componentModule(comp) {
-  return comp.module.replace(/^M3e\./, "M3e.Component.");
+  return comp.module;
 }
 
 /** JSON-escaped Elm string literal (Elm's escaping is JSON-compatible here). */
