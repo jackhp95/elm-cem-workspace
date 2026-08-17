@@ -79,7 +79,13 @@ export function regeneratePackageOutput({ pkgDir, exclude = [], symlinks = [], g
         throw new Error(`rsync copy of ${pkgDir} failed: ${rsync.error}`);
     }
     for (const link of symlinks) {
-        fs.symlinkSync(path.join(pkgDir, link), path.join(dest, link));
+        // A link may be nested (e.g. "node_modules/elm-cem" — a workspace
+        // dependency that lives under an excluded node_modules/). rsync skipped
+        // node_modules, so its parent dir won't exist in the copy: create it
+        // before symlinking the one read-only input back in.
+        const linkDest = path.join(dest, link);
+        fs.mkdirSync(path.dirname(linkDest), { recursive: true });
+        fs.symlinkSync(path.join(pkgDir, link), linkDest);
     }
     try {
         generate(dest);

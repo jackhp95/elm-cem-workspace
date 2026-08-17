@@ -113,15 +113,28 @@ test("check-drift core (R-008): a real content change beyond the timestamp still
 // COPY (copyCommittedPathsToScratch) — the real tracked tree is never
 // mutated by these tests.
 
+// A descriptor that symlinks in an upstream `.cache` checkout (m3e-okf's
+// guidance/OKF outputs derive from .cache/m3e — the matraic/m3e@v2.7.3 clone,
+// gitignored) cannot be regenerated in a clone that lacks it. The CLI SKIPs it
+// (check-drift.mjs, R-020/R-023); the direct-call tests must match that honesty
+// rather than fail on a missing external input. Same guard, same reason.
+function cacheAbsentSkipReason(descriptor) {
+    if ((descriptor.symlinks || []).includes(".cache") && !fs.existsSync(path.join(descriptor.pkgDir, ".cache", "m3e"))) {
+        return `${path.relative(repoRoot, path.join(descriptor.pkgDir, ".cache", "m3e"))} absent (upstream matraic/m3e@v2.7.3 checkout) — provision it or run in CI where it is provisioned`;
+    }
+    return false;
+}
+
 for (const key of ["cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
     const descriptor = descriptorsByKey[key];
+    const skip = cacheAbsentSkipReason(descriptor);
 
-    test(`check-drift core: GREEN on ${key}'s real, untouched generated output`, () => {
+    test(`check-drift core: GREEN on ${key}'s real, untouched generated output`, { skip }, () => {
         const { ok, failures } = checkConsumerOutputDrift(descriptor);
         assert.equal(ok, true, `expected clean tree to be green, got: ${failures.join(" | ")}`);
     });
 
-    test(`check-drift core: RED when a COPY of ${key}'s committed output is perturbed`, () => {
+    test(`check-drift core: RED when a COPY of ${key}'s committed output is perturbed`, { skip }, () => {
         const scratch = copyCommittedPathsToScratch(descriptor);
         try {
             const targetRel = firstFileUnder(scratch, descriptor.paths[0]);
