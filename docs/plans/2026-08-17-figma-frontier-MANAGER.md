@@ -26,12 +26,14 @@
 | # | leaf | role | tier | status | agent | evidence / envelope |
 |---|---|---|---|---|---|---|
 | S2-a | CC→Elm ref gate (v1) + reconciliation plan | work | opus | **done** | self | commit `b43b38d`; gate RED 83/224 captured |
-| S2-b | producer fix (Emit.elm surfaces+module) + regen | work | opus | **done (uncommitted)** | self | facts M3e.Component.*; 130/130 modules real |
-| S2-c | seam fix (textSeam M3e, attrSeam TypedHtml.customAttribute) + config thread | work | opus | **done (uncommitted)** | self | gate 83→0; --strict green |
-| S2-d | rebaseline 16 emitter unit tests | work | sonnet | **in-verify** | `a9657` | must reach 728 pass / 0 fail + diff review |
-| S2-e | wire gate --strict into gate-all | work | opus | **done (uncommitted)** | self | gate-all.mjs parses; gate green |
-| S2-f | COMMIT S2 green + full gate-all from clean | verify+manage | opus | queued (blocked by S2-d) | self | needs captured `gate-all` exit 0 |
-| S2-map | producer/exposure mapping (corroboration) | verify | sonnet | dispatched | `a77e` | read-only Explore; low priority |
+| S2-b | producer fix (Emit.elm surfaces+module) + regen | work | opus | **done** | self | facts M3e.Component.*; 130/130 modules real |
+| S2-c | seam fix (textSeam M3e, attrSeam TypedHtml.customAttribute) + config thread | work | opus | **done** | self | gate 83→0; --strict green |
+| S2-d | rebaseline 16 emitter unit tests | work | sonnet→opus verify | **done** | `a9657`+self | 728/728; diff reviewed (no weakening) |
+| S2-icon | icon ctor/setter module split fix (found in verify) | work | opus | **done** | self | M3e.Icon.icon + M3e.Component.Icon.filled; imports minimal |
+| S2-engineA | remove A's M3e.→M3e.Component. rewrite (double-infix) | work | opus | **done** | self | to-elm.mjs; elm-m3e test green |
+| S2-e | wire gate --strict into gate-all | work | opus | **done** | self | gate-all blocking check |
+| S2-f | COMMIT S2 + full gate-all from clean | verify+manage | opus | **done** | self | commit `6c80a03`; **gate-all exit 0, 0 failed** (captured) |
+| S2-map | producer/exposure mapping (corroboration) | verify | sonnet | dispatched (superseded — self-verified) | `a77e` | read-only; low priority |
 | P3 | Phase-3 Figma→Elm wiring design | plan | opus | **done (prep)** | self | `2026-08-17-stream2-phase3-figma-to-elm-link.md` |
 | S1-runbook | visual-gate runbook + mechanical-prep spec | plan | sonnet | dispatched | `a68f` | draft → /tmp; integrate + review |
 | S1-work | 4 residual captures (card/fab-menu/date-input/search) | work | — | queued (blocked: bridge live + S1-runbook) | — | ⚑ bridge; captured diff evidence |
