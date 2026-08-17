@@ -403,7 +403,7 @@ cellRow c =
                 [ TA.class "space-y-1" ]
                 [ TypedHtml.div
                     []
-                    [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text c.id ] ]
+                    [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ TypedHtml.code [] [ M3e.text c.id ] ] ]
                 , TypedHtml.span [] [ M3e.text deviationText ]
                 , TypedHtml.span [] [ M3e.text escapeText ]
                 ]

@@ -214,7 +214,9 @@ barrelBlock c =
         [ M3e.divider [] []
         , M3e.heading
             [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2 ]
-            [ M3e.text (c.moduleName ++ "  · the barrel") ]
+            [ TypedHtml.code [] [ M3e.text c.moduleName ]
+            , M3e.text "  · the barrel"
+            ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , barrelGroup "Component constructors" isBarrelConstructor c.members
         , barrelGroup "Variants" (isPrefixed "variant") c.members
@@ -269,7 +271,7 @@ componentBlock c =
         [ M3e.divider [] []
         , M3e.heading
             [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, M3e.Attributes.level 2 ]
-            [ M3e.text c.moduleName ]
+            [ TypedHtml.code [] [ M3e.text c.moduleName ] ]
         , prose "max-w-2xl" "text-body-lg" c.overview
         , TypedHtml.div [ TA.class "space-y-3" ]
             (List.map memberRow c.members)

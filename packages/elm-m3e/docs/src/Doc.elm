@@ -107,9 +107,17 @@ codeBlock lang s =
     in
     -- Auto-derived folding: the fold tree is computed from the raw
     -- string and highlighted per line, so we assemble nested `<details>`
-    -- ourselves rather than emitting one flat highlighted block.
+    -- ourselves rather than emitting one flat highlighted block. The
+    -- `m3e-card` (`filled`) supplies the surface/radius a deleted
+    -- `.doc-code-block` stylesheet class used to fake; the outer `<div>`
+    -- stays a plain div (its `DivIs` kind is pinned verbatim across 42 call
+    -- sites) with the card nested inside it, the same idiom as
+    -- `recapBox`/`ExampleNav.footer`.
     TypedHtml.div [ TA.class wrapperClass ]
-        [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+        [ M3e.card
+            [ M3e.Attributes.variant Value.filled ]
+            [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+        ]
 
 
 {-| Highlight a single code line, keeping the `.elmshN` token classes. Falls
@@ -364,15 +372,24 @@ elmSignature s =
 carrying the outline/hover chrome).
 
 The ideal fix is `m3e-assist-chip` (a chip that "carries a native `href`" per
-its own docs — exactly this pill's job), but its producer kind
-(`{ s | assistChip : Brand }`) cannot satisfy this function's `{ s | sharedText :
-M3e.Kind.Shared }` signature (verified against the compiler: the `assistChip`
-tag is an EXTRA field a rigid `s` can't absorb), and that signature is pinned
-verbatim by `app/Route/Guide.elm`'s `chapterLink`, outside this burn-down's file
-scope. So this stays a native `<a>` with layout classes only. Its former pill
-chrome (shape, border, hover state, label type scale) is dropped rather than
-recreated in a stylesheet — filed as an m3e gap, because the fix is for
-`m3e-assist-chip` to be reachable here, not for this app to own CSS.
+its own docs — exactly this pill's job). `M3e.Coerce.asPhrasing` now exists
+(config `978acce`) and DOES cross `{ s | assistChip : Brand }` to a shared
+kind — but it targets `shared:phrasing` (`{ s | sharedPhrasing : Shared }`),
+not `shared:text`, while this function's signature is pinned verbatim (also
+by `app/Route/Guide.elm`'s `chapterLink`, outside this burn-down's file scope)
+to `{ s | sharedText : M3e.Kind.Shared }`. Those are two DIFFERENT named kind
+rows, and `anchorPill`'s type annotation makes `s` rigid in its body, so the
+compiler cannot pad the missing `sharedText` field onto `asPhrasing`'s
+`sharedPhrasing`-only output (verified against the compiler — `elm make`
+reports a straight `TYPE MISMATCH`: `asPhrasing` produces
+`{ a | sharedPhrasing : Shared, sharedText : Shared }` but the annotation
+demands `{ s | sharedText : Shared }`). The real fix is a `_coerce` target of
+`shared:text` (or an `asText`/`asPhrasing`-with-`sharedText` variant) in
+config, out of this file's scope. So this stays a native `<a>` with layout
+classes only. Its former pill chrome (shape, border, hover state, label type
+scale) is dropped rather than recreated in a stylesheet — filed as an m3e
+gap, because the fix is for `m3e-assist-chip` to be reachable here, not for
+this app to own CSS.
 
 -}
 anchorPill : { href : String, label : String } -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
