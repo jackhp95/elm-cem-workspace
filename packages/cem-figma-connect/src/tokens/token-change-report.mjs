@@ -77,6 +77,13 @@ export function collectStandingChanges(auditPaths = {}, auditOptions = {}) {
       severity: "blocking",
       summary: `unclassified spec-failure (${row.rootCause ?? "none"})`,
     };
+    // L8: carry the audit's measured evidence so this row is a faithful
+    // re-expression of the audit spec-failure (traceable, no re-measurement).
+    const deltaE = Math.max(
+      row.light?.deLightComputed ?? 0,
+      row.dark?.deDarkComputed ?? 0,
+      row.light?.deLightFallback ?? 0,
+    );
     changes.push({
       source: "audit",
       token: row.md,
@@ -85,7 +92,9 @@ export function collectStandingChanges(auditPaths = {}, auditOptions = {}) {
       reason: map.reason,
       severity: map.severity,
       file: map.file,
-      detail: map.summary,
+      rootCause: row.rootCause,
+      deltaE: Number(deltaE.toFixed(3)),
+      detail: `${map.summary} (max deltaE ${deltaE.toFixed(3)})`,
     });
   }
 
@@ -99,6 +108,7 @@ export function collectStandingChanges(auditPaths = {}, auditOptions = {}) {
       reason: "value-mismatch",
       severity: "blocking",
       file: row.codeFile ? `tailwind-m3e-web/${row.codeFile.replace(/^tailwind-m3e-web\//, "")}` : "tailwind-m3e-web/src/sys/typescale.css",
+      rootCause: "numeric-spec-failure",
       detail: row.classificationDetail ?? "numeric spec-failure (exact-match)",
     });
   }
