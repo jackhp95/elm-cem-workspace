@@ -702,7 +702,7 @@ skipLink : Element { s | sharedText : M3e.Kind.Shared } adm_ msg
 skipLink =
     TypedHtml.a
         [ TypedHtml.Attributes.href "#main-content"
-        , TypedHtml.Attributes.class "sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary focus:shadow-md-level2"
+        , TypedHtml.Attributes.class "skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
         ]
         [ M3e.text "Skip to main content" ]
 
@@ -914,7 +914,7 @@ settingsSheetContent model =
 controlLabel : String -> Element { s | heading : M3e.Kind.Brand } admittedBy Msg
 controlLabel lbl =
     M3e.heading
-        [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TypedHtml.Attributes.class "text-on-surface" ]
+        [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ]
         [ M3e.text lbl ]
 
 
@@ -1040,19 +1040,19 @@ searchResults : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admitted
 searchResults model =
     case model.searchIndex of
         Nothing ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Loading..." ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Loading..." ]
 
         Just (Err _) ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Search unavailable" ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Search unavailable" ]
 
         Just (Ok entries) ->
             if String.isEmpty (String.trim model.searchQuery) then
-                TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Type to search" ]
+                TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "Type to search" ]
 
             else
                 case filterSearchEntries model.searchQuery entries of
                     [] ->
-                        TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "No results" ]
+                        TypedHtml.div [ TypedHtml.Attributes.class "p-4 doc-muted" ] [ M3e.text "No results" ]
 
                     matches ->
                         TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1 p-2" ]
@@ -1099,13 +1099,13 @@ searchResultLink : SearchEntry -> Element { s | sharedText : M3e.Kind.Shared, sh
 searchResultLink entry =
     TypedHtml.a
         [ TypedHtml.Attributes.href (entry.url ++ (entry.anchor |> Maybe.map (\a -> "#" ++ a) |> Maybe.withDefault ""))
-        , TypedHtml.Attributes.class "flex flex-col gap-0.5 rounded-lg px-3 py-2 hover:bg-surface-container-highest"
+        , TypedHtml.Attributes.class "search-result-link flex flex-col gap-0.5 px-3 py-2"
         , TypedHtml.Events.onClick CloseSearch
         ]
         (M3e.text (Maybe.withDefault entry.title entry.heading)
             :: (case entry.heading of
                     Just _ ->
-                        [ TypedHtml.div [ TypedHtml.Attributes.class "text-on-surface-variant text-sm" ] [ M3e.text entry.title ] ]
+                        [ TypedHtml.div [ TypedHtml.Attributes.class "doc-muted" ] [ M3e.text entry.title ] ]
 
                     Nothing ->
                         []
@@ -1587,7 +1587,7 @@ docsNavRail toMsg path =
     M3e.navRail
         [ Aria.label "Sections"
         , M3e.Attributes.id "nav-rail"
-        , TypedHtml.Attributes.class "hidden shrink-0 md:flex flex-col items-stretch w-fit bg-surface-container-lowest"
+        , TypedHtml.Attributes.class "hidden shrink-0 md:flex flex-col items-stretch w-fit"
         ]
         (M3e.iconButton
             [ Aria.label "Toggle rail width"

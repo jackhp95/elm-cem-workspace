@@ -384,16 +384,20 @@ rootExplainer dismissed =
         TypedHtml.div [] []
 
     else
-        TypedHtml.div
-            [ TA.class "compose-root-explainer flex items-center gap-2 rounded-md-corner-medium border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface-variant" ]
-            [ M3e.icon [ TA.name "info" ] []
-            , TypedHtml.span [ TA.class "flex-1" ]
-                [ TypedHtml.text "The root card can’t be reordered or removed; use the sidebar to start over with a different root component." ]
-            , M3e.iconButton
-                [ Aria.label "Dismiss"
-                , M3e.Events.onClick DismissRootExplainer
+        TypedHtml.div [ TA.class "compose-root-explainer" ]
+            [ M3e.card
+                [ M3e.Attributes.variant Value.outlined ]
+                [ TypedHtml.div [ TA.class "flex items-center gap-2 px-3 py-2" ]
+                    [ M3e.icon [ TA.name "info" ] []
+                    , TypedHtml.span [ TA.class "doc-muted flex-1" ]
+                        [ TypedHtml.text "The root card can’t be reordered or removed; use the sidebar to start over with a different root component." ]
+                    , M3e.iconButton
+                        [ Aria.label "Dismiss"
+                        , M3e.Events.onClick DismissRootExplainer
+                        ]
+                        [ M3e.icon [ TA.name "close" ] [] ]
+                    ]
                 ]
-                [ M3e.icon [ TA.name "close" ] [] ]
             ]
 
 
@@ -407,13 +411,21 @@ runtime). Marked `compose-preview` for the test.
 livePreview : Cem.Compose.Node -> Element (Sectioning.SectionIs s) admittedBy Msg
 livePreview root =
     TypedHtml.section
-        [ TA.class "compose-preview flex flex-col gap-2 rounded-md-corner-medium border border-outline-variant bg-surface-container-lowest p-4"
+        [ TA.class "compose-preview"
         , Aria.label "Live preview"
         ]
-        [ TypedHtml.p
-            [ TA.class "text-label-sm text-on-surface-variant uppercase tracking-wide" ]
-            [ TypedHtml.text "Live preview" ]
-        , M3e.Unsafe.fromHtml (Render.renderNode root)
+        [ M3e.card
+            [ M3e.Attributes.variant Value.outlined ]
+            [ TypedHtml.div [ TA.class "flex flex-col gap-2 p-4" ]
+                [ M3e.heading
+                    [ M3e.Attributes.variant Value.label
+                    , M3e.Attributes.size Value.small
+                    , TA.class "doc-muted"
+                    ]
+                    [ M3e.text "Live preview" ]
+                , M3e.Unsafe.fromHtml (Render.renderNode root)
+                ]
+            ]
         ]
 
 
@@ -443,7 +455,7 @@ panelBar model =
             , M3e.Events.onClick TogglePrefill
             ]
             []
-        , TypedHtml.span [ TA.class "text-label-lg text-on-surface-variant" ]
+        , TypedHtml.span [ TA.class "doc-muted" ]
             [ TypedHtml.text "Prefill examples" ]
         ]
 
@@ -830,15 +842,21 @@ componentPicker config =
         ]
         [ M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-2" ]
-                (TypedHtml.input
-                    [ TA.value config.search
-                    , TA.placeholder "Search components"
-                    , TE.onInput config.onSearch
-                    , TA.class "w-full rounded-md-corner-small border border-outline-variant bg-surface-container-highest px-2 py-1 text-body-md"
+                (M3e.formField
+                    [ M3e.Component.FormField.variant Value.outlined
+                    , TA.class "w-full"
                     ]
-                    []
+                    [ M3e.Component.FormField.label
+                        (TypedHtml.label [ TA.for "compose-component-search" ] [ M3e.text "Search components" ])
+                    , TypedHtml.input
+                        [ TA.id "compose-component-search"
+                        , TA.value config.search
+                        , TE.onInput config.onSearch
+                        ]
+                        []
+                    ]
                     :: (if List.isEmpty sections then
-                            [ TypedHtml.p [ TA.class "text-body-sm text-on-surface-variant px-2" ] [ TypedHtml.text "No matches" ] ]
+                            [ TypedHtml.p [ TA.class "doc-muted px-2" ] [ TypedHtml.text "No matches" ] ]
 
                         else
                             List.map (pickerSection config.onPick) sections

@@ -165,11 +165,12 @@ card's own nested theme.
 selectedBadge : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 selectedBadge =
     TypedHtml.div
-        [ TA.class "flex justify-end -mb-1 text-primary" ]
+        [ TA.class "flex justify-end -mb-1" ]
         [ M3e.icon
             [ M3e.Component.Icon.name "check_circle"
             , M3e.Component.Icon.filled True
-            , MA.class "text-base"
+            , MA.style "font-size" "1rem"
+            , MA.style "color" "var(--md-sys-color-primary)"
             ]
             []
         ]

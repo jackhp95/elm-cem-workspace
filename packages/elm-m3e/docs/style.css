@@ -259,6 +259,67 @@
     font-size: var(--md-sys-typescale-body-large-font-size);
     line-height: var(--md-sys-typescale-body-large-line-height);
     letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    /* The document's default FOREGROUND, completing the pair with the type scale
+       above. Without it the base text colour was whatever the UA picked from
+       `color-scheme`, so 33 call sites had to say `text-on-surface` by hand just
+       to get the theme's own default — and any surface that forgot looked
+       subtly wrong. `--md-sys-color-*` is defined at `:root` by
+       tailwind-m3e-web, so this resolves outside the <m3e-theme> subtree too.
+       m3e components set their own foreground internally and are unaffected. */
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* De-emphasized body text: the M3 `on-surface-variant` role. This exists
+     because m3e ships NO component for a run of secondary prose — `m3e-heading`
+     covers display/headline/title/label and nothing covers `body`. Where a
+     component DOES own the surface the component wins (an `m3e-list-item`'s
+     `supporting-text` slot and an `m3e-card`'s text colour already carry this
+     role, so those call sites need no class at all); this is only for standalone
+     prose, and it is one token-backed definition instead of the 84 scattered
+     `text-on-surface-variant` utilities it replaces. Rung 4 of the styling
+     ladder (M3 design token), not a Tailwind utility. */
+  .doc-muted {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* The a11y skip link's focus-visible affordance. There is no m3e component
+     for a skip link — it must be a real `<a href="#main-content">` to work at
+     all — and it only paints while focused, so the primary/on-primary pair and
+     the elevation live here against the tokens instead of as eight `focus:`
+     Tailwind utilities at the call site. Layout and the sr-only/not-sr-only
+     reveal stay as utilities in Shared.elm, which is correct for both. */
+  .skip-link:focus {
+    border-radius: 0.5rem;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    box-shadow: var(--md-sys-elevation-level2, 0 2px 6px 2px rgb(0 0 0 / 15%));
+  }
+
+  /* A search-result row. `m3e-list-item` would own this surface, but the search
+     panel's rows must stay real `<a href>` elements (they are keyboard-navigable
+     links into the docs, and the panel closes on click), and m3e ships no link
+     list-item. So the row's shape and its hover state layer come from the tokens
+     here — one definition rather than a `rounded-lg hover:bg-*` pair per row.
+     Flagged in the handover as an m3e gap. */
+  .search-result-link {
+    border-radius: 0.5rem;
+  }
+
+  .search-result-link:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+  }
+
+  /* `m3e-nav-rail` exposes NO container-color custom property (verified against
+     the generated utility list — the rail is transparent by design and the
+     matraic docs shell lets the page surface show through), but this app's rail
+     sits beside a differently-tinted content pane and needs its own surface to
+     read as a separate region. Element-targeted, token-backed, and centralised
+     here in the same spirit as the m3e-nav-bar shim below. Flagged in the
+     handover as an m3e gap: if the component ever gains a container-color
+     property, delete this and use the generated `m3e-nav-rail-container-color-*`
+     utility instead. */
+  m3e-nav-rail#nav-rail {
+    background-color: var(--md-sys-color-surface-container-lowest);
   }
 
   /* The active theme's DISPLAY (brand) font, applied to every heading. m3e-heading

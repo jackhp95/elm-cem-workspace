@@ -682,7 +682,7 @@ colorOptions model =
             [ M3e.heading
                 [ M3e.Attributes.variant Value.label
                 , M3e.Attributes.size Value.small
-                , TypedHtml.Attributes.class "text-on-surface-variant"
+                , TypedHtml.Attributes.class "doc-muted"
                 ]
                 [ M3e.text "Source color" ]
             ]
@@ -700,7 +700,7 @@ stretched over it — clicking anywhere opens the OS color picker and fires
 sourceColorOption : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 sourceColorOption model =
     TypedHtml.div
-        [ TypedHtml.Attributes.class "relative inline-flex rounded-full" ]
+        [ TypedHtml.Attributes.class "relative inline-flex" ]
         [ TypedHtml.div []
             [ M3e.theme [ M3e.Component.Theme.color model.seed ]
                 [ M3e.avatar
@@ -708,7 +708,12 @@ sourceColorOption model =
                     , M3e.Attributes.style "--m3e-avatar-color" "var(--md-sys-color-primary)"
                     , M3e.Attributes.style "--m3e-avatar-label-color" "var(--md-sys-color-on-primary)"
                     ]
-                    [ M3e.icon [ M3e.Component.Icon.name "colorize", M3e.Attributes.class "text-base" ] [] ]
+                    [ M3e.icon
+                        [ M3e.Component.Icon.name "colorize"
+                        , M3e.Attributes.style "font-size" "1rem"
+                        ]
+                        []
+                    ]
                 ]
             ]
         , TypedHtml.div [ TypedHtml.Attributes.class "absolute inset-0" ]
@@ -760,7 +765,7 @@ colorAvatar model hex =
             [ TypedHtml.button
                 [ TypedHtml.Events.onClick (SetSeed hex)
                 , Aria.label ("Set source color to " ++ hex)
-                , TypedHtml.Attributes.class "size-full rounded-full cursor-pointer"
+                , TypedHtml.Attributes.class "size-full cursor-pointer"
                 ]
                 []
             ]
