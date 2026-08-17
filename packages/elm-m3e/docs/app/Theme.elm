@@ -8,6 +8,7 @@ import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Button
 import M3e.Component.Icon
+import M3e.Component.SelectionIndicator
 import M3e.Component.Theme
 import M3e.Events
 import M3e.Kind
@@ -734,26 +735,47 @@ color's derived primary (via a nested `<m3e-theme>` seeded with the hex). The
 click target is a transparent, empty native `<button>` overlaid on top —
 `onClick` is an interactive-element attribute (a `div` can't carry it), and an
 empty button avoids threading a branded child through the button's
-phrasing-content slot. The active swatch (matching the current seed) gets a
-primary ring in the APP palette so the selected marker reads consistently
-across hues.
+phrasing-content slot.
+
+The active swatch (matching the current seed) gets a real `m3e-selection-indicator`
+ring — the same primitive `m3e-nav-item` uses for its own active pill —
+`for`-attached to the button by id, so it shares the button's hover/focus/press
+state layer as well as its selected fill. Per the component's own contract ("the
+parenting element must be a relative positioned element") the wrapper carries
+`relative`; per its `border-radius: inherit` shape mechanism the wrapper also
+carries an explicit `border-radius`, mirroring the exact token `m3e-avatar`
+itself defaults to (`--md-sys-shape-corner-full`) so the ring stays round and in
+sync with the avatar's own shape. `p-1` gives the indicator's `inset: 0` fill
+room to peek out past the 2rem avatar as a ring, rather than being fully hidden
+behind it.
+
 -}
 colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 colorAvatar model hex =
+    let
+        controlId : String
+        controlId =
+            "swatch-color-" ++ String.dropLeft 1 hex
+    in
     TypedHtml.div
-        (TypedHtml.Attributes.class "relative inline-flex"
-            :: (if model.seed == hex then
-                    -- `m3e-avatar` has no selected state and no outline property,
-                    -- so the selected swatch can no longer show a ring. It still
-                    -- announces itself via aria-current; the visual marker is a
-                    -- filed m3e gap rather than a CSS class.
-                    [ Aria.current TypedHtml.Values.true ]
+        [ TypedHtml.Attributes.class "relative inline-flex p-1"
 
-                else
-                    []
-               )
-        )
-        [ TypedHtml.div []
+        -- `m3e-selection-indicator` has NO shape property; it takes its radius
+        -- from `border-radius: inherit` off this light-DOM parent. Without a
+        -- radius here it renders as a SQUARE box behind the round swatches
+        -- (verified visually), so the shape has to come from somewhere. This is
+        -- the one inline style in the app, valued from the same token
+        -- `m3e-avatar` itself defaults to. It is NOT a settled pattern -- see the
+        -- gaps doc: the real fix is for the indicator to inherit its shape from
+        -- the element it is `for`, or to expose a shape property.
+        , TypedHtml.Attributes.style "border-radius" "var(--md-sys-shape-corner-full, 624.9375rem)"
+        ]
+        [ M3e.selectionIndicator
+            [ M3e.Component.SelectionIndicator.for controlId
+            , M3e.Component.SelectionIndicator.selected (model.seed == hex)
+            ]
+            []
+        , TypedHtml.div []
             [ M3e.theme [ M3e.Component.Theme.color hex ]
                 [ M3e.avatar
                     [ M3e.Attributes.class "m3e-avatar-size-[2rem]"
@@ -764,7 +786,8 @@ colorAvatar model hex =
             ]
         , TypedHtml.div [ TypedHtml.Attributes.class "absolute inset-0" ]
             [ TypedHtml.button
-                [ TypedHtml.Events.onClick (SetSeed hex)
+                [ TypedHtml.Attributes.id controlId
+                , TypedHtml.Events.onClick (SetSeed hex)
                 , Aria.label ("Set source color to " ++ hex)
                 , TypedHtml.Attributes.class "size-full cursor-pointer"
                 ]

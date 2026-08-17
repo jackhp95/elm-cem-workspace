@@ -29,19 +29,18 @@ import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.AppBar
 import M3e.Component.Card
-import M3e.Component.ListAction
 import M3e.Component.ListItem
+import M3e.Component.ListOption
 import M3e.Component.NavItem
+import M3e.Component.SelectionList
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
-import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import TypedHtml.Component.Grouping
-import TypedHtml.Values
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -227,39 +226,38 @@ body model =
 
 
 {-| The master list — full-width on compact, a fixed rail on `md:`.
+`M3e.selectionList` + `M3e.listOption` gives the active contact a real,
+component-painted background (`m3e-list-option`'s own `[selected]` styling)
+instead of a hand-painted class. `hideSelectionIndicator` keeps rows plain —
+no radio dot — since this list has no trailing content the built-in indicator
+would otherwise swap out.
 -}
 listPane : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 listPane selected =
     TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto md:w-80 md:flex-none md:shrink-0" ]
-        [ M3e.list []
+        [ M3e.selectionList
+            [ M3e.Component.SelectionList.hideSelectionIndicator True ]
             (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                 (List.indexedMap (contactRow selected) contacts)
             )
         ]
 
 
-{-| One row — the selected row swaps to surfaceContainer so the active item reads
-against the base surface.
+{-| One row — `m3e-list-option`'s own `[selected]` styling paints the active
+row's background (a real secondary-container fill resolved from
+`--m3e-list-item-selected-container-color`, not a hand-painted class) and its
+`option` role reflects `aria-selected` automatically, so no separate aria
+stopgap is needed.
 -}
-contactRow : Int -> Int -> Contact -> Element { s | listAction : M3e.Kind.Brand } adm_ Msg
+contactRow : Int -> Int -> Contact -> Element { s | listOption : M3e.Kind.Brand } adm_ Msg
 contactRow selected index contact =
-    M3e.listAction
-        (M3e.Component.ListAction.onClick (SelectContact index)
-            :: (if index == selected then
-                    -- `m3e-list-action` exposes no selected/activated attribute,
-                    -- so the selected row can no longer paint itself. It still
-                    -- ANNOUNCES itself: aria-current keeps the state real for
-                    -- assistive tech instead of dropping it entirely. The visual
-                    -- marker is an m3e gap, filed, not recreated in CSS.
-                    [ Aria.current TypedHtml.Values.true ]
-
-                else
-                    []
-               )
-        )
-        [ M3e.Component.ListAction.leading (M3e.avatar [] [ M3e.text contact.initials ])
+    M3e.listOption
+        [ M3e.Component.ListOption.selected (index == selected)
+        , M3e.Component.ListOption.onClick (SelectContact index)
+        ]
+        [ M3e.Component.ListOption.leading (M3e.avatar [] [ M3e.text contact.initials ])
         , M3e.text contact.name
-        , M3e.Component.ListAction.supportingText (M3e.text contact.role)
+        , M3e.Component.ListOption.supportingText (M3e.text contact.role)
         ]
 
 
