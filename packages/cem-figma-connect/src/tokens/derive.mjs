@@ -401,10 +401,41 @@ export function readTokenOverrides(overridesPath) {
   return readJson(overridesPath);
 }
 
+// -- Phase 4 (L2): tier attribution ------------------------------------------
+//
+// tierForMd(md) -> the Material token TIER this row's code-side name lands in,
+// derived mechanically from the `--md-*` prefix (Decision 1: the correspondence
+// table only gains a thin `tier` field; the real tier MODEL is the separate
+// token-graph.json seam). Returns null for a row with no code-side md name
+// (policy/gap rows — figma-only kit conveniences with no token to tier).
+//
+// The Figma kit's variables are all reference/system CONCEPTS (Schemes=sys
+// color, Corner=sys shape, Static=sys typescale), so every mapped row here is
+// system-tier; there are ZERO component-tier (`--m3e-*`) rows by construction
+// (asserted in the tests). Component tokens live only in the CEM/token-graph,
+// never in this Figma overlay.
+export function tierForMd(md) {
+  if (!md) return null;
+  if (md.startsWith("--md-seed-")) return "seed";
+  if (md.startsWith("--md-ref-")) return "reference";
+  if (md.startsWith("--md-sys-")) return "system";
+  if (md.startsWith("--m3e-")) return "component";
+  return null;
+}
+
+// withTier(row) -> the same row with a `tier` field inserted right after `md`
+// (mechanical, from the prefix). Applied to EVERY row post-merge — including
+// verbatim human/policy override rows — so the overlay and the token graph
+// agree on tier without the graph having to absorb the overlay.
+function withTier(row) {
+  const { figma, md, ...rest } = row;
+  return { figma, md, tier: tierForMd(md), ...rest };
+}
+
 // -- top-level derivation ------------------------------------------------------
 
 // deriveTokenRows(paths) -> rows[], sorted by figma, merged with whatever
-// human rows already exist in tokens-overrides.json.
+// human rows already exist in tokens-overrides.json, each tier-attributed.
 export function deriveTokenRows(paths = {}) {
   const p = { ...DEFAULT_PATHS, ...paths };
 
@@ -421,7 +452,7 @@ export function deriveTokenRows(paths = {}) {
   const proposed = variables.map((v) => buildRow(v, ctx));
 
   const overrides = readTokenOverrides(p.overridesPath);
-  return mergeTokenRows(overrides, proposed);
+  return mergeTokenRows(overrides, proposed).map(withTier);
 }
 
 // reviewRows(rows) -> unmapped rows, grouped by Figma family (first "/"
