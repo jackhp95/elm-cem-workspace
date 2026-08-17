@@ -155,6 +155,16 @@ EOF
 #   above; new to this monorepo's Compose POC, absent from the upstream
 #   elm-m3e checkout.
 
+# elm-m3e-families/ — the FAMILIES layer (L3): a monorepo-only nested package
+# elm-cem generates alongside the components (its own README/LICENSE/elm.json +
+# one M3e/Family/*.elm module per component family). Like elm-m3e-icons/ it is a
+# generated distributable that lives in this monorepo but not (yet) in the
+# upstream standalone snapshot, and its module set changes with the family
+# grouping, so the WHOLE subtree is authorized by prefix rather than a brittle
+# per-file list. Its own regen-drift gate (elm-m3e `check:families`) polices its
+# contents; copy-fidelity only needs to not treat the subtree as unexplained.
+AUTHORIZED_EXTRA_PREFIX="elm-m3e-families/"
+
 require_snapshot_or_skip "copy-fidelity-elm-m3e" "$SOURCE_ELM_M3E" "SOURCE_ELM_M3E"
 
 if [ ! -d "$REPO_ROOT/$PKG_REL" ]; then
@@ -190,7 +200,8 @@ comm -23 "$tmp/missing-raw.txt" "$tmp/authorized.txt" \
     | grep -v "^${AUTHORIZED_ABSENT_PREFIX}" > "$tmp/missing.txt" || true
 printf '%s\n' "$AUTHORIZED_EXTRA" | grep -vE '^\s*$' | sort > "$tmp/authorized-extra.txt"
 comm -13 "$tmp/source.txt" "$tmp/workspace.txt" | sort > "$tmp/extra-raw.txt"
-comm -23 "$tmp/extra-raw.txt" "$tmp/authorized-extra.txt" > "$tmp/extra.txt"
+comm -23 "$tmp/extra-raw.txt" "$tmp/authorized-extra.txt" \
+    | grep -v "^${AUTHORIZED_EXTRA_PREFIX}" > "$tmp/extra.txt" || true
 
 missing_count=$(wc -l < "$tmp/missing.txt" | tr -d ' ')
 extra_count=$(wc -l < "$tmp/extra.txt" | tr -d ' ')
