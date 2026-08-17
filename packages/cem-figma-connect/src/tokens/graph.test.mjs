@@ -124,6 +124,28 @@ test("L3: the known on-surface role aliases neutral tone 10/90 (transitive throu
   assert.deepEqual(primary, ["--md-ref-palette-primary-40", "--md-ref-palette-primary-80"]);
 });
 
+// -- L4 (Decision 2b): component tier is edge-less leaves + a recorded reason -
+
+test("L4: component nodes are leaves — present, but never a source or target of any edge", () => {
+  const graph = buildGraph();
+  const componentNames = new Set(graph.nodes.filter((n) => n.tier === "component").map((n) => n.name));
+  assert.ok(componentNames.size >= 2251, "component leaves are present");
+
+  // No edge touches the component tier in v1 (the sys→comp fallback lives in
+  // @m3e/web dist CSS, not the CEM — Decision 2b).
+  for (const e of graph.edges) {
+    assert.ok(!componentNames.has(e.from), `component node ${e.from} must have no outgoing edge in v1`);
+    assert.ok(!componentNames.has(e.to), `component node ${e.to} must have no incoming edge in v1`);
+  }
+
+  // The reason for the edge-less component tier is RECORDED in the artifact,
+  // not just in code — a consumer learns the v1 boundary from the graph itself.
+  assert.ok(
+    graph.notes.some((n) => /edge-less.*Decision 2b/i.test(n) && /@m3e\/web dist/i.test(n)),
+    "the edge-less component-tier reason must be recorded in graph.notes",
+  );
+});
+
 test("L1: graph.mjs --check is byte-stable (committed == fresh regeneration)", () => {
   // The committed artifact must equal a fresh regeneration — the workspace
   // determinism ground rule. Uses the CLI so this exercises exactly what the
