@@ -17,6 +17,8 @@
     "check": "run-p \"check:*\"",
     "check:drift": "node src/cli.mjs check --profile m3-kit",
     "check:tokens": "node src/tokens/derive.mjs --check",
+    "check:token-graph": "node src/tokens/graph.mjs --check",
+    "check:token-change-report": "node src/tokens/token-change-report.mjs --check",
     "check:render": "node src/visual/harness/selfcheck.mjs",
     "gate": "run-s check test",
     "hooks:install": "git config core.hooksPath hooks"
