@@ -40,7 +40,9 @@ import M3e.Component.Heading
 import M3e.Component.IconButton
 import M3e.Component.Menu
 import M3e.Component.MenuItem
+import M3e.Component.ListAction
 import M3e.Events
+import M3e.Kind
 import M3e.Review.Facts
 import M3e.Unsafe
 import M3e.Values as Value
@@ -51,7 +53,6 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Button
 import TypedHtml.Component.Grouping as Grouping
 import TypedHtml.Component.Sectioning as Sectioning
 import TypedHtml.Events as TE
@@ -464,6 +465,14 @@ viewNode ctx path node model =
         collapsed : Bool
         collapsed =
             Set.member (pathId path) model.collapsed
+
+        hasAttrs : Bool
+        hasAttrs =
+            not (List.isEmpty (Cem.Compose.attrChips path model.compose))
+
+        hasSlots : Bool
+        hasSlots =
+            not (List.isEmpty (Cem.Compose.slotChips path model.compose))
     in
     M3e.card
         [ M3e.Attributes.variant Value.outlined ]
@@ -477,14 +486,22 @@ viewNode ctx path node model =
 
                     else
                         [ TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                            [ M3e.mapMsg ComposeMsg
-                                (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                                    [ attrGroup path model.compose
-                                    , freeTextMenuFor path model.compose
-                                    ]
-                                )
-                            , slotGroup ctx path model
-                            ]
+                            (List.concat
+                                [ [ M3e.mapMsg ComposeMsg
+                                        (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                                            [ attrGroup path model.compose
+                                            , freeTextMenuFor path model.compose
+                                            ]
+                                        )
+                                  ]
+                                , if hasAttrs && hasSlots then
+                                    [ M3e.divider [ TA.class "compose-attr-slot-divider" ] [] ]
+
+                                  else
+                                    []
+                                , [ slotGroup ctx path model ]
+                                ]
+                            )
                         , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
                             (childCards ctx path node model)
                         ]
@@ -632,10 +649,11 @@ slotChildrenAt parentPath slotName model =
 
 
 {-| The Attributes group — every attribute button, under its own label,
-never sharing a row with the Slots group below. Structurally set apart from the
-Slots group by a primary-colored left border + a faint container tint (IA
-review §3.2: attributes-vs-slots must be a real visual DISTINCTION, not just two
-captions over similar rows) and marked `compose-attr-group` so tests can assert
+never sharing a row with the Slots group below. Separated from the Slots group
+by a single `M3e.divider` in `viewNode` (IA review §3.2 asked for a real
+attributes-vs-slots DISTINCTION; the earlier bordered/tinted sub-card treatment
+read as heavy nested chrome, so it was replaced by a plain caption + divider —
+simpler, per feedback). Marked `compose-attr-group` so tests can still assert
 the two kinds are distinguishable. The buttons wrap in a plain `flex flex-wrap`
 row (an `M3e.buttonGroup` was rejected: it overflows rather than wraps, and it
 stamps `role="radiogroup"`/`role="radio"` on these independent toggles, implying
@@ -650,23 +668,24 @@ attrGroup path model =
             TypedHtml.div [] []
 
         chips ->
-            TypedHtml.div [ TA.class "compose-attr-group flex flex-col gap-2 border-l-4 border-primary bg-surface-container-lowest rounded-md-corner-small pl-3 pr-2 py-2" ]
+            TypedHtml.div [ TA.class "compose-attr-group flex flex-col gap-2" ]
                 (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-2" ]
-                    (groupLabel "text-primary" "Attributes" :: List.map (attrButtonElement path) chips)
+                    (groupLabel "text-on-surface-variant" "Attributes" :: List.map (attrButtonElement path) chips)
                     :: attrMenusFor path model chips
                 )
 
 
 {-| The Slots (add-child) group — every slot control, under its own label,
-never sharing a row with the Attributes group above. Set apart from the
-Attributes group by a tertiary-colored left border + container tint and marked
-`compose-slot-group` (IA review §3.2; see `attrGroup`). Each slot's fill-count
-badge rides in its own button's `trailing-icon` slot; a multi-option slot's
-add-child panel is a sibling of its button inside a `relative` wrapper
-(`slotControl`), not a shared `m3e-menu` — an `m3e-menu`'s `Content` cannot
-host the panel's captioned "Nest a component" / "Load an example" subsections
-(see `slotAddPanel`), so the whole affordance is a plain positioned panel,
-following the change-component picker's precedent (M-IA2a).
+never sharing a row with the Attributes group above. Separated from the
+Attributes group by a single `M3e.divider` in `viewNode` (see `attrGroup`) and
+marked `compose-slot-group` (IA review §3.2). Each slot's fill-count badge rides
+in its own button's `trailing-icon` slot; a multi-option slot's add-child panel
+is a sibling of its button inside a `relative` wrapper (`slotControl`), rendered
+as an `M3e.card` surface (Material elevation/shape/container color) rather than a
+hand-rolled bordered div. It is still not a shared `m3e-menu` — an `m3e-menu`'s
+`Content` cannot host the panel's captioned "Nest a component" / "Load an
+example" subsections (see `slotAddPanel`) — but its option rows are real
+`M3e.listAction` items, so it reads as a Material menu surface.
 -}
 slotGroup : MenuCtx -> Cem.Compose.Path -> Model -> Element (Grouping.DivIs s) admittedBy Msg
 slotGroup ctx path model =
@@ -675,8 +694,8 @@ slotGroup ctx path model =
             TypedHtml.div [] []
 
         chips ->
-            TypedHtml.div [ TA.class "compose-slot-group flex flex-wrap items-center gap-2 border-l-4 border-tertiary bg-surface-container-lowest rounded-md-corner-small pl-3 pr-2 py-2" ]
-                (groupLabel "text-tertiary" "Slots" :: List.map (slotControl ctx path model) chips)
+            TypedHtml.div [ TA.class "compose-slot-group flex flex-wrap items-center gap-2" ]
+                (groupLabel "text-on-surface-variant" "Slots" :: List.map (slotControl ctx path model) chips)
 
 
 {-| A group's caption — the color class ties the caption to its group's
@@ -733,12 +752,18 @@ editControl ctx path model =
 control's popup panel, reusable (constrained to a slot's own afforded set)
 by M-IA2b's "nest a component" affordance.
 
-NOT an `m3e-menu`: its `Content` only admits `menuItem`/`menuItemCheckbox`/
-`menuItemGroup`/`menuItemRadio`/`divider` (see `M3e.Internal.Types.Menu`) —
-none of which can host a search `<input>` or a plain category caption. So
-this is a plain positioned panel instead, toggled by route `Model` state
-(`componentPicker`/`componentSearch`) rather than the web component's own
-`popover="manual"`/`menuTrigger` machinery.
+Its surface is an `M3e.card` (variant `elevated`) — real Material elevation,
+shape, and container color — and its option rows are `M3e.listAction` items,
+so it reads as a proper Material menu surface rather than a hand-rolled
+bordered div. It is still NOT an `m3e-menu`: an `m3e-menu`'s `Content` only
+admits `menuItem`/`menuItemCheckbox`/`menuItemGroup`/`menuItemRadio`/`divider`
+(see `M3e.Internal.Types.Menu`) — none of which can host a search `<input>` or
+a plain category caption. So this stays a route-state-toggled panel
+(`componentPicker`/`componentSearch`), just built from Material surfaces. On a
+compact (`< sm`, e.g. 411px) viewport it docks as a bottom sheet spanning the
+viewport width, so a deeply-indented trigger can never push it off an edge; at
+`sm` and up it is the anchored dropdown, right-anchored so it opens leftward
+from the trailing edit control.
 
 -}
 componentPicker :
@@ -748,7 +773,7 @@ componentPicker :
     , options : List String
     , reference : Dict String Doc.Data.Component
     }
-    -> Element (Grouping.DivIs s) admittedBy Msg
+    -> Element (M3e.Component.Card.Is s) admittedBy Msg
 componentPicker config =
     let
         query : String
@@ -794,23 +819,28 @@ componentPicker config =
                         [ ( "Other", other ) ]
                    )
     in
-    TypedHtml.div
-        [ TA.class "compose-component-picker absolute z-10 mt-1 w-64 max-h-80 overflow-y-auto rounded-md-corner-medium border border-outline-variant bg-surface-container p-2 flex flex-col gap-2 shadow-md-level2"
+    M3e.card
+        [ M3e.Attributes.variant Value.elevated
+        , M3e.Attributes.class "compose-component-picker fixed inset-x-3 bottom-3 top-auto z-20 max-h-96 overflow-y-auto sm:absolute sm:inset-x-auto sm:bottom-auto sm:top-full sm:right-0 sm:mt-1 sm:max-h-80 sm:w-72"
         ]
-        (TypedHtml.input
-            [ TA.value config.search
-            , TA.placeholder "Search components"
-            , TE.onInput config.onSearch
-            , TA.class "w-full rounded-md-corner-small border border-outline-variant px-2 py-1 text-body-md"
-            ]
-            []
-            :: (if List.isEmpty sections then
-                    [ TypedHtml.p [ TA.class "text-body-sm text-on-surface-variant px-2" ] [ TypedHtml.text "No matches" ] ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "flex flex-col gap-2" ]
+                (TypedHtml.input
+                    [ TA.value config.search
+                    , TA.placeholder "Search components"
+                    , TE.onInput config.onSearch
+                    , TA.class "w-full rounded-md-corner-small border border-outline-variant bg-surface-container-highest px-2 py-1 text-body-md"
+                    ]
+                    []
+                    :: (if List.isEmpty sections then
+                            [ TypedHtml.p [ TA.class "text-body-sm text-on-surface-variant px-2" ] [ TypedHtml.text "No matches" ] ]
 
-                else
-                    List.map (pickerSection config.onPick) sections
-               )
-        )
+                        else
+                            List.map (pickerSection config.onPick) sections
+                       )
+                )
+            )
+        ]
 
 
 {-| One option in the picker: its raw `componentOptions` name (what
@@ -851,16 +881,21 @@ pickerEntry reference name =
 pickerSection : (String -> Msg) -> ( String, List PickerEntry ) -> Element (Grouping.DivIs s) admittedBy Msg
 pickerSection onPick ( category, entries ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
-        (groupLabel "text-on-surface-variant" category :: List.map (pickerItem onPick) entries)
-
-
-pickerItem : (String -> Msg) -> PickerEntry -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
-pickerItem onPick entry =
-    TypedHtml.button
-        [ TA.class "text-left w-full rounded-md-corner-small px-2 py-1 text-body-md hover:bg-surface-container-high"
-        , TE.onClick (onPick entry.name)
+        [ groupLabel "text-on-surface-variant" category
+        , M3e.list [] (List.map (pickerItem onPick) entries)
         ]
-        [ TypedHtml.text entry.label ]
+
+
+{-| One picker/nest option as an `M3e.listAction` row — a real Material list
+item (ripple, state layer, left-aligned) whose accessible name is its editorial
+label. The host carries `role="listitem"`; its internal action button carries
+`role="button"`, so `getByRole("button", { name })` still resolves each row.
+-}
+pickerItem : (String -> Msg) -> PickerEntry -> Element { s | listAction : M3e.Kind.Brand } admittedBy Msg
+pickerItem onPick entry =
+    M3e.listAction
+        [ M3e.Component.ListAction.onClick (onPick entry.name) ]
+        [ M3e.text entry.label ]
 
 
 {-| The real examples for component `name` (`data/examples.json`, keyed by
@@ -1176,16 +1211,22 @@ slotButton info onClick =
         )
 
 
-{-| A slot's add-child panel (see `slotControl` for why it is a plain panel,
-not an `m3e-menu`). Leads with the structural primitives the slot affords
-(`Text`/`Icon`), then a captioned "Nest a component" group listing the afforded
-component types (reusing the change-component picker's editorial labels,
-M-IA2a), then — only when real usage examples exist for those components — a
-captioned "Load an example" group whose items are QUALIFIED by their source
-component ("Heading — Typescale variants and sizes"), so duplicate bare example
-titles become distinguishable (audit §1.2).
+{-| A slot's add-child panel (see `slotControl` for why it is a route-state
+panel, not an `m3e-menu`). Its surface is an `M3e.card` (variant `elevated`) and
+each group of options is an `M3e.list` of `M3e.listAction` rows, so the whole
+affordance reads as a Material menu surface rather than a hand-rolled bordered
+div. It leads with the structural primitives the slot affords (`Text`/`Icon`),
+then a captioned "Nest a component" group listing the afforded component types
+(reusing the change-component picker's editorial labels, M-IA2a), then — only
+when real usage examples exist for those components — a captioned "Load an
+example" group whose items are QUALIFIED by their source component ("Heading —
+Typescale variants and sizes"), so duplicate bare example titles become
+distinguishable (audit §1.2). On a compact (`< sm`, e.g. 411px) viewport it
+docks as a bottom sheet spanning the viewport width, so a deeply-indented slot
+button can never push it off an edge; at `sm` and up it is the anchored
+dropdown below its button.
 -}
-slotAddPanel : MenuCtx -> Cem.Compose.Path -> String -> Cem.Compose.Model -> Element (Grouping.DivIs s) admittedBy Msg
+slotAddPanel : MenuCtx -> Cem.Compose.Path -> String -> Cem.Compose.Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
 slotAddPanel ctx path slotName compose =
     let
         options : List Cem.Compose.SlotOption
@@ -1214,23 +1255,37 @@ slotAddPanel ctx path slotName compose =
                             |> List.map (\( example, exampleNode ) -> ( name, example, exampleNode ))
                     )
     in
-    TypedHtml.div
-        [ TA.class "compose-slot-panel absolute z-10 mt-1 top-full left-0 w-64 max-h-80 overflow-y-auto rounded-md-corner-medium border border-outline-variant bg-surface-container p-2 flex flex-col gap-1 shadow-md-level2"
+    M3e.card
+        [ M3e.Attributes.variant Value.elevated
+        , M3e.Attributes.class "compose-slot-panel fixed inset-x-3 bottom-3 top-auto z-20 max-h-96 overflow-y-auto sm:absolute sm:inset-x-auto sm:bottom-auto sm:top-full sm:left-0 sm:mt-1 sm:max-h-80 sm:w-72"
         ]
-        (List.concat
-            [ List.filterMap (primitiveButton path slotName) options
-            , if List.isEmpty componentNames then
-                []
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "flex flex-col gap-2" ]
+                (List.concat
+                    [ case List.filterMap (primitiveButton path slotName) options of
+                        [] ->
+                            []
 
-              else
-                groupLabel "text-on-surface-variant" "Nest a component" :: List.map (nestButton ctx path slotName) componentNames
-            , if List.isEmpty examples then
-                []
+                        prims ->
+                            [ M3e.list [] prims ]
+                    , if List.isEmpty componentNames then
+                        []
 
-              else
-                groupLabel "text-on-surface-variant" "Load an example" :: List.map (exampleButton ctx path slotName compose) examples
-            ]
-        )
+                      else
+                        [ groupLabel "text-on-surface-variant" "Nest a component"
+                        , M3e.list [] (List.map (nestButton ctx path slotName) componentNames)
+                        ]
+                    , if List.isEmpty examples then
+                        []
+
+                      else
+                        [ groupLabel "text-on-surface-variant" "Load an example"
+                        , M3e.list [] (List.map (exampleButton ctx path slotName compose) examples)
+                        ]
+                    ]
+                )
+            )
+        ]
 
 
 {-| The `Text`/`Icon` structural primitives an add-child panel leads with —
@@ -1238,14 +1293,14 @@ one plain button per afforded primitive `SlotOption` (a component option is
 handled by `nestButton`, so it is `Nothing` here). Adds directly and closes
 the panel.
 -}
-primitiveButton : Cem.Compose.Path -> String -> Cem.Compose.SlotOption -> Maybe (Element (TypedHtml.Component.Button.Is s) admittedBy Msg)
+primitiveButton : Cem.Compose.Path -> String -> Cem.Compose.SlotOption -> Maybe (Element { s | listAction : M3e.Kind.Brand } admittedBy Msg)
 primitiveButton path slotName option =
     case option of
         Cem.Compose.OptionText ->
-            Just (panelButton "Text" (AddChildAndClose (Cem.Compose.AddTextChild path slotName)))
+            Just (panelListAction "Text" (AddChildAndClose (Cem.Compose.AddTextChild path slotName)))
 
         Cem.Compose.OptionIcon ->
-            Just (panelButton "Icon" (AddChildAndClose (Cem.Compose.AddIconChild path slotName)))
+            Just (panelListAction "Icon" (AddChildAndClose (Cem.Compose.AddIconChild path slotName)))
 
         Cem.Compose.OptionComponent _ ->
             Nothing
@@ -1255,7 +1310,7 @@ primitiveButton path slotName option =
 change-component picker uses (M-IA2a), but its `onPick` appends the component as
 a new child of this slot (and closes the panel) rather than re-typing a node.
 -}
-nestButton : MenuCtx -> Cem.Compose.Path -> String -> String -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
+nestButton : MenuCtx -> Cem.Compose.Path -> String -> String -> Element { s | listAction : M3e.Kind.Brand } admittedBy Msg
 nestButton ctx path slotName name =
     pickerItem
         (\picked -> AddChildAndClose (Cem.Compose.AddChild path slotName picked))
@@ -1270,35 +1325,33 @@ stays distinguishable from the plain "Nest a component" options. Fires
 appended at the slot's current fill count), then the parsed example's own
 message batch (`FromHtml.toMsgs`) addressed at that new child's resulting path.
 -}
-exampleButton : MenuCtx -> Cem.Compose.Path -> String -> Cem.Compose.Model -> ( String, Doc.Usage.UsageExample, FromHtml.ExampleNode ) -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
+exampleButton : MenuCtx -> Cem.Compose.Path -> String -> Cem.Compose.Model -> ( String, Doc.Usage.UsageExample, FromHtml.ExampleNode ) -> Element { s | listAction : M3e.Kind.Brand } admittedBy Msg
 exampleButton ctx path slotName compose ( name, example, exampleNode ) =
     let
         filled : Int
         filled =
             slotChildCount path slotName compose
     in
-    TypedHtml.button
-        [ TA.class "compose-example-item text-left w-full rounded-md-corner-small px-2 py-1 text-body-md hover:bg-surface-container-high"
-        , TE.onClick
+    M3e.listAction
+        [ TA.class "compose-example-item"
+        , M3e.Component.ListAction.onClick
             (LoadExampleAndClose
                 (Cem.Compose.AddChild path slotName name
                     :: FromHtml.toMsgs (path ++ [ Cem.Compose.IntoSlot slotName filled ]) exampleNode
                 )
             )
         ]
-        [ TypedHtml.text (qualifiedExampleLabel ctx.reference name example.title) ]
+        [ M3e.text (qualifiedExampleLabel ctx.reference name example.title) ]
 
 
-{-| A plain panel option button — the shared shape of `primitiveButton` and
-`pickerItem`, styled as a left-aligned full-width row.
+{-| A panel option row — the shared shape of `primitiveButton` (and, via
+`pickerItem`, the nest/example rows): an `M3e.listAction` Material list item.
 -}
-panelButton : String -> Msg -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
-panelButton label msg =
-    TypedHtml.button
-        [ TA.class "text-left w-full rounded-md-corner-small px-2 py-1 text-body-md hover:bg-surface-container-high"
-        , TE.onClick msg
-        ]
-        [ TypedHtml.text label ]
+panelListAction : String -> Msg -> Element { s | listAction : M3e.Kind.Brand } admittedBy Msg
+panelListAction label msg =
+    M3e.listAction
+        [ M3e.Component.ListAction.onClick msg ]
+        [ M3e.text label ]
 
 
 {-| An example option's display label, prefixed with its source component's

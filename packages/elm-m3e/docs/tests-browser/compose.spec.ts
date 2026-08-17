@@ -12,11 +12,15 @@ import { test, expect } from "@playwright/test";
  * collapsed to a text box and the checkbox was unreachable.
  *
  * A slot that affords more than one option opens an add-child PANEL (M-IA2b):
- * a plain positioned `.compose-slot-panel` (NOT an `m3e-menu`, whose `Content`
- * cannot host the panel's "Nest a component"/"Load an example" captions),
- * addressed by route `Model` state per `(path, slot)`. Its options are plain
- * `<button>`s (primitives `Text`/`Icon`, editorially-labeled component types,
- * and source-qualified `.compose-example-item` examples). The attribute/slot
+ * an `M3e.card` surface `.compose-slot-panel` (NOT an `m3e-menu`, whose
+ * `Content` cannot host the panel's "Nest a component"/"Load an example"
+ * captions), addressed by route `Model` state per `(path, slot)`. On a compact
+ * viewport it docks as a bottom sheet (never clipping); at `sm`+ it is the
+ * anchored dropdown. Its options are `m3e-list-action` rows (primitives
+ * `Text`/`Icon`, editorially-labeled component types, and source-qualified
+ * `.compose-example-item` examples) — each a `role="listitem"` host wrapping an
+ * internal `role="button"`, so `getByRole("button", { name })` resolves a row
+ * but exact option TEXT is asserted on the `m3e-list-action` host. The attr/slot
  * buttons wrap in a plain `flex flex-wrap` row, so they carry `role="button"`
  * (an earlier `M3e.buttonGroup` was dropped: it overflowed instead of wrapping
  * and stamped `role="radiogroup"`/`role="radio"` on these independent toggles).
@@ -291,7 +295,7 @@ test("loading a real example (G-Ex2) fills the node with its actual content", as
   const panel = page.locator(".compose-slot-panel");
   await expect(panel.getByText("Load an example", { exact: true })).toBeVisible();
   const headingExample = panel.locator(
-    "button.compose-example-item",
+    "m3e-list-action.compose-example-item",
     { hasText: "Heading — Typescale variants and sizes" }
   );
   await expect(headingExample).toHaveText("Heading — Typescale variants and sizes");
@@ -325,7 +329,12 @@ test("a nested node's edit-tag menu only offers what its parent slot accepts", a
   // editorial label ("Divider"); the other three have none, so they land in
   // the trailing "Other" group under their raw names.
   const picker = page.locator(".compose-component-picker");
-  await expect(picker.getByRole("button")).toHaveText([
+  // Each option is an `m3e-list-action` (host `role="listitem"`, wrapping an
+  // internal `role="button"`). Its accessible NAME resolves to the label (so
+  // `getByRole("button", { name })` still works elsewhere), but its slotted
+  // label text lives on the HOST's light DOM — so assert exact option text on
+  // the `m3e-list-action` hosts, not the empty-textContent shadow buttons.
+  await expect(picker.locator("m3e-list-action")).toHaveText([
     "Divider",
     "expandableListItem",
     "listAction",
