@@ -45,7 +45,12 @@
   "Chip": {
     "admits": {
       "unnamed": { "kinds": ["shared:text"], "multi": true }
-    }
+    },
+    "examples": [
+      { "title": "Basic chip", "code": "Chip.component [] [ text \"Filter\" ]" },
+      { "title": "Disabled chip", "code": "Chip.component [ Chip.disabled True ] [ text \"Filter\" ]", "section": "States" }
+    ],
+    "docMeta": { "category": "actions" }
   },
   "Surface": {
     "admits": {

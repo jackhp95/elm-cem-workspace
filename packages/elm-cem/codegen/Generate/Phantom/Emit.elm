@@ -25,6 +25,7 @@ import Attr
 import Cem
 import Char
 import Dict
+import Docs
 import Elm
 import Generate.Phantom.Model as M exposing (Brand, Comp, EnumSpec, KindField, Marker(..), ResolvedSlot, SlotContent(..))
 import Json.Encode as Encode
@@ -3250,6 +3251,22 @@ compModule brand comp =
                 Nothing ->
                     []
 
+        -- Config-supplied `## Examples` section + opaque doc-metadata marker
+        -- (`examples`/`docMeta` config keys — see `Docs.examplesSection`/
+        -- `Docs.docMetaMarker`). Both render to "" when the component's config
+        -- supplies neither, which is the common case, so the extra doc-comment
+        -- line is omitted entirely rather than leaving a stray blank line on
+        -- every component that has no examples.
+        exampleDoc =
+            Docs.examplesSection comp.examples ++ Docs.docMetaMarker comp.docMeta
+
+        exampleDocLines =
+            if String.isEmpty exampleDoc then
+                []
+
+            else
+                [ exampleDoc ]
+
     in
     file [ lib, "Component", comp.name ]
         (String.join "\n"
@@ -3262,7 +3279,9 @@ compModule brand comp =
                   , comp.description
                   , ""
                   , docs_
-                  , ""
+                  ]
+                , exampleDocLines
+                , [ ""
                   , "-}"
                   , ""
                   ]

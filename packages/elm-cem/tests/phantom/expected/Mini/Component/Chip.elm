@@ -16,6 +16,27 @@ A compact labelled element.
 @docs disabled
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic chip" -->
+```elm
+Chip.component [] [ text "Filter" ]
+```
+
+
+### States
+
+<!-- elm-cem:example title="Disabled chip" -->
+```elm
+Chip.component [ Chip.disabled True ] [ text "Filter" ]
+```
+
+<!-- elm-cem:docmeta category=actions -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)
