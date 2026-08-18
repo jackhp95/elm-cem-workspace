@@ -24,11 +24,10 @@
   {
     "page": "AccessibleByConstruction",
     "sample": "namelessCode",
-    "disposition": "expect-review",
-    "reason": "the page's claim, in one line. It compiles — that is the point — and the linter is what refuses it, so the rule name below is checked against the real elm-review run.",
+    "disposition": "expect-compile-error",
+    "reason": "the page's claim, in one line. It does NOT compile — that is the point — the required-record `el` shape is what refuses it, so this is checked against a real `elm make` run, not a lint pass. (Pre `el`-unification this was `expect-review MissingRequiredAttribute` — a linter guarantee; the required-record collapse promoted the SAME check to a compiler guarantee.)",
     "module": "Sample.AccessibleByConstruction.NamelessCode",
-    "file": "good/Sample/AccessibleByConstruction/NamelessCode.elm",
-    "rule": "MissingRequiredAttribute"
+    "file": "bad/Sample/AccessibleByConstruction/NamelessCode.elm"
   },
   {
     "page": "CheatSheet",

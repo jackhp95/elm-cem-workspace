@@ -66,6 +66,13 @@ export function consumerOutputDescriptors(repoRoot) {
             // the gen pipeline) — excluded from the copy and symlinked back in read-only.
             exclude: [".cache"],
             symlinks: [".cache"],
+            // W6 promoted scripts/lib/okf-lib.mjs's generic core to the shared
+            // workspace tools/lib/okf-lib.mjs (same pattern as tailwind-m3e-web
+            // below) — build-okf.mjs imports it via a relative specifier that
+            // walks out of packages/m3e-okf/scripts/ into tools/lib/, so the
+            // scratch copy needs that sibling present at the same
+            // repo-root-relative position.
+            externalSymlinks: ["tools/lib"],
             paths: ["data/components.json", "skills/m3e", "knowledge", "implementations/m3e-web"],
             generate: (dest) => {
                 for (const script of [

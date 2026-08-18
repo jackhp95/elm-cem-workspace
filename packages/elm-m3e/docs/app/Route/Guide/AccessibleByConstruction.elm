@@ -15,13 +15,14 @@ import Guide.Samples as Samples
 import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
+import M3e.Action
+import M3e.Component.IconButton
 import M3e.Kind
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
-import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import UrlPath
 import View exposing (View)
@@ -78,8 +79,7 @@ beside the real output of the `missingRequiredAttribute` rule.
 
 helpButton : Element { s | iconButton : M3e.Kind.Brand } adm_ msg
 helpButton =
-    M3e.iconButton [ Aria.label "Help" ]
-        [ M3e.icon [ TA.name "help" ] [] ]
+    M3e.Component.IconButton.component { content = M3e.icon [ TA.name "help" ] [], ariaLabel = "Help", action = M3e.Action.none } [] []
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
@@ -120,40 +120,65 @@ labeled =
 
 nameless : String
 nameless =
-    """Now drop the name. The component list the API was generated from records that an icon button **requires** an accessible name — and the codegen-aware `missingRequiredAttribute` rule reads that same list, so in a project that runs elm-review this does not pass CI. The message below is the rule's real output:"""
+    """Now drop the name. Since the `el`-unification, an icon button's accessible name isn't a linter-checked attribute anymore — `ariaLabel` is a **required record field** on `IconButton.component` itself, the same required-record mechanism that makes forgetting a Button's `action` impossible (see [the strictness dial](/guide/strictness)). Try to omit it and the build stops — the message below is the compiler's real output:"""
 
 
 
--- @sample expect-review MissingRequiredAttribute: the page's claim, in one line.
--- It compiles — that is the point — and the linter is what refuses it, so the
--- rule name below is checked against the real elm-review run.
+-- @sample expect-compile-error: the page's claim, in one line. It does NOT
+-- compile — that is the point — the required-record `el` shape is what
+-- refuses it, so this is checked against a real `elm make` run, not a lint
+-- pass. (Pre `el`-unification this was `expect-review MissingRequiredAttribute`
+-- — a linter guarantee; the required-record collapse promoted the SAME check
+-- to a compiler guarantee.)
 
 
 namelessCode : String
 namelessCode =
-    """M3e.iconButton []
-    [ M3e.icon [ TA.name "help" ] [] ]"""
+    """M3e.Component.IconButton.component
+    { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
+    []
+    []"""
 
 
 linterText : String
 linterText =
-    """MissingRequiredAttribute: Component `iconButton` requires attribute `aria-label`
-but this call doesn't provide it
+    """-- TYPE MISMATCH --
 
-The Material 3 spec (and accessibility guidance) treats `aria-label` as required
-for iconButton.
+The 1st argument to `component` is not what I expect:
 
-Add `Aria.label "..."` (from `import TypedHtml.Aria as Aria`) to the attrs list."""
+17|     M3e.Component.IconButton.component
+18|>        { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
+19|         []
+20|         []
+
+This argument is a record of type:
+
+    { action : M3e.Action.Action capability msg1
+    , content : M3e.Element (M3e.Component.Icon.Is s) admittedBy msg
+    }
+
+But `component` needs the 1st argument to be:
+
+    { action : M3e.Action.Action M3e.Component.IconButton.ActionCaps msg
+    , ariaLabel : String
+    , content :
+          HtmlIr.Element.Element
+              M3e.Component.IconButton.Content
+              (M3e.Component.IconButton.ChildAdmittedBy childAdm)
+              msg
+    }
+
+Hint: Looks like the ariaLabel field is missing."""
 
 
 wiring : String
 wiring =
-    """This is "accessible by construction" in practice: the requirement lives in the component's own definition — the same facts file the rest of the linter reads — so CI refuses the unlabeled control instead of a human having to remember. It is a linter guarantee, not a compiler one, so it protects you when elm-review runs in CI. And when a control has a visible label — like the text fields we build next — the label and input are wired from one shared id, so you never hand-type a matching `for`/`id` pair."""
+    """This is "accessible by construction" in practice: the requirement lives in the component's own required-record shape, so `elm make` refuses the unlabeled control instead of a human having to remember. It is a **compiler** guarantee now — no elm-review run required, no CI step to forget to wire up. And when a control has a visible label — like the text fields we build next — the label and input are wired from one shared id, so you never hand-type a matching `for`/`id` pair."""
 
 
 recap : String
 recap =
     """- An icon-only control has no visible text, so its **accessible name is required**.
-- The Aria setters are **first-class**, and `missingRequiredAttribute` **refuses a nameless control in CI** — a linter guarantee, so run elm-review there.
+- `ariaLabel` is a **required record field** on `IconButton.component` — omitting it is a **compile error**, not a lint finding, so there's no CI step to forget.
 - Visible labels are **wired to their input for you** from one shared id — no hand-typed `for`/`id`.
 - **Next: [Composition, not injection](/guide/composition-text-field) →** build a text field that doesn't exist as a component — by composition."""
