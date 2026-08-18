@@ -1,6 +1,7 @@
 module Generate.Phantom.Model exposing
     ( Brand, Comp, Controlled, EnumSpec, KindField, Marker(..), ResolvedSlot, SetAlias, SlotContent(..)
     , Variant, VariantInput(..)
+    , ActionWrapper, ActionsRoster, RichActionWrapper, RichPayload(..), OptionalFieldKind(..)
     , decodePhantomFlag, decodeEmitFactsBundleFlag, resolve
     , knownSharedRole, sharedRoleOf, sharedRoleOfField, unknownSharedRoleError, unknownSharedFieldError
     )
@@ -15,6 +16,7 @@ value produced here.
 
 @docs Brand, Comp, Controlled, EnumSpec, KindField, Marker, ResolvedSlot, SetAlias, SlotContent
 @docs Variant, VariantInput
+@docs ActionWrapper, ActionsRoster, RichActionWrapper, RichPayload, OptionalFieldKind
 @docs decodePhantomFlag, resolve
 
 The closed cross-library atom vocabulary, shared with the emitter so the same rule
@@ -30,6 +32,7 @@ import Cem
 import Dict exposing (Dict)
 import Json.Decode as D
 import Naming
+import Util exposing (deduplicateBy)
 
 
 {-| Kind-row field markers: the library's private `Brand` or the IR's
@@ -513,10 +516,61 @@ type alias EventPayload =
     { event : String, setter : String, payload : Cem.Payload }
 
 
-{-| One `_actions` wrapper entry (m3e's behavioural-action roster).
+{-| One `_actions` wrapper entry: a trigger/action element the label is nested
+inside (`opensMenu` → `<m3e-menu-trigger>`, a nullary `bottomSheetAction`, …).
+Generic mechanism — which components exist and what they're named is entirely
+config; see `ActionsRoster`.
 -}
 type alias ActionWrapper =
     { ctor : String, cap : String, variant : String, comp : String, doc : String }
+
+
+{-| One `_actions` RICH wrapper entry: like `ActionWrapper`, but its ctor takes
+a config-DESCRIBED payload (a single named attribute, or a small record of a
+required + optional attributes) rather than the fixed "nothing" / "one `for`
+string" shapes `nullaryWrappers`/`forWrappers` cover. Generalizes what used to
+be two Material-Design-specific fields (`bottomSheetComp`/`dialogActionComp`)
+hardcoded onto `ActionsRoster` with bespoke emission branches in `Emit.elm` —
+finding 2.2, Theme 2 of the 2026-08-17 thermonuclear review. A second
+library's rich-payload wrapper is now just another `richWrappers` config
+entry, not a core-model field + a code patch by name.
+-}
+type alias RichActionWrapper =
+    { ctor : String, cap : String, variant : String, comp : String, doc : String, payload : RichPayload }
+
+
+{-| The payload shape a `RichActionWrapper`'s ctor takes:
+
+  - `SingleArgPayload` — the ctor takes one `String` argument, stamped as the
+    named attribute (`attr`) under the given parameter name (generalizes the
+    old `dialogActionComp` case: `attr = "return-value"`, unlike
+    `forWrappers`, whose attribute is always `"for"`).
+  - `RecordPayload` — the ctor takes a small record: one required `String`
+    field (its own attribute) plus zero or more optional fields, each
+    becoming an attribute only when present (generalizes the old
+    `bottomSheetComp` case).
+
+-}
+type RichPayload
+    = SingleArgPayload { paramName : String, attr : String }
+    | RecordPayload
+        { typeName : String
+        , typeDoc : String
+        , paramName : String
+        , required : { field : String, attr : String }
+        , optional : List { field : String, attr : String, kind : OptionalFieldKind }
+        }
+
+
+{-| How an optional `RecordPayload` field renders when present. `FloatField`
+covers a numeric attr rendered via `String.fromFloat`; `PresenceField` covers
+a boolean-presence attr rendered as `attr=""` (the value carries no
+information, only the field's presence does — the old `bottomSheetComp`
+`secondary` case).
+-}
+type OptionalFieldKind
+    = FloatField
+    | PresenceField
 
 
 {-| The `_actions` roster.
@@ -524,8 +578,7 @@ type alias ActionWrapper =
 type alias ActionsRoster =
     { forWrappers : List ActionWrapper
     , nullaryWrappers : List ActionWrapper
-    , bottomSheetComp : Maybe String
-    , dialogActionComp : Maybe String
+    , richWrappers : List RichActionWrapper
     }
 
 
@@ -1010,13 +1063,94 @@ actionWrapperDecoder =
         (D.oneOf [ D.field "doc" D.string, D.succeed "" ])
 
 
+optionalFieldKindDecoder : D.Decoder OptionalFieldKind
+optionalFieldKindDecoder =
+    D.string
+        |> D.andThen
+            (\s ->
+                case s of
+                    "float" ->
+                        D.succeed FloatField
+
+                    "presence" ->
+                        D.succeed PresenceField
+
+                    _ ->
+                        D.fail ("richWrappers optional field `kind` must be \"float\" or \"presence\", got: \"" ++ s ++ "\"")
+            )
+
+
+optionalFieldDecoder : D.Decoder { field : String, attr : String, kind : OptionalFieldKind }
+optionalFieldDecoder =
+    D.map3 (\field attr kind -> { field = field, attr = attr, kind = kind })
+        (D.field "field" D.string)
+        (D.field "attr" D.string)
+        (D.field "kind" optionalFieldKindDecoder)
+
+
+requiredFieldDecoder : D.Decoder { field : String, attr : String }
+requiredFieldDecoder =
+    D.map2 (\field attr -> { field = field, attr = attr })
+        (D.field "field" D.string)
+        (D.field "attr" D.string)
+
+
+{-| A `richWrappers` entry's `payload` block: `{"kind": "singleArg", "paramName":
+…, "attr": …}` or `{"kind": "record", "typeName": …, "typeDoc": …, "paramName":
+…, "required": {"field", "attr"}, "optional": [{"field","attr","kind"}, …]}`.
+An unknown `kind` fails LOUD rather than silently degrading to a shape that
+would emit malformed Elm.
+-}
+richPayloadDecoder : D.Decoder RichPayload
+richPayloadDecoder =
+    D.field "kind" D.string
+        |> D.andThen
+            (\kind ->
+                case kind of
+                    "singleArg" ->
+                        D.map2 (\paramName attr -> SingleArgPayload { paramName = paramName, attr = attr })
+                            (D.field "paramName" D.string)
+                            (D.field "attr" D.string)
+
+                    "record" ->
+                        D.map5
+                            (\typeName typeDoc paramName required optional ->
+                                RecordPayload
+                                    { typeName = typeName
+                                    , typeDoc = typeDoc
+                                    , paramName = paramName
+                                    , required = required
+                                    , optional = optional
+                                    }
+                            )
+                            (D.field "typeName" D.string)
+                            (D.field "typeDoc" D.string)
+                            (D.field "paramName" D.string)
+                            (D.field "required" requiredFieldDecoder)
+                            (D.oneOf [ D.field "optional" (D.list optionalFieldDecoder), D.succeed [] ])
+
+                    _ ->
+                        D.fail ("richWrappers `payload.kind` must be \"singleArg\" or \"record\", got: \"" ++ kind ++ "\"")
+            )
+
+
+richActionWrapperDecoder : D.Decoder RichActionWrapper
+richActionWrapperDecoder =
+    D.map6 RichActionWrapper
+        (D.field "ctor" D.string)
+        (D.field "cap" D.string)
+        (D.field "variant" D.string)
+        (D.field "comp" D.string)
+        (D.oneOf [ D.field "doc" D.string, D.succeed "" ])
+        (D.field "payload" richPayloadDecoder)
+
+
 actionsRosterDecoder : D.Decoder ActionsRoster
 actionsRosterDecoder =
-    D.map4 ActionsRoster
+    D.map3 ActionsRoster
         (D.oneOf [ D.field "forWrappers" (D.list actionWrapperDecoder), D.succeed [] ])
         (D.oneOf [ D.field "nullaryWrappers" (D.list actionWrapperDecoder), D.succeed [] ])
-        (D.maybe (D.field "bottomSheetComp" D.string))
-        (D.maybe (D.field "dialogActionComp" D.string))
+        (D.oneOf [ D.field "richWrappers" (D.list richActionWrapperDecoder), D.succeed [] ])
 
 
 ariaDecoder : D.Decoder AriaConfig
@@ -1339,8 +1473,42 @@ resolve lib eventPrefix flags declarations =
             resolveWith lib eventPrefix raw declarations
 
 
-resolveWith : String -> String -> RawConfig -> List Cem.Declaration -> Result (List String) Brand
-resolveWith detectedLib eventPrefix raw declarations =
+{-| The resolution context: everything `resolveWith`'s lifted helpers need from
+its parameters and its own outer `let`, threaded explicitly instead of closed
+over. Built once, in `buildCtx`, then passed down through every helper below.
+
+  - `raw` / `eventPrefix` — the decoded config and the caller-supplied brand
+    event prefix, unchanged from `resolveWith`'s own parameters.
+  - `lib` — the resolved brand name (`_brand`, else the manifest-derived
+    fallback).
+  - `comps0` / `ctorIndex` — the manifest's custom-element declarations
+    (`_exclude`d ones dropped) and the constructor-name index built from them;
+    every kind/slot/parent reference resolves through `ctorIndex`.
+  - `globals` / `openGlobals` / `allGlobals` — the `_globals` roster, kernel-
+    blocked entries dropped, split into closed/open halves (`allGlobals` is
+    both halves pooled for the consumers that do not care about row shape).
+  - `globalBlockedNotes` — one info-channel note per kernel-blocked global.
+
+-}
+type alias Ctx =
+    { raw : RawConfig
+    , eventPrefix : String
+    , lib : String
+    , comps0 : List Cem.Declaration
+    , ctorIndex : Dict String Cem.Declaration
+    , globals : List Attr.AttrSpec
+    , openGlobals : List Attr.AttrSpec
+    , allGlobals : List Attr.AttrSpec
+    , globalBlockedNotes : List String
+    }
+
+
+{-| Build the `Ctx` once, from `resolveWith`'s own parameters. Mirrors what
+used to be `resolveWith`'s outer `let` verbatim — see `Ctx` for what each
+field is and why it is ambient rather than a per-call argument.
+-}
+buildCtx : String -> String -> RawConfig -> List Cem.Declaration -> Ctx
+buildCtx detectedLib eventPrefix raw declarations =
     let
         -- `_brand` is authoritative when present; the manifest-derived name is
         -- only a fallback (its tag-prefix heuristic misfires on native tags).
@@ -1406,1147 +1574,1339 @@ resolveWith detectedLib eventPrefix raw declarations =
             declarations
                 |> List.filter (\d -> d.customElement == Just True && not (List.member d.name raw.exclude))
 
-        ctorOf name =
-            -- CEM declaration names are PascalCase; the constructor is its
-            -- decapitalization ("PictureSource" → "pictureSource"). NOT
-            -- Naming.camel, which only splits on symbols and would lowercase
-            -- the whole word ("picturesource"). `main` follows elm/html's
-            -- `main_` convention (a top-level `main` trips app builds).
-            case Naming.decapitalize name of
-                "main" ->
-                    "main_"
-
-                other ->
-                    other
-
         ctorIndex : Dict String Cem.Declaration
         ctorIndex =
             comps0 |> List.map (\d -> ( ctorOf d.name, d )) |> Dict.fromList
+    in
+    { raw = raw
+    , eventPrefix = eventPrefix
+    , lib = lib
+    , comps0 = comps0
+    , ctorIndex = ctorIndex
+    , globals = globals
+    , openGlobals = openGlobals
+    , allGlobals = allGlobals
+    , globalBlockedNotes = globalBlockedNotes
+    }
 
-        producesOf name cfg =
-            case Maybe.andThen .kind cfg |> Maybe.andThen sharedRoleOf of
-                Just role ->
-                    sharedKindField role
 
-                Nothing ->
-                    { field = ctorOf name, marker = MBrand }
+{-| CEM declaration names are PascalCase; the constructor is its
+decapitalization ("PictureSource" → "pictureSource"). NOT
+Naming.camel, which only splits on symbols and would lowercase
+the whole word ("picturesource"). `Naming.safeValue` follows elm/html's
+`main_` convention (a top-level `main` trips app builds) and covers every
+other reserved Elm keyword the same way.
+-}
+ctorOf : String -> String
+ctorOf name =
+    Naming.safeValue (Naming.decapitalize name)
 
-        kindFieldOfRef : String -> RawKindRef -> Result String (List KindField)
-        kindFieldOfRef where_ ref =
-            case ref of
-                RAny ->
-                    Err (where_ ++ ": 'any' cannot be mixed with other kinds")
 
-                RShared role ->
-                    Ok [ sharedKindField role ]
+{-| The row field a component (or set member) PRODUCES: its config `kind`
+resolved to a shared atom, else its own constructor under the brand's
+private `Brand` marker.
+-}
+producesOf : String -> Maybe RawComp -> KindField
+producesOf name cfg =
+    case Maybe.andThen .kind cfg |> Maybe.andThen sharedRoleOf of
+        Just role ->
+            sharedKindField role
 
-                RSet setName ->
-                    case Dict.get setName raw.sets of
-                        Just members ->
-                            members
-                                |> List.map
-                                    (\mRaw ->
-                                        let
-                                            m =
-                                                if mRaw == "main" then
-                                                    "main_"
+        Nothing ->
+            { field = ctorOf name, marker = MBrand }
 
-                                                else
-                                                    mRaw
-                                        in
-                                        case Dict.get m ctorIndex of
-                                            Just d ->
-                                                Ok (producesOf d.name (Dict.get d.name raw.components))
 
-                                            Nothing ->
-                                                Err (where_ ++ ": set '@" ++ setName ++ "' member '" ++ m ++ "' is not a component")
-                                    )
-                                |> combine
+{-| Resolve one `admits`/`parents` kind reference (`RAny` / `RShared` /
+`RSet` / `RBrand`) to the row field(s) it produces.
+-}
+kindFieldOfRef : Ctx -> String -> RawKindRef -> Result String (List KindField)
+kindFieldOfRef ctx where_ ref =
+    let
+        raw =
+            ctx.raw
 
-                        Nothing ->
-                            Err (where_ ++ ": unknown set '@" ++ setName ++ "'")
+        ctorIndex =
+            ctx.ctorIndex
+    in
+    case ref of
+        RAny ->
+            Err (where_ ++ ": 'any' cannot be mixed with other kinds")
 
-                RBrand ctorRaw ->
-                    let
-                        ctor =
-                            if ctorRaw == "main" then
-                                "main_"
+        RShared role ->
+            Ok [ sharedKindField role ]
 
-                            else
-                                ctorRaw
-                    in
-                    case Dict.get ctor ctorIndex of
-                        Just d ->
-                            Ok [ producesOf d.name (Dict.get d.name raw.components) ]
-
-                        Nothing ->
-                            if List.member ctor raw.kinds then
-                                -- An auxiliary brand kind declared in
-                                -- `_kinds`: produced by non-component
-                                -- constructors (action wrappers, escapes).
-                                Ok [ { field = ctor, marker = MBrand } ]
-
-                            else
-                                Err (where_ ++ ": unknown kind '" ++ ctor ++ "' (no such component or _kinds entry)")
-
-        resolveSlot : String -> RawSlot -> Result (List String) ResolvedSlot
-        resolveSlot compName s =
-            let
-                where_ =
-                    compName ++ "." ++ s.name
-            in
-            case s.kinds of
-                [ RAny ] ->
-                    Ok { name = s.name, content = Permissive, multi = s.multi, required = s.required }
-
-                [ RSet setName ] ->
-                    case Dict.get setName raw.sets of
-                        Just _ ->
-                            kindFieldOfRef where_ (RSet setName)
-                                |> Result.map
-                                    (\fields ->
-                                        { name = s.name
-                                        , content = SetContent { name = setName, pascal = Naming.pascal setName, fields = sortFields fields }
-                                        , multi = s.multi
-                                        , required = s.required
-                                        }
-                                    )
-                                |> Result.mapError List.singleton
-
-                        Nothing ->
-                            Err [ where_ ++ ": unknown set '@" ++ setName ++ "'" ]
-
-                refs ->
-                    refs
-                        |> List.map (kindFieldOfRef where_)
-                        |> combine
-                        |> Result.map (List.concat >> sortFields)
-                        |> Result.map (\fields -> { name = s.name, content = Fields fields, multi = s.multi, required = s.required })
-                        |> Result.mapError List.singleton
-
-        resolveParents : String -> List String -> Result (List String) (List String)
-        resolveParents compName ps =
-            ps
-                |> List.concatMap
-                    (\p ->
-                        if String.startsWith "@" p then
-                            Dict.get (String.dropLeft 1 p) raw.sets |> Maybe.withDefault [ p ]
-
-                        else
-                            [ p ]
-                    )
-                |> List.map
-                    (\pRaw ->
-                        let
-                            p =
-                                if pRaw == "main" then
-                                    "main_"
-
-                                else
-                                    pRaw
-                        in
-                        if Dict.member p ctorIndex then
-                            Ok p
-
-                        else
-                            Err (compName ++ ".parents: unknown component '" ++ p ++ "'")
-                    )
-                |> combine
-                |> Result.mapError List.singleton
-                |> Result.map List.sort
-
-        buildComp : Cem.Declaration -> Result (List String) ( Comp, List String )
-        buildComp d =
-            let
-                cfg =
-                    Dict.get d.name raw.components
-
-                -- Classify raw attrs once, sanitize keyword names.
-                -- Then apply per-component attr renames from _renames config.
-                compRenames =
-                    Dict.get d.name raw.renames.components |> Maybe.withDefault Dict.empty
-
-                classifiedAttrs =
-                    d.attributes
-                        |> List.filter (\a -> not (String.startsWith "_" a.name))
-                        |> List.map Attr.fromCem
-                        |> List.map (\a -> { a | elmName = Naming.safeField a.elmName, capName = Naming.safeField a.capName })
+        RSet setName ->
+            case Dict.get setName raw.sets of
+                Just members ->
+                    members
                         |> List.map
-                            (\a ->
-                                -- Apply rename from _renames config (e.g. "attr:with-hint" -> "hintFlag")
-                                case Dict.get ("attr:" ++ a.htmlName) compRenames of
-                                    Just newName ->
-                                        { a | elmName = newName, capName = newName }
+                            (\mRaw ->
+                                let
+                                    m =
+                                        Naming.safeValue mRaw
+                                in
+                                case Dict.get m ctorIndex of
+                                    Just d ->
+                                        Ok (producesOf d.name (Dict.get d.name raw.components))
 
                                     Nothing ->
-                                        a
+                                        Err (where_ ++ ": set '@" ++ setName ++ "' member '" ++ m ++ "' is not a component")
                             )
+                        |> combine
 
-                -- The ATTRIBUTE-vs-PROPERTY form, decided in one place from config.
-                --
-                -- First the brand-level controlled roster (`_controlled`) sweeps its
-                -- members to `AsProperty` — but only on the elements the entry's
-                -- `elements` scope covers; then the per-component `attrForm` override
-                -- gets the last word, so one element can opt out of (or into) the
-                -- property form. Before this, the roster was a hardcoded list inside
-                -- the EMITTER and `Attr.applyForm` was dead code that nothing called —
-                -- two mechanisms for one decision, of which only the hidden one worked.
-                --
-                -- The scope is what keeps the sweep from being a claim about
-                -- `HTMLElement`. `value` is declared by seven elements in the native
-                -- manifest at three different IDL types, and `Ir.property "value"` on
-                -- the `double`-typed ones (`<progress>`, `<meter>`) THROWS a Web IDL
-                -- TypeError for any non-numeric string — inside `applyFacts`, i.e.
-                -- during patch, where it takes down the render loop. See
-                -- `Controlled.elements`.
-                formedAttrs =
-                    classifiedAttrs
-                        |> List.map
-                            (\a ->
-                                if List.any (\c -> c.htmlName == a.htmlName && controlsElement c d) raw.controlled then
-                                    { a | attrForm = Attr.AsProperty }
+                Nothing ->
+                    Err (where_ ++ ": unknown set '@" ++ setName ++ "'")
 
-                                else
-                                    a
+        RBrand ctorRaw ->
+            let
+                ctor =
+                    Naming.safeValue ctorRaw
+            in
+            case Dict.get ctor ctorIndex of
+                Just d ->
+                    Ok [ producesOf d.name (Dict.get d.name raw.components) ]
+
+                Nothing ->
+                    if List.member ctor raw.kinds then
+                        -- An auxiliary brand kind declared in
+                        -- `_kinds`: produced by non-component
+                        -- constructors (action wrappers, escapes).
+                        Ok [ { field = ctor, marker = MBrand } ]
+
+                    else
+                        Err (where_ ++ ": unknown kind '" ++ ctor ++ "' (no such component or _kinds entry)")
+
+
+{-| Resolve one `admits` slot entry to its `ResolvedSlot`.
+-}
+resolveSlot : Ctx -> String -> RawSlot -> Result (List String) ResolvedSlot
+resolveSlot ctx compName s =
+    let
+        raw =
+            ctx.raw
+
+        where_ =
+            compName ++ "." ++ s.name
+    in
+    case s.kinds of
+        [ RAny ] ->
+            Ok { name = s.name, content = Permissive, multi = s.multi, required = s.required }
+
+        [ RSet setName ] ->
+            case Dict.get setName raw.sets of
+                Just _ ->
+                    kindFieldOfRef ctx where_ (RSet setName)
+                        |> Result.map
+                            (\fields ->
+                                { name = s.name
+                                , content = SetContent { name = setName, pascal = Naming.pascal setName, fields = sortFields fields }
+                                , multi = s.multi
+                                , required = s.required
+                                }
                             )
-                        |> List.map (Attr.applyForm (cfg |> Maybe.map .attrForm |> Maybe.withDefault []))
+                        |> Result.mapError List.singleton
 
-                -- KERNEL-BLOCKED attrs leave here, and they leave AFTER the form
-                -- passes above, because the test depends on the form: an `AsAttribute`
-                -- setter goes through `VirtualDom.attribute`'s
-                -- `_VirtualDom_noOnOrFormAction` and an `AsProperty` one through
-                -- `VirtualDom.property`'s `_VirtualDom_noInnerHtmlOrFormAction`, and
-                -- the two guards block different names. See `Attr.kernelBlockedReason`
-                -- for every case and the kernel source behind it.
-                --
-                -- Dropping them HERE — before K3/K2, before `sharedAttrs`, before the
-                -- capability rows — is what makes the omission total. A blocked name
-                -- that survived this point would reappear in the shared canonical, the
-                -- per-element re-export, the builder pipe, the `Attrs` row and the
-                -- `Review/Facts` roster, each of which reads from `Comp.attrs`.
-                --
-                -- Omitted, not fatal: the manifest is CORRECT (`formaction` and `is`
-                -- are real HTML) and it is `elm/virtual-dom` that cannot express them,
-                -- so no manifest or config edit could ever clear the error. But not
-                -- silent either — one info-channel note per omission, below.
-                blocked =
-                    formedAttrs |> List.filter Attr.kernelBlocked
+                Nothing ->
+                    Err [ where_ ++ ": unknown set '@" ++ setName ++ "'" ]
 
-                blockedNotes =
-                    blocked
-                        |> List.sortBy .htmlName
-                        |> List.filterMap
-                            (\a ->
-                                Attr.kernelBlockedReason a
-                                    |> Maybe.map
-                                        (\reason ->
-                                            "elm-cem: omitted attr '"
-                                                ++ a.htmlName
-                                                ++ "' on "
-                                                ++ d.name
-                                                ++ " — elm/virtual-dom cannot express it: "
-                                                ++ reason
-                                                ++ ". No setter is emitted; do not restore one."
-                                        )
-                            )
+        refs ->
+            refs
+                |> List.map (kindFieldOfRef ctx where_)
+                |> combine
+                |> Result.map (List.concat >> sortFields)
+                |> Result.map (\fields -> { name = s.name, content = Fields fields, multi = s.multi, required = s.required })
+                |> Result.mapError List.singleton
 
-                keptAttrs =
-                    formedAttrs |> List.filter (not << Attr.kernelBlocked)
 
-                -- K3: collapse identical duplicate attr specs (same elmName + same
-                -- normalized spec). Differing specs under one name → fail-loud.
-                -- Returns Ok (deduped attrs, collapse notes) or Err (errors).
-                k3Result =
-                    keptAttrs
-                        |> List.sortBy .elmName
-                        |> List.foldl
-                            (\a acc ->
-                                case acc of
-                                    Err errs ->
-                                        Err errs
+{-| Resolve a component's `parents` list (set refs expanded, `main` mapped to
+`main_`) against the constructor index.
+-}
+resolveParents : Ctx -> String -> List String -> Result (List String) (List String)
+resolveParents ctx compName ps =
+    ps
+        |> List.concatMap
+            (\p ->
+                if String.startsWith "@" p then
+                    Dict.get (String.dropLeft 1 p) ctx.raw.sets |> Maybe.withDefault [ p ]
 
-                                    Ok ( seen, notes ) ->
-                                        case List.filter (\x -> x.elmName == a.elmName) seen of
-                                            [] ->
-                                                Ok ( seen ++ [ a ], notes )
+                else
+                    [ p ]
+            )
+        |> List.map
+            (\pRaw ->
+                let
+                    p =
+                        Naming.safeValue pRaw
+                in
+                if Dict.member p ctx.ctorIndex then
+                    Ok p
 
-                                            [ existing ] ->
-                                                -- Identical specs (same htmlName, type_, attrForm): collapse with note.
-                                                -- Differing specs → fail-loud.
-                                                if existing.htmlName == a.htmlName && existing.type_ == a.type_ && existing.attrForm == a.attrForm then
-                                                    -- K3: identical duplicate spec; collapse + emit deterministic note.
-                                                    Ok
-                                                        ( seen
-                                                        , notes
-                                                            ++ [ "elm-cem: collapsed duplicate CEM attr '"
-                                                                    ++ a.htmlName
-                                                                    ++ "' on "
-                                                                    ++ d.name
-                                                                    ++ " (K3: identical duplicate spec)"
-                                                               ]
-                                                        )
+                else
+                    Err (compName ++ ".parents: unknown component '" ++ p ++ "'")
+            )
+        |> combine
+        |> Result.mapError List.singleton
+        |> Result.map List.sort
 
-                                                else
-                                                    Err
-                                                        [ "K3: component "
-                                                            ++ d.name
-                                                            ++ " declares attr '"
-                                                            ++ a.elmName
-                                                            ++ "' twice with differing specs (htmlNames: '"
-                                                            ++ existing.htmlName
-                                                            ++ "' vs '"
-                                                            ++ a.htmlName
-                                                            ++ "'). Use `_renames` to resolve."
-                                                        ]
 
-                                            _ ->
-                                                -- Shouldn't happen since we build `seen` one-by-one.
-                                                Ok ( seen, notes )
-                            )
-                            (Ok ( [], [] ))
+{-| Resolve one CEM declaration into a `Comp`: classify + rename its
+attributes, apply the `_controlled` property-form sweep, run the K2/K3
+attr-collapse passes, and resolve its slots/parents. `resolvedCtor` is set to
+`ctor` here; K7 barrel-collision resolution is applied afterwards, once every
+`Comp` exists and the atom roster is known (see `applyK7`).
+-}
+buildComp : Ctx -> Cem.Declaration -> Result (List String) ( Comp, List String )
+buildComp ctx d =
+    let
+        raw =
+            ctx.raw
 
-                -- K2: collapse CEM attrs whose elmName ∈ brand globals into the single
-                -- global projection. Only when the CEM attr's classified type MATCHES the
-                -- global's declared type; a mismatch → fail-loud (that's not a true dup —
-                -- the CEM attr carries different semantics, and collapsing it would swap
-                -- the caller's setter for one of another type).
-                --
-                -- The comparison used to be `type_ == AString`, because every global was
-                -- implicitly a free string. Now that `_globals` carries types, the test is
-                -- the faithful generalization: `dir : Value Dir` on the brand collapses a
-                -- CEM `dir` classified to the same value-set, and nothing else. Plain `==`
-                -- suffices because both sides sort their enum token lists (`globalDecoder`
-                -- and `Attr.enumValues`).
-                -- Returns Ok (kept attrs, extra notes) or Err (errors).
-                k2Result ( deduped, k3Notes ) =
-                    deduped
-                        |> List.foldl
-                            (\a acc ->
-                                case acc of
-                                    Err errs ->
-                                        Err errs
+        allGlobals =
+            ctx.allGlobals
 
-                                    Ok ( kept, notes ) ->
-                                        -- `allGlobals`: an OPEN global colliding with a
-                                        -- component's own same-named attribute is the
-                                        -- identical hazard, and row shape has no bearing
-                                        -- on it. Reading `globals` alone here would let a
-                                        -- component's conflicting `dir` past the guard the
-                                        -- moment `dir` went open.
-                                        case allGlobals |> List.filter (\g -> g.elmName == a.elmName) |> List.head of
-                                            Just global ->
-                                                if global.type_ == a.type_ then
-                                                    -- K2: collapse into global projection (drop from per-component list)
-                                                    -- + emit deterministic note.
-                                                    Ok
-                                                        ( kept
-                                                        , notes
-                                                            ++ [ "elm-cem: collapsed CEM attr '"
-                                                                    ++ a.htmlName
-                                                                    ++ "' on "
-                                                                    ++ d.name
-                                                                    ++ " into global (K2)"
-                                                               ]
-                                                        )
+        cfg =
+            Dict.get d.name raw.components
 
-                                                else
-                                                    Err
-                                                        [ "K2: CEM attr '"
+        -- Classify raw attrs once, sanitize keyword names.
+        -- Then apply per-component attr renames from _renames config.
+        compRenames =
+            Dict.get d.name raw.renames.components |> Maybe.withDefault Dict.empty
+
+        classifiedAttrs =
+            d.attributes
+                |> List.filter (\a -> not (String.startsWith "_" a.name))
+                |> List.map Attr.fromCem
+                |> List.map (\a -> { a | elmName = Naming.safeField a.elmName, capName = Naming.safeField a.capName })
+                |> List.map
+                    (\a ->
+                        -- Apply rename from _renames config (e.g. "attr:with-hint" -> "hintFlag")
+                        case Dict.get ("attr:" ++ a.htmlName) compRenames of
+                            Just newName ->
+                                { a | elmName = newName, capName = newName }
+
+                            Nothing ->
+                                a
+                    )
+
+        -- The ATTRIBUTE-vs-PROPERTY form, decided in one place from config.
+        --
+        -- First the brand-level controlled roster (`_controlled`) sweeps its
+        -- members to `AsProperty` — but only on the elements the entry's
+        -- `elements` scope covers; then the per-component `attrForm` override
+        -- gets the last word, so one element can opt out of (or into) the
+        -- property form. Before this, the roster was a hardcoded list inside
+        -- the EMITTER and `Attr.applyForm` was dead code that nothing called —
+        -- two mechanisms for one decision, of which only the hidden one worked.
+        --
+        -- The scope is what keeps the sweep from being a claim about
+        -- `HTMLElement`. `value` is declared by seven elements in the native
+        -- manifest at three different IDL types, and `Ir.property "value"` on
+        -- the `double`-typed ones (`<progress>`, `<meter>`) THROWS a Web IDL
+        -- TypeError for any non-numeric string — inside `applyFacts`, i.e.
+        -- during patch, where it takes down the render loop. See
+        -- `Controlled.elements`.
+        formedAttrs =
+            classifiedAttrs
+                |> List.map
+                    (\a ->
+                        if List.any (\c -> c.htmlName == a.htmlName && controlsElement c d) raw.controlled then
+                            { a | attrForm = Attr.AsProperty }
+
+                        else
+                            a
+                    )
+                |> List.map (Attr.applyForm (cfg |> Maybe.map .attrForm |> Maybe.withDefault []))
+
+        -- KERNEL-BLOCKED attrs leave here, and they leave AFTER the form
+        -- passes above, because the test depends on the form: an `AsAttribute`
+        -- setter goes through `VirtualDom.attribute`'s
+        -- `_VirtualDom_noOnOrFormAction` and an `AsProperty` one through
+        -- `VirtualDom.property`'s `_VirtualDom_noInnerHtmlOrFormAction`, and
+        -- the two guards block different names. See `Attr.kernelBlockedReason`
+        -- for every case and the kernel source behind it.
+        --
+        -- Dropping them HERE — before K3/K2, before `sharedAttrs`, before the
+        -- capability rows — is what makes the omission total. A blocked name
+        -- that survived this point would reappear in the shared canonical, the
+        -- per-element re-export, the builder pipe, the `Attrs` row and the
+        -- `Review/Facts` roster, each of which reads from `Comp.attrs`.
+        --
+        -- Omitted, not fatal: the manifest is CORRECT (`formaction` and `is`
+        -- are real HTML) and it is `elm/virtual-dom` that cannot express them,
+        -- so no manifest or config edit could ever clear the error. But not
+        -- silent either — one info-channel note per omission, below.
+        blocked =
+            formedAttrs |> List.filter Attr.kernelBlocked
+
+        blockedNotes =
+            blocked
+                |> List.sortBy .htmlName
+                |> List.filterMap
+                    (\a ->
+                        Attr.kernelBlockedReason a
+                            |> Maybe.map
+                                (\reason ->
+                                    "elm-cem: omitted attr '"
+                                        ++ a.htmlName
+                                        ++ "' on "
+                                        ++ d.name
+                                        ++ " — elm/virtual-dom cannot express it: "
+                                        ++ reason
+                                        ++ ". No setter is emitted; do not restore one."
+                                )
+                    )
+
+        keptAttrs =
+            formedAttrs |> List.filter (not << Attr.kernelBlocked)
+
+        -- K3: collapse identical duplicate attr specs (same elmName + same
+        -- normalized spec). Differing specs under one name → fail-loud.
+        -- Returns Ok (deduped attrs, collapse notes) or Err (errors).
+        k3Result =
+            keptAttrs
+                |> List.sortBy .elmName
+                |> List.foldl
+                    (\a acc ->
+                        case acc of
+                            Err errs ->
+                                Err errs
+
+                            Ok ( seen, notes ) ->
+                                case List.filter (\x -> x.elmName == a.elmName) seen of
+                                    [] ->
+                                        Ok ( seen ++ [ a ], notes )
+
+                                    [ existing ] ->
+                                        -- Identical specs (same htmlName, type_, attrForm): collapse with note.
+                                        -- Differing specs → fail-loud.
+                                        if existing.htmlName == a.htmlName && existing.type_ == a.type_ && existing.attrForm == a.attrForm then
+                                            -- K3: identical duplicate spec; collapse + emit deterministic note.
+                                            Ok
+                                                ( seen
+                                                , notes
+                                                    ++ [ "elm-cem: collapsed duplicate CEM attr '"
                                                             ++ a.htmlName
                                                             ++ "' on "
                                                             ++ d.name
-                                                            ++ " has elmName '"
-                                                            ++ a.elmName
-                                                            ++ "' which matches a global, but its type ("
-                                                            ++ Attr.typeLabel a.type_
-                                                            ++ ") is not the global's ("
-                                                            ++ Attr.typeLabel global.type_
-                                                            ++ "). Retype the global in `_globals`, or use `_renames` to resolve."
-                                                        ]
-
-                                            Nothing ->
-                                                Ok ( kept ++ [ a ], notes )
-                            )
-                            (Ok ( [], k3Notes ))
-
-                attrsResult =
-                    k3Result
-                        |> Result.andThen k2Result
-                        -- The blocked-attr report rides the same note list as the K2/K3
-                        -- collapse notes, so it reaches stdout through the one existing
-                        -- info channel (`Brand.collapseNotes` → `Generate.generatePhantom`).
-                        |> Result.map (\( kept, notes ) -> ( kept, notes ++ blockedNotes ))
-
-                provenanceOf elmName =
-                    d.attributes
-                        |> List.filter (\raw_ -> Attr.fromCem raw_ |> .elmName |> (==) elmName)
-                        |> List.head
-                        |> Maybe.andThen .type_
-                        |> Maybe.andThen .aliasName
-
-                slotsR =
-                    cfg
-                        |> Maybe.map .admits
-                        |> Maybe.withDefault []
-                        |> List.sortBy
-                            (\s ->
-                                if s.name == "unnamed" then
-                                    ( 0, "" )
-
-                                else
-                                    ( 1, s.name )
-                            )
-                        |> List.map (resolveSlot d.name)
-                        |> combineAll
-
-                parentsR =
-                    case Maybe.andThen .parents cfg of
-                        Just ps ->
-                            resolveParents d.name ps |> Result.map Just
-
-                        Nothing ->
-                            Ok Nothing
-            in
-            Result.map3
-                (\( attrs, compNotes ) slots parents ->
-                    let
-                        -- `Attr.enumPairs` rather than a local `case … of AEnum tokens`:
-                        -- an `AEnumMap` (a config `attrTypes` override whose token names
-                        -- differ from the strings they emit) is just as much a union
-                        -- attribute, and matching only `AEnum` here is precisely how a
-                        -- downstream brand's config-constrained `disable-pagination` ended
-                        -- up a `String` setter with no `<Lib>.Values` row at all. The TOKEN
-                        -- half of each pair is what a row carries; the VALUE half is
-                        -- resolved once, brand-wide, into `Brand.tokenValues`.
-                        enums =
-                            attrs
-                                |> List.filterMap
-                                    (\a ->
-                                        Attr.enumPairs a.type_
-                                            |> Maybe.map
-                                                (\pairs ->
-                                                    { elmName = a.elmName
-                                                    , aliasName = Naming.pascal a.elmName
-                                                    , tokens = pairs |> List.map Tuple.first |> List.sort
-                                                    , provenance = provenanceOf a.elmName
-                                                    }
+                                                            ++ " (K3: identical duplicate spec)"
+                                                       ]
                                                 )
-                                    )
-                    in
-                    ( { name = d.name
-                      , ctor = ctorOf d.name
 
-                      -- resolvedCtor is set to ctor here; K7 collision resolution
-                      -- (barrel atom vs element ctor) is applied in resolveWith
-                      -- after all comps are built and atoms are known.
-                      , resolvedCtor = ctorOf d.name
-                      , tag = tagOf d
-                      , produces = producesOf d.name cfg
-                      , attrs = attrs
-                      , enums = enums
-                      , events =
-                            let
-                                payloads =
-                                    cfg |> Maybe.map .eventPayloads |> Maybe.withDefault []
-                            in
-                            d.events
-                                |> List.map
-                                    (\ev ->
-                                        case payloads |> List.filter (\p -> p.event == ev.name) |> List.head of
-                                            Just p ->
-                                                { ev | setter = Just p.setter, payload = Just p.payload }
+                                        else
+                                            Err
+                                                [ "K3: component "
+                                                    ++ d.name
+                                                    ++ " declares attr '"
+                                                    ++ a.elmName
+                                                    ++ "' twice with differing specs (htmlNames: '"
+                                                    ++ existing.htmlName
+                                                    ++ "' vs '"
+                                                    ++ a.htmlName
+                                                    ++ "'). Use `_renames` to resolve."
+                                                ]
 
-                                            Nothing ->
-                                                ev
-                                    )
-                      , slots = slots
-                      , admittedBy = parents
-                      , description = Maybe.withDefault "" d.description
-                      , home = Maybe.andThen .home cfg
-                      , transparent = cfg |> Maybe.map .transparent |> Maybe.withDefault False
-                      , roles = Maybe.andThen .roles cfg
-                      , actionCaps = Maybe.andThen .requiredAction cfg
-                      , eventOverrides = cfg |> Maybe.map .eventOverrides |> Maybe.withDefault []
-                      , requiredAttrs = cfg |> Maybe.map .requiredAttrs |> Maybe.withDefault []
-                      , actionMap = cfg |> Maybe.map .actionMap |> Maybe.withDefault []
-                      , propertyOnly = cfg |> Maybe.map .propertyOnly |> Maybe.withDefault [] |> List.sort
-                      , blockedAttrs = blocked |> List.sortBy .htmlName
-                      , examples = cfg |> Maybe.map .examples |> Maybe.withDefault []
-                      , docMeta = cfg |> Maybe.map .docMeta |> Maybe.withDefault []
-                      }
-                    , compNotes
+                                    _ ->
+                                        -- Shouldn't happen since we build `seen` one-by-one.
+                                        Ok ( seen, notes )
                     )
-                )
-                attrsResult
-                slotsR
-                parentsR
+                    (Ok ( [], [] ))
 
-        compsR =
-            comps0
-                |> List.map buildComp
+        -- K2: collapse CEM attrs whose elmName ∈ brand globals into the single
+        -- global projection. Only when the CEM attr's classified type MATCHES the
+        -- global's declared type; a mismatch → fail-loud (that's not a true dup —
+        -- the CEM attr carries different semantics, and collapsing it would swap
+        -- the caller's setter for one of another type).
+        --
+        -- The comparison used to be `type_ == AString`, because every global was
+        -- implicitly a free string. Now that `_globals` carries types, the test is
+        -- the faithful generalization: `dir : Value Dir` on the brand collapses a
+        -- CEM `dir` classified to the same value-set, and nothing else. Plain `==`
+        -- suffices because both sides sort their enum token lists (`globalDecoder`
+        -- and `Attr.enumValues`).
+        -- Returns Ok (kept attrs, extra notes) or Err (errors).
+        k2Result ( deduped, k3Notes ) =
+            deduped
+                |> List.foldl
+                    (\a acc ->
+                        case acc of
+                            Err errs ->
+                                Err errs
+
+                            Ok ( kept, notes ) ->
+                                -- `allGlobals`: an OPEN global colliding with a
+                                -- component's own same-named attribute is the
+                                -- identical hazard, and row shape has no bearing
+                                -- on it. Reading `globals` alone here would let a
+                                -- component's conflicting `dir` past the guard the
+                                -- moment `dir` went open.
+                                case allGlobals |> List.filter (\g -> g.elmName == a.elmName) |> List.head of
+                                    Just global ->
+                                        if global.type_ == a.type_ then
+                                            -- K2: collapse into global projection (drop from per-component list)
+                                            -- + emit deterministic note.
+                                            Ok
+                                                ( kept
+                                                , notes
+                                                    ++ [ "elm-cem: collapsed CEM attr '"
+                                                            ++ a.htmlName
+                                                            ++ "' on "
+                                                            ++ d.name
+                                                            ++ " into global (K2)"
+                                                       ]
+                                                )
+
+                                        else
+                                            Err
+                                                [ "K2: CEM attr '"
+                                                    ++ a.htmlName
+                                                    ++ "' on "
+                                                    ++ d.name
+                                                    ++ " has elmName '"
+                                                    ++ a.elmName
+                                                    ++ "' which matches a global, but its type ("
+                                                    ++ Attr.typeLabel a.type_
+                                                    ++ ") is not the global's ("
+                                                    ++ Attr.typeLabel global.type_
+                                                    ++ "). Retype the global in `_globals`, or use `_renames` to resolve."
+                                                ]
+
+                                    Nothing ->
+                                        Ok ( kept ++ [ a ], notes )
+                    )
+                    (Ok ( [], k3Notes ))
+
+        attrsResult =
+            k3Result
+                |> Result.andThen k2Result
+                -- The blocked-attr report rides the same note list as the K2/K3
+                -- collapse notes, so it reaches stdout through the one existing
+                -- info channel (`Brand.collapseNotes` → `Generate.generatePhantom`).
+                |> Result.map (\( kept, notes ) -> ( kept, notes ++ blockedNotes ))
+
+        provenanceOf elmName =
+            d.attributes
+                |> List.filter (\raw_ -> Attr.fromCem raw_ |> .elmName |> (==) elmName)
+                |> List.head
+                |> Maybe.andThen .type_
+                |> Maybe.andThen .aliasName
+
+        slotsR =
+            cfg
+                |> Maybe.map .admits
+                |> Maybe.withDefault []
+                |> List.sortBy
+                    (\s ->
+                        if s.name == "unnamed" then
+                            ( 0, "" )
+
+                        else
+                            ( 1, s.name )
+                    )
+                |> List.map (resolveSlot ctx d.name)
                 |> combineAll
-                |> Result.map
-                    (\pairs ->
-                        let
-                            sorted =
-                                pairs |> List.sortBy (Tuple.first >> .name)
-                        in
-                        ( sorted |> List.map Tuple.first
-                        , sorted |> List.concatMap Tuple.second
-                        )
-                    )
+
+        parentsR =
+            case Maybe.andThen .parents cfg of
+                Just ps ->
+                    resolveParents ctx d.name ps |> Result.map Just
+
+                Nothing ->
+                    Ok Nothing
     in
-    compsR
+    Result.map3
+        (\( attrs, compNotes ) slots parents ->
+            let
+                -- `Attr.enumPairs` rather than a local `case … of AEnum tokens`:
+                -- an `AEnumMap` (a config `attrTypes` override whose token names
+                -- differ from the strings they emit) is just as much a union
+                -- attribute, and matching only `AEnum` here is precisely how a
+                -- downstream brand's config-constrained `disable-pagination` ended
+                -- up a `String` setter with no `<Lib>.Values` row at all. The TOKEN
+                -- half of each pair is what a row carries; the VALUE half is
+                -- resolved once, brand-wide, into `Brand.tokenValues`.
+                enums =
+                    attrs
+                        |> List.filterMap
+                            (\a ->
+                                Attr.enumPairs a.type_
+                                    |> Maybe.map
+                                        (\pairs ->
+                                            { elmName = a.elmName
+                                            , aliasName = Naming.pascal a.elmName
+                                            , tokens = pairs |> List.map Tuple.first |> List.sort
+                                            , provenance = provenanceOf a.elmName
+                                            }
+                                        )
+                            )
+            in
+            ( { name = d.name
+              , ctor = ctorOf d.name
+
+              -- resolvedCtor is set to ctor here; K7 collision resolution
+              -- (barrel atom vs element ctor) is applied in resolveWith
+              -- after all comps are built and atoms are known.
+              , resolvedCtor = ctorOf d.name
+              , tag = tagOf d
+              , produces = producesOf d.name cfg
+              , attrs = attrs
+              , enums = enums
+              , events =
+                    let
+                        payloads =
+                            cfg |> Maybe.map .eventPayloads |> Maybe.withDefault []
+                    in
+                    d.events
+                        |> List.map
+                            (\ev ->
+                                case payloads |> List.filter (\p -> p.event == ev.name) |> List.head of
+                                    Just p ->
+                                        { ev | setter = Just p.setter, payload = Just p.payload }
+
+                                    Nothing ->
+                                        ev
+                            )
+              , slots = slots
+              , admittedBy = parents
+              , description = Maybe.withDefault "" d.description
+              , home = Maybe.andThen .home cfg
+              , transparent = cfg |> Maybe.map .transparent |> Maybe.withDefault False
+              , roles = Maybe.andThen .roles cfg
+              , actionCaps = Maybe.andThen .requiredAction cfg
+              , eventOverrides = cfg |> Maybe.map .eventOverrides |> Maybe.withDefault []
+              , requiredAttrs = cfg |> Maybe.map .requiredAttrs |> Maybe.withDefault []
+              , actionMap = cfg |> Maybe.map .actionMap |> Maybe.withDefault []
+              , propertyOnly = cfg |> Maybe.map .propertyOnly |> Maybe.withDefault [] |> List.sort
+              , blockedAttrs = blocked |> List.sortBy .htmlName
+              , examples = cfg |> Maybe.map .examples |> Maybe.withDefault []
+              , docMeta = cfg |> Maybe.map .docMeta |> Maybe.withDefault []
+              }
+            , compNotes
+            )
+        )
+        attrsResult
+        slotsR
+        parentsR
+
+{-| Resolve every `comps0` declaration into its `Comp`, sorted by name, with
+each build's collapse notes pooled alongside.
+-}
+buildComps : Ctx -> Result (List String) ( List Comp, List String )
+buildComps ctx =
+    ctx.comps0
+        |> List.map (buildComp ctx)
+        |> combineAll
+        |> Result.map
+            (\pairs ->
+                let
+                    sorted =
+                        pairs |> List.sortBy (Tuple.first >> .name)
+                in
+                ( sorted |> List.map Tuple.first
+                , sorted |> List.concatMap Tuple.second
+                )
+            )
+
+
+{-| Enum GLOBALS join the brand's union roster, so `<Lib>.Values` stays
+the ONE home for every enum row + token (a global's row alias and
+its tokens are minted, pooled, and collision-checked exactly like a
+component enum's) and `<Lib>.Attributes` reads the global setter's
+row alias from here rather than re-deriving it.
+`allGlobals`, emphatically: this is where an enum global's
+`<Lib>.Values` row and tokens are minted. An OPEN enum global's
+setter is still annotated `Value <Lib>.Values.<Row>`, so reading
+`globals` alone here would emit a module annotated against a type
+that was never generated.
+-}
+globalEnumsOf : Ctx -> List EnumSpec
+globalEnumsOf ctx =
+    ctx.allGlobals
+        |> List.filterMap
+            (\g ->
+                Attr.enumPairs g.type_
+                    |> Maybe.map
+                        (\pairs ->
+                            { elmName = g.elmName
+                            , aliasName = Naming.pascal g.elmName
+                            , tokens = pairs |> List.map Tuple.first |> List.sort
+                            , provenance = Nothing
+                            }
+                        )
+            )
+
+
+{-| The brand's union roster: every component enum plus every enum global,
+merged by `elmName` (tokens unioned, provenance kept from whichever side has
+one).
+-}
+unionsOf : List Comp -> List EnumSpec -> List EnumSpec
+unionsOf comps globalEnums =
+    (comps |> List.concatMap .enums)
+        ++ globalEnums
+        |> List.foldl
+            (\e acc ->
+                Dict.update e.elmName
+                    (\existing ->
+                        case existing of
+                            Just x ->
+                                Just
+                                    { tokens = List.sort (List.foldl consUnique x.tokens e.tokens)
+                                    , provenance = orMaybe x.provenance e.provenance
+                                    }
+
+                            Nothing ->
+                                Just { tokens = List.sort e.tokens, provenance = e.provenance }
+                    )
+                    acc
+            )
+            Dict.empty
+        |> Dict.toList
+        |> List.map
+            (\( elmName, u ) ->
+                { elmName = elmName
+                , aliasName = Naming.pascal elmName
+                , tokens = u.tokens
+                , provenance = u.provenance
+                }
+            )
+
+
+{-| Every ( token, emitted string ) pair the brand declares anywhere,
+from both enum sources: per-component attributes and enum globals.
+Identity pairs are INCLUDED deliberately — they are what makes the
+conflict below detectable. A plain `AEnum` token `auto` is the pair
+( "auto", "auto" ), so an `attrTypes` map elsewhere asking for
+( "auto", "automatic" ) is caught rather than silently retargeting
+the token every other attribute already shares.
+-}
+tokenValuePairsOf : Ctx -> List Comp -> List ( String, String )
+tokenValuePairsOf ctx comps =
+    ((comps |> List.concatMap .attrs) ++ ctx.allGlobals)
+        |> List.filterMap (.type_ >> Attr.enumPairs)
+        |> List.concat
+        |> List.sort
+
+
+{-| `<Lib>.Values` mints ONE value per token identifier, so a token that
+two attributes want to render differently is UNREPRESENTABLE, exactly
+like the ident collision `Emit.guardValuesModule` already fails on.
+Letting `Dict.insert` pick a winner would corrupt the other attribute
+silently — `Values.always` would write one attribute's string into
+the other's DOM attribute, past a type checker that sees one legal
+`Value` row and has nothing to object to.
+-}
+resolveTokenValues : Ctx -> List ( String, String ) -> ( Dict String String, List String )
+resolveTokenValues ctx tokenValuePairs =
+    let
+        lib =
+            ctx.lib
+    in
+    tokenValuePairs
+        |> List.foldl
+            (\( token, value ) ( acc, errs ) ->
+                case Dict.get token acc of
+                    Just existing ->
+                        if existing == value then
+                            ( acc, errs )
+
+                        else
+                            ( acc
+                            , errs
+                                ++ [ "COLLISION in module "
+                                        ++ lib
+                                        ++ ".Values (token payload): token '"
+                                        ++ token
+                                        ++ "' is asked to render two different strings — \""
+                                        ++ existing
+                                        ++ "\" and \""
+                                        ++ value
+                                        ++ "\". One token identifier mints one `Ir.token`, so"
+                                        ++ " whichever won would silently write the wrong string for the other"
+                                        ++ " attribute. Give one of them a distinct TOKEN NAME in its"
+                                        ++ " `attrTypes` map (the key is the Elm name, the value is the HTML"
+                                        ++ " string, so they need not match).\nattrTypes snippet:\n"
+                                        ++ "{ \"<attr>\": { \""
+                                        ++ token
+                                        ++ "Alt\": \""
+                                        ++ value
+                                        ++ "\" } }"
+                                   ]
+                            )
+
+                    Nothing ->
+                        ( Dict.insert token value acc, errs )
+            )
+            ( Dict.empty, [] )
+
+
+{-| The shared vocabulary: ONE canonical spec per attribute name.
+
+`deduplicateBy` picks a single spec per `elmName`, so when two components
+classify one attribute to different SCALAR types (`value : String`
+on m3e-textfield, `value : Float` on m3e-slider) exactly one type
+reaches `<Lib>.Attributes`. That is intentional — a module cannot
+expose one name at two types — and it is SOUND because the losing
+components keep a locally-typed setter in their own module
+(`Emit.conflictsWithCanonical`). What was missing is that the choice
+was completely silent: the elm-typed-html `datetime` regression
+(`<time>`'s Float outranked `<ins>`/`<del>`'s String) left no trace
+in any output. `conflictNotesOf` below puts the choice on the info
+channel; `Emit.guardHomeAttrTypes` makes the unrepresentable case
+(both types in ONE module) a hard error.
+…and one further normalization `deduplicateBy` cannot do on its own: the
+attribute-vs-PROPERTY FORM. Once `_controlled` gained an element
+scope, one name can legitimately be a DOM property on one element
+and a content attribute on another (`value` is the live property of
+an `<input>` and a reflected content attribute of a `<progress>`),
+and `deduplicateBy` would then publish whichever element the manifest
+happened to list first.
+
+The tie is broken toward `AsProperty`, deliberately and not by
+majority. `<Lib>.Attributes` is the LOOSE surface — every setter is
+an open producer admitted by every element whose row carries the
+field — so the one body it can publish has to be right for every
+element STILL ON THAT ROW. The property form is; the attribute form
+is not:
+
+  - The property form's only failure mode is Web IDL COERCION, and
+    that is a property of the ELEMENT, not of this decision:
+    `progress.value = "abc"` is a TypeError only because
+    `HTMLProgressElement.value` is a restricted `double`. An element
+    whose IDL type coerces must therefore not share the row AT ALL —
+    it declares its value under its own capability row and its own
+    setter name (`_renames` + `attrTypes`, so the type is honest
+    too). That is what makes the crash UNREPRESENTABLE rather than
+    merely avoided: `<Lib>.Attributes.value` applied to a
+    `<progress>` is a row mismatch the compiler rejects, not a
+    TypeError thrown mid-patch. Every element left on a property-form
+    row reflects (`HTMLButtonElement`/`HTMLDataElement`/
+    `HTMLOptionElement.value` are `[CEReactions] attribute DOMString
+    value`), so the property write reaches the content attribute
+    there anyway.
+  - The attribute form has no such escape. It is INERT or STALE
+    exactly where `_controlled` exists in the first place: once an
+    `<input>`'s dirty-value flag is set, `setAttribute("value")` no
+    longer moves the live value (issue #41), and there is no
+    capability row to move to — the whole point of `value` on an
+    `<input>` is that name. Publishing it here pinned
+    `<Lib>.Attributes.value model.text` on the most-used form control
+    in the library, silently.
+
+So: a rare crash on elements that can and must diverge their row, or
+common silent staleness on the one element that cannot. The property
+form, and let the row do the refusing. The attribute half stays
+reachable — and is the only form — through each reflecting element's
+own module, where `Emit.divergesFromCanonical` keeps a local setter,
+plus the `default*` companion this form earns beside the shared
+setter (`Emit.companionsFor`).
+
+-}
+sharedAttrsOf : List Comp -> List Attr.AttrSpec
+sharedAttrsOf comps =
+    comps
+        |> List.concatMap .attrs
+        |> deduplicateBy .elmName
+        |> List.map
+            (\canon ->
+                if canon.attrForm == Attr.AsAttribute && anyPropertyForm comps canon.elmName then
+                    { canon | attrForm = Attr.AsProperty }
+
+                else
+                    canon
+            )
+        |> List.sortBy .elmName
+
+
+{-| One deterministic note per attribute name whose SETTER TYPE differs
+across components, naming the type the shared canonical took and the
+components that therefore keep a local setter. Keyed on the emitted
+setter type (not `Attr.AttrType`) so enum-vs-enum and
+enum-vs-free-string — both `String` at the setter boundary — are not
+reported as conflicts.
+-}
+conflictNotesOf : Ctx -> List Comp -> List Attr.AttrSpec -> List String
+conflictNotesOf ctx comps sharedAttrs =
+    let
+        lib =
+            ctx.lib
+
+        occurrences =
+            comps
+                |> List.concatMap
+                    (\c -> c.attrs |> List.map (\a -> ( a.elmName, ( Attr.setterType a.type_, c.name ) )))
+
+        canonicalLabel name =
+            sharedAttrs
+                |> List.filter (\a -> a.elmName == name)
+                |> List.head
+                |> Maybe.map (.type_ >> Attr.setterType)
+                |> Maybe.withDefault "?"
+    in
+    sharedAttrs
+        |> List.filterMap
+            (\canon ->
+                let
+                    forName =
+                        occurrences
+                            |> List.filter (\( n, _ ) -> n == canon.elmName)
+                            |> List.map Tuple.second
+
+                    distinct =
+                        forName |> List.map Tuple.first |> List.foldl consUnique [] |> List.sort
+                in
+                if List.length distinct < 2 then
+                    Nothing
+
+                else
+                    Just
+                        ("elm-cem: attr '"
+                            ++ canon.elmName
+                            ++ "' has conflicting setter types across components ("
+                            ++ (forName
+                                    |> List.sortBy Tuple.second
+                                    |> List.map (\( t, c ) -> c ++ " : " ++ t)
+                                    |> String.join ", "
+                               )
+                            ++ "); the shared "
+                            ++ lib
+                            ++ ".Attributes."
+                            ++ canon.elmName
+                            ++ " is "
+                            ++ canonicalLabel canon.elmName
+                            ++ " and every other component keeps a locally-typed setter."
+                        )
+            )
+
+
+{-| The same treatment for the attribute-vs-PROPERTY form. A split form
+is not an error — it is the whole point of `_controlled`'s element
+scope — but it IS a place where one name means two runtime things,
+and the `datetime` lesson is that such a choice must never be
+silent. Names which elements get the content-attribute form and
+states that the shared canonical took the property one.
+
+The note is worth reading as a CHECKLIST, because it lists exactly
+the elements to which the shared property-form setter will be
+applied without being the live form they want. Each must be one a
+string property write is harmless on — i.e. a REFLECTING element. An
+element whose IDL type coerces (`double`, `long`) belongs on its own
+capability row and should not appear here at all; see `sharedAttrsOf`.
+
+-}
+formNotesOf : Ctx -> List Comp -> List Attr.AttrSpec -> List String
+formNotesOf ctx comps sharedAttrs =
+    let
+        lib =
+            ctx.lib
+    in
+    sharedAttrs
+        |> List.filterMap
+            (\canon ->
+                let
+                    attributeOwners =
+                        comps
+                            |> List.filter
+                                (\c ->
+                                    c.attrs
+                                        |> List.any (\a -> a.elmName == canon.elmName && a.attrForm == Attr.AsAttribute)
+                                )
+                            |> List.map .name
+                            |> List.sort
+                in
+                if List.isEmpty attributeOwners || canon.attrForm == Attr.AsAttribute then
+                    Nothing
+
+                else
+                    Just
+                        ("elm-cem: attr '"
+                            ++ canon.elmName
+                            ++ "' is a content attribute on "
+                            ++ String.join ", " attributeOwners
+                            ++ " and a DOM property elsewhere; the shared "
+                            ++ lib
+                            ++ ".Attributes."
+                            ++ canon.elmName
+                            ++ " is the PROPERTY form (the form that cannot go inert on a controlled"
+                            ++ " element) and each content-attribute element keeps a local setter."
+                            ++ " Every element named here must be one whose IDL attribute of that name"
+                            ++ " REFLECTS; one whose IDL type coerces needs its own setter name and"
+                            ++ " capability row (`_renames` + `attrTypes`)."
+                        )
+            )
+
+
+{-| Resolve `_sets` against the brand's `Comp`s, each set's fields sourced
+from its members' `produces`.
+-}
+resolveSets : Ctx -> List Comp -> Result (List String) (List SetAlias)
+resolveSets ctx comps =
+    ctx.raw.sets
+        |> Dict.toList
+        |> List.map
+            (\( name, members ) ->
+                members
+                    |> List.map
+                        (\mRaw ->
+                            let
+                                m =
+                                    Naming.safeValue mRaw
+                            in
+                            case Dict.get m (comps |> List.map (\c -> ( c.ctor, c )) |> Dict.fromList) of
+                                Just c ->
+                                    Ok c.produces
+
+                                Nothing ->
+                                    Err ("_sets." ++ name ++ ": unknown component '" ++ m ++ "'")
+                        )
+                    |> combine
+                    |> Result.mapError List.singleton
+                    |> Result.map (\fields -> { name = name, pascal = Naming.pascal name, fields = sortFields fields })
+            )
+        |> combineAll
+
+
+{-| `AsProperty` names its DOM property `Attr.propertyName`: the CEM
+`fieldName`, else `htmlName` VERBATIM. Verbatim is the identity,
+never a camel-cased guess (issue #33) — but that also means a
+HYPHENATED name has no same-named IDL property, so `Ir.property
+"aria-label"` would set an inert own-property nobody observes.
+Fail loud instead of emitting a setter that does nothing.
+-}
+controlledFormErrorsOf : List Comp -> List String
+controlledFormErrorsOf comps =
+    comps
+        |> List.concatMap
+            (\c ->
+                c.attrs
+                    |> List.filterMap
+                        (\a ->
+                            if a.attrForm == Attr.AsProperty && a.reactiveProp == Nothing && String.contains "-" a.htmlName then
+                                Just
+                                    ("attrForm/_controlled: '"
+                                        ++ a.htmlName
+                                        ++ "' on "
+                                        ++ c.name
+                                        ++ " asks for the PROPERTY form, but a hyphenated name has no same-named DOM property (issue #33). Declare the real IDL name as the CEM `fieldName`, or leave it as an attribute."
+                                    )
+
+                            else
+                                Nothing
+                        )
+            )
+
+
+{-| A `_controlled` entry's `elements` scope must name elements that
+exist AND that declare the attribute. A typo would otherwise leave
+the entry covering nothing — the plain setter silently reverts to
+the content-attribute form, which for `value` on an `<input>` is
+exactly issue #41 back again, with no diagnostic anywhere. The
+scope's whole job is to be a deliberate, checked statement about
+which elements diverge, so an unverifiable one is refused.
+`elements: []` names no element, so the entry would cover nothing
+while LOOKING deliberate. Omitting the key is how you say "every
+element declaring it"; deleting the entry is how you say "none".
+-}
+emptyScopeErrorsOf : Ctx -> List String
+emptyScopeErrorsOf ctx =
+    ctx.raw.controlled
+        |> List.filterMap
+            (\ct ->
+                if ct.elements == Just [] then
+                    Just
+                        ("_controlled['"
+                            ++ ct.htmlName
+                            ++ "'].elements is empty, so the entry controls nothing. Omit `elements` to cover every element declaring the attribute, or remove the entry."
+                        )
+
+                else
+                    Nothing
+            )
+
+
+unknownScopeErrorsOf : Ctx -> List Comp -> List String
+unknownScopeErrorsOf ctx comps =
+    ctx.raw.controlled
+        |> List.concatMap
+            (\ct ->
+                ct.elements
+                    |> Maybe.withDefault []
+                    |> List.filterMap
+                        (\name ->
+                            case comps |> List.filter (\c -> c.tag == name || c.name == name) of
+                                [] ->
+                                    Just
+                                        ("_controlled['"
+                                            ++ ct.htmlName
+                                            ++ "'].elements: '"
+                                            ++ name
+                                            ++ "' is not an element of this brand (name it by tag or by declaration name)"
+                                        )
+
+                                matches ->
+                                    if matches |> List.any (\c -> c.attrs |> List.any (\a -> a.htmlName == ct.htmlName)) then
+                                        Nothing
+
+                                    else
+                                        Just
+                                            ("_controlled['"
+                                                ++ ct.htmlName
+                                                ++ "'].elements: '"
+                                                ++ name
+                                                ++ "' does not declare a '"
+                                                ++ ct.htmlName
+                                                ++ "' attribute"
+                                            )
+                        )
+            )
+
+
+{-| A `propertyOnly` entry must name an attribute this component
+actually declares AND one the brand roster controls ON THIS
+ELEMENT; otherwise it is a typo that silently suppresses nothing.
+
+The element-scope arm matters because `propertyOnly` and the scope
+are opposite requests: `propertyOnly` says "keep the live property
+but drop the dishonest `default*`", while an out-of-scope element
+has no live property to keep. Asking for both is a contradiction,
+and the emitted result would look like the `propertyOnly` was
+honoured (no companion) when in fact the scope did all the work.
+
+-}
+propertyOnlyErrorsOf : Ctx -> List Comp -> List String
+propertyOnlyErrorsOf ctx comps =
+    let
+        raw =
+            ctx.raw
+    in
+    comps
+        |> List.concatMap
+            (\c ->
+                c.propertyOnly
+                    |> List.filterMap
+                        (\name ->
+                            case raw.controlled |> List.filter (\ct -> ct.htmlName == name) of
+                                [] ->
+                                    Just (c.name ++ ".propertyOnly: '" ++ name ++ "' is not in `_controlled`")
+
+                                entries ->
+                                    if not (List.any (\a -> a.htmlName == name) c.attrs) then
+                                        Just (c.name ++ ".propertyOnly: '" ++ name ++ "' is not an attribute of " ++ c.name)
+
+                                    else if not (List.any (\ct -> scopeCovers ct c) entries) then
+                                        Just
+                                            (c.name
+                                                ++ ".propertyOnly: '"
+                                                ++ name
+                                                ++ "' is outside `_controlled['"
+                                                ++ name
+                                                ++ "'].elements`, so there is no live property here to keep — the plain setter already writes the content attribute. Drop the `propertyOnly`, or add "
+                                                ++ c.tag
+                                                ++ " to the scope."
+                                            )
+
+                                    else
+                                        Nothing
+                        )
+            )
+
+
+{-| `_variants` validation. A variant is emitted FROM the base
+attribute's shared-vocabulary spec (that is where its capability
+row and its DOM name come from), so a `base` no component declares
+produces no setter at all — silently, which is the failure mode
+this whole change exists to remove. Reject the typo instead.
+
+Matched on `elmName`, the SETTER name, not on `htmlName` — same as
+`Emit.variantsFor`, and the two must agree or a base validates here
+and emits nothing there. `elmName` is the right key because a
+variant claims the base's capability ROW, and the row follows the
+setter name: once `_renames` moves one element's `value` to
+`valueNumeric` (a `<progress>` opting out of the shared `value`
+vocabulary because its IDL type is `double`), that element is not a
+place `valueAsNumber` belongs, and matching `htmlName` would both put
+it there and make the choice of which of several rows to claim an
+arbitrary `List.head` — the `datetime` failure shape.
+
+-}
+variantErrorsOf : Ctx -> List Comp -> List String
+variantErrorsOf ctx comps =
+    ctx.raw.variants
+        |> List.filterMap
+            (\v ->
+                if comps |> List.any (\c -> c.attrs |> List.any (\a -> a.elmName == v.base)) then
+                    Nothing
+
+                else
+                    Just
+                        ("_variants: '"
+                            ++ v.name
+                            ++ "' declares base attribute '"
+                            ++ v.base
+                            ++ "', which no component in this brand declares under that SETTER name"
+                            ++ " (it is the camel-cased HTML name unless `_renames` moved it)."
+                        )
+            )
+
+
+roleErrorsOf : List String -> List Comp -> List String
+roleErrorsOf roleVocab comps =
+    comps
+        |> List.concatMap
+            (\c ->
+                c.roles
+                    |> Maybe.withDefault []
+                    |> List.filterMap
+                        (\r ->
+                            if List.member r roleVocab then
+                                Nothing
+
+                            else
+                                Just (c.name ++ ".roles: '" ++ r ++ "' is not in _aria.roles")
+                        )
+            )
+
+
+{-| Every `Shared`-marked field that reaches emission, checked
+against `sharedAtomVocabulary`. Covers all three ways a
+shared role enters: `_atoms`, a component's `kind`, and a
+slot's `kinds`. Set members resolve through `producesOf`,
+so a set's fields are already covered by its members'
+`produces` — no separate walk needed.
+-}
+atomVocabErrorsOf : Ctx -> List Comp -> List String
+atomVocabErrorsOf ctx comps =
+    let
+        raw =
+            ctx.raw
+
+        checkField where_ kf =
+            case kf.marker of
+                MShared ->
+                    let
+                        role =
+                            sharedRoleOfField kf.field
+                    in
+                    if knownSharedRole role then
+                        Nothing
+
+                    else
+                        Just (unknownSharedRoleError where_ role)
+
+                MBrand ->
+                    Nothing
+
+        slotFields s =
+            case s.content of
+                Permissive ->
+                    []
+
+                SetContent set ->
+                    set.fields
+
+                Fields fs ->
+                    fs
+    in
+    (raw.atoms
+        |> List.filterMap
+            (\role ->
+                if knownSharedRole role then
+                    Nothing
+
+                else
+                    Just (unknownSharedRoleError "_atoms" role)
+            )
+    )
+        ++ (comps
+                |> List.concatMap
+                    (\c ->
+                        (checkField (c.name ++ ".kind") c.produces
+                            |> Maybe.map List.singleton
+                            |> Maybe.withDefault []
+                        )
+                            ++ (c.slots
+                                    |> List.concatMap
+                                        (\s ->
+                                            slotFields s
+                                                |> List.filterMap (checkField (c.name ++ "." ++ s.name))
+                                        )
+                               )
+                    )
+           )
+        |> deduplicateBy identity
+
+
+{-| K4: Resolve event handler names with collision handling.
+prefix-stripping is the default; when a prefix-stripped brand event
+handler name collides with a lossless native-event name, the brand
+event reverts its prefix-strip. Both on<X>/on<X>With pairs rename
+together.
+Then apply event renames from _renames._events (override config).
+-}
+resolvedHandlersOf : Ctx -> List Cem.Event -> Dict String String
+resolvedHandlersOf ctx sharedEvents =
+    let
+        raw =
+            ctx.raw
+    in
+    resolveEventHandlers ctx.eventPrefix sharedEvents
+        |> Dict.map
+            (\evName handlerName ->
+                Dict.get evName raw.renames.events |> Maybe.withDefault handlerName
+            )
+
+
+{-| K7: Resolve barrel ctor names. When a comp's ctor collides with an
+atom name in the barrel module, the ctor reverts to the full-tag camel
+form (e.g. fluent-text → fluentText). The atom keeps the plain name.
+-}
+applyK7 : List String -> List Comp -> List Comp
+applyK7 atoms_ comps =
+    comps
+        |> List.map
+            (\c ->
+                if List.member c.ctor atoms_ then
+                    { c | resolvedCtor = Naming.camel c.tag }
+
+                else
+                    c
+            )
+
+
+{-| K7 renames from _renames._elements: apply AFTER K7 collision detection.
+If an element tag is explicitly overridden, use the new name instead
+of the deterministic K7 result.
+-}
+applyElementRenames : Ctx -> List Comp -> List Comp
+applyElementRenames ctx comps =
+    let
+        raw =
+            ctx.raw
+    in
+    comps
+        |> List.map
+            (\c ->
+                case Dict.get c.tag raw.renames.elements of
+                    Just newName ->
+                        { c | resolvedCtor = newName }
+
+                    Nothing ->
+                        c
+            )
+
+
+{-| The brand-wide roster of ( DOM name, reason ) pairs this run
+refused to emit, pooled from BOTH sources — the `_globals` roster
+and every component's own attributes — then deduplicated by name.
+One `formaction` note is right even though seven elements declare
+it: the reason is a fact about the NAME, not about the element.
+-}
+kernelBlockedRosterOf : Ctx -> List Comp -> List ( String, String )
+kernelBlockedRosterOf ctx comps =
+    (ctx.raw.globals |> List.map Tuple.second |> List.filter Attr.kernelBlocked)
+        ++ (comps |> List.concatMap .blockedAttrs)
+        |> List.filterMap
+            (\a -> Attr.kernelBlockedReason a |> Maybe.map (Tuple.pair a.htmlName))
+        |> List.foldl
+            (\( name, reason ) acc ->
+                if List.any (\( n, _ ) -> n == name) acc then
+                    acc
+
+                else
+                    acc ++ [ ( name, reason ) ]
+            )
+            []
+        |> List.sortBy Tuple.first
+
+
+resolveWith : String -> String -> RawConfig -> List Cem.Declaration -> Result (List String) Brand
+resolveWith detectedLib eventPrefix raw declarations =
+    let
+        ctx =
+            buildCtx detectedLib eventPrefix raw declarations
+    in
+    buildComps ctx
         |> Result.andThen
             (\( comps, buildNotes ) ->
                 let
                     r1Errors =
                         comps |> List.concatMap (checkR1 comps)
 
-                    -- Enum GLOBALS join the brand's union roster, so `<Lib>.Values` stays
-                    -- the ONE home for every enum row + token (a global's row alias and
-                    -- its tokens are minted, pooled, and collision-checked exactly like a
-                    -- component enum's) and `<Lib>.Attributes` reads the global setter's
-                    -- row alias from here rather than re-deriving it.
-                    -- `allGlobals`, emphatically: this is where an enum global's
-                    -- `<Lib>.Values` row and tokens are minted. An OPEN enum global's
-                    -- setter is still annotated `Value <Lib>.Values.<Row>`, so reading
-                    -- `globals` alone here would emit a module annotated against a type
-                    -- that was never generated.
                     globalEnums =
-                        allGlobals
-                            |> List.filterMap
-                                (\g ->
-                                    Attr.enumPairs g.type_
-                                        |> Maybe.map
-                                            (\pairs ->
-                                                { elmName = g.elmName
-                                                , aliasName = Naming.pascal g.elmName
-                                                , tokens = pairs |> List.map Tuple.first |> List.sort
-                                                , provenance = Nothing
-                                                }
-                                            )
-                                )
+                        globalEnumsOf ctx
 
                     unions =
-                        (comps |> List.concatMap .enums)
-                            ++ globalEnums
-                            |> List.foldl
-                                (\e acc ->
-                                    Dict.update e.elmName
-                                        (\existing ->
-                                            case existing of
-                                                Just x ->
-                                                    Just
-                                                        { tokens = List.sort (List.foldl consUnique x.tokens e.tokens)
-                                                        , provenance = orMaybe x.provenance e.provenance
-                                                        }
+                        unionsOf comps globalEnums
 
-                                                Nothing ->
-                                                    Just { tokens = List.sort e.tokens, provenance = e.provenance }
-                                        )
-                                        acc
-                                )
-                                Dict.empty
-                            |> Dict.toList
-                            |> List.map
-                                (\( elmName, u ) ->
-                                    { elmName = elmName
-                                    , aliasName = Naming.pascal elmName
-                                    , tokens = u.tokens
-                                    , provenance = u.provenance
-                                    }
-                                )
-
-                    -- Every ( token, emitted string ) pair the brand declares anywhere,
-                    -- from both enum sources: per-component attributes and enum globals.
-                    -- Identity pairs are INCLUDED deliberately — they are what makes the
-                    -- conflict below detectable. A plain `AEnum` token `auto` is the pair
-                    -- ( "auto", "auto" ), so an `attrTypes` map elsewhere asking for
-                    -- ( "auto", "automatic" ) is caught rather than silently retargeting
-                    -- the token every other attribute already shares.
                     tokenValuePairs =
-                        ((comps |> List.concatMap .attrs) ++ allGlobals)
-                            |> List.filterMap (.type_ >> Attr.enumPairs)
-                            |> List.concat
-                            |> List.sort
+                        tokenValuePairsOf ctx comps
 
-                    -- `<Lib>.Values` mints ONE value per token identifier, so a token that
-                    -- two attributes want to render differently is UNREPRESENTABLE, exactly
-                    -- like the ident collision `Emit.guardValuesModule` already fails on.
-                    -- Letting `Dict.insert` pick a winner would corrupt the other attribute
-                    -- silently — `Values.always` would write one attribute's string into
-                    -- the other's DOM attribute, past a type checker that sees one legal
-                    -- `Value` row and has nothing to object to.
                     ( tokenValues, tokenValueErrors ) =
-                        tokenValuePairs
-                            |> List.foldl
-                                (\( token, value ) ( acc, errs ) ->
-                                    case Dict.get token acc of
-                                        Just existing ->
-                                            if existing == value then
-                                                ( acc, errs )
+                        resolveTokenValues ctx tokenValuePairs
 
-                                            else
-                                                ( acc
-                                                , errs
-                                                    ++ [ "COLLISION in module "
-                                                            ++ lib
-                                                            ++ ".Values (token payload): token '"
-                                                            ++ token
-                                                            ++ "' is asked to render two different strings — \""
-                                                            ++ existing
-                                                            ++ "\" and \""
-                                                            ++ value
-                                                            ++ "\". One token identifier mints one `Ir.token`, so"
-                                                            ++ " whichever won would silently write the wrong string for the other"
-                                                            ++ " attribute. Give one of them a distinct TOKEN NAME in its"
-                                                            ++ " `attrTypes` map (the key is the Elm name, the value is the HTML"
-                                                            ++ " string, so they need not match).\nattrTypes snippet:\n"
-                                                            ++ "{ \"<attr>\": { \""
-                                                            ++ token
-                                                            ++ "Alt\": \""
-                                                            ++ value
-                                                            ++ "\" } }"
-                                                       ]
-                                                )
-
-                                        Nothing ->
-                                            ( Dict.insert token value acc, errs )
-                                )
-                                ( Dict.empty, [] )
-
-                    -- The shared vocabulary: ONE canonical spec per attribute name.
-                    --
-                    -- `dedupBy` picks a single spec per `elmName`, so when two components
-                    -- classify one attribute to different SCALAR types (`value : String`
-                    -- on m3e-textfield, `value : Float` on m3e-slider) exactly one type
-                    -- reaches `<Lib>.Attributes`. That is intentional — a module cannot
-                    -- expose one name at two types — and it is SOUND because the losing
-                    -- components keep a locally-typed setter in their own module
-                    -- (`Emit.conflictsWithCanonical`). What was missing is that the choice
-                    -- was completely silent: the elm-typed-html `datetime` regression
-                    -- (`<time>`'s Float outranked `<ins>`/`<del>`'s String) left no trace
-                    -- in any output. `conflictNotes` below puts the choice on the info
-                    -- channel; `Emit.guardHomeAttrTypes` makes the unrepresentable case
-                    -- (both types in ONE module) a hard error.
-                    -- …and one further normalization `dedupBy` cannot do on its own: the
-                    -- attribute-vs-PROPERTY FORM. Once `_controlled` gained an element
-                    -- scope, one name can legitimately be a DOM property on one element
-                    -- and a content attribute on another (`value` is the live property of
-                    -- an `<input>` and a reflected content attribute of a `<progress>`),
-                    -- and `dedupBy` would then publish whichever element the manifest
-                    -- happened to list first.
-                    --
-                    -- The tie is broken toward `AsProperty`, deliberately and not by
-                    -- majority. `<Lib>.Attributes` is the LOOSE surface — every setter is
-                    -- an open producer admitted by every element whose row carries the
-                    -- field — so the one body it can publish has to be right for every
-                    -- element STILL ON THAT ROW. The property form is; the attribute form
-                    -- is not:
-                    --
-                    --   * The property form's only failure mode is Web IDL COERCION, and
-                    --     that is a property of the ELEMENT, not of this decision:
-                    --     `progress.value = "abc"` is a TypeError only because
-                    --     `HTMLProgressElement.value` is a restricted `double`. An element
-                    --     whose IDL type coerces must therefore not share the row AT ALL —
-                    --     it declares its value under its own capability row and its own
-                    --     setter name (`_renames` + `attrTypes`, so the type is honest
-                    --     too). That is what makes the crash UNREPRESENTABLE rather than
-                    --     merely avoided: `<Lib>.Attributes.value` applied to a
-                    --     `<progress>` is a row mismatch the compiler rejects, not a
-                    --     TypeError thrown mid-patch. Every element left on a property-form
-                    --     row reflects (`HTMLButtonElement`/`HTMLDataElement`/
-                    --     `HTMLOptionElement.value` are `[CEReactions] attribute DOMString
-                    --     value`), so the property write reaches the content attribute
-                    --     there anyway.
-                    --   * The attribute form has no such escape. It is INERT or STALE
-                    --     exactly where `_controlled` exists in the first place: once an
-                    --     `<input>`'s dirty-value flag is set, `setAttribute("value")` no
-                    --     longer moves the live value (issue #41), and there is no
-                    --     capability row to move to — the whole point of `value` on an
-                    --     `<input>` is that name. Publishing it here pinned
-                    --     `<Lib>.Attributes.value model.text` on the most-used form control
-                    --     in the library, silently.
-                    --
-                    -- So: a rare crash on elements that can and must diverge their row, or
-                    -- common silent staleness on the one element that cannot. The property
-                    -- form, and let the row do the refusing. The attribute half stays
-                    -- reachable — and is the only form — through each reflecting element's
-                    -- own module, where `Emit.divergesFromCanonical` keeps a local setter,
-                    -- plus the `default*` companion this form earns beside the shared
-                    -- setter (`Emit.companionsFor`).
                     sharedAttrs =
-                        comps
-                            |> List.concatMap .attrs
-                            |> dedupBy .elmName
-                            |> List.map
-                                (\canon ->
-                                    if canon.attrForm == Attr.AsAttribute && anyPropertyForm comps canon.elmName then
-                                        { canon | attrForm = Attr.AsProperty }
+                        sharedAttrsOf comps
 
-                                    else
-                                        canon
-                                )
-                            |> List.sortBy .elmName
-
-                    -- One deterministic note per attribute name whose SETTER TYPE differs
-                    -- across components, naming the type the shared canonical took and the
-                    -- components that therefore keep a local setter. Keyed on the emitted
-                    -- setter type (not `Attr.AttrType`) so enum-vs-enum and
-                    -- enum-vs-free-string — both `String` at the setter boundary — are not
-                    -- reported as conflicts.
                     conflictNotes =
-                        let
-                            occurrences =
-                                comps
-                                    |> List.concatMap
-                                        (\c -> c.attrs |> List.map (\a -> ( a.elmName, ( Attr.setterType a.type_, c.name ) )))
+                        conflictNotesOf ctx comps sharedAttrs
 
-                            canonicalLabel name =
-                                sharedAttrs
-                                    |> List.filter (\a -> a.elmName == name)
-                                    |> List.head
-                                    |> Maybe.map (.type_ >> Attr.setterType)
-                                    |> Maybe.withDefault "?"
-                        in
-                        sharedAttrs
-                            |> List.filterMap
-                                (\canon ->
-                                    let
-                                        forName =
-                                            occurrences
-                                                |> List.filter (\( n, _ ) -> n == canon.elmName)
-                                                |> List.map Tuple.second
-
-                                        distinct =
-                                            forName |> List.map Tuple.first |> List.foldl consUnique [] |> List.sort
-                                    in
-                                    if List.length distinct < 2 then
-                                        Nothing
-
-                                    else
-                                        Just
-                                            ("elm-cem: attr '"
-                                                ++ canon.elmName
-                                                ++ "' has conflicting setter types across components ("
-                                                ++ (forName
-                                                        |> List.sortBy Tuple.second
-                                                        |> List.map (\( t, c ) -> c ++ " : " ++ t)
-                                                        |> String.join ", "
-                                                   )
-                                                ++ "); the shared "
-                                                ++ lib
-                                                ++ ".Attributes."
-                                                ++ canon.elmName
-                                                ++ " is "
-                                                ++ canonicalLabel canon.elmName
-                                                ++ " and every other component keeps a locally-typed setter."
-                                            )
-                                )
-
-                    -- The same treatment for the attribute-vs-PROPERTY form. A split form
-                    -- is not an error — it is the whole point of `_controlled`'s element
-                    -- scope — but it IS a place where one name means two runtime things,
-                    -- and the `datetime` lesson is that such a choice must never be
-                    -- silent. Names which elements get the content-attribute form and
-                    -- states that the shared canonical took the property one.
-                    --
-                    -- The note is worth reading as a CHECKLIST, because it lists exactly
-                    -- the elements to which the shared property-form setter will be
-                    -- applied without being the live form they want. Each must be one a
-                    -- string property write is harmless on — i.e. a REFLECTING element. An
-                    -- element whose IDL type coerces (`double`, `long`) belongs on its own
-                    -- capability row and should not appear here at all; see `sharedAttrs`.
                     formNotes =
-                        sharedAttrs
-                            |> List.filterMap
-                                (\canon ->
-                                    let
-                                        attributeOwners =
-                                            comps
-                                                |> List.filter
-                                                    (\c ->
-                                                        c.attrs
-                                                            |> List.any (\a -> a.elmName == canon.elmName && a.attrForm == Attr.AsAttribute)
-                                                    )
-                                                |> List.map .name
-                                                |> List.sort
-                                    in
-                                    if List.isEmpty attributeOwners || canon.attrForm == Attr.AsAttribute then
-                                        Nothing
-
-                                    else
-                                        Just
-                                            ("elm-cem: attr '"
-                                                ++ canon.elmName
-                                                ++ "' is a content attribute on "
-                                                ++ String.join ", " attributeOwners
-                                                ++ " and a DOM property elsewhere; the shared "
-                                                ++ lib
-                                                ++ ".Attributes."
-                                                ++ canon.elmName
-                                                ++ " is the PROPERTY form (the form that cannot go inert on a controlled"
-                                                ++ " element) and each content-attribute element keeps a local setter."
-                                                ++ " Every element named here must be one whose IDL attribute of that name"
-                                                ++ " REFLECTS; one whose IDL type coerces needs its own setter name and"
-                                                ++ " capability row (`_renames` + `attrTypes`)."
-                                            )
-                                )
+                        formNotesOf ctx comps sharedAttrs
 
                     sharedEvents =
                         comps
                             |> List.concatMap .events
-                            |> dedupBy .name
+                            |> deduplicateBy .name
                             |> List.sortBy .name
 
                     sets =
-                        raw.sets
-                            |> Dict.toList
-                            |> List.map
-                                (\( name, members ) ->
-                                    members
-                                        |> List.map
-                                            (\mRaw ->
-                                                let
-                                                    m =
-                                                        if mRaw == "main" then
-                                                            "main_"
-
-                                                        else
-                                                            mRaw
-                                                in
-                                                case Dict.get m (comps |> List.map (\c -> ( c.ctor, c )) |> Dict.fromList) of
-                                                    Just c ->
-                                                        Ok c.produces
-
-                                                    Nothing ->
-                                                        Err ("_sets." ++ name ++ ": unknown component '" ++ m ++ "'")
-                                            )
-                                        |> combine
-                                        |> Result.mapError List.singleton
-                                        |> Result.map (\fields -> { name = name, pascal = Naming.pascal name, fields = sortFields fields })
-                                )
-                            |> combineAll
+                        resolveSets ctx comps
 
                     roleVocab =
                         raw.aria |> Maybe.map .roles |> Maybe.withDefault []
 
-                    -- `AsProperty` names its DOM property `Attr.propertyName`: the CEM
-                    -- `fieldName`, else `htmlName` VERBATIM. Verbatim is the identity,
-                    -- never a camel-cased guess (issue #33) — but that also means a
-                    -- HYPHENATED name has no same-named IDL property, so `Ir.property
-                    -- "aria-label"` would set an inert own-property nobody observes.
-                    -- Fail loud instead of emitting a setter that does nothing.
                     controlledFormErrors =
-                        comps
-                            |> List.concatMap
-                                (\c ->
-                                    c.attrs
-                                        |> List.filterMap
-                                            (\a ->
-                                                if a.attrForm == Attr.AsProperty && a.reactiveProp == Nothing && String.contains "-" a.htmlName then
-                                                    Just
-                                                        ("attrForm/_controlled: '"
-                                                            ++ a.htmlName
-                                                            ++ "' on "
-                                                            ++ c.name
-                                                            ++ " asks for the PROPERTY form, but a hyphenated name has no same-named DOM property (issue #33). Declare the real IDL name as the CEM `fieldName`, or leave it as an attribute."
-                                                        )
+                        controlledFormErrorsOf comps
 
-                                                else
-                                                    Nothing
-                                            )
-                                )
-
-                    -- A `_controlled` entry's `elements` scope must name elements that
-                    -- exist AND that declare the attribute. A typo would otherwise leave
-                    -- the entry covering nothing — the plain setter silently reverts to
-                    -- the content-attribute form, which for `value` on an `<input>` is
-                    -- exactly issue #41 back again, with no diagnostic anywhere. The
-                    -- scope's whole job is to be a deliberate, checked statement about
-                    -- which elements diverge, so an unverifiable one is refused.
-                    -- `elements: []` names no element, so the entry would cover nothing
-                    -- while LOOKING deliberate. Omitting the key is how you say "every
-                    -- element declaring it"; deleting the entry is how you say "none".
                     emptyScopeErrors =
-                        raw.controlled
-                            |> List.filterMap
-                                (\ct ->
-                                    if ct.elements == Just [] then
-                                        Just
-                                            ("_controlled['"
-                                                ++ ct.htmlName
-                                                ++ "'].elements is empty, so the entry controls nothing. Omit `elements` to cover every element declaring the attribute, or remove the entry."
-                                            )
-
-                                    else
-                                        Nothing
-                                )
+                        emptyScopeErrorsOf ctx
 
                     unknownScopeErrors =
-                        raw.controlled
-                            |> List.concatMap
-                                (\ct ->
-                                    ct.elements
-                                        |> Maybe.withDefault []
-                                        |> List.filterMap
-                                            (\name ->
-                                                case comps |> List.filter (\c -> c.tag == name || c.name == name) of
-                                                    [] ->
-                                                        Just
-                                                            ("_controlled['"
-                                                                ++ ct.htmlName
-                                                                ++ "'].elements: '"
-                                                                ++ name
-                                                                ++ "' is not an element of this brand (name it by tag or by declaration name)"
-                                                            )
-
-                                                    matches ->
-                                                        if matches |> List.any (\c -> c.attrs |> List.any (\a -> a.htmlName == ct.htmlName)) then
-                                                            Nothing
-
-                                                        else
-                                                            Just
-                                                                ("_controlled['"
-                                                                    ++ ct.htmlName
-                                                                    ++ "'].elements: '"
-                                                                    ++ name
-                                                                    ++ "' does not declare a '"
-                                                                    ++ ct.htmlName
-                                                                    ++ "' attribute"
-                                                                )
-                                            )
-                                )
+                        unknownScopeErrorsOf ctx comps
 
                     controlledElementErrors =
                         emptyScopeErrors ++ unknownScopeErrors
 
-                    -- A `propertyOnly` entry must name an attribute this component
-                    -- actually declares AND one the brand roster controls ON THIS
-                    -- ELEMENT; otherwise it is a typo that silently suppresses nothing.
-                    --
-                    -- The element-scope arm matters because `propertyOnly` and the scope
-                    -- are opposite requests: `propertyOnly` says "keep the live property
-                    -- but drop the dishonest `default*`", while an out-of-scope element
-                    -- has no live property to keep. Asking for both is a contradiction,
-                    -- and the emitted result would look like the `propertyOnly` was
-                    -- honoured (no companion) when in fact the scope did all the work.
                     propertyOnlyErrors =
-                        comps
-                            |> List.concatMap
-                                (\c ->
-                                    c.propertyOnly
-                                        |> List.filterMap
-                                            (\name ->
-                                                case raw.controlled |> List.filter (\ct -> ct.htmlName == name) of
-                                                    [] ->
-                                                        Just (c.name ++ ".propertyOnly: '" ++ name ++ "' is not in `_controlled`")
+                        propertyOnlyErrorsOf ctx comps
 
-                                                    entries ->
-                                                        if not (List.any (\a -> a.htmlName == name) c.attrs) then
-                                                            Just (c.name ++ ".propertyOnly: '" ++ name ++ "' is not an attribute of " ++ c.name)
-
-                                                        else if not (List.any (\ct -> scopeCovers ct c) entries) then
-                                                            Just
-                                                                (c.name
-                                                                    ++ ".propertyOnly: '"
-                                                                    ++ name
-                                                                    ++ "' is outside `_controlled['"
-                                                                    ++ name
-                                                                    ++ "'].elements`, so there is no live property here to keep — the plain setter already writes the content attribute. Drop the `propertyOnly`, or add "
-                                                                    ++ c.tag
-                                                                    ++ " to the scope."
-                                                                )
-
-                                                        else
-                                                            Nothing
-                                            )
-                                )
-
-                    -- `_variants` validation. A variant is emitted FROM the base
-                    -- attribute's shared-vocabulary spec (that is where its capability
-                    -- row and its DOM name come from), so a `base` no component declares
-                    -- produces no setter at all — silently, which is the failure mode
-                    -- this whole change exists to remove. Reject the typo instead.
-                    --
-                    -- Matched on `elmName`, the SETTER name, not on `htmlName` — same as
-                    -- `Emit.variantsFor`, and the two must agree or a base validates here
-                    -- and emits nothing there. `elmName` is the right key because a
-                    -- variant claims the base's capability ROW, and the row follows the
-                    -- setter name: once `_renames` moves one element's `value` to
-                    -- `valueNumeric` (a `<progress>` opting out of the shared `value`
-                    -- vocabulary because its IDL type is `double`), that element is not a
-                    -- place `valueAsNumber` belongs, and matching `htmlName` would both put
-                    -- it there and make the choice of which of several rows to claim an
-                    -- arbitrary `List.head` — the `datetime` failure shape.
                     variantErrors =
-                        raw.variants
-                            |> List.filterMap
-                                (\v ->
-                                    if comps |> List.any (\c -> c.attrs |> List.any (\a -> a.elmName == v.base)) then
-                                        Nothing
-
-                                    else
-                                        Just
-                                            ("_variants: '"
-                                                ++ v.name
-                                                ++ "' declares base attribute '"
-                                                ++ v.base
-                                                ++ "', which no component in this brand declares under that SETTER name"
-                                                ++ " (it is the camel-cased HTML name unless `_renames` moved it)."
-                                            )
-                                )
+                        variantErrorsOf ctx comps
 
                     roleErrors =
-                        comps
-                            |> List.concatMap
-                                (\c ->
-                                    c.roles
-                                        |> Maybe.withDefault []
-                                        |> List.filterMap
-                                            (\r ->
-                                                if List.member r roleVocab then
-                                                    Nothing
+                        roleErrorsOf roleVocab comps
 
-                                                else
-                                                    Just (c.name ++ ".roles: '" ++ r ++ "' is not in _aria.roles")
-                                            )
-                                )
-
-                    -- Every `Shared`-marked field that reaches emission, checked
-                    -- against `sharedAtomVocabulary`. Covers all three ways a
-                    -- shared role enters: `_atoms`, a component's `kind`, and a
-                    -- slot's `kinds`. Set members resolve through `producesOf`,
-                    -- so a set's fields are already covered by its members'
-                    -- `produces` — no separate walk needed.
                     atomVocabErrors =
-                        let
-                            checkField where_ kf =
-                                case kf.marker of
-                                    MShared ->
-                                        let
-                                            role =
-                                                sharedRoleOfField kf.field
-                                        in
-                                        if knownSharedRole role then
-                                            Nothing
+                        atomVocabErrorsOf ctx comps
 
-                                        else
-                                            Just (unknownSharedRoleError where_ role)
-
-                                    MBrand ->
-                                        Nothing
-
-                            slotFields s =
-                                case s.content of
-                                    Permissive ->
-                                        []
-
-                                    SetContent set ->
-                                        set.fields
-
-                                    Fields fs ->
-                                        fs
-                        in
-                        (raw.atoms
-                            |> List.filterMap
-                                (\role ->
-                                    if knownSharedRole role then
-                                        Nothing
-
-                                    else
-                                        Just (unknownSharedRoleError "_atoms" role)
-                                )
-                        )
-                            ++ (comps
-                                    |> List.concatMap
-                                        (\c ->
-                                            (checkField (c.name ++ ".kind") c.produces
-                                                |> Maybe.map List.singleton
-                                                |> Maybe.withDefault []
-                                            )
-                                                ++ (c.slots
-                                                        |> List.concatMap
-                                                            (\s ->
-                                                                slotFields s
-                                                                    |> List.filterMap (checkField (c.name ++ "." ++ s.name))
-                                                            )
-                                                   )
-                                        )
-                               )
-                            |> dedupBy identity
-
-                    -- K4: Resolve event handler names with collision handling.
-                    -- prefix-stripping is the default; when a prefix-stripped brand event
-                    -- handler name collides with a lossless native-event name, the brand
-                    -- event reverts its prefix-strip. Both on<X>/on<X>With pairs rename
-                    -- together.
-                    -- Then apply event renames from _renames._events (override config).
                     resolvedHandlers =
-                        resolveEventHandlers eventPrefix sharedEvents
-                            |> Dict.map
-                                (\evName handlerName ->
-                                    Dict.get evName raw.renames.events |> Maybe.withDefault handlerName
-                                )
+                        resolvedHandlersOf ctx sharedEvents
 
-                    -- K7: Resolve barrel ctor names. When a comp's ctor collides with an
-                    -- atom name in the barrel module, the ctor reverts to the full-tag camel
-                    -- form (e.g. fluent-text → fluentText). The atom keeps the plain name.
                     atoms_ =
                         List.sort raw.atoms
 
                     compsWithK7 =
-                        comps
-                            |> List.map
-                                (\c ->
-                                    if List.member c.ctor atoms_ then
-                                        { c | resolvedCtor = Naming.camel c.tag }
+                        applyK7 atoms_ comps
 
-                                    else
-                                        c
-                                )
-
-                    -- K7 renames from _renames._elements: apply AFTER K7 collision detection.
-                    -- If an element tag is explicitly overridden, use the new name instead
-                    -- of the deterministic K7 result.
                     compsWithElementRenames =
-                        compsWithK7
-                            |> List.map
-                                (\c ->
-                                    case Dict.get c.tag raw.renames.elements of
-                                        Just newName ->
-                                            { c | resolvedCtor = newName }
+                        applyElementRenames ctx compsWithK7
 
-                                        Nothing ->
-                                            c
-                                )
-
-                    -- The brand-wide roster of ( DOM name, reason ) pairs this run
-                    -- refused to emit, pooled from BOTH sources — the `_globals` roster
-                    -- and every component's own attributes — then deduplicated by name.
-                    -- One `formaction` note is right even though seven elements declare
-                    -- it: the reason is a fact about the NAME, not about the element.
                     kernelBlockedRoster =
-                        (raw.globals |> List.map Tuple.second |> List.filter Attr.kernelBlocked)
-                            ++ (comps |> List.concatMap .blockedAttrs)
-                            |> List.filterMap
-                                (\a -> Attr.kernelBlockedReason a |> Maybe.map (Tuple.pair a.htmlName))
-                            |> List.foldl
-                                (\( name, reason ) acc ->
-                                    if List.any (\( n, _ ) -> n == name) acc then
-                                        acc
-
-                                    else
-                                        acc ++ [ ( name, reason ) ]
-                                )
-                                []
-                            |> List.sortBy Tuple.first
+                        kernelBlockedRosterOf ctx comps
                 in
                 case ( r1Errors ++ roleErrors ++ atomVocabErrors ++ controlledFormErrors ++ controlledElementErrors ++ propertyOnlyErrors ++ variantErrors ++ tokenValueErrors, sets ) of
                     ( [], Ok setAliases ) ->
                         Ok
-                            { lib = lib
+                            { lib = ctx.lib
                             , eventPrefix = eventPrefix
                             , comps = compsWithElementRenames
                             , sets = List.sortBy .name setAliases
@@ -2555,14 +2915,14 @@ resolveWith detectedLib eventPrefix raw declarations =
                             , sharedEvents = sharedEvents
                             , resolvedEventHandlers = resolvedHandlers
                             , atoms = atoms_
-                            , globals = List.sortBy .elmName globals
-                            , openGlobals = List.sortBy .elmName openGlobals
+                            , globals = List.sortBy .elmName ctx.globals
+                            , openGlobals = List.sortBy .elmName ctx.openGlobals
                             , controlled = raw.controlled
                             , variants = raw.variants
                             , aria = raw.aria
                             , actions = raw.actions
                             , legacyHtml = raw.legacyHtml
-                            , collapseNotes = buildNotes ++ conflictNotes ++ formNotes ++ globalBlockedNotes
+                            , collapseNotes = buildNotes ++ conflictNotes ++ formNotes ++ ctx.globalBlockedNotes
                             , tokenRenames = raw.renames.tokens
                             , tokenValues = tokenValues
                             , elementRenames = raw.renames.elements
@@ -2610,7 +2970,7 @@ checkR1 comps container =
                     fields |> List.filterMap memberParents
 
                 distinct =
-                    closedMembers |> List.map Tuple.second |> dedupBy identity
+                    closedMembers |> List.map Tuple.second |> deduplicateBy identity
             in
             if List.length distinct > 1 then
                 [ "R1 violation in "
@@ -2732,7 +3092,7 @@ resolveEventHandlers prefix events =
 
 sortFields : List KindField -> List KindField
 sortFields =
-    dedupBy .field >> List.sortBy .field
+    deduplicateBy .field >> List.sortBy .field
 
 
 orMaybe : Maybe a -> Maybe a -> Maybe a
@@ -2752,19 +3112,6 @@ consUnique x xs =
 
     else
         x :: xs
-
-
-dedupBy : (a -> b) -> List a -> List a
-dedupBy key =
-    List.foldr
-        (\x acc ->
-            if List.any (\y -> key y == key x) acc then
-                acc
-
-            else
-                x :: acc
-        )
-        []
 
 
 combine : List (Result e a) -> Result e (List a)

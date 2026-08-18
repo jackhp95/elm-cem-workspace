@@ -56,26 +56,6 @@ generatePhantom :
     -> Result (List { title : String, description : String }) { info : List String, files : List Elm.File }
 generatePhantom flags manifest =
     let
-        libraryInfo =
-            extractLibraryInfo manifest
-
-        -- Reuse the legacy normalization front-end wholesale: custom-element
-        -- filtering, tag merge, attr-type normalization, plus the config-fed
-        -- type overrides and synthetic attrs (the migrated phantom config
-        -- keeps those keys under their legacy names, so the legacy decoder
-        -- still reads them). Then RENAME each declaration to its module name
-        -- (`m3e-button` → `Button`) so phantom config keys and kind refs
-        -- resolve; raw CEM class names (`M3eButtonElement`) never match.
-        -- Rename ONLY library-prefixed class names ("M3eButtonElement" →
-        -- "Button"); clean declaration names (native manifests, incl. the R2
-        -- split entries like PictureSource whose tag repeats) stay authoritative.
-        rename d =
-            if String.startsWith libraryInfo.moduleName d.name then
-                { d | name = componentModuleName libraryInfo d }
-
-            else
-                d
-
         -- A malformed `_config` FAILS THE RUN. It used to fall back to the raw
         -- manifest declarations, which threw away the whole legacy front-end in
         -- silence: `_exclude` went inert (leaked base classes kept emitting), every
@@ -90,21 +70,48 @@ generatePhantom flags manifest =
         -- config-free path is already an `Ok`; only a PRESENT-but-broken config reaches
         -- here, and for that "carry on with a silently different brand" is the worst of
         -- the available answers.
-        declarationsResult =
+        extractionResult =
             decodeConfigResult flags
                 |> Result.map
                     (\legacyConfig ->
-                        extractComponents legacyConfig.exclude manifest
-                            |> applyTypeOverrides libraryInfo legacyConfig.components
-                            |> applySyntheticAttrs libraryInfo legacyConfig.components
-                            |> List.map rename
+                        let
+                            extracted =
+                                extractComponents legacyConfig.exclude manifest
+
+                            libraryInfo =
+                                extractLibraryInfo manifest extracted
+
+                            -- Reuse the legacy normalization front-end wholesale: custom-element
+                            -- filtering, tag merge, attr-type normalization, plus the config-fed
+                            -- type overrides and synthetic attrs (the migrated phantom config
+                            -- keeps those keys under their legacy names, so the legacy decoder
+                            -- still reads them). Then RENAME each declaration to its module name
+                            -- (`m3e-button` → `Button`) so phantom config keys and kind refs
+                            -- resolve; raw CEM class names (`M3eButtonElement`) never match.
+                            -- Rename ONLY library-prefixed class names ("M3eButtonElement" →
+                            -- "Button"); clean declaration names (native manifests, incl. the R2
+                            -- split entries like PictureSource whose tag repeats) stay authoritative.
+                            rename d =
+                                if String.startsWith libraryInfo.moduleName d.name then
+                                    { d | name = componentModuleName libraryInfo d }
+
+                                else
+                                    d
+                        in
+                        { libraryInfo = libraryInfo
+                        , declarations =
+                            extracted
+                                |> applyTypeOverrides libraryInfo legacyConfig.components
+                                |> applySyntheticAttrs libraryInfo legacyConfig.components
+                                |> List.map rename
+                        }
                     )
     in
-    case declarationsResult of
+    case extractionResult of
         Err configError ->
             Err [ { title = "config decode error", description = configError } ]
 
-        Ok declarations ->
+        Ok { libraryInfo, declarations } ->
             case Generate.Phantom.Model.resolve libraryInfo.moduleName libraryInfo.eventPrefix flags declarations of
                 Ok brand ->
                     case Generate.Phantom.Emit.files brand of

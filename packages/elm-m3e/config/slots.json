@@ -454,8 +454,34 @@
         "doc": "Move the enclosing stepper to the previous step"
       }
     ],
-    "bottomSheetComp": "BottomSheetTrigger",
-    "dialogActionComp": "DialogAction"
+    "richWrappers": [
+      {
+        "ctor": "opensBottomSheet",
+        "cap": "bottomSheetTrigger",
+        "variant": "OpensBottomSheet",
+        "comp": "BottomSheetTrigger",
+        "doc": "Open the bottom sheet whose id is `for` (full spec via the record).",
+        "payload": {
+          "kind": "record",
+          "typeName": "BottomSheetSpec",
+          "typeDoc": "The parts of a bottom-sheet trigger.",
+          "paramName": "spec",
+          "required": { "field": "for", "attr": "for" },
+          "optional": [
+            { "field": "detent", "attr": "detent", "kind": "float" },
+            { "field": "secondary", "attr": "secondary", "kind": "presence" }
+          ]
+        }
+      },
+      {
+        "ctor": "dialogAction",
+        "cap": "dialogAction",
+        "variant": "DialogAction",
+        "comp": "DialogAction",
+        "doc": "Close the enclosing dialog with `returnValue`.",
+        "payload": { "kind": "singleArg", "paramName": "returnValue", "attr": "return-value" }
+      }
+    ]
   },
   "Collapsible": {
     "admits": {
