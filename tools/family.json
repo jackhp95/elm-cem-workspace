@@ -67,6 +67,7 @@
           "review/src/M3eUtilityNames.elm",
           "docs/app/Theme/Sections/CssVariables.elm",
           "docs/scripts/examples-gen/lib/facts.mjs",
+          "docs/scripts/vendor-tailwind-m3e-web.mjs",
           ".github/actions/fetch-elm-review-cem/action.yml",
           "config/figma.generated.json",
           "docs/samples/bad/Sample/AccessibleByConstruction/NamelessCode.elm"
