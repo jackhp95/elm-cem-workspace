@@ -79,6 +79,14 @@ tests/eject.test.mjs
 # Same class as family-deps.js/eject.js above: cross-family dependency mapping.
 bin/registry-check.js
 
+# --- family-configs/ (thermonuclear audit W3, finding 2.3): the M3E brand data
+# that eject.js/family-deps.js hardcoded is now DATA, one entry (m3e.json) among
+# N possible brand configs family-deps.js loads at runtime — same class as the
+# bin/ files above (a real, load-bearing brand instance), not a second copy of
+# the hardcoding the fix removed. ---
+family-configs/README.md
+family-configs/m3e.json
+
 # --- False positive: base64 integrity hashes coincidentally match "md3" ---
 package-lock.json
 
