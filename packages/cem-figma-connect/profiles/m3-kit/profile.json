@@ -24,7 +24,9 @@
     "$comment_seams": "htmlSeam/attrSeam/attrSeamFn name the seams for plain HTML scaffolding that carries multiple children — a right-aligned `<div slot=\"actions\">` action row, or a trailing `<span>` holding text + a control. CORRECTED 2026-08-17 (Stream 2, same reconciliation as textSeam): the prior `attrSeam: \"Native\"` named a module that does not exist in the current elm-m3e (the CC→Elm reference gate flagged it). The real foundation is the vendored TypedHtml: `htmlSeam TypedHtml` (real — `TypedHtml.div`/`TypedHtml.span`) and custom attributes via `TypedHtml.Unsafe.Attributes.customAttribute \"k\" \"v\"` (packages/elm-m3e/docs/vendor/elm-foundation/TypedHtml/Unsafe/Attributes.elm; the exact spelling config/examples.generated.json uses, 521×). attrSeamFn is the function name on the attr seam (the helper is `customAttribute`, not `attribute`). Override only if a consuming project's HTML seam modules are named differently.",
     "htmlSeam": "TypedHtml",
     "attrSeam": "TypedHtml.Unsafe.Attributes",
-    "attrSeamFn": "customAttribute"
+    "attrSeamFn": "customAttribute",
+    "$comment_expectedBrand": "Phase 1.2 (plans/2026-08-17-figma-elm-config-integration-design.md): the brand name facts/elm-api-facts.json's provenance.brand.name is expected to carry — asserted by scripts/check-facts.mjs (pnpm check:facts) so a bundle copied from the wrong brand fails loud instead of silently mis-emitting. Optional field; a profile with no Elm emitter can omit it.",
+    "expectedBrand": "elm-m3e"
   },
   "emitters": [
     "html-label",

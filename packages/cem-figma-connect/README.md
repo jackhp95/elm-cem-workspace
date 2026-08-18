@@ -89,7 +89,8 @@ extraction → match → review → gap → emit → visual-gate → publish flo
 - `extract/` — the generalized Figma extraction path (self-hosted plugin + bun WS relay + `export.mjs`).
 - `profiles/m3-kit/` — the first consumer profile (config, correspondence, gap report, generated-output pins).
 - `generated/m3-kit/` — the committed Code Connect bindings (`web-components/` + `elm/`).
-- `docs/` — usage walkthrough and density/spacing notes.
+- `docs/` — usage walkthrough, density/spacing notes, and the profile file
+  contract (`docs/PROFILE-CONTRACT.md`).
 - `plans/` — mission, architecture, and the executable plan suite (`plans/plan/`).
 - `research/evidence/` — verification reports the plans cite.
 - `research/figma-dumps/` — checked-in Figma exports (M3 kit components, variables, styles)
