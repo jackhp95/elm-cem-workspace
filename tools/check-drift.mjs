@@ -162,7 +162,7 @@ function checkConsumerOutputs() {
             continue;
         }
         try {
-            const { ok, failures } = checkConsumerOutputDrift(descriptor);
+            const { ok, failures } = checkConsumerOutputDrift(descriptor, { repoRoot });
             record(descriptor.label, ok, ok ? "byte-identical to a fresh regeneration" : failures.join(" | "));
         } catch (e) {
             record(descriptor.label, false, `regeneration threw: ${e.message}`);

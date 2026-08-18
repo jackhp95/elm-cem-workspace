@@ -130,7 +130,7 @@ for (const key of ["cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
     const skip = cacheAbsentSkipReason(descriptor);
 
     test(`check-drift core: GREEN on ${key}'s real, untouched generated output`, { skip }, () => {
-        const { ok, failures } = checkConsumerOutputDrift(descriptor);
+        const { ok, failures } = checkConsumerOutputDrift(descriptor, { repoRoot });
         assert.equal(ok, true, `expected clean tree to be green, got: ${failures.join(" | ")}`);
     });
 
@@ -143,7 +143,7 @@ for (const key of ["cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
             const original = fs.readFileSync(targetAbs, "utf8");
             fs.writeFileSync(targetAbs, `${original}\n/* STALE-INJECTED-BY-TEST */\n`);
 
-            const { ok, failures } = checkConsumerOutputDrift(descriptor, { committedRoot: scratch });
+            const { ok, failures } = checkConsumerOutputDrift(descriptor, { committedRoot: scratch, repoRoot });
 
             assert.equal(ok, false, "expected the perturbed copy to be flagged as drifted");
             assert.ok(

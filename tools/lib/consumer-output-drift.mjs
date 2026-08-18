@@ -85,6 +85,12 @@ export function consumerOutputDescriptors(repoRoot) {
             pkgDir: familySrcDir(repoRoot, "tailwind-m3e-web"),
             exclude: [],
             symlinks: [],
+            // Theme 6 (thermonuclear audit) promoted this script's generic core to
+            // tools/lib/component-css-utilities.mjs, imported via a relative
+            // specifier that walks out of packages/tailwind-m3e-web/bin/ into the
+            // shared workspace tools/lib/ — needs the scratch copy to have that
+            // sibling present at the same repo-root-relative position.
+            externalSymlinks: ["tools/lib"],
             paths: ["generated/utilities.css", "generated/CSS_CUSTOM_PROPERTIES.md"],
             generate: (dest) => runNodeScript(dest, "bin/generate-component-utilities.mjs"),
         },
@@ -99,11 +105,13 @@ export function consumerOutputDescriptors(repoRoot) {
  *
  * @returns {{ok: boolean, failures: string[]}}
  */
-export function checkConsumerOutputDrift(descriptor, { committedRoot } = {}) {
+export function checkConsumerOutputDrift(descriptor, { committedRoot, repoRoot } = {}) {
     const { root, cleanup } = regeneratePackageOutput({
+        repoRoot: repoRoot || path.resolve(descriptor.pkgDir, "..", ".."),
         pkgDir: descriptor.pkgDir,
         exclude: descriptor.exclude,
         symlinks: descriptor.symlinks,
+        externalSymlinks: descriptor.externalSymlinks || [],
         generate: descriptor.generate,
     });
     try {

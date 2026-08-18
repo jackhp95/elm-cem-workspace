@@ -66,16 +66,28 @@ export function listFilesRecursive(dir) {
  * checkout under .cache/ that the generator only reads), then run `generate`
  * with the scratch copy's root as its argument.
  *
+ * The scratch copy preserves `pkgDir`'s real position relative to `repoRoot`
+ * (e.g. `packages/tailwind-m3e-web`, not just `tailwind-m3e-web`) — a
+ * generation script that imports a REPO-ROOT-relative sibling via a relative
+ * specifier (e.g. `../../../tools/lib/x.mjs`, walking up out of `packages/*`
+ * to a shared `tools/lib/`) resolves against the running script's own real
+ * path, so a flattened scratch copy silently breaks that import. Preserving
+ * depth is what lets `externalSymlinks` below hand back exactly the same
+ * relative path shape the script already uses in the real tree.
+ *
  * @param {object} opts
+ * @param {string} opts.repoRoot - the real workspace root (for locating externalSymlinks sources and computing pkgDir's depth)
  * @param {string} opts.pkgDir - the real, tracked package directory (read-only)
  * @param {string[]} [opts.exclude] - extra rsync --exclude patterns beyond node_modules/.git
- * @param {string[]} [opts.symlinks] - relative paths to symlink from pkgDir into the copy after rsync
+ * @param {string[]} [opts.symlinks] - paths, relative to pkgDir, to symlink from pkgDir into the copy after rsync (e.g. an excluded node_modules/ entry)
+ * @param {string[]} [opts.externalSymlinks] - paths, relative to repoRoot, OUTSIDE pkgDir, to symlink into the scratch tree at the same repo-root-relative position (e.g. "tools/lib" for a script that imports out of its package into shared workspace tooling)
  * @param {(scratchPkgDir: string) => void} opts.generate - runs the generation pipeline in-place inside the copy; throws on failure
  * @returns {{root: string, cleanup: () => void}}
  */
-export function regeneratePackageOutput({ pkgDir, exclude = [], symlinks = [], generate }) {
+export function regeneratePackageOutput({ repoRoot, pkgDir, exclude = [], symlinks = [], externalSymlinks = [], generate }) {
     const parent = fs.mkdtempSync(path.join(os.tmpdir(), "check-drift-regen-"));
-    const dest = path.join(parent, path.basename(pkgDir));
+    const relPkgDir = path.relative(repoRoot, pkgDir);
+    const dest = path.join(parent, relPkgDir);
     fs.mkdirSync(dest, { recursive: true });
     const cleanup = () => fs.rmSync(parent, { recursive: true, force: true });
 
@@ -93,6 +105,14 @@ export function regeneratePackageOutput({ pkgDir, exclude = [], symlinks = [], g
         const linkDest = path.join(dest, link);
         fs.mkdirSync(path.dirname(linkDest), { recursive: true });
         fs.symlinkSync(path.join(pkgDir, link), linkDest);
+    }
+    for (const rootRel of externalSymlinks) {
+        // Same shape as `symlinks` above, but the source lives OUTSIDE pkgDir
+        // (repo-root-relative), so both the source and the link position are
+        // resolved against repoRoot / parent instead of pkgDir / dest.
+        const linkDest = path.join(parent, rootRel);
+        fs.mkdirSync(path.dirname(linkDest), { recursive: true });
+        fs.symlinkSync(path.join(repoRoot, rootRel), linkDest);
     }
     try {
         generate(dest);
