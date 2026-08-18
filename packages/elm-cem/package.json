@@ -73,7 +73,7 @@
     "bless": "node tests/phantom/bless.mjs",
     "setup": "elm-tooling install",
     "prepublishOnly": "npm run gate",
-    "hooks:install": "git config core.hooksPath hooks"
+    "hooks:install": "node ../../tools/hooks-install.mjs"
   },
   "dependencies": {
     "elm-codegen": "^0.6.3"

@@ -22,7 +22,7 @@
     "check": "run-p \"check:!(staleness)\"",
     "test:lib": "node --test scripts/lib/*.test.mjs",
     "test": "run-p \"test:*\"",
-    "hooks:install": "git config core.hooksPath hooks",
+    "hooks:install": "node ../../tools/hooks-install.mjs",
     "gate": "run-s check test"
   },
   "devDependencies": {

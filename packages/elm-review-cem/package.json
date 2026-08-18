@@ -12,7 +12,7 @@
     "check": "run-p \"check:*\"",
     "test:elm": "elm-test-rs --project tests --compiler node_modules/.bin/elm tests/src/*.elm",
     "test": "run-p \"test:*\"",
-    "hooks:install": "git config core.hooksPath hooks",
+    "hooks:install": "node ../../tools/hooks-install.mjs",
     "gate": "run-s check test"
   },
   "devDependencies": {

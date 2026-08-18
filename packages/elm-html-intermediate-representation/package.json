@@ -16,7 +16,7 @@
     "test": "ELM_HOME=\"${ELM_HOME:-$HOME/.elm}\" \"${ELM_TEST_RS:-./node_modules/.bin/elm-test-rs}\" --compiler \"${ELM:-./node_modules/.bin/elm}\"",
     "bench": "bash bench/run.sh",
     "gate": "run-s check test",
-    "hooks:install": "git config core.hooksPath hooks"
+    "hooks:install": "node ../../tools/hooks-install.mjs"
   },
   "devDependencies": {
     "elm-format": "0.8.7",
