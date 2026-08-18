@@ -89,6 +89,35 @@ function objKey(key) {
   return IDENT_RE.test(key) ? key : JSON.stringify(key);
 }
 
+// iconTable -> the getEnum() body rows for a glyph lookup, keyed by
+// figmaName, valued by the `name="<symbol>"[ filled]` attribute fragment.
+// Three call sites (buildSlotBooleanBlock, buildDefaultSlotIconBlock,
+// buildVisibilityAxisSlotBlock) built this byte-for-byte identically before
+// being deduped here (thermonuclear audit, Theme 6 "other structural
+// findings"): dedupe by figmaName (the kit repeats some icon names across
+// nodes, e.g. "alarm" at two node ids — those collapse to one row), fail
+// loud on a genuinely CONFLICTING dup (same figmaName, different glyph —
+// a data bug, never silently pick one), then sort by figmaName for
+// byte-stable output.
+function iconGetEnumRows(iconTable) {
+  const byName = new Map();
+  for (const icon of iconTable) {
+    const fragment = `name="${icon.symbolName}"${icon.filled ? " filled" : ""}`;
+    const prior = byName.get(icon.figmaName);
+    if (prior !== undefined && prior !== fragment) {
+      throw new Error(
+        `html-label emitter: iconTable has conflicting rows for figmaName "${icon.figmaName}" — ` +
+          `${JSON.stringify(prior)} vs ${JSON.stringify(fragment)}; cannot build a getEnum with a duplicate key`
+      );
+    }
+    byName.set(icon.figmaName, fragment);
+  }
+  return [...byName.entries()]
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([figmaName, fragment]) => `  ${objKey(figmaName)}: ${JSON.stringify(fragment)},`)
+    .join("\n");
+}
+
 // camelCase of an arbitrary Figma display name ("Label text" -> "labelText",
 // "Show icon" -> "showIcon").
 function camel(name) {
@@ -235,27 +264,7 @@ function buildSlotBooleanBlock(prop, entry, config) {
     // CC 1.4.9 allows (no shared import to dedupe them). Rows sorted by
     // figmaName for byte-stable output.
     const glyphVar = `${condVar}Glyph`;
-    // Dedupe by figmaName — getEnum keys must be unique (a swap instance has
-    // ONE name). The kit repeats some icon names across nodes (e.g. "alarm" at
-    // two node ids); those collapse to one row. A genuinely CONFLICTING dup
-    // (same figmaName, different glyph) is a data bug — fail loud, never
-    // silently pick one.
-    const byName = new Map();
-    for (const icon of config.iconTable) {
-      const fragment = `name="${icon.symbolName}"${icon.filled ? " filled" : ""}`;
-      const prior = byName.get(icon.figmaName);
-      if (prior !== undefined && prior !== fragment) {
-        throw new Error(
-          `html-label emitter: iconTable has conflicting rows for figmaName "${icon.figmaName}" — ` +
-            `${JSON.stringify(prior)} vs ${JSON.stringify(fragment)}; cannot build a getEnum with a duplicate key`
-        );
-      }
-      byName.set(icon.figmaName, fragment);
-    }
-    const rows = [...byName.entries()]
-      .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-      .map(([figmaName, fragment]) => `  ${objKey(figmaName)}: ${JSON.stringify(fragment)},`)
-      .join("\n");
+    const rows = iconGetEnumRows(config.iconTable);
     lines.push(`const ${glyphVar} = instance.getEnum(${JSON.stringify(swapProp.figmaProp)}, {\n${rows}\n})`);
     iconAttrs = "${" + glyphVar + "}";
   } else if (swapProp) {
@@ -297,22 +306,7 @@ function buildDefaultSlotIconBlock(prop, config) {
   const glyphVar = camel(prop.figmaProp) + "Glyph";
   let glyphCode;
   if (config.iconTable && config.iconTable.length > 0) {
-    const byName = new Map();
-    for (const icon of config.iconTable) {
-      const fragment = `name="${icon.symbolName}"${icon.filled ? " filled" : ""}`;
-      const prior = byName.get(icon.figmaName);
-      if (prior !== undefined && prior !== fragment) {
-        throw new Error(
-          `html-label emitter: iconTable has conflicting rows for figmaName "${icon.figmaName}" — ` +
-            `${JSON.stringify(prior)} vs ${JSON.stringify(fragment)}; cannot build a getEnum with a duplicate key`
-        );
-      }
-      byName.set(icon.figmaName, fragment);
-    }
-    const rows = [...byName.entries()]
-      .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-      .map(([figmaName, fragment]) => `  ${objKey(figmaName)}: ${JSON.stringify(fragment)},`)
-      .join("\n");
+    const rows = iconGetEnumRows(config.iconTable);
     glyphCode = `const ${glyphVar} = instance.getEnum(${JSON.stringify(prop.figmaProp)}, {\n${rows}\n})`;
   } else {
     glyphCode = `const ${glyphVar} = instance.getPropertyValue(${JSON.stringify(prop.figmaProp)})`;
@@ -446,22 +440,7 @@ function buildVisibilityAxisSlotBlock(prop, entry, config) {
 
   // --- glyph resolution (approach A — same iconTable getEnum as buildSlotBooleanBlock) ---
   const glyphVar = `${base}Glyph`;
-  const byName = new Map();
-  for (const icon of config.iconTable) {
-    const fragment = `name="${icon.symbolName}"${icon.filled ? " filled" : ""}`;
-    const prior = byName.get(icon.figmaName);
-    if (prior !== undefined && prior !== fragment) {
-      throw new Error(
-        `html-label emitter: iconTable has conflicting rows for figmaName "${icon.figmaName}" — ` +
-          `${JSON.stringify(prior)} vs ${JSON.stringify(fragment)}; cannot build a getEnum with a duplicate key`
-      );
-    }
-    byName.set(icon.figmaName, fragment);
-  }
-  const glyphRows = [...byName.entries()]
-    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-    .map(([figmaName, fragment]) => `  ${objKey(figmaName)}: ${JSON.stringify(fragment)},`)
-    .join("\n");
+  const glyphRows = iconGetEnumRows(config.iconTable);
   lines.push(`const ${glyphVar} = instance.getEnum(${JSON.stringify(prop.figmaProp)}, {\n${glyphRows}\n})`);
 
   // --- conditional line ---

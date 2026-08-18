@@ -1,4 +1,4 @@
-# m3e-docs
+# m3e-okf
 
 Generates a Claude Code **skill** that gives agents correct, verified usage of
 the [M3E (Material 3 Expressive)](https://github.com/matraic/m3e) web component
@@ -183,7 +183,7 @@ ln -s "$(pwd)/skills/m3e" ~/.claude/skills/m3e         # personal (all projects)
 | `data/knowledge/**` | source of truth for the OKF bundle: neutral prose + `_dir.json` metadata |
 | `knowledge/**` | generated OKF v0.1 bundle (technology-neutral); start at `knowledge/index.md` |
 | `implementations/m3e-web/**` | generated tech-specific layer: the CEM-verified component cards |
-| `scripts/lib/okf-lib.mjs` | dependency-free frontmatter/link helpers behind build-okf + validate-okf |
+| `../../tools/lib/okf-lib.mjs` | dependency-free frontmatter/link helpers behind build-okf + validate-okf (promoted workspace-shared, thermonuclear audit Theme 6 #1) |
 
 ## Status
 

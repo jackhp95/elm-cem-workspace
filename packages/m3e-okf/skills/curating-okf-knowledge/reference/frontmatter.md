@@ -2,7 +2,8 @@
 
 Every concept file under `data/knowledge/**` (any `.md` that is NOT `index.md` or
 `log.md`) carries YAML frontmatter fenced by `---`. Copy this template verbatim and
-fill it in. The bundle's YAML reader (`scripts/lib/okf-lib.mjs`) supports only
+fill it in. The bundle's YAML reader (`tools/lib/okf-lib.mjs`, workspace-shared)
+supports only
 scalars, inline `[a, b]` lists, and the block `sources:` shape shown here — do not
 use other YAML constructs.
 

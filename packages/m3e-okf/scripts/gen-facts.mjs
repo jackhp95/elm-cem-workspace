@@ -5,7 +5,7 @@
 // tailwind-m3e-web's gen-facts.mjs byte-for-byte — Theme 3 of the
 // 2026-08-17 audit).
 //
-// Usage: pnpm --filter m3e-docs run gen:facts
+// Usage: pnpm --filter m3e-okf run gen:facts
 // Env:
 //   ELM_M3E                  elm-m3e checkout to generate against (default:
 //                            the in-workspace packages/elm-m3e)

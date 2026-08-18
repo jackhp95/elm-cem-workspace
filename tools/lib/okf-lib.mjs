@@ -1,7 +1,13 @@
-// okf-lib.mjs — dependency-free helpers for the Open Knowledge Format bundle.
+// okf-lib.mjs — dependency-free helpers for reading/validating Markdown docs
+// bundles with YAML frontmatter (Open Knowledge Format-style). Zero m3e/brand
+// references — lives in tools/lib/ (not packages/m3e-okf/) so a second-brand
+// docs bundle can import it without depending on m3e-okf at all. Currently
+// consumed only by m3e-okf's scripts/*.mjs; promoted here per the
+// thermonuclear audit (Theme 6, trapped-generic-modules #1) ahead of a second
+// consumer actually existing.
 //
-// A minimal YAML-frontmatter reader (the repo is intentionally dep-free) plus
-// link extraction, kept separate from the build/validate CLIs so they're
+// A minimal YAML-frontmatter reader (dep-free by design) plus link
+// extraction, kept separate from the build/validate CLIs so they're
 // unit-testable without the filesystem. The parser handles the shapes THIS bundle
 // uses — scalars, inline `[a, b]` lists, block `- ` lists, and a block list of
 // `{key: value}` maps (the `sources:` shape) — not arbitrary YAML.

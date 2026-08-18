@@ -22,7 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseFrontmatter, extractLinks, makesDesignClaim } from "./okf-lib.mjs";
+import { parseFrontmatter, extractLinks, makesDesignClaim } from "../../../../tools/lib/okf-lib.mjs";
 import { classifyLinks } from "./audit-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../../..");

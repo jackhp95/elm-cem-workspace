@@ -45,7 +45,7 @@ const CONSUMERS = [
         ],
     },
     {
-        pkgName: "m3e-docs",
+        pkgName: "m3e-okf",
         committed: [{ path: path.join(repoRoot, "packages", "m3e-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
     {
