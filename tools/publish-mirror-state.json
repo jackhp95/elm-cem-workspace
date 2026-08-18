@@ -30,5 +30,10 @@
     "mirrorCommitSha": "b771a38db8565b754b9b250e63518d3044ddd917",
     "publishedAt": "2026-08-18T03:38:00.000Z",
     "note": "Backfilled by the orchestrator — same situation as elm-typed-html above."
+  },
+  "elm-cem-compose": {
+    "publishedWorkspaceSha": "905416ba154f7edb958c69b491b006f5858c0867",
+    "mirrorCommitSha": "b6cf6187f2d4cd1f29792ad5a06961ba5dc2cd9f",
+    "publishedAt": "2026-08-18T09:52:42.320Z"
   }
 }
