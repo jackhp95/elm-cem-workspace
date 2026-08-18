@@ -20,9 +20,6 @@
           "exact": "M3e.Attributes"
         },
         {
-          "exact": "M3e.Coerce"
-        },
-        {
           "exact": "M3e.Events"
         },
         {

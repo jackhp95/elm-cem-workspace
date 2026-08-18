@@ -1,7 +1,6 @@
 module Generate.Types exposing
     ( ActionConfig
     , ActionWrapper
-    , Coercion
     , Config
     , ConfigResult
     , EventDecoder(..)
@@ -164,9 +163,8 @@ type alias ExampleRecord =
 legacy front-end decoder. `Generate.elm` reads only `components` (for type
 overrides + synthetic attrs) and `exclude` (custom-element curation); the
 remaining fields carry the other top-level config keys through the shared
-decoder. The phantom emitter resolves everything else (slots, coercions,
-actions, categories, brands) directly from the raw flags in
-`Generate.Phantom.Model`.
+decoder. The phantom emitter resolves everything else (slots, actions,
+categories, brands) directly from the raw flags in `Generate.Phantom.Model`.
 -}
 type alias ConfigResult =
     { components : Config
@@ -200,12 +198,6 @@ type alias ConfigResult =
     -- Default: [] (no attr setters — the CLI always injects the
     -- bundled table unless overridden by `--config-from`).
     , nativeAttrTable : List { elmName : String, valueType : String, tags : List String }
-
-    -- Blessed brand crossings declared in the `_coerce` config block (WS6 / CX5).
-    -- Each entry emits one loud crossing function in `<Lib>/Coerce.elm`.
-    -- Absent `_coerce` (or empty list) → no Coerce module emitted.
-    -- Default: [] (no coercions).
-    , coercions : List Coercion
     }
 
 
@@ -281,41 +273,6 @@ type alias Config =
         -- feature is opt-in and library-agnostic. See `SyntheticAttr`.
         , syntheticAttrs : List SyntheticAttr
         }
-
-
-{-| A config-declared **blessed brand crossing** (WS6 / CX5).
-
-A coercion entry declares that a specific component kind may be explicitly
-rebranded to a different kind — a "loud" crossing that is never automatic.
-The generator emits one named function per entry in `<Lib>/Coerce.elm`.
-
-  - `from` — the source component name (e.g. `"Chip"`). Used for documentation.
-  - `fromKind` — the kind field the source element carries (e.g. `"chip"`).
-  - `to` — the target kind field name (e.g. `"button"`).
-  - `name` — the Elm function name for the crossing (e.g. `"asButton"`).
-
-The emitted signature:
-`<name> : Element { k | <fromKind> : <Lib>.Kind.Brand } msg -> Element { s | <to> : <Lib>.Kind.Brand } msg`
-
-Both ends default to the library's own `Kind.Brand` (private-tier crossings). Either
-end may instead name a CROSS-LIBRARY atom by carrying the `"shared:<role>"` prefix
-(`"shared:icon"` → `sharedIcon : Kind.Shared`), resolved by
-`Generate.Phantom.Model.kindFieldOfSpelling` and validated against the closed
-`sharedAtomVocabulary` — the same grammar and the same vocabulary as a slot's
-`kinds` and a component's `kind`.
-
-An earlier version of this comment attributed that resolution to a `slotKindMarkerT`
-that has never existed in this repo, and the resolution did not happen: the emitter
-wrote the raw config string into the annotation, producing `shared:icon : Brand`.
-Pinned now by the `atom-vocab` phantom suite.
-
--}
-type alias Coercion =
-    { from : String
-    , fromKind : String
-    , to : String
-    , name : String
-    }
 
 
 {-| A config-declared **event-payload decoder descriptor**, keyed per

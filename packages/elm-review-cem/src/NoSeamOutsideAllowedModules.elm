@@ -32,14 +32,20 @@ seams and which are blessed. The `seamModules` field extends the discipline to c
 multiple seam modules (e.g. both the public `Seam` and its internal stamper layer
 `Seam.Internal`).
 
-**Brand crossings — two sanctioned forms**
+**Brand crossings — one sanctioned form**
 
   - **`recast`** (in your seam module) — the general brand escape: crosses any kinds
     but makes no semantic claim. Caught and gated by this rule.
-  - **Config-blessed coercions** (`_coerce` block in `config/slots.json`, emitted as
-    `<Lib>.Coerce.<name>`) — named loud crossings for stable, semantically meaningful
-    re-brandings (e.g. `asButton : Chip → button`). These live in an ALLOWED module
-    (`<Lib>.Coerce`) and are NOT gated by this rule.
+
+A composition that needs a specific kind-crossing has two sanctioned routes,
+neither of which is a second escape-hatch module: widen the relevant `admits`
+list directly in config, when that does not conflict with the design system's
+own guidance; or reach for `recast`, gated here like any other seam, when it
+genuinely does conflict and needs an explicit, reviewed exception. (`elm-cem`
+briefly had a config-declared `_coerce` block that emitted named crossing
+functions into a `<Lib>.Coerce` module, living in an allow-listed module and so
+NOT gated by this rule; it was removed after review found it added a second,
+narrower, ungated escape hatch alongside `recast` for no real benefit.)
 
 > **Migration note:** if you were using the old `rule : List String -> Rule` signature,
 > wrap your allow-list in a record:

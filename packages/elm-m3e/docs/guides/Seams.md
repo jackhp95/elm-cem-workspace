@@ -10,14 +10,17 @@ sanctioned userland door is `M3e.Unsafe` (and its attribute-side twin
 every crossing into the IR goes through one of the two mechanisms described
 here.
 
-This guide covers the **two sanctioned brand crossings** that the cross-CEM
-initiative established (CX5). For a broader overview of the seam boundary and
-why it exists, see [`DESIGN.md §6`](../DESIGN.md) and the
-[`decisions.md CX5 entry`](../decisions.md#cx5--seams-are-loud-coercions-are-config-blessed-sugar).
+This guide covers the **one sanctioned brand crossing**, `recast`. (The cross-CEM
+initiative (CX5) originally established a second, config-declared crossing
+mechanism alongside it; it was removed after review found it duplicated
+`recast`'s job behind a narrower, ungated escape — see the
+[`decisions.md CX5 entry`](../decisions.md#cx5--seams-are-loud-coercions-are-config-blessed-sugar)
+for the full history.) For a broader overview of the seam boundary and why it
+exists, see [`DESIGN.md §6`](../DESIGN.md).
 
-## The two mechanisms
+## The mechanism
 
-### 1. `recast` — the general loud crossing
+### `recast` — the general loud crossing
 
 `M3e.Unsafe.recast` is the general escape valve. It takes an `Element` with any kind
 row and re-stamps it with any other kind row:
@@ -36,39 +39,21 @@ it, so the design-system owner can audit every crossing point; app code
 typically calls it from a small, named producer kept next to the feature that
 needs it, rather than inline at every call site.
 
-Use `recast` for crossings that have no stable, recurring semantic identity: a
-one-off layout adapter, a foreign component you are integrating temporarily, a
-crossing you expect to resolve when the library grows a proper slot.
+Use `recast` for every brand crossing — a one-off layout adapter, a foreign
+component you are integrating temporarily, or a crossing that recurs with a
+stable, well-understood intent (a Chip acting as a button). When a crossing
+recurs, don't reach for a second, config-declared mechanism: wrap `recast` in a
+small, named local function (`asButton = M3e.Unsafe.recast`) and keep it next
+to the feature that needs it. That gives you the same self-documenting name a
+config-declared crossing would have had, without a second generated escape
+surface for reviewers to track.
 
-### 2. `M3e.Coerce.*` — config-blessed typed crossings
-
-Some brand crossings recur with a stable identity. A Chip acting as a button is
-a design-system decision, not an accident. For these, the `_coerce` block in
-`config/slots.json` declares the crossing, and the generator emits a typed
-function in `M3e.Coerce`:
-
-```elm
--- config/slots.json:
--- "_coerce": [{"from": "Chip", "fromKind": "chip", "to": "button", "name": "asButton"}]
-
--- Generated: src/M3e/Coerce.elm
-asButton :
-    HtmlIr.Element.Element { k | chip : M3e.Kind.Brand } admittedBy msg
-    -> HtmlIr.Element.Element { s | button : M3e.Kind.Brand } admittedBy msg
-asButton element =
-    Ir.fromNode (HtmlIr.Element.toNode element)   -- Ir = HtmlIr.Internal
-```
-
-A named coercion differs from `recast` in two ways:
-
-- **It is typed**: the from-kind is specific (`chip : M3e.Kind.Brand`), not
-  polymorphic. Only an element that is already typed as a Chip will pass.
-- **It is config-tracked**: it appears in `_coerce`, so the tool and reviewers
-  can find every declared crossing without grepping the application code.
-
-Use named coercions for crossings that appear in multiple places with the same
-intent. If you reach for `recast` on the same crossing three times, that is a
-sign it deserves a named coercion.
+**First, check whether config is the real fix.** Before reaching for `recast`
+at all, ask whether the crossing should not need an escape in the first place —
+if it does not conflict with the design system's own guidance, widen the
+relevant slot's `admits` list in config instead. `recast` (and a named wrapper
+around it) is for the case where the crossing genuinely conflicts with that
+guidance and needs an explicit, reviewed exception.
 
 ## What is NOT a seam crossing
 
@@ -105,16 +90,17 @@ NoSeamOutsideAllowedModules.rule
 Together these ensure every crossing is inside an auditable module, not
 scattered across application code.
 
-## Choosing between the two mechanisms
+## Choosing the right tool
 
 | Situation | Use |
 |---|---|
-| Crossing with a stable, recurring semantic identity (Chip as button) | Named coercion in `_coerce` |
-| One-off crossing, no recurring semantic identity | `M3e.Unsafe.recast` |
+| A slot rejects a kind that does not conflict with the design system's own guidance | Widen the slot's `admits` list in config |
+| A crossing that genuinely conflicts with that guidance, one-off or recurring | `M3e.Unsafe.recast` (wrap it in a small, named local function if it recurs) |
 | Atom producer (text, link, label, icon) entering a compatible slot | Neither — atoms flow freely via shared kind |
 | Wrapping raw `Html` into the IR | `M3e.Unsafe.fromHtml` |
 | A third-party custom element the library has no producer for | `M3e.Unsafe.customElement` |
 
-The design principle: if you are uncertain which to use, start with `recast`.
-If the same crossing recurs with consistent intent, promote it to a named coercion.
-The test is whether the crossing has a name that another developer would recognize.
+The design principle: fix it in config first if you honestly can. Reach for
+`recast` only when the design system is genuinely wrong for your case — and if
+the same crossing recurs with consistent intent, give it a name so another
+developer recognizes it, rather than repeating the bare `recast` call.

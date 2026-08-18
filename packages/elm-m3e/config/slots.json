@@ -454,15 +454,6 @@
     "bottomSheetComp": "BottomSheetTrigger",
     "dialogActionComp": "DialogAction"
   },
-  "_coerce": [
-    {
-      "from": "Chip",
-      "fromKind": "chip",
-      "to": "button",
-      "name": "asButton",
-      "_comment": "WS6/CX5: A Chip admitted as a button-kinded element. Loud crossing \u2014 never automatic. M3e.Chip.view produces { chip : M3e.Kind.Brand }; SplitButton.leadingButton requires { button : M3e.Kind.Brand }. Use M3e.Coerce.asButton to explicitly admit a Chip into a button slot."
-    }
-  ],
   "Collapsible": {
     "admits": {
       "unnamed": {

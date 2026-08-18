@@ -29,7 +29,6 @@ const VOCAB_SUFFIXES = [
   "Kind",
   "Build",
   "Build.Internal",
-  "Coerce",
   "Unsafe",
 ];
 

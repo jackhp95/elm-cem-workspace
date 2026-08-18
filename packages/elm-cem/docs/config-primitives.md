@@ -20,8 +20,8 @@ upstream truth, native's is a hand-authored manifest). Config layers **curation*
 that truth using ten primitives: what an element *is* (`kind`), what its slots *admit*
 (`admits`), where it is *valid* (`parents`), how it *groups* into modules (`home`), the
 *named sets* shared by all of the above (`sets`), the enum *value* vocabulary (`values`),
-the *required* shape (`require`), the ARIA gate (`roles`), the blessed *escapes*
-(`coerce` — plus two flags), and *docs*. Everything else — both phantom rows, every
+the *required* shape (`require`), the ARIA gate (`roles`), two brand-level *escape flags*
+(`delegate`, `legacyHtml`), and *docs*. Everything else — both phantom rows, every
 alias, the 2-surface layout, Design-A setter families, event gating, ARIA hybrid,
 `delegate`, atoms, review facts — is an **emission rule** (a projection), not config.
 
@@ -96,9 +96,8 @@ in config vocabulary, and once at emission, on the row field about to be written
 | `shared:flow` | WHATWG *flow content* | the 31 native flow elements (`Div`, `Section`, `P`, `Ul`, …) |
 | `shared:phrasing` | WHATWG *phrasing content* | the 52 native phrasing elements (`Span`, `A`, `Em`, `Button`, …) |
 
-`shared:` is legal in four places, all of which are checked: a slot's `kinds`, a
-component's `kind`, a `_atoms` key, and either end of a `_coerce` entry
-(`fromKind` / `to`). A misspelling is a hard error naming the typo and listing the
+`shared:` is legal in three places, all of which are checked: a slot's `kinds`, a
+component's `kind`, and a `_atoms` key. A misspelling is a hard error naming the typo and listing the
 vocabulary — it used to be silent, and a silent one mints a field no other brand will
 ever name: a private kind wearing cross-library clothes.
 
@@ -198,9 +197,10 @@ of which change the theorem:
    ceremony. The failure is confined to phrasing-level and table/list-level containers.
 2. **A shared atom on both sides** — the `shared:` vocabulary above. This is the channel
    that *does* cross, and it is why `text` and `icon` flow in both directions.
-3. **A declared loud crossing** — `_coerce` (P9), which emits one named, greppable,
-   reviewed `Element a -> Element b` per entry. Correct precisely where the crossing is a
-   claim the compiler cannot check, and wrong as a default.
+3. **The general loud crossing** — `recast`, generated into every brand's `<Lib>.Unsafe`,
+   which re-stamps any `Element a` as any `Element b` with no semantic claim. Correct
+   precisely where the crossing is a claim the compiler cannot check, and wrong as a
+   default; wrap it in a small, named local function when the same crossing recurs.
 
 What is *not* an answer: making the producer name the shared atom exclusively so it fits
 everywhere. That compiles, and it is the disaster case — a component with only
@@ -282,15 +282,15 @@ Today's `required`-in-slot + component `required.action` + `requiredAttrs`, unch
 meaning. Drives: which components get an `el` entry point (required record), the `build`
 capability records, and the missing-required/duplicate-singular review facts.
 
-### P9 `_coerce` + two escape flags
+### P9 two escape flags
 
-`_coerce` unchanged from today (from/fromKind/to/name → `Brand.Coerce.asButton =
-fromNode << toNode`). `fromKind` and `to` name kind **fields**, not components, and both
-honour the `shared:` prefix (`"to": "shared:icon"` → `sharedIcon : Kind.Shared`) against
-the same closed vocabulary a slot's `kinds` uses. Brand flags: `"delegate": true` (default — emit
+Brand flags, unrelated to each other: `"delegate": true` (default — emit
 `Brand.Events.delegate`, the capability-forget escape) and `"legacyHtml": true` (native
 only — emit the ONE loud `TypedHtml.Unsafe.fromHtml` legacy-interop escape over
-`fromNode << fromHtml`).
+`fromNode << fromHtml`). There is no config-declared kind-crossing primitive: every
+brand's generated `Unsafe` module already carries `recast = fromNode << toNode`
+unconditionally, with no config gate — see [Retired outright](#retired-outright) for
+why a narrower, config-declared `_coerce` primitive was tried here and then removed.
 
 ### P10 `home` — module granularity (the learning-surface axis)
 
@@ -486,8 +486,15 @@ stays lockstep.
 **Retired outright:** `injectRuntime` + the `Markup→lib` rename + `ownsRuntime` (the IR
 is imported: `import HtmlIr.Internal`), the Raw/Html/Record/Build module quintet (2
 shapes replace 5), the barrel-as-6th-restatement (the general surface IS the terse
-surface), `_seams`/Seam (atoms are first-class; the only crossings are `_coerce`,
-`delegate`, `legacyHtml`), `inlineTypeAliases`-as-expansion (becomes alias-recording).
+surface), `_seams`/Seam (atoms are first-class; the only crossing is `recast`, plus
+the `delegate`/`legacyHtml` flags), `inlineTypeAliases`-as-expansion (becomes
+alias-recording), and `_coerce` (P9's `Brand.Coerce.<name>` crossings) — the
+`coerceModule` generator function that would have emitted `Brand.Coerce.elm` was
+written but never wired into the emitter's output list, so it never actually shipped
+despite this doc once describing it as current (§1 P9, §2 the crossing-theorem answer
+list). Removed outright rather than wired up: `recast`, generated unconditionally into
+every brand's `Unsafe` module, already covers the same ground without a second,
+config-only escape surface for reviewers to track.
 
 ---
 
@@ -582,14 +589,15 @@ a full table (`/tmp/htmlia` before/after pair, verbatim).
 
 - **Ten primitives, three of them new** (`parents`, `_sets`, `roles`; `kind`/`admits`/
   `home` are renames of proven keys; the rest carry over verbatim). Everything the design
-  demands — both rows, R1/R2, ARIA hybrid, Design A, 2-surface, delegate, atoms, coerce,
+  demands — both rows, R1/R2, ARIA hybrid, Design A, 2-surface, delegate, atoms, recast,
   facts — falls out as projections. No feature-shaped config anywhere: shoelace needs
   *data* under the same keys, nothing else.
 - **Orthogonality:** kind (what) ⊥ admits (contains) ⊥ parents (contained-by) ⊥ home
   (where taught) ⊥ values (enums) ⊥ roles (ARIA). Each varies independently; sets factor
   the shared vocabulary out of all of them.
 - **Post-hoc tweaks are config edits:** wrong nesting rule → `parents`/`admits`; noisy
-  module → `home`; missing gate → `roles`; new blessing → `_coerce`. Never code.
+  module → `home`; missing gate → `roles`; kind-crossing the design system genuinely
+  needs → `recast`, not a config edit at all. Never code.
 - **Failure surfaces are generation-time and loud** (R1 grouping, unknown set refs,
   alias-name collisions) — the config is type-checked by the generator before Elm ever
   sees it.

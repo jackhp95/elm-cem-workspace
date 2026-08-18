@@ -171,8 +171,8 @@ barrel) exists for **real** `Html`: caller-supplied content, or a chunk you are
 migrating incrementally.
 
 - `fromHtml : Html msg -> Element …` — wrap raw `elm/html` you genuinely have.
-- `coerce : Element … -> Element …` — re-kind an element to a free row.
-- `coerceAll : List (Element …) -> List (Element …)` — `coerce` over a list.
+- `recast : Element … -> Element …` — re-kind an element to a free row.
+- `recastAll : List (Element …) -> List (Element …)` — `recast` over a list.
 
 ```elm
 TypedHtml.div []
@@ -182,7 +182,7 @@ TypedHtml.div []
 ```
 
 These are loud on purpose: every use site is a grep target. **Do not** reach for
-`coerce` to force something that is *already* a typed `Element` into a slot — if
+`recast` to force something that is *already* a typed `Element` into a slot — if
 it is already typed, compose it directly (§1, §2). The
 [`elm-review-cem`](https://github.com/jackhp95/elm-review-cem) rule
 **`NoRedundantElementEscape`** flags exactly that: escaping something the type

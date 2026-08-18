@@ -104,9 +104,6 @@ codegen/Generate/SharedAttrs.elm
 # config-primitives.md is the accurate config-primitives reference; it teaches the
 # neutral pipeline using the real elm-m3e config as its running worked example.
 docs/config-primitives.md
-# configuring-cem-overrides skill cites `M3e.Coerce.asButton` as an illustrative
-# override example.
-skills/configuring-cem-overrides/SKILL.md
 
 # --- Release-audit records: name the m3e family because it IS the audit subject ---
 # The handoff doc + the 2026-07-22 re-audit + its digests and pinned source files

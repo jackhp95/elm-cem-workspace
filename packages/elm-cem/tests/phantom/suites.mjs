@@ -118,9 +118,8 @@ export const SUITES = [
   {
     // RC5: `shared:<role>` is a CLOSED vocabulary. An unlisted role mints a field
     // no other brand will ever name — a private kind wearing a cross-library name,
-    // which is the `"html"` defect itself. EVERY entry point must be guarded: the
-    // slot side (`kinds`), the producer side (`kind`), the atom side (`_atoms`) and
-    // the crossing side (`_coerce[].to`).
+    // which is the `"html"` defect itself. Every entry point must be guarded: the
+    // slot side (`kinds`), the producer side (`kind`), and the atom side (`_atoms`).
     name: "atom-vocab",
     cem: path.join(here, "fixtures", "atom-vocab.cem.json"),
     config: path.join(here, "fixtures", "atom-vocab-config.json"),
@@ -133,10 +132,6 @@ export const SUITES = [
       // The ATOM side — `_atoms` mints the leaf constructor AND its `shared<Role>`
       // field, so a typo here ships a `txet` constructor nothing can consume.
       ["_atoms", "shared:txet"],
-      // The CROSSING side. A `shared:` target in `_coerce` was unvalidated AND
-      // unresolved: the emitter wrote the config string straight into a type
-      // annotation. Named by its `name`, because a brand may declare many.
-      ["_coerce 'asPhrasing'", "shared:phrasin"],
       // The whole legal vocabulary, so the fix needs no source dive…
       ["shared:flow", "shared:icon", "shared:link", "shared:phrasing", "shared:text"],
       // …and WHY it is closed, so nobody "fixes" it by widening the list.

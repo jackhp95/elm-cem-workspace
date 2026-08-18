@@ -112,8 +112,9 @@ consumers copy `Kit`, `Native`, and `Seam` and adapt them (see `docs/kit/README.
 - **`Seam`** — the single sanctioned, loud, auditable break-glass (`fromHtml`, `recast`)
   built on `HtmlIr.Internal`. You cannot mint an `Element` from raw HTML anywhere else
   except the published `M3e.Unsafe.fromHtml`; that fence is Elm's own module exposure, not
-  a lint rule. For stable semantic crossings, prefer `M3e.Coerce.*` (config-blessed
-  coercions) over `recast`.
+  a lint rule. There is no separate config-blessed crossing mechanism — for a stable,
+  recurring semantic crossing, give `recast` a small named wrapper in your own `Seam`
+  module instead of a bare inline call.
 
 So a real call reads `M3e.button [ M3e.Button.variant Value.filled ] [ M3e.text "Save" ]`
 — library component, built-in text.

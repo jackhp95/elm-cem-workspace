@@ -10,12 +10,12 @@ reflex on the **consumer** side: wrapping something that is **already a typed
 type-checking the typed layer exists to give.
 
 The reflex is "drop to plain `Html`": a consumer reaches for `<Lib>.toHtml`,
-`<Lib>.Unsafe.coerce`/`coerceAll`/`fromHtml`, or a configured `Seam.*` escape and
+`<Lib>.Unsafe.recast`/`recastAll`/`fromHtml`, or a configured `Seam.*` escape and
 feeds it a value that a **known family producer** already returned as a typed
 `Element` —
 
     toHtml (M3e.button [ … ] [ … ])
-    Unsafe.coerce (M3e.heading …)
+    Unsafe.recast (M3e.heading …)
 
 A design pass showed heterogeneous typed composition already works (a `button`
 `Element` can be a child of a `card` `Element` directly), so these escapes are
@@ -41,7 +41,7 @@ when
   - _the head is an escape_ —
       - `toHtml` resolving to any module under a facts namespace
         (`<Lib>`, `<Lib>.Html`, …);
-      - `coerce`/`coerceAll`/`fromHtml` resolving to `<Lib>.Unsafe`;
+      - `recast`/`recastAll`/`fromHtml` resolving to `<Lib>.Unsafe`;
       - any of the fully-qualified `seamEscapes` names (`"Seam.fromHtml"`);
   - _and the argument is a known family producer_ — a direct call
     (`M3e.button …`, `M3e.Component.Button.component …`, a barrel or component shorthand) whose
@@ -54,7 +54,7 @@ so nothing is hardcoded:
   - `Unsafe.fromHtml (Html.a …)` / `Unsafe.fromHtml (Html.node "header" …)` — an
     **Html-accepting** escape (`<Lib>.Unsafe.fromHtml` or a configured
     `seamEscapes` name) fed a hand-written raw tag the typed producer layer
-    already provides. `toHtml`/`coerce` are deliberately excluded: they take an
+    already provides. `toHtml`/`recast` are deliberately excluded: they take an
     `Element`, so a raw `Html` argument there cannot occur in code that compiles.
   - `Unsafe.customElement "a" …` — the blessed custom-element forge pointed at a
     tag that is not custom at all. This is `NoRedundantElementForge`'s check
@@ -78,7 +78,7 @@ so nothing is hardcoded:
     not a producer application;
   - `Unsafe.customElement tagName …` — a dynamic tag: not a literal, and not
     provably an element either, so silent;
-  - an escape of a non-producer helper (`toHtml (viewThing …)`, `Unsafe.coerce
+  - an escape of a non-producer helper (`toHtml (viewThing …)`, `Unsafe.recast
     (M3e.text "hi")` when `text` is not a component fact) — unresolvable or not a
     known producer, so silent.
 
@@ -304,7 +304,7 @@ isCustomElement context head =
 
 
 {-| The escapes that ACCEPT raw `Html` — `<Lib>.Unsafe.fromHtml` and the
-configured `seamEscapes`. `toHtml`/`coerce` take an `Element`, so a raw-tag
+configured `seamEscapes`. `toHtml`/`recast` take an `Element`, so a raw-tag
 argument to them cannot occur in compiling code and is not this rule's business.
 -}
 htmlAcceptingEscape : Context -> Node Expression -> Maybe String
@@ -423,7 +423,7 @@ escapeLabel context head =
 
 
 {-| Is `head` a facts-derived render escape — `toHtml` under any facts namespace,
-or `coerce`/`coerceAll`/`fromHtml` under `<Lib>.Unsafe`?
+or `recast`/`recastAll`/`fromHtml` under `<Lib>.Unsafe`?
 -}
 isRenderEscape : Context -> Node Expression -> String -> Bool
 isRenderEscape context head name =
@@ -433,10 +433,10 @@ isRenderEscape context head name =
                 "toHtml" ->
                     True
 
-                "coerce" ->
+                "recast" ->
                     remainder == [ "Unsafe" ]
 
-                "coerceAll" ->
+                "recastAll" ->
                     remainder == [ "Unsafe" ]
 
                 "fromHtml" ->

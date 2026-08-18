@@ -105,7 +105,7 @@ layers =
 | **`component` (required record)** | Same value; the compiler demands the required parts. | The 29 components with a required record, when you must not forget it. |
 | **`build` + `toElement`** | Same value via a pipe; one-only setters unwritable twice. | Conditional or order-free construction. |
 | **`M3e.Html.*` (loose)** | The open-rowed producer — no slot/attr checking, still in the IR. Not plain HTML. | Opting out of the strict rows on purpose. |
-| **`M3e.Coerce` / `M3e.Unsafe`** | Escapes: kind crossing / raw `Html`. Loud, greppable, lint-flagged. | Leaving the typed tree when nothing else fits. |"""
+| **`M3e.Unsafe`** | Escapes: `recast` (kind crossing) / `fromHtml` (raw `Html`). Loud, greppable, lint-flagged. | Leaving the typed tree when nothing else fits. |"""
 
 
 barrelVsSpecific : String

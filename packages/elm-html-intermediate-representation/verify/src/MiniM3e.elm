@@ -17,7 +17,7 @@ module MiniM3e exposing
 {-| A hand-written stand-in for the GENERATED m3e brand, depending on the IR
 ONLY (never on MiniNative) yet interoperating with native content on the one
 shared `Element` type. Exercises: brand-private kind/context markers, typed
-enum values, named-slot placement and kind-coerce as lever compositions.
+enum values, named-slot placement and kind-recast as lever compositions.
 -}
 
 import HtmlIr.Attribute exposing (Attr)
@@ -65,7 +65,7 @@ icon name =
     I.fromNode (I.node "m3e-icon" [] [ I.text name ])
 
 
-{-| A second brand kind, to exercise `asButton` (coerce).
+{-| A second brand kind, to exercise `asButton` (recast).
 -}
 chip : String -> Element { acc | chip : M3eBrand } admittedBy msg
 chip label =
@@ -120,8 +120,8 @@ placeIcon el =
     I.fromNode (I.addAttribute (I.attribute "slot" "icon") (HtmlIr.Element.toNode el))
 
 
-{-| Blessed brand crossing (coerce) as a LEVER COMPOSITION
-(`fromNode << toNode`) — the one loud re-brand concept.
+{-| A hand-rolled `recast` as a LEVER COMPOSITION (`fromNode << toNode`) — the
+one loud re-brand concept, proving it needs nothing beyond the IR's own verbs.
 -}
 asButton : Element { acc | chip : M3eBrand } admittedBy msg -> Element { acc2 | button : M3eBrand } admittedBy2 msg
 asButton el =

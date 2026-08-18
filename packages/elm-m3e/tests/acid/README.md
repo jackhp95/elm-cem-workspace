@@ -50,7 +50,7 @@ because an import went missing.
 
 | Probe | Invariant |
 |---|---|
-| `app/Good.elm` | The real composition: slot admittance the right way round, shared atoms, value narrowing, the blessed `M3e.Coerce` crossing, the write-once builder used correctly, and the single `toHtml` exit. |
+| `app/Good.elm` | The real composition: slot admittance the right way round, shared atoms, value narrowing, the explicit `M3e.Unsafe.recast` crossing, the write-once builder used correctly, and the single `toHtml` exit. |
 | `app/NativeIntoM3eSlot.elm` | **The RC5 direction.** `TypedHtml.div` (produces `sharedFlow`) enters `M3e.AppBar.trailing`, which names the shared content categories — with no escape. And `M3e.text` / `M3e.icon`, the shared atoms, sit inside `TypedHtml.span`. A regeneration that re-closed those rows breaks this. |
 
 ### Negative — must fail

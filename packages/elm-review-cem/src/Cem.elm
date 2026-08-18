@@ -279,7 +279,7 @@ translateToBuild =
 
 
 {-| Flag the consumer-side "drop to plain Html" reflex: an escape
-(`<Lib>.toHtml`, `<Lib>.Unsafe.coerce`/`coerceAll`/`fromHtml`, or a configured
+(`<Lib>.toHtml`, `<Lib>.Unsafe.recast`/`recastAll`/`fromHtml`, or a configured
 `Seam.*` escape) wrapping a value a known family producer already returned as a
 typed `Element`. Facts-driven and advisory (no autofix).
 

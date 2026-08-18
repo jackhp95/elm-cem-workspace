@@ -61,7 +61,7 @@ That gives you the **general layer** — enough to build real (if loosely-typed)
 |---|---|
 | `M3e.Html` | every element in the `elm/html` call shape — `M3e.Html.button [attrs] [content]` |
 | `M3e.Attributes` / `M3e.Events` / `M3e.Values` | the shared attribute / event / design-token vocabulary |
-| `M3e.Kind` / `M3e.Coerce` / `M3e.Unsafe` / `M3e.Build` | phantom rows, config-blessed brand crossings, the `fromHtml` escape hatch, the shared builder |
+| `M3e.Kind` / `M3e.Unsafe` / `M3e.Build` | phantom rows, the `fromHtml`/`recast` escape hatches, the shared builder |
 
 The IR core (`HtmlIr.*`) comes from the `elm-html-intermediate-representation`
 dependency — **imported, not bundled**.

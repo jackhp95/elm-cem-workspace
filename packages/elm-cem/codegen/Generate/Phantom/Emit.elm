@@ -187,7 +187,6 @@ runGuard brand =
                     in
                     guardHomeModule brand h members
                 )
-        , guardCoerceModule brand
         , guardActionModule brand
         , guardAriaModule brand
         , guardSharedAtoms brand
@@ -200,10 +199,10 @@ cross-library vocabulary (`Model.sharedAtomVocabulary`).
 `Model.resolveWith` already enforces this, earlier and in config vocabulary, which
 is the message a config author wants. This is the same rule stated at the output,
 and it is worth stating twice for one reason: the resolution check ENUMERATES the
-routes a shared role can take (`_atoms`, a component's `kind`, a slot's `kinds`,
-both ends of a `_coerce` entry). Enumerating routes is exactly the mistake that
-produced the defect this vocabulary exists to prevent — `_coerce` was left off the
-list for a release, and the symptom was `shared:phrasing : Brand` appearing in a
+routes a shared role can take (`_atoms`, a component's `kind`, a slot's `kinds`).
+Enumerating routes is exactly the mistake that produced the defect this
+vocabulary exists to prevent — a route was once left off the list for a
+release, and the symptom was `shared:phrasing : Brand` appearing in a
 generated type annotation with nothing in the failure naming the config key.
 
 A guard positioned at the bytes cannot be bypassed by adding a route. It is
@@ -266,12 +265,6 @@ guardSharedAtoms brand =
                            )
                 )
         , brand.sets |> List.concatMap (\s -> fieldErrors (brand.lib ++ ".Kind." ++ s.pascal) s.fields)
-        , brand.coercions
-            |> List.concatMap
-                (\c ->
-                    spellingErrors (brand.lib ++ ".Coerce." ++ c.name ++ ".fromKind") c.fromKind
-                        ++ spellingErrors (brand.lib ++ ".Coerce." ++ c.name ++ ".to") c.to
-                )
         ]
         |> List.foldr
             (\e acc ->
@@ -1132,33 +1125,6 @@ guardHomeAttrForms brand moduleName members =
                             ++ " `attrForm`."
                         )
             )
-
-
-guardCoerceModule : Brand -> List String
-guardCoerceModule brand =
-    if List.isEmpty brand.coercions then
-        -- Coerce module is omitted when empty; no guard needed.
-        []
-
-    else
-        let
-            moduleName =
-                brand.lib ++ ".Coerce"
-
-            -- Coerce function names come from `_coerce` config; purely config-driven.
-            fnPairs =
-                brand.coercions |> List.map (\c -> ( c.name, "coerce \"" ++ c.name ++ "\"" ))
-
-            topLevel =
-                fnPairs |> List.map Tuple.first
-
-            snippetHint =
-                "\"_coerce\": change the `name` field in the coerce entry"
-        in
-        List.concat
-            [ guardNonEmpty moduleName "top-level" topLevel
-            , guardDuplicatesRich moduleName "top-level" snippetHint fnPairs
-            ]
 
 
 guardActionModule : Brand -> List String
@@ -5679,80 +5645,6 @@ kindModule brand =
                 ]
             )
         )
-
-
-
--- COERCE MODULE
-
-
-coerceModule : Brand -> List Elm.File
-coerceModule brand =
-    if List.isEmpty brand.coercions then
-        []
-
-    else
-        let
-            lib =
-                brand.lib
-
-            -- Both ends name a kind FIELD, so both honour the `shared:` prefix — the
-            -- convention `Generate.Types.Coercion` has documented all along, minus the
-            -- resolution step, which did not exist. Without it the config string went
-            -- straight into the annotation and emitted `shared:icon : Brand`: not Elm,
-            -- and wrong in the marker too, since a shared atom is `Shared`.
-            markerType f =
-                case f.marker of
-                    MShared ->
-                        "Shared"
-
-                    MBrand ->
-                        "Brand"
-
-            row var f =
-                "Element { " ++ var ++ " | " ++ f.field ++ " : " ++ markerType f ++ " }"
-
-            decl c =
-                [ ""
-                , ""
-                , doc ("A " ++ c.from ++ " admitted where a " ++ c.to ++ " kind is expected.")
-                , c.name ++ " :"
-                , "    " ++ row "k" (M.kindFieldOfSpelling c.fromKind) ++ " admittedBy msg"
-                , "    -> " ++ row "s" (M.kindFieldOfSpelling c.to) ++ " admittedBy2 msg"
-                , c.name ++ " element ="
-                , "    Ir.fromNode (HtmlIr.Element.toNode element)"
-                ]
-
-            -- Expose exactly the markers the emitted signatures mention: a brand whose
-            -- every crossing targets a shared atom must not import an unused `Brand`.
-            markersUsed =
-                brand.coercions
-                    |> List.concatMap
-                        (\c -> [ markerType (M.kindFieldOfSpelling c.fromKind), markerType (M.kindFieldOfSpelling c.to) ])
-                    |> (\ms -> List.filter (\m -> List.member m ms) [ "Brand", "Shared" ])
-        in
-        [ file [ lib, "Coerce" ]
-            (String.join "\n"
-                (List.concat
-                    [ [ "module " ++ lib ++ ".Coerce exposing (" ++ (brand.coercions |> List.map .name |> String.join ", ") ++ ")"
-                      , ""
-                      , "{-| Config-blessed brand crossings — the one loud, greppable re-kind concept."
-                      , "Each function is declared in config (`_coerce`) and reviewed there; nothing"
-                      , "else in the library moves an element between kinds."
-                      , ""
-                      , docsBlock [ brand.coercions |> List.map .name ]
-                      , ""
-                      , "-}"
-                      , ""
-                      , "import HtmlIr.Element exposing (Element)"
-                      , "import HtmlIr.Internal as Ir"
-                      , "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " markersUsed ++ ")"
-                      ]
-                    , brand.coercions |> List.concatMap decl
-                    , [ "" ]
-                    ]
-                )
-            )
-        ]
 
 
 

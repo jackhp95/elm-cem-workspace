@@ -35,9 +35,12 @@ guarantee** the typed component layer would otherwise enforce — so a codebase
 wants them *contained* to a few blessed modules, not sprinkled through features.
 
 Seams are built on two fenced forges: `HtmlIr.Internal` (the raw→phantom
-constructors) and each brand's `*.Unsafe` surface. A **config-blessed coercion**
-(`<Lib>.Coerce.*`, from the generator's `_coerce` block) is the *named, stable*
-crossing and is deliberately NOT a seam; `recast` and the raw wrappers are.
+constructors) and each brand's `*.Unsafe` surface. `recast` and the raw wrappers
+are the seams. There is no second, config-declared crossing mechanism sitting
+outside this discipline: a kind-crossing a composition needs either belongs in
+config (widen the relevant `admits` list, when that doesn't conflict with the
+design system's own guidance) or belongs behind `recast`, gated and triaged
+like any other seam.
 
 ## The family (route to the module docs for semantics)
 

@@ -69,7 +69,7 @@ view =
                                 , under = "M3e.toHtml"
                                 }
                             ]
-            , test "Unsafe.coerce wrapping a producer: `Unsafe.coerce (M3e.heading …)`" <|
+            , test "Unsafe.recast wrapping a producer: `Unsafe.recast (M3e.heading …)`" <|
                 \() ->
                     """module Feature exposing (view)
 
@@ -78,14 +78,14 @@ import M3e.Unsafe as Unsafe
 
 
 view =
-    Unsafe.coerce (M3e.heading [] [])
+    Unsafe.recast (M3e.heading [] [])
 """
                         |> Review.Test.run config
                         |> Review.Test.expectErrors
                             [ Review.Test.error
-                                { message = "Redundant escape: `M3e.Unsafe.coerce` wraps the already-typed `heading` Element"
-                                , details = expectedDetails "M3e.Unsafe.coerce" "heading"
-                                , under = "Unsafe.coerce"
+                                { message = "Redundant escape: `M3e.Unsafe.recast` wraps the already-typed `heading` Element"
+                                , details = expectedDetails "M3e.Unsafe.recast" "heading"
+                                , under = "Unsafe.recast"
                                 }
                             ]
             , test "Unsafe.fromHtml wrapping a producer is flagged" <|

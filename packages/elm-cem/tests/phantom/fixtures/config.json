@@ -30,15 +30,6 @@
     "weight": [{ "name": "weightAsNumber", "type": "float" }],
     "grid": [{ "name": "gridAsInts", "type": "ints", "separator": "x" }]
   },
-  "_coerce": [
-    {
-      "from": "Chip",
-      "fromKind": "chip",
-      "to": "button",
-      "name": "asButton",
-      "_comment": "A Chip admitted where a button kind is expected."
-    }
-  ],
   "Button": {
     "admits": {
       "unnamed": { "kinds": ["shared:text", "shared:icon"], "multi": true, "required": true },

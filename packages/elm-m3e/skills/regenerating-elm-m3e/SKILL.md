@@ -120,7 +120,6 @@ output:
 | `_actions` | the `M3e.Action` roster (capability-typed behavioural values) |
 | `_native` | native-HTML brand facts (the native brand ships separately as `TypedHtml.*` / `elm-typed-html`; no `M3e.Native` module is emitted here) |
 | `_seams` | seam contract types + stampers consumed by the userland `docs/kit/Seam.elm` (Seam is a copyable kit module, **not** a published `M3e.Seam`) |
-| `_coerce` | config-blessed brand crossings emitted as `M3e.Coerce.<name>` functions |
 | `_phantom` | `true` → the phantom pipeline: generated code imports `HtmlIr.*` (this repo's `config/slots.json` has it set) |
 
 **Vocabulary that bites:** the unnamed slot is keyed `"unnamed"` (not `"default"`); the

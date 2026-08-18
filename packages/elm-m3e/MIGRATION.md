@@ -432,8 +432,10 @@ the IR packages to the registry makes this moot.
 
 `Seam.recast` forges a fresh phantom row with no semantic check. It is intentionally
 loud so it is greppable. If you need it in more than one place for the same
-crossing, that crossing belongs in a named coercion in `M3e.Coerce` (config-driven)
-or a dedicated helper in your `Seam` module — not scattered across view modules.
+crossing, give it a dedicated, named helper in your `Seam` module (built on
+`recast`) — not scattered `recast` calls across view modules. There is no
+config-driven crossing mechanism separate from `recast`; a named helper is how
+you get the same self-documenting effect.
 
 ### `M3e.Attributes.style` vs `M3e.Attributes.styleList`
 

@@ -122,7 +122,6 @@ LOOSENESS — opt out of the strict phantom rows, still in the IR
   M3e.Html.button …                the loose producer (open rows, no slot checking)
 
 ESCAPES — leave the typed tree (loud, greppable, lint-fenced)
-  M3e.Component.Coerce.asButton …            config-blessed kind crossing
   M3e.Unsafe.fromHtml …            wrap raw elm/html; free rows, checks nothing
   M3e.Unsafe.recast …              re-kind an Element so it fits any slot
   M3e.Unsafe.customElement …       forge a custom-element tag as a slot-ready Element"""
@@ -159,6 +158,6 @@ recap : String
 recap =
     """- A component is **one typed value**, written through interchangeable **surfaces** (barrel, `component`, `build`) — **peers, not a ranking**.
 - `M3e.Html.*` is the **loose** producer: opt out of strict phantom rows while staying in the IR (it is *not* plain HTML).
-- You leave the typed tree only through loud, named **escapes**: `M3e.Unsafe` / `M3e.Unsafe.Attributes` (`fromHtml`, `fromNode`, `recast`, `customElement`, …) — shipped with the library, built on the raw forge `HtmlIr.Internal` that application code never touches directly — plus `M3e.Coerce` for the config-blessed kind crossings a brand declares.
+- You leave the typed tree only through loud, named **escapes**: `M3e.Unsafe` / `M3e.Unsafe.Attributes` (`fromHtml`, `fromNode`, `recast`, `customElement`, …) — shipped with the library, built on the raw forge `HtmlIr.Internal` that application code never touches directly. There is no second, config-blessed kind-crossing module — a specific, recurring crossing is a small named function built on `recast`.
 - The tell that you over-escaped: **hand-writing raw HTML the library already ships as a component.**
 - **Next: [Your own seam](/guide/seams) →** when you *do* need to step outside, do it through one of the sanctioned escapes."""

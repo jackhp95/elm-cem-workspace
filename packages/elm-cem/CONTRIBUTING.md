@@ -117,7 +117,7 @@ this vocabulary and each module is a projection of it. The authoritative catalog
 worked examples and the emission rules) is [`docs/config-primitives.md`](docs/config-primitives.md);
 the phantom pipeline itself is opt-in via top-level **`_phantom: true`**.
 
-**Phantom primitives** — top-level `kind`/`admits`/`parents`/`_sets`/`_atoms`/`_coerce`/
+**Phantom primitives** — top-level `kind`/`admits`/`parents`/`_sets`/`_atoms`/
 `_renames` plus the carried-over per-element curation keys below. Decoded and validated
 loudly in `Generate/Phantom/Model.elm` (unknown kind/set refs, the shared-admittedBy R1
 discipline, identifier collisions).
@@ -139,7 +139,7 @@ elements.
 
 **Top-level reserved keys** (recognised alongside the per-component entries, each
 `_`-prefixed so it can never collide with a component module name): `_phantom`, `_sets`,
-`_atoms`, `_coerce`, `_renames`, `_variants`, `_exclude` — see
+`_atoms`, `_renames`, `_variants`, `_exclude` — see
 [`docs/config-primitives.md`](docs/config-primitives.md) and _The CLI↔codegen contract_
 below.
 
@@ -162,7 +162,7 @@ package as a peer dependency; no runtime source is injected into the output dir.
 
 Inside `_config`, the generator recognises its own reserved keys alongside the
 per-component entries: **`_phantom`** (opt into the phantom pipeline), the phantom
-primitives **`_sets`** / **`_atoms`** / **`_coerce`** / **`_renames`**, and
+primitives **`_sets`** / **`_atoms`** / **`_renames`**, and
 **`_exclude`** (a base-class component curation list). Every reserved key is prefixed
 with `_` so it can never collide with a component module name. Add a new reserved key
 only in the config decoders (`Generate/Config.elm`, `Generate/Phantom/Model.elm`) — that

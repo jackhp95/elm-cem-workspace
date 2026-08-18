@@ -148,6 +148,14 @@ generator flag so regen-drift doesn't silently collapse the split.
 ## Friction log reference
 
 - ~~`M3e.Action`, `M3e.Coerce`, `M3e.Events`, `M3e.Unsafe`, `M3e.Html` placement pending~~ **RESOLVED 2026-08-10** — all five + `M3e.Unsafe.Attributes` live in the thin core `elm-m3e` (first two bullets above + Q2). They are generic; per-component modules re-alias what they need.
+- **Correction (2026-08-17):** `M3e.Coerce` in the module lists above (Q2, the
+  routing step) never actually existed — the `_coerce` config primitive and its
+  generator function were never wired into codegen's output, and both have now
+  been removed outright. Read every `M3e.Coerce` mention above as historical: at
+  the time these notes were written, the module was believed to be part of the
+  thin core's roster; it never shipped, and there is nothing to route in its
+  place. A kind-crossing now goes through `M3e.Unsafe.recast` or a config
+  `admits` widening — see `packages/elm-m3e/docs/guides/Seams.md`.
 - The builder package currently lists only 3 `exposed-modules` (sketch). When the
   generator emits, it will list all `M3e.<Component>.Build` modules (122+) plus
   `M3e.Build`. *(2a emitted 132 builder modules — done.)*
