@@ -126,6 +126,13 @@ config =
             , "Route.Examples.Shop"
             , "Route.Guide"
             , "Seam"
+
+            -- `Theme.colorAvatar` consumes `Seam.selectionIndicatorShape`.
+            -- Added deliberately, one consumer at a time: this allow-list IS the
+            -- supervision the seam buys us. A module appearing here is a claim
+            -- that its use of an escape was reviewed — so grow it by decision,
+            -- never to silence an error.
+            , "Theme"
             ]
         }
 

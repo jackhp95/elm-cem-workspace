@@ -107,6 +107,7 @@ docs/app/Compose/Codegen.elm
 docs/tests-browser/compose.spec.ts
 docs/app/Compose/FromHtml.elm
 docs/tests/FromHtmlTest.elm
+docs/src/Seam.elm
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -154,6 +155,12 @@ EOF
 # docs/tests/FromHtmlTest.elm — Compose G-Ex1: worker-test for the parser
 #   above; new to this monorepo's Compose POC, absent from the upstream
 #   elm-m3e checkout.
+# docs/src/Seam.elm — THE seam: the single designated home for design-system
+#   escapes, which every fence in review/ points at (NoProprietaryDsClasses'
+#   allowedModules, NoSeamOutsideAllowedModules' seamModules,
+#   NoUnsafeImportOutsideAllowed's allow-list). New to this monorepo because the
+#   layout-only Tailwind enforcement is what first produced a contained escape;
+#   the upstream elm-m3e checkout has no equivalent module yet.
 # elm-m3e-families/ — the FAMILIES layer (L3): a monorepo-only nested package
 # elm-cem generates alongside the components (its own README/LICENSE/elm.json +
 # one M3e/Family/*.elm module per component family). Like elm-m3e-icons/ it is a

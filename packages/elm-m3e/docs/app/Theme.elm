@@ -13,6 +13,7 @@ import M3e.Component.Theme
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value exposing (Value)
+import Seam
 import Theme.Fonts
 import Theme.Icons exposing (IconStyle)
 import Theme.Ports
@@ -760,15 +761,11 @@ colorAvatar model hex =
     TypedHtml.div
         [ TypedHtml.Attributes.class "relative inline-flex p-1"
 
-        -- `m3e-selection-indicator` has NO shape property; it takes its radius
-        -- from `border-radius: inherit` off this light-DOM parent. Without a
-        -- radius here it renders as a SQUARE box behind the round swatches
-        -- (verified visually), so the shape has to come from somewhere. This is
-        -- the one inline style in the app, valued from the same token
-        -- `m3e-avatar` itself defaults to. It is NOT a settled pattern -- see the
-        -- gaps doc: the real fix is for the indicator to inherit its shape from
-        -- the element it is `for`, or to expose a shape property.
-        , TypedHtml.Attributes.style "border-radius" "var(--md-sys-shape-corner-full, 624.9375rem)"
+        -- `m3e-selection-indicator` has no shape property and takes its radius by
+        -- inheritance from this parent, so the round corner has to come from here.
+        -- Contained in `Seam` rather than applied inline: see that module for what
+        -- the design system cannot express and what would let it be deleted.
+        , Seam.selectionIndicatorShape
         ]
         [ M3e.selectionIndicator
             [ M3e.Component.SelectionIndicator.for controlId
