@@ -8,5 +8,27 @@
     "publishedWorkspaceSha": "8631c5bf4e7b5b597278683acfd1b32ba4d3dba7",
     "mirrorCommitSha": "54c0eda10231df33d6b0d8b1512dfd5ebcd78b22",
     "publishedAt": "2026-08-18T03:28:10.614Z"
+  },
+  "elm-cem-facts": {
+    "publishedWorkspaceSha": "325b3d9e497bbe4383c264f544ccfdeac54ebeef",
+    "mirrorCommitSha": "592c00fdfc8541f1d9b9ce8fb28f04eee3419bc4",
+    "publishedAt": "2026-08-18T03:42:35.434Z"
+  },
+  "elm-review-cem": {
+    "publishedWorkspaceSha": "325b3d9e497bbe4383c264f544ccfdeac54ebeef",
+    "mirrorCommitSha": "b25fc293f8f76c110e7e286457cfecc0d3af2f4c",
+    "publishedAt": "2026-08-18T03:42:54.507Z"
+  },
+  "elm-typed-html": {
+    "publishedWorkspaceSha": "1fe78904f5d4b3fa2a2a58ede6c26cca88de3fe0",
+    "mirrorCommitSha": "5a9f461210f2cb5ae11c709fa09a35b2d02d1ae2",
+    "publishedAt": "2026-08-18T03:38:00.000Z",
+    "note": "Backfilled by the orchestrator — the original worker pushed this for real but was killed (unrelated permission interrupt) before it could record state; a relaunched audit found the mirror already live and verified clean. Timestamp is approximate."
+  },
+  "elm-html-intermediate-representation": {
+    "publishedWorkspaceSha": "1fe78904f5d4b3fa2a2a58ede6c26cca88de3fe0",
+    "mirrorCommitSha": "b771a38db8565b754b9b250e63518d3044ddd917",
+    "publishedAt": "2026-08-18T03:38:00.000Z",
+    "note": "Backfilled by the orchestrator — same situation as elm-typed-html above."
   }
 }
