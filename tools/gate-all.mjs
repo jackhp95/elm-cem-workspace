@@ -294,6 +294,9 @@ function main() {
         path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
         "--strict",
     ]);
+    runItem("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
+        path.join(repoRoot, "tools", "check-mirror-drift.mjs"),
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

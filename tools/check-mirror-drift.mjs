@@ -32,8 +32,9 @@ function main() {
 
   if (names.length === 0) {
     console.log(
-      "No publish records in tools/publish-mirror-state.json yet — nothing to " +
-        "check. Run tools/publish-mirror.mjs --push for at least one repo first.",
+      "SKIP: check-mirror-drift — no publish records in " +
+        "tools/publish-mirror-state.json yet. Run tools/publish-mirror.mjs " +
+        "--push for at least one repo first.",
     );
     process.exit(0);
   }
