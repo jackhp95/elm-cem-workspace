@@ -23,10 +23,10 @@
 //   (unchanged): ab-elm-cem.sh, registered here and in tools/gate-all.mjs,
 //   IS the drift proof for Face A at the workspace level.
 //
-// The three consumer bundle copies (cem-figma-connect, m3e-okf,
-// tailwind-m3e-web) carry no such pre-existing staleness — each is kept in
-// sync by its own `check-bundle-provenance*.mjs` gate already — so a naive
-// regenerate-and-diff is the correct, and simplest, check for them.
+// The consumer bundle copies declared in tools/family.json's `bundleCopy`
+// blocks (cem-figma-connect, m3e-okf, tailwind-m3e-web) carry no such
+// pre-existing staleness — each is kept in sync by checkConsumers() below —
+// so a naive regenerate-and-diff is the correct, and simplest, check for them.
 //
 // M4.b (round 2): the bundle-copy checks above only cover each consumer's
 // intake of the facts bundle — they never regenerated a consumer's own
@@ -53,6 +53,7 @@ import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consu
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+const family = JSON.parse(fs.readFileSync(path.join(repoRoot, "tools", "family.json"), "utf8")).packages;
 
 const results = [];
 function record(name, ok, detail) {
@@ -123,26 +124,24 @@ function checkBrand() {
 }
 
 // ── 3. consumers: naive regenerate-and-diff (no pre-existing staleness here) ──
+// Driven by tools/family.json's `bundleCopy` blocks (Theme 3 "manifest move")
+// instead of a hardcoded per-package list — adding a 4th consumer is a data
+// change here. Also folds in what the now-retired standalone
+// check-bundle-provenance*.mjs scripts uniquely checked (git-trackedness,
+// cem-figma-connect's icon-names.json derivation) via checkConsumerBundleDrift.
 function checkConsumers() {
-    const consumers = [
-        {
-            label: "check-drift: cem-figma-connect bundle copy",
-            files: [
-                { committedPath: path.join(repoRoot, "packages", "cem-figma-connect", "profiles", "m3-kit", "facts", "cem-facts.json"), bundleFile: "cem-facts.json" },
-                { committedPath: path.join(repoRoot, "packages", "cem-figma-connect", "profiles", "m3-kit", "facts", "elm-api-facts.json"), bundleFile: "elm-api-facts.json" },
-            ],
-        },
-        {
-            label: "check-drift: m3e-okf bundle copy",
-            files: [{ committedPath: path.join(repoRoot, "packages", "m3e-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
-        },
-        {
-            label: "check-drift: tailwind-m3e-web bundle copy",
-            files: [{ committedPath: path.join(repoRoot, "packages", "tailwind-m3e-web", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
-        },
-    ];
-    for (const { label, files } of consumers) {
-        const { ok, failures } = checkConsumerBundleDrift({ repoRoot, elmM3e: ELM_M3E, label, files });
+    for (const [name, pkg] of Object.entries(family)) {
+        if (!pkg.bundleCopy) continue;
+        const bc = pkg.bundleCopy;
+        const label = `check-drift: ${name} bundle copy`;
+        const files = bc.files.map((f) => ({
+            committedPath: path.join(repoRoot, pkg.srcDir, bc.dir, f),
+            bundleFile: f,
+        }));
+        const iconNames = bc.iconNamesFile
+            ? { committedPath: path.join(repoRoot, pkg.srcDir, bc.dir, bc.iconNamesFile) }
+            : undefined;
+        const { ok, failures } = checkConsumerBundleDrift({ repoRoot, elmM3e: ELM_M3E, label, files, iconNames });
         record(label, ok, ok ? "byte-identical to a fresh regeneration" : failures.join(" | "));
     }
 }

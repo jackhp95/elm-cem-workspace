@@ -96,21 +96,14 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { repo, makePlainCheck } from "./lib/harness.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const elmFormat = path.join(repo, "node_modules", ".bin", "elm-format");
 const cem = path.join(here, "attr-property", "probe.cem.json");
 const config = path.join(here, "attr-property", "probe.config.json");
 
-let failures = 0;
-const check = (ok, msg) => {
-  if (ok) console.log(`  PASS  ${msg}`);
-  else {
-    console.error(`  FAIL  ${msg}`);
-    failures += 1;
-  }
-};
+const { check, failureCount } = makePlainCheck();
 
 const work = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-attr-prop-"));
 const outSrc = path.join(work, "src");
@@ -496,8 +489,8 @@ fs.rmSync(work, { recursive: true, force: true });
   );
 }
 
-if (failures > 0) {
-  console.error(`\nattr-property: FAIL — ${failures} assertion(s) failed`);
+if (failureCount() > 0) {
+  console.error(`\nattr-property: FAIL — ${failureCount()} assertion(s) failed`);
   process.exit(1);
 }
 console.log(`\nattr-property: OK — every attribute space emits the runtime-correct HtmlIr primitive.`);

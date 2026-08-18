@@ -6,11 +6,9 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { repo, makePlainCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const workspaceRoot = path.resolve(repo, "..", "..");
 const require = createRequire(import.meta.url);
 const { validate } = require(path.join(repo, "bin", "validate-facts-bundle.js"));
@@ -18,14 +16,7 @@ const { validate } = require(path.join(repo, "bin", "validate-facts-bundle.js"))
 const schemaPath = path.join(workspaceRoot, "docs", "facts-bundle", "schema.json");
 const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
 
-let failures = 0;
-const check = (ok, msg) => {
-  if (ok) console.log(`  PASS  ${msg}`);
-  else {
-    console.error(`  FAIL  ${msg}`);
-    failures += 1;
-  }
-};
+const { check, failureCount } = makePlainCheck();
 
 // --- a minimal, VALID Face B and Face C, hand-built to the schema's own shape ---
 
@@ -164,8 +155,8 @@ function validFaceC() {
   check(!result.valid, "faceB attribute with an invalid `kind` enum value is rejected");
 }
 
-if (failures > 0) {
-  console.error(`facts-bundle-schema: ${failures} check(s) failed`);
+if (failureCount() > 0) {
+  console.error(`facts-bundle-schema: ${failureCount()} check(s) failed`);
   process.exit(1);
 }
 console.log("facts-bundle-schema: all checks passed");

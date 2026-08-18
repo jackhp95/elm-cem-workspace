@@ -46,23 +46,16 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { repo, makePlainCheck } from "./lib/harness.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const elm = path.join(repo, "node_modules", ".bin", "elm");
 const elmFormat = path.join(repo, "node_modules", ".bin", "elm-format");
 // The IR substrate lives beside this repo; the phantom gate resolves it the same way.
 const irSrc = path.resolve(repo, "..", "elm-html-intermediate-representation", "src");
 const fixture = path.join(here, "enum-override");
 
-let failures = 0;
-const check = (ok, msg) => {
-  if (ok) console.log(`  PASS  ${msg}`);
-  else {
-    console.error(`  FAIL  ${msg}`);
-    failures += 1;
-  }
-};
+const { check, failureCount } = makePlainCheck();
 
 const work = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-enum-override-"));
 const outSrc = path.join(work, "src");
@@ -276,8 +269,8 @@ for (const f of fs.readdirSync(path.join(fixture, "bad")).filter((f) => f.endsWi
 }
 
 console.log(
-  failures === 0
+  failureCount() === 0
     ? "\nenum-override: OK — both `attrTypes` enum override forms emit real `Value` setters, rows and tokens."
-    : `\nenum-override: ${failures} failure(s)`,
+    : `\nenum-override: ${failureCount()} failure(s)`,
 );
-process.exit(failures === 0 ? 0 : 1);
+process.exit(failureCount() === 0 ? 0 : 1);

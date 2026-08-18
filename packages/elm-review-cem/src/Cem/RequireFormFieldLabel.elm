@@ -56,6 +56,7 @@ the high-confidence case of an inline control literal with no discoverable name.
 
 import Cem.Facts exposing (Facet(..), Fact)
 import Cem.Internal.Facts as Facts
+import Cem.Internal.Lookup exposing (isCallTo)
 import Dict exposing (Dict)
 import Elm.Syntax.Declaration as Declaration
 import Elm.Syntax.Expression as Expression exposing (Expression)
@@ -450,17 +451,6 @@ isRawNamingAttr setterNode setterArgs =
 formFieldModule : Fact -> List String
 formFieldModule fact =
     Facts.factNamespaceParts fact ++ [ Facts.factComponentSegment fact ]
-
-
-isCallTo : Context -> List String -> String -> Node Expression -> Bool
-isCallTo context expectedModule expectedName setterNode =
-    case Node.value setterNode of
-        Expression.FunctionOrValue _ name ->
-            (name == expectedName)
-                && (Lookup.moduleNameFor context.lookup setterNode == Just expectedModule)
-
-        _ ->
-            False
 
 
 

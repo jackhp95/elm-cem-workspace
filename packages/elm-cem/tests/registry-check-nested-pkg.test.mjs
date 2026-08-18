@@ -30,23 +30,13 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { repo, makeCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const cli = path.join(repo, "bin", "elm-cem.js");
 const fixture = path.join(repo, "tests", "fixtures", "nonm3e.cem.json");
 const IR = "jackhp95/elm-html-intermediate-representation";
 
-let failures = 0;
-const ok = (msg) => console.log(`registry-check-nested-pkg-test: OK — ${msg}`);
-const check = (cond, msg, extra = "") => {
-  if (cond) ok(msg);
-  else {
-    console.error(`registry-check-nested-pkg-test: FAIL — ${msg}${extra ? "\n" + extra : ""}`);
-    failures++;
-  }
-};
+const { check, finish } = makeCheck("registry-check-nested-pkg-test");
 
 const elm = [path.join(repo, "node_modules", ".bin", "elm"), process.env.ELM_BINARY].find(
   (e) => e && fs.existsSync(e)
@@ -175,8 +165,4 @@ const runRegistryCheck = (args = []) =>
 
 fs.rmSync(brand, { recursive: true, force: true });
 
-if (failures > 0) {
-  console.error(`\nregistry-check-nested-pkg-test: ${failures} FAILURE(S)`);
-  process.exit(1);
-}
-console.log("\nregistry-check-nested-pkg-test: ALL CHECKS PASSED");
+finish("\nregistry-check-nested-pkg-test: ALL CHECKS PASSED");

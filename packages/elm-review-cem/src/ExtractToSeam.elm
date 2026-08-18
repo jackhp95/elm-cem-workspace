@@ -74,6 +74,7 @@ contained with `NoUnsafeImportOutsideAllowed` / `NoSeamOutsideAllowedModules`.
 
 -}
 
+import Cem.Internal.Facts as Facts
 import Dict exposing (Dict)
 import Elm.Syntax.Declaration as Declaration exposing (Declaration)
 import Elm.Syntax.Exposing as Exposing exposing (Exposing)
@@ -1582,7 +1583,7 @@ deriveBaseName literals fnName =
             slugify (String.join " " literals)
     in
     if String.isEmpty fromLiterals then
-        "recast" ++ capitalizeFirst fnName
+        "recast" ++ Facts.capitalize fnName
 
     else
         fromLiterals
@@ -1610,7 +1611,7 @@ slugify raw =
         first :: rest ->
             let
                 joined =
-                    lowerFirst first ++ String.concat (List.map capitalizeFirst rest)
+                    lowerFirst first ++ String.concat (List.map Facts.capitalize rest)
             in
             case String.uncons joined of
                 Just ( c, _ ) ->
@@ -1635,7 +1636,7 @@ uniqueName base key taken =
     else
         let
             withHash =
-                base ++ capitalizeFirst (hashString key)
+                base ++ Facts.capitalize (hashString key)
         in
         if not (Set.member withHash taken) then
             withHash
@@ -1665,16 +1666,6 @@ lowerFirst s =
     case String.uncons s of
         Just ( c, rest ) ->
             String.cons (Char.toLower c) rest
-
-        Nothing ->
-            s
-
-
-capitalizeFirst : String -> String
-capitalizeFirst s =
-    case String.uncons s of
-        Just ( c, rest ) ->
-            String.cons (Char.toUpper c) rest
 
         Nothing ->
             s

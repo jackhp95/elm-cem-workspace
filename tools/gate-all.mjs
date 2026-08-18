@@ -9,9 +9,11 @@
 //      edit here;
 //   2. the cross-cutting workspace checks (coverage map, single Cem.Facts,
 //      single @m3e/web pin, the A/B generation harness, the A/B split
-//      harness, copy-fidelity for the migrated elm-m3e AND cem-figma-connect,
-//      cem-figma-connect's gen:emit determinism proof, cem-figma-connect's
-//      facts-bundle provenance, the root gate);
+//      harness, copy-fidelity for every migrated package DISCOVERED from
+//      tools/family.json's `copyFidelity` blocks — never hardcoded, same
+//      spirit as (1) — cem-figma-connect's gen:emit determinism proof,
+//      check-drift's bundle-copy provenance for every family.json
+//      `bundleCopy` consumer, pre-push hook drift, the root gate);
 //   3. a REAL end-to-end facts-bundle proof: run the workspace elm-cem against
 //      elm-m3e's own config into a temp dir, then validate both emitted faces
 //      against docs/facts-bundle/schema.json with the shipped validator.
@@ -38,6 +40,12 @@ const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
 
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+// tools/family.json — the one manifest of "which packages exist, where, and
+// what mirror/bundle-copy/copy-fidelity gates apply to them" (Theme 3 of the
+// 2026-08-17 audit, "the manifest move"). The copy-fidelity sweep below is
+// driven entirely from it, so a 4th (or Nth) consumer package is a DATA
+// change here, not a new hardcoded runItem() call.
+const family = JSON.parse(fs.readFileSync(path.join(repoRoot, "tools", "family.json"), "utf8")).packages;
 
 // ── result accounting ─────────────────────────────────────────────────────
 // Status is one of "pass" | "fail" | "skip". A SKIP is a gate that exited 0
@@ -283,31 +291,23 @@ function main() {
     runItem("workspace: check-single-m3e-web-pin", process.execPath, [
         path.join(repoRoot, "tools", "check-single-m3e-web-pin.mjs"),
     ]);
-    runItem("workspace: check-bundle-provenance cem-figma-connect", process.execPath, [
-        path.join(repoRoot, "tools", "check-bundle-provenance.mjs"),
-    ]);
-    runItem("workspace: check-bundle-provenance m3e-okf", process.execPath, [
-        path.join(repoRoot, "tools", "check-bundle-provenance-m3e-okf.mjs"),
-    ]);
-    runItem("workspace: check-bundle-provenance tailwind-m3e-web", process.execPath, [
-        path.join(repoRoot, "tools", "check-bundle-provenance-tailwind.mjs"),
-    ]);
     runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
     runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);
 
-    // Copy fidelity for the migrated elm-m3e: proves no git-tracked source file
-    // went missing and no untracked file got committed. This exists because a
-    // migration can be entirely green while having silently DROPPED a tracked
-    // file — every other check here would still pass. It belongs in the sweep,
-    // not in a human's memory.
-    runItem("workspace: copy-fidelity elm-m3e", "bash", [path.join(repoRoot, "tools", "copy-fidelity-elm-m3e.sh")]);
-    runItem("workspace: copy-fidelity cem-figma-connect", "bash", [
-        path.join(repoRoot, "tools", "copy-fidelity-cem-figma-connect.sh"),
-    ]);
-    runItem("workspace: copy-fidelity m3e-okf", "bash", [path.join(repoRoot, "tools", "copy-fidelity-m3e-okf.sh")]);
-    runItem("workspace: copy-fidelity tailwind-m3e-web", "bash", [
-        path.join(repoRoot, "tools", "copy-fidelity-tailwind-m3e-web.sh"),
-    ]);
+    // Copy fidelity for every migrated package: proves no git-tracked source
+    // file went missing and no untracked file got committed. This exists
+    // because a migration can be entirely green while having silently DROPPED
+    // a tracked file — every other check here would still pass. It belongs in
+    // the sweep, not in a human's memory. Driven by tools/family.json's
+    // `copyFidelity` blocks (Theme 3 "manifest move") via the one generic
+    // tools/copy-fidelity.mjs engine — this loop, not a per-package runItem()
+    // call, is what makes adding a 5th migrated package a data change. (The
+    // provenance checks that used to live in three standalone
+    // check-bundle-provenance*.mjs scripts are folded into "check-drift"
+    // below, via checkConsumerBundleDrift.)
+    for (const name of Object.keys(family).filter((n) => family[n].copyFidelity)) {
+        runItem(`workspace: copy-fidelity ${name}`, process.execPath, [path.join(repoRoot, "tools", "copy-fidelity.mjs"), name]);
+    }
     runItem("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
         path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
     ]);
@@ -337,6 +337,10 @@ function main() {
     ]);
     runItem("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [
         path.join(repoRoot, "tools", "check-m3e-5pkg.mjs"),
+    ]);
+    runItem("workspace: check-hooks-sync (pre-push hook drift, Theme 3)", process.execPath, [
+        path.join(repoRoot, "tools", "gen-hooks.mjs"),
+        "--check",
     ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 

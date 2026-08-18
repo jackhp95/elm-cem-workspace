@@ -23,25 +23,15 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { repo, makeCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const family = createRequire(import.meta.url)(path.join(repo, "bin", "family-deps.js"));
 
 const IR = "jackhp95/elm-html-intermediate-representation";
 const FACTS = "jackhp95/elm-cem-facts";
 
-let failures = 0;
-const ok = (msg) => console.log(`depstamp-test: OK — ${msg}`);
-const check = (cond, msg) => {
-  if (cond) ok(msg);
-  else {
-    console.error(`depstamp-test: FAIL — ${msg}`);
-    failures++;
-  }
-};
+const { check, finish } = makeCheck("depstamp-test");
 
 const work = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-depstamp-"));
 const src = path.join(work, "src");
@@ -255,8 +245,4 @@ facts =
 
 fs.rmSync(work, { recursive: true, force: true });
 
-if (failures > 0) {
-  console.error(`\ndepstamp-test: ${failures} FAILURE(S)`);
-  process.exit(1);
-}
-console.log("\ndepstamp-test: ALL GATES PASSED");
+finish("\ndepstamp-test: ALL GATES PASSED");

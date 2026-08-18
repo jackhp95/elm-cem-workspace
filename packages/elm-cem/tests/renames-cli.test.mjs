@@ -20,10 +20,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
+import { repo } from "./lib/harness.mjs";
 
 function fail(msg) {
   console.error(`\nrenames-cli: FAIL — ${msg}`);
