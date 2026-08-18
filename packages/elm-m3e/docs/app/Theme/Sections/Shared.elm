@@ -11,8 +11,11 @@ resulting `Theme.Scale.ScaleMode`.
 -}
 
 import M3e exposing (Element)
+import M3e.Attributes
+import M3e.Component.FormField as FormField
 import M3e.Component.Icon
 import M3e.Kind
+import M3e.Values as Value
 import Theme exposing (TypeScaleParam)
 import Theme.Scale as Scale exposing (ScaleConfig, ScaleMode)
 import TypedHtml
@@ -64,18 +67,58 @@ stepperControls toMsg config =
                 ]
 
 
-numberStepper : String -> Float -> Float -> (Float -> msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+{-| A numeric control as a real `m3e-form-field` (outlined, `float-label="auto"`,
+`hide-subscript="auto"`, sized to its content) instead of the old
+label + icon-button + static-text row.
+
+The label is wired to the input through the typed `label` slot. The
+decrement/increment `m3e-icon-button`s and the value input sit inline in the
+DEFAULT slot (not `prefix`/`suffix`, which are for adornments, not controls):
+leading decrement, editable value, trailing increment — so the value is now
+directly typeable, not just steppable.
+
+Typing commits on every `input` event; text that does not parse as a number
+re-emits `current`, so the re-rendered input snaps back to the last valid value
+rather than the model taking a `NaN`.
+
+-}
+numberStepper : String -> Float -> Float -> (Float -> msg) -> Element (FormField.Is s) admittedBy msg
 numberStepper labelText current step toMsg =
-    TypedHtml.div [ TypedHtml.Attributes.class "flex items-center gap-1" ]
-        [ M3e.text labelText
+    let
+        inputId : String
+        inputId =
+            "stepper-" ++ (labelText |> String.toLower |> String.replace " " "-" |> String.filter (\c -> Char.isAlphaNum c || c == '-'))
+
+        commit : String -> msg
+        commit raw =
+            toMsg (String.toFloat (String.trim raw) |> Maybe.withDefault current)
+    in
+    M3e.formField
+        [ FormField.variant Value.outlined
+        , FormField.floatLabel Value.auto
+        , FormField.hideSubscript Value.auto
+        , TypedHtml.Attributes.class "max-w-fit"
+        ]
+        [ FormField.label
+            (TypedHtml.label [ TypedHtml.Attributes.for inputId ] [ M3e.text labelText ])
         , M3e.iconButton
             [ TypedHtml.Events.onClick (toMsg (current - step))
+            , M3e.Attributes.size Value.small
             , Aria.label ("Decrease " ++ labelText)
             ]
             [ M3e.icon [ M3e.Component.Icon.name "remove" ] [] ]
-        , M3e.text (String.fromFloat current)
+        , TypedHtml.input
+            [ TypedHtml.Attributes.id inputId
+            , TypedHtml.Attributes.type_ "text"
+            , TypedHtml.Attributes.value (String.fromFloat current)
+            , TypedHtml.Attributes.class "field-sizing-content w-fit px-2"
+            , TypedHtml.Events.onInput commit
+            , Aria.label labelText
+            ]
+            []
         , M3e.iconButton
             [ TypedHtml.Events.onClick (toMsg (current + step))
+            , M3e.Attributes.size Value.small
             , Aria.label ("Increase " ++ labelText)
             ]
             [ M3e.icon [ M3e.Component.Icon.name "add" ] [] ]

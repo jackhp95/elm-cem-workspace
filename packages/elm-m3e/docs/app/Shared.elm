@@ -78,6 +78,7 @@ import Theme.Presets
 import Theme.Sections.Advanced
 import Theme.Sections.Appearance
 import Theme.Sections.Color
+import Theme.Sections.CssVariables
 import Theme.Sections.Shape
 import Theme.Sections.Typography
 import TypedHtml
@@ -337,6 +338,7 @@ type Msg
     | GotSearchIndex (Result Http.Error (List SearchEntry))
     | ThemeMsg Theme.Msg
     | SetDirection (TypedHtml.Values.Value TypedHtml.Values.Dir)
+    | ResetControlRow
     | PresetRequested String
     | SurfaceLoaded Decode.Value
 
@@ -563,6 +565,22 @@ update msg model =
 
         SetDirection dir ->
             ( { model | dir = dir }, Effect.none )
+
+        -- Scoped reset for `controlRow` only: variant → neutral, scheme → auto
+        -- ("System"), direction → auto. Deliberately NOT `Theme.ResetAll`, which
+        -- would also discard every colour, typescale, shape and CSS-variable
+        -- override the visitor has built up in the sections below.
+        ResetControlRow ->
+            let
+                ( theme2, themeCmd ) =
+                    Theme.update (Theme.SetVariant Value.neutral) model.theme
+
+                ( theme3, themeCmd2 ) =
+                    Theme.update (Theme.SetScheme Value.auto) theme2
+            in
+            ( { model | theme = theme3, dir = TypedHtml.Values.auto }
+            , Effect.fromCmd (Cmd.batch [ Cmd.map ThemeMsg themeCmd, Cmd.map ThemeMsg themeCmd2 ])
+            )
 
         PresetRequested id ->
             case Theme.Presets.byId id of
@@ -871,7 +889,7 @@ sectionPanel label body =
         [ M3e.Unsafe.recast body ]
 
 
-{-| The 5 theme-editor sections wrapped in an accordion. Assembles the
+{-| The 6 theme-editor sections wrapped in an accordion. Assembles the
 `sectionsEl` passed to `Theme.view`. Lives here (allow-listed) because
 `sectionPanel` needs `M3e.Unsafe.recast`.
 -}
@@ -881,6 +899,7 @@ sectionsAccordion :
     , shape : Element cs adm msg
     , appearance : Element cs adm msg
     , advanced : Element cs adm msg
+    , cssVariables : Element cs adm msg
     }
     -> Element { s | accordion : M3e.Kind.Brand } admittedBy msg
 sectionsAccordion themeSections =
@@ -890,6 +909,11 @@ sectionsAccordion themeSections =
         , sectionPanel "Shape" themeSections.shape
         , sectionPanel "Appearance" themeSections.appearance
         , sectionPanel "Advanced" themeSections.advanced
+
+        -- Last, and named for the mechanism rather than a topic: this is the raw
+        -- CSS-custom-property hatch, reached after the curated sections above
+        -- have failed to expose whatever the visitor is after.
+        , sectionPanel "CSS Variables" themeSections.cssVariables
         ]
 
 
@@ -911,10 +935,17 @@ settingsSheetContent : Model -> Element (TypedHtml.Component.Grouping.DivIs s) a
 settingsSheetContent model =
     TypedHtml.div
         [ TypedHtml.Attributes.id "settings-sheet-content"
-        , TypedHtml.Attributes.class "flex flex-col gap-2 py-4"
+
+        -- Extra bottom padding gives the sheet scroll runway so the last control
+        -- clears the mobile browser URL bar (the bottom sheet's height is
+        -- component-driven — there is no CSS height knob to make it `dvh`-aware).
+        -- `env(safe-area-inset-bottom)` additionally clears the iOS home
+        -- indicator and is 0 on desktop, so it costs desktop nothing.
+        , TypedHtml.Attributes.class "flex flex-col gap-2 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-md:pb-[calc(5rem+env(safe-area-inset-bottom))]"
         , Aria.role Aria.complementary
         ]
-        [ Theme.view
+        [ controlRow model
+        , Theme.view
             { dir = model.dir
             , onSetDirection = SetDirection
             , sectionsEl =
@@ -924,36 +955,37 @@ settingsSheetContent model =
                     , shape = Theme.Sections.Shape.view model.theme |> HtmlIr.Element.map ThemeMsg
                     , appearance = Theme.Sections.Appearance.view model.theme |> HtmlIr.Element.map ThemeMsg
                     , advanced = Theme.Sections.Advanced.view model.theme |> HtmlIr.Element.map ThemeMsg
+                    , cssVariables = Theme.Sections.CssVariables.view model.theme |> HtmlIr.Element.map ThemeMsg
                     }
             }
             model.theme
             ThemeMsg
-        , controlLabel "Directionality"
-        , directionSegmented model
         ]
 
 
-controlLabel : String -> Element { s | heading : M3e.Kind.Brand } admittedBy Msg
-controlLabel lbl =
-    M3e.heading
-        [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TypedHtml.Attributes.class "text-on-surface" ]
-        [ M3e.text lbl ]
+{-| The variant + scheme + direction row, pinned at the top of the settings
+sheet: the three "what does the whole app look like" knobs, previously scattered
+(scheme and variant were full-width segmented strips inside `Theme.view`,
+direction was a labelled strip at the very bottom of the sheet).
 
+Variant and scheme come from `Theme` (mapped through `ThemeMsg`); direction is
+assembled here, since `dir` lives in `Shared.Model`, not `Theme.Model`. One
+scoped reset fires all three back to their neutral values — deliberately NOT
+`Theme.ResetAll`, which would also discard every colour/typescale override.
 
-{-| One segmented-button control: `SegmentedButton` holding `ButtonSegment`
-children, each a checked/label/onClick triple.
 -}
-segmented : List ( String, Bool, Msg ) -> Element { s | segmentedButton : M3e.Kind.Brand } admittedBy Msg
-segmented segments =
-    M3e.segmentedButton []
-        (List.map
-            (\( lbl, isChecked, msg ) ->
-                M3e.buttonSegment
-                    [ M3e.Attributes.checked isChecked, M3e.Events.onClick msg ]
-                    [ M3e.text lbl ]
-            )
-            segments
-        )
+controlRow : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+controlRow model =
+    TypedHtml.div [ TypedHtml.Attributes.class "flex flex-wrap items-end gap-2" ]
+        [ Theme.variantSelect model.theme |> HtmlIr.Element.map ThemeMsg
+        , Theme.schemeToggle model.theme |> HtmlIr.Element.map ThemeMsg
+        , directionToggle model
+        , M3e.iconButton
+            [ TypedHtml.Events.onClick ResetControlRow
+            , Aria.label "Reset variant, scheme, and direction"
+            ]
+            [ M3e.icon [ M3e.Component.Icon.name "restart_alt" ] [] ]
+        ]
 
 
 {-| Drive `--md-sys-density-scale` via a Tailwind arbitrary-property class — Elm
@@ -972,23 +1004,44 @@ densityClass d =
         "[--md-sys-density-scale:0]"
 
 
-directionSegmented : Model -> Element { s | segmentedButton : M3e.Kind.Brand } admittedBy Msg
-directionSegmented model =
-    segmented
-        (TypedHtml.Values.dirValues
-            -- `dir` admits auto|ltr|rtl. `auto` defers to the document/OS, which is
-            -- already what the shell does when this control is untouched, so offering
-            -- it would be a button that visibly does nothing. Filtered explicitly
-            -- rather than hand-listing ltr/rtl, so a FOURTH value would still appear.
-            |> List.filter (\v -> TypedHtml.Values.toString v /= "auto")
-            |> List.map
-                (\v ->
-                    ( String.toUpper (TypedHtml.Values.toString v)
-                    , model.dir == v
-                    , SetDirection v
-                    )
-                )
-        )
+{-| Direction control: a single icon button flipping LTR ⇄ RTL, replacing the
+2-option segmented strip (a two-option enum strip is a toggle wearing a costume,
+and it cost a full row plus its own label). Shows
+`format_textdirection_l_to_r` when LTR and `format_textdirection_r_to_l` when RTL;
+clicking flips to the other and fires `SetDirection`. `aria-pressed`/`aria-label`
+carry the state, since the glyph alone does not.
+
+`auto` is not offered — it defers to the document/OS, which is already what the
+shell does when this control is untouched, so it would be a button that visibly
+does nothing. It stays reachable through `ResetControlRow`.
+
+-}
+directionToggle : Model -> Element { s | iconButton : M3e.Kind.Brand } admittedBy Msg
+directionToggle model =
+    let
+        isRtl : Bool
+        isRtl =
+            TypedHtml.Values.toString model.dir == "rtl"
+
+        ( next, glyph, lbl ) =
+            if isRtl then
+                ( TypedHtml.Values.ltr, "format_textdirection_l_to_r", "Switch to left-to-right" )
+
+            else
+                ( TypedHtml.Values.rtl, "format_textdirection_r_to_l", "Switch to right-to-left" )
+    in
+    M3e.iconButton
+        [ TypedHtml.Events.onClick (SetDirection next)
+        , Aria.label lbl
+        , Aria.pressed
+            (if isRtl then
+                Aria.true
+
+             else
+                Aria.false
+            )
+        ]
+        [ M3e.icon [ M3e.Component.Icon.name glyph ] [] ]
 
 
 
