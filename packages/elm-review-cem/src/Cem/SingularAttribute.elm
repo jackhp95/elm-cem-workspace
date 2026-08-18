@@ -28,7 +28,7 @@ never reaches this rule's `elementSetter` in the first place.
 
 import Cem.Facts exposing (Facet(..), Fact)
 import Cem.Internal.Facts as Facts
-import Cem.Internal.ListExtra exposing (dedupeByName)
+import Cem.Internal.ListExtra exposing (countBy, dedupeByName)
 import Dict exposing (Dict)
 import Elm.Syntax.Expression as Expression exposing (Expression)
 import Elm.Syntax.Node as Node exposing (Node)
@@ -145,11 +145,6 @@ elementSetter element =
 
         _ ->
             Nothing
-
-
-countBy : String -> List ( String, a ) -> Int
-countBy name =
-    List.filter (\( n, _ ) -> n == name) >> List.length
 
 
 error :

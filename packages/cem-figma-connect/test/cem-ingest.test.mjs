@@ -19,7 +19,9 @@ import { collectLiteralAliases, resolveAlias } from "../src/ingest/dts-inline.mj
 const here = path.dirname(fileURLToPath(import.meta.url));
 // A real Face B, built by elm-cem's own bin/facts-bundle.js from the
 // vendored @m3e/web 2.5.14 manifest (test/fixtures/m3e-web-2.5.14/) — see
-// tools/copy-fidelity-cem-figma-connect.sh's authorized-extra note. Face B is
+// docs/copy-fidelity-notes.md#cem-figma-connect's authorized-extra note
+// (tools/family.json's cem-figma-connect.copyFidelity.authorizedExtra entry
+// for test/fixtures/cem-facts.m3e-web-2.5.14.json). Face B is
 // emitted POST tag-reconciliation, which is why its counts (123 components,
 // 505 attributes, 0 duplicates) differ from the pre-M3.a numbers this file
 // used to assert (121/500/2): the old loader's own naive

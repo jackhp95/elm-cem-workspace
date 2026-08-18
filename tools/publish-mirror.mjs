@@ -95,8 +95,9 @@ function main() {
   }
   if (!cfg.auditedExclusions) {
     console.warn(
-      `WARN: ${name} has no tools/copy-fidelity-${name}.sh gate, so its authorized-` +
-        `absent file set has never been audited. This script only excludes the ` +
+      `WARN: ${name} has no copyFidelity block in tools/family.json (no ` +
+        `\`node tools/copy-fidelity.mjs ${name}\` gate), so its authorized-absent ` +
+        `file set has never been audited. This script only excludes the ` +
         `common baseline (lockfiles, pnpm-workspace.yaml) — review the dry-run ` +
         `diff closely before trusting it for this repo.`,
     );

@@ -15,7 +15,7 @@ is treated as singular. Advisory: report-only.
 
 import Cem.Facts exposing (Fact)
 import Cem.Internal.Facts as Facts
-import Cem.Internal.ListExtra exposing (dedupeByName)
+import Cem.Internal.ListExtra exposing (countBy, dedupeByName)
 import Dict exposing (Dict)
 import Elm.Syntax.Declaration as Declaration
 import Elm.Syntax.Expression as Expression exposing (Expression)
@@ -236,11 +236,6 @@ elementSetter context namespace componentNoun elementNode =
 
         _ ->
             Nothing
-
-
-countBy : String -> List ( String, a ) -> Int
-countBy name =
-    List.filter (\( n, _ ) -> n == name) >> List.length
 
 
 error : String -> { start : { row : Int, column : Int }, end : { row : Int, column : Int } } -> Error {}

@@ -1,9 +1,9 @@
-module Cem.Internal.ListExtra exposing (dedupeByName)
+module Cem.Internal.ListExtra exposing (countBy, dedupeByName)
 
 {-| Small list helpers shared by the rules that dedupe named entries
 (`SingularAttribute`, `SingularSlot`).
 
-@docs dedupeByName
+@docs countBy, dedupeByName
 
 -}
 
@@ -22,3 +22,10 @@ dedupeByName =
                 acc ++ [ item ]
         )
         []
+
+
+{-| Count how many `( name, _ )` entries match the given name.
+-}
+countBy : String -> List ( String, a ) -> Int
+countBy name =
+    List.filter (\( n, _ ) -> n == name) >> List.length
