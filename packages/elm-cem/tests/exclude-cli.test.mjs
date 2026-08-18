@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "..");
-const manifest = path.join(here, "fixtures", "nonm3e.cem.json");
+const manifest = path.join(here, "fixtures", "wc-widgets.cem.json");
 
 function fail(msg) {
   console.error(`\nexclude-cli: FAIL — ${msg}`);

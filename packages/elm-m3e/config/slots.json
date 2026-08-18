@@ -11,6 +11,9 @@
     "iconComp": "Icon",
     "catalogFrom": "config/icons-catalog.json",
     "shape": "names",
+    "tag": "m3e-icon",
+    "iconFamily": "Material Symbols",
+    "attribution": "Source: Material Symbols ligature names from @iconify-json/material-symbols\n(base icons, style-suffix-free).",
     "package": {
       "dir": "elm-m3e-icons",
       "name": "jackhp95/elm-m3e-icons",

@@ -26,6 +26,7 @@ import {
   applyManualCorrespondence,
   validateManualCorrespondence,
 } from "../src/correspond/merge.mjs";
+import { loadMatcherConfig } from "../src/match/matcher.mjs";
 import {
   renderReviewMarkdown,
   parseAcceptedTags,
@@ -44,8 +45,12 @@ const cem = loadCem(
 );
 const figma = loadFigmaExport(path.join(here, "fixtures", "figma-export.m3-kit.json"));
 
+// The m3-kit profile's own calibration (finding 2.4) — this fixture IS the
+// m3-kit export, so it uses the same matcher.json a real `match` run would.
+const m3KitMatcherConfig = loadMatcherConfig(path.join(here, "..", "profiles", "m3-kit"));
+
 // Loaded once — both fixtures are large. Every assertion reads this view.
-const proposed = buildProposals(cem, figma);
+const proposed = buildProposals(cem, figma, m3KitMatcherConfig);
 const byTag = (tag) => proposed.find((e) => e.cemTag === tag);
 
 function tmpPath(name) {
@@ -161,7 +166,7 @@ test("buildProposals: cemTag:null Figma-only gaps never leak into correspondence
 });
 
 test("buildProposals: byte-stable across repeated runs on the same inputs", () => {
-  const again = buildProposals(cem, figma);
+  const again = buildProposals(cem, figma, m3KitMatcherConfig);
   assert.equal(JSON.stringify(again), JSON.stringify(proposed));
 });
 

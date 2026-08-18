@@ -66,33 +66,71 @@ const FAMILY_DEPS = [
 // broader `Cem.*` review-cem matcher below, so the byte-synced Cem/Facts.elm copy
 // a consumer vendors inside elm-review-cem is attributed to elm-cem-facts, exactly
 // as the Stage-F cutover prescribes (review-cem drops its own copy, deps facts).
+//
+// The brand-specific tail (finding 2.3, 2026-08-17 thermonuclear review: this
+// used to be 3 M3E package literals hardcoded here, plus a SEPARATE hardcoded
+// `BRANDS = { m3e: {...} }` in eject.js describing the same brand) is loaded
+// from ../family-configs/*.json — see family-configs/README.md. Each brand
+// file contributes its `consumerPackages`, appended in file order AFTER the
+// generic FAMILY_DEPS pair, so the `Cem.Facts`-before-`Cem.*` ordering above
+// always holds regardless of how many brands are configured.
+const FAMILY_CONFIGS_DIR = path.join(__dirname, "..", "family-configs");
+
+function buildMatcher(moduleRoots, extraModules) {
+  const roots = moduleRoots || [];
+  const extras = new Set(extraModules || []);
+  return (m) => roots.some((r) => m === r || m.startsWith(r + ".")) || extras.has(m);
+}
+
+// Load every brand family-config, sorted by filename for determinism. Each
+// entry: { key, namespace, package, repo, webPackage, consumerPackages }.
+// Malformed/unreadable files are skipped with a loud warning rather than
+// silently dropped, matching the file's own "derive, never hand-wave" rule.
+function loadBrandFamilies(dir) {
+  const brands = [];
+  let entries;
+  try {
+    entries = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
+  } catch {
+    return brands;
+  }
+  for (const file of entries) {
+    const full = path.join(dir, file);
+    try {
+      const raw = JSON.parse(fs.readFileSync(full, "utf8"));
+      if (!raw.key || !raw.namespace || !raw.package) {
+        console.error(`family-deps: ${full} is missing required "key"/"namespace"/"package" — skipping`);
+        continue;
+      }
+      brands.push(raw);
+    } catch (e) {
+      console.error(`family-deps: could not read ${full}: ${e.message} — skipping`);
+    }
+  }
+  return brands;
+}
+
+const BRAND_FAMILIES = loadBrandFamilies(FAMILY_CONFIGS_DIR);
+
+// The eject brand registry — key → brand metadata. Genuinely config-driven:
+// dropping a new family-configs/<brand>.json here adds an eject target with
+// no JS change (bin/eject.js consumes this instead of its own literal).
+const BRAND_REGISTRY = Object.fromEntries(
+  BRAND_FAMILIES.map((b) => [
+    b.key,
+    { key: b.key, namespace: b.namespace, package: b.package, repo: b.repo, webPackage: b.webPackage },
+  ])
+);
+
 const FAMILY_PACKAGES = [
   ...FAMILY_DEPS, // IR (HtmlIr.*) then facts (Cem.Facts) — ranges single-sourced.
-  {
-    package: "jackhp95/elm-typed-html",
-    range: "1.0.0 <= v < 2.0.0",
-    matches: (m) => m === "TypedHtml" || m.startsWith("TypedHtml."),
-  },
-  {
-    package: "jackhp95/elm-m3e",
-    range: "1.0.0 <= v < 2.0.0",
-    // The brand namespace. `M3e.Review.Facts` (which imports Cem.Facts) lives
-    // here too — root M3e, so it is attributed to the brand, not to facts.
-    matches: (m) => m === "M3e" || m.startsWith("M3e."),
-  },
-  {
-    package: "jackhp95/elm-review-cem",
-    range: "1.0.0 <= v < 2.0.0",
-    // The review package exposes `Cem` / `Cem.*` (minus `Cem.Facts`, caught
-    // above) plus these bare rule/helper modules.
-    matches: (m) =>
-      m === "Cem" ||
-      m.startsWith("Cem.") ||
-      m === "NoSeamOutsideAllowedModules" ||
-      m === "NoInternalImportOutsideAllowed" ||
-      m === "NoRedundantElementForge" ||
-      m === "ExtractToSeam",
-  },
+  ...BRAND_FAMILIES.flatMap((b) =>
+    (b.consumerPackages || []).map((p) => ({
+      package: p.package,
+      range: p.range,
+      matches: buildMatcher(p.moduleRoots, p.extraModules),
+    }))
+  ),
 ];
 
 // The published family package a vendored module belongs to, or null. First
@@ -292,6 +330,9 @@ function auditPackage(pkgDir, providedModules = new Set()) {
 module.exports = {
   FAMILY_DEPS,
   FAMILY_PACKAGES,
+  BRAND_FAMILIES,
+  BRAND_REGISTRY,
+  loadBrandFamilies,
   familyPackageFor,
   lowerBound,
   BASE_ELM_DEPS,

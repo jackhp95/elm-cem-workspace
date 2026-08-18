@@ -64,15 +64,20 @@ import Review.ModuleNameLookupTable as Lookup exposing (ModuleNameLookupTable)
 import Review.Rule as Rule exposing (Error, Rule)
 
 
-{-| Build from the generated facts. The rule recognises the form-field component
-by its elm-cem-generated noun (`formField`, from the `m3e-form-field` tag) and
-reads the `label` slot setter name from that fact's `slotRewrites`.
+{-| Build from the generated facts. `config.componentNoun` is the `fact.component`
+value that identifies the form-field in YOUR brand's facts (elm-cem's noun for
+the tag that plays the form-field role — `"formField"` for `m3e-form-field`);
+the rest of the rule is fully fact-driven (label slot setter name from
+`slotRewrites`, module/namespace from the fact itself). This package holds no
+brand's noun hardcoded — the consumer's own ReviewConfig supplies it, same
+pattern as `Cem.fences`'s `brandRoots`/`seamModules` or
+`Cem.redundantElementEscape`'s `seamEscapes`.
 -}
-rule : List Fact -> Rule
-rule facts =
+rule : { componentNoun : String } -> List Fact -> Rule
+rule config facts =
     Rule.newModuleRuleSchemaUsingContextCreator "RequireFormFieldLabel" (initContext facts)
         |> Rule.withDeclarationEnterVisitor declarationEnterVisitor
-        |> Rule.withExpressionEnterVisitor expressionVisitor
+        |> Rule.withExpressionEnterVisitor (expressionVisitor config)
         |> Rule.fromModuleRuleSchema
 
 
@@ -130,15 +135,15 @@ declarationEnterVisitor node context =
             ( [], context )
 
 
-expressionVisitor : Node Expression -> Context -> ( List (Error {}), Context )
-expressionVisitor node context =
+expressionVisitor : { componentNoun : String } -> Node Expression -> Context -> ( List (Error {}), Context )
+expressionVisitor config node context =
     case Node.value node of
         Expression.Application (fnNode :: args) ->
             case Facts.callSite context.namespaces context.lookup fnNode of
                 Just site ->
                     case Facts.find site context.factsIndex of
                         Just fact ->
-                            ( checkCall context site fact fnNode args, context )
+                            ( checkCall config context site fact fnNode args, context )
 
                         Nothing ->
                             ( [], context )
@@ -154,17 +159,9 @@ expressionVisitor node context =
 -- CHECK
 
 
-{-| The elm-cem noun for `m3e-form-field`. Kept as the single recognition point
-so the semantic anchor is greppable; the rest of the rule is fact-driven.
--}
-formFieldNoun : String
-formFieldNoun =
-    "formField"
-
-
-checkCall : Context -> Facts.CallSite -> Fact -> Node Expression -> List (Node Expression) -> List (Error {})
-checkCall context site fact fnNode args =
-    if fact.component /= formFieldNoun || site.facet /= Standard then
+checkCall : { componentNoun : String } -> Context -> Facts.CallSite -> Fact -> Node Expression -> List (Node Expression) -> List (Error {})
+checkCall config context site fact fnNode args =
+    if fact.component /= config.componentNoun || site.facet /= Standard then
         []
 
     else

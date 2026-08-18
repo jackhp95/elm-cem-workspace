@@ -97,6 +97,13 @@ test("cli: publish refuses a profile whose kitVersionTag is still the A3 placeho
     );
     profile.kitVersionTag = "unknown-pre-a3-fixture";
     fs.writeFileSync(path.join(tmpDir, "profile.json"), `${JSON.stringify(profile, null, 2)}\n`);
+    // loadProfile() also requires matcher.json (finding 2.4) — copy the real
+    // m3-kit one so this test still exercises the kitVersionTag guard itself,
+    // not an unrelated "matcher.json missing" failure.
+    fs.copyFileSync(
+      path.join(repoRoot, "profiles", "m3-kit", "matcher.json"),
+      path.join(tmpDir, "matcher.json")
+    );
     const result = runCli([
       "publish",
       "--profile",

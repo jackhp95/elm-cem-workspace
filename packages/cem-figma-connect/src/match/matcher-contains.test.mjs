@@ -5,13 +5,18 @@ import path from "node:path";
 
 import { loadCem } from "../ingest/cem.mjs";
 import { loadFigmaExport } from "../ingest/figma.mjs";
-import { match, proposeAxis } from "./matcher.mjs";
+import { match, proposeAxis, loadMatcherConfig } from "./matcher.mjs";
+
+// The m3-kit profile's own calibration (finding 2.4) — these tests exercise
+// the real m3-kit fixture, so they use the same matcher.json a real `match`
+// run would load, not a synthetic stand-in.
+const m3KitMatcherConfig = loadMatcherConfig(path.join(process.cwd(), "profiles/m3-kit"));
 
 function realMatch() {
   const prof = JSON.parse(fs.readFileSync(path.join(process.cwd(), "profiles/m3-kit/profile.json"), "utf8"));
   const cem = loadCem(path.resolve(process.cwd(), prof.cem.manifestPath), { log: () => {} });
   const figma = loadFigmaExport(path.resolve(process.cwd(), prof.figmaExportPath));
-  return match(cem, figma);
+  return match(cem, figma, m3KitMatcherConfig);
 }
 
 test("contains tier: the clean qualifier components bind at tier:contains", () => {
@@ -63,7 +68,7 @@ const BUTTON_CEM = {
 
 test("proposeAxis: maps a size axis with synonym values", () => {
   const axis = { name: "Size", options: ["XSmall", "Small", "Medium", "Large", "XLarge"] };
-  const result = proposeAxis(axis, BUTTON_CEM);
+  const result = proposeAxis(axis, BUTTON_CEM, m3KitMatcherConfig);
   assert.equal(result.mapped, true);
   assert.equal(result.attribute, "size");
   assert.equal(result.coverage, "5/5");
@@ -74,7 +79,7 @@ test("proposeAxis: maps a size axis with synonym values", () => {
 
 test("proposeAxis: returns mapped:false when no attribute covers the axis", () => {
   const axis = { name: "State", options: ["Default", "Hovered", "Focused", "Pressed", "Disabled"] };
-  const result = proposeAxis(axis, BUTTON_CEM);
+  const result = proposeAxis(axis, BUTTON_CEM, m3KitMatcherConfig);
   assert.equal(result.mapped, false);
   assert.match(result.reason, /no CEM enum attribute/);
 });
@@ -86,7 +91,7 @@ test("proposeAxis: maps a boolean axis by name-affinity (Modal on/off)", () => {
     slots: [],
   };
   const axis = { name: "Modal", options: ["True", "False"] };
-  const result = proposeAxis(axis, cem);
+  const result = proposeAxis(axis, cem, m3KitMatcherConfig);
   assert.equal(result.mapped, true);
   assert.equal(result.attribute, "modal");
   assert.equal(result.attributeKind, "boolean");
@@ -102,7 +107,7 @@ test("proposeAxis: maps a multi-boolean axis (checkbox Type -> checked+indetermi
     slots: [],
   };
   const axis = { name: "Type", options: ["Selected", "Unselected", "Indeterminate"] };
-  const result = proposeAxis(axis, cem);
+  const result = proposeAxis(axis, cem, m3KitMatcherConfig);
   assert.equal(result.mapped, true);
   assert.equal(result.kind, "multi-boolean");
   assert.ok(Array.isArray(result.attrs));
@@ -171,7 +176,7 @@ test("match: exact tier — normalized name match gives tier:exact, score:1", ()
   // Button (id 1:1) matches exactly; the fusion siblings are subsets of that
   // set by id. In this minimal fixture there's no fusion (not enough siblings
   // sharing the exact name convention), so we get a singleton set exact match.
-  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA);
+  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA, m3KitMatcherConfig);
   const btn = candidates.find((c) => c.figmaName === "Button" && c.tier === "exact");
   assert.ok(btn, "Button should match at exact tier");
   assert.equal(btn.cemTag, "m3e-button");
@@ -185,7 +190,7 @@ test("match: gap — no CEM counterpart emits tier:gap with cemTag:null", () => 
     sets: [{ id: "9:9", name: "Totally Novel Widget", page: "Components", description: "", properties: [] }],
     standalones: [],
   };
-  const { candidates } = match(cem, figma);
+  const { candidates } = match(cem, figma, m3KitMatcherConfig);
   assert.equal(candidates.length, 1);
   assert.equal(candidates[0].tier, "gap");
   assert.equal(candidates[0].cemTag, null);
@@ -214,14 +219,14 @@ test("match: fuzzy tier — Assistive chip -> m3e-assist-chip above threshold", 
     ],
     standalones: [],
   };
-  const { candidates } = match(cem, figma);
+  const { candidates } = match(cem, figma, m3KitMatcherConfig);
   assert.equal(candidates[0].tier, "fuzzy");
   assert.equal(candidates[0].cemTag, "m3e-assist-chip");
   assert.ok(candidates[0].score >= 0.5);
 });
 
 test("match: output is sorted — exact before fuzzy before gap", () => {
-  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA);
+  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA, m3KitMatcherConfig);
   const tierRank = { exact: 0, fuzzy: 1, contains: 0.5, gap: 2 };
   // Allow 'contains' between exact and fuzzy.
   for (let i = 1; i < candidates.length; i++) {
@@ -232,7 +237,7 @@ test("match: output is sorted — exact before fuzzy before gap", () => {
 });
 
 test("match: result carries axis/property proposals for exact-matched set", () => {
-  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA);
+  const { candidates } = match(MINIMAL_CEM, MINIMAL_FIGMA, m3KitMatcherConfig);
   const btn = candidates.find((c) => c.cemTag === "m3e-button" && c.tier === "exact");
   assert.ok(btn, "m3e-button exact candidate should exist");
   assert.ok(Array.isArray(btn.axisProposals), "axisProposals should be an array");

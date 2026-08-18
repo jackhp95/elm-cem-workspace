@@ -1,0 +1,30 @@
+{
+  "key": "m3e",
+  "namespace": "M3e",
+  "package": "jackhp95/elm-m3e",
+  "repo": "jackhp95/elm-m3e",
+  "webPackage": "@m3e/web",
+  "consumerPackages": [
+    {
+      "package": "jackhp95/elm-typed-html",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["TypedHtml"]
+    },
+    {
+      "package": "jackhp95/elm-m3e",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e"]
+    },
+    {
+      "package": "jackhp95/elm-review-cem",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["Cem"],
+      "extraModules": [
+        "NoSeamOutsideAllowedModules",
+        "NoInternalImportOutsideAllowed",
+        "NoRedundantElementForge",
+        "ExtractToSeam"
+      ]
+    }
+  ]
+}

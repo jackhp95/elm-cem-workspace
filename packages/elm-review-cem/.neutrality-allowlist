@@ -75,8 +75,20 @@ src/NoInternalImportOutsideAllowed.elm::`import M3e.Element.Internal` is gated, 
 src/Cem.elm::be concatenated (`M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts`); every
 src/Cem.elm::Cem.all M3e.Review.Facts.facts
 src/Cem.elm::(M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts)
-src/Cem.elm::++ [ Cem.requireFormFieldLabel M3e.Review.Facts.facts ]
-src/Cem.elm::++ [ Cem.requireFabLabel M3e.Review.Facts.facts ]
+src/Cem.elm::++ [ Cem.requireFormFieldLabel { componentNoun = "formField" } M3e.Review.Facts.facts ]
+src/Cem.elm::++ [ Cem.requireFabLabel { componentNoun = "fab" } M3e.Review.Facts.facts ]
+
+# finding 2.5 (2026-08-17 thermonuclear review): RequireFabLabel/RequireFormFieldLabel
+# no longer hardcode "fab"/"formField" as rule logic — the noun is now a
+# caller-supplied `componentNoun` config field (same pattern as `fences`'
+# `brandRoots`). These doc-comment lines illustrate elm-cem's OWN noun for the
+# M3E tags as a worked example of what a caller passes in; the value itself is
+# never read from here by any rule.
+README.md::that role (elm-cem's noun for `m3e-form-field`/`m3e-fab` is `"formField"`/`"fab"`)
+src/Cem.elm::value for the form-field tag (elm-cem's noun for `m3e-form-field` is `"formField"`)
+src/Cem.elm::(elm-cem's noun for `m3e-fab` is `"fab"`) — this package holds no brand's noun
+src/Cem/RequireFabLabel.elm::that plays the FAB role — `"fab"` for `m3e-fab`); the rest of the rule is
+src/Cem/RequireFormFieldLabel.elm::the tag that plays the form-field role — `"formField"` for `m3e-form-field`);
 src/Cem.elm::module (and drifts on: elm-m3e's MIGRATION.md hand-rolled the allow-list without
 src/Cem.elm::- `brandRoots` — the generated library root namespaces (e.g. `[ "M3e" ]`).
 src/Cem.elm::{ brandRoots = [ "M3e" ]

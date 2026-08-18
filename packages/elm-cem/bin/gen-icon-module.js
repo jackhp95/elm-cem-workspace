@@ -112,13 +112,31 @@ function toElmIdentifier(snake) {
 // six-type-variable function could not.
 //
 // Both shapes emit `custom` as the escape hatch for unenumerated ligatures.
-function generateIconModule(lib, names, shape = "names") {
+//
+// `tag` and `iconFamily` are brand config, NOT hardcoded here (finding 2.1 of
+// the 2026-08-17 thermonuclear review): `tag` is the DOM custom-element name
+// the generated `icon`/helpers emit (e.g. "m3e-icon"), `iconFamily` is the
+// prose name of the icon set used in doc comments (e.g. "Material Symbols").
+// `attribution` is optional free-form doc text inserted before the
+// "N icons total." tail; when omitted it falls back to a generic sentence
+// derived from `iconFamily` so a brand that doesn't supply one still gets
+// truthful (if plain) prose instead of someone else's vendor name.
+function generateIconModule(lib, names, shape = "names", tag, iconFamily, attribution) {
   if (shape !== "names" && shape !== "functions") {
     console.error(
       `elm-cem gen-icon-module: unknown _iconModule.shape "${shape}" — expected "names" (default) or "functions"`
     );
     process.exit(1);
   }
+  if (!tag || !iconFamily) {
+    console.error(
+      `elm-cem gen-icon-module: _iconModule.tag and _iconModule.iconFamily are both required ` +
+      `(got tag=${JSON.stringify(tag)}, iconFamily=${JSON.stringify(iconFamily)}) — ` +
+      `without them the generator has no brand-neutral way to name the emitted element or the icon set in doc prose.`
+    );
+    process.exit(1);
+  }
+  const attributionLines = (attribution || `Source: ${iconFamily} ligature names.`).split("\n");
   // Collision check — fail loudly
   const seen = new Map(); // identifier → first snake name
   for (const snake of names) {
@@ -145,12 +163,12 @@ function generateIconModule(lib, names, shape = "names") {
 
   const headlineDoc = namesShape
     ? [
-        `{-| Type-safe icon names for the full Material Symbols ligature set.`,
+        `{-| Type-safe icon names for the full ${iconFamily} ligature set.`,
         ``,
-        `Every ligature is a \`Name\` value, and \`icon\` renders one as an \`m3e-icon\``,
+        `Every ligature is a \`Name\` value, and \`icon\` renders one as an \`${tag}\``,
         `element with the ligature pre-filled as the \`name\` attribute, using the IR`,
         `directly — no components dependency. So`,
-        `\`${lib}.Icon.icon ${lib}.Icon.menu attrs kids\` emits an \`m3e-icon\` element`,
+        `\`${lib}.Icon.icon ${lib}.Icon.menu attrs kids\` emits an \`${tag}\` element`,
         `with \`name="menu"\` prepended to \`attrs\`.`,
         ``,
         `\`Name\` is an ordinary opaque value, so an icon can be stored in a model, held`,
@@ -163,11 +181,11 @@ function generateIconModule(lib, names, shape = "names") {
         `importing this module has no size cost beyond what you use.`,
       ]
     : [
-        `{-| Type-safe icon element helpers for the full Material Symbols ligature set.`,
+        `{-| Type-safe icon element helpers for the full ${iconFamily} ligature set.`,
         ``,
-        `Each helper produces an \`m3e-icon\` element with the icon name pre-filled`,
+        `Each helper produces an \`${tag}\` element with the icon name pre-filled`,
         `as the \`name\` attribute, using the IR directly — no components dependency.`,
-        `So \`${lib}.Icon.menu attrs kids\` emits an \`m3e-icon\` element with`,
+        `So \`${lib}.Icon.menu attrs kids\` emits an \`${tag}\` element with`,
         `\`name="menu"\` prepended to \`attrs\`.`,
         ``,
         `Use \`custom\` for any name not enumerated here — teams updating the underlying`,
@@ -180,8 +198,8 @@ function generateIconModule(lib, names, shape = "names") {
   const moduleDoc = [
     ...headlineDoc,
     ``,
-    `Source: Material Symbols ligature names from @iconify-json/material-symbols`,
-    `(base icons, style-suffix-free). ${names.length} icons total.`,
+    ...attributionLines.slice(0, -1),
+    `${attributionLines[attributionLines.length - 1]} ${names.length} icons total.`,
     ``,
     // `elm make --docs` (what `elm publish` runs) requires a `@docs` entry for
     // EVERY exposed value, not just a representative one — `@docs custom` alone
@@ -228,7 +246,7 @@ function generateIconModule(lib, names, shape = "names") {
   // difference is where the ligature string comes from (an unwrapped `Name`, or
   // the closed-over literal in a per-icon helper).
   const produce = (ligatureExpr) =>
-    `    Ir.fromNode (Ir.node "m3e-icon" (Ir.attribute "name" ${ligatureExpr} :: attrs) (List.map HtmlIr.Element.toNode kids))`;
+    `    Ir.fromNode (Ir.node "${tag}" (Ir.attribute "name" ${ligatureExpr} :: attrs) (List.map HtmlIr.Element.toNode kids))`;
 
   // Shape-specific preamble + per-icon declarations.
   const preambleDecls = [];
@@ -237,7 +255,7 @@ function generateIconModule(lib, names, shape = "names") {
   if (namesShape) {
     preambleDecls.push(
       [
-        `{-| An opaque Material Symbols ligature name.`,
+        `{-| An opaque ${iconFamily} ligature name.`,
         ``,
         `Construct one from the enumerated values below, or with \`custom\`.`,
         `-}`,
@@ -245,7 +263,7 @@ function generateIconModule(lib, names, shape = "names") {
         `    = Name String`,
       ].join("\n"),
       [
-        `{-| Render an icon \`Name\` as an \`m3e-icon\` element.`,
+        `{-| Render an icon \`Name\` as an \`${tag}\` element.`,
         `-}`,
         formatSig("icon", ["Name", ...sigParts.slice(0, 2)], sigParts[2]),
         `icon (Name ligature) attrs kids =`,
@@ -404,6 +422,9 @@ function run(argv, configFromPaths, outputDir) {
   let catalogPath = null;
   let pkg = null; // optional `package` sub-object for standalone package emission
   let shape = "names"; // "names" (published, under the docs.json cap) | "functions"
+  let tag = null; // required — DOM tag the generated element/helpers emit (e.g. "m3e-icon")
+  let iconFamily = null; // required — prose name of the icon set (e.g. "Material Symbols")
+  let attribution = null; // optional — free-form "Source: ..." doc text, see generateIconModule
 
   for (const p of configFromPaths) {
     if (!/\.json$/.test(p)) continue;
@@ -416,6 +437,9 @@ function run(argv, configFromPaths, outputDir) {
         if (m.catalogFrom) catalogPath = m.catalogFrom;
         if (m.package && typeof m.package === "object") pkg = m.package;
         if (m.shape) shape = m.shape;
+        if (m.tag) tag = m.tag;
+        if (m.iconFamily) iconFamily = m.iconFamily;
+        if (m.attribution) attribution = m.attribution;
       }
       // Also read _brand as fallback for lib
       if (!lib && c._brand) lib = c._brand;
@@ -433,6 +457,18 @@ function run(argv, configFromPaths, outputDir) {
     return;
   }
 
+  if (!tag || !iconFamily) {
+    // finding 2.1 (2026-08-17 thermonuclear review): a brand opting into
+    // _iconModule without supplying its own tag/iconFamily used to silently
+    // get M3E's "m3e-icon"/"Material Symbols" baked into its output. Fail
+    // loud instead — the caller must say what element and icon family they mean.
+    console.error(
+      "elm-cem gen-icon-module: _iconModule.tag and _iconModule.iconFamily are both required " +
+      "(e.g. \"tag\": \"my-icon\", \"iconFamily\": \"My Icon Set\") — nothing to do"
+    );
+    process.exit(1);
+  }
+
   // Load catalog
   let names;
   try {
@@ -447,7 +483,7 @@ function run(argv, configFromPaths, outputDir) {
     process.exit(1);
   }
 
-  const src = generateIconModule(lib, names, shape);
+  const src = generateIconModule(lib, names, shape, tag, iconFamily, attribution);
 
   // Write to <outputDir>/M3e/Icon.elm (flat src — internal, unexposed artifact)
   const outDir = path.resolve(process.cwd(), outputDir);

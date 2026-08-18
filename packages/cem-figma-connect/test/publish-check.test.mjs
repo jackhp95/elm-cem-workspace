@@ -442,6 +442,10 @@ test("publish: refuses a profile whose kitVersionTag is still the A3 placeholder
     const profile = JSON.parse(fs.readFileSync(path.join(REAL_M3_KIT_DIR, "profile.json"), "utf8"));
     profile.kitVersionTag = "unknown-pre-a3-fixture";
     fs.writeFileSync(path.join(tmpDir, "profile.json"), `${JSON.stringify(profile, null, 2)}\n`);
+    // loadProfile() also requires matcher.json (finding 2.4) — copy the real
+    // m3-kit one so this test still exercises the kitVersionTag guard itself,
+    // not an unrelated "matcher.json missing" failure.
+    fs.copyFileSync(path.join(REAL_M3_KIT_DIR, "matcher.json"), path.join(tmpDir, "matcher.json"));
     await assert.rejects(
       () =>
         publish({

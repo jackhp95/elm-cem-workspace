@@ -17,6 +17,9 @@
 // Every proposal carries an auditable rationale string. Zero deps beyond the
 // two sibling normalize/fusion modules.
 
+import fs from "node:fs";
+import path from "node:path";
+
 import {
   slugify,
   normalizeName,
@@ -28,20 +31,59 @@ import { detectFusionGroups } from "./fusion.mjs";
 import { detectQualifierGroups } from "./qualifier.mjs";
 import { byKey } from "../lib/order.mjs";
 
-// A4 forward-flag: these two tags' CEM description/module fields describe the
-// WRONG element (an upstream dedup artifact, scoped out of A4). Match them on
-// name only — never let their poisoned description feed the fuzzy scorer.
-const DESCRIPTION_UNTRUSTED = new Set(["m3e-menu-item", "m3e-stepper-previous"]);
+// finding 2.4 (2026-08-17 thermonuclear review): this matcher is meant to be
+// design-kit-generic — every brand-calibrated number/word-list below (which
+// tags' descriptions to distrust, the fuzzy-accept threshold, which English
+// words a given kit's authors use for boolean variant options) used to be
+// hardcoded here as M3E/m3-kit constants, contradicting the spine-design
+// doc's promise that kit-specificity stays in profiles/<kit>/. They now live
+// in profiles/<kit>/matcher.json (see profiles/m3-kit/matcher.json for the
+// m3-kit calibration + task-A5-report.md's evidence) and are loaded via
+// `loadMatcherConfig()` below, then threaded through as the `matcherConfig`
+// parameter — this module holds no kit-specific defaults of its own.
+//
+// Shape (post-load, see loadMatcherConfig): {
+//   descriptionUntrusted: Set<cemTag>,     // never let description feed the fuzzy scorer
+//   fuzzyAcceptThreshold: number,
+//   booleanOptionPolarity: Map<word, bool>,
+//   booleanAxisSynonyms: Map<axisWord, cemAttrWord>,
+//   multiBooleanAffinity: [word, cemAttrName][],
+// }
 
-// Calibrated against the checked-in m3-kit fixture (task-A5-report.md): the
-// best-scoring correct fuzzy match ("Assistive chip" → m3e-assist-chip, 0.524)
-// sits alone above a noise floor of *wrong* best-matches at ≤ 0.444 (e.g.
-// "Radio buttons" → m3e-split-button). 0.50 sits in that cliff — it admits the
-// one unambiguous semantic win and rejects the noise. Abbreviation matches
-// (nav↔navigation) that pure edit-distance scores below this are deliberately
-// NOT forced through: they'd need an abbreviation table and risk false
-// positives; they surface in the gap report for human review instead (D6).
-const FUZZY_ACCEPT_THRESHOLD = 0.5;
+// Load + validate a design-kit's matcher calibration from
+// <profileDir>/matcher.json. Required — there is no brand-neutral fallback
+// for "which words mean true" or "how strict is fuzzy matching", so a
+// profile missing this file fails loud rather than silently borrowing
+// another kit's calibration.
+export function loadMatcherConfig(profileDir) {
+  const file = path.join(profileDir, "matcher.json");
+  let raw;
+  try {
+    raw = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    throw new Error(`matcher: could not read required ${file}: ${e.message}`);
+  }
+  const required = [
+    "descriptionUntrusted",
+    "fuzzyAcceptThreshold",
+    "booleanOptionPolarity",
+    "booleanAxisSynonyms",
+    "multiBooleanAffinity",
+  ];
+  for (const field of required) {
+    if (raw[field] === undefined) {
+      throw new Error(`matcher: ${file} is missing required field "${field}"`);
+    }
+  }
+  return {
+    descriptionUntrusted: new Set(raw.descriptionUntrusted),
+    fuzzyAcceptThreshold: raw.fuzzyAcceptThreshold,
+    booleanOptionPolarity: new Map(raw.booleanOptionPolarity),
+    booleanAxisSynonyms: new Map(raw.booleanAxisSynonyms),
+    multiBooleanAffinity: raw.multiBooleanAffinity,
+  };
+}
+
 const DOC_URL_RE = /m3\.material\.io\/components\/[a-z0-9-]+/gi;
 const STOPWORDS = new Set([
   "a", "an", "the", "and", "or", "of", "to", "for", "with", "that", "this",
@@ -95,33 +137,21 @@ function booleanAttributes(component) {
   return component.attributes.filter((a) => a.kind === "boolean");
 }
 
-// The boolean option vocabulary: which folded Figma option words read as the
-// TRUE vs FALSE pole. Kept minimal + auditable (the three pairs the M3 kit
-// actually uses on its boolean variant axes) — extend deliberately.
-const BOOLEAN_OPTION_POLARITY = new Map([
-  ["true", true], ["false", false],
-  ["on", true], ["off", false],
-  ["yes", true], ["no", false],
-]);
-
-// Axis-name (folded) → the CEM boolean attribute name it denotes, for the cases
-// where the Figma axis and the @m3e/web attribute are domain synonyms rather
-// than name-identical. Tiny by design (Figma "Selected" == the `checked`
-// boolean); grow only as real kit cases demand.
-const BOOLEAN_AXIS_SYNONYMS = new Map([
-  ["selected", "checked"],
-]);
+// The boolean option vocabulary (which folded Figma option words read as the
+// TRUE vs FALSE pole) and the axis-name→attr synonym table are both loaded
+// from the profile's matcher.json — see loadMatcherConfig() above.
 
 // A Figma VARIANT axis with exactly two options forming a boolean pair (True/
 // False, On/Off, Yes/No) has no ENUM CEM counterpart, so proposeAxis()'s enum
 // scan leaves it unmapped — yet a BOOLEAN CEM attr represents it exactly. Bind
 // such an axis to the boolean attr picked by NAME affinity: name-identical
-// after folding, or via BOOLEAN_AXIS_SYNONYMS. We never guess when no name
-// matches (switch's second `Icon` True/False axis has no boolean attr named for
-// it → stays unmapped) — binding an arbitrary boolean would silently mis-drive.
-function proposeBooleanAxis(axis, component) {
+// after folding, or via `matcherConfig.booleanAxisSynonyms`. We never guess
+// when no name matches (switch's second `Icon` True/False axis has no boolean
+// attr named for it → stays unmapped) — binding an arbitrary boolean would
+// silently mis-drive.
+function proposeBooleanAxis(axis, component, matcherConfig) {
   if (!Array.isArray(axis.options) || axis.options.length !== 2) return null;
-  const polarities = axis.options.map((o) => BOOLEAN_OPTION_POLARITY.get(foldIdentity(o)));
+  const polarities = axis.options.map((o) => matcherConfig.booleanOptionPolarity.get(foldIdentity(o)));
   if (polarities.some((p) => p === undefined)) return null; // not boolean-shaped words
   if (polarities[0] === polarities[1]) return null; // both same pole → not a real pair
 
@@ -134,8 +164,8 @@ function proposeBooleanAxis(axis, component) {
   // OVERRIDE a name-exact hit.
   const axisFold = foldIdentity(axis.name);
   let attr = bools.find((a) => foldIdentity(a.name) === axisFold);
-  if (!attr && BOOLEAN_AXIS_SYNONYMS.has(axisFold)) {
-    const syn = BOOLEAN_AXIS_SYNONYMS.get(axisFold);
+  if (!attr && matcherConfig.booleanAxisSynonyms.has(axisFold)) {
+    const syn = matcherConfig.booleanAxisSynonyms.get(axisFold);
     attr = bools.find((a) => foldIdentity(a.name) === syn);
   }
   if (!attr) return null;
@@ -159,21 +189,10 @@ function proposeBooleanAxis(axis, component) {
   };
 }
 
-// Vocabulary for recognising which Figma option name implies the TRUE pole of
-// a CEM boolean attribute — by folded whole-word match. Each entry is
-// [wordThatImpliesTrue, cemAttrName]. A word matches an option when the
-// folded option is EXACTLY that word or ENDS WITH that word (allowing an
-// "error " qualifier prefix — e.g. "Error selected" folds to "errorselected"
-// and ends with "selected"). "un…" negations are thereby excluded: "unselected"
-// ends with "selected" BUT "unselected" starts with "un", so we additionally
-// require the match not be preceded by "un" in the folded token.
-// Kept minimal: extend only for real new kit cases.
-const MULTI_BOOLEAN_AFFINITY = [
-  // [ wordThatImpliesTrue (folded), cemAttrName ]
-  ["selected", "checked"],
-  ["indeterminate", "indeterminate"],
-];
-
+// The multi-boolean affinity vocabulary ([wordThatImpliesTrue, cemAttrName]
+// pairs, matched by folded whole-word match — see affinityMatch below) is
+// loaded from the profile's matcher.json (`multiBooleanAffinity`).
+//
 // Returns true when `word` is a "positive" match in the folded option token:
 // the token is exactly `word`, or it ends with `word` without the "un" prefix
 // (e.g. "errorselected" ends with "selected" and has no "un" before it).
@@ -185,13 +204,13 @@ function affinityMatch(foldedOption, word) {
   return !prefix.endsWith("un");
 }
 
-// proposeMultiAttrAxis(axis, component) -> proposal | null
+// proposeMultiAttrAxis(axis, component, matcherConfig) -> proposal | null
 //
 // Detects when one Figma axis drives MULTIPLE CEM boolean attrs, e.g.
 // checkbox's Type axis: "Selected"→checked=true, "Indeterminate"→
 // indeterminate=true, everything else→neither. General rule:
 //
-//   1. For each MULTI_BOOLEAN_AFFINITY [word, cemAttr]:
+//   1. For each `matcherConfig.multiBooleanAffinity` [word, cemAttr]:
 //      a. The component must have a boolean attr named `cemAttr`.
 //      b. At least one Figma axis option must affinity-match `word` (after
 //         folding) — excluding "un…" negations.
@@ -204,12 +223,12 @@ function affinityMatch(foldedOption, word) {
 //
 // The result carries `attrs: [{attr, valueMap}]` (one entry per firing CEM
 // attr) and `kind: "multi-boolean"`.
-function proposeMultiAttrAxis(axis, component) {
+function proposeMultiAttrAxis(axis, component, matcherConfig) {
   const bools = booleanAttributes(component);
   if (bools.length < 2) return null; // need at least 2 boolean attrs to fire
 
   const firings = []; // { attr: name, matchingOptions: [figmaOption, ...] }
-  for (const [word, cemAttrName] of MULTI_BOOLEAN_AFFINITY) {
+  for (const [word, cemAttrName] of matcherConfig.multiBooleanAffinity) {
     const boolAttr = bools.find((a) => foldIdentity(a.name) === cemAttrName);
     if (!boolAttr) continue;
     const matching = axis.options.filter((opt) => affinityMatch(foldIdentity(opt), word));
@@ -252,7 +271,7 @@ function proposeMultiAttrAxis(axis, component) {
 // axis maps when some enum attribute's value set covers a majority of the
 // axis's options (each option value-matched, tolerant of synonyms + typos).
 // Axes with no CEM counterpart return { mapped:false, reason }.
-export function proposeAxis(axis, component) {
+export function proposeAxis(axis, component, matcherConfig) {
   const enums = enumAttributes(component);
   let best = null;
   for (const attr of enums) {
@@ -279,11 +298,11 @@ export function proposeAxis(axis, component) {
   if (!best || best.coverage < 0.6) {
     // No ENUM attribute represents this axis — try the BOOLEAN path (a 2-option
     // boolean-shaped axis → a name-affine boolean attr) before giving up.
-    const boolProposal = proposeBooleanAxis(axis, component);
+    const boolProposal = proposeBooleanAxis(axis, component, matcherConfig);
     if (boolProposal) return boolProposal;
     // Try the MULTI-ATTR boolean path (axis drives 2+ boolean attrs by name
     // affinity, e.g. checkbox Type → {checked, indeterminate}).
-    const multiProposal = proposeMultiAttrAxis(axis, component);
+    const multiProposal = proposeMultiAttrAxis(axis, component, matcherConfig);
     if (multiProposal) return multiProposal;
     return {
       axis: axis.name,
@@ -461,13 +480,13 @@ function proposeFusionValues(group, component) {
 
 // Score a candidate (Figma side) against a CEM component. Three normalized
 // signals, weighted; returns { score, signals } for auditable rationale.
-function fuzzyScore(candidate, component) {
+function fuzzyScore(candidate, component, matcherConfig) {
   const slugDist = editDistance(candidate.slug, normalizeName(component.tag));
   const maxLen = Math.max(candidate.slug.length, normalizeName(component.tag).length, 1);
   const nameSignal = Math.max(0, 1 - slugDist / maxLen);
 
   let descSignal = 0;
-  if (!DESCRIPTION_UNTRUSTED.has(component.tag)) {
+  if (!matcherConfig.descriptionUntrusted.has(component.tag)) {
     descSignal = jaccard(candidate.descTokens, descriptionTokens(component.description));
   }
 
@@ -678,11 +697,19 @@ function resolveAmbiguousExact(exactHits, candidate) {
 
 // -- top-level match ---------------------------------------------------------
 
-// match(cem, figma) -> { candidates }
+// match(cem, figma, matcherConfig) -> { candidates }
 //   candidates: array of { cemTag, figmaSetIds, tier, score, rationale, ... }
 //   where the "..." carries kind-specific proposals (axes/properties/fusion/
 //   valueTable). Gaps are included with cemTag=null and tier="gap".
-export function match(cem, figma) {
+//   `matcherConfig` (required, see loadMatcherConfig above) is the design
+//   kit's calibration — this function has no brand-specific defaults.
+export function match(cem, figma, matcherConfig) {
+  if (!matcherConfig) {
+    throw new Error(
+      "match: matcherConfig is required (load it via loadMatcherConfig(profileDir) — " +
+      "the generic matcher has no brand-neutral fallback for kit-specific calibration)"
+    );
+  }
   const { bySlug, enriched, cems } = indexCem(cem);
   const figmaCandidates = buildFigmaCandidates(figma, cems);
   const results = [];
@@ -731,10 +758,10 @@ export function match(cem, figma) {
         let best = null;
         for (const { component: c } of enriched) {
           if (boundCemTags.has(c.tag)) continue;
-          const s = fuzzyScore(candidate, c);
+          const s = fuzzyScore(candidate, c, matcherConfig);
           if (best === null || s.score > best.s.score) best = { c, s };
         }
-        if (best && best.s.score >= FUZZY_ACCEPT_THRESHOLD) {
+        if (best && best.s.score >= matcherConfig.fuzzyAcceptThreshold) {
           component = best.c;
           tier = "fuzzy";
           score = Number(best.s.score.toFixed(3));
@@ -773,14 +800,14 @@ export function match(cem, figma) {
     };
 
     if (component && (candidate.kind === "fusion" || candidate.kind === "contains")) {
-      result.axisProposals = candidate.group.variantAxes.map((axis) => proposeAxis(axis, component));
+      result.axisProposals = candidate.group.variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
       result.fusion = proposeFusionValues(candidate.group, component);
       result.propertyProposals = candidate.group.nonVariantProps.map((p) => proposeProperty(p, component));
     } else if (component && candidate.kind === "set" && candidate.set.properties) {
       const variantAxes = candidate.set.properties
         .filter((p) => p.type === "VARIANT")
         .map((p) => ({ name: p.displayName, options: p.variantOptions ?? [], defaultValue: p.defaultValue }));
-      result.axisProposals = variantAxes.map((axis) => proposeAxis(axis, component));
+      result.axisProposals = variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
       result.propertyProposals = candidate.set.properties
         .filter((p) => p.type !== "VARIANT")
         .map((p) => proposeProperty({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component));

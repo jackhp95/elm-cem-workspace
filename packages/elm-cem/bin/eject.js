@@ -31,18 +31,12 @@ const fs = require("fs");
 const path = require("path");
 const family = require("./family-deps");
 
-// The bundled brand registry. Minimal metadata only; the target @m3e/web version
-// is resolved at runtime (flag, or read from the pulled repo) so elm-cem is not
-// coupled to a brand's upstream version.
-const BRANDS = {
-  m3e: {
-    key: "m3e",
-    namespace: "M3e",
-    package: "jackhp95/elm-m3e",
-    repo: "jackhp95/elm-m3e",
-    webPackage: "@m3e/web",
-  },
-};
+// The brand registry — derived from ../family-configs/*.json (finding 2.3,
+// 2026-08-17 thermonuclear review: this used to be a JS literal with exactly
+// one hardcoded "m3e" entry despite eject being advertised as brand-generic).
+// A second brand is a data change (drop a file in family-configs/), not a
+// code change — see family-configs/README.md.
+const BRANDS = family.BRAND_REGISTRY;
 
 function usage() {
   console.log(

@@ -35,7 +35,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "..");
 const cli = path.join(repo, "bin", "elm-cem.js");
-const fixture = path.join(repo, "tests", "fixtures", "nonm3e.cem.json");
+const fixture = path.join(repo, "tests", "fixtures", "wc-widgets.cem.json");
 const IR = "jackhp95/elm-html-intermediate-representation";
 
 let failures = 0;
@@ -81,6 +81,8 @@ const slotsJsonFor = (deps) =>
       lib: "Nk",
       iconComp: "Icon",
       catalogFrom: "config/icons-catalog.json",
+      tag: "nk-icon",
+      iconFamily: "Nk Icons",
       package: { dir: "nk-icons", name: "test/nk-icons", summary: "nested-pkg registry-check test", version: "1.0.0", deps },
     },
   });

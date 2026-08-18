@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Release gates: regen-drift + registry-check (issue #49, findings NB5 + B2/NB1).
 //
-// Builds a throwaway brand repo from the committed nonm3e fixture (generate →
+// Builds a throwaway brand repo from the committed wc-widgets fixture (finding 2.6: named for its actual brand, not "not-m3e" — M3E is not the default here) (generate →
 // elm-format → package elm.json → package.json), then exercises both gates:
 //
 //   regen-drift    — PASSES on the freshly-generated brand; FAILS after a single
@@ -23,7 +23,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "..");
 const cli = path.join(repo, "bin", "elm-cem.js");
-const fixture = path.join(repo, "tests", "fixtures", "nonm3e.cem.json");
+const fixture = path.join(repo, "tests", "fixtures", "wc-widgets.cem.json");
 const IR = "jackhp95/elm-html-intermediate-representation";
 
 let failures = 0;
@@ -114,6 +114,11 @@ fs.writeFileSync(
       lib: "Wc",
       iconComp: "Icon",
       catalogFrom: "config/icons-catalog.json",
+      // Deliberately NOT "m3e-icon"/"Material Symbols" — this is the
+      // non-M3E fixture proving finding 2.1 is fixed: gen-icon-module.js
+      // must emit THIS tag/prose, not M3E's, and must fail loud without them.
+      tag: "wc-icon",
+      iconFamily: "Test Icons",
       package: {
         dir: "wc-icons",
         name: "test/wc-icons",
@@ -144,6 +149,50 @@ if (genIcons.status !== 0) {
   console.error("gates-test: FAIL — could not generate the nested-pkg test brand");
   process.exit(1);
 }
+
+// finding 2.1 (2026-08-17 thermonuclear review): gen-icon-module.js used to
+// hardcode M3E's "m3e-icon" tag and "Material Symbols" prose regardless of
+// brand. Prove the non-M3E "Wc" fixture above gets ITS OWN tag/prose, not M3E's.
+{
+  const wcIconSrc = fs.readFileSync(path.join(brandIconsSrc, "Wc", "Icon.elm"), "utf8");
+  check(wcIconSrc.includes("wc-icon"), "gen-icon-module emits the config-driven tag (\"wc-icon\") for a non-M3E brand");
+  check(wcIconSrc.includes("Test Icons"), "gen-icon-module emits the config-driven iconFamily (\"Test Icons\") for a non-M3E brand");
+  check(!wcIconSrc.includes("m3e-icon"), "gen-icon-module does NOT leak M3E's \"m3e-icon\" tag into a non-M3E brand's output");
+  check(!wcIconSrc.includes("Material Symbols"), "gen-icon-module does NOT leak M3E's \"Material Symbols\" prose into a non-M3E brand's output");
+}
+
+// A brand that declares _iconModule without tag/iconFamily must fail loud,
+// not silently fall back to M3E's defaults (the exact bug finding 2.1 named).
+{
+  const brandNoTag = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-gates-icons-notag-"));
+  fs.mkdirSync(path.join(brandNoTag, "config"), { recursive: true });
+  fs.writeFileSync(path.join(brandNoTag, "config", "icons-catalog.json"), JSON.stringify({ names: ["menu"] }));
+  fs.writeFileSync(
+    path.join(brandNoTag, "config", "slots.json"),
+    JSON.stringify({ _phantom: true, _iconModule: { lib: "Wc", iconComp: "Icon", catalogFrom: "config/icons-catalog.json" } })
+  );
+  fs.copyFileSync(fixture, path.join(brandNoTag, "custom-elements.json"));
+  fs.writeFileSync(
+    path.join(brandNoTag, "package.json"),
+    JSON.stringify({ name: "elm-wc-icons-notag-test", config: { cem: "custom-elements.json" } }, null, 2)
+  );
+  const genNoTag = spawnSync(
+    "node",
+    [
+      cli,
+      `--flags-from=${path.join(brandNoTag, "custom-elements.json")}`,
+      "--config-from=config/slots.json",
+      `--output=${path.join(brandNoTag, "src")}`,
+    ],
+    { cwd: brandNoTag, encoding: "utf8" }
+  );
+  check(
+    genNoTag.status !== 0 && /_iconModule\.tag/.test(genNoTag.stdout + genNoTag.stderr),
+    "gen-icon-module FAILS LOUD (not a silent M3E-flavored default) when _iconModule.tag/iconFamily are missing",
+    genNoTag.stdout + genNoTag.stderr
+  );
+}
+
 const nestedPkgSrc = path.join(brandIcons, "wc-icons", "src");
 if (fs.existsSync(elmFormat)) {
   spawnSync(elmFormat, [brandIconsSrc, "--yes"], { encoding: "utf8" });
