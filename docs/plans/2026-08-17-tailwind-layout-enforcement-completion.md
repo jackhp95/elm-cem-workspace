@@ -79,7 +79,33 @@ generation moment, and the rule checks membership against it. Mirrors the
 ## L-D — judgment call flagged for Jack
 
 Search capped at 20 matches in raw index order with no relevance ranking, so
-"button" returned 20 guide-prose hits and `/components/button` never surfaced.
-Jack has not ruled on ranking policy; this is reversible and not permission-gated,
-so a sensible default was chosen and is flagged for review. See the commit for the
-scoring actually implemented.
+"button" returned 20 guide-prose hits and `/components/button` never surfaced — a
+user could not reach a component page by typing its name.
+
+**The ranking I chose** (lowest score wins), which Jack has NOT ruled on:
+
+| Score | Rule | Example for "button" |
+| --- | --- | --- |
+| 0 | matched text IS the query | `button` |
+| 1 | STARTS with the query | `Button < Components < elm-m3e` |
+| 2 | a WORD in it starts with the query | `Filled Button`, `Icon button` |
+| 3 | contains it anywhere | `M3e.Component.ButtonGroup` |
+
+Ties break toward page-level entries (`heading = Nothing`) over headings inside a
+page, then original index for stability.
+
+**Why this shape:** page titles here are reverse breadcrumbs
+(`Shared.breadcrumbTitle`), so a page *about* a thing starts with that thing's
+name — score 1 surfaces the component page without needing a special-case
+"boost reference pages" rule. That is a nicer property than URL- or
+section-based boosting: it needs no list of privileged routes and stays correct
+as pages are added.
+
+**What Jack might want differently:** a URL-based boost (`/components/*` above
+`/guide/*`) would be more aggressive and would also rank a component page above a
+guide page that happens to have a better textual match. I chose textual relevance
+over route privilege because it degrades more gracefully, but it is a defensible
+disagreement. Fully reversible — one function, `Shared.filterSearchEntries`.
+
+Result: all 8 `search.spec.ts` cases pass, including the 3 that were failing
+(36, 150, 215).

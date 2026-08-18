@@ -1060,8 +1060,29 @@ searchResults model =
 
 
 {-| Case-insensitive substring match against `heading` (falling back to
-`title` for a page-level entry, where `heading = Nothing`), capped at the
-first 20 matches in index order -- see Global Constraints.
+`title` for a page-level entry, where `heading = Nothing`), RANKED by relevance
+and capped at 20 -- see Global Constraints.
+
+The cap used to take the first 20 matches in raw INDEX order, which made the
+search unable to find its own components. Searching "button" matched ~2700
+entries, and the first 20 in index order were all `/guide/reference` and
+`/guide/roundtrip` prose that happens to mention the word; `/components/button`
+never appeared at all. A user could not reach a component page by typing its
+name.
+
+Ranking, lowest score wins:
+
+1.  the matched text IS the query -- an exact hit;
+2.  it STARTS with the query -- "Button < Components < elm-m3e" for "button".
+    Page titles here are reverse breadcrumbs (see `breadcrumbTitle`), so a page
+    about a thing starts with that thing's name;
+3.  a WORD in it starts with the query -- "Filled Button", "Icon button";
+4.  it merely contains the query somewhere -- "M3e.Component.ButtonGroup".
+
+Ties break toward page-level entries (`heading = Nothing`) over headings buried
+inside a page, then by original index so the order stays deterministic and
+stable.
+
 -}
 filterSearchEntries : String -> List SearchEntry -> List SearchEntry
 filterSearchEntries query entries =
@@ -1069,11 +1090,66 @@ filterSearchEntries query entries =
         needle : String
         needle =
             String.toLower (String.trim query)
+
+        matchedText : SearchEntry -> String
+        matchedText entry =
+            String.toLower (Maybe.withDefault entry.title entry.heading)
+
+        {- Any word starting with the needle, where "word" is a run of
+           alphanumerics -- so `.`, `-`, `/` and `<` all count as boundaries and
+           "M3e.Component.Button" word-matches "button".
+        -}
+        hasWordStartingWithNeedle : String -> Bool
+        hasWordStartingWithNeedle text =
+            text
+                |> String.map
+                    (\c ->
+                        if Char.isAlphaNum c then
+                            c
+
+                        else
+                            ' '
+                    )
+                |> String.words
+                |> List.any (String.startsWith needle)
+
+        relevance : SearchEntry -> Int
+        relevance entry =
+            let
+                text : String
+                text =
+                    matchedText entry
+            in
+            if text == needle then
+                0
+
+            else if String.startsWith needle text then
+                1
+
+            else if hasWordStartingWithNeedle text then
+                2
+
+            else
+                3
+
+        {- A page-level entry names a whole page; a heading names a spot inside
+           one. At equal textual relevance the page is the more useful answer.
+        -}
+        depth : SearchEntry -> Int
+        depth entry =
+            case entry.heading of
+                Nothing ->
+                    0
+
+                Just _ ->
+                    1
     in
     entries
-        |> List.filter
-            (\entry -> String.contains needle (String.toLower (Maybe.withDefault entry.title entry.heading)))
+        |> List.filter (\entry -> String.contains needle (matchedText entry))
+        |> List.indexedMap (\index entry -> ( ( relevance entry, depth entry, index ), entry ))
+        |> List.sortBy Tuple.first
         |> List.take 20
+        |> List.map Tuple.second
 
 
 {-| One result. Primary text is the matched heading when the entry is a
