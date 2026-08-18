@@ -26,6 +26,7 @@ import Doc.Fold as Fold
 import Html exposing (Html, p, text)
 import M3e exposing (Element)
 import M3e.Attributes
+import M3e.Component.AssistChip
 import M3e.Component.Card
 import M3e.Component.ContentPane
 import M3e.Component.Heading
@@ -371,37 +372,22 @@ elmSignature s =
 {-| A rounded "pill" anchor for the reference index (a same-page `#slug` link
 carrying the outline/hover chrome).
 
-The ideal fix is `m3e-assist-chip` (a chip that "carries a native `href`" per
-its own docs — exactly this pill's job). Getting a chip's
-`{ s | assistChip : Brand }` into this function's pinned
-`{ s | sharedText : M3e.Kind.Shared }` needs a kind crossing, and the two
-candidates for that have both been ruled out:
+This IS `m3e-assist-chip`: a chip that carries a native `href`, which is exactly
+this pill's job. It went through a plain `<a>` for a while because the chip's kind
+(`{ s | assistChip : Brand }`) could not satisfy this function's old
+`{ s | sharedText : Shared }` annotation — `s` is rigid inside the body, so the
+compiler could not add the chip's field to whatever the caller had chosen.
 
-  - **`coerce` is gone.** A `_coerce` entry was briefly added for this, then
-    removed along with the whole mechanism: `coerce` served no case that
-    `admits` or `recast` does not already cover. Do not reach for it.
-  - **Widening `admits` does not apply.** `admits` fixes what a SLOT accepts;
-    here the mismatch is in a hand-written function's own return annotation,
-    which no config change reaches.
-
-So the remaining route, per the standing rule, is **`recast`** — the sanctioned,
-centralized, reviewed escape for a crossing that genuinely conflicts with
-Material guidance. That is deliberately NOT done here: a recast needs its own
-justification, and "an assist-chip is phrasing content, not text" argues the
-honest fix is instead to widen this signature (and `chapterLink`'s, in
-`app/Route/Guide.elm`) to accept phrasing — a call-site change, not an escape.
-TODO: pick one of those two before restoring the chip.
-
-Until then this stays a native `<a>` with layout classes only. Its former pill
-chrome (shape, border, hover state, label type scale) is dropped rather than
-recreated in a stylesheet.
+The fix was to widen the annotation rather than to force the crossing. An
+assist-chip genuinely IS phrasing content; the signature was simply too narrow, and
+an escape here would have papered over that rather than fixed it. `Route.Guide`'s
+`chapterLink` re-declares the same type and was widened with it.
 
 -}
-anchorPill : { href : String, label : String } -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
+anchorPill : { href : String, label : String } -> Element { s | assistChip : M3e.Kind.Brand } admittedBy msg
 anchorPill link =
-    TypedHtml.a
-        [ TA.href link.href
-        ]
+    M3e.assistChip
+        [ M3e.Component.AssistChip.href link.href ]
         [ M3e.text link.label ]
 
 

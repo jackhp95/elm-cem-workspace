@@ -60,7 +60,7 @@ head _ =
         |> Seo.website
 
 
-chapterLink : String -> String -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
+chapterLink : String -> String -> Element { s | assistChip : M3e.Kind.Brand } admittedBy msg
 chapterLink href label =
     Doc.anchorPill { href = href, label = label }
 
