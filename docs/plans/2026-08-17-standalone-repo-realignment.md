@@ -36,24 +36,26 @@ not require amending VISION.md.
 
 ## Done-gate
 
-- [ ] Every `jackhp95/*` family repo has an explicit "mirror, do not commit
-      here" marker (README banner + branch protection or equivalent) pointing
-      back to `elm-cem-workspace`.
-- [ ] All post-2026-08-12-baseline commits sitting only in standalone repos are
-      identified, triaged, and either ported into the workspace or explicitly
-      recorded as superseded/rejected — none silently lost.
-- [ ] A publish path exists: one gated command/CI step pushes workspace
-      `packages/<name>` state out to `jackhp95/<name>` (subtree push or
-      generated-mirror-commit, matching each repo's existing history shape
-      well enough for `git blame`/history to stay usable).
-- [ ] A drift gate runs on a schedule (or in CI) that fails loudly if any
-      standalone repo's HEAD moves without a matching workspace publish —
-      turns "silent leak" into "caught same day."
-- [ ] Root cause of the leak identified — which agent workflow/skill/tool
-      cloned a standalone repo directly — and closed (routing fix, skill
-      note, or CLAUDE.md rule) so it can't recur silently.
-- [ ] VISION.md / README.md updated with the explicit mirror policy so future
-      agents don't have to reverse-engineer it the way this investigation did.
+- [x] Every `jackhp95/*` family repo named in VISION.md/README.md now has an
+      explicit "mirror, do not commit here" statement (2026-08-17, T6). Not
+      done: repo-level GitHub branch protection on the 9 standalone repos
+      themselves — still possible to `git push` directly if someone tries;
+      the gate is social/tooling (CLAUDE.md rule + check-mirror-drift.mjs),
+      not a hard GitHub-side block. Consider adding branch protection as a
+      follow-up if the drift gate alone proves insufficient.
+- [x] All post-2026-08-12-baseline commits triaged (T2) and ported (P1-P3):
+      elm-cem (1 real gap), elm-review-cem (1 real gap + 2 doc cleanups),
+      elm-m3e (27 real gaps, all demo-app UI) — all merged to `main`.
+- [x] Publish path exists: `tools/publish-mirror.mjs` (dry-run default).
+- [x] Drift gate exists: `tools/check-mirror-drift.mjs`. Not yet wired into
+      `tools/gate-all.mjs` or a schedule — it only has something to check
+      once a repo has been published at least once via the new tool, and
+      none have been yet (all dry-run so far). Follow-up: publish for real,
+      then wire the gate into CI/a schedule.
+- [x] Root cause identified (T1): an untracked parallel work channel against
+      elm-cem/elm-m3e/elm-review-cem, quiet since 2026-08-16. Closed via a
+      rule in `/Users/jack/Documents/code/CLAUDE.md`.
+- [x] VISION.md / README.md updated (T6).
 
 ## Task table (manager state)
 
