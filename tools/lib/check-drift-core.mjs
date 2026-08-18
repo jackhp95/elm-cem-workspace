@@ -5,11 +5,17 @@
 //
 // Zero dependencies (plain Node ESM).
 
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { generateBundleToTemp } from "./regen.mjs";
+import { generateBundleToTemp, deriveIconNamesFromOutput, serializeIconNames } from "./regen.mjs";
+
+function isGitTracked(repoRoot, absPath) {
+    const relPath = path.relative(repoRoot, absPath);
+    const result = spawnSync("git", ["ls-files", "--error-unmatch", relPath], { cwd: repoRoot, encoding: "utf8" });
+    return result.status === 0;
+}
 
 function diffSummary(committedPath, freshPath) {
     try {
@@ -21,8 +27,9 @@ function diffSummary(committedPath, freshPath) {
 }
 
 // listFilesRecursive(dir) -> sorted relative paths, so directory-listing
-// order differences never masquerade as content differences.
-function listFilesRecursive(dir) {
+// order differences never masquerade as content differences. Exported: also
+// used by tools/check-emit-determinism-cfc.mjs for the same reason.
+export function listFilesRecursive(dir) {
     const out = [];
     const walk = (d, rel) => {
         for (const entry of fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
@@ -178,6 +185,13 @@ export function compareGeneratedPaths({ label, committedRoot, freshRoot, paths }
  * Compare one or more committed bundle-copy files against a fresh
  * regeneration of the producer's output, byte for byte.
  *
+ * Also enforces the two checks the now-retired standalone
+ * `check-bundle-provenance*.mjs` scripts used to do that this generic engine
+ * didn't: every committed file must be git-TRACKED (not merely present on
+ * disk — a `git rm`'d-but-not-committed file would otherwise pass silently),
+ * and — when `iconNames` is given — the opaque-`Name` icon catalog (R-026)
+ * must match a fresh derivation from the same regeneration's Face-A output.
+ *
  * @param {object} opts
  * @param {string} opts.repoRoot
  * @param {string} opts.elmM3e - elm-m3e checkout to generate against (read-only)
@@ -185,14 +199,20 @@ export function compareGeneratedPaths({ label, committedRoot, freshRoot, paths }
  * @param {{committedPath: string, bundleFile: string}[]} opts.files -
  *   committedPath: the file to check (may be a copy, for testing);
  *   bundleFile: its name within the freshly generated bundle (cem-facts.json, elm-api-facts.json)
+ * @param {{committedPath: string}} [opts.iconNames] - if set, also derive the
+ *   icon-Name catalog from the same regeneration's Face-A output and compare
+ *   it against this committed file (cem-figma-connect's icon-names.json).
  * @returns {{ok: boolean, failures: string[]}}
  */
-export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files }) {
+export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files, iconNames }) {
     const failures = [];
 
-    for (const { committedPath } of files) {
+    const trackedTargets = iconNames ? [...files, { committedPath: iconNames.committedPath }] : files;
+    for (const { committedPath } of trackedTargets) {
         if (!fs.existsSync(committedPath)) {
             failures.push(`${label}: ${committedPath} is missing.`);
+        } else if (!isGitTracked(repoRoot, committedPath)) {
+            failures.push(`${label}: ${committedPath} exists but is not git-tracked.`);
         }
     }
     if (!fs.existsSync(elmM3e)) {
@@ -202,9 +222,9 @@ export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files }) {
 
     const work = fs.mkdtempSync(path.join(os.tmpdir(), "check-drift-"));
     try {
-        let bundleDir;
+        let outputDir, bundleDir;
         try {
-            ({ bundleDir } = generateBundleToTemp({ repoRoot, elmM3e, workDir: work, streamOutput: false }));
+            ({ outputDir, bundleDir } = generateBundleToTemp({ repoRoot, elmM3e, workDir: work, streamOutput: false }));
         } catch (e) {
             return { ok: false, failures: [`${label}: regeneration threw: ${e.message}`] };
         }
@@ -221,6 +241,26 @@ export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files }) {
                 const summary = diffSummary(committedPath, freshPath);
                 const lines = summary.split("\n").slice(0, 40).join("\n");
                 failures.push(`${label}: ${committedPath} DRIFTED from a fresh regeneration. First diff lines:\n${lines}`);
+            }
+        }
+
+        if (iconNames) {
+            let freshBytes;
+            try {
+                freshBytes = Buffer.from(serializeIconNames(deriveIconNamesFromOutput(outputDir)), "utf8");
+            } catch (e) {
+                failures.push(`${label}: could not derive icon names from the fresh output: ${e.message}`);
+                freshBytes = null;
+            }
+            if (freshBytes) {
+                const committedBytes = fs.readFileSync(iconNames.committedPath);
+                if (!committedBytes.equals(freshBytes)) {
+                    const freshPath = path.join(work, "icon-names.json");
+                    fs.writeFileSync(freshPath, freshBytes);
+                    const summary = diffSummary(iconNames.committedPath, freshPath);
+                    const lines = summary.split("\n").slice(0, 40).join("\n");
+                    failures.push(`${label}: ${iconNames.committedPath} DRIFTED from a fresh derivation. First diff lines:\n${lines}`);
+                }
             }
         }
     } finally {

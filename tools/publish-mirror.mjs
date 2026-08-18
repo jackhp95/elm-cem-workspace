@@ -48,26 +48,22 @@ const COMMON_EXCLUDE = new Set([
   "pnpm-workspace.yaml",
 ]);
 
-// Per-repo config. `auditedExclusions: true` means a tools/copy-fidelity-*.sh
-// gate already established this repo's authorized-absent set at migration
-// time (see that script for the full list — this table only repeats the
-// common baseline, not every idiosyncratic entry, so cross-check before
-// trusting a "clean" dry-run diff on first use).
-const FAMILY = {
-  "elm-cem": { srcDir: "packages/elm-cem", auditedExclusions: false },
-  "elm-m3e": { srcDir: "packages/elm-m3e", auditedExclusions: true },
-  "elm-cem-compose": { srcDir: "packages/elm-cem-compose", auditedExclusions: false },
-  "elm-html-intermediate-representation": {
-    srcDir: "packages/elm-html-intermediate-representation",
-    auditedExclusions: false,
-  },
-  "elm-review-cem": { srcDir: "packages/elm-review-cem", auditedExclusions: false },
-  "elm-typed-html": { srcDir: "packages/elm-typed-html", auditedExclusions: false },
-  "m3e-okf": { srcDir: "packages/m3e-okf", auditedExclusions: true },
-  "tailwind-m3e-web": { srcDir: "packages/tailwind-m3e-web", auditedExclusions: true },
-  "elm-cem-facts": { srcDir: "packages/elm-cem/facts", auditedExclusions: false },
-  "cem-figma-connect": { srcDir: "packages/cem-figma-connect", auditedExclusions: true },
-};
+// Per-repo config, read from tools/family.json — the single manifest of
+// "which packages exist, where, and what mirror/bundle-copy/copy-fidelity
+// gates apply to them" (Theme 3 of the 2026-08-17 audit, "the manifest
+// move" — this file used to carry its own independently-invented copy of
+// this table). `mirror.auditedExclusions: true` means a `copyFidelity` block
+// in family.json (checked by tools/copy-fidelity.mjs) already established
+// this repo's authorized-absent set at migration time — cross-check
+// tools/family.json + docs/copy-fidelity-notes.md before trusting a "clean"
+// dry-run diff on first use for a package where it's false.
+const rawFamily = JSON.parse(readFileSync(path.join(REPO_ROOT, "tools", "family.json"), "utf8")).packages;
+const FAMILY = Object.fromEntries(
+  Object.entries(rawFamily).map(([name, cfg]) => [
+    name,
+    { srcDir: cfg.srcDir, auditedExclusions: cfg.mirror?.auditedExclusions ?? false },
+  ]),
+);
 
 function sh(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { encoding: "utf8", ...opts });

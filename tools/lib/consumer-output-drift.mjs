@@ -11,9 +11,22 @@
 //
 // Zero dependencies (plain Node ESM).
 
+import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { compareGeneratedPaths, regeneratePackageOutput } from "./check-drift-core.mjs";
+
+// `srcDir` per package is READ from tools/family.json (Theme 3 "manifest
+// move") rather than hardcoded here a second time — this module used to be
+// the audit's "independently invented a second [FAMILY]" (Theme 3 table).
+// The `exclude`/`symlinks`/`paths`/`generate` shape below stays as code: it's
+// each consumer's actual build-pipeline invocation, not portable data.
+function familySrcDir(repoRoot, name) {
+    const family = JSON.parse(fs.readFileSync(path.join(repoRoot, "tools", "family.json"), "utf8")).packages;
+    const pkg = family[name];
+    if (!pkg) throw new Error(`consumer-output-drift: no tools/family.json entry for "${name}"`);
+    return path.join(repoRoot, pkg.srcDir);
+}
 
 function runNodeScript(cwd, relScriptPath, args = []) {
     const result = spawnSync(process.execPath, [relScriptPath, ...args], { cwd, encoding: "utf8" });
@@ -30,7 +43,7 @@ export function consumerOutputDescriptors(repoRoot) {
         {
             key: "cem-figma-connect",
             label: "check-drift: cem-figma-connect generated/m3-kit (regenerate + byte-compare)",
-            pkgDir: path.join(repoRoot, "packages", "cem-figma-connect"),
+            pkgDir: familySrcDir(repoRoot, "cem-figma-connect"),
             // gen:emit is proven byte-deterministic (tools/check-emit-determinism-cfc.mjs);
             // these excludes just skip large, irrelevant subtrees to keep the scratch copy
             // fast — research/ is NOT excluded: figma.mjs reads its figma-export dump as input.
@@ -48,7 +61,7 @@ export function consumerOutputDescriptors(repoRoot) {
         {
             key: "m3e-okf",
             label: "check-drift: m3e-okf components.json + skill/OKF outputs (regenerate + byte-compare)",
-            pkgDir: path.join(repoRoot, "packages", "m3e-okf"),
+            pkgDir: familySrcDir(repoRoot, "m3e-okf"),
             // .cache/m3e is a gitignored upstream checkout (input only, never written by
             // the gen pipeline) — excluded from the copy and symlinked back in read-only.
             exclude: [".cache"],
@@ -69,7 +82,7 @@ export function consumerOutputDescriptors(repoRoot) {
         {
             key: "tailwind-m3e-web",
             label: "check-drift: tailwind-m3e-web generated utilities (regenerate + byte-compare)",
-            pkgDir: path.join(repoRoot, "packages", "tailwind-m3e-web"),
+            pkgDir: familySrcDir(repoRoot, "tailwind-m3e-web"),
             exclude: [],
             symlinks: [],
             paths: ["generated/utilities.css", "generated/CSS_CUSTOM_PROPERTIES.md"],

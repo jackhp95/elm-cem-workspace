@@ -29,9 +29,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { repo } from "./lib/harness.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const elm = path.join(repo, "node_modules", ".bin", "elm");
 const elmFormat = path.join(repo, "node_modules", ".bin", "elm-format");
 // The IR substrate lives beside this repo; the phantom gate resolves it the same way.

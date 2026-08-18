@@ -33,6 +33,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { listFilesRecursive } from "./lib/check-drift-core.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const pkgDir = path.join(repoRoot, "packages", "cem-figma-connect");
@@ -47,22 +48,6 @@ function runEmit() {
     if (result.status !== 0) {
         throw new Error(`gen:emit failed (exit ${result.status}):\n${result.stdout}\n${result.stderr}`);
     }
-}
-
-// listFilesRecursive(dir) -> sorted relative paths, so directory-listing
-// order differences never masquerade as content differences.
-function listFilesRecursive(dir) {
-    const out = [];
-    const walk = (d, rel) => {
-        for (const entry of fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
-            const full = path.join(d, entry.name);
-            const relPath = rel ? `${rel}/${entry.name}` : entry.name;
-            if (entry.isDirectory()) walk(full, relPath);
-            else out.push(relPath);
-        }
-    };
-    if (fs.existsSync(dir)) walk(dir, "");
-    return out;
 }
 
 function snapshot(label) {

@@ -514,14 +514,14 @@ ariaSpecificName barrelName =
 
 {-| The `(attr, token)` a barrel value combined un-folds to, or `Nothing` if
 it names none of `fact`'s enum tokens. Inverts `PreferBarrel.combinedName`
-(`dropTrailingUnderscore attr ++ capitalizeFirst token`) over `fact.enums`, so
+(`dropTrailingUnderscore attr ++ Facts.capitalize token`) over `fact.enums`, so
 the keyword-attr underscore strip matches (`typeButton` → `type_` + `button`).
 -}
 combinedExpansion : Fact -> String -> Maybe ( String, String )
 combinedExpansion fact combined =
     fact.enums
         |> List.concatMap (\( attr, tokens ) -> List.map (\token -> ( attr, token )) tokens)
-        |> List.filter (\( attr, token ) -> dropTrailingUnderscore attr ++ capitalizeFirst token == combined)
+        |> List.filter (\( attr, token ) -> dropTrailingUnderscore attr ++ Facts.capitalize token == combined)
         |> List.head
 
 
@@ -532,16 +532,6 @@ dropTrailingUnderscore s =
 
     else
         s
-
-
-capitalizeFirst : String -> String
-capitalizeFirst s =
-    case String.uncons s of
-        Just ( c, rest ) ->
-            String.cons (Char.toUpper c) rest
-
-        Nothing ->
-            s
 
 
 checkSlots : Context -> Fact -> Node Expression -> List (Error {})

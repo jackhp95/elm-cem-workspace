@@ -8,10 +8,9 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { repo } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const CLI = path.join(here, "..", "bin", "elm-cem.js");
+const CLI = path.join(repo, "bin", "elm-cem.js");
 
 function fakeBrand(name, lib) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `brand-sync-${name}-`));

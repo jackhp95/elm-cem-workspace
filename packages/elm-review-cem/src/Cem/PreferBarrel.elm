@@ -231,7 +231,7 @@ combinedName fact attrName tokenName =
         |> Maybe.andThen
             (\( _, tokens ) ->
                 if List.member tokenName tokens then
-                    Just (dropTrailingUnderscore attrName ++ capitalizeFirst tokenName)
+                    Just (dropTrailingUnderscore attrName ++ Facts.capitalize tokenName)
 
                 else
                     Nothing
@@ -245,16 +245,6 @@ dropTrailingUnderscore s =
 
     else
         s
-
-
-capitalizeFirst : String -> String
-capitalizeFirst s =
-    case String.uncons s of
-        Just ( c, rest ) ->
-            String.cons (Char.toUpper c) rest
-
-        Nothing ->
-            s
 
 
 unwrapParens : Node Expression -> Node Expression

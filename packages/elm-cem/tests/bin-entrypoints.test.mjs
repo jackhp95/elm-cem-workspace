@@ -28,21 +28,11 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { repo, makeCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const binDir = path.join(repo, "bin");
 
-let failures = 0;
-const ok = (msg) => console.log(`bin-entrypoints-test: OK — ${msg}`);
-const check = (cond, msg, extra = "") => {
-  if (cond) ok(msg);
-  else {
-    console.error(`bin-entrypoints-test: FAIL — ${msg}${extra ? "\n" + extra : ""}`);
-    failures++;
-  }
-};
+const { check, finish } = makeCheck("bin-entrypoints-test");
 
 // A bin file is an ENTRY POINT if it exports a `run`. `bin/elm-cem.js` is the
 // dispatcher itself (no `run` export, always executes) and is covered by every
@@ -92,8 +82,4 @@ try {
   );
 }
 
-if (failures > 0) {
-  console.error(`\nbin-entrypoints-test: ${failures} FAILURE(S)`);
-  process.exit(1);
-}
-console.log("\nbin-entrypoints-test: ALL ENTRY POINTS EXECUTE");
+finish("\nbin-entrypoints-test: ALL ENTRY POINTS EXECUTE");

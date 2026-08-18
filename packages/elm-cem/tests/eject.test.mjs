@@ -17,11 +17,9 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { repo, makeCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const require = createRequire(import.meta.url);
 const eject = require(path.join(repo, "bin", "eject.js"));
 
@@ -30,15 +28,7 @@ const FACTS = "jackhp95/elm-cem-facts";
 const M3E = "jackhp95/elm-m3e";
 const brand = eject.BRANDS.m3e;
 
-let failures = 0;
-const ok = (m) => console.log(`eject-test: OK — ${m}`);
-const check = (cond, m) => {
-  if (cond) ok(m);
-  else {
-    failures += 1;
-    console.error(`eject-test: FAIL — ${m}`);
-  }
-};
+const { check, finish } = makeCheck("eject-test");
 
 // Build a synthetic vendored M3e tree. `withReviewFacts` includes the one module
 // that imports Cem.Facts.
@@ -137,8 +127,4 @@ function makeVendorTree(withReviewFacts) {
   check(skip.mode === "skip", "no --with-review → skip");
 }
 
-if (failures) {
-  console.error(`\neject-test: ${failures} FAILED`);
-  process.exit(1);
-}
-console.log("\neject-test: ALL TESTS PASSED");
+finish("\neject-test: ALL TESTS PASSED", "FAILED");

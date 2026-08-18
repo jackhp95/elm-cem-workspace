@@ -25,21 +25,11 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { repo, makeCheck } from "./lib/harness.mjs";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const cli = path.join(repo, "bin", "elm-cem.js");
 
-let failures = 0;
-const ok = (msg) => console.log(`check-gates-test: OK — ${msg}`);
-const check = (cond, msg, extra = "") => {
-  if (cond) ok(msg);
-  else {
-    console.error(`check-gates-test: FAIL — ${msg}${extra ? "\n" + extra : ""}`);
-    failures++;
-  }
-};
+const { check, finish } = makeCheck("check-gates-test");
 
 // A minimal package.json that is already clean under rules 1–3: `check:x` is
 // the only check:*/test:* script, and `gate` reaches it. Without this, rule 1
@@ -207,8 +197,4 @@ try {
   for (const d of tmpDirs) fs.rmSync(d, { recursive: true, force: true });
 }
 
-if (failures > 0) {
-  console.error(`\ncheck-gates-test: ${failures} FAILURE(S)`);
-  process.exit(1);
-}
-console.log("\ncheck-gates-test: ALL CHECKS PASSED");
+finish("\ncheck-gates-test: ALL CHECKS PASSED");
