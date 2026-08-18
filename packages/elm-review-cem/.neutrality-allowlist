@@ -284,3 +284,18 @@ src/NoNonLayoutTailwindClasses.elm::`m3e-crd-padding-4` slip through: it is not 
 src/NoNonLayoutTailwindClasses.elm::what Tailwind's `-*` suffix means: `@utility m3e-card-padding-*` admits
 src/NoNonLayoutTailwindClasses.elm::`m3e-card-padding-[0.625rem]` and `m3e-card-padding-4`.
 src/NoNonLayoutTailwindClasses.elm::{-| A bare arbitrary property (`[--m3e-inset:auto]`, `[color:red]`). Setting a
+
+# NoHandEditedGeneratedM3e.elm (+ its elm.json exposed-modules entry): the Wave 1
+# committed-copy anti-drift guard (rollout plan §5.2). Its detection LOGIC is
+# namespace-agnostic (a `vendor/**/*` glob + a length-compare against a JSON manifest
+# via FilePattern/Dict/Decode; no design-system string is compared in code) — but its
+# NAME, the manifest filename `m3e-manifest.json`, and every user-facing message
+# ("Vendored M3e file …") bake in "M3e" because the guard was built specifically for
+# the M3e committed-copy vendoring scheme. This whole-file allowance restores the gate
+# to GREEN: the rule was added in Wave 1 (commit 81d97bd) without a neutrality pass — a
+# verification gap — so it merged inherited-RED to main (6168615). FOLLOW-UP (Jack
+# decision): the rollout plan intends sibling brands to inherit this rule, which argues
+# for brand-parameterizing it (configurable rule name / manifest path / message brand)
+# to be TRULY neutral; if that is done, retire this whole-file entry.
+file:src/NoHandEditedGeneratedM3e.elm
+elm.json::"NoHandEditedGeneratedM3e",
