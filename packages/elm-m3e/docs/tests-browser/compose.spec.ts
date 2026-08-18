@@ -428,6 +428,88 @@ test("collapsing a card hides its body", async ({ page }) => {
   await expect(rootSlotsCaption).toBeVisible();
 });
 
+test("attributes and slots are visually separated by a divider, and empty vs filled slot chips differ (Part 3)", async ({
+  page,
+}) => {
+  await page.goto("/components/compose");
+
+  // The root "list" card has both an Attributes group (e.g. "variant") and a
+  // Slots group ("unnamed"), so a divider marks the boundary between them.
+  await expect(page.locator(".compose-attr-slot-divider").first()).toBeVisible();
+
+  // A FILLED slot chip (the root's "unnamed" holds the two starter listItems)
+  // drops the `add` icon and shows its count badge — it reads as content, not
+  // an add affordance. Its button also carries the `compose-slot-filled` marker.
+  const filledSlot = page.getByRole("button", { name: "unnamed" }).first();
+  await expect(filledSlot).toHaveClass(/compose-slot-filled/);
+  await expect(filledSlot.locator("m3e-badge")).toHaveCount(1);
+  await expect(filledSlot.locator('m3e-icon[name="add"]')).toHaveCount(0);
+
+  // An EMPTY slot chip (a listItem's "overline") keeps the `add` affordance
+  // and shows no count badge — categorically the other chip kind, marked
+  // `compose-slot-empty`.
+  const emptySlot = page.getByRole("button", { name: /overline/ }).first();
+  await expect(emptySlot).toHaveClass(/compose-slot-empty/);
+  await expect(emptySlot.locator('m3e-icon[name="add"]')).toHaveCount(1);
+  await expect(emptySlot.locator("m3e-badge")).toHaveCount(0);
+});
+
+test("child cards are indented per nesting level (Part 4)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // Build list > listItem > (trailing) checkbox — three levels, buttons and
+  // panels only, no hand-authored code.
+  await page.getByRole("button", { name: "unnamed" }).first().click();
+  const unnamedPanel = page.locator(".compose-slot-add-panel");
+  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
+  await page.getByRole("button", { name: "trailing" }).last().click();
+
+  const panel = page.locator(".compose-slot-add-panel");
+  await panel.getByRole("button", { name: "Nest a component...", exact: true }).click();
+  await panel.locator(".compose-component-picker").getByRole("button", { name: "Checkbox", exact: true }).click();
+
+  await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
+
+  // The depth-2 card (the checkbox) sits objectively further right than the
+  // depth-1 card (its parent listItem) — indentation is present, not just
+  // visually claimed. Each `childRow` wraps a node in a fixed left indent
+  // that compounds with depth, marked `compose-depth-N`.
+  const depth1Card = page.locator(".compose-depth-1 > m3e-card").last();
+  const depth2Card = page.locator(".compose-depth-2 > m3e-card").last();
+  const b1 = await depth1Card.boundingBox();
+  const b2 = await depth2Card.boundingBox();
+  expect(b1).not.toBeNull();
+  expect(b2).not.toBeNull();
+  expect(b2!.x).toBeGreaterThan(b1!.x);
+});
+
+test("the live preview has a labeled output frame (Part 5)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // The rendered tree reads as an OUTPUT region, not incidental page copy —
+  // a labeled `.compose-preview` frame (accessible region + visible caption)
+  // that the test can locate, holding the live custom elements.
+  const preview = page.locator(".compose-preview");
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAttribute("aria-label", "Live preview");
+  await expect(preview.getByText("Live preview", { exact: true })).toBeVisible();
+  await expect(preview.locator("m3e-list")).toHaveCount(1);
+});
+
+test("the root-card explainer renders on first load and is dismissible (Part 6)", async ({ page }) => {
+  await page.goto("/components/compose");
+
+  // A one-line caption explains why the root card has no Move/Remove
+  // controls. It renders on first load and dismisses on click.
+  const explainer = page.locator(".compose-root-explainer");
+  await expect(explainer).toBeVisible();
+  await expect(explainer).toContainText("be reordered or removed");
+
+  await explainer.getByRole("button", { name: "Dismiss" }).click();
+  await expect(page.locator(".compose-root-explainer")).toHaveCount(0);
+});
+
 test("screenshot: the opened slot add-panel shows the leading options and the 'Load an example' section together (M-IA2b)", async ({
   page,
 }) => {

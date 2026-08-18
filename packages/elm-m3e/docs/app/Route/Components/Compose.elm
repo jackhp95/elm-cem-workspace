@@ -54,6 +54,7 @@ import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
 import TypedHtml.Component.Button
 import TypedHtml.Component.Grouping as Grouping
+import TypedHtml.Component.Sectioning as Sectioning
 import TypedHtml.Events as TE
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -68,6 +69,7 @@ type alias Model =
     , slotAddPanel : Maybe ( Cem.Compose.Path, String )
     , nestPickerOpen : Bool
     , nestSearch : String
+    , rootExplainerDismissed : Bool
     }
 
 
@@ -83,6 +85,7 @@ type Msg
     | ToggleNestPicker
     | SetNestSearch String
     | PickNestComponent Cem.Compose.Path String String
+    | DismissRootExplainer
 
 
 type alias RouteParams =
@@ -148,6 +151,7 @@ init _ _ =
       , slotAddPanel = Nothing
       , nestPickerOpen = False
       , nestSearch = ""
+      , rootExplainerDismissed = False
       }
     , Effect.none
     )
@@ -254,6 +258,9 @@ update _ _ msg model =
             , Effect.none
             )
 
+        DismissRootExplainer ->
+            ( { model | rootExplainerDismissed = True }, Effect.none )
+
 
 {-| Apply a `Cem.Compose.Msg`, with one consumer-level nicety governed by the
 "Prefill examples" toggle: when it is on, a freshly added text child is seeded
@@ -351,22 +358,83 @@ view app _ model =
         )
 
 
-{-| A heading, the panel bar, the live preview, the recursive editor, and the
-generated-code snippet. Only the panel bar and the editor emit real messages;
-the heading/preview/snippet are static (msg-polymorphic), so they sit in the
-same `Msg`-typed tree without wrapping. `ctx` (this route's `usage`/
-`reference` data) threads down into the editor so its menus can offer "fill
-me with a real example" options and the change-component picker can group by
-category.
+{-| A heading, the panel bar, the labeled live preview, the dismissible root
+explainer, the recursive editor, and the generated-code snippet. Only the
+panel bar and the editor emit real messages; the heading/preview/explainer/
+snippet are static (msg-polymorphic) apart from the explainer's own dismiss
+control, so they sit in the same `Msg`-typed tree without wrapping. `ctx`
+(this route's `usage`/`reference` data) threads down into the editor so its
+menus can offer "fill me with a real example" options and the
+change-component picker can group by category.
 -}
 screen : MenuCtx -> Model -> Element (Grouping.DivIs s) admittedBy Msg
 screen ctx model =
     TypedHtml.div [ TA.class "space-y-4" ]
         [ Doc.pageHeading ("Compose: " ++ Cem.Compose.componentOf model.compose.root)
         , panelBar model
-        , M3e.Unsafe.fromHtml (Render.renderNode model.compose.root)
+        , livePreview model.compose.root
+        , rootExplainer model.rootExplainerDismissed
         , viewNode ctx [] model.compose.root model
         , Doc.codeBlock Doc.Elm (Codegen.codeFor model.compose.root)
+        ]
+
+
+{-| A one-line, dismissible caption above the root card explaining why the
+root looks structurally different from its children (no reorder/remove
+controls) — a silent rule made explicit without adding permanent chrome.
+Dismissal is session-scoped route state (`rootExplainerDismissed`); no
+port/localStorage persistence across reloads — that would need an app-shell
+edit outside this route's own surface, so it is left as a small follow-up.
+Marked `compose-root-explainer` for the test.
+-}
+rootExplainer : Bool -> Element (Grouping.DivIs s) admittedBy Msg
+rootExplainer dismissed =
+    if dismissed then
+        TypedHtml.div [] []
+
+    else
+        TypedHtml.div [ TA.class "compose-root-explainer" ]
+            [ M3e.card
+                [ M3e.Attributes.variant Value.outlined ]
+                [ TypedHtml.div [ TA.class "flex items-center gap-2 px-3 py-2" ]
+                    [ M3e.icon [ TA.name "info" ] []
+                    , TypedHtml.span [ TA.class "flex-1" ]
+                        [ TypedHtml.text "The root card can’t be reordered or removed; use the sidebar to start over with a different root component." ]
+                    , M3e.iconButton
+                        [ Aria.label "Dismiss"
+                        , M3e.Events.onClick DismissRootExplainer
+                        ]
+                        [ M3e.icon [ TA.name "close" ] [] ]
+                    ]
+                ]
+            ]
+
+
+{-| The rendered custom-element tree, wrapped in a labeled output frame so it
+reads as "the live preview" rather than incidental page copy. A semantic
+`section` named "Live preview" (accessible region) wraps an outlined
+`M3e.card` with a small label heading above the rendered tree; the raw
+element tree is erased once through `M3e.Unsafe.fromHtml` inside it (which
+component is on screen is only known at runtime). Marked `compose-preview`
+for the test.
+-}
+livePreview : Cem.Compose.Node -> Element (Sectioning.SectionIs s) admittedBy Msg
+livePreview root =
+    TypedHtml.section
+        [ TA.class "compose-preview"
+        , Aria.label "Live preview"
+        ]
+        [ M3e.card
+            [ M3e.Attributes.variant Value.outlined ]
+            [ TypedHtml.div [ TA.class "flex flex-col gap-2 p-4" ]
+                [ M3e.heading
+                    [ M3e.Attributes.variant Value.label
+                    , M3e.Attributes.size Value.small
+                    ]
+                    [ M3e.text "Live preview" ]
+                , M3e.Unsafe.fromHtml (Render.renderNode root)
+                ]
+            ]
         ]
 
 
@@ -430,15 +498,36 @@ viewNode ctx path node model =
                         []
 
                     else
+                        let
+                            -- Only the expanded branch asks whether this node has
+                            -- both groups (the divider between them is the only
+                            -- consumer), so computing it above the `if` would walk
+                            -- the chip lists for every collapsed node too.
+                            hasAttrs : Bool
+                            hasAttrs =
+                                not (List.isEmpty (Cem.Compose.attrChips path model.compose))
+
+                            hasSlots : Bool
+                            hasSlots =
+                                not (List.isEmpty (Cem.Compose.slotChips path model.compose))
+                        in
                         [ TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                            [ M3e.mapMsg ComposeMsg
-                                (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
-                                    [ attrGroup path model.compose
-                                    , freeTextMenuFor path model.compose
-                                    ]
-                                )
-                            , slotGroup ctx path model
-                            ]
+                            (List.concat
+                                [ [ M3e.mapMsg ComposeMsg
+                                        (TypedHtml.div [ TA.class "flex flex-col gap-3" ]
+                                            [ attrGroup path model.compose
+                                            , freeTextMenuFor path model.compose
+                                            ]
+                                        )
+                                  ]
+                                , if hasAttrs && hasSlots then
+                                    [ M3e.divider [ TA.class "compose-attr-slot-divider" ] [] ]
+
+                                  else
+                                    []
+                                , [ slotGroup ctx path model ]
+                                ]
+                            )
                         , TypedHtml.div [ TA.class "flex flex-col gap-3" ]
                             (childCards ctx path node model)
                         ]
@@ -1081,9 +1170,16 @@ directly instead of opening a one-item panel — a consumer convenience, not a
 core rule (spec §7.2 step 2). Otherwise it toggles this slot's add-panel
 open/closed (`ToggleSlotAddPanel`) — the panel itself, when open, is built as
 a sibling by `slotControl`, not nested here. Every case is an extra-small
-`M3e.button`, never a chip, its content a leading `add` icon (never a literal
-"+") then the slot name, with the fill-count badge (only when the slot is
-non-empty) in the button's own `trailing-icon` slot.
+`M3e.button`, never a chip.
+
+An EMPTY slot and a FILLED slot are categorically different chip kinds ("stop
+overloading the `+`"): an empty slot leads with the `add` icon (its
+affordance is "add your first child") and carries no badge; a filled slot
+drops the `add` icon entirely and shows just its name + fill-count badge (in
+the button's own `trailing-icon` slot) at the heavier `filled` weight (its
+content, not an add affordance). Marked `compose-slot-empty`/
+`compose-slot-filled` so the distinction is test-assertable.
+
 -}
 slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Msg
 slotButtonElement path model info =
@@ -1098,7 +1194,14 @@ slotButtonElement path model info =
                     ToggleSlotAddPanel path info.name
     in
     M3e.button
-        [ M3e.Attributes.size Value.extraSmall
+        [ M3e.Attributes.class
+            (if info.filled > 0 then
+                "compose-slot-filled"
+
+             else
+                "compose-slot-empty"
+            )
+        , M3e.Attributes.size Value.extraSmall
         , M3e.Attributes.variant
             (if info.filled > 0 then
                 Value.filled
@@ -1109,10 +1212,14 @@ slotButtonElement path model info =
         , M3e.Attributes.selected (info.filled > 0)
         , M3e.Events.onClick onClickMsg
         ]
-        ([ M3e.icon [ TA.name "add" ] []
-         , M3e.text info.name
-         ]
-            ++ slotCountTrailing info
+        ((if info.filled > 0 then
+            []
+
+          else
+            [ M3e.icon [ TA.name "add" ] [] ]
+         )
+            ++ M3e.text info.name
+            :: slotCountTrailing info
         )
 
 
@@ -1375,13 +1482,30 @@ childCards ctx path node model =
 {-| A `ChildNode` recurses into `viewNode` (route `Msg`); a `ChildText`/
 `ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
 `M3e.mapMsg ComposeMsg` at this boundary.
+
+A `ChildNode`'s recursive card carries a fixed per-level left indent
+(`pl-6`), so nesting depth reads at a glance the way the code panel's own
+indentation already does. The indent is applied once per `childRow` and
+therefore COMPOUNDS with depth automatically — a depth-2 card sits inside its
+depth-1 parent's own indented wrapper — with no depth arithmetic. The
+`compose-depth-N` marker (N = the child node's own path length) lets a test
+assert the indent is objectively present, not just claimed. `ChildText`/
+`ChildIcon` rows are leaves (never recurse), so they are not indented — only
+structural node nesting earns a level.
+
 -}
 childRow : MenuCtx -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (Grouping.DivIs s) admittedBy Msg
 childRow ctx path slotName index child model =
     case child of
         Cem.Compose.ChildNode inner ->
-            TypedHtml.div []
-                [ viewNode ctx (path ++ [ Cem.Compose.IntoSlot slotName index ]) inner model ]
+            let
+                childPath : Cem.Compose.Path
+                childPath =
+                    path ++ [ Cem.Compose.IntoSlot slotName index ]
+            in
+            TypedHtml.div
+                [ TA.class ("compose-child compose-depth-" ++ String.fromInt (List.length childPath) ++ " pl-6") ]
+                [ viewNode ctx childPath inner model ]
 
         Cem.Compose.ChildText text ->
             M3e.mapMsg ComposeMsg (childFieldRow "Text" text path slotName index model.compose)
