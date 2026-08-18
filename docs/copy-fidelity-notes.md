@@ -108,6 +108,26 @@ move"). The gate itself only needs the path lists; this doc is where the
 
 ## cem-figma-connect
 
+- **Phase 4 token-graph/links feature work** (workspace-ahead-of-upstream,
+  not on `jackhp95/cem-figma-connect`'s `main` — verified only one branch,
+  same SHA as the pinned snapshot, exists there): `docs/PROFILE-CONTRACT.md`,
+  `plans/2026-08-17-figma-elm-config-integration-design.md`,
+  `profiles/m3-kit/facts/icon-names.json`, `profiles/m3-kit/figma-links.json`,
+  `profiles/m3-kit/matcher.json`, `profiles/m3-kit/token-change-report.md`,
+  `profiles/m3-kit/token-graph.json`, `scripts/check-facts.mjs`,
+  `scripts/check-links.mjs`, `src/links/derive.mjs`,
+  `src/tokens/audit-reconcile.test.mjs`, `src/tokens/classify-delta.mjs(.test.mjs)`,
+  `src/tokens/graph.mjs(.test.mjs)`, `src/tokens/tier.test.mjs`,
+  `src/tokens/token-change-report.mjs(.test.mjs)`, `test/check-facts.test.mjs`,
+  `test/fixtures/{b4,evil,toy}-profile/matcher.json`, `test/links.test.mjs`.
+  Git history under `packages/cem-figma-connect/src/tokens/` and
+  `scripts/check-facts.mjs` (e.g. "feat(cem-figma-connect): Phase 1.2/1.3 —
+  facts staleness gate + profile contract doc", the phase4 L1/L3/L5
+  token-graph commits) confirms this is deliberate, substantial in-workspace
+  feature development — not accidental drift — that simply has not been
+  pushed upstream to the standalone repo yet. A separate effort tracks
+  landing this in the standalone repo; copy-fidelity only needs to not treat
+  it as unexplained in the meantime.
 - `pnpm-lock.yaml` / `pnpm-workspace.yaml` — per-repo lockfile + nested pnpm
   workspace, superseded by the root workspace's single lockfile and single
   `pnpm-workspace.yaml` (same treatment as elm-m3e).
@@ -219,6 +239,20 @@ move"). The gate itself only needs the path lists; this doc is where the
 
 ## tailwind-m3e-web
 
+- `bin/check-drift.mjs` / `hooks/pre-push` — the standalone repo's own
+  per-package CI-drift-check script and git pre-push hook. Superseded by the
+  workspace root's single `tools/gate-all.mjs` + root `hooks/pre-push` (the
+  same "one git repo, one meta-gate" reasoning already applied to this
+  package's own `pnpm-lock.yaml`/`pnpm-workspace.yaml` below) — a
+  per-package hook/CI-drift-script would be redundant with, and could drift
+  out of sync with, the root gate.
+- `generated/utilities.json` — the machine-readable manifest companion to
+  `generated/utilities.css`, emitted by `bin/generate-component-utilities.mjs`
+  (`emitUtilityManifest`) from the workspace's own `data/cem-facts.json`. The
+  source repo predates this manifest; it is a deliberate workspace-only
+  build artifact, gitignored nowhere on purpose so `pnpm gen:facts` output is
+  reviewable in `git status`, and legitimately absent from the source repo's
+  tracked set.
 - `pnpm-lock.yaml` / `pnpm-workspace.yaml` — per-repo lockfile +
   standalone-package pnpm workspace declaration (`packages: - .`),
   superseded by the root workspace's single lockfile and single

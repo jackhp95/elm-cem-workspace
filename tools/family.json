@@ -117,8 +117,15 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_TAILWIND_M3E_WEB",
-        "authorizedAbsent": ["pnpm-lock.yaml", "pnpm-workspace.yaml"],
-        "authorizedExtra": ["scripts/gen-facts.mjs", "data/cem-facts.json"],
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/tailwind-m3e-web",
+        "$sourceDefaultNote": "tools/snapshot-refs.json pins tailwind-m3e-web to its real upstream repo+sha, materialized by tools/fetch-snapshots.mjs, rather than defaulting to a $SNAPSHOT_ROOT/tailwind-m3e-web sibling clone that may not exist on every machine.",
+        "authorizedAbsent": [
+          "pnpm-lock.yaml",
+          "pnpm-workspace.yaml",
+          "bin/check-drift.mjs",
+          "hooks/pre-push"
+        ],
+        "authorizedExtra": ["scripts/gen-facts.mjs", "data/cem-facts.json", "generated/utilities.json"],
         "$notes": "docs/copy-fidelity-notes.md#tailwind-m3e-web"
       }
     },
@@ -137,6 +144,8 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_CFC",
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/cem-figma-connect",
+        "$sourceDefaultNote": "tools/snapshot-refs.json pins cem-figma-connect to its real upstream repo+sha, materialized by tools/fetch-snapshots.mjs, rather than defaulting to a $SNAPSHOT_ROOT/cem-figma-connect sibling clone that may not exist on every machine.",
         "authorizedAbsent": [
           "pnpm-lock.yaml",
           "pnpm-workspace.yaml",
@@ -210,9 +219,32 @@
           "profiles/m3-kit/facts/cem-facts.json",
           "profiles/m3-kit/facts/elm-api-facts.json",
           "test/fixtures/cem-facts.m3e-web-2.5.14.json",
-          "scripts/gen-facts.mjs"
+          "scripts/gen-facts.mjs",
+          "docs/PROFILE-CONTRACT.md",
+          "plans/2026-08-17-figma-elm-config-integration-design.md",
+          "profiles/m3-kit/facts/icon-names.json",
+          "profiles/m3-kit/figma-links.json",
+          "profiles/m3-kit/matcher.json",
+          "profiles/m3-kit/token-change-report.md",
+          "profiles/m3-kit/token-graph.json",
+          "scripts/check-facts.mjs",
+          "scripts/check-links.mjs",
+          "src/links/derive.mjs",
+          "src/tokens/audit-reconcile.test.mjs",
+          "src/tokens/classify-delta.mjs",
+          "src/tokens/classify-delta.test.mjs",
+          "src/tokens/graph.mjs",
+          "src/tokens/graph.test.mjs",
+          "src/tokens/tier.test.mjs",
+          "src/tokens/token-change-report.mjs",
+          "src/tokens/token-change-report.test.mjs",
+          "test/check-facts.test.mjs",
+          "test/fixtures/b4-profile/matcher.json",
+          "test/fixtures/evil-profile/matcher.json",
+          "test/fixtures/toy-profile/matcher.json",
+          "test/links.test.mjs"
         ],
-        "$notes": "docs/copy-fidelity-notes.md#cem-figma-connect — includes the 'DELIBERATELY NOT in this list' investigation note about test/fixtures/m3e-web-2.5.14/ (kept, not deleted, despite being on an earlier authorized-deletion list — derive.mjs needs the raw manifest bytes)."
+        "$notes": "docs/copy-fidelity-notes.md#cem-figma-connect — includes the 'DELIBERATELY NOT in this list' investigation note about test/fixtures/m3e-web-2.5.14/ (kept, not deleted, despite being on an earlier authorized-deletion list — derive.mjs needs the raw manifest bytes). Also includes the phase4 token-graph/links feature work note (workspace-ahead-of-upstream, not yet pushed to jackhp95/cem-figma-connect)."
       }
     }
   }
