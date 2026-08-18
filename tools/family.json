@@ -47,7 +47,8 @@
           "plans/2026-08-06-nav-rail-tree-toc.md",
           "plans/2026-08-07-nav-rail-search.md",
           "plans/2026-08-08-welcome-page-url-restructure.md",
-          "specs/2026-08-05-remove-raw-html-element-design.md"
+          "specs/2026-08-05-remove-raw-html-element-design.md",
+          "docs/samples/good/Sample/AccessibleByConstruction/NamelessCode.elm"
         ],
         "authorizedExtra": [
           "docs/scripts/fix-native-bins.mjs",
@@ -65,7 +66,10 @@
           "review/scripts/gen-m3e-utility-names.mjs",
           "review/src/M3eUtilityNames.elm",
           "docs/app/Theme/Sections/CssVariables.elm",
-          "docs/scripts/examples-gen/lib/facts.mjs"
+          "docs/scripts/examples-gen/lib/facts.mjs",
+          ".github/actions/fetch-elm-review-cem/action.yml",
+          "config/figma.generated.json",
+          "docs/samples/bad/Sample/AccessibleByConstruction/NamelessCode.elm"
         ],
         "authorizedExtraPrefixes": ["elm-m3e-families/"],
         "$notes": "Full per-path reasoning for every allowlist entry above (why each is authorized-absent or authorized-extra) lives in docs/copy-fidelity-notes.md#elm-m3e — moved there verbatim from this package's retired tools/copy-fidelity-elm-m3e.sh so the institutional memory survives the consolidation."
@@ -101,7 +105,7 @@
         "sourceEnvVar": "SOURCE_M3E_OKF",
         "sourceDefaultRelToRepoRoot": ".cache/snapshots/m3e-okf",
         "$sourceDefaultNote": "m3e-okf's copy-fidelity gate must compare against the pinned-SHA fetched snapshot, not a live sibling clone — restores the default this package lost when tools/copy-fidelity-m3e-okf.sh was folded into the generic copy-fidelity.mjs (W5 consolidation).",
-        "authorizedAbsent": [],
+        "authorizedAbsent": ["scripts/lib/okf-lib.mjs", "scripts/lib/okf-lib.test.mjs"],
         "authorizedAbsentM6": [".claude-memory/m3e-disclosure-hook-design.md"],
         "authorizedExtra": ["scripts/gen-facts.mjs", "data/cem-facts.json"],
         "$notes": "docs/copy-fidelity-notes.md#m3e-okf"
