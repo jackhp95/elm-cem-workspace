@@ -33,7 +33,7 @@ import path from "node:path";
 import { repo, makeCheck } from "./lib/harness.mjs";
 
 const cli = path.join(repo, "bin", "elm-cem.js");
-const fixture = path.join(repo, "tests", "fixtures", "nonm3e.cem.json");
+const fixture = path.join(repo, "tests", "fixtures", "wc-widgets.cem.json");
 const IR = "jackhp95/elm-html-intermediate-representation";
 
 const { check, finish } = makeCheck("registry-check-nested-pkg-test");
@@ -71,6 +71,8 @@ const slotsJsonFor = (deps) =>
       lib: "Nk",
       iconComp: "Icon",
       catalogFrom: "config/icons-catalog.json",
+      tag: "nk-icon",
+      iconFamily: "Nk Icons",
       package: { dir: "nk-icons", name: "test/nk-icons", summary: "nested-pkg registry-check test", version: "1.0.0", deps },
     },
   });

@@ -1,0 +1,10 @@
+{
+  "$comment": "Synthetic profile for test/emitter-api.test.mjs's adversarial-input tests (finding 2.4 fixture). This profile's tests read its correspondence.json directly and don't run fresh matching — these values only need to exist so loadProfile()/loadMatcherConfig() succeed without borrowing m3-kit's calibration.",
+  "descriptionUntrusted": [],
+  "fuzzyAcceptThreshold": 0.5,
+  "booleanOptionPolarity": [
+    ["true", true], ["false", false]
+  ],
+  "booleanAxisSynonyms": [],
+  "multiBooleanAffinity": []
+}

@@ -15,7 +15,7 @@ import {
   bestValueMatch,
 } from "../src/match/normalize.mjs";
 import { detectFusionGroups } from "../src/match/fusion.mjs";
-import { match, proposeAxis } from "../src/match/matcher.mjs";
+import { match, proposeAxis, loadMatcherConfig } from "../src/match/matcher.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const cem = loadCem(
@@ -24,8 +24,12 @@ const cem = loadCem(
 );
 const figma = loadFigmaExport(path.join(here, "fixtures", "figma-export.m3-kit.json"));
 
+// The m3-kit profile's own calibration (finding 2.4) — these fixtures ARE the
+// m3-kit export, so tests use the same matcher.json a real `match` run would.
+const m3KitMatcherConfig = loadMatcherConfig(path.join(here, "..", "profiles", "m3-kit"));
+
 // Loaded once — both fixtures are large. Every assertion reads these views.
-const { candidates } = match(cem, figma);
+const { candidates } = match(cem, figma, m3KitMatcherConfig);
 const byTag = (tag) => candidates.find((c) => c.cemTag === tag);
 
 // -- normalize.mjs -----------------------------------------------------------
@@ -183,7 +187,7 @@ test("matcher (RC1): a True/False axis maps to a name-affine boolean CEM attr (S
     ],
     slots: [],
   };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.ok(p.mapped, "Selected axis maps");
   assert.equal(p.attribute, "checked", "selected→checked (synonym), not the other boolean attr");
   assert.equal(p.attributeKind, "boolean");
@@ -195,7 +199,7 @@ test("matcher (RC1): a True/False axis maps to a name-affine boolean CEM attr (S
 test("matcher (RC1): a name-exact boolean axis maps (Modal→modal), On/Off polarity honored", () => {
   const axis = { name: "Modal", options: ["Off", "On"], defaultValue: "Off" };
   const component = { attributes: [{ name: "modal", kind: "boolean" }], slots: [] };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.ok(p.mapped, "Modal axis maps to the modal boolean");
   assert.equal(p.attribute, "modal");
   assert.equal(p.attributeKind, "boolean");
@@ -206,7 +210,7 @@ test("matcher (RC1): a name-exact boolean axis maps (Modal→modal), On/Off pola
 test("matcher (RC1): a boolean-shaped axis with no name-affine boolean attr stays unmapped (switch Icon)", () => {
   const axis = { name: "Icon", options: ["False", "True"], defaultValue: "False" };
   const component = { attributes: [{ name: "checked", kind: "boolean" }], slots: [] };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.equal(p.mapped, false, "no boolean attr named/synonymous with 'Icon' — do not guess");
 });
 
@@ -219,7 +223,7 @@ test("matcher (RC1): an enum axis still wins over the boolean path (no regressio
     ],
     slots: [],
   };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.ok(p.mapped);
   assert.equal(p.attribute, "size");
   assert.notEqual(p.attributeKind, "boolean", "enum mapping, not the boolean fallback");
@@ -245,7 +249,7 @@ test("matcher (multi-boolean): checkbox Type axis maps to {checked, indeterminat
     ],
     slots: [],
   };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.ok(p.mapped, "Type axis must map (multi-boolean path)");
   assert.equal(p.kind, "multi-boolean");
   assert.ok(Array.isArray(p.attrs), "attrs array present");
@@ -289,7 +293,7 @@ test("matcher (multi-boolean): 'Unselected' does NOT affinity-match 'selected' (
     ],
     slots: [],
   };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   // With only "Selected" matching checked (not "Unselected"), and no option
   // matching indeterminate, the axis should NOT fire as multi-boolean (only 1
   // attr fires — not enough to be multi-attr). Falls through to unmapped.
@@ -310,7 +314,7 @@ test("matcher (multi-boolean): a non-multi axis (two booleans, but only one fire
     ],
     slots: [],
   };
-  const p = proposeAxis(axis, component);
+  const p = proposeAxis(axis, component, m3KitMatcherConfig);
   assert.equal(p.mapped, false, "State axis stays unmapped — no affinity match");
 });
 
@@ -354,7 +358,7 @@ test("matcher (multi-boolean): checkbox Type axis maps via synthetic fixture (fi
     }],
     standalones: [],
   };
-  const { candidates: synCandidates } = match(synCem, synFigma);
+  const { candidates: synCandidates } = match(synCem, synFigma, m3KitMatcherConfig);
   const checkbox = synCandidates.find((c) => c.cemTag === "m3e-checkbox");
   assert.ok(checkbox, "m3e-checkbox matched");
   const typeAxis = checkbox.axisProposals.find((a) => a.axis === "Type");
@@ -455,7 +459,7 @@ test("matcher (RC2): INSTANCE_SWAP Icon → default slot when component has only
     }],
     standalones: [],
   };
-  const { candidates: synCandidates } = match(synCem, synFigma);
+  const { candidates: synCandidates } = match(synCem, synFigma, m3KitMatcherConfig);
   const synt = synCandidates.find(c => c.cemTag === "m3e-synth-btn");
   assert.ok(synt, "synthetic match found");
   const iconProp = synt.propertyProposals?.find(p => p.property === "Icon");
@@ -498,7 +502,7 @@ test("matcher (RC2): INSTANCE_SWAP Icon → stays unmapped when component has ne
     }],
     standalones: [],
   };
-  const { candidates: noSlotCandidates } = match(synCem, synFigma);
+  const { candidates: noSlotCandidates } = match(synCem, synFigma, m3KitMatcherConfig);
   const noSlot = noSlotCandidates.find(c => c.cemTag === "m3e-no-slots");
   assert.ok(noSlot, "no-slots match found");
   const iconProp = noSlot.propertyProposals?.find(p => p.property === "Icon");
@@ -594,14 +598,14 @@ test("matcher: review fix #6 — shared m3.material.io doc URL contributes to th
 
   // Without a shared doc URL (and with unrelated surrounding description
   // text), the name signal alone doesn't clear the fuzzy threshold.
-  const without = match(mkCem(cemBase), mkFigma(figmaBase));
+  const without = match(mkCem(cemBase), mkFigma(figmaBase), m3KitMatcherConfig);
   const noUrlCandidate = without.candidates[0];
   assert.equal(noUrlCandidate.tier, "gap");
 
   // Add the SAME m3.material.io/components/... URL to both descriptions
   // (otherwise-unrelated text unchanged): the shared-URL signal alone tips
   // the score over FUZZY_ACCEPT_THRESHOLD.
-  const withUrl = match(mkCem(`${cemBase} See ${url}.`), mkFigma(`${figmaBase} Spec: ${url}.`));
+  const withUrl = match(mkCem(`${cemBase} See ${url}.`), mkFigma(`${figmaBase} Spec: ${url}.`), m3KitMatcherConfig);
   const urlCandidate = withUrl.candidates[0];
   assert.equal(urlCandidate.tier, "fuzzy");
   assert.equal(urlCandidate.cemTag, "m3e-glorbwidget");
@@ -646,7 +650,7 @@ test("matcher (Fix 2): a leading-dot set (.Shape-like) does NOT exact-match its 
     ],
     standalones: [],
   };
-  const { candidates: synCandidates } = match(synCem, synFigma);
+  const { candidates: synCandidates } = match(synCem, synFigma, m3KitMatcherConfig);
 
   // The leading-dot set candidate must NOT be exact tier.
   const dotCandidate = synCandidates.find((c) => c.figmaSetIds.includes("DOT:1"));

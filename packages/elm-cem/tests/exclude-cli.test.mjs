@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 import { repo } from "./lib/harness.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const manifest = path.join(here, "fixtures", "nonm3e.cem.json");
+const manifest = path.join(here, "fixtures", "wc-widgets.cem.json");
 
 function fail(msg) {
   console.error(`\nexclude-cli: FAIL — ${msg}`);

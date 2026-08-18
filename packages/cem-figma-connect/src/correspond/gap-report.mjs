@@ -455,7 +455,7 @@ export function runGapReport({ profileDir, loadCem, loadFigmaExport, outPath }) 
   const profile = loadProfile(profileDir);
   const cem = loadCem(profile.cemManifestPath, { dtsDir: profile.cemDtsDir, log: () => {} });
   const figma = loadFigmaExport(profile.figmaExportPath);
-  const { candidates } = match(cem, figma);
+  const { candidates } = match(cem, figma, profile.matcherConfig);
 
   const profileName = path.basename(profileDir);
   const markdown = renderGapReportMarkdown(profileName, cem, candidates);

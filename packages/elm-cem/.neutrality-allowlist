@@ -135,17 +135,19 @@ native-manifest-gen/RESULTS.md
 # distribution-model.md documents the publish/eject model using the real elm-m3e
 # brand as its worked example — a legitimate reference, not coupling.
 docs/distribution-model.md
-# depstamp.test.mjs uses the deliberately-neutral `nonm3e` fixture (a NON-m3e brand);
-# the token is the substring "m3e" inside "nonm3e". Dev test, not shipped.
-tests/depstamp.test.mjs
-# gates.test.mjs likewise builds its throwaway brand from the `nonm3e` fixture
-# (token is "m3e" inside "nonm3e"). Dev test for the regen-drift + registry gates.
+# gates.test.mjs builds its throwaway non-M3E brand from the `wc-widgets` fixture
+# (`tests/fixtures/wc-widgets.cem.json`, renamed from `nonm3e.cem.json` in the
+# 2026-08-18 finding-2.6 pass — M3E should not be the unmarked default name for
+# a generic-forge fixture) and separately cites real `m3e-*`/`elm-m3e` names in
+# doc comments proving its own non-M3E fixtures ("Wc"/"wc-icon") don't leak them.
+# Dev test for the regen-drift + registry gates, not shipped.
 tests/gates.test.mjs
 # registry-check-nested-pkg.test.mjs (batch-4): tests the --nested-pkg drift-gate
-# flow against a `nonm3e.cem.json` fixture and cites the real elm-m3e-icons bug it
-# mirrors, by name, in a doc comment. Dev test, not shipped — same class as the
-# depstamp/gates tests above. Missed by the batch-4 worklog's "green" claim; added
-# on re-verification (2026-08-12).
+# flow against the same `wc-widgets.cem.json` fixture (renamed from
+# `nonm3e.cem.json`, see above) and cites the real elm-m3e-icons bug it mirrors,
+# by name, in a doc comment. Dev test, not shipped — same class as the gates
+# test above. Missed by the batch-4 worklog's "green" claim; added on
+# re-verification (2026-08-12).
 tests/registry-check-nested-pkg.test.mjs
 # Stage-F handoff docs — discuss the m3e family as their subject (like the other release-audit docs); swept pre-squash.
 docs/release-audit/STAGE-F-RUNBOOK.md

@@ -66,7 +66,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component [] [ M3e.TextField.component [] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "flags the barrel facet too" <|
             \() ->
@@ -74,7 +74,7 @@ v = M3e.FormField.component [] [ M3e.TextField.component [] [] ]
 import M3e
 v = M3e.formField [] [ M3e.textField [] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.formField" ]
         , test "accepts a slot=label child (M3e.FormField.label)" <|
             \() ->
@@ -83,7 +83,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component [] [ M3e.FormField.label [ M3e.TextField.component [] [] ], M3e.TextField.component [] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts aria-label on the control (M3e.Aria.label)" <|
             \() ->
@@ -93,7 +93,7 @@ import M3e.TextField
 import M3e.Aria
 v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.Aria.label "Email" ] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts aria-labelledby via any *.Aria module" <|
             \() ->
@@ -108,7 +108,7 @@ labelledby : String -> Int
 labelledby _ = 0
 """
                 ]
-                    |> Review.Test.runOnModules (rule formFieldFacts)
+                    |> Review.Test.runOnModules (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts an id on the control (the <label for> proxy)" <|
             \() ->
@@ -117,7 +117,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.TextField.id "email" ] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts the raw attribute escape hatch (aria-label)" <|
             \() ->
@@ -127,7 +127,7 @@ import M3e.TextField
 import M3e.Html.Attr
 v = M3e.FormField.component [] [ M3e.TextField.component [ M3e.Html.Attr.attribute "aria-label" "Email" ] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts aria-label on the form-field host itself" <|
             \() ->
@@ -137,7 +137,7 @@ import M3e.TextField
 import M3e.Aria
 v = M3e.FormField.component [ M3e.Aria.label "Email" ] [ M3e.TextField.component [] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "unwraps the default-slot setter (M3e.FormField.child) and still flags" <|
             \() ->
@@ -146,7 +146,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component [] [ M3e.FormField.child (M3e.TextField.component [] []) ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "unwraps M3e.FormField.child and accepts an aria-labelled control" <|
             \() ->
@@ -156,7 +156,7 @@ import M3e.TextField
 import M3e.Aria
 v = M3e.FormField.component [] [ M3e.FormField.child (M3e.TextField.component [ M3e.Aria.label "Email" ] []) ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when the content list is unresolved (Seam.field helper)" <|
             \() ->
@@ -165,7 +165,7 @@ import M3e.FormField
 import Seam
 v = M3e.FormField.component [] (Seam.field "email" cfg)
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when the form-field attrs list is unresolved" <|
             \() ->
@@ -174,7 +174,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component dynAttrs [ M3e.TextField.component [] [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when the control is wrapped in an unrecognised native/helper child" <|
             \() ->
@@ -184,7 +184,7 @@ import M3e.TextField
 import Html
 v = M3e.FormField.component [] [ Html.div [] [ M3e.TextField.component [] [] ] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when a default-slot child's attrs are unresolved" <|
             \() ->
@@ -193,7 +193,7 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.component [] [ M3e.TextField.component dynAttrs [] ]
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "silent on an empty form-field (no control to name)" <|
             \() ->
@@ -201,7 +201,7 @@ v = M3e.FormField.component [] [ M3e.TextField.component dynAttrs [] ]
 import M3e.FormField
 v = M3e.FormField.component [] []
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         , test "no-op on a non-form-field component" <|
             \() ->
@@ -210,7 +210,7 @@ import M3e.Card
 v = M3e.Card.component [] []
 """
                     |> Review.Test.run
-                        (rule [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
+                        (rule { componentNoun = "formField" } [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
                     |> Review.Test.expectNoErrors
         , test "resolves a let-bound content list via scope and flags" <|
             \() ->
@@ -223,7 +223,7 @@ v =
     in
     M3e.FormField.component [] content
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.FormField.component" ]
         , test "does not analyse the Build/pipeline facet" <|
             \() ->
@@ -232,6 +232,6 @@ import M3e.FormField
 import M3e.TextField
 v = M3e.FormField.build |> M3e.FormField.withChild (M3e.TextField.component [] []) |> M3e.FormField.toElement
 """
-                    |> Review.Test.run (rule formFieldFacts)
+                    |> Review.Test.run (rule { componentNoun = "formField" } formFieldFacts)
                     |> Review.Test.expectNoErrors
         ]

@@ -32,7 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { match } from "../match/matcher.mjs";
+import { match, loadMatcherConfig } from "../match/matcher.mjs";
 import { validate } from "../lib/validate.mjs";
 import { byKey } from "../lib/order.mjs";
 
@@ -235,7 +235,7 @@ export function entriesFromCandidates(candidates, figma) {
   return entries;
 }
 
-// buildProposals(cem, figma) -> entries[]
+// buildProposals(cem, figma, matcherConfig) -> entries[]
 //
 // Runs the matcher fresh and maps every candidate that carries a real cemTag
 // onto a correspondence entry. Candidates with cemTag:null are Figma-side
@@ -243,8 +243,12 @@ export function entriesFromCandidates(candidates, figma) {
 // report (Plan A7), never in correspondence.json, whose primary key is
 // cemTag. Deterministic: sorted by cemTag so re-runs diff cleanly. See
 // entriesFromCandidates() above for the fail-loud collision contract.
-export function buildProposals(cem, figma) {
-  const { candidates } = match(cem, figma);
+// `matcherConfig` is required (see matcher.mjs's loadMatcherConfig) — this
+// function does not default it, so a caller forgetting to load a profile's
+// matcher.json fails loud instead of silently reusing whatever kit happened
+// to run last.
+export function buildProposals(cem, figma, matcherConfig) {
+  const { candidates } = match(cem, figma, matcherConfig);
   return entriesFromCandidates(candidates, figma);
 }
 
@@ -792,6 +796,11 @@ export function loadProfile(profileDir) {
     ? JSON.parse(fs.readFileSync(manualCorrespondencePath, "utf8"))
     : {};
 
+  // Required — the generic matcher has no brand-neutral fallback for kit
+  // calibration (finding 2.4), so a profile missing matcher.json fails loud
+  // here rather than the matcher silently borrowing another kit's numbers.
+  const matcherConfig = loadMatcherConfig(profileDir);
+
   return {
     fileKey: raw.fileKey,
     kitVersionTag: raw.kitVersionTag,
@@ -801,6 +810,7 @@ export function loadProfile(profileDir) {
     cem: raw.cem,
     emitters: raw.emitters ?? [],
     htmlLabel: raw.htmlLabel ?? {},
+    matcherConfig,
     examples,
     setAttrs,
     manualCorrespondence,
@@ -826,7 +836,7 @@ export function runMatch({ profileDir, correspondencePath, loadCem, loadFigmaExp
     validateManualCorrespondence(profile.manualCorrespondence, { cem, figma });
   }
 
-  const proposed = buildProposals(cem, figma);
+  const proposed = buildProposals(cem, figma, profile.matcherConfig);
   // Apply manual-correspondence AFTER matching but BEFORE the human-preserving
   // merge with what's already on disk. This means every manual entry lands as
   // provenance:"manual"/status:"proposed" in the proposals array, and the

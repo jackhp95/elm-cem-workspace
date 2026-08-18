@@ -337,19 +337,22 @@ redundantAttributeEscape =
 discoverable accessible name — no `slot="label"` child (`<root>.FormField.label`),
 no `aria-label`/`aria-labelledby`, and no `id` (the `<label for>` proxy).
 
-Opt-in — NOT in `Cem.all`. It recognises the form-field component by its
-elm-cem-generated noun and reasons only about the Standard/barrel facet's static
-call structure; it deliberately stays silent on anything it cannot fully resolve
-(so false positives are engineered out at the cost of some false negatives). See
+Opt-in — NOT in `Cem.all`. `config.componentNoun` is YOUR brand's `fact.component`
+value for the form-field tag (elm-cem's noun for `m3e-form-field` is `"formField"`)
+— this package holds no brand's noun hardcoded, same pattern as `Cem.fences`'s
+`brandRoots` or `Cem.redundantElementEscape`'s `seamEscapes`. The rule reasons
+only about the Standard/barrel facet's static call structure; it deliberately
+stays silent on anything it cannot fully resolve (so false positives are
+engineered out at the cost of some false negatives). See
 `Cem.RequireFormFieldLabel` for exactly what counts as accessibly named and the
 static-analysis limitations.
 
     config =
         Cem.all M3e.Review.Facts.facts
-            ++ [ Cem.requireFormFieldLabel M3e.Review.Facts.facts ]
+            ++ [ Cem.requireFormFieldLabel { componentNoun = "formField" } M3e.Review.Facts.facts ]
 
 -}
-requireFormFieldLabel : List Fact -> Rule
+requireFormFieldLabel : { componentNoun : String } -> List Fact -> Rule
 requireFormFieldLabel =
     Cem.RequireFormFieldLabel.rule
 
@@ -359,8 +362,11 @@ requireFormFieldLabel =
 `aria-label`/`aria-labelledby`, and no `id` (the `<label for>` proxy).
 
 Opt-in — NOT in `Cem.all`. The library made `aria-label` optional on Fab at the
-type level, so the accessible-name guarantee lives here instead. It recognises
-the FAB component by its elm-cem-generated noun and reasons only about the
+type level, so the accessible-name guarantee lives here instead.
+`config.componentNoun` is YOUR brand's `fact.component` value for the FAB tag
+(elm-cem's noun for `m3e-fab` is `"fab"`) — this package holds no brand's noun
+hardcoded, same pattern as `Cem.fences`'s `brandRoots` or
+`Cem.redundantElementEscape`'s `seamEscapes`. The rule reasons only about the
 Standard/barrel facet's static call structure; it deliberately stays silent on
 anything it cannot fully resolve (so false positives are engineered out at the
 cost of some false negatives). See `Cem.RequireFabLabel` for exactly what counts
@@ -368,10 +374,10 @@ as accessibly named and the static-analysis limitations.
 
     config =
         Cem.all M3e.Review.Facts.facts
-            ++ [ Cem.requireFabLabel M3e.Review.Facts.facts ]
+            ++ [ Cem.requireFabLabel { componentNoun = "fab" } M3e.Review.Facts.facts ]
 
 -}
-requireFabLabel : List Fact -> Rule
+requireFabLabel : { componentNoun : String } -> List Fact -> Rule
 requireFabLabel =
     Cem.RequireFabLabel.rule
 

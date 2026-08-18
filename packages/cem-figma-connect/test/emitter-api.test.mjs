@@ -305,7 +305,7 @@ function makeThrowawayM3KitProfile() {
   const tmpName = `m3-kit-cli-test-${crypto.randomUUID()}`;
   const tmpProfileDir = path.join(repoRoot, "profiles", tmpName);
   fs.mkdirSync(tmpProfileDir, { recursive: true });
-  for (const file of ["profile.json", "correspondence.json"]) {
+  for (const file of ["profile.json", "correspondence.json", "matcher.json"]) {
     fs.copyFileSync(path.join(repoRoot, "profiles", "m3-kit", file), path.join(tmpProfileDir, file));
   }
   return tmpName;

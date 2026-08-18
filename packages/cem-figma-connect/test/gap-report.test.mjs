@@ -27,7 +27,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadCem } from "../src/ingest/cem.mjs";
 import { loadFigmaExport } from "../src/ingest/figma.mjs";
-import { match } from "../src/match/matcher.mjs";
+import { match, loadMatcherConfig } from "../src/match/matcher.mjs";
 import { repoRoot } from "../src/correspond/merge.mjs";
 import {
   computeCodeOnly,
@@ -49,7 +49,10 @@ const cem = loadCem(
 const figma = loadFigmaExport(path.join(here, "fixtures", "figma-export.m3-kit.json"));
 
 // Loaded once — both fixtures are large. Every assertion reads this view.
-const { candidates } = match(cem, figma);
+// The m3-kit profile's own calibration (finding 2.4) — this fixture IS the
+// m3-kit export, so it uses the same matcher.json a real `match` run would.
+const m3KitMatcherConfig = loadMatcherConfig(path.join(here, "..", "profiles", "m3-kit"));
+const { candidates } = match(cem, figma, m3KitMatcherConfig);
 
 function tmpPath(name) {
   return path.join(os.tmpdir(), `cem-figma-connect-${name}-${process.pid}-${Date.now()}.md`);

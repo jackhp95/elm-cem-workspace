@@ -119,21 +119,28 @@ specific `seamEscapes` / `setterModules` names `fences` does not carry, and the
 reflex is consumer guidance rather than a boundary invariant.
 
 **Opt-in accessible-name backstop** — not in `Cem.all`; enable via
-`Cem.requireFormFieldLabel facts` (the standalone rule module is
-`Cem.RequireFormFieldLabel`):
+`Cem.requireFormFieldLabel { componentNoun = "formField" } facts` (the standalone
+rule module is `Cem.RequireFormFieldLabel`) and, for FABs,
+`Cem.requireFabLabel { componentNoun = "fab" } facts` (`Cem.RequireFabLabel`).
+`componentNoun` is YOUR brand's `fact.component` value for the tag that plays
+that role (elm-cem's noun for `m3e-form-field`/`m3e-fab` is `"formField"`/`"fab"`)
+— neither rule module hardcodes a brand's noun, same pattern as `Cem.fences`'s
+`brandRoots` or `Cem.redundantElementEscape`'s `seamEscapes`:
 
 | Rule | What it flags |
 | --- | --- |
 | `Cem.requireFormFieldLabel` | A form-field (`<root>.FormField`) wrapping a control with **no discoverable accessible name** — no `slot="label"` child (`<root>.FormField.label`), no `aria-label`/`aria-labelledby`, and no `id` (the `<label for>` proxy) — on the Standard/barrel facet. Advisory (no autofix). |
+| `Cem.requireFabLabel` | A FAB (`<root>.Fab`) with **no discoverable accessible name** — no `slot="label"` child (`<root>.Fab.label`), no `aria-label`/`aria-labelledby`, and no `id` (the `<label for>` proxy) — on the Standard/barrel facet. Advisory (no autofix). |
 
-It is the form-field companion of `Cem.missingRequiredAttribute` (which requires
-`aria-label` on icon-only controls). Reasoning statically from Elm source, it
-recognises the form-field by its elm-cem noun and stays **silent** on anything it
-cannot fully resolve (a dynamic content list, a helper/native-wrapped control, a
-`build`-facet pipeline) — false positives are engineered out at the cost of some
-false negatives, which is why it is opt-in. An `id` on the control is treated as
-evidence of an intended external `<label for>` association (the rule cannot see
-that `<label>` element).
+`Cem.requireFormFieldLabel` is the form-field companion of
+`Cem.missingRequiredAttribute` (which requires `aria-label` on icon-only
+controls). Reasoning statically from Elm source, both rules identify their
+component via the caller-supplied `componentNoun` and stay **silent** on
+anything they cannot fully resolve (a dynamic content list, a helper/native-wrapped
+control, a `build`-facet pipeline) — false positives are engineered out at the
+cost of some false negatives, which is why they are opt-in. An `id` on the
+control is treated as evidence of an intended external `<label for>`
+association (the rule cannot see that `<label>` element).
 
 **Seam-discipline** — boundary rules that keep their **top-level** module name
 (not `Cem.*`). The first three are config-driven (each takes explicit module

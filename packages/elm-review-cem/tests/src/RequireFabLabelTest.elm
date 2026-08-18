@@ -67,7 +67,7 @@ import M3e.Fab
 import M3e.Icon
 v = M3e.Fab.component [] [ M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "flags the barrel facet too" <|
             \() ->
@@ -75,7 +75,7 @@ v = M3e.Fab.component [] [ M3e.Icon.component [] [] ]
 import M3e
 v = M3e.fab [] [ M3e.icon [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.fab" ]
         , test "flags an empty FAB (no name at all)" <|
             \() ->
@@ -83,7 +83,7 @@ v = M3e.fab [] [ M3e.icon [] [] ]
 import M3e.Fab
 v = M3e.Fab.component [] []
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "accepts a slot=label child (M3e.Fab.label)" <|
             \() ->
@@ -92,7 +92,7 @@ import M3e.Fab
 import M3e.Icon
 v = M3e.Fab.component [] [ M3e.Fab.label [ M3e.Fab.text "Add" ], M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts aria-label on the FAB (M3e.Aria.label)" <|
             \() ->
@@ -102,7 +102,7 @@ import M3e.Icon
 import M3e.Aria
 v = M3e.Fab.component [ M3e.Aria.label "Add" ] [ M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts aria-labelledby via any *.Aria module" <|
             \() ->
@@ -117,7 +117,7 @@ labelledby : String -> Int
 labelledby _ = 0
 """
                 ]
-                    |> Review.Test.runOnModules (rule fabFacts)
+                    |> Review.Test.runOnModules (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts the flat barrel aria setter (M3e.ariaLabel)" <|
             \() ->
@@ -125,7 +125,7 @@ labelledby _ = 0
 import M3e
 v = M3e.fab [ M3e.ariaLabel "Add" ] [ M3e.icon [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts an id on the FAB (the <label for> proxy)" <|
             \() ->
@@ -134,7 +134,7 @@ import M3e.Fab
 import M3e.Icon
 v = M3e.Fab.component [ M3e.Fab.id "add" ] [ M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "accepts the raw attribute escape hatch (aria-label)" <|
             \() ->
@@ -144,7 +144,7 @@ import M3e.Icon
 import M3e.Html.Attr
 v = M3e.Fab.component [ M3e.Html.Attr.attribute "aria-label" "Add" ] [ M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when the content list is unresolved (helper)" <|
             \() ->
@@ -153,7 +153,7 @@ import M3e.Fab
 import Seam
 v = M3e.Fab.component [] (Seam.fabBody cfg)
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when the FAB attrs list is unresolved" <|
             \() ->
@@ -162,7 +162,7 @@ import M3e.Fab
 import M3e.Icon
 v = M3e.Fab.component dynAttrs [ M3e.Icon.component [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when a content child is an unrecognised native/helper wrapper" <|
             \() ->
@@ -171,7 +171,7 @@ import M3e.Fab
 import Html
 v = M3e.Fab.component [] [ Html.div [] [] ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "silent when a content child is a bare (helper-produced) reference" <|
             \() ->
@@ -179,7 +179,7 @@ v = M3e.Fab.component [] [ Html.div [] [] ]
 import M3e.Fab
 v = M3e.Fab.component [] [ someChild ]
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         , test "no-op on a non-fab component" <|
             \() ->
@@ -188,7 +188,7 @@ import M3e.Card
 v = M3e.Card.component [] []
 """
                     |> Review.Test.run
-                        (rule [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
+                        (rule { componentNoun = "fab" } [ { component = "card", module_ = "M3e.Card", enums = [], requiredSlots = [], multiSlots = [], attrRewrites = [], slotRewrites = [], slotKinds = [], slotUpgrades = [], facets = [ Standard ], requiredAttrs = [], actionMap = [], groupConstructors = [], usesAction = False } ])
                     |> Review.Test.expectNoErrors
         , test "resolves a let-bound content list via scope and flags" <|
             \() ->
@@ -201,7 +201,7 @@ v =
     in
     M3e.Fab.component [] content
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectErrors [ expectedError "M3e.Fab.component" ]
         , test "does not analyse the Build/pipeline facet" <|
             \() ->
@@ -210,6 +210,6 @@ import M3e.Fab
 import M3e.Icon
 v = M3e.Fab.build |> M3e.Fab.withIcon (M3e.Icon.component [] []) |> M3e.Fab.toElement
 """
-                    |> Review.Test.run (rule fabFacts)
+                    |> Review.Test.run (rule { componentNoun = "fab" } fabFacts)
                     |> Review.Test.expectNoErrors
         ]
