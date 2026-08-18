@@ -341,7 +341,7 @@ async value_ =
         Ir.none
 
 
-{-| Hint for form autofill feature
+{-| Default setting for autofill feature for controls in the form
 -}
 autocomplete : String -> Attr { c | autocomplete : Supported } msg
 autocomplete =
@@ -436,7 +436,7 @@ data =
     Ir.attribute "data"
 
 
-{-| Machine-readable value. A date/time string (a valid date, time, local/global date-and-time, month, week, yearless date, time-zone offset, or duration string), never a bare number.
+{-| Date and (optionally) time of the change
 -}
 datetime : String -> Attr { c | datetime : Supported } msg
 datetime =
@@ -490,7 +490,7 @@ download =
     Ir.attribute "download"
 
 
-{-| Specifies controls from which the output was calculated
+{-| Associate the label with form control
 -}
 for : String -> Attr { c | for : Supported } msg
 for =
@@ -621,7 +621,7 @@ low value_ =
     Ir.attribute "low" (String.fromFloat value_)
 
 
-{-| Upper bound of range
+{-| Maximum value
 -}
 max : String -> Attr { c | max : Supported } msg
 max =
@@ -642,7 +642,7 @@ media =
     Ir.attribute "media"
 
 
-{-| Lower bound of range
+{-| Minimum value
 -}
 min : String -> Attr { c | min : Supported } msg
 min =
@@ -708,7 +708,7 @@ novalidate value_ =
         Ir.none
 
 
-{-| Whether the dialog box is showing
+{-| Whether the details are visible
 -}
 open : Bool -> Attr { c | open : Supported } msg
 open value_ =
@@ -772,7 +772,7 @@ poster =
     Ir.attribute "poster"
 
 
-{-| Whether to allow the value to be edited by the user
+{-| Affects willValidate, plus any behavior added by the custom element author
 -}
 readonly : Bool -> Attr { c | readonly : Supported } msg
 readonly value_ =
@@ -783,7 +783,7 @@ readonly value_ =
         Ir.none
 
 
-{-| Relationship between the document containing the hyperlink and the destination resource
+{-| Relationship between the location in the document containing the hyperlink and the destination resource
 -}
 rel : String -> Attr { c | rel : Supported } msg
 rel =
@@ -945,14 +945,14 @@ step =
     Ir.attribute "step"
 
 
-{-| Navigable for form submission
+{-| Navigable for hyperlink navigation
 -}
 target : String -> Attr { c | target : Supported } msg
 target =
     Ir.attribute "target"
 
 
-{-| Type of script: a MIME type, or 'module' for an ES module, or 'importmap'
+{-| Type of button: submit (default), reset, or button
 -}
 type_ : String -> Attr { c | type_ : Supported } msg
 type_ =
