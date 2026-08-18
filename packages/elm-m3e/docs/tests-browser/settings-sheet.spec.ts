@@ -153,10 +153,19 @@ test("a color-token override survives a scheme toggle but not Reset all", async 
   // in this case; `.last()` opens it. Not a component bug worth chasing
   // further here -- just a locator-ambiguity trap in this specific markup.
   await page.getByRole("button", { name: "Color" }).last().click();
-  const primaryInput = page.locator("#color-md-sys-color-primary");
+  // `colorpick-`, not `color-`: `Theme.Sections.Color` builds the picker id as
+  // `"colorpick-" ++ token.cssVar`. This locator had the wrong prefix from the
+  // start, so the test could never pass — `locator.fill` timed out on a node
+  // that does not exist. Fixed toward the SHIPPED code rather than renaming the
+  // id, since the id is what users' saved overrides key off.
+  const primaryInput = page.locator("#colorpick-md-sys-color-primary");
   await primaryInput.fill("#ff0000");
 
-  await page.getByRole("radio", { name: "Dark" }).click();
+  // The scheme control is an icon BUTTON now, not a radio: main's `controlRow`
+  // redesign replaced the full-width segmented strip with `Theme.schemeToggle`,
+  // whose accessible name is directionally phrased ("Switch to dark theme" /
+  // "Switch to light theme") and therefore depends on the current scheme.
+  await page.getByRole("button", { name: /Switch to (dark|light) theme/ }).click();
   await expect(primaryInput).toHaveValue("#ff0000");
 
   await page.getByRole("button", { name: "Reset all" }).click();
