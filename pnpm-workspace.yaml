@@ -1,6 +1,9 @@
 packages:
   - "packages/*"
   - "packages/*/*"
+  - "core/*"
+  - "brands/*/inputs/*"
+  - "brands/*/outputs/*"
   - "!**/node_modules"
   - "!**/elm-stuff"
   - "!packages/*/elm-html-intermediate-representation"
