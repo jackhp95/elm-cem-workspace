@@ -2,12 +2,16 @@
 @import "tailwindcss";
 
 /* M3 design tokens (seed -> ref -> sys -> @theme keys).
-   tailwind-m3e-web is a co-located workspace package (packages/tailwind-m3e-web) —
-   the private jackhp95/tailwind-m3e-web repo, unpublished, but co-located here
-   so this docs app can depend on it directly instead of vendoring a copy. */
-@import "tailwind-m3e-web";
+   tailwind-m3e-web is a co-located workspace package (packages/tailwind-m3e-web),
+   but this docs app also deploys from a standalone published mirror repo
+   (jackhp95/elm-m3e, see tools/publish-mirror.mjs) that does NOT contain that
+   sibling package — a pnpm-workspace `@import "tailwind-m3e-web"` fails there
+   with ERR_PNPM_WORKSPACE_PKG_NOT_FOUND. So its CSS is vendored into
+   vendor/tailwind-m3e-web (scripts/vendor-tailwind-m3e-web.mjs, same pattern
+   as vendor/elm-foundation) and imported here by relative path instead. */
+@import "./vendor/tailwind-m3e-web/src/index.css";
 /* Per-component CSS-variable utility setters for @m3e/web */
-@import "tailwind-m3e-web/utilities";
+@import "./vendor/tailwind-m3e-web/generated/utilities.css";
 
 /* Scan the docs routes and the Ui.* library for utility classes. */
 @source "./app";

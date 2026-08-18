@@ -115,9 +115,6 @@ importers:
       linkedom:
         specifier: ^0.18.13
         version: 0.18.13
-      tailwind-m3e-web:
-        specifier: workspace:*
-        version: link:../../tailwind-m3e-web
       tslib:
         specifier: ^2.8.1
         version: 2.8.1

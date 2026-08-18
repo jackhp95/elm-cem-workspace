@@ -5,7 +5,9 @@
   "scripts": {
     "postinstall": "node scripts/fix-native-bins.mjs",
     "gen": "run-s gen:vendor gen:icons gen:brand-images gen:reference gen:examples-config gen:examples-surfaces gen:examples-barrel gen:examples gen:samples",
-    "gen:vendor": "node scripts/vendor-foundation.mjs",
+    "gen:vendor": "run-s gen:vendor-foundation gen:vendor-tailwind",
+    "gen:vendor-foundation": "node scripts/vendor-foundation.mjs",
+    "gen:vendor-tailwind": "node scripts/vendor-tailwind-m3e-web.mjs",
     "gen:icons": "node scripts/icons-gen/icons-to-js.mjs",
     "gen:brand-images": "node scripts/icons-gen/brand-images.mjs && node scripts/icons-gen/tangram-favicon.mjs",
     "gen:reference": "node scripts/extract-reference.mjs",
@@ -57,7 +59,6 @@
   "dependencies": {
     "@m3e/web": "2.7.3",
     "linkedom": "^0.18.13",
-    "tailwind-m3e-web": "workspace:*",
     "tslib": "^2.8.1"
   }
 }
