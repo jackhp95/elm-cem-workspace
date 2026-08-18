@@ -5,7 +5,7 @@
 // definition: tools/lib/regen.mjs). This is the only writer of that file —
 // never hand-edit it.
 //
-// Usage: pnpm --filter m3e-docs run gen:facts
+// Usage: pnpm --filter m3e-okf run gen:facts
 // Env:
 //   ELM_M3E                  elm-m3e checkout to generate against (default:
 //                            the in-workspace packages/elm-m3e)

@@ -1,0 +1,19 @@
+{
+  "name": "tonal-palette-oklch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sample an HCT tonal palette (MCU) at given hues/tones and report each tone's OKLCH lightness — brand-agnostic color math, no design-system-specific constants.",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test src/*.test.mjs"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "culori": "^4.0.2"
+  }
+}

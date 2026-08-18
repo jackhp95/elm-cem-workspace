@@ -1,5 +1,5 @@
 {
-  "name": "m3e-docs",
+  "name": "m3e-okf",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -20,7 +20,7 @@
     "check:paraphrase": "node scripts/check-paraphrase.mjs",
     "check:staleness": "node scripts/check-staleness.mjs",
     "check": "run-p \"check:!(staleness)\"",
-    "test:lib": "node --test scripts/lib/*.test.mjs",
+    "test:lib": "node --test scripts/lib/*.test.mjs ../../tools/lib/okf-lib.test.mjs",
     "test": "run-p \"test:*\"",
     "hooks:install": "git config core.hooksPath hooks",
     "gate": "run-s check test"

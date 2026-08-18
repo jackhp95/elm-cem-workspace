@@ -17,6 +17,17 @@
 // committed config, and elm-cem falls back to a generic sentence for any
 // element/attr with no config entry (so `--docs` stays green regardless).
 //
+// STATUS NOTE (2026-08-18, thermonuclear-audit W6 pass): `_native`/
+// `nativeAttrTable` are decoded by `elm-cem/codegen/Generate/Config.elm` but
+// never read downstream — no `M3e.Native` module exists in current generated
+// `src/`. `docs/facts-bundle/m6-deep-clean.md` (2026-08-13) independently
+// confirms `_native` is superseded pre-phantom-refactor config vocabulary.
+// This script and `config/native-mdn.json` currently feed a config key elm-cem
+// ignores. Left in place rather than deleted or moved upstream here — that
+// call belongs with whoever resolves the `_native` dead-config-surface
+// cleanup (thermonuclear audit Theme 5), since moving/deleting it here would
+// risk colliding with that work.
+//
 //   Usage:   node scripts/fetch-mdn-native-summaries.mjs
 //
 //   Then regenerate the library (note the extra --config-from):
@@ -47,10 +58,13 @@ const OUT = path.join(ROOT, "config", "native-mdn.json");
 // attributes are documented in the owning element page's definition list.
 const RAW = "https://raw.githubusercontent.com/mdn/content/main/files/en-us/web/html/reference";
 
-// Attribute → owning element used to locate its definition when the attribute
-// has no dedicated `attributes/<name>` page. Mirrors the generator's
-// `nativeAttrTable` (elm-cem/codegen/Generate.elm); the key is the HTML attr
-// name (Elm's `type_` is HTML `type`). Keep in sync if that table changes.
+// Attribute → owning element used ONLY to locate an attribute's MDN
+// definition when it has no dedicated `attributes/<name>` page — the key is
+// the HTML attr name (Elm's `type_` is HTML `type`). This is NOT a mirror of
+// anything in elm-cem: `codegen/Generate/Config.elm`'s decoded
+// `nativeAttrTable` field has no live reader (verified 2026-08-18; see the
+// STATUS NOTE above), so there is currently no generator-side table for this
+// one to stay in sync with.
 const ATTR_OWNER = {
   href: "a", target: "a", rel: "a", download: "a",
   for: "label",

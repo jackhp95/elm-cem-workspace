@@ -7,13 +7,17 @@
  * neutral-variant palettes). Samples MCU's TonalPalette across 12 hues
  * × 12 tones, converts each generated hex to OKLCH L, averages over hues.
  *
+ * The hue/chroma/tone -> OKLCH-L sampling math is brand-agnostic and lives in
+ * `tonal-palette-oklch` (promoted per the thermonuclear audit, Theme 6 #3) —
+ * this file keeps only what's specific to m3e's calibration: the M3-spec
+ * chroma buckets, the 12x12 sample grid, and the `--_m3e-tone-*` output.
+ *
  * Output: src/ref/_tone-table.css (deterministic, checked in).
  *
  * Re-run manually only when bumping @material/material-color-utilities
  * or revisiting the approximation.
  */
-import { TonalPalette, hexFromArgb } from "@material/material-color-utilities";
-import { converter, parse } from "culori";
+import { averageLPerTone } from "tonal-palette-oklch";
 import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
@@ -30,32 +34,10 @@ const HUES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
 const CHROMA_RICH = 40;
 const CHROMA_NEUTRAL = 6; // midpoint of 4 and 8
 
-const toOklch = converter("oklch");
-
-function lForToneAtHue(hue, chroma, tone) {
-  const palette = TonalPalette.fromHueAndChroma(hue, chroma);
-  const argb = palette.tone(tone);
-  const hex = hexFromArgb(argb);
-  const oklch = toOklch(parse(hex));
-  return oklch.l * 100; // culori returns L in [0,1]; we want percent
-}
-
-function averageLPerTone(chroma) {
-  const out = {};
-  for (const tone of TONES) {
-    let sum = 0;
-    for (const hue of HUES) {
-      sum += lForToneAtHue(hue, chroma, tone);
-    }
-    out[tone] = +(sum / HUES.length).toFixed(2);
-  }
-  return out;
-}
-
 export function calibrate() {
   return {
-    rich: averageLPerTone(CHROMA_RICH),
-    neutral: averageLPerTone(CHROMA_NEUTRAL),
+    rich: averageLPerTone(CHROMA_RICH, { tones: TONES, hues: HUES }),
+    neutral: averageLPerTone(CHROMA_NEUTRAL, { tones: TONES, hues: HUES }),
   };
 }
 

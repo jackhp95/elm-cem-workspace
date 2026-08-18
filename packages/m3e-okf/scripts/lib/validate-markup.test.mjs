@@ -141,3 +141,26 @@ test("a '>' inside a quoted attribute value does not hide later attributes", () 
     `expected the trailing 'colour' attribute to still be checked, got: ${JSON.stringify(errs)}`
   );
 });
+
+// #4 — brand-agnosticism (thermonuclear audit Theme 6 #4): a hyphenated
+// custom-element tag from a DIFFERENT brand's ground truth must be checked
+// against GT like any other component, not dismissed as "non-standard" just
+// because it isn't spelled `m3e-*`. Before this fix, `isCustomElement` was
+// `tag.startsWith("m3e-")`, so a second brand's real, documented components
+// were NEVER looked up in GT at all and always misreported as non-standard.
+const CARBON_GT = buildGroundTruth([
+  {
+    elements: [
+      { tag: "carbon-button", attributes: [{ name: "kind", type: "'primary' | 'secondary'" }], properties: [], slots: [] },
+    ],
+  },
+]);
+
+test("a non-m3e-prefixed custom element is checked against its own ground truth", () => {
+  assert.deepEqual(validateMarkup(`<carbon-button kind="primary">x</carbon-button>`, CARBON_GT), []);
+  const errs = validateMarkup(`<carbon-button kind="tertiary">x</carbon-button>`, CARBON_GT);
+  assert.ok(
+    errs.some((e) => e.includes(`kind="tertiary" not in`)),
+    `expected a non-m3e custom element to still be union-checked, got: ${JSON.stringify(errs)}`
+  );
+});

@@ -105,7 +105,7 @@ function main() {
                 failures.push(
                     `${path.relative(repoRoot, committedPath)} DRIFTED from what the producer generates today. ` +
                         `Committed copy no longer matches elm-cem's output — regenerate via ` +
-                        `\`pnpm --filter m3e-docs run gen:facts\` and commit the result. First diff lines:\n${lines}`,
+                        `\`pnpm --filter m3e-okf run gen:facts\` and commit the result. First diff lines:\n${lines}`,
                 );
             } else {
                 console.log(`  ok  data/cem-facts.json — byte-identical to a fresh regeneration.`);

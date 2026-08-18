@@ -71,10 +71,23 @@ function parse(html) {
   return root;
 }
 
-function nearestM3eAncestor(node) {
+// A tag is a custom element per the WHATWG Custom Elements spec iff its name
+// contains a hyphen (native elements never do) — the brand-agnostic test.
+// This file used to gate on `startsWith("m3e-")` instead, the exact
+// prefix-guess anti-pattern flagged in the thermonuclear audit (Theme 6 #4):
+// worse than cosmetic, it meant a second brand's real, ground-truth-documented
+// components (e.g. `<carbon-button>`) were NEVER looked up against `GT` at
+// all and would misreport as "non-standard tag" forever. `tailwind-m3e-web`'s
+// generated `utilities.json` (the fix applied to the sibling elm-review rule)
+// doesn't apply here — it enumerates CSS utility *class* prefixes, not custom
+// element *tag* names, a different namespace entirely. `isCustomElement` is
+// the tag-name equivalent of "consult the real thing, not a brand guess".
+const isCustomElement = (tag) => tag.includes("-");
+
+function nearestComponentAncestor(node) {
   let n = node.parent;
-  while (n && !n.tag.startsWith("m3e-")) n = n.parent;
-  return n && n.tag.startsWith("m3e-") ? n : null;
+  while (n && !isCustomElement(n.tag)) n = n.parent;
+  return n && isCustomElement(n.tag) ? n : null;
 }
 
 /**
@@ -109,7 +122,7 @@ export function validateMarkup(code, GT, { allowCss = false } = {}) {
   const walk = (node) => {
     for (const child of node.children) {
       const t = child.tag;
-      if (t.startsWith("m3e-")) {
+      if (isCustomElement(t)) {
         const gt = GT.get(t);
         if (!gt) {
           errs.push(`unknown tag <${t}>`);
@@ -129,7 +142,7 @@ export function validateMarkup(code, GT, { allowCss = false } = {}) {
       }
       // slot targeting
       if (child.attrs.slot != null) {
-        const par = nearestM3eAncestor(child);
+        const par = nearestComponentAncestor(child);
         if (par) {
           const pg = GT.get(par.tag);
           if (pg && !pg.slots.has(child.attrs.slot))

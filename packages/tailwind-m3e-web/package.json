@@ -57,6 +57,7 @@
     "@changesets/cli": "^2.31.0",
     "culori": "^4.0.2",
     "tailwindcss": "^4.3.2",
+    "tonal-palette-oklch": "workspace:*",
     "vitest": "^4.1.9"
   },
   "scripts": {

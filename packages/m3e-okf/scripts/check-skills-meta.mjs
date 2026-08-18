@@ -16,7 +16,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseFrontmatter, extractLinks } from "./lib/okf-lib.mjs";
+import { parseFrontmatter, extractLinks } from "../../../tools/lib/okf-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../..");
 const SKILLS = path.join(ROOT, "skills");

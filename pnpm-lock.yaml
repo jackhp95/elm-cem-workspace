@@ -224,9 +224,21 @@ importers:
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.3
+      tonal-palette-oklch:
+        specifier: workspace:*
+        version: link:../tonal-palette-oklch
       vitest:
         specifier: ^4.1.9
         version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
+
+  packages/tonal-palette-oklch:
+    dependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
 
 packages:
 
