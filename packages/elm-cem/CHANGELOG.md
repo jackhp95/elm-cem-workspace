@@ -23,6 +23,35 @@ surface shows up as a reviewed test diff rather than a silent break.
 
 ## Unreleased
 
+### Changed — single `component` ctor, `Build` restored, flat `Family` modules (BREAKING generated-output change)
+
+Exactly one element constructor per module (supersedes an earlier attempt at a
+two-ctor `<name>`/`required` split, which was tried and then rejected for
+violating "one ctor per module"):
+
+- **`<Lib>.Component.<E>`** — exactly one constructor, always named `component`.
+  Two-arity: bare `component : attrs -> children -> Element` when the component has
+  no required pieces, record-arg `component : { .. } -> attrs -> children -> Element`
+  when it does. `view`/`el` are gone; the barrel (`<Lib>`) delegates to `component`.
+- **`<Lib>.Build.<E>`** — the fluent `build`/`toElement` builder package, previously
+  slated for deletion, kept. `<Lib>.Build.<E>.build` + `<Lib>.Forge.Internal` re-emit
+  as before.
+- **`<Lib>.Family.<FAMILY>`** — reshaped from one sub-module per element to ONE flat
+  module per family: element-named constructors (e.g. `Chip.assist`,
+  `Chip.filterSet`), element-prefixed type aliases (`AssistIs`, `AssistAttrs`, …) and
+  element-prefixed typed helpers (`assistVariant`, …) to dodge cross-member
+  collisions within the family module.
+- **`<Lib>`** (Html surface) — unchanged, already `M3e.<element>`.
+
+How many physical packages a brand cuts these modules into is a downstream
+packaging decision, not an elm-cem concern — elm-m3e currently ships 5
+(`html`, `components`, `builder`, `facts`, `icons`; see its own
+`packages.json`).
+
+Emitted by `codegen/Generate/Phantom/Emit.elm` (`compModule`, `guardComponentModule`,
+`compBuildModule`/`guardBuildModule`, `generalModule` barrel) and
+`bin/gen-family-package.js`. Phantom goldens re-blessed.
+
 The first public release cuts the **phantom architecture**. The generator now emits one
 phantom-typed **brand** per library, and the legacy multi-form pipeline has been retired.
 
@@ -32,9 +61,10 @@ emits a single brand as a fixed module shape driven by data:
 
 - **`<Lib>`** — the general surface: every component constructor in the `elm/html` call
   shape, one import.
-- **`<Lib>.<Component>`** — the strict per-component surface: `view`, `el` (when
-  required content/attrs are configured), the shared `build`/`Builder` pipe-builder,
-  narrowed value setters, and `with*` pipe setters.
+- **`<Lib>.Component.<E>`** — the strict per-component surface: a single `component`
+  constructor (see the "single `component` ctor" entry above for the two-arity
+  shape), the shared `build`/`Builder` pipe-builder, narrowed value setters, and
+  `with*` pipe setters.
 - **`<Lib>.Attributes` / `<Lib>.Events` / `<Lib>.Values` / `<Lib>.Kind`** — the shared
   vocabulary: canonical open attribute producers, capability-gated events (+ `delegate`),
   the enum token vocabulary minted once, and the library's private phantom markers.

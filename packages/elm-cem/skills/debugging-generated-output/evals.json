@@ -1,0 +1,34 @@
+{
+  "skill": "debugging-generated-output",
+  "cases": [
+    {
+      "id": "string-should-be-bool-classify",
+      "prompt": "Attribute `open` generates as String but should be Bool. Why, and how do I fix it?",
+      "expect": {
+        "classifies": "identifies the CEM under-specified the type (a CEM or config fault), not a generator bug",
+        "routes_to_attrtypes": "routes the fix to the `attrTypes` config override",
+        "no_patch_generated": "does NOT patch the generated Elm module"
+      },
+      "reject": [
+        "editing the generated setter",
+        "assuming an elm-cem generator bug first"
+      ]
+    },
+    {
+      "id": "component-went-missing",
+      "prompt": "A component I expected is missing from the output — it seems merged into another. What happened?",
+      "expect": {
+        "tagname_pass": "suspects a colliding tagName in the CEM and the reconcileTagNames pass",
+        "inspect_merged": "suggests inspecting the merged CEM (elm-cem-cfg temp file) to confirm the tagName"
+      }
+    },
+    {
+      "id": "inspect-merged-cem",
+      "prompt": "My --config-from override doesn't seem to be taking effect. How do I confirm what the generator actually saw?",
+      "expect": {
+        "temp_file": "points to the elm-cem-cfg-*.json temp file (merged CEM with _config inlined) in the OS temp dir",
+        "check_config_field": "checks that the component's _config entry has the expected field"
+      }
+    }
+  ]
+}
