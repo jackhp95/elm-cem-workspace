@@ -132,6 +132,16 @@ encoder). Every brand needs a regen once that lands.
 `family-configs/` (which IS now read, unlike `cem-configs/`) and reaffirming that 2.6's larger ask
 (a live second-brand CI proof) is out of scope for this leaf, per the plan's own scoping note.
 
+**Follow-up (2026-08-18, post-independent-review):** the 2.6 rename above missed
+`packages/elm-cem/.neutrality-allowlist` — its whole-file allowances for `tests/gates.test.mjs`
+and `tests/registry-check-nested-pkg.test.mjs` carried comment prose still naming the old
+`nonm3e`/`nonm3e.cem.json` fixture. Fixed: comments reworded to name `wc-widgets`/
+`wc-widgets.cem.json` (keeping "renamed from `nonm3e.cem.json`" as provenance, not scrubbing
+history). A third entry, `tests/depstamp.test.mjs`, turned out to be dead weight entirely — that
+file has zero `material|m3e|md3` hits (checked via the gate's own pattern), so its allowance was
+removed rather than reworded. Re-ran `bash .github/neutrality-check.sh` (OK) and the full
+`npm run gate` (0 failures) after the edit to confirm.
+
 **Gates run, fresh, full output, this pass:** `elm-cem` (`npm run gate` — all `test:*`+`check:*`,
 0 failures), `cem-figma-connect` (`npm run gate` — 757 tests + all `check:*`, 0 failures),
 `elm-review-cem` (`npm run gate` — 418 tests + neutrality + format + review, 0 failures), and
