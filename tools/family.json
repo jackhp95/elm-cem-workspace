@@ -99,6 +99,8 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_M3E_OKF",
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/m3e-okf",
+        "$sourceDefaultNote": "m3e-okf's copy-fidelity gate must compare against the pinned-SHA fetched snapshot, not a live sibling clone — restores the default this package lost when tools/copy-fidelity-m3e-okf.sh was folded into the generic copy-fidelity.mjs (W5 consolidation).",
         "authorizedAbsent": [],
         "authorizedAbsentM6": [".claude-memory/m3e-disclosure-hook-design.md"],
         "authorizedExtra": ["scripts/gen-facts.mjs", "data/cem-facts.json"],
