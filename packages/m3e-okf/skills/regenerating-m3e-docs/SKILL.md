@@ -6,7 +6,7 @@ description: >-
   matraic/m3e source, and performs an upstream-version bump. Use when a maintainer
   needs to run the generation pipeline in the right order, bump the pinned m3e SHA,
   check staleness, review extraction drift in data/report.md, or understand the
-  rebuild+diff CI contract. This is a maintainer workflow for the m3e-docs repo; the
+  rebuild+diff CI contract. This is a maintainer workflow for the m3e-okf repo; the
   generated trees (skills/m3e/, knowledge/, implementations/) are build outputs and
   MUST NOT be hand-edited.
 disable-model-invocation: true

@@ -2,13 +2,13 @@
 name: curating-okf-knowledge
 description: >-
   Authors and curates concept pages in the technology-neutral M3 Expressive
-  knowledge bundle (data/knowledge/**, OKF v0.1) for the m3e-docs repo. Use when
+  knowledge bundle (data/knowledge/**, OKF v0.1) for the m3e-okf repo. Use when
   adding, revising, or reviewing a knowledge/ page — writing the frontmatter
   (including sources:), choosing the Diátaxis type, keeping the prose neutral and
   properly cited, deciding whether a topic belongs in knowledge/ vs
   implementations/ vs history/, and running the validation loop (validate-okf +
   citation-presence + audit-guidance) until it is clean. This is a maintainer
-  workflow for m3e-docs contributors; it is rule-bound and low-freedom — follow
+  workflow for m3e-okf contributors; it is rule-bound and low-freedom — follow
   the templates exactly.
 disable-model-invocation: true
 ---

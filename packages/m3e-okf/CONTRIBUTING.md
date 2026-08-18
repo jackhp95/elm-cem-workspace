@@ -1,4 +1,4 @@
-# Contributing to m3e-docs
+# Contributing to m3e-okf
 
 Thanks for helping out. This repo generates a verified Claude Code **skill** for the
 `@m3e/web` component library — the value is that every API claim is checked against the
