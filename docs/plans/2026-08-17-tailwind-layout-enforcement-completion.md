@@ -13,10 +13,47 @@ remain, from the status report that preceded this plan.
 ## Task table
 
 ```
-[x] L-A  centralization mechanism for Tailwind violations  — work  — sonnet/opus  — done
-[x] L-B  m3e-* allow-list correctness (real manifest)       — work  — sonnet/opus  — done
-[x] L-D  T7 search-ranking fix, gate to green              — work  — sonnet/opus  — done
+[x] L-A  centralization mechanism for Tailwind violations  — 8478c63 — done, verified
+[x] L-B  m3e-* allow-list correctness (real manifest)      — 1464985 — done, verified
+[x] L-D  T7 search-ranking fix, gate to green              — 3067852 — done, verified
+[x] ---  regen derived review-config sample (L-A fallout)  — 02eb33e — done, verified
 ```
+
+## Done-gate evidence
+
+Authoritative run: `node tools/gate-all.mjs > /tmp/gate8.log 2>&1` at `02eb33e`,
+from a tree with no inherited servers (ports killed first), exit code captured
+directly rather than through a pipe.
+
+```
+GATE_EXIT=0
+GATE-ALL GREEN
+PASS: 260   FAIL: 0   SKIP: 16
+browser suite: 236 passed (2.7m)
+```
+
+The 16 SKIPs are all snapshot-dependent gates (`copy-fidelity-*`, `ab-elm-cem`,
+`ab-elm-m3e-split`, `m3e-okf` drift) that skip-with-reason in a clone without
+provisioned snapshots — pre-existing on this branch and unrelated to this work.
+
+Per-leaf evidence:
+
+| Leaf | Acceptance test | Result |
+| --- | --- | --- |
+| L-A | violation outside the seam caught, identical usage inside not flagged | 76/76 rule tests, 6 new fence cases |
+| L-B | fake `m3e-*` caught, 2347 real ones pass, docs app still zero | 83/83 rule tests; `elm-review` "I found no errors!"; drift check negative-tested |
+| L-D | `search.spec.ts` 36 / 150 / 215 pass | 8/8 search specs pass (was 5/8) |
+
+## Process note — the miss worth recording
+
+The first full-gate run after all three leaves came back RED on
+`check:drift`: `docs/samples/review/src/CodegenReviewConfig.elm` is DERIVED from
+the review config L-A edited, and I had verified L-A with elm-review, elm-format
+and the rule's unit tests — everything local to the code I touched — but not the
+generators that derive from it. Editing a file something else is extracted from
+needs `check:drift`, not just the checks local to that file. Second instance of
+this exact shape on this branch (the first was `Guide/Samples.elm` after
+`Seams.elm` changed).
 
 ## L-A — decision record: ONE destination, named `Seam`
 
