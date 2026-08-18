@@ -8,6 +8,7 @@
     "gate": "node tools/gate.mjs",
     "gate:all": "node tools/gate-all.mjs",
     "bump": "node tools/bump.mjs",
+    "hooks:install": "node tools/hooks-install.mjs",
     "postinstall": "node tools/install-toolchains.mjs"
   },
   "devDependencies": {

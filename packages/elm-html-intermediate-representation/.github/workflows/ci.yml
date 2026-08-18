@@ -12,7 +12,7 @@ env:
 
 jobs:
   ci:
-    name: Format · Review · Validate
+    name: gate (format · review · validate · acid · test)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,14 +37,12 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      # All of src/ is hand-written — format:check runs on the full src/.
-      - name: elm-format --validate src/
-        run: npm run check:format
-
-      - name: elm-review
-        run: npm run check:review
-
-      # check:validate = elm make --docs: proves all exposed modules compile and docs
-      # are well-formed. Parameterized via ELM_VERSION above (future bump = one line).
-      - name: validate (elm make --docs)
-        run: npm run check:validate
+      # One step, deliberately (finding 1.8 fix): `gate` = `run-s check test`,
+      # i.e. every check:* script (format/review/validate/acid) THEN the
+      # elm-test-rs suite. This workflow used to hand-enumerate only three of
+      # the four check:* steps and never ran `test` at all — silently stale
+      # the moment check:acid was added and test suite grew. `gate` is also
+      # what hooks/pre-push runs locally; enumerating steps again here would
+      # let this file drift from package.json a second time.
+      - name: gate (check:* then test)
+        run: npm run gate

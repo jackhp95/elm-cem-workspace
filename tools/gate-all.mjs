@@ -46,6 +46,33 @@ const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e"
 // sweep red, since it ran zero real comparisons.
 const results = [];
 
+// Finding 1.10 (docs/reviews/2026-08-17-thermonuclear-workspace-review.md):
+// gate-all didn't distinguish "skipped this run" (environmental, e.g. a
+// snapshot briefly unavailable) from "chronically skipped forever" (a gate
+// that has NEVER run for real on any machine because nothing ever wires up
+// its dependency). A named, reasoned allowlist makes that distinction
+// legible instead of every SKIP looking equally benign in the summary.
+//
+// Entries here are gates KNOWN to be chronic — every one of the three below
+// depends on `.cache/snapshots/<name>`, which only `tools/fetch-snapshots.mjs`
+// populates, and nothing calls that script automatically (see the note above
+// `factsBundleE2E` for why it isn't wired in here yet: it needs network
+// access to clone public GitHub repos, which changes gate-all's reliability
+// profile in a way that deserves its own decision, not a silent addition).
+// If a name below stops appearing in the SKIPPED ITEMS list, remove it here —
+// that means the underlying dependency became available and the gate is
+// running for real again.
+const CHRONIC_SKIPS = {
+    "workspace: ab-elm-cem (Face A byte-identity)":
+        "requires .cache/snapshots/elm-cem, materialized only by `node tools/fetch-snapshots.mjs`, which nothing calls automatically (deferred — see finding 1.10 follow-up, network dependency).",
+    "workspace: ab-elm-m3e-split (split-step byte-identity)":
+        "requires .cache/snapshots/elm-cem, same as above.",
+    "workspace: copy-fidelity elm-m3e":
+        "requires .cache/snapshots/elm-m3e, same as above (also network-fetched).",
+    "workspace: check-drift (M4.b cross-cutting drift gate)":
+        "one of its internal sub-checks (brand Face A, R-010) shares the same .cache/snapshots/elm-cem dependency as ab-elm-cem above, which makes check-drift.mjs's own aggregate stdout carry a SKIP line.",
+};
+
 function record(name, status, detail) {
     // Accept booleans too, for callers written before "skip" existed.
     if (status === true) status = "pass";
@@ -297,6 +324,20 @@ function main() {
     runItem("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
         path.join(repoRoot, "tools", "check-mirror-drift.mjs"),
     ]);
+    // Finding 1.10: measure-docs-size.mjs (the registry doc-size cap that
+    // already bit elm-m3e-icons once) and check-m3e-5pkg.mjs (the D-037
+    // 5-package split shape check) were both orphaned — real, useful, and
+    // cheap to run (no network, pure local elm compile / JSON check) but
+    // wired to nothing. Wiring them in is the "if cheap, do it" half of the
+    // finding's remedy; fetch-snapshots.mjs is the other orphan named there
+    // and is deliberately NOT wired in yet (see the CHRONIC_SKIPS comment
+    // above — it needs network access, a bigger decision than this fix).
+    runItem("workspace: measure-docs-size (registry docs.json size cap)", process.execPath, [
+        path.join(repoRoot, "tools", "measure-docs-size.mjs"),
+    ]);
+    runItem("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [
+        path.join(repoRoot, "tools", "check-m3e-5pkg.mjs"),
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();
@@ -315,8 +356,34 @@ function main() {
     console.log(`${passed.length}/${results.length} passed, ${skipped.length} skipped, ${failed.length} failed`);
 
     if (skipped.length > 0) {
-        console.log("\nSKIPPED ITEMS:");
-        for (const r of skipped) console.log(`  - ${r.name}${r.detail ? `  (${r.detail})` : ""}`);
+        // Finding 1.10: split skips into chronic (named, reasoned, expected —
+        // see CHRONIC_SKIPS above) vs unexpected (not on that list, meaning
+        // either a NEW chronic gate nobody has categorized yet, or a
+        // genuinely transient environmental skip). Both print, but
+        // separately, so a new unexplained SKIP cannot hide inside a long
+        // "this is all normal" list.
+        const chronic = skipped.filter((r) => CHRONIC_SKIPS[r.name]);
+        const unexpected = skipped.filter((r) => !CHRONIC_SKIPS[r.name]);
+
+        if (chronic.length > 0) {
+            console.log("\nCHRONIC SKIPS (known, tracked — see CHRONIC_SKIPS in tools/gate-all.mjs):");
+            for (const r of chronic) console.log(`  - ${r.name}\n      ${CHRONIC_SKIPS[r.name]}`);
+        }
+        if (unexpected.length > 0) {
+            console.log("\nUNEXPECTED SKIPS (not on the known-chronic list — investigate, or add a reasoned entry to CHRONIC_SKIPS if it turns out to be permanent):");
+            for (const r of unexpected) console.log(`  - ${r.name}${r.detail ? `  (${r.detail})` : ""}`);
+        }
+
+        // The inverse case is worth surfacing too: a name on the chronic
+        // list that did NOT skip this run means its dependency became
+        // available and it ran for real — CHRONIC_SKIPS should shrink.
+        const noLongerChronic = Object.keys(CHRONIC_SKIPS).filter(
+            (name) => results.some((r) => r.name === name) && !skipped.some((r) => r.name === name),
+        );
+        if (noLongerChronic.length > 0) {
+            console.log("\nNO LONGER CHRONIC (ran for real this time — remove from CHRONIC_SKIPS in tools/gate-all.mjs):");
+            for (const name of noLongerChronic) console.log(`  - ${name}`);
+        }
     }
 
     if (failed.length > 0) {

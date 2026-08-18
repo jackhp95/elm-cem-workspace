@@ -12,7 +12,7 @@ env:
 
 jobs:
   ci:
-    name: Format · Review · Validate · Acid
+    name: gate (format · review · validate · acid · whatwg · drift)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +32,18 @@ jobs:
         env:
           ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
         run: git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-html-intermediate-representation.git" "$GITHUB_WORKSPACE/../elm-html-intermediate-representation"
+
+      # check:drift (scripts/regen-diff-gate.sh) regenerates from the elm-cem
+      # generator at ../elm-cem/bin/elm-cem.js (ELM_CEM_BIN) to prove src/ is
+      # byte-identical to a clean regen. Added alongside the finding-1.8 fix
+      # below (this step previously wasn't run by CI at all, only locally).
+      # PRIVATE repo — authenticated clone (same ELM_CEM_TOKEN).
+      - name: Fetch elm-cem generator (sibling, private)
+        env:
+          ELM_CEM_TOKEN: ${{ secrets.ELM_CEM_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:${ELM_CEM_TOKEN}@github.com/jackhp95/elm-cem.git" "$GITHUB_WORKSPACE/../elm-cem"
+          cd "$GITHUB_WORKSPACE/../elm-cem" && npm ci
 
       - uses: actions/setup-node@v4
         with:
@@ -53,21 +65,13 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      # Format check on hand-written files only (verify/src/ and verify/bad/).
-      # Generated src/ is excluded — it is formatted by elm-cem at gen time.
-      - name: elm-format --validate (hand-written verify/)
-        run: npm run check:format
-
-      - name: elm-review
-        run: npm run check:review
-
-      # check:validate = elm make --docs (proves all exposed modules compile).
-      # The IR package is unpublished; scripts/validate.mjs resolves it via the
-      # sibling clone that was already fetched above.
-      - name: validate (elm make --docs)
-        run: npm run check:validate
-
-      # check:acid = verify/run.sh (good must compile, bad must fail).
-      # run.sh self-resolves elm from ../node_modules/.bin/elm (set by npm ci above).
-      - name: acid (verify/run.sh)
-        run: npm run check:acid
+      # One step, deliberately (finding 1.8 fix): `gate` = `npm run check`,
+      # which is `run-p "check:*"` — every check:* script in package.json,
+      # with no hand-enumerated subset to drift out of sync. This workflow
+      # used to list four of the six check:* steps by hand and silently went
+      # stale when check:whatwg and check:drift were added later. Enumerating
+      # steps again here would let this file and package.json drift apart a
+      # second time; `gate` is also what hooks/pre-push runs locally, so this
+      # is the exact same contract, not a parallel one.
+      - name: gate (check:format + check:review + check:validate + check:acid + check:whatwg + check:drift)
+        run: npm run gate

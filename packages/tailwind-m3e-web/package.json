@@ -67,6 +67,8 @@
     "generate": "pnpm run generate:tones && pnpm run generate:utilities",
     "gen:facts": "node scripts/gen-facts.mjs",
     "check:privates": "node bin/check-privates.mjs",
+    "check": "node bin/check-privates.mjs",
+    "hooks:install": "node ../../tools/hooks-install.mjs",
     "prepublishOnly": "pnpm run generate && git diff --exit-code -- generated/ && pnpm test",
     "release:version": "changeset version",
     "release:publish": "changeset publish"

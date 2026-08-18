@@ -54,10 +54,87 @@ const CONSUMERS = [
     },
 ];
 
+// Finding 1.6 (docs/reviews/2026-08-17-thermonuclear-workspace-review.md):
+// bump used to rewrite every package.json, regenerate every consumer bundle,
+// THEN run gate-all — a gate failure exited 1 leaving a half-applied
+// migration in the working tree with no rollback. `rollbackArmed` flips true
+// only once `ensureCleanTree` has verified the tree, so ANY failure from that
+// point on (repin, pnpm install, a consumer's gen:facts, or gate-all itself)
+// restores the pre-mutation state instead of leaving a partial migration.
+let rollbackArmed = false;
+
+// Requiring a clean tree up front is what makes the rollback below safe and
+// precise: every uncommitted change present at failure time is then
+// GUARANTEED to be something this run itself created, so reverting all
+// tracked modifications can never discard pre-existing, unrelated work.
+function ensureCleanTree() {
+    const status = spawnSync("git", ["status", "--porcelain"], { cwd: repoRoot, encoding: "utf8" });
+    if (status.stdout.trim()) {
+        fail(
+            "the working tree is not clean. bump mutates package.json/lockfile/consumer bundle files " +
+                "across the workspace and rolls itself back to the pre-mutation state on any failure " +
+                "(finding 1.6) — that rollback is only safe against a KNOWN starting point. Commit or " +
+                "stash your changes first, then re-run.\n\n" +
+                status.stdout,
+        );
+    }
+}
+
+// Restores every tracked file bump may have touched back to its pre-mutation
+// (HEAD) content. `keepPath` (relative to repoRoot), when given, is excluded
+// from the revert — used for the m4-bump-report.md diagnostic, which should
+// survive a rollback so a human can see WHY it rolled back.
+function rollback(keepPath) {
+    console.error("\nbump: ROLLING BACK to the pre-mutation state (finding 1.6)...");
+    const args = ["checkout", "--", "."];
+    if (keepPath) args.push(`:(exclude)${keepPath}`);
+    const r = spawnSync("git", args, { cwd: repoRoot, stdio: "inherit" });
+    if (r.status !== 0) {
+        console.error(
+            "bump: WARNING — the rollback `git checkout` itself failed; the tree may be left half-mutated. " +
+                "Run `git status` and restore manually.",
+        );
+        return;
+    }
+    console.error(
+        "bump: rollback complete — package.json/lockfile/consumer bundles restored to their pre-bump state." +
+            (keepPath ? ` (${keepPath} was left in place.)` : ""),
+    );
+}
+
 function fail(msg) {
     console.error(`bump: FAIL — ${msg}`);
+    if (rollbackArmed) {
+        rollbackArmed = false; // avoid double-rollback if fail() is somehow reached twice
+        rollback();
+    }
     process.exit(1);
 }
+
+// Closes a gap independent review found in finding 1.6: `fail()` above only
+// catches EXPECTED failures — the ones this file itself detects and routes
+// through a `fail(...)` call. An unexpected raw JS exception after
+// `rollbackArmed` flips true (malformed JSON from a consumer's bundle file,
+// a throw inside generateBundleToTemp(), bad `pnpm ls -r --json` output) does
+// NOT go through `fail()` — it propagates straight past every rollback site
+// and would leave the tree half-mutated with no rollback, exactly the
+// failure mode 1.6 exists to prevent. This is the catch-all for that case.
+// Every function bump.mjs calls here is synchronous (spawnSync throughout,
+// no promises) so a plain try/catch around `main()` catches 100% of the
+// realistic cases; the process-level handlers below are a pure backstop in
+// case async code is ever added later, not load-bearing today.
+let rolledBackOnCrash = false;
+function rollbackOnCrash(err) {
+    console.error(`\nbump: UNCAUGHT ERROR — ${err && err.stack ? err.stack : err}`);
+    if (rollbackArmed && !rolledBackOnCrash) {
+        rolledBackOnCrash = true;
+        rollbackArmed = false;
+        rollback();
+    }
+    process.exit(1);
+}
+process.on("uncaughtException", rollbackOnCrash);
+process.on("unhandledRejection", rollbackOnCrash);
 
 function run(name, command, args, options = {}) {
     console.log(`\n${"─".repeat(72)}\n▶ ${name}\n$ ${command} ${args.join(" ")}`);
@@ -230,6 +307,12 @@ function main() {
     if (!version) fail("usage: pnpm run bump -- <exact-version>");
     if (!EXACT_VERSION.test(version)) fail(`"${version}" is not an exact version (no ranges/prefixes allowed).`);
 
+    // Finding 1.6: verify a known-clean starting point, then arm the rollback
+    // — every `fail()` call from here on restores this exact state instead of
+    // leaving a half-applied migration.
+    ensureCleanTree();
+    rollbackArmed = true;
+
     // Snapshot the "before" bundle for the report, before anything changes.
     const beforeSnapshotPath = CONSUMERS[1].committed[0].path; // m3e-okf's data/cem-facts.json
     const fromVersionPkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "packages", "tailwind-m3e-web", "package.json"), "utf8"));
@@ -296,11 +379,23 @@ function main() {
         fs.writeFileSync(REPORT_PATH, report);
         console.log(`\nbump: wrote ${path.relative(repoRoot, REPORT_PATH)}`);
 
-        if (!gateAllOk) fail("gate-all reported failures — see the report and the gate-all output above.");
+        if (!gateAllOk) {
+            // Roll back everything EXCEPT the report just written above — a
+            // rolled-back bump should still leave behind the diagnostic that
+            // explains why (finding 1.6). fail()'s own blanket rollback would
+            // revert that too, so do it here and disarm before calling fail().
+            rollback(path.relative(repoRoot, REPORT_PATH));
+            rollbackArmed = false;
+            fail("gate-all reported failures — see the report and the gate-all output above (tree rolled back to its pre-bump state).");
+        }
         console.log(`\nbump: DONE — @m3e/web is ${version} everywhere, all gates green.`);
     } finally {
         fs.rmSync(work, { recursive: true, force: true });
     }
 }
 
-main();
+try {
+    main();
+} catch (err) {
+    rollbackOnCrash(err);
+}

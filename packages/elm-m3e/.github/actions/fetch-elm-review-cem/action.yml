@@ -1,0 +1,21 @@
+name: Fetch elm-review-cem (sibling)
+description: >
+  Clones the public jackhp95/elm-review-cem sibling repo to
+  $GITHUB_WORKSPACE/../elm-review-cem, where review/elm.json's
+  source-directory expects it. No auth needed (public repo).
+
+  Extracted to a composite action (finding 1.9,
+  docs/reviews/2026-08-17-thermonuclear-workspace-review.md): this exact
+  two-line clone step used to be copy-pasted identically into all three jobs
+  of ci.yml (library/docs/harness) — a mechanical, no-auth-risk dedupe. The
+  OTHER sibling fetches in ci.yml (elm-html-intermediate-representation,
+  elm-typed-html, elm-cem — all private, PAT-authenticated) each appear only
+  once, so there is no copy-paste to remove there; touching that auth/clone
+  logic is the "bigger redesign" the audit's remedy explicitly says to defer
+  rather than rush.
+runs:
+  using: composite
+  steps:
+    - name: Clone elm-review-cem
+      shell: bash
+      run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"

@@ -48,9 +48,11 @@ EOF
 #   pnpm-workspace.yaml under packages/tailwind-m3e-web would make that
 #   directory its OWN pnpm workspace root when a command is invoked from
 #   inside it, which is exactly the "one git repo, one meta-gate" problem
-#   this reconciliation avoids — analogous to the single `core.hooksPath`
-#   this workspace already enforces at the root, this package gets a single
-#   pnpm-workspace.yaml too: the root's.
+#   this reconciliation avoids — the same "one git repo, one shared key"
+#   principle now also holds for `core.hooksPath` (root `hooks/pre-push` +
+#   `pnpm run hooks:install`, see tools/hooks-install.mjs — fixed for finding
+#   1.4, which is what used to be asserted, falsely, right here): this
+#   package gets a single pnpm-workspace.yaml too, the root's.
 
 # Files present in the workspace copy that are NOT in the source repo, because
 # they are deliberate M3.c adaptations. Each entry needs a stated reason.

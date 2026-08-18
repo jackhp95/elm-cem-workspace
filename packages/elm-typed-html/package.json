@@ -17,7 +17,7 @@
     "check:drift": "bash scripts/regen-diff-gate.sh",
     "check": "run-p \"check:*\"",
     "gate": "npm run check",
-    "hooks:install": "git config core.hooksPath hooks"
+    "hooks:install": "node ../../tools/hooks-install.mjs"
   },
   "devDependencies": {
     "elm-review": "^2.13.5",
