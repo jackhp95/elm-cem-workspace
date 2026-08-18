@@ -460,14 +460,51 @@ inputs (Avetta priorities; legal review) this plan can't supply.
   Figma URLs into shipped package doc-comment bytes for zero visible effect — this is
   open question 2 above, now concrete. Held for Jack's steer; see the script's header for
   the full account.
-- **Not started: Phase 3** (coverage worklist — `m3e-card`, `m3e-date-input` docked set,
-  `m3e-fab-menu`). Deliberately not rushed into the same pass as Phases 0–2: the plan
-  itself rates this fiddly per-component example-authoring work at a higher tier
-  (opus/medium vs. Phases 1–2's sonnet/medium), and `plans/next-agent-handoff.md` flags
-  real per-component traps (`m3e-fab-menu`'s portal/sibling-layout trap). Worth its own
-  focused pass rather than being squeezed in.
+- **2026-08-18 — Phase 3.1 (`m3e-card`) done** (`f034f95`). Converting it required new
+  infra that genuinely didn't exist: `appendSets` and the `figmaSets`-replace path both
+  refuse to touch a component the matcher already bound (m3e-card matches at the
+  `contains` tier), so there was no way to attach a per-set example without either
+  hand-editing `correspondence.json` directly (tried first — correctly caught by the A8
+  byte-stability test, exactly what it's for) or relabeling the whole entry `manual` and
+  losing its matcher-derived axes/props. Added a new manual-correspondence.json mechanism,
+  `setExamples` — a content-only overlay onto sets an entry already has, implemented
+  symmetrically in both `merge.mjs` paths (strict/throwing on proposed, lenient/idempotent
+  on existing, same discipline as `appendSets`) so re-matching stays byte-stable. 17 new
+  unit tests. Card's two structurally-different nodes (vertical: header avatar+more_vert,
+  media, Title/Subtitle/Supporting, Secondary/Primary; horizontal: media in header slot,
+  Headline/Supporting, single action) now have distinct, offline-validated
+  (`example-content.mjs`'s `validateExamples()` against the real CEM) representative
+  examples. Visual approval is still a Phase 4 task.
+- **Phase 3.2/3.3 (`m3e-fab-menu`, `m3e-date-input` docked): investigated, found
+  structurally blocked, not attempted blind.** Both hit the same wall, and it isn't
+  something offline work can route around:
+  - **`m3e-fab-menu`**: the emitted example root is always the bound cemTag
+    (`<m3e-fab-menu>…</m3e-fab-menu>`) — the handoff's needed "real FAB + trigger"
+    composition is a SIBLING element, which by construction cannot live inside that root.
+    The figma export DOES have dedicated `.Building Blocks/FAB Menu/{Primary,Secondary,
+    Tertiary}/FAB` component sets (`57998:42971` etc.) separate from the open-menu node
+    (`57998:42986`) — a real candidate for binding `m3e-fab-menu-trigger` (or `m3e-fab`)
+    as its OWN correspondence entry — but `m3e-fab-menu-trigger`'s CEM shape (`slots: []`,
+    only a `for` attribute) gives no evidence of what it actually renders without the real
+    `@m3e/web` source (not available offline this session) or a live render to check
+    against. Binding it on a guess would be fabrication, not "best assertion of what would
+    work" — left for a live-Figma pass. `next-agent-handoff.md`'s own gotcha list agrees:
+    the two sanctioned fixes for a composition-outside-the-root case are a render-harness
+    wrap (ephemeral tooling, not in this repo) or rebinding to a real containing node
+    (none exists here) — extending `emit` to allow a non-cemTag root is explicitly the
+    last resort ("real blast radius... prefer (a)/(b)").
+  - **`m3e-date-input` docked**: confirmed by inspection that the ALREADY-DONE modal set
+    (88% per the handoff, done before this session) carries **no `example` on either set**
+    in `manual-correspondence.json` — meaning whatever got modal to 88% was 100% a
+    render-harness screenshot concern (the ephemeral `WRAP` map from a prior live session,
+    absent from this repo — `src/visual/harness/` has no such mechanism today), never a
+    correspondence/example change. There is nothing in the binding data for this session
+    to fix; docked needs the same (currently-missing) harness capability plus live pixel
+    iteration, not a code change.
+  - `m3e-search-view` fullscreen: still untouched, per standing "only if asked" instruction.
 - **Phase 4 (live-Figma bridge session): still fully blocked**, runbook unchanged — this
-  is the "run one command when I have Figma access" step; everything through Phase 2 was
+  is the "run one command when I have Figma access" step; everything through Phase 3.1 was
   designed so that session should need at most the fileKey dry-run (open question 1) plus
-  whatever Phase 3 leaves for live pixel-approval.
+  visual approval for card + whatever fab-menu/date-input-docked need once real render
+  access exists.
 - **Phase 5: untouched**, no dependency from anything above.
