@@ -23,6 +23,7 @@ import MimeType
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
+import Set
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
@@ -78,7 +79,52 @@ componentDecoder =
         (Decode.field "module" Decode.string)
         (Decode.field "slug" Decode.string)
         (Decode.field "overview" Decode.string)
-        (Decode.field "members" (Decode.list memberDecoder))
+        membersDecoder
+
+
+{-| The barrel-reference page groups a component's members by NAME PREFIX, so it
+needs the FLAT member list. `reference.json` is layered now (`types` +
+`layers.{m3e,components,builder,raw}`), so rebuild the flat list by unioning them,
+de-duped by name. `raw` is deliberately excluded: its members are custom-element
+attribute names (`aria-label`, `variant`), not Elm values, so they would not group
+under any of this page's Elm name-prefix buckets. A legacy flat `members` array is
+still accepted first, so a stale generated artifact keeps rendering.
+-}
+membersDecoder : Decode.Decoder (List Member)
+membersDecoder =
+    let
+        listAt : String -> Decode.Decoder (List Member)
+        listAt field =
+            Decode.oneOf [ Decode.field field (Decode.list memberDecoder), Decode.succeed [] ]
+
+        layerAt : String -> Decode.Decoder (List Member)
+        layerAt field =
+            Decode.oneOf [ Decode.at [ "layers", field ] (Decode.list memberDecoder), Decode.succeed [] ]
+
+        dedupe : List Member -> List Member
+        dedupe ms =
+            List.foldl
+                (\m ( seen, acc ) ->
+                    if Set.member m.name seen then
+                        ( seen, acc )
+
+                    else
+                        ( Set.insert m.name seen, m :: acc )
+                )
+                ( Set.empty, [] )
+                ms
+                |> Tuple.second
+                |> List.reverse
+    in
+    Decode.oneOf
+        [ Decode.field "members" (Decode.list memberDecoder)
+        , Decode.map4
+            (\types m3e components builder -> dedupe (types ++ m3e ++ components ++ builder))
+            (listAt "types")
+            (layerAt "m3e")
+            (layerAt "components")
+            (layerAt "builder")
+        ]
 
 
 route : StatelessRoute RouteParams Data ActionData

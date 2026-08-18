@@ -2,6 +2,7 @@ port module Theme.Ports exposing
     ( storeThemeState, readThemeState
     , setCssOverride, setFaviconColor
     , loadFonts, loadSpecimenFonts, setIconVariant, requestPreset, onPresetRequested
+    , storeSurface, readSurface
     , encode, decoder
     )
 
@@ -11,6 +12,7 @@ port module Theme.Ports exposing
 @docs storeThemeState, readThemeState
 @docs setCssOverride, setFaviconColor
 @docs loadFonts, loadSpecimenFonts, setIconVariant, requestPreset, onPresetRequested
+@docs storeSurface, readSurface
 @docs encode, decoder
 
 -}
@@ -92,6 +94,26 @@ page. Maps the received id through `Theme.Presets.byId` to recover the full
 `Preset`, then dispatches `ThemeMsg (ApplyPreset preset)`. An unknown id no-ops.
 -}
 port onPresetRequested : (String -> msg) -> Sub msg
+
+
+{-| The docs' API-layer tab selection (`Doc.Usage.Surface`), persisted to its own
+namespaced localStorage key — deliberately NOT folded into the theme blob above:
+this is a docs-navigation preference, not a visual theme setting, and the two have
+different lifetimes.
+
+`index.ts` writes the value AND immediately echoes it back through `readSurface`,
+so `Shared` (the single source of truth for `activeSurface`) updates from one
+place no matter which page's tab strip was clicked.
+
+-}
+port storeSurface : Encode.Value -> Cmd msg
+
+
+{-| On boot AND after every `storeSurface`, `index.ts` sends the stored surface
+string here; `Shared.update` decodes it (`Doc.Usage.surfaceFromString`), falling
+back to its current value on absence/decode failure.
+-}
+port readSurface : (Decode.Value -> msg) -> Sub msg
 
 
 {-| Encoder for the persisted blob. Keep in sync with `decoder` below and

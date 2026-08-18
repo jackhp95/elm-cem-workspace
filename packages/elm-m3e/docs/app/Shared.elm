@@ -38,6 +38,7 @@ constructor is `Module.component [attrs] [content]`.
 import BackendTask exposing (BackendTask)
 import Browser.Events
 import Doc.Data
+import Doc.Usage
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
@@ -114,6 +115,13 @@ type alias Model =
     , searchOpen : Bool
     , searchQuery : String
     , searchIndex : Maybe (Result Http.Error (List SearchEntry))
+
+    -- The site-wide API-layer tab selection shared by every Usage example and
+    -- every component page's API section. It lives HERE, not in a route's local
+    -- model, so it survives client-side navigation between component pages;
+    -- localStorage (via `Theme.Ports.storeSurface`/`readSurface`) survives a
+    -- reload. Routes only read it and forward tab clicks to the store port.
+    , activeSurface : Doc.Usage.Surface
     }
 
 
@@ -330,6 +338,7 @@ type Msg
     | ThemeMsg Theme.Msg
     | SetDirection (TypedHtml.Values.Value TypedHtml.Values.Dir)
     | PresetRequested String
+    | SurfaceLoaded Decode.Value
 
 
 init :
@@ -359,6 +368,7 @@ init flags _ =
       , searchOpen = False
       , searchQuery = ""
       , searchIndex = Nothing
+      , activeSurface = Doc.Usage.Top
       }
       -- Load every reel card's specimen-subset webfont once at boot (§D6). The
       -- reel appears in both the settings drawer AND the Welcome page, and Shared
@@ -566,6 +576,26 @@ update msg model =
                 Nothing ->
                     ( model, Effect.none )
 
+        -- The site-wide layer-tab selection, mirrored from localStorage.
+        -- `index.ts` sends this on boot AND after every `storeSurface` (a tab
+        -- click on any page), so this single field is the only writer and it
+        -- survives client-side navigation between component pages. Falls back to
+        -- the current value on absence/decode failure rather than resetting to
+        -- `Top` — a bad blob must not silently undo the user's choice.
+        SurfaceLoaded value ->
+            let
+                surface : Doc.Usage.Surface
+                surface =
+                    case Decode.decodeValue Decode.string value of
+                        Ok s ->
+                            Doc.Usage.surfaceFromString s
+                                |> Result.withDefault model.activeSurface
+
+                        Err _ ->
+                            model.activeSurface
+            in
+            ( { model | activeSurface = surface }, Effect.none )
+
 
 {-| Watch viewport width so `resizeTo` can re-pin the tree (and, past
 `tocPinBreakpointPx`, the TOC) when the user crosses back up from a narrow
@@ -586,6 +616,7 @@ subscriptions path _ =
         [ Browser.Events.onResize (\w _ -> ViewportResized w)
         , Sub.map ThemeMsg Theme.subscriptions
         , Theme.Ports.onPresetRequested PresetRequested
+        , Theme.Ports.readSurface SurfaceLoaded
         , if hasDocsShell path then
             Ports.onOpenSearchRequested (\_ -> OpenSearch)
 

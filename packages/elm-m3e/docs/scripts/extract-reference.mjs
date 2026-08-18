@@ -166,6 +166,47 @@ function barrelSource() {
   return out;
 }
 
+// The @m3e/web custom-elements manifest (CEM). Its declared path is the package's
+// package.json `customElements` field: dist/custom-elements.json. Standard CEM 1.0.0 —
+// each custom-element declaration carries `tagName` + attributes/events/slots. Indexed by
+// tagName so the per-component `raw` layer (the Raw API tab) can look an element up by the
+// component's slug.
+const CEM_PATH = path.resolve(REPO, "docs/node_modules/@m3e/web/dist/custom-elements.json");
+const cemByTag = new Map();
+if (fs.existsSync(CEM_PATH)) {
+  const cem = JSON.parse(fs.readFileSync(CEM_PATH, "utf8"));
+  for (const mod of cem.modules || []) {
+    for (const d of mod.declarations || []) {
+      if (d.customElement && d.tagName) cemByTag.set(d.tagName, d);
+    }
+  }
+} else {
+  console.warn(
+    `⚠ CEM manifest not found at ${path.relative(REPO, CEM_PATH)} — ` +
+      `Raw tabs will be empty. (Is @m3e/web installed?)`
+  );
+}
+
+// slug → CEM tag(s). The common rule: strip the `m3e-` prefix and hyphens, lowercase, and
+// match against the docs slug. A few docs pages consolidate multiple elements or have no
+// element at all; the override map covers the only such component with a real element today
+// (`progress` = both progress indicators). Slugs absent from both the stripped index and the
+// override get an empty Raw layer — correct for infra/barrel modules (`action`, `html`,
+// `m3e`, …) and sub-components with no own element (`steppernext`).
+const cemTagByStripped = new Map();
+for (const tag of cemByTag.keys()) {
+  cemTagByStripped.set(tag.replace(/^m3e-/, "").replace(/-/g, ""), tag);
+}
+const CEM_SLUG_OVERRIDES = {
+  // Docs `progress` page consolidates the two indicator elements onto one page.
+  progress: ["m3e-linear-progress-indicator", "m3e-circular-progress-indicator"],
+};
+function cemTagsForSlug(slug) {
+  if (CEM_SLUG_OVERRIDES[slug]) return CEM_SLUG_OVERRIDES[slug];
+  const tag = cemTagByStripped.get(slug);
+  return tag ? [tag] : [];
+}
+
 // 1. Build a fresh scratch package project inside the unique temp dir.
 function setupScratch() {
   // Refresh only the src tree (idempotent across runs — the dir persists); keep
@@ -206,6 +247,16 @@ function setupScratch() {
         .map((f) => "M3e.Component." + f.replace(/\.elm$/, ""))
     : [];
 
+  // Builder modules (M3e.Build.*) — the pipe API surface behind the Builder tab.
+  // Exposed only as a LAYER SOURCE; `moduleEntry` never emits a page for them.
+  const SRC_M3E_BUILD = path.join(SRC_M3E, "Build");
+  const buildModules = fs.existsSync(SRC_M3E_BUILD)
+    ? fs
+        .readdirSync(SRC_M3E_BUILD)
+        .filter((f) => f.endsWith(".elm"))
+        .map((f) => "M3e.Build." + f.replace(/\.elm$/, ""))
+    : [];
+
   const exposed = [
     // The one-import barrel first — it is the taught surface (#187).
     "M3e",
@@ -216,6 +267,8 @@ function setupScratch() {
       .filter((m) => !NOT_EXPOSED.has(m)),
     // Per-component modules under M3e.Component.* (Phase B layout).
     ...componentModules,
+    // Builder modules under M3e.Build.* (the Builder-tab layer source).
+    ...buildModules,
   ].sort();
 
   const elmJson = {
@@ -298,30 +351,28 @@ function summary(overviewText) {
 }
 
 // 4d. Classify a member into the elm-module-page groups the API section renders,
-//     preserving @docs order within each group. `type` (aliases/unions) colocate
-//     with the constructor; `ctor` is `view`; `slot` setters return
-//     `M3e.Content.Content`; `event` setters are the `onX` attribute producers;
-//     everything else that produces an `Attr` is a plain attribute setter.
-function roleOf(m) {
+//     preserving @docs order within each group. `type` (aliases/unions) become the
+//     page-wide Types block; `ctor` is the layer's own constructor name — passed in,
+//     because it differs per layer (`component` in `M3e.Component.<X>`, `build` in
+//     `M3e.Build.<X>`, the camelCased component name in the `M3e` barrel); `slot`
+//     setters return `M3e.Content.Content`; `event` setters are the `onX` attribute
+//     producers; everything else that produces an `Attr` is a plain attribute setter.
+function roleOf(m, ctorNames) {
   const sig = m.signature || "";
   if (m.kind === "type") return "type";
-  if (m.name === "view") return "ctor";
+  if (ctorNames.includes(m.name)) return "ctor";
   if (/\bM3e\.Content\.Content\b/.test(sig)) return "slot";
   if (/^on[A-Z]/.test(m.name) && /\bM3e\.Cem\.Attr\.Attr\b/.test(sig)) return "event";
   if (/\bM3e\.Cem\.Attr\.Attr\b/.test(sig)) return "attr";
   return "other";
 }
 
-// 5. Build the per-module reference record. `kind`: type for unions and
-//    aliases; value for everything else. Signature on values is the elm type
-//    (multi-line collapsed to a single line by docs.json already). Each member
-//    also carries a `role` so the API section can render elm-module-page groups
-//    (constructor+types, attributes, slots, events) while preserving @docs order.
-function moduleEntry(mod) {
-  const name = mod.name.replace(/^M3e\./, "");
-  // For M3e.Component.Button → slug "button" (strip intermediate namespace so
-  // categories.json keys stay simple). Top-level M3e.Action → slug "action" unchanged.
-  const slug = name.replace(/^Component\./, "").toLowerCase();
+// Build a module's ordered member list (types + values), each tagged with its
+// `role` via `roleOf(m, ctorNames)`. Order follows the module comment's @docs
+// sections, with anything unreferenced falling to the end alphabetically. Shared
+// by the Components, Builder, and M3e-barrel layer extraction so all three
+// classify identically.
+function membersOf(mod, ctorNames) {
   const byName = new Map();
   for (const u of mod.unions || []) {
     byName.set(u.name, { name: u.name, kind: "type", signature: "", doc: (u.comment || "").trim() });
@@ -345,7 +396,86 @@ function moduleEntry(mod) {
   for (const n of [...byName.keys()].sort()) {
     if (!seen.has(n)) members.push(byName.get(n));
   }
-  for (const m of members) m.role = roleOf(m);
+  for (const m of members) m.role = roleOf(m, ctorNames);
+  return members;
+}
+
+// Map a CEM custom-element declaration's attributes/events/slots to reference `Member`s.
+// CEM attribute → role `attr`, event → `event`, slot → `slot` (the same vocabulary the API
+// section's apiGroups buckets on). There is no Elm signature — a member's `signature` is the
+// CEM `type.text` (e.g. `boolean`, `Event`), its `doc` the CEM description. No ctor/other.
+function cemMembers(decl) {
+  const attrs = (decl.attributes || []).map((a) => ({
+    name: a.name,
+    kind: "value",
+    signature: (a.type && a.type.text) || "",
+    doc: (a.description || "").trim(),
+    role: "attr",
+  }));
+  const slots = (decl.slots || []).map((s) => ({
+    name: s.name || "(default)",
+    kind: "value",
+    signature: "",
+    doc: (s.description || "").trim(),
+    role: "slot",
+  }));
+  const events = (decl.events || []).map((e) => ({
+    name: e.name,
+    kind: "value",
+    signature: (e.type && e.type.text) || "",
+    doc: (e.description || "").trim(),
+    role: "event",
+  }));
+  return [...attrs, ...slots, ...events];
+}
+
+// 5. Build the per-module reference record. `kind`: type for unions and
+//    aliases; value for everything else. Signature on values is the elm type
+//    (multi-line collapsed to a single line by docs.json already). Each member
+//    also carries a `role` so the API section can render elm-module-page groups
+//    (constructor, attributes, slots, events) while preserving @docs order.
+//
+//    The record is LAYERED: `types` (shared aliases/unions, rendered above the
+//    tabs) plus `layers.{m3e,components,builder,raw}`, one per API-reference tab.
+function moduleEntry(mod, modulesByName, barrelSlice) {
+  const name = mod.name.replace(/^M3e\./, "");
+  // For M3e.Component.Button → slug "button" (strip intermediate namespace so
+  // categories.json keys stay simple). Top-level M3e.Action → slug "action" unchanged.
+  const slug = name.replace(/^Component\./, "").toLowerCase();
+
+  // `component` is the per-component constructor in the 5-package split; `view`
+  // is the pre-rename name, kept so an older tree still classifies.
+  const members = membersOf(mod, ["component", "view"]);
+
+  // Types (aliases/unions) are shared across the M3e + Components layers, so they
+  // leave the per-layer bucket set and become a page-wide block.
+  const types = members.filter((m) => m.kind === "type");
+  const componentsLayer = members.filter((m) => m.kind !== "type");
+
+  // Builder layer: M3e.Build.<Name>'s own members (`build` is its constructor;
+  // aliases join the shared types). Absent module ⇒ empty layer.
+  const buildMod = modulesByName.get("M3e.Build." + name.replace(/^Component\./, ""));
+  const builderMembers = buildMod ? membersOf(buildMod, ["build"]) : [];
+  for (const t of builderMembers.filter((m) => m.kind === "type")) {
+    if (!types.some((x) => x.name === t.name)) types.push(t);
+  }
+  const builderLayer = builderMembers.filter((m) => m.kind !== "type");
+
+  // M3e barrel slice: the barrel values this component owns (see barrelSliceByOwner).
+  const barrelMod = modulesByName.get("M3e");
+  const ownedNames = barrelSlice.get(slug) || [];
+  const m3eLayer = barrelMod
+    ? membersOf(barrelMod, ownedNames).filter(
+        (m) => ownedNames.includes(m.name) && m.kind !== "type"
+      )
+    : [];
+
+  // Raw layer: the underlying custom element(s)' CEM attributes/events/slots.
+  // Empty for infra/barrel slugs and sub-components with no own element.
+  const rawLayer = cemTagsForSlug(slug).flatMap((tag) => {
+    const decl = cemByTag.get(tag);
+    return decl ? cemMembers(decl) : [];
+  });
 
   const over = overview(mod.comment || "");
   // Join the editorial override (config/categories.json) by slug: a matched
@@ -366,8 +496,27 @@ function moduleEntry(mod) {
     label: override ? override.label : name,
     summary: summary(over),
     overview: over,
-    members,
+    types,
+    layers: { m3e: m3eLayer, components: componentsLayer, builder: builderLayer, raw: rawLayer },
   };
+}
+
+// Barrel per-component ownership. The workspace barrel does NOT re-export by
+// aliasing (`button = M3e.Component.Button.button`); every constructor inlines its
+// own `Ir.fromNode (Ir.node "m3e-button" …)`. What DOES hold exactly is the naming
+// contract: the barrel value is the camelCase of the component module's base name,
+// so `value.toLowerCase() === slug`. Everything else the barrel exposes — the
+// `slot*` placers, `toHtml`/`mapMsg`/`lazy*`, `text` — matches no component slug and
+// is correctly excluded (those are universal, not per-component).
+function barrelSliceByOwner(barrelMod, componentSlugs) {
+  const byOwner = new Map();
+  for (const v of (barrelMod && barrelMod.values) || []) {
+    const slug = v.name.toLowerCase();
+    if (!componentSlugs.has(slug)) continue;
+    if (!byOwner.has(slug)) byOwner.set(slug, []);
+    byOwner.get(slug).push(v.name);
+  }
+  return byOwner;
 }
 
 // ----- run -----
@@ -397,10 +546,31 @@ try {
   throw e;
 }
 
+// Index raw docs.json module entries by name so the Builder + barrel layer lookups
+// can pull typed members without re-parsing source.
+const modulesByName = new Map(modules.map((m) => [m.name, m]));
+
+// Every component slug that has its own page module — the key set the barrel
+// ownership rule matches against.
+const componentSlugs = new Set(
+  modules
+    .filter((m) => /^M3e\.Component\./.test(m.name))
+    .map((m) => m.name.replace(/^M3e\.Component\./, "").toLowerCase())
+);
+const barrelSlice = barrelSliceByOwner(modulesByName.get("M3e"), componentSlugs);
+
 const components = modules
-  // Keep the bare `M3e` barrel plus every `M3e.*` component module.
-  .filter((m) => m.name === "M3e" || /^M3e\./.test(m.name))
-  .map(moduleEntry)
+  // Keep the bare `M3e` barrel plus every `M3e.Component.*` page module, plus any
+  // other top-level `M3e.*` module that maps to a page — but NOT `M3e.Build.*`,
+  // which is consumed only as a layer source and must never surface as its own
+  // page (no `build`-prefixed slug in categories.json).
+  .filter(
+    (m) =>
+      m.name === "M3e" ||
+      /^M3e\.Component\./.test(m.name) ||
+      (/^M3e\./.test(m.name) && !/^M3e\.Build\./.test(m.name))
+  )
+  .map((m) => moduleEntry(m, modulesByName, barrelSlice))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 // Build guard: the package exposes ZERO `Ui.*` modules — every module is
@@ -419,7 +589,13 @@ for (const c of components) {
   for (const [field, val] of Object.entries(fields)) {
     if (/\bUi\.[A-Z]/.test(val || "")) uiHits.push(`${c.module} .${field}`);
   }
-  for (const m of c.members) {
+  for (const m of [
+    ...c.types,
+    ...c.layers.m3e,
+    ...c.layers.components,
+    ...c.layers.builder,
+    ...c.layers.raw,
+  ]) {
     if (/\bUi\.[A-Z]/.test(m.doc || "")) uiHits.push(`${c.module}.${m.name} .doc`);
     if (/\bUi\.[A-Z]/.test(m.signature || "")) uiHits.push(`${c.module}.${m.name} .signature`);
   }
@@ -436,7 +612,16 @@ if (uiHits.length) {
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(components));
-const totalMembers = components.reduce((n, c) => n + c.members.length, 0);
+const totalMembers = components.reduce(
+  (n, c) =>
+    n +
+    c.types.length +
+    c.layers.m3e.length +
+    c.layers.components.length +
+    c.layers.builder.length +
+    c.layers.raw.length,
+  0
+);
 console.log(
   `reference (via elm make --docs): ${components.length} components, ${totalMembers} members -> data/reference.json`
 );
