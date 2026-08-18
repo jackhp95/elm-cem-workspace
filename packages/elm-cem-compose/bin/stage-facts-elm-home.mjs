@@ -34,6 +34,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
@@ -74,6 +75,18 @@ const cacheDir = path.join(elmHome, "0.19.1", "packages", "jackhp95", "elm-cem-f
 const cacheElmJsonPath = path.join(cacheDir, "elm.json");
 const cacheDocsPath = path.join(cacheDir, "docs.json");
 const cacheReadmePath = path.join(cacheDir, "README.md");
+// Finding 1.11 (2026-08-17 thermonuclear review): this cache slot is a single
+// FIXED path (…/elm-cem-facts/1.0.0) shared by every concurrent worktree on
+// the machine (ELM_HOME is normally $HOME/.elm, not per-worktree). Comparing
+// elm.json alone is not enough to detect staleness — elm.json (the version
+// pin + dependency list) rarely changes even when Cem/Facts.elm's actual
+// content does, so two worktrees mid-edit on Facts.elm with an unchanged
+// elm.json would silently share (and corrupt) each other's cached docs.json.
+// This workspace runs 7+ concurrent agent worktrees routinely, so this is a
+// live risk, not a theoretical one. Hash src/ too, and store the hash
+// alongside the cache so a content change is detected even when elm.json
+// didn't move.
+const cacheSrcHashPath = path.join(cacheDir, ".src-hash");
 
 function resolveElm() {
   const binName = process.platform === "win32" ? "elm.cmd" : "elm";
@@ -95,7 +108,36 @@ if (!fs.existsSync(factsElmJsonPath) || !fs.existsSync(factsSrcDir)) {
 
 const canonicalElmJson = fs.readFileSync(factsElmJsonPath, "utf8");
 
-if (fs.existsSync(cacheElmJsonPath) && fs.readFileSync(cacheElmJsonPath, "utf8") === canonicalElmJson && fs.existsSync(cacheDocsPath)) {
+// Deterministic hash of every file under src/ (relative path + content), so
+// a rename or a byte edit anywhere in the tree changes the hash — not just a
+// top-level file. Sorted directory listing makes the walk order stable.
+function hashDir(dir) {
+  const hash = crypto.createHash("sha256");
+  const walk = (d, rel) => {
+    for (const entry of fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const full = path.join(d, entry.name);
+      const relPath = rel ? `${rel}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        walk(full, relPath);
+      } else {
+        hash.update(relPath);
+        hash.update(fs.readFileSync(full));
+      }
+    }
+  };
+  walk(dir, "");
+  return hash.digest("hex");
+}
+
+const canonicalSrcHash = hashDir(factsSrcDir);
+
+if (
+  fs.existsSync(cacheElmJsonPath) &&
+  fs.readFileSync(cacheElmJsonPath, "utf8") === canonicalElmJson &&
+  fs.existsSync(cacheDocsPath) &&
+  fs.existsSync(cacheSrcHashPath) &&
+  fs.readFileSync(cacheSrcHashPath, "utf8") === canonicalSrcHash
+) {
   console.log(`stage-facts-elm-home: OK — cache already current at ${cacheDir}`);
   process.exit(0);
 }
@@ -119,6 +161,7 @@ if (r.status !== 0) {
 
 fs.copyFileSync(path.join(scratch, "docs.json"), cacheDocsPath);
 fs.copyFileSync(factsElmJsonPath, cacheElmJsonPath);
+fs.writeFileSync(cacheSrcHashPath, canonicalSrcHash);
 if (!fs.existsSync(cacheReadmePath)) {
   fs.writeFileSync(cacheReadmePath, "# jackhp95/elm-cem-facts\n\nWorkspace-local, unpublished. Seeded by bin/stage-facts-elm-home.mjs.\n");
 }
