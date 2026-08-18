@@ -14,17 +14,17 @@ before merge, same bar as every other leaf this session.
 ## Waves (dependency-aware — same-package leaves sequenced, different-package leaves parallel)
 
 ```
-[ ] W1 enforcement wiring (Theme 1, move #1, BLOCKER)          — work — sonnet/high — queued
-[ ] W2 elm-cem core: Emit.elm split + resolveWith + dead code  — work — sonnet/high — queued
+[x] W1 enforcement wiring (Theme 1, move #1, BLOCKER)          — work — sonnet/high — MERGED (b6c6746)
+[x] W2 elm-cem core: Emit.elm split + resolveWith + dead code  — work — sonnet/high — MERGED (bed24c2)
     (Theme 4 move #3 + Theme 5 move #6, BLOCKER latent bug in Config.elm's divergent decoder)
-[x] W3 M3E-coupling fixes (Theme 2, moves #2 + #5)             — work — sonnet/high — DONE (2.1,2.3,2.4,2.5,2.6-partial; see progress log)
-[ ] W4 elm-review-cem shared-module extraction (move #7)       — work — sonnet/high — HELD (overlaps W3's RequireFabLabel/FormField fix, sequence after)
-[x] W5 redundancy cleanup + family.json manifest (Theme 3/#4)  — work — sonnet/high — DONE
-[x] W6 trapped generic modules + prefix-guess fixes (#9)       — work — sonnet/high — DONE
+[x] W3 M3E-coupling fixes (Theme 2, moves #2 + #5)             — work — sonnet/high — MERGED (198f1dc)
+[ ] W4 elm-review-cem shared-module extraction (move #7)       — work — sonnet/high — HELD (not started this pass)
+[x] W5 redundancy cleanup + family.json manifest (Theme 3/#4)  — work — sonnet/high — MERGED (bdd66ac)
+[x] W6 trapped generic modules + prefix-guess fixes (#9)       — work — sonnet/high — MERGED (e2dce06)
 [ ] W7 package boundary extractions (elm-cem-facts, tokens/*)  — work — sonnet/high — HELD (structural, lower leverage, later wave)
 [ ] W8 derived-artifact staleness gaps (#10)                   — work — sonnet/high — HELD (small, folds into W1 easily, later)
-[ ] V-per-wave independent verify, different agent each        — verify — sonnet/high — per-wave
-[ ] M synthesis + report                                       — manage — this session — ongoing
+[x] V-per-wave independent verify, different agent each        — verify — sonnet/high — done for all 5 merged leaves
+[x] M synthesis + report                                       — manage — this session — merge complete, see below
 ```
 
 W2/W3/W4 all touch elm-cem or elm-review-cem — sequenced to avoid file collisions (W4 held until
@@ -254,3 +254,52 @@ removed rather than reworded. Re-ran `bash .github/neutrality-check.sh` (OK) and
 
 **Not touched, explicitly out of scope this leaf:** 2.2 (ActionsRoster/ActionWrapper — W2's
 files), full 2.6 brand-pluggability proof (flagged in the audit itself as a likely separate wave).
+
+---
+
+## Merge synthesis (2026-08-18)
+
+All 5 in-scope leaves (W1, W2, W3, W5, W6) merged to `main`, `9a40cc7`. Not pushed yet.
+
+Each leaf was independently verified before merge, and W1/W3/W5/W6 also got a targeted
+follow-up round after review found small gaps (a rollback-completeness hole in `bump.mjs`,
+a missed `countBy` duplicate, a stale warning string, two stale doc-path references) — all
+fixed and re-verified before merge. W2 got two full re-verification rounds: the first found
+the BLOCKER's acceptance-test narrative didn't reproduce and a twin `dedupBy_` bug was
+missed; both were fixed and independently re-confirmed.
+
+**What no single leaf's own gate caught — only the combined tree did, after all 5 merged:**
+
+1. **`.neutrality-allowlist` gaps** (×2) — new files/directories (`Emit.elm`'s split
+   siblings from W2, `family-configs/` from W3) carried legitimate M3E doc-comment/data
+   content but were never added to the allowlist. Fixed directly, same class of exception
+   as existing entries.
+2. **A real `check-drift.mjs` bug**, not just a missing allowlist entry — W6 promoted
+   `tailwind-m3e-web`'s generic transform to a shared `tools/lib/component-css-utilities.mjs`,
+   imported via a relative specifier walking out of `packages/tailwind-m3e-web/bin/` to the
+   workspace-root `tools/lib/`. `check-drift`'s scratch-copy regen mechanism
+   (`regeneratePackageOutput`) flattened the copy (`tmp/tailwind-m3e-web`, not
+   `tmp/packages/tailwind-m3e-web`), so the relative import resolved outside the scratch
+   tree and regen threw `ERR_MODULE_NOT_FOUND`. Fixed: the helper now preserves a package's
+   real depth from `repoRoot`, plus a new `externalSymlinks` option for exactly this
+   "package imports out to shared workspace tooling" shape. Also updated the negative-test
+   callers in `check-drift.test.mjs` to match the new signature.
+3. **Two stale downstream generated-output files** — W2's real `dedupBy` bug fix
+   (first-wins, not last-wins) changes which component's doc-comment text a shared setter's
+   `{-| ... -}` block shows. `elm-m3e/src/M3e/Attributes.elm` and
+   `elm-typed-html/src/TypedHtml/Attributes.elm` (plus `elm-m3e`'s vendored copy of the
+   latter) were never regenerated after the fix landed. Regenerated all three, diffed
+   (confirmed doc-comment-only, no code/type changes), committed.
+
+None of these were leaf-quality problems — every individual leaf's own gate was genuinely
+green in isolation. They're integration-only failures, the exact class the final
+all-branches-merged gate run exists to catch. `node tools/gate-all.mjs`: `GATE-ALL GREEN`
+on the fully merged tree.
+
+**Remaining, explicitly not started this pass:** W4 (elm-review-cem shared-module
+extraction — held pending a future pass), W7 (package boundary extractions — elm-cem-facts
+to top-level, cem-figma-connect's `src/tokens/*`), W8 (derived-artifact staleness gaps —
+`match --check` for cem-figma-connect, facts-index meta-test, folds mostly into W1's
+already-landed chronic-SKIP tracking). Also un-attempted: the audit's move #2, proving
+brand-pluggability via a live second-brand CI run — flagged from the start as its own
+likely wave, not mechanical.
