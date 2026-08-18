@@ -13,7 +13,7 @@ is a private kind wearing cross-library clothes, and it fails silently — the
 brand compiles, publishes, and simply never matches anything.
 
 The resolution-time check enumerates the routes it knows (`_atoms`, a component's
-`kind`, a slot's `kinds`, a `_coerce` target). This one enumerates nothing: it
+`kind`, a slot's `kinds`). This one enumerates nothing: it
 walks what the emitter is about to WRITE. That is why it is worth having twice —
 a future emitter path that synthesises a field name cannot slip past a check
 positioned at the output.
@@ -148,17 +148,6 @@ suite =
             \_ ->
                 emitErrors (\b -> { b | atoms = [ "txet" ] })
                     |> mentions "shared:txet"
-                    |> Expect.equal True
-        , test "an unlisted shared coercion target is refused at emission" <|
-            \_ ->
-                emitErrors
-                    (\b ->
-                        { b
-                            | coercions =
-                                [ { from = "Card", fromKind = "card", to = "shared:phrasin", name = "asPhrasing" } ]
-                        }
-                    )
-                    |> mentions "shared:phrasin"
                     |> Expect.equal True
         , test "the refusal names the whole legal vocabulary, so the fix needs no source dive" <|
             \_ ->

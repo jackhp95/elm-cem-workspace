@@ -150,7 +150,7 @@ composition of them, built above the IR by generated code:
 | typed attr / event setter | `attribute` / `property` / `on` + honest capability row |
 | enum token | `token` + honest tag row |
 | `slotAs` (named-slot placement, free output row) | `fromNode << addAttribute (attribute "slot" name) << toNode` |
-| `coerce` (blessed brand crossing) | `fromNode << toNode` |
+| `recast` (brand crossing, free output row) | `fromNode << toNode` |
 | `delegate` (event capability-forget escape) | `recast` |
 | absent attribute (a `False` boolean setter) | `none` |
 | merging inline styles | `styles [ ( prop, value ) ]` — declarations merge across setters |

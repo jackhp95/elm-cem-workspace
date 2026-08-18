@@ -27,6 +27,7 @@ import NoDebug.TodoOrToString
 import NoExposingEverything
 import NoFunctionOutsideOfModules
 import NoImportingEverything
+import NoMissingComponentApiNames
 import NoMissingTypeAnnotation
 import NoMissingTypeAnnotationInLetIn
 import NoMissingTypeExpose
@@ -49,7 +50,7 @@ import Simplify
 
 config : List Rule
 config =
-    List.concat
+    (List.concat
         [ unused
         , common
         , docs
@@ -62,6 +63,14 @@ config =
         , toHtmlGate
         ]
         |> List.map (ignoreElmPages >> ignoreLibraryTests >> ignoreGeneratedSubstrate >> ignoreGeneratedComposeAttrs)
+    )
+        -- `NoMissingComponentApiNames` is the one rule that must run ON the
+        -- generated library (`src/M3e/Component/*`) — it guards that every
+        -- generated component module exposes its `<name>`/`required` constructors.
+        -- So it is deliberately EXEMPT from `ignoreGeneratedSubstrate` (which
+        -- otherwise hides `../src/` when review runs from `docs/`). It self-scopes
+        -- to `M3e.Component.*` modules, so it is a no-op on the docs app.
+        ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Component" ] } ]
 
 
 {-| The generated brand surfaces, the IR, and the vendored foundation copies

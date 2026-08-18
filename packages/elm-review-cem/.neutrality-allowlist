@@ -39,7 +39,7 @@ README.md::(M3e) component libraries. These are the machine-checkable *guarantee
 README.md::(`M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts`); the rules group them
 README.md::Cem.all M3e.Review.Facts.facts
 README.md::{ brandRoots = [ "M3e" ]
-README.md::| `Cem.redundantElementEscape` | The consumer-side "drop to plain Html" reflex: an escape (`<Lib>.toHtml`, `<Lib>.Unsafe.coerce`/`coerceAll`/`fromHtml`, or a configured `Seam.*` escape) wrapping a value a **known family producer** already returned as a typed `Element` — `toHtml (M3e.button …)`, `Unsafe.coerce (M3e.heading …)`. Also: an Html-accepting escape wrapping a hand-written **covered raw tag** (`Unsafe.fromHtml (Html.a …)`), and `Unsafe.customElement` pointed at a covered tag or at an element expression. Advisory (no autofix). |
+README.md::| `Cem.redundantElementEscape` | The consumer-side "drop to plain Html" reflex: an escape (`<Lib>.toHtml`, `<Lib>.Unsafe.recast`/`recastAll`/`fromHtml`, or a configured `Seam.*` escape) wrapping a value a **known family producer** already returned as a typed `Element` — `toHtml (M3e.button …)`, `Unsafe.recast (M3e.heading …)`. Also: an Html-accepting escape wrapping a hand-written **covered raw tag** (`Unsafe.fromHtml (Html.a …)`), and `Unsafe.customElement` pointed at a covered tag or at an element expression. Advisory (no autofix). |
 
 # CHANGELOG: historical entry describing the per-namespace fact-grouping change,
 # illustrated with the same `M3e … ++ TypedHtml …` concatenation example as the
@@ -49,7 +49,6 @@ CHANGELOG.md::(`M3e … ++ TypedHtml …`) by namespace and resolve call sites a
 # Pedagogical `M3e.*` examples in src/ doc-comments and a sample default arg.
 # `M3e` here is an illustrative namespace, never hardcoded in rule logic.
 src/Cem/Facts.elm::- `groupConstructors` — for a VARIANT-GROUP module (e.g. `M3e.Progress`, whose
-src/ExtractToSeam.elm::- **Config-blessed coercions** (WS6 / CX5, e.g. `M3e.Coerce.asButton`) — named
 src/Cem/MissingRequiredAttribute.elm::-- (e.g. `M3e.slotLabel`).
 src/Cem/MissingRequiredAttribute.elm::-- re-export `<root>.aria<X>` (`M3e.ariaLabel`).
 src/Cem/ValidSlotKind.elm::list (e.g. `M3e.Card.view [] [ M3e.iconButton [] [] ]`) targets the default
@@ -103,7 +102,7 @@ src/Cem/Internal/Facts.elm::-- M3e.Component.IconButton.iconButton as M3e.iconBu
 # argument's head against the passed-in facts (`Facts.callSite`); no brand name
 # is compared in code.
 src/NoRedundantElementEscape.elm::toHtml (M3e.button [ … ] [ … ])
-src/NoRedundantElementEscape.elm::Unsafe.coerce (M3e.heading …)
+src/NoRedundantElementEscape.elm::Unsafe.recast (M3e.heading …)
 src/NoRedundantElementEscape.elm::(M3e.Review.Facts.facts ++ TypedHtml.Review.Facts.facts)
 src/NoRedundantElementEscape.elm::(`M3e.button …`, `M3e.Button.view …`, a barrel or Record shorthand) whose
 src/NoRedundantElementEscape.elm::(M3e.text "hi")` when `text` is not a component fact) — unresolvable or not a

@@ -52,7 +52,7 @@ Curation rules for this module (frozen at 1.0):
     exposed, so the forge surface is exactly the functions listed here, not the
     representation.
   - **No userland-shaped conveniences.** Opinionated operations (slot
-    placement, kind branding, coercion, event delegation) are compositions of
+    placement, kind branding, recast, event delegation) are compositions of
     these levers, built _above_ the IR by brand packages — see the composition
     table in the README. Generality-as-obscurity is the safety feature.
 
@@ -246,7 +246,7 @@ a text atom).
 
 Legitimate callers: generated brand constructors (which pair it with an honest
 closed row derived from config), and the brand-level escapes built on it
-(`coerce`, slot placement).
+(`recast`, slot placement).
 
 -}
 fromNode : Node msg -> Element accepts admittedBy msg

@@ -25,6 +25,7 @@ import Attr
 import Cem
 import Char
 import Dict
+import Docs
 import Elm
 import Generate.Phantom.Model as M exposing (Brand, Comp, EnumSpec, KindField, Marker(..), ResolvedSlot, SlotContent(..))
 import Json.Encode as Encode
@@ -187,7 +188,6 @@ runGuard brand =
                     in
                     guardHomeModule brand h members
                 )
-        , guardCoerceModule brand
         , guardActionModule brand
         , guardAriaModule brand
         , guardSharedAtoms brand
@@ -200,10 +200,10 @@ cross-library vocabulary (`Model.sharedAtomVocabulary`).
 `Model.resolveWith` already enforces this, earlier and in config vocabulary, which
 is the message a config author wants. This is the same rule stated at the output,
 and it is worth stating twice for one reason: the resolution check ENUMERATES the
-routes a shared role can take (`_atoms`, a component's `kind`, a slot's `kinds`,
-both ends of a `_coerce` entry). Enumerating routes is exactly the mistake that
-produced the defect this vocabulary exists to prevent — `_coerce` was left off the
-list for a release, and the symptom was `shared:phrasing : Brand` appearing in a
+routes a shared role can take (`_atoms`, a component's `kind`, a slot's `kinds`).
+Enumerating routes is exactly the mistake that produced the defect this
+vocabulary exists to prevent — a route was once left off the list for a
+release, and the symptom was `shared:phrasing : Brand` appearing in a
 generated type annotation with nothing in the failure naming the config key.
 
 A guard positioned at the bytes cannot be bypassed by adding a route. It is
@@ -266,12 +266,6 @@ guardSharedAtoms brand =
                            )
                 )
         , brand.sets |> List.concatMap (\s -> fieldErrors (brand.lib ++ ".Kind." ++ s.pascal) s.fields)
-        , brand.coercions
-            |> List.concatMap
-                (\c ->
-                    spellingErrors (brand.lib ++ ".Coerce." ++ c.name ++ ".fromKind") c.fromKind
-                        ++ spellingErrors (brand.lib ++ ".Coerce." ++ c.name ++ ".to") c.to
-                )
         ]
         |> List.foldr
             (\e acc ->
@@ -1132,33 +1126,6 @@ guardHomeAttrForms brand moduleName members =
                             ++ " `attrForm`."
                         )
             )
-
-
-guardCoerceModule : Brand -> List String
-guardCoerceModule brand =
-    if List.isEmpty brand.coercions then
-        -- Coerce module is omitted when empty; no guard needed.
-        []
-
-    else
-        let
-            moduleName =
-                brand.lib ++ ".Coerce"
-
-            -- Coerce function names come from `_coerce` config; purely config-driven.
-            fnPairs =
-                brand.coercions |> List.map (\c -> ( c.name, "coerce \"" ++ c.name ++ "\"" ))
-
-            topLevel =
-                fnPairs |> List.map Tuple.first
-
-            snippetHint =
-                "\"_coerce\": change the `name` field in the coerce entry"
-        in
-        List.concat
-            [ guardNonEmpty moduleName "top-level" topLevel
-            , guardDuplicatesRich moduleName "top-level" snippetHint fnPairs
-            ]
 
 
 guardActionModule : Brand -> List String
@@ -3284,6 +3251,22 @@ compModule brand comp =
                 Nothing ->
                     []
 
+        -- Config-supplied `## Examples` section + opaque doc-metadata marker
+        -- (`examples`/`docMeta` config keys — see `Docs.examplesSection`/
+        -- `Docs.docMetaMarker`). Both render to "" when the component's config
+        -- supplies neither, which is the common case, so the extra doc-comment
+        -- line is omitted entirely rather than leaving a stray blank line on
+        -- every component that has no examples.
+        exampleDoc =
+            Docs.examplesSection comp.examples ++ Docs.docMetaMarker comp.docMeta
+
+        exampleDocLines =
+            if String.isEmpty exampleDoc then
+                []
+
+            else
+                [ exampleDoc ]
+
     in
     file [ lib, "Component", comp.name ]
         (String.join "\n"
@@ -3296,7 +3279,9 @@ compModule brand comp =
                   , comp.description
                   , ""
                   , docs_
-                  , ""
+                  ]
+                , exampleDocLines
+                , [ ""
                   , "-}"
                   , ""
                   ]
@@ -6923,8 +6908,23 @@ hasElOf comp =
 surfacesOf : Brand -> Maybe String -> Maybe String -> Comp -> Dict.Dict String Encode.Value
 surfacesOf brand tokenModule actionModule_ comp =
     let
-        moduleName =
-            brand.lib ++ "." ++ (memberRef brand comp).module_
+        -- Per-surface module names, mirroring EXACTLY the source modules the
+        -- generator emits: the strict per-component ctor surface lives in
+        -- `<Lib>.Component.<Member>` (barrel imports it at ~L4729;
+        -- `guardComponentModule` names it) and the phantom builder in
+        -- `<Lib>.Build.<Member>` (`guardBuildModule`). The pre-R-025 flat
+        -- `<Lib>.<Member>` no longer exists, so Face C MUST carry the infixed
+        -- names — otherwise every downstream Elm snippet (Code Connect, docs)
+        -- names a module that isn't there. `memberRef` handles home/native
+        -- components (module_ = the home module) so this stays a faithful mirror.
+        surfaceMemberName =
+            (memberRef brand comp).module_
+
+        topSurfaceModule =
+            brand.lib ++ ".Component." ++ surfaceMemberName
+
+        buildSurfaceModule =
+            brand.lib ++ ".Build." ++ surfaceMemberName
 
         -- The single `component` ctor IS the top surface. Its form is the loose
         -- double-list when nothing is required, and the required-record form when
@@ -6934,7 +6934,7 @@ surfacesOf brand tokenModule actionModule_ comp =
             ( "top"
             , Encode.object
                 [ ( "facet", Encode.string "Standard" )
-                , ( "module", Encode.string moduleName )
+                , ( "module", Encode.string topSurfaceModule )
                 , ( "entry", Encode.string "component" )
                 , ( "form"
                   , Encode.string
@@ -6953,7 +6953,7 @@ surfacesOf brand tokenModule actionModule_ comp =
             ( "build"
             , Encode.object
                 [ ( "facet", Encode.string "Build" )
-                , ( "module", Encode.string moduleName )
+                , ( "module", Encode.string buildSurfaceModule )
                 , ( "entry", Encode.string "build" )
                 , ( "form", Encode.string "pipeline" )
                 , ( "finalizer", Encode.string "toElement" )
@@ -7054,8 +7054,15 @@ encodeComponent brand tokenModule actionModule_ comp =
         ref =
             memberRef brand comp
 
+        -- The component's strict per-component surface module (`component` ctor,
+        -- setters, slot placers) — `<Lib>.Component.<Member>`, mirroring the
+        -- emitted source (guardComponentModule) and `surfacesOf`'s `top`
+        -- surface. Consumers (the elm emitter's nested-child + slot rendering)
+        -- read this `module` field to spell a component referenced INSIDE a
+        -- snippet (a Button in a Dialog, the `icon` slot placer). The pre-R-025
+        -- flat `<Lib>.<Member>` no longer exists, so it must carry the infix.
         moduleName =
-            brand.lib ++ "." ++ ref.module_
+            brand.lib ++ ".Component." ++ ref.module_
 
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")

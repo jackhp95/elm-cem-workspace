@@ -36,7 +36,7 @@ elm-html-intermediate-representation   HtmlIr.* — the shared phantom-typed HTM
                                        shared vocab in M3e.Attributes / M3e.Events / M3e.Values
   M3e.<Component> (per-component)      M3e.Button, M3e.Dialog, … — narrowed values,
                                        required-content view, and the build pipeline
-  support                             M3e.Kind, M3e.Coerce, M3e.Unsafe, M3e.Review.Facts
+  support                             M3e.Kind, M3e.Unsafe, M3e.Review.Facts
 ```
 
 Both surfaces return the same `HtmlIr.Element.Element … msg`, so they nest and
@@ -90,7 +90,6 @@ element fails to unify and is rejected by the compiler.
   type system gives it a distinct identity from `HtmlIr.Kind.Brand` and every other
   brand) and `Ctx` (the context-row marker). This is what makes kind segregation
   compile-time safe with zero runtime cost.
-- **`M3e.Coerce`** — the config-blessed named coercions between brands.
 - **`M3e.Unsafe`** / **`M3e.Unsafe.Attributes`** — the published escape hatches:
   `fromHtml` / `fromHtmlAttribute` lift raw `Html`, `fromNode` re-asserts rows on an
   erased `Node`, `recast` / `recastAttr` (and their `*All` list forms) re-kind to free

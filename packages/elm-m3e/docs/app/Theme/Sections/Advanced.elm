@@ -6,12 +6,14 @@ and Shape's steppers, which drive a `Theme.Scale.ScaleConfig` through
 `SetTypeScaleParam`/`SetShapeScaleParam`, these tokens have no scale-mode
 computation — each stepper writes a raw CSS custom property directly via
 `Theme.SetCssOverride`, reusing `Theme.Sections.Shared.numberStepper` (an
-`M3e.iconButton`-based, real-`Aria.label` stepper) with a `Float -> Msg`
-adapter that rounds back to an `Int` and re-serializes the unit suffix.
+editable `m3e-form-field` with decrement/increment icon buttons) with a
+`Float -> Msg` adapter that rounds back to an `Int` and re-serializes the unit
+suffix.
 -}
 
 import Dict
 import M3e exposing (Element)
+import M3e.Component.FormField as FormField
 import Theme exposing (Msg(..))
 import Theme.Sections.Shared as Shared
 import Theme.Tokens as Tokens exposing (MotionDurationToken, StateOpacityToken)
@@ -23,7 +25,14 @@ import TypedHtml.Component.Grouping
 view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
-        [ TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2" ]
+        [ -- No m3e component owns standalone muted body prose (see the recipe's
+          -- Tier 4 gap note); `text-sm`/`text-on-surface-variant` are deleted
+          -- rather than routed sideways into a new CSS class, so this reads in
+          -- the plain document body scale/colour until the design system ships
+          -- a body-text component.
+          TypedHtml.p []
+            [ M3e.text "Motion durations and state-layer opacities — raw CSS custom-property overrides for the 16 transition-timing tokens and 3 interaction-state opacity tokens @m3e/web exposes." ]
+        , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2" ]
             (List.map (durationRow model) Tokens.motionDurationTokens)
         , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2" ]
             (List.map (opacityRow model) Tokens.stateOpacityTokens)
@@ -34,7 +43,7 @@ view model =
 token's default), parsing the numeric prefix back out of the stored
 `"250ms"`-shaped string.
 -}
-durationRow : Theme.Model -> MotionDurationToken -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+durationRow : Theme.Model -> MotionDurationToken -> Element (FormField.Is s) admittedBy Msg
 durationRow model token =
     let
         currentMs : Int
@@ -50,7 +59,7 @@ durationRow model token =
     Shared.numberStepper token.label (toFloat currentMs) 25 toMsg
 
 
-opacityRow : Theme.Model -> StateOpacityToken -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+opacityRow : Theme.Model -> StateOpacityToken -> Element (FormField.Is s) admittedBy Msg
 opacityRow model token =
     let
         currentPercent : Int

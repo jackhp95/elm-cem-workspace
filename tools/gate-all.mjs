@@ -287,6 +287,16 @@ function main() {
     runItem("workspace: check-drift (M4.b cross-cutting drift gate)", process.execPath, [
         path.join(repoRoot, "tools", "check-drift.mjs"),
     ]);
+    runItem("workspace: check-elm-shape-drift (Phase 1 canonical-engine gate)", process.execPath, [
+        path.join(repoRoot, "tools", "check-elm-shape-drift.mjs"),
+    ]);
+    runItem("workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)", process.execPath, [
+        path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
+        "--strict",
+    ]);
+    runItem("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
+        path.join(repoRoot, "tools", "check-mirror-drift.mjs"),
+    ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
 
     factsBundleE2E();

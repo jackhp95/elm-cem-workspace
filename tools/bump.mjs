@@ -24,6 +24,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateBundleToTemp } from "./lib/regen.mjs";
 import { comparePagesElmIgnoringTimestamp } from "./lib/check-drift-core.mjs";
+import { classifyDelta, readBaseSources } from "../packages/cem-figma-connect/src/tokens/classify-delta.mjs";
+import { changesFromVerdict, runGate } from "../packages/cem-figma-connect/src/tokens/token-change-report.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const EXACT_VERSION = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/;
@@ -148,7 +150,38 @@ function diffBundles(before, after) {
     return { added, removed, changed };
 }
 
-function renderReport({ fromVersion, toVersion, repinned, diff, gateAllOk, gateAllSummary }) {
+// ── Phase 4 (L7): classify the token delta this bump introduces and render a
+// NON-BLOCKING section (Decision 3). The only token INPUT a bump changes is the
+// facts bundle's cssProperties (from @m3e/web); the repo's own CSS token
+// sources (seed/palette/sys/theme) are held constant. A new/renamed component
+// var → required-code-change naming utilities.css; nothing → a pure re-theme.
+function tokenChangeSection(before, after) {
+    let verdict;
+    try {
+        const baseSources = readBaseSources();
+        verdict = classifyDelta({ ...baseSources, cemFacts: before }, { ...baseSources, cemFacts: after });
+    } catch (e) {
+        return { lines: ["## Token-tier change (Phase 4)", "", `_Skipped — classifier error: ${e.message}_`, ""], blocking: false };
+    }
+    const changes = changesFromVerdict(verdict);
+    const gate = runGate(changes, { strict: false }); // v1: warn, never block a bump
+    const lines = ["## Token-tier change (Phase 4)", ""];
+    if (verdict.kind === "retheme") {
+        lines.push("Pure re-theme — no covered emitter output or token name/edge changed; no code change forced.", "");
+    } else {
+        lines.push(
+            `**Required code change** — tier **${verdict.tier}**, reason **${verdict.reason}**. ${verdict.detail}`,
+            "",
+            verdict.outputs.length ? `Affected emitter outputs: ${verdict.outputs.map((o) => `\`${o.surface}\``).join(", ")}.` : "Caught by the token-graph name/edge axis (no emitter-output byte diff).",
+            "",
+            "> Gate policy: NON-BLOCKING in v1 (Decision 3) — surfaced here as a warning; the bump is not failed on it.",
+            "",
+        );
+    }
+    return { lines, blocking: gate.blockingChanges.length > 0 };
+}
+
+function renderReport({ fromVersion, toVersion, repinned, diff, gateAllOk, gateAllSummary, tokenSectionLines = [] }) {
     const lines = [];
     lines.push(`# m4 bump report — @m3e/web ${fromVersion} → ${toVersion}`);
     lines.push("");
@@ -178,6 +211,7 @@ function renderReport({ fromVersion, toVersion, repinned, diff, gateAllOk, gateA
             lines.push("");
         }
     }
+    if (tokenSectionLines.length) lines.push(...tokenSectionLines);
     lines.push("## Gate sweep (`tools/gate-all.mjs`)");
     lines.push("");
     lines.push(gateAllOk ? "GATE-ALL GREEN — every item passed." : "GATE-ALL RED — see failures below.");
@@ -230,6 +264,13 @@ function main() {
 
         const after = JSON.parse(fs.readFileSync(beforeSnapshotPath, "utf8"));
         const diff = diffBundles(before, after);
+        const tokenSection = tokenChangeSection(before, after);
+        if (tokenSection.blocking) {
+            console.warn(
+                "\nbump: WARNING — this bump introduces an unfiled BLOCKING token-tier required-code-change " +
+                    "(surfaced in the report). NON-BLOCKING in v1 (Decision 3): the bump is not failed on it.",
+            );
+        }
 
         console.log("\nbump: running the full gate sweep (tools/gate-all.mjs)...");
         const gateAll = spawnSync(process.execPath, [path.join(repoRoot, "tools", "gate-all.mjs")], {
@@ -249,6 +290,7 @@ function main() {
             diff,
             gateAllOk,
             gateAllSummary: [], // gate-all.mjs prints its own summary above; the report references pass/fail only.
+            tokenSectionLines: tokenSection.lines,
         });
         fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
         fs.writeFileSync(REPORT_PATH, report);

@@ -23,6 +23,7 @@ import MimeType
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
+import Set
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
@@ -78,7 +79,52 @@ componentDecoder =
         (Decode.field "module" Decode.string)
         (Decode.field "slug" Decode.string)
         (Decode.field "overview" Decode.string)
-        (Decode.field "members" (Decode.list memberDecoder))
+        membersDecoder
+
+
+{-| The barrel-reference page groups a component's members by NAME PREFIX, so it
+needs the FLAT member list. `reference.json` is layered now (`types` +
+`layers.{m3e,components,builder,raw}`), so rebuild the flat list by unioning them,
+de-duped by name. `raw` is deliberately excluded: its members are custom-element
+attribute names (`aria-label`, `variant`), not Elm values, so they would not group
+under any of this page's Elm name-prefix buckets. A legacy flat `members` array is
+still accepted first, so a stale generated artifact keeps rendering.
+-}
+membersDecoder : Decode.Decoder (List Member)
+membersDecoder =
+    let
+        listAt : String -> Decode.Decoder (List Member)
+        listAt field =
+            Decode.oneOf [ Decode.field field (Decode.list memberDecoder), Decode.succeed [] ]
+
+        layerAt : String -> Decode.Decoder (List Member)
+        layerAt field =
+            Decode.oneOf [ Decode.at [ "layers", field ] (Decode.list memberDecoder), Decode.succeed [] ]
+
+        dedupe : List Member -> List Member
+        dedupe ms =
+            List.foldl
+                (\m ( seen, acc ) ->
+                    if Set.member m.name seen then
+                        ( seen, acc )
+
+                    else
+                        ( Set.insert m.name seen, m :: acc )
+                )
+                ( Set.empty, [] )
+                ms
+                |> Tuple.second
+                |> List.reverse
+    in
+    Decode.oneOf
+        [ Decode.field "members" (Decode.list memberDecoder)
+        , Decode.map4
+            (\types m3e components builder -> dedupe (types ++ m3e ++ components ++ builder))
+            (listAt "types")
+            (layerAt "m3e")
+            (layerAt "components")
+            (layerAt "builder")
+        ]
 
 
 route : StatelessRoute RouteParams Data ActionData
@@ -186,7 +232,7 @@ twoFormsText =
     """Every component is reachable two ways — same output, different import and different strictness:
 
 - The **barrel** (`import M3e`) — one import for everything. `M3e.button`, `M3e.icon`, and the shared `M3e.Attributes.variant Value.filled` vocabulary. This is the form the [Guide](/guide/the-layers) teaches; it's the generic, easy form.
-- The **component module** (`import M3e.Button`) — `M3e.Component.Button.view` and its component-scoped `M3e.Component.Button.variant` / slot setters (`M3e.Component.Button.icon`). More precise: the compiler rejects a token or slot child that isn't valid for *that* component.
+- The **component module** (`import M3e.Button`) — `M3e.Component.Button.component` and its component-scoped `M3e.Component.Button.variant` / slot setters (`M3e.Component.Button.icon`). More precise: the compiler rejects a token or slot child that isn't valid for *that* component.
 
 Barrel-vs-module isn't a [surface](/guide/the-layers) choice and it isn't an escape hatch — it's a separate axis, only *which import you reach through*. Start on the barrel; reach for a component module when you want the tighter, component-scoped types."""
 

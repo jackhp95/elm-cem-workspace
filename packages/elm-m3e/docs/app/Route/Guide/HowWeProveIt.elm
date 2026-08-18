@@ -10,7 +10,7 @@ running-example beat.
 Every figure on this page is derived at build time from the SAME source the
 [`/guide/roundtrip`](/guide/roundtrip) report renders: `data/roundtrip-report.json`. Nothing
 here is hand-typed, so the guide and the report can never drift apart. We headline
-the **top** form (`M3e.Button.view` — the typed, slot-safe layer the guide
+the **top** form (`M3e.Button.component` — the typed, slot-safe layer the guide
 teaches first); the full per-form table lives on `/guide/roundtrip`.
 
 -}
@@ -69,7 +69,7 @@ type alias ActionData =
     {}
 
 
-{-| The surface we headline: `M3e.Button.view` — the standard form the guide
+{-| The surface we headline: `M3e.Button.component` — the standard form the guide
 teaches first. Its per-surface aggregate is the one we render into the report.
 (The `perSurface` JSON keys this aggregate `"top"` — a data-file key, not a
 "layer"; the vocabulary is [the surface map](/guide/the-layers).)

@@ -31,13 +31,14 @@ distinction is load-bearing.
 The scheme/contrast/direction state is held as generated `Value` tokens — there is
 no local shadow union — so `M3e.Theme` takes the model field directly and the
 settings controls render from the generated `<enum>Values` lists. Every
-constructor is `Module.view [attrs] [content]`.
+constructor is `Module.component [attrs] [content]`.
 
 -}
 
 import BackendTask exposing (BackendTask)
 import Browser.Events
 import Doc.Data
+import Doc.Usage
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
@@ -77,6 +78,7 @@ import Theme.Presets
 import Theme.Sections.Advanced
 import Theme.Sections.Appearance
 import Theme.Sections.Color
+import Theme.Sections.CssVariables
 import Theme.Sections.Shape
 import Theme.Sections.Typography
 import TypedHtml
@@ -114,6 +116,13 @@ type alias Model =
     , searchOpen : Bool
     , searchQuery : String
     , searchIndex : Maybe (Result Http.Error (List SearchEntry))
+
+    -- The site-wide API-layer tab selection shared by every Usage example and
+    -- every component page's API section. It lives HERE, not in a route's local
+    -- model, so it survives client-side navigation between component pages;
+    -- localStorage (via `Theme.Ports.storeSurface`/`readSurface`) survives a
+    -- reload. Routes only read it and forward tab clicks to the store port.
+    , activeSurface : Doc.Usage.Surface
     }
 
 
@@ -329,7 +338,9 @@ type Msg
     | GotSearchIndex (Result Http.Error (List SearchEntry))
     | ThemeMsg Theme.Msg
     | SetDirection (TypedHtml.Values.Value TypedHtml.Values.Dir)
+    | ResetControlRow
     | PresetRequested String
+    | SurfaceLoaded Decode.Value
 
 
 init :
@@ -359,6 +370,7 @@ init flags _ =
       , searchOpen = False
       , searchQuery = ""
       , searchIndex = Nothing
+      , activeSurface = Doc.Usage.Top
       }
       -- Load every reel card's specimen-subset webfont once at boot (§D6). The
       -- reel appears in both the settings drawer AND the Welcome page, and Shared
@@ -554,6 +566,22 @@ update msg model =
         SetDirection dir ->
             ( { model | dir = dir }, Effect.none )
 
+        -- Scoped reset for `controlRow` only: variant → neutral, scheme → auto
+        -- ("System"), direction → auto. Deliberately NOT `Theme.ResetAll`, which
+        -- would also discard every colour, typescale, shape and CSS-variable
+        -- override the visitor has built up in the sections below.
+        ResetControlRow ->
+            let
+                ( theme2, themeCmd ) =
+                    Theme.update (Theme.SetVariant Value.neutral) model.theme
+
+                ( theme3, themeCmd2 ) =
+                    Theme.update (Theme.SetScheme Value.auto) theme2
+            in
+            ( { model | theme = theme3, dir = TypedHtml.Values.auto }
+            , Effect.fromCmd (Cmd.batch [ Cmd.map ThemeMsg themeCmd, Cmd.map ThemeMsg themeCmd2 ])
+            )
+
         PresetRequested id ->
             case Theme.Presets.byId id of
                 Just preset ->
@@ -565,6 +593,26 @@ update msg model =
 
                 Nothing ->
                     ( model, Effect.none )
+
+        -- The site-wide layer-tab selection, mirrored from localStorage.
+        -- `index.ts` sends this on boot AND after every `storeSurface` (a tab
+        -- click on any page), so this single field is the only writer and it
+        -- survives client-side navigation between component pages. Falls back to
+        -- the current value on absence/decode failure rather than resetting to
+        -- `Top` — a bad blob must not silently undo the user's choice.
+        SurfaceLoaded value ->
+            let
+                surface : Doc.Usage.Surface
+                surface =
+                    case Decode.decodeValue Decode.string value of
+                        Ok s ->
+                            Doc.Usage.surfaceFromString s
+                                |> Result.withDefault model.activeSurface
+
+                        Err _ ->
+                            model.activeSurface
+            in
+            ( { model | activeSurface = surface }, Effect.none )
 
 
 {-| Watch viewport width so `resizeTo` can re-pin the tree (and, past
@@ -586,6 +634,7 @@ subscriptions path _ =
         [ Browser.Events.onResize (\w _ -> ViewportResized w)
         , Sub.map ThemeMsg Theme.subscriptions
         , Theme.Ports.onPresetRequested PresetRequested
+        , Theme.Ports.readSurface SurfaceLoaded
         , if hasDocsShell path then
             Ports.onOpenSearchRequested (\_ -> OpenSearch)
 
@@ -848,7 +897,7 @@ sectionPanel label body =
         [ body ]
 
 
-{-| The 5 theme-editor sections wrapped in an accordion. Assembles the
+{-| The 6 theme-editor sections wrapped in an accordion. Assembles the
 `sectionsEl` passed to `Theme.view`. The section bodies carry the expansion
 panel's own `ChildAdmittedBy` row rather than a bare type variable, which is what
 lets `sectionPanel` place them in a typed slot with no escape hatch.
@@ -859,6 +908,7 @@ sectionsAccordion :
     , shape : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
     , appearance : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
     , advanced : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , cssVariables : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
     }
     -> Element { s | accordion : M3e.Kind.Brand } admittedBy msg
 sectionsAccordion themeSections =
@@ -868,6 +918,11 @@ sectionsAccordion themeSections =
         , sectionPanel "Shape" themeSections.shape
         , sectionPanel "Appearance" themeSections.appearance
         , sectionPanel "Advanced" themeSections.advanced
+
+        -- Last, and named for the mechanism rather than a topic: this is the raw
+        -- CSS-custom-property hatch, reached after the curated sections above
+        -- have failed to expose whatever the visitor is after.
+        , sectionPanel "CSS Variables" themeSections.cssVariables
         ]
 
 
@@ -889,10 +944,17 @@ settingsSheetContent : Model -> Element (TypedHtml.Component.Grouping.DivIs s) a
 settingsSheetContent model =
     TypedHtml.div
         [ TypedHtml.Attributes.id "settings-sheet-content"
-        , TypedHtml.Attributes.class "flex flex-col gap-2 py-4"
+
+        -- Extra bottom padding gives the sheet scroll runway so the last control
+        -- clears the mobile browser URL bar (the bottom sheet's height is
+        -- component-driven — there is no CSS height knob to make it `dvh`-aware).
+        -- `env(safe-area-inset-bottom)` additionally clears the iOS home
+        -- indicator and is 0 on desktop, so it costs desktop nothing.
+        , TypedHtml.Attributes.class "flex flex-col gap-2 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-md:pb-[calc(5rem+env(safe-area-inset-bottom))]"
         , Aria.role Aria.complementary
         ]
-        [ Theme.view
+        [ controlRow model
+        , Theme.view
             { dir = model.dir
             , onSetDirection = SetDirection
             , sectionsEl =
@@ -902,36 +964,37 @@ settingsSheetContent model =
                     , shape = Theme.Sections.Shape.view model.theme |> HtmlIr.Element.map ThemeMsg
                     , appearance = Theme.Sections.Appearance.view model.theme |> HtmlIr.Element.map ThemeMsg
                     , advanced = Theme.Sections.Advanced.view model.theme |> HtmlIr.Element.map ThemeMsg
+                    , cssVariables = Theme.Sections.CssVariables.view model.theme |> HtmlIr.Element.map ThemeMsg
                     }
             }
             model.theme
             ThemeMsg
-        , controlLabel "Directionality"
-        , directionSegmented model
         ]
 
 
-controlLabel : String -> Element { s | heading : M3e.Kind.Brand } admittedBy Msg
-controlLabel lbl =
-    M3e.heading
-        [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ]
-        [ M3e.text lbl ]
+{-| The variant + scheme + direction row, pinned at the top of the settings
+sheet: the three "what does the whole app look like" knobs, previously scattered
+(scheme and variant were full-width segmented strips inside `Theme.view`,
+direction was a labelled strip at the very bottom of the sheet).
 
+Variant and scheme come from `Theme` (mapped through `ThemeMsg`); direction is
+assembled here, since `dir` lives in `Shared.Model`, not `Theme.Model`. One
+scoped reset fires all three back to their neutral values — deliberately NOT
+`Theme.ResetAll`, which would also discard every colour/typescale override.
 
-{-| One segmented-button control: `SegmentedButton` holding `ButtonSegment`
-children, each a checked/label/onClick triple.
 -}
-segmented : List ( String, Bool, Msg ) -> Element { s | segmentedButton : M3e.Kind.Brand } admittedBy Msg
-segmented segments =
-    M3e.segmentedButton []
-        (List.map
-            (\( lbl, isChecked, msg ) ->
-                M3e.buttonSegment
-                    [ M3e.Attributes.checked isChecked, M3e.Events.onClick msg ]
-                    [ M3e.text lbl ]
-            )
-            segments
-        )
+controlRow : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+controlRow model =
+    TypedHtml.div [ TypedHtml.Attributes.class "flex flex-wrap items-end gap-2" ]
+        [ Theme.variantSelect model.theme |> HtmlIr.Element.map ThemeMsg
+        , Theme.schemeToggle model.theme |> HtmlIr.Element.map ThemeMsg
+        , directionToggle model
+        , M3e.iconButton
+            [ TypedHtml.Events.onClick ResetControlRow
+            , Aria.label "Reset variant, scheme, and direction"
+            ]
+            [ M3e.icon [ M3e.Component.Icon.name "restart_alt" ] [] ]
+        ]
 
 
 {-| Drive `--md-sys-density-scale` via a Tailwind arbitrary-property class — Elm
@@ -950,23 +1013,44 @@ densityClass d =
         "[--md-sys-density-scale:0]"
 
 
-directionSegmented : Model -> Element { s | segmentedButton : M3e.Kind.Brand } admittedBy Msg
-directionSegmented model =
-    segmented
-        (TypedHtml.Values.dirValues
-            -- `dir` admits auto|ltr|rtl. `auto` defers to the document/OS, which is
-            -- already what the shell does when this control is untouched, so offering
-            -- it would be a button that visibly does nothing. Filtered explicitly
-            -- rather than hand-listing ltr/rtl, so a FOURTH value would still appear.
-            |> List.filter (\v -> TypedHtml.Values.toString v /= "auto")
-            |> List.map
-                (\v ->
-                    ( String.toUpper (TypedHtml.Values.toString v)
-                    , model.dir == v
-                    , SetDirection v
-                    )
-                )
-        )
+{-| Direction control: a single icon button flipping LTR ⇄ RTL, replacing the
+2-option segmented strip (a two-option enum strip is a toggle wearing a costume,
+and it cost a full row plus its own label). Shows
+`format_textdirection_l_to_r` when LTR and `format_textdirection_r_to_l` when RTL;
+clicking flips to the other and fires `SetDirection`. `aria-pressed`/`aria-label`
+carry the state, since the glyph alone does not.
+
+`auto` is not offered — it defers to the document/OS, which is already what the
+shell does when this control is untouched, so it would be a button that visibly
+does nothing. It stays reachable through `ResetControlRow`.
+
+-}
+directionToggle : Model -> Element { s | iconButton : M3e.Kind.Brand } admittedBy Msg
+directionToggle model =
+    let
+        isRtl : Bool
+        isRtl =
+            TypedHtml.Values.toString model.dir == "rtl"
+
+        ( next, glyph, lbl ) =
+            if isRtl then
+                ( TypedHtml.Values.ltr, "format_textdirection_l_to_r", "Switch to left-to-right" )
+
+            else
+                ( TypedHtml.Values.rtl, "format_textdirection_r_to_l", "Switch to right-to-left" )
+    in
+    M3e.iconButton
+        [ TypedHtml.Events.onClick (SetDirection next)
+        , Aria.label lbl
+        , Aria.pressed
+            (if isRtl then
+                Aria.true
+
+             else
+                Aria.false
+            )
+        ]
+        [ M3e.icon [ M3e.Component.Icon.name glyph ] [] ]
 
 
 

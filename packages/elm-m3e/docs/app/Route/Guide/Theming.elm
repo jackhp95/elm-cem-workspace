@@ -117,7 +117,7 @@ For the neutral *theory* — how dynamic color derives a tonal palette from a si
 
 rootBody : String
 rootBody =
-    """Wrap the app — or any subtree — in `M3e.Theme.view`. It is a non-visual element: it emits no box of its own, it just publishes the derived token roles to everything nested inside it. The docs app themes once, at the root, in `docs/app/Shared.elm`:"""
+    """Wrap the app — or any subtree — in `M3e.Theme.component`. It is a non-visual element: it emits no box of its own, it just publishes the derived token roles to everything nested inside it. The docs app themes once, at the root, in `docs/app/Shared.elm`:"""
 
 
 rootCode : String
@@ -278,7 +278,7 @@ TypedHtml.div [ TypedHtml.Attributes.class "my-panel" ] rows"""
 
 recap : String
 recap =
-    """- Theme **once, at the root**: `M3e.Theme.view` fed a **seed color plus scheme / contrast / density** derives every `--md-sys-*` role.
+    """- Theme **once, at the root**: `M3e.Theme.component` fed a **seed color plus scheme / contrast / density** derives every `--md-sys-*` role.
 - **Paint with roles, not hex** — `primary`, `onSurface`, `surfaceContainer` keep contrast correct in light *and* dark automatically.
 - **Dark = flip `scheme`; dynamic = swap `color`.** One input, whole palette re-derives — never a second stylesheet.
 - A **brand re-skin is a few `Theme` inputs**, not a sheet of overrides — views untouched because they named roles.

@@ -2,11 +2,11 @@ module Generate.Phantom.Model exposing
     ( Brand, Comp, Controlled, EnumSpec, KindField, Marker(..), ResolvedSlot, SetAlias, SlotContent(..)
     , Variant, VariantInput(..)
     , decodePhantomFlag, decodeEmitFactsBundleFlag, resolve
-    , knownSharedRole, sharedRoleOf, sharedRoleOfField, kindFieldOfSpelling, unknownSharedRoleError, unknownSharedFieldError
+    , knownSharedRole, sharedRoleOf, sharedRoleOfField, unknownSharedRoleError, unknownSharedFieldError
     )
 
 {-| The phantom pipeline's brand model: decode the new config primitives
-(`kind` / `admits` / `parents` / `_sets` / `_atoms` / `_globals` / `_coerce`)
+(`kind` / `admits` / `parents` / `_sets` / `_atoms` / `_globals`)
 from `_config`, resolve them against the CEM components, and VALIDATE loudly
 (unknown kind refs, unknown set refs, the R1 shared-admittedBy discipline).
 
@@ -21,7 +21,7 @@ The closed cross-library atom vocabulary, shared with the emitter so the same ru
 is enforced at resolution (in config vocabulary) and at emission (in row-field
 vocabulary):
 
-@docs knownSharedRole, sharedRoleOf, sharedRoleOfField, kindFieldOfSpelling, unknownSharedRoleError, unknownSharedFieldError
+@docs knownSharedRole, sharedRoleOf, sharedRoleOfField, unknownSharedRoleError, unknownSharedFieldError
 
 -}
 
@@ -87,10 +87,9 @@ knownSharedRole role =
 
 `"shared:"` is the whole grammar that separates a cross-library atom from a
 brand-private kind. Every reader of that prefix goes through here — slot `kinds`,
-a component's `kind`, both ends of a `_coerce` entry, and the emitter's guard —
-because each site that re-derived it with `String.startsWith` by hand was a site
-that could be, and was, forgotten when the rule was tightened: `_coerce` spent a
-release interpreting the prefix nowhere at all.
+a component's `kind`, and the emitter's guard — because each site that
+re-derived it with `String.startsWith` by hand was a site that could be, and
+was, forgotten when a rule was tightened without touching every reader.
 
 -}
 sharedRoleOf : String -> Maybe String
@@ -107,23 +106,6 @@ sharedRoleOf spelling =
 sharedKindField : String -> KindField
 sharedKindField role =
     { field = "shared" ++ Naming.pascal role, marker = MShared }
-
-
-{-| The `KindField` a raw config kind spelling denotes — the shared atom when it
-carries the `shared:` prefix, otherwise a brand-private field named verbatim.
-
-Used where config supplies a field name directly rather than a component name
-(`_coerce`'s `fromKind`/`to`); `producesOf` is the component-name-shaped sibling.
-
--}
-kindFieldOfSpelling : String -> KindField
-kindFieldOfSpelling spelling =
-    case sharedRoleOf spelling of
-        Just role ->
-            sharedKindField role
-
-        Nothing ->
-            { field = spelling, marker = MBrand }
 
 
 {-| One "unknown shared atom" error, phrased in config vocabulary.
@@ -368,6 +350,13 @@ type alias Comp =
     -- setter is the kind of gap a reader "fixes" by adding one back, and the note
     -- is what stops that.
     , blockedAttrs : List Attr.AttrSpec
+
+    -- Config-supplied doc content (`examples`/`docMeta` config keys), rendered
+    -- into the module doc comment by `Docs.examplesSection`/`Docs.docMetaMarker`
+    -- in `Emit.elm`. Opt-in per component; absent ⇒ `[]`, so most components
+    -- emit no `## Examples` section at all.
+    , examples : List RawExample
+    , docMeta : List ( String, String )
     }
 
 
@@ -407,7 +396,6 @@ type alias Brand =
     , sharedEvents : List Cem.Event
     , resolvedEventHandlers : Dict String String
     , atoms : List String
-    , coercions : List { from : String, fromKind : String, to : String, name : String }
     , globals : List Attr.AttrSpec
 
     -- The `"row": "open"` globals, held APART from `globals` rather than flagged
@@ -488,7 +476,21 @@ type alias RawComp =
     , actionMap : List ( String, String )
     , attrForm : List ( String, String )
     , propertyOnly : List String
+    , examples : List RawExample
+    , docMeta : List ( String, String )
     }
+
+
+{-| A config-supplied usage example (`examples` config key), rendered into the
+component module's `## Examples` doc-comment section by `Docs.examplesSection`.
+Mirrors `Generate.Types.ExampleRecord` (the legacy front-end's decoded shape)
+but is decoded independently here because the phantom pipeline's `RawComp`
+decoder is self-contained (see the module doc). `codeRecord` is accepted by
+the legacy decoder but has never been consumed by any renderer, so it is not
+carried forward here.
+-}
+type alias RawExample =
+    { title : String, code : String, section : Maybe String }
 
 
 {-| A per-component typed event decoder (config `events`): decode `path`
@@ -550,7 +552,6 @@ type alias RawConfig =
     , controlled : List Controlled
     , variants : List Variant
     , exclude : List String
-    , coercions : List { from : String, fromKind : String, to : String, name : String }
     , aria : Maybe AriaConfig
     , kinds : List String
     , actions : Maybe ActionsRoster
@@ -977,6 +978,21 @@ rawCompDecoder =
         |> andMap (D.oneOf [ D.field "actionMap" pairListDecoder, D.succeed [] ])
         |> andMap (D.oneOf [ D.field "attrForm" attrFormDecoder, D.succeed [] ])
         |> andMap (D.oneOf [ D.field "propertyOnly" (D.list D.string), D.succeed [] ])
+        |> andMap (D.oneOf [ D.field "examples" (D.list rawExampleDecoder), D.succeed [] ])
+        |> andMap (D.oneOf [ D.field "docMeta" (D.keyValuePairs D.string), D.succeed [] ])
+
+
+{-| One config-supplied usage example. `title`/`code` default to `""` (never
+fail-loud — an author who forgets one gets an empty-but-valid string, not a
+config-decode error); `section` is optional (unsectioned examples group under
+the renderer's "Examples" default).
+-}
+rawExampleDecoder : D.Decoder RawExample
+rawExampleDecoder =
+    D.map3 (\t c s -> { title = t, code = c, section = s })
+        (D.oneOf [ D.field "title" D.string, D.succeed "" ])
+        (D.oneOf [ D.field "code" D.string, D.succeed "" ])
+        (D.maybe (D.field "section" D.string))
 
 
 andMap : D.Decoder a -> D.Decoder (a -> b) -> D.Decoder b
@@ -1206,15 +1222,6 @@ defaultGlobals =
         |> List.map (\name -> globalSpec name Attr.AString)
 
 
-coercionDecoder : D.Decoder { from : String, fromKind : String, to : String, name : String }
-coercionDecoder =
-    D.map4 (\f fk t n -> { from = f, fromKind = fk, to = t, name = n })
-        (D.field "from" D.string)
-        (D.field "fromKind" D.string)
-        (D.field "to" D.string)
-        (D.field "name" D.string)
-
-
 renamesDecoder : D.Decoder RawRenames
 renamesDecoder =
     D.map4 RawRenames
@@ -1269,8 +1276,8 @@ rawConfigDecoder =
                                     )
                                 |> List.foldr (D.map2 (::)) (D.succeed [])
                     in
-                    D.map8
-                        (\phantom brandName sets atoms globals exclude coercions aria ->
+                    D.map7
+                        (\phantom brandName sets atoms globals exclude aria ->
                             \kinds actions legacyHtml cs renames controlled ->
                                 \variants ->
                                     { phantom = phantom
@@ -1281,7 +1288,6 @@ rawConfigDecoder =
                                     , controlled = controlled
                                     , variants = variants
                                     , exclude = exclude
-                                    , coercions = coercions
                                     , aria = aria
                                     , kinds = kinds
                                     , actions = actions
@@ -1298,7 +1304,6 @@ rawConfigDecoder =
                         -- closed, and adapting here keeps that fact stated once.
                         (get "_globals" (D.list globalDecoder) (List.map (Tuple.pair False) defaultGlobals))
                         (get "_exclude" (D.list D.string) [])
-                        (get "_coerce" (D.list coercionDecoder) [])
                         (get "_aria" (D.map Just ariaDecoder) Nothing)
                         |> D.andThen
                             (\f ->
@@ -1311,7 +1316,7 @@ rawConfigDecoder =
                                     (get "_controlled" controlledDecoder defaultControlled)
                             )
                         -- A third stage: `D.map8`/`D.map6` are the widest maps Elm's
-                        -- Json.Decode ships, and the raw config now has 15 fields.
+                        -- Json.Decode ships, and the raw config now has 14 fields.
                         |> D.andThen (\f -> D.map f (get "_variants" variantsDecoder []))
                 )
         )
@@ -1866,6 +1871,8 @@ resolveWith detectedLib eventPrefix raw declarations =
                       , actionMap = cfg |> Maybe.map .actionMap |> Maybe.withDefault []
                       , propertyOnly = cfg |> Maybe.map .propertyOnly |> Maybe.withDefault [] |> List.sort
                       , blockedAttrs = blocked |> List.sortBy .htmlName
+                      , examples = cfg |> Maybe.map .examples |> Maybe.withDefault []
+                      , docMeta = cfg |> Maybe.map .docMeta |> Maybe.withDefault []
                       }
                     , compNotes
                     )
@@ -2222,40 +2229,6 @@ resolveWith detectedLib eventPrefix raw declarations =
                                 )
                             |> combineAll
 
-                    -- `_coerce` names kind FIELDS directly rather than components, so
-                    -- both ends are a third way a `shared:` role enters the brand —
-                    -- and the one that stayed unchecked longest, because the entry is
-                    -- validated for its `from` component and nothing else. An
-                    -- unresolved `shared:` spelling used to reach the emitter verbatim
-                    -- and land inside a type annotation (`shared:phrasing : Brand`),
-                    -- so the run failed in generated Elm without ever naming `_coerce`.
-                    coerceErrors =
-                        raw.coercions
-                            |> List.concatMap
-                                (\c ->
-                                    (if List.any (\comp -> comp.name == c.from) comps then
-                                        []
-
-                                     else
-                                        [ "_coerce: unknown component '" ++ c.from ++ "'" ]
-                                    )
-                                        ++ ([ ( ".fromKind", c.fromKind ), ( ".to", c.to ) ]
-                                                |> List.filterMap
-                                                    (\( end, spelling ) ->
-                                                        case sharedRoleOf spelling of
-                                                            Just role ->
-                                                                if knownSharedRole role then
-                                                                    Nothing
-
-                                                                else
-                                                                    Just (unknownSharedRoleError ("_coerce '" ++ c.name ++ "'" ++ end) role)
-
-                                                            Nothing ->
-                                                                Nothing
-                                                    )
-                                           )
-                                )
-
                     roleVocab =
                         raw.aria |> Maybe.map .roles |> Maybe.withDefault []
 
@@ -2570,7 +2543,7 @@ resolveWith detectedLib eventPrefix raw declarations =
                                 []
                             |> List.sortBy Tuple.first
                 in
-                case ( r1Errors ++ coerceErrors ++ roleErrors ++ atomVocabErrors ++ controlledFormErrors ++ controlledElementErrors ++ propertyOnlyErrors ++ variantErrors ++ tokenValueErrors, sets ) of
+                case ( r1Errors ++ roleErrors ++ atomVocabErrors ++ controlledFormErrors ++ controlledElementErrors ++ propertyOnlyErrors ++ variantErrors ++ tokenValueErrors, sets ) of
                     ( [], Ok setAliases ) ->
                         Ok
                             { lib = lib
@@ -2582,7 +2555,6 @@ resolveWith detectedLib eventPrefix raw declarations =
                             , sharedEvents = sharedEvents
                             , resolvedEventHandlers = resolvedHandlers
                             , atoms = atoms_
-                            , coercions = raw.coercions
                             , globals = List.sortBy .elmName globals
                             , openGlobals = List.sortBy .elmName openGlobals
                             , controlled = raw.controlled

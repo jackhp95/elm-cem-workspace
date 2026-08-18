@@ -125,10 +125,10 @@ shapes =
 
 shapesCode : String
 shapesCode =
-    """-- the standard form (`view`) — everything optional; the tersest, easiest form
+    """-- the standard form — everything optional; the tersest, easiest form
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
--- required-record form (`el`) — the compiler now DEMANDS the parts a button can't do without
+-- required-record form (`component`) — the compiler now DEMANDS the parts a button can't do without
 M3e.Component.Button.component
     { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }
     []
@@ -142,12 +142,12 @@ M3e.Build.Button.build
 
 recordAha : String
 recordAha =
-    """The standard-form Save button lets you forget its action — that's the easy path's cost. Switch the same button to the **required-record** form (`el`) and forgetting the action is no longer possible: leave it out and the build stops, because the record spells out the parts a button can't render without."""
+    """The standard-form Save button lets you forget its action — that's the easy path's cost. Switch the same button to the **required-record** form (`component`) and forgetting the action is no longer possible: leave it out and the build stops, because the record spells out the parts a button can't render without."""
 
 
 recordError : String
 recordError =
-    """The 1st argument to `el` is not what I expect:
+    """The 1st argument to `component` is not what I expect:
 
 4| M3e.Component.Button.component { content = M3e.text "Save" } [] []
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -155,7 +155,7 @@ This argument is a record of type:
 
     { content : … }
 
-But `el` needs the 1st argument to be:
+But `component` needs the 1st argument to be:
 
     { action : Action { … } msg, content : … }"""
 

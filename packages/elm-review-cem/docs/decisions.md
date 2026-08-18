@@ -16,6 +16,7 @@ rationale.
 - [Standard as the top form](#standard-as-the-top-form-wave-4)
 - [Translators are mutually exclusive](#translators-are-mutually-exclusive)
 - [Slot-kind validity checking](#slot-kind-validity-checking-adr-15)
+- [Facts-index canonicality](#facts-index-canonicality)
 - [The barrel autofix pair and its round-trip idempotence](#the-barrel-autofix-pair-and-its-round-trip-idempotence)
 - [Barrel rewrites must be type-preserving and facet-agnostic](#barrel-rewrites-must-be-type-preserving-and-facet-agnostic)
 - [Seam-discipline rules live here](#seam-discipline-rules-live-here-plan-d-f5)
@@ -106,6 +107,28 @@ helpers like `M3e.text`/`M3e.none` resolve as *unresolvable* rather than falsely
 tripping a constrained slot. The same ADR-15 shift is why the Record/Build
 translators lift required content from raw children — and why that lift is scoped
 to only those two targets (see below).
+
+## Facts-index canonicality
+
+`RequireSlot.elm` and `SingularSlot.elm` both derive their per-rule lookup
+index directly from `Cem.Internal.Facts.buildIndex` rather than rolling a
+private `factKey`-only index of their own. This matters because
+`Facts.buildIndex` inserts **two** keys per fact when a component sits under a
+barrel-aliasable namespace (e.g. `["M3e", "Component"]`): the canonical
+`factKey` (`"M3e.Component\u{0000}button"`) *and* the barrel-alias key
+(`"M3e\u{0000}button"`) — see `buildIndex`'s doc comment in `Facts.elm`. A
+rule's `siteKey` for a barrel call site (`M3e.button …`) only ever resolves
+against the barrel-alias key, so a rule that instead rolls its own index keyed
+solely on `factKey` is silently DEAD on the entire barrel call-site surface:
+real generated facts always carry the `Component`/`Build` segment, so a barrel
+call never matches. This gap shipped and passed review because the
+hand-written test fixtures used flat `module_` values (`"M3e.Grid"`,
+`"M3e.Button"` with no `.Component.` segment), where `factKey == siteKey` by
+coincidence — masking it. The fix, and the convention going forward: any rule
+that needs a facts index MUST derive it from `Facts.buildIndex`, never
+re-derive its own `factKey`-keyed dictionary, so it inherits the barrel-alias
+entries for free and stays correct against real generated facts, not just
+flat fixtures.
 
 ## The barrel autofix pair and its round-trip idempotence
 

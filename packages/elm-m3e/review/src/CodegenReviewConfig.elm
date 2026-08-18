@@ -11,6 +11,7 @@ encode M3e's own project boundaries and are not part of the generic package.
 import Cem.Facts
 import M3e.Review.Facts
 import NoInternalImportOutsideAllowed
+import NoMergedPipeAndSetter
 import NoRedundantAttributeEscape
 import NoRedundantElementEscape
 import NoRedundantElementForge
@@ -167,4 +168,10 @@ config =
     -- all — the generated `*.Unsafe` modules are the sanctioned crossings, and
     -- they live inside the brand.
     , NoInternalImportOutsideAllowed.rule [ "M3e", "TypedHtml", "HtmlIr" ]
+
+    -- K5/#58 guard: a barrel must not co-expose `withX` pipes AND bare `x`
+    -- setters for the same concept. Generated brand modules (M3e, TypedHtml,
+    -- HtmlIr) are intentional source families and are allow-listed; any
+    -- hand-written barrel that merges them accidentally is flagged.
+    , NoMergedPipeAndSetter.rule { allowedModules = [ "M3e", "TypedHtml", "HtmlIr" ] }
     ]

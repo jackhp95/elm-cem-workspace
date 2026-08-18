@@ -109,6 +109,16 @@ hybrid outputs), so design and code mesh seamlessly.**
 | **`elm-cem-facts` · `elm-typed-html` / IR · `elm-review-cem`** | Shared substrate: fact types, the HTML intermediate representation, and the facts-driven lint rules. |
 | **`matraic/m3e`** (upstream, not ours) | Source of `@m3e/web`. Intended eventual home for the CEM ⋈ Figma Code Connect work (Phase 5). |
 
+**Every `jackhp95/<name>` GitHub repo named above is a read-only published
+mirror of `packages/<name>/` here — never a separate development target.**
+This workspace is the sole place family-package work happens; the mirrors
+exist so registry publishing and external consumers have somewhere to point.
+Publish via `tools/publish-mirror.mjs <name>` (dry-run by default); drift is
+checked by `tools/check-mirror-drift.mjs`. This wasn't always true in
+practice — see `docs/plans/2026-08-17-standalone-repo-realignment.md` for
+the ~5 days in August 2026 where three of these repos forked before the
+tooling above existed to catch it.
+
 ## Principles
 
 - **Nothing hardcoded.** Every module, setter, token, and binding is measured or generated from the

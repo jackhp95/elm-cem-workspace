@@ -12,10 +12,19 @@ import TypedHtml.Component.Grouping
 view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
-        [ contrastSegmented model
-        , motionSegmented model
-        , densitySegmented model
+        [ -- Each segmented control gets its own `Theme.controlLabel`: three
+          -- unlabelled enum strips stacked together read as one control with 9
+          -- options, and "Standard" appears in two of them.
+          labelled "Contrast" (contrastSegmented model)
+        , labelled "Motion" (motionSegmented model)
+        , labelled "Density" (densitySegmented model)
         ]
+
+
+labelled : String -> Element { s | segmentedButton : M3e.Kind.Brand, heading : M3e.Kind.Brand } (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) Msg -> Element (TypedHtml.Component.Grouping.DivIs t) admittedBy Msg
+labelled lbl control =
+    TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
+        [ Theme.controlLabel lbl, control ]
 
 
 {-| Ported from the app-level Shared.elm's `contrastSegmented` (as it existed

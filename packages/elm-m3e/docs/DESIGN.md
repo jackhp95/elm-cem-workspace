@@ -542,21 +542,17 @@ recast element =
     Ir.fromNode (HtmlIr.Element.toNode element)
 ```
 
-**`M3e.Coerce.*` — config-blessed typed crossings.** When a brand crossing recurs
-with a stable identity (a Chip *acting as* a button — a design-system decision, not
-an accident), the `_coerce` block in `config/slots.json` declares it and the
-generator emits a typed function. Unlike `recast`, its from-kind is *specific*, so
-only an element already typed as a Chip passes, and it appears in config so the tool
-and reviewers can find every declared crossing:
-
-```elm
--- src/M3e/Coerce.elm:18 (config: _coerce Chip→button, name "asButton")
-asButton :
-    Element { k | chip : Brand } admittedBy msg
-    -> Element { s | button : Brand } admittedBy2 msg
-asButton element =
-    Ir.fromNode (HtmlIr.Element.toNode element)
-```
+**No second, named crossing mechanism.** An earlier design had a config-declared
+`_coerce` block: when a brand crossing recurred with a stable identity (a Chip
+*acting as* a button — a design-system decision, not an accident), the block
+would declare it and the generator would emit a typed, from-kind-specific
+function into `M3e.Coerce`. It was removed after review found it duplicated
+`recast`'s job behind a second, narrower, config-only escape hatch — one more
+place a reviewer had to look, for a guarantee `recast` already gives (loud,
+greppable, review-fenced), and its specificity did not enforce anything `recast`
+plus a caller-named local wrapper could not. A brand crossing that recurs with a
+stable identity today gets a small, named local function built on `recast`, kept
+next to the feature that needs it — not a second generated module.
 
 **`M3e.Unsafe.fromHtml` / `.fromNode` / `.customElement` — the published escapes.**
 The exported ways to wrap raw `Html` as an `Element` with fully-free rows, re-assert
@@ -575,7 +571,7 @@ customElement : String -> List (Attr capability msg) -> List (Element childAccep
 The posture is **permissive-default-you-trim**: a freshly generated component
 defaults maximally permissive (everything composes) so teams *subtract* invalid
 compositions in config rather than opt into valid ones. When a team believes the
-design system is genuinely wrong for their case, `recast` coerces the row — but it
+design system is genuinely wrong for their case, `recast` forces the row — but it
 is loud, greppable, and review-fenced, so the design-system owner can audit each use
 and either fix the app or fix the config. The escape is a feedback signal, not a
 silent hole. See [`guides/Seams.md`](guides/Seams.md) for the full decision table.
@@ -613,10 +609,10 @@ name):
 8. **`require`** — cardinality and required shape: drives which components get an
    `el` entry point, the `build` capability records, and the
    missing-required/duplicate-singular review facts.
-9. **`_coerce` + escape flags** — the blessed brand crossings (§6), plus brand flags
-   `delegate` (default on → emit `M3e.Events.delegate`) and `legacyHtml` (native
-   only → the one loud `fromHtml` escape). The shipped m3e config sets `_legacyHtml`
-   and one `_coerce` entry (Chip→button).
+9. **escape flags** — brand flags `delegate` (default on → emit `M3e.Events.delegate`)
+   and `legacyHtml` (native only → the one loud `fromHtml` escape). The shipped m3e
+   config sets `_legacyHtml`. There is no config-declared crossing primitive (§6):
+   a kind-crossing either widens `admits` (above) or goes through `recast`.
 10. **`home`** — module granularity: which module a constructor co-locates in. m3e's
     default is one module per component (`M3e.Button`); the native brand groups
     simple siblings and gives complex elements their own home.
@@ -642,7 +638,7 @@ The pipeline is: **`@m3e/web` CEM + `config/slots.json` in, the two surfaces of
 §3 out.** The generator reads each component's manifest for its tag, attributes,
 events, and slots, applies the config's per-component facts, and emits the
 per-component modules, the general `M3e` / `M3e.Attributes` / `M3e.Events` /
-`M3e.Values` surface, the `M3e.Kind` / `M3e.Coerce` / `M3e.Unsafe` support modules,
+`M3e.Values` surface, the `M3e.Kind` / `M3e.Unsafe` support modules,
 and the `M3e.Review.Facts` table the `elm-review-cem` rules read. The IR
 (`HtmlIr.*`) and the native brand (`TypedHtml.*`) are *not* emitted here — they are
 imported dependencies. Regeneration is the release gate: nothing under `src/M3e/`

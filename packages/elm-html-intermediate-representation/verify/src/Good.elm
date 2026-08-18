@@ -2,7 +2,7 @@ module Good exposing (page, view)
 
 {-| The payoff case: native and m3e content nest on ONE `Element` type with no
 conversion — cross-brand layout, shared atoms in a brand slot, global attrs and
-events across brands, typed enums, slot placement, coerce, delegate, map, and
+events across brands, typed enums, slot placement, recast, delegate, map, and
 the render boundary. MUST compile.
 -}
 

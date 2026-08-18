@@ -123,25 +123,45 @@ four packages could technically publish without it, but see O-1/O-2 before treat
 
 ## 5. Open decisions to put to the human (surface, do not decide)
 
-- **O-1 — Versioning.** The human said "nothing is published, no versioning." Every `packages.json`
-  entry says `1.0.0`, but that is a placeholder, not a decision. Needs: is the first published
-  version `1.0.0` for all five? Are the two substrate packages (`IR`, `elm-cem-facts`) also `1.0.0`
-  first-publishes, or do they already have an intended version line? A published version is
-  permanent and its semver successors are constrained (#6) — this is a one-way door.
-- **O-2 — Remotes/coordinates.** Seven new public GitHub repos would be created at the exact
-  `owner/name` coordinates (`jackhp95/elm-m3e-html`, `-facts`, `-icons`, `-components`, `-builder`,
-  plus `jackhp95/elm-html-intermediate-representation`, `jackhp95/elm-cem-facts`). Confirm the org
-  (`jackhp95`), the names, public visibility, and that none already exist / collide. Creating them
-  and pushing tags is irreversible-ish (a published package name cannot be reused for something else).
+- **O-1 — Versioning. ✅ ANSWERED — HOLD EVERYTHING UNTIL AFTER THE PROBE.** No real coordinate is
+  spent until `jackhp95/elm-probe-pkg` has exercised requirements #8–#12 against the live registry
+  (O-6). First publish is `1.0.0` regardless (forced for a first publish, not chosen), so the
+  decision was purely timing: the elm-m3e-* API is still moving — the icon surface changed shape at
+  R-026 — and 1.0.0 is permanent, so nothing real ships against an unverified pipeline.
+- **O-2 — Remotes/coordinates. ✅ ANSWERED — create all five, public, at the exact elm.json names.**
+  `jackhp95/elm-m3e-html`, `-facts`, `-icons`, `-components`, `-builder`. **Availability verified
+  2026-08-16: all five return HTTP 404 (free).** The two substrate coordinates
+  `jackhp95/elm-html-intermediate-representation` and `jackhp95/elm-cem-facts` **already exist** —
+  public, default branch `main`, **root `elm.json` present**, **no tags** (so nothing is published
+  and requirement #8 is unmet on both). `elm publish` never inspects the git remote; it resolves
+  GitHub from the elm.json NAME, so these names must match exactly.
+  **Sequencing note:** repo creation is authorized but is NOT publishing. Per O-1 it may happen
+  before the probe (an empty repo is deletable; a published package name is not), but no tag is
+  pushed and no `elm publish` runs until O-6 is green.
 - **O-3 — Icons cap (R-026).** Which of §4 (a)/(b)/(c). Blocks the icons package; does not block a
   decision to publish the other four first if O-1/O-2 allow a partial release.
-- **O-4 — README ≥ 300 B.** `split.js` emits a README with a copy-only banner + summary; verify each
-  of the five is ≥ 300 bytes (requirement #3) — the tiny `elm-m3e-facts` summary is the one at risk.
-  If short, enrich the README template in `split.js`/`packages.json` (generator change, regenerate).
-- **O-5 — Substrate ownership.** `elm-html-intermediate-representation` and `elm-cem-facts` live as
-  in-workspace packages here but are their own upstream repos. Decide whether they publish from this
-  monorepo's mirror step or from their own source repos, and at what version — they gate everything
-  downstream.
+- **O-4 — README ≥ 300 B. ✅ ANSWERED — hand-author one README per package.** **MEASURED 2026-08-16:
+  ALL FIVE FAIL, not just `elm-m3e-facts` as this doc previously guessed** — components 285 B ·
+  html 276 B · builder 267 B · icons 263 B · facts 262 B, against a 300 B floor. Decision: write five
+  bespoke READMEs rather than enrich the template, so each package gets a real registry landing page.
+  **Required companion change:** `split.js` currently EMITS its own README into `dist-packages/` and
+  will clobber hand-authored ones — it must be changed to copy-not-overwrite. This is not
+  hypothetical: it is exactly what silently overrode the 940 B README that `gen-icon-module.js`
+  writes to `packages/elm-m3e/elm-m3e-icons/README.md`, leaving the published artifact at 263 B.
+  LICENSE (1,520 B) and elm.json are present and correct for all five.
+- **O-5 — Substrate ownership. ✅ ANSWERED — force-sync from the workspace, then publish from the
+  standalone repos.** The in-workspace copies are canonical; push them over
+  `jackhp95/elm-html-intermediate-representation` and `jackhp95/elm-cem-facts`, then tag and publish
+  from those repos (no mirror step needed — both already have a root `elm.json`, so the zipball-root
+  requirement #11 is already satisfied). Chosen over "publish from their own repos as-is" to resolve
+  drift EXPLICITLY: the two sides currently agree on version (`1.0.0` both) and file count (7/7 and
+  1/1), but that is not proof of byte-identity, and these two packages gate every other publish.
+  **A byte-level diff must be run as part of the sync, not assumed. VERIFIED 2026-08-17: byte-identity
+  is NOT proven for `elm-cem-facts` — `src/Cem/Facts.elm` differs by one comment-wording line (3275 B
+  workspace vs 3246 B remote). `elm-html-intermediate-representation`'s `elm.json`/`src/`/`README`/
+  `LICENSE` ARE byte-identical (only its dev-tooling `package.json`, not part of the published
+  package, differs by one line). This confirms the force-sync is live, necessary work, not a
+  precaution.**
 - **O-6 — Dry run.** Approve a `jackhp95/elm-probe-pkg` throwaway publish first (the probe package is
   already scaffolded) to observe the real registry's #8–#12 behavior — especially the cap 400 and
   the zipball rebuild — before spending a real coordinate.

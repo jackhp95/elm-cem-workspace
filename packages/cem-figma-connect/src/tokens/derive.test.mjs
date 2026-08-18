@@ -327,18 +327,34 @@ test("deriveTokenRows + writeTokens: an end-to-end re-derive — a hand-added hu
 
     const paths = { ...DEFAULT_PATHS, overridesPath, tokensPath };
 
+    // Phase 4 (L2): every row is tier-attributed mechanically post-merge, so a
+    // preserved human row keeps ALL its substantive fields verbatim and gains
+    // exactly one derived field — `tier`, inserted right after `md` (here
+    // "system", from the --md-sys-* prefix). That is the row deriveTokenRows
+    // now returns; the human override is otherwise untouched.
+    const expectedRow = {
+      figma: humanRow.figma,
+      md: humanRow.md,
+      tier: "system",
+      tailwind: humanRow.tailwind,
+      m3eFallback: humanRow.m3eFallback,
+      provenance: humanRow.provenance,
+      status: humanRow.status,
+      note: humanRow.note,
+    };
+
     // Pass 1: derive + write.
     const firstRows = deriveTokenRows(paths);
     writeTokens(tokensPath, firstRows);
     const firstPrimary = firstRows.find((r) => r.figma === "Schemes/Primary");
-    assert.deepEqual(firstPrimary, humanRow);
+    assert.deepEqual(firstPrimary, expectedRow);
 
     // Pass 2: re-derive from scratch (simulating a re-run after upstream
     // dumps/theme.css/fallbacks change) — the human row must be BYTE
     // IDENTICAL, not just "still present".
     const secondRows = deriveTokenRows(paths);
     const secondPrimary = secondRows.find((r) => r.figma === "Schemes/Primary");
-    assert.deepEqual(secondPrimary, humanRow);
+    assert.deepEqual(secondPrimary, expectedRow);
     assert.deepEqual(firstRows, secondRows, "the whole table is byte-stable across re-derives, not just the human row");
   } finally {
     fs.rmSync(scratch, { recursive: true, force: true });

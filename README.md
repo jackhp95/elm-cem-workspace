@@ -15,6 +15,13 @@ tailwind-m3e-web, elm-cem-compose, and the shared substrate), with a root task r
 and gate that operate over both graphs. The `packages/_probe/` pair is the living,
 executable test of the coexistence convention below.
 
+**The `github.com/jackhp95/<name>` repos are read-only published mirrors of
+these packages — never edit them directly.** All family-package work happens
+here, under `packages/<name>/`. Publish a package out via
+`node tools/publish-mirror.mjs <name>` (dry-run unless you pass `--push
+--yes-i-am-sure`); `node tools/check-mirror-drift.mjs` catches any mirror
+that moved outside that tool.
+
 ## Layout
 
 ```

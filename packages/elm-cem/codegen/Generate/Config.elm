@@ -3,7 +3,7 @@ module Generate.Config exposing (decodeConfigResult, extractComponents, extractL
 import Cem
 import Dict
 import Generate.Normalize exposing (dropNamelessMembers, mergeComponentsByTagName, normalizeAttrTypes)
-import Generate.Types exposing (ActionConfig, ActionWrapper, Coercion, Config, ConfigResult, EventDecoder(..), EventScalar(..), LibraryInfo, SlotKinds(..))
+import Generate.Types exposing (ActionConfig, ActionWrapper, Config, ConfigResult, EventDecoder(..), EventScalar(..), LibraryInfo, SlotKinds(..))
 import Json.Decode
 import Naming
 
@@ -55,9 +55,6 @@ decodeConfigResult flags =
 
         nativeAttrTableKey =
             "_nativeAttrTable"
-
-        coerceKey =
-            "_coerce"
 
         categoriesKey =
             "_categories"
@@ -440,23 +437,6 @@ decodeConfigResult flags =
         nativeAttrTableDecoder =
             Json.Decode.list nativeAttrEntryDecoder
 
-        -- A blessed brand-crossing declaration (WS6 / CX5). Each entry emits one
-        -- named loud-crossing function in `<Lib>/Coerce.elm`.
-        -- `from` = source component name (doc only); `fromKind` = source kind field;
-        -- `to` = target kind field (prefix `"shared:"` for atom targets);
-        -- `name` = Elm function name.
-        -- Present-but-invalid fails LOUD; absent ⇒ [] (no Coerce module emitted).
-        coercionEntryDecoder : Json.Decode.Decoder Coercion
-        coercionEntryDecoder =
-            Json.Decode.map4 Coercion
-                (Json.Decode.field "from" Json.Decode.string)
-                (Json.Decode.field "fromKind" Json.Decode.string)
-                (Json.Decode.field "to" Json.Decode.string)
-                (Json.Decode.field "name" Json.Decode.string)
-
-        coerceDecoder : Json.Decode.Decoder (List Coercion)
-        coerceDecoder =
-            Json.Decode.list coercionEntryDecoder
     in
     -- Absent `_config` ⇒ empty config (the manifest-agnostic path). A PRESENT
     -- but malformed `_config` must fail LOUD rather than silently collapse to
@@ -467,7 +447,7 @@ decodeConfigResult flags =
             flags
     of
         Ok Nothing ->
-            Ok { components = Dict.empty, native = { emit = [], semantics = [], elementSummaries = [], attrSummaries = [] }, htmlNamespace = "Html", rawNamespace = "Raw", exclude = [], actions = Nothing, nativeAttrTable = [], coercions = [] }
+            Ok { components = Dict.empty, native = { emit = [], semantics = [], elementSummaries = [], attrSummaries = [] }, htmlNamespace = "Html", rawNamespace = "Raw", exclude = [], actions = Nothing, nativeAttrTable = [] }
 
         Ok (Just configValue) ->
             let
@@ -511,14 +491,6 @@ decodeConfigResult flags =
                         (optStrict nativeAttrTableKey nativeAttrTableDecoder [])
                         configValue
                         |> Result.mapError Json.Decode.errorToString
-
-                -- `_coerce`: blessed brand crossings (WS6 / CX5).
-                -- Absent ⇒ [] (no Coerce module emitted).
-                coercionsResult =
-                    Json.Decode.decodeValue
-                        (optStrict coerceKey coerceDecoder [])
-                        configValue
-                        |> Result.mapError Json.Decode.errorToString
             in
             Result.map3
                 (\comps native ( htmlNs, rawNs, excl ) ->
@@ -531,52 +503,37 @@ decodeConfigResult flags =
                     (\r ->
                         Result.map2
                             (\actions nativeAttrTable ->
-                                { actions = actions
-                                , nativeAttrTable = nativeAttrTable
-
                                 -- Scrub the `_`-prefixed meta-keys out of the raw
                                 -- component dict so they are never treated as
                                 -- component entries. The keys are load-bearing here
                                 -- even though several of their decoded values are no
                                 -- longer projected into `ConfigResult` (phantom path
                                 -- reads only `components` + `exclude`).
-                                , comps =
+                                { components =
                                     Dict.remove categoriesKey
-                                        (Dict.remove coerceKey
-                                            (Dict.remove nativeAttrTableKey
-                                                (Dict.remove actionsKey
-                                                    (Dict.remove runtimeKey
-                                                        (Dict.remove excludeKey
-                                                            (Dict.remove rawNamespaceKey
-                                                                (Dict.remove htmlNamespaceKey
-                                                                    (Dict.remove nativeKey (Dict.remove seamsKey (Dict.remove baseSlotsKey r.comps)))
-                                                                )
+                                        (Dict.remove nativeAttrTableKey
+                                            (Dict.remove actionsKey
+                                                (Dict.remove runtimeKey
+                                                    (Dict.remove excludeKey
+                                                        (Dict.remove rawNamespaceKey
+                                                            (Dict.remove htmlNamespaceKey
+                                                                (Dict.remove nativeKey (Dict.remove seamsKey (Dict.remove baseSlotsKey r.comps)))
                                                             )
                                                         )
                                                     )
                                                 )
                                             )
                                         )
+                                , native = r.native
+                                , htmlNamespace = r.htmlNs
+                                , rawNamespace = r.rawNs
+                                , exclude = r.excl
+                                , actions = actions
+                                , nativeAttrTable = nativeAttrTable
                                 }
                             )
                             actionsResult
                             nativeAttrTableResult
-                            |> Result.andThen
-                                (\inner ->
-                                    Result.map
-                                        (\coercions ->
-                                            { components = inner.comps
-                                            , native = r.native
-                                            , htmlNamespace = r.htmlNs
-                                            , rawNamespace = r.rawNs
-                                            , exclude = r.excl
-                                            , actions = inner.actions
-                                            , nativeAttrTable = inner.nativeAttrTable
-                                            , coercions = coercions
-                                            }
-                                        )
-                                        coercionsResult
-                                )
                     )
 
         Err e ->

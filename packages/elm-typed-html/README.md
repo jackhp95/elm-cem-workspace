@@ -106,7 +106,7 @@ The pieces you reach for most:
   **payload-typed** events: `onInput` / `onChange : (String -> msg)` and
   `onCheck : (Bool -> msg)` hand you the value directly (like `elm/html`);
   `onInputWith` / `onChangeWith` / `onCheckWith` take a decoder for custom payloads.
-- **`TypedHtml.Unsafe`** — `fromHtml` / `coerce` / `coerceAll`, the loud escapes
+- **`TypedHtml.Unsafe`** — `fromHtml` / `recast` / `recastAll`, the loud escapes
   for genuine raw `Html` (see below).
 - **`TypedHtml.toHtml`** — the render exit; `TypedHtml.toHtml el` is the barrel
   shorthand for `HtmlIr.Node.toHtml (HtmlIr.Element.toNode el)`.
@@ -122,7 +122,7 @@ Two coordinated surfaces, both generated:
     attribute, event, and value vocabulary.
   - `TypedHtml.Aria` — the ARIA attribute surface.
   - `TypedHtml.Kind` — the containment-kind types.
-  - `TypedHtml.Unsafe` — escape hatches (`fromHtml` / `coerce` / `coerceAll`)
+  - `TypedHtml.Unsafe` — escape hatches (`fromHtml` / `recast` / `recastAll`)
     for legacy/raw HTML.
 
 - **Specific per-component surface** — the strict per-component modules with
@@ -251,12 +251,12 @@ relevant mechanisms, all visible in the generated `src/`:
   invalid nesting a type error.
 - **ARIA hybrid** — roles/aria surfaced through `TypedHtml.Aria` and the
   per-component role types, gated by the manifest's `roles`.
-- **`delegate` / `coerce`** — the escape/adaptation primitives used where an
+- **`delegate` / `recast`** — the escape/adaptation primitives used where an
   attribute or value must cross a boundary (present in `TypedHtml.Attributes`,
   `TypedHtml.Events`, `TypedHtml.Scripting`).
 
-The full config vocabulary — the ten primitives (`element`, `kind`, `admits`,
-`parents`, `_sets`, `values`, `roles`, `require`, `_coerce` + escape flags,
+The full config vocabulary — the nine primitives (`element`, `kind`, `admits`,
+`parents`, `_sets`, `values`, `roles`, `require` + escape flags,
 `home`) — is specified in the generator repo at
 `elm-cem/docs/config-primitives.md`. This README describes only what this
 generated brand exposes; the vocabulary and emission rules are owned by the
@@ -299,12 +299,12 @@ rules exist to shrink). Use `TypedHtml.Unsafe.fromHtml`; it is loud, greppable,
 and the single lint-visible escape hatch. Reserve it for incremental migration
 and genuinely un-typed third-party markup.
 
-`TypedHtml.Unsafe` also carries **`coerce`** / **`coerceAll`** — re-kind an
+`TypedHtml.Unsafe` also carries **`recast`** / **`recastAll`** — re-kind an
 existing `Element` (or a list of them) to free rows so it fits any slot. Same
 loudness, same lint visibility. Reach for these only when a value must cross a
 kind boundary you cannot express; if a value is *already* a typed `Element`,
-compose it directly rather than coercing. The `elm-review-cem` rule
-**`NoRedundantElementEscape`** flags a coerce (or `fromHtml`) applied to
+compose it directly rather than recasting. The `elm-review-cem` rule
+**`NoRedundantElementEscape`** flags a recast (or `fromHtml`) applied to
 something the type system already accepts.
 
 ## Accessible form fields

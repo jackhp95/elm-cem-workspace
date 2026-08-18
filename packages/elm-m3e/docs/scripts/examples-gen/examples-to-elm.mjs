@@ -32,6 +32,7 @@ import { dirname, resolve } from "node:path";
 import { parseHTML } from "linkedom";
 
 import { buildOracle } from "./lib/oracle.mjs";
+import { loadFacts } from "./lib/facts.mjs";
 import { toElm } from "./lib/to-elm.mjs";
 import { deriveSection } from "./lib/sections.mjs";
 import { pascal } from "./lib/naming.mjs";
@@ -89,8 +90,8 @@ function nodeToHtml(node) {
  * handling multi-root galleries.
  * @returns {{ code: string } | { skip: string }}
  */
-function convertExample(html, oracle) {
-  const convert = (h) => toElm(h, oracle);
+function convertExample(html, oracle, facts) {
+  const convert = (h) => toElm(h, oracle, facts);
   const roots = topLevelNodes(html);
 
   // Single root (or empty) -> defer entirely to the converter.
@@ -137,6 +138,8 @@ function main() {
   const corpus = readJson(EXAMPLES_PATH);
   const categories = readJson(CATEGORIES_PATH);
   const oracle = buildOracle();
+  // Face C (component-API facts) from the ONE facts bundle — see lib/facts.mjs.
+  const facts = loadFacts();
 
   const generated = {};
   const skippedLines = [];
@@ -182,7 +185,7 @@ function main() {
       // Convert the strict top surface. A converter skip is NOT a drop: the
       // example still ships its HTML surface; its `top` field simply becomes
       // null. The skip reason is carried for the log.
-      const res = convertExample(rawHtml, oracle);
+      const res = convertExample(rawHtml, oracle, facts);
       const section = deriveSection(rawHtml, oracle);
       examples.push({
         title,

@@ -144,35 +144,33 @@ cardBody : Bool -> Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admi
 cardBody isActive preset =
     TypedHtml.div
         [ TA.class "flex flex-col gap-1.5" ]
-        (List.concat
-            [ if isActive then
-                [ selectedBadge ]
-
-              else
-                []
-            , [ cardName preset
-              , cardSpecimen preset
-              , cardRoleStrip
-              ]
-            ]
-        )
+        [ cardBadge isActive
+        , cardName preset
+        , cardSpecimen preset
+        , cardRoleStrip
+        ]
 
 
-{-| The "selected" affordance: a filled `check_circle` icon, right-aligned.
-Shown only for the active card. Its colour inherits `on-surface` from the
-card's own nested theme.
+{-| Selection affordance: always rendered so the badge row never collapses.
+Active card → filled `check_circle` in primary; inactive → outline ring
+(`radio_button_unchecked`) in a neutral/dim tone so it recedes visually.
+Both icons occupy the same slot so no reflow occurs on selection change.
 -}
-selectedBadge : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
-selectedBadge =
+cardBadge : Bool -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardBadge isActive =
     TypedHtml.div
         [ TA.class "flex justify-end -mb-1" ]
-        [ M3e.icon
-            [ M3e.Component.Icon.name "check_circle"
-            , M3e.Component.Icon.filled True
-            , MA.style "font-size" "1rem"
-            , MA.style "color" "var(--md-sys-color-primary)"
-            ]
-            []
+        [ if isActive then
+            M3e.icon
+                [ M3e.Component.Icon.name "check_circle"
+                , M3e.Component.Icon.filled True
+                ]
+                []
+
+          else
+            M3e.icon
+                [ M3e.Component.Icon.name "radio_button_unchecked" ]
+                []
         ]
 
 

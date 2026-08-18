@@ -21,7 +21,8 @@ crossing theorem is a property of the encoding rather than a gap in the config.
 
 The sanctioned answers, none of which change this: a kind-permissive container
 (`Mini.Surface`, `"kinds": ["any"]`), a shared atom on both sides (this file's
-subject), or a declared loud crossing (`Mini.Coerce.asButton`, config `_coerce`).
+subject), or the loud centralized escape hatch (`Mini.Unsafe.recast`) for a
+crossing that genuinely can't be expressed in config.
 
 -}
 

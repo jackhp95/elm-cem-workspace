@@ -16,10 +16,10 @@ vocabulary. Nothing here is the cap-busting component layer.
 | `jackhp95/elm-typed-html` | typed `elm/html`, brand-agnostic, broad appeal |
 | `jackhp95/elm-cem-facts` | `Cem.Facts` (elm/core only), consumed by the review rules |
 | `jackhp95/elm-review-cem` | the `Cem.*` lint rules (must be a registry package — that's how elm-review consumes rules) |
-| `jackhp95/elm-m3e` | the m3e **primitives + tokens** (`M3e.Html`, `.Attributes`, `.Values`, `.Events`, `.Kind`, `.Build`, `.Action`, `.Unsafe`, `.Coerce`) — usable on its own; **eject** for components |
+| `jackhp95/elm-m3e` | the m3e **primitives + tokens** (`M3e.Html`, `.Attributes`, `.Values`, `.Events`, `.Kind`, `.Build`, `.Action`, `.Unsafe`) — usable on its own; **eject** for components |
 
-The brand package exposes only its 9 general modules (`M3e.Action`, `.Attributes`,
-`.Build`, `.Coerce`, `.Events`, `.Html`, `.Kind`, `.Unsafe`, `.Values` — the
+The brand package exposes only its 8 general modules (`M3e.Action`, `.Attributes`,
+`.Build`, `.Events`, `.Html`, `.Kind`, `.Unsafe`, `.Values` — the
 primitives-only set). Its `docs.json` is ~186 KB, well under cap. No measurement,
 no level selection.
 

@@ -20,6 +20,16 @@
 // cutover retires: nothing is written under packages/. The ELM_HOME cache is
 // the same place a real `elm install` of a published package would write to;
 // this just seeds it locally for an unpublished in-workspace dependency.
+//
+// Standalone-checkout fallback: `jackhp95/elm-cem-facts` is deliberately kept
+// OFF the Elm package registry (Jack's call — publishing there is effectively
+// irreversible), but it does have its own `jackhp95/elm-cem-facts` GitHub
+// mirror, published by `tools/publish-mirror.mjs` the same way this repo is.
+// Outside the monorepo (a plain `git clone` of this repo on its own), the
+// `packages/elm-cem/facts` relative path doesn't exist — this script falls
+// back to a shallow clone of that mirror instead, cached and refreshed like
+// any other dependency fetch. Override the mirror URL with
+// `ELM_CEM_FACTS_GIT_URL` if you need to point at a fork or a local path.
 
 import fs from "node:fs";
 import os from "node:os";
@@ -29,7 +39,33 @@ import { spawnSync } from "node:child_process";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workspaceRoot = path.resolve(repoRoot, "..", "..");
-const factsDir = path.resolve(workspaceRoot, "packages", "elm-cem", "facts");
+
+function resolveFactsDir() {
+  const monorepoFactsDir = path.resolve(workspaceRoot, "packages", "elm-cem", "facts");
+  if (fs.existsSync(path.join(monorepoFactsDir, "elm.json"))) {
+    return monorepoFactsDir;
+  }
+
+  const gitUrl = process.env.ELM_CEM_FACTS_GIT_URL || "https://github.com/jackhp95/elm-cem-facts.git";
+  const mirrorCacheDir = path.join(os.tmpdir(), "elm-cem-facts-mirror-cache");
+
+  if (fs.existsSync(path.join(mirrorCacheDir, ".git"))) {
+    console.log(`stage-facts-elm-home: refreshing standalone-checkout fallback clone at ${mirrorCacheDir}`);
+    spawnSync("git", ["-C", mirrorCacheDir, "fetch", "--depth", "1", "origin", "main"], { stdio: "inherit" });
+    spawnSync("git", ["-C", mirrorCacheDir, "reset", "--hard", "origin/main"], { stdio: "inherit" });
+  } else {
+    console.log(`stage-facts-elm-home: no in-monorepo packages/elm-cem/facts — cloning ${gitUrl} as a fallback (standalone checkout)`);
+    fs.rmSync(mirrorCacheDir, { recursive: true, force: true });
+    const clone = spawnSync("git", ["clone", "--depth", "1", gitUrl, mirrorCacheDir], { stdio: "inherit" });
+    if (clone.status !== 0) {
+      fail(`could not clone ${gitUrl} — set ELM_CEM_FACTS_GIT_URL to override, or run this from inside elm-cem-workspace`);
+    }
+  }
+
+  return mirrorCacheDir;
+}
+
+const factsDir = resolveFactsDir();
 const factsElmJsonPath = path.join(factsDir, "elm.json");
 const factsSrcDir = path.join(factsDir, "src");
 

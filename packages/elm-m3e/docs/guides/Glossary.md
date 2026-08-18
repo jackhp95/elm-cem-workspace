@@ -23,14 +23,6 @@ cost. A private-tier component's kind row carries its library's brand; closed sl
 reject any element carrying a different brand. See
 [`decisions.md CX2`](../decisions.md#cx2--brand-kind-rows-per-library).
 
-**coercion**
-A config-declared, named, typed brand crossing. Declared in the `_coerce` block of
-`config/slots.json`; generated into `<Lib>.Coerce` (e.g., `M3e.Coerce.asButton`).
-A coercion makes a semantic claim about the crossing — a Chip *acting as* a button
-— and is the preferred mechanism for recurrent, well-reasoned crossings. Contrast
-with `recast` (the general loud crossing). See [`Seams`](Seams.md) and
-[`decisions.md CX5`](../decisions.md#cx5--seams-are-loud-coercions-are-config-blessed-sugar).
-
 **surface**
 One of the two coordinated entry points the single `jackhp95/elm-m3e` package exposes:
 the **general** surface (`M3e` + `M3e.Attributes` / `M3e.Events` / `M3e.Values`, the
@@ -41,16 +33,16 @@ compile errors. See [`TheLayers`](TheLayers.md). (This replaces the retired
 "facet family" packaging, where each layer/form was its own published package.)
 
 **recast**
-The general loud seam crossing: `M3e.Unsafe.recast` coerces any `Element` to any other
-kind row with no semantic claim (`recastAll` maps it over a list; `M3e.Unsafe.Attributes`
+The one sanctioned brand crossing: `M3e.Unsafe.recast` re-kinds any `Element` to any
+other kind row with no semantic claim (`recastAll` maps it over a list; `M3e.Unsafe.Attributes`
 ships the attribute-side twins, `recastAttr` / `recastAttrAll`). Always greppable and
-review-enforced. Use for one-off or as-yet-unnamed crossings; promote to a named
-coercion when the crossing recurs with consistent intent. See [`Seams`](Seams.md).
+review-enforced. When a crossing recurs with consistent intent, wrap it in a small,
+named local function built on `recast` — kept next to the feature that needs it,
+not a second generated escape. See [`Seams`](Seams.md).
 
 **seam**
-Any crossing point where a value from outside the typed IR enters it. Two
-sanctioned mechanisms exist: `recast` (general) and named coercions
-(`M3e.Coerce.*`, config-blessed). Every seam crossing must happen inside a
+Any crossing point where a value from outside the typed IR enters it. One
+sanctioned mechanism: `recast`. Every seam crossing must happen inside a
 module declared in `NoSeamOutsideAllowedModules`'s `allowedModules` list.
 The seam stampers (`fromNode`, `fromHtml`, `recast`) live only in `HtmlIr.Internal`,
 which is lint-guarded and not re-exported from the public surface — but every brand

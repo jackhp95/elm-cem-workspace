@@ -7,8 +7,8 @@
 
 ## 1. What is published vs. what is generated
 
-**Published to the Elm registry — the 9 modules in `elm.json` `exposed-modules`:**
-`M3e.Action, M3e.Attributes, M3e.Build, M3e.Coerce, M3e.Events, M3e.Html,
+**Published to the Elm registry — the 8 modules in `elm.json` `exposed-modules`:**
+`M3e.Action, M3e.Attributes, M3e.Build, M3e.Events, M3e.Html,
 M3e.Kind, M3e.Unsafe, M3e.Values`.
 Source: `elm.json` (exposed-modules), `config/slots.json` `"_publishGeneralOnly": true` (line 4).
 These are the brand's "primitives + tokens" layer — the shared vocabulary and the
@@ -85,8 +85,17 @@ per the design doc — depend on the separate `jackhp95/elm-typed-html` package 
 
 | Module | Kind | Verified |
 |---|---|---|
-| `M3e.Coerce` | Config-blessed kind crossings. Exposes **only `asButton`** (a Chip admitted where a button is expected). Declared in `config/slots.json` `_coerce`. | `src/M3e/Coerce.elm` |
-| `M3e.Unsafe` | The loud legacy-interop escapes: `fromHtml` (wrap raw `Html`, FREE rows), `coerce`, `coerceAll` (re-kind, FREE rows). Every use site is a grep target / lint finding. | `src/M3e/Unsafe.elm` |
+| `M3e.Unsafe` | The loud legacy-interop escapes: `fromHtml` (wrap raw `Html`, FREE rows), `recast`, `recastAll` (re-kind, FREE rows). Every use site is a grep target / lint finding. | `src/M3e/Unsafe.elm` |
+
+> Correction to an earlier version of this doc: there is no `M3e.Coerce` module.
+> `elm-cem` once had a config-declared `_coerce` block meant to emit named crossing
+> functions there, but the emitter that would write `M3e/Coerce.elm` was never wired
+> into codegen's output list, so the module has never actually existed in this
+> repo's history despite prior docs describing it as shipped. The mechanism was
+> removed outright rather than wired up: a composition needing a specific
+> kind-crossing either widens the relevant `admits` list in config (when that
+> doesn't conflict with Material guidance) or reaches for `M3e.Unsafe.recast`
+> (when it genuinely conflicts and needs an explicit, reviewed exception).
 
 ## 6. Docs-internal machinery (vendored — NOT what a consumer imports)
 
@@ -129,8 +138,8 @@ in `elm.json` dependencies) AND vendored into `docs/vendor` for the docs site.
   A horizontal ergonomic choice, NOT a safety ranking, NOT a layer to descend.
 - **loose vs. tight** — shared `M3e.Attributes.*` vocabulary (union, lint-checked) vs.
   per-component `M3e.<Comp>.*` setters (compile-tight). `M3e.Html.*` is the loose producer.
-- **escape** — leaving the typed tree via `M3e.Coerce` / `M3e.Unsafe` (consumer) or the
+- **escape** — leaving the typed tree via `M3e.Unsafe` (consumer) or the
   docs kit `Native`/`Seam` (docs site).
 - **RETIRED terms — must not appear as live API:** `M3e.Raw.*`, `M3e.Record.*`,
   per-component `M3e.Html.<Comp>`, `M3e.Build.<Comp>` (build is `M3e.<Comp>.build`), the
-  5-layer "descent," "drop a layer," decay ladder, `swap`.
+  5-layer "descent," "drop a layer," decay ladder, `swap`, `M3e.Coerce`, `_coerce`.

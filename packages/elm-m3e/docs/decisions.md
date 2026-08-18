@@ -176,6 +176,19 @@ emitter converts these to the actual kind field names. The coercion signature us
 the from-component's `Brand`, not a generalized kind — both sides are `M3e.Kind.Brand`
 (Chip re-brands as button, both in the same library).
 
+**Correction (2026-08-17): "what landed" above never actually landed.** The
+`coerceModule` generator function existed but was never wired into the emitter's
+output list, so `src/M3e/Coerce.elm` has never existed as generated code in this
+repo's history, despite this section — and roughly ten other doc pages — describing
+it as shipped. The `_coerce` config primitive and the generator function were
+removed outright rather than wired up, once this was discovered: the distinction
+this decision drew (general loud crossing vs. blessed named sugar) turned out not
+to earn its keep as a *second* mechanism. Going forward there is one lever: a
+kind-crossing either belongs in config (widen the relevant `admits` list, when
+that does not conflict with Material guidance) or goes through `recast` (when it
+genuinely conflicts and needs an explicit, reviewed exception). See
+`packages/elm-cem/docs/config-primitives.md` for the current primitive list.
+
 ### CX6 — The markup package is a real generated peer
 
 Markup is not hand-written HTML wrappers. It is a full generated peer library,
@@ -567,9 +580,11 @@ publishable package's per-package `docs.json` stays comfortably under the
 Three layers, all version `1.0.0`, `family`/`devRepo`/`licenseText` preserved:
 
   1. **`jackhp95/elm-m3e-core` (bottom)** — the general/support surface that
-     imports no component: `M3e.Action`, `M3e.Attributes`, `M3e.Coerce`,
-     `M3e.Events`, `M3e.Kind`, `M3e.Unsafe`, `M3e.Values` (7 modules). Verified
-     against `grep '^import M3e\.'`: `Attributes → Values`, `Coerce → Kind`,
+     imports no component: `M3e.Action`, `M3e.Attributes`,
+     `M3e.Events`, `M3e.Kind`, `M3e.Unsafe`, `M3e.Values` (6 modules — this entry
+     originally listed a seventh, `M3e.Coerce`, which never actually existed as
+     generated code; see the CX5 correction above). Verified
+     against `grep '^import M3e\.'`: `Attributes → Values`,
      everything else importing only `elm/*` and `HtmlIr.*`. No component leaks in.
   2. **Middle — the per-component `M3e.<Component>` modules**, partitioned into
      **three** packages purely by a simple, documented rule: **alphabetical by

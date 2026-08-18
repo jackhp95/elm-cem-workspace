@@ -1,6 +1,7 @@
 module Doc.Data exposing
     ( Component
     , ExampleUsage
+    , Layers
     , Member
     , allComponents
     , allExampleUsage
@@ -19,6 +20,22 @@ type alias Member =
     { name : String, kind : String, signature : String, doc : String, role : String }
 
 
+{-| The four API layers of a component, one per API-reference tab: `m3e` (the
+barrel's thin per-component slice — normally just the constructor), `components`
+(the `M3e.Component.<Name>` module's own members), `builder` (`M3e.Build.<Name>`'s
+pipe surface), and `raw` (the underlying custom element's CEM
+attributes/events/slots, read from `@m3e/web`'s `custom-elements.json`). Type
+aliases/unions are lifted OUT of the layers into `Component.types` — they are
+shared across layers — so a layer holds only its value members.
+-}
+type alias Layers =
+    { m3e : List Member
+    , components : List Member
+    , builder : List Member
+    , raw : List Member
+    }
+
+
 type alias Component =
     { name : String
     , slug : String
@@ -26,7 +43,8 @@ type alias Component =
     , label : String
     , summary : String
     , overview : String
-    , members : List Member
+    , types : List Member
+    , layers : Layers
     }
 
 
@@ -42,7 +60,7 @@ memberDecoder =
 
 componentDecoder : Decode.Decoder Component
 componentDecoder =
-    Decode.map7 Component
+    Decode.map8 Component
         (Decode.field "name" Decode.string)
         (Decode.field "slug" Decode.string)
         (Decode.oneOf [ Decode.field "category" Decode.string, Decode.succeed "" ])
@@ -51,7 +69,36 @@ componentDecoder =
         (Decode.oneOf [ Decode.field "label" Decode.string, Decode.field "name" Decode.string ])
         (Decode.oneOf [ Decode.field "summary" Decode.string, Decode.succeed "" ])
         (Decode.field "overview" Decode.string)
-        (Decode.field "members" (Decode.list memberDecoder))
+        (Decode.oneOf
+            [ Decode.field "types" (Decode.list memberDecoder)
+            , legacyMembers |> Decode.map (List.filter (\m -> m.kind == "type"))
+            ]
+        )
+        layersDecoder
+
+
+{-| An older flat `reference.json` carried one `members` array. Decode it (or an
+empty list) so the layered decoders can fall back gracefully instead of failing
+the whole file on a stale generated artifact.
+-}
+legacyMembers : Decode.Decoder (List Member)
+legacyMembers =
+    Decode.oneOf [ Decode.field "members" (Decode.list memberDecoder), Decode.succeed [] ]
+
+
+layersDecoder : Decode.Decoder Layers
+layersDecoder =
+    Decode.oneOf
+        [ Decode.field "layers"
+            (Decode.map4 Layers
+                (Decode.field "m3e" (Decode.list memberDecoder))
+                (Decode.field "components" (Decode.list memberDecoder))
+                (Decode.field "builder" (Decode.list memberDecoder))
+                (Decode.oneOf [ Decode.field "raw" (Decode.list memberDecoder), Decode.succeed [] ])
+            )
+        , legacyMembers
+            |> Decode.map (\ms -> Layers [] (List.filter (\m -> m.kind /= "type") ms) [] [])
+        ]
 
 
 allComponents : BackendTask FatalError (List Component)

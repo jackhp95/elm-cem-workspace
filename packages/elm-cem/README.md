@@ -137,15 +137,14 @@ for every library — the difference is data, not structure:
 | `<Lib>.Kind` | the library's **private phantom markers** (`Brand`/`Ctx`, `Available`/`Used`) and named kind/context sets. Nominal and private — a foreign brand's markers never unify with them. |
 | `<Lib>.Review.Facts` | **generated metadata** for the [elm-review-cem](#generated-dependencies) rules (valid values, required slots, singular attrs, slot kinds, …). |
 
-Configuration can add further axes — `<Lib>.Coerce` (blessed cross-kind escapes, from
-`_coerce`), `<Lib>.Aria`, `<Lib>.Action` — which appear only when the relevant config is
-present.
+Configuration can add further axes — `<Lib>.Aria`, `<Lib>.Action` — which appear only
+when the relevant config is present.
 
 The **two surfaces come from the same data**: the terse general `<Lib>` module and the
 strict `<Lib>.<Component>` modules are two projections of one brand model, so they can
 never drift. There is no separate "raw" or "html" layer to fall back to — dropping a
 layer of strictness is a matter of which module you import, and the escapes (`delegate`,
-`_coerce`) are explicit.
+`recast`) are explicit.
 
 ### Generated dependencies
 
@@ -239,9 +238,13 @@ primitives** — a brand is *data* in this vocabulary, and each generated module
   `text`).
 - **`require`** (per component) — cardinality and required shape; drives which components
   get an `el` entry point and the `build` capability record.
-- **`_coerce`** (top level) — blessed cross-kind escapes, emitted into `<Lib>.Coerce`.
 - **`_renames`** (top level) — an identifier-override escape hatch for collision
   resolution (fails loud on an unknown source).
+
+There is no config-declared kind-crossing primitive: every generated brand ships a
+`<Lib>.Unsafe.recast` (general, unrestricted re-kind) as part of its escape surface —
+see [`docs/config-primitives.md`](docs/config-primitives.md#retired-outright) for why a
+narrower, config-declared `_coerce` primitive was tried and then removed.
 
 Per-element CEM curation keys (`_exclude`, `syntheticAttrs`, `attrTypes`, `staticAttrs`,
 `events`, `group`, `idWiring`, `_actions`) carry over unchanged; see the catalog.

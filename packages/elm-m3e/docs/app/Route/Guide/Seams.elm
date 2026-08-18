@@ -296,7 +296,7 @@ In practice it rarely bites, and there are three honest answers before you reach
 
 1. **Use a flow container.** `TypedHtml.div`, `section`, `article`, `header`, `footer`, `main_`, `nav`, `form`, `figure`, `aside`, `details`, `dialog` and 20-odd others take any children at all. Wrapping a component in a `<div>` is not a workaround — it is what the content model already says.
 2. **Check the slot first.** Text and icons cross both ways as shared atoms, so `M3e.text` and `M3e.icon` sit inside native phrasing content directly.
-3. **`M3e.Coerce`** for a crossing the design system has blessed in config, and **`M3e.Unsafe.recast`** for the one-off where the design system is genuinely wrong. Both are loud, named and lint-fenced — which is the point of this page.
+3. **`M3e.Unsafe.recast`** for the case where the design system is genuinely wrong — a specific, recurring crossing gets a small named function built on `recast`, kept next to the feature that needs it. Loud, named and lint-fenced — which is the point of this page.
 
 Two smaller residues, for completeness: a bare `<img>` or `<area>` keeps a per-tag kind (so `<picture>` and `<map>` stay exact) and needs a wrapper to enter an M3e slot; and `<dl>`/`<option>` accept any flow content rather than the narrower set the spec names."""
 

@@ -30,12 +30,16 @@
   "bin": {
     "elm-cem": "./bin/elm-cem.js"
   },
+  "exports": {
+    "./elm-shape": "./src/elm-shape.mjs"
+  },
   "files": [
     "codegen/",
     "bin/",
     "templates/",
     "cem-configs/",
     "data/",
+    "src/",
     "LICENSE",
     "README.md",
     "CHANGELOG.md",
@@ -53,6 +57,7 @@
     "test:attr-property": "node tests/attr-property.test.mjs",
     "test:enum-override": "node tests/enum-override.test.mjs",
     "test:from-string": "node tests/from-string.test.mjs",
+    "test:elm-shape": "node --test tests/elm-shape.test.mjs",
     "test:gates": "node tests/gates.test.mjs",
     "test:registry-nested-pkg": "node tests/registry-check-nested-pkg.test.mjs",
     "test:check-gates": "node tests/check-gates.test.mjs",

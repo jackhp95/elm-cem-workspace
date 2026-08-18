@@ -1,4 +1,4 @@
-module Seam exposing (selectionIndicatorShape)
+module Seam exposing (colorSwatchChrome, selectionIndicatorShape)
 
 {-| **The seam** — the one place a design-system escape is allowed to live.
 
@@ -25,7 +25,7 @@ This module stayed deliberately empty until something genuinely needed it. It ha
 exactly one member today; if it grows quickly, that is a signal about the design
 system, not about this file.
 
-@docs selectionIndicatorShape
+@docs colorSwatchChrome, selectionIndicatorShape
 
 -}
 
@@ -57,3 +57,28 @@ is `for`. Filed as an m3e gap; delete this export and its call site in
 selectionIndicatorShape : Attr { c | class : Supported } msg
 selectionIndicatorShape =
     TypedHtml.Attributes.class "rounded-full"
+
+
+{-| The round outlined chrome of a colour-override swatch in the theme editor.
+
+**What the design system cannot express.** The swatch must render a circle with a
+visible outline whose FILL is an arbitrary user-chosen hex — and show as an empty
+outlined circle when the token is unset (fill `transparent`). `m3e-avatar` is round
+and takes a colour, but exposes no outline property, so an unset swatch becomes an
+invisible transparent circle. Verified: swapping the label for an `m3e-avatar` lost
+the border outright.
+
+**Why it stays a native `<label for>`.** The swatch labels a visually-hidden native
+`<input type="color">`, which is what keeps the control keyboard-reachable and
+screen-reader-labelled. A `<label>` admits only phrasing content, so a custom
+element cannot go inside it; replacing the label with a component broke
+`settings-sheet.spec.ts:138` (`locator.fill` timed out — the input was no longer
+reachable). Structure that works beats markup that lints.
+
+**What lets this be deleted.** `m3e-avatar` gaining an outline/border property, or
+an `m3e-*` swatch primitive that accepts an arbitrary fill. Filed as an m3e gap.
+
+-}
+colorSwatchChrome : Attr { c | class : Supported } msg
+colorSwatchChrome =
+    TypedHtml.Attributes.class "rounded-full border border-outline"

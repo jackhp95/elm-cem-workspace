@@ -83,7 +83,7 @@ if (full.perModule) {
   console.log("\nTop 8 modules by docs.json bytes:");
   for (const [n, b] of rows.slice(0, 8)) console.log(`  ${b.toString().padStart(8)}  ${n}`);
   const comp = rows.filter(([n]) => /^M3e\.[A-Za-z]+$/.test(n) &&
-    !["M3e.Action","M3e.Attributes","M3e.Coerce","M3e.Events","M3e.Html","M3e.Kind","M3e.Unsafe","M3e.Values","M3e.Build"].includes(n));
+    !["M3e.Action","M3e.Attributes","M3e.Events","M3e.Html","M3e.Kind","M3e.Unsafe","M3e.Values","M3e.Build"].includes(n));
   const compBytes = comp.reduce((s, [, b]) => s + b, 0);
   console.log(`\ncomponents: ${comp.length} modules, ${compBytes} docs bytes (${(compBytes/HARD_CAP*100).toFixed(1)}% of cap)`);
 }

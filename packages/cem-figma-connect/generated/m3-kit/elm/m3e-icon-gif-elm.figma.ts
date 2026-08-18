@@ -6,7 +6,7 @@ import figma from "figma"
  * m3e-icon (iconTable row "GIF") -> M3e.Icon.icon M3e.Icon.custom "GIF" (opaque-Name icon, R-026).
  * bound to Figma icon node 54692:23582; symbol "GIF".
  * "GIF" has no exposed Name constant — emitted via the M3e.Icon.custom escape hatch (not guessed).
- * icon Name resolved from the opaque-Name catalog (profiles/m3-kit/facts/icon-names.json), derived from the generated M3e.Icon module; filled from the elm-cem facts bundle Face C.
+ * icon Name resolved from the opaque-Name catalog (profiles/m3-kit/facts/icon-names.json), derived from the generated M3e.Icon module; filled setter from the M3e.Component.Icon component surface (Face C).
  */
 
 export default {

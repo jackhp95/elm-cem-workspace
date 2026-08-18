@@ -20,6 +20,9 @@ importers:
       '@figma/code-connect':
         specifier: ^1.4.9
         version: 1.5.3
+      elm-cem:
+        specifier: workspace:*
+        version: link:../elm-cem
     devDependencies:
       '@fontsource-variable/material-symbols-outlined':
         specifier: ^5.2.45

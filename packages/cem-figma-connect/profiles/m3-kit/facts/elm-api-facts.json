@@ -31,7 +31,7 @@
     "m3e-accordion": {
       "cemTag": "m3e-accordion",
       "component": "accordion",
-      "module": "M3e.Accordion",
+      "module": "M3e.Component.Accordion",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -73,7 +73,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Accordion",
+          "module": "M3e.Build.Accordion",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -87,7 +87,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Accordion",
+          "module": "M3e.Component.Accordion",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -97,7 +97,7 @@
     "m3e-action-list": {
       "cemTag": "m3e-action-list",
       "component": "actionList",
-      "module": "M3e.ActionList",
+      "module": "M3e.Component.ActionList",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -157,7 +157,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ActionList",
+          "module": "M3e.Build.ActionList",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -171,7 +171,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ActionList",
+          "module": "M3e.Component.ActionList",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -181,7 +181,7 @@
     "m3e-app-bar": {
       "cemTag": "m3e-app-bar",
       "component": "appBar",
-      "module": "M3e.AppBar",
+      "module": "M3e.Component.AppBar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -293,7 +293,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.AppBar",
+          "module": "M3e.Build.AppBar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -307,7 +307,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.AppBar",
+          "module": "M3e.Component.AppBar",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -317,7 +317,7 @@
     "m3e-assist-chip": {
       "cemTag": "m3e-assist-chip",
       "component": "assistChip",
-      "module": "M3e.AssistChip",
+      "module": "M3e.Component.AssistChip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -440,7 +440,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.AssistChip",
+          "module": "M3e.Build.AssistChip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -454,7 +454,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.AssistChip",
+          "module": "M3e.Component.AssistChip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -464,7 +464,7 @@
     "m3e-autocomplete": {
       "cemTag": "m3e-autocomplete",
       "component": "autocomplete",
-      "module": "M3e.Autocomplete",
+      "module": "M3e.Component.Autocomplete",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -585,7 +585,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Autocomplete",
+          "module": "M3e.Build.Autocomplete",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -599,7 +599,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Autocomplete",
+          "module": "M3e.Component.Autocomplete",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -609,7 +609,7 @@
     "m3e-avatar": {
       "cemTag": "m3e-avatar",
       "component": "avatar",
-      "module": "M3e.Avatar",
+      "module": "M3e.Component.Avatar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -638,7 +638,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Avatar",
+          "module": "M3e.Build.Avatar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -652,7 +652,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Avatar",
+          "module": "M3e.Component.Avatar",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -662,7 +662,7 @@
     "m3e-badge": {
       "cemTag": "m3e-badge",
       "component": "badge",
-      "module": "M3e.Badge",
+      "module": "M3e.Component.Badge",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -784,7 +784,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Badge",
+          "module": "M3e.Build.Badge",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -798,7 +798,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Badge",
+          "module": "M3e.Component.Badge",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -808,7 +808,7 @@
     "m3e-bottom-sheet": {
       "cemTag": "m3e-bottom-sheet",
       "component": "bottomSheet",
-      "module": "M3e.BottomSheet",
+      "module": "M3e.Component.BottomSheet",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -884,7 +884,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.BottomSheet",
+          "module": "M3e.Build.BottomSheet",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -898,7 +898,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.BottomSheet",
+          "module": "M3e.Component.BottomSheet",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -908,7 +908,7 @@
     "m3e-bottom-sheet-action": {
       "cemTag": "m3e-bottom-sheet-action",
       "component": "bottomSheetAction",
-      "module": "M3e.BottomSheetAction",
+      "module": "M3e.Component.BottomSheetAction",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -942,7 +942,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.BottomSheetAction",
+          "module": "M3e.Build.BottomSheetAction",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -956,7 +956,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.BottomSheetAction",
+          "module": "M3e.Component.BottomSheetAction",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -966,7 +966,7 @@
     "m3e-bottom-sheet-trigger": {
       "cemTag": "m3e-bottom-sheet-trigger",
       "component": "bottomSheetTrigger",
-      "module": "M3e.BottomSheetTrigger",
+      "module": "M3e.Component.BottomSheetTrigger",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1011,7 +1011,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.BottomSheetTrigger",
+          "module": "M3e.Build.BottomSheetTrigger",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1025,7 +1025,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.BottomSheetTrigger",
+          "module": "M3e.Component.BottomSheetTrigger",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1035,7 +1035,7 @@
     "m3e-breadcrumb": {
       "cemTag": "m3e-breadcrumb",
       "component": "breadcrumb",
-      "module": "M3e.Breadcrumb",
+      "module": "M3e.Component.Breadcrumb",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1082,7 +1082,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Breadcrumb",
+          "module": "M3e.Build.Breadcrumb",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1096,7 +1096,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Breadcrumb",
+          "module": "M3e.Component.Breadcrumb",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -1106,7 +1106,7 @@
     "m3e-breadcrumb-item": {
       "cemTag": "m3e-breadcrumb-item",
       "component": "breadcrumbItem",
-      "module": "M3e.BreadcrumbItem",
+      "module": "M3e.Component.BreadcrumbItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1220,7 +1220,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.BreadcrumbItem",
+          "module": "M3e.Build.BreadcrumbItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1234,7 +1234,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.BreadcrumbItem",
+          "module": "M3e.Component.BreadcrumbItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1244,7 +1244,7 @@
     "m3e-breadcrumb-item-button": {
       "cemTag": "m3e-breadcrumb-item-button",
       "component": "breadcrumbItemButton",
-      "module": "M3e.BreadcrumbItemButton",
+      "module": "M3e.Component.BreadcrumbItemButton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1347,7 +1347,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.BreadcrumbItemButton",
+          "module": "M3e.Build.BreadcrumbItemButton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1361,7 +1361,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.BreadcrumbItemButton",
+          "module": "M3e.Component.BreadcrumbItemButton",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1371,7 +1371,7 @@
     "m3e-button": {
       "cemTag": "m3e-button",
       "component": "button",
-      "module": "M3e.Button",
+      "module": "M3e.Component.Button",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1618,7 +1618,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Button",
+          "module": "M3e.Build.Button",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1632,7 +1632,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Button",
+          "module": "M3e.Component.Button",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -1642,7 +1642,7 @@
     "m3e-button-group": {
       "cemTag": "m3e-button-group",
       "component": "buttonGroup",
-      "module": "M3e.ButtonGroup",
+      "module": "M3e.Component.ButtonGroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1742,7 +1742,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ButtonGroup",
+          "module": "M3e.Build.ButtonGroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1756,7 +1756,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ButtonGroup",
+          "module": "M3e.Component.ButtonGroup",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1766,7 +1766,7 @@
     "m3e-button-segment": {
       "cemTag": "m3e-button-segment",
       "component": "buttonSegment",
-      "module": "M3e.ButtonSegment",
+      "module": "M3e.Component.ButtonSegment",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1830,7 +1830,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ButtonSegment",
+          "module": "M3e.Build.ButtonSegment",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1844,7 +1844,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ButtonSegment",
+          "module": "M3e.Component.ButtonSegment",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1854,7 +1854,7 @@
     "m3e-calendar": {
       "cemTag": "m3e-calendar",
       "component": "calendar",
-      "module": "M3e.Calendar",
+      "module": "M3e.Component.Calendar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -1956,7 +1956,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Calendar",
+          "module": "M3e.Build.Calendar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -1970,7 +1970,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Calendar",
+          "module": "M3e.Component.Calendar",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -1980,7 +1980,7 @@
     "m3e-card": {
       "cemTag": "m3e-card",
       "component": "card",
-      "module": "M3e.Card",
+      "module": "M3e.Component.Card",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2134,7 +2134,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Card",
+          "module": "M3e.Build.Card",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2148,7 +2148,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Card",
+          "module": "M3e.Component.Card",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2158,7 +2158,7 @@
     "m3e-checkbox": {
       "cemTag": "m3e-checkbox",
       "component": "checkbox",
-      "module": "M3e.Checkbox",
+      "module": "M3e.Component.Checkbox",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2223,7 +2223,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Checkbox",
+          "module": "M3e.Build.Checkbox",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2237,7 +2237,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Checkbox",
+          "module": "M3e.Component.Checkbox",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2247,7 +2247,7 @@
     "m3e-chip": {
       "cemTag": "m3e-chip",
       "component": "chip",
-      "module": "M3e.Chip",
+      "module": "M3e.Component.Chip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2323,7 +2323,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Chip",
+          "module": "M3e.Build.Chip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2337,7 +2337,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Chip",
+          "module": "M3e.Component.Chip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -2347,7 +2347,7 @@
     "m3e-chip-set": {
       "cemTag": "m3e-chip-set",
       "component": "chipSet",
-      "module": "M3e.ChipSet",
+      "module": "M3e.Component.ChipSet",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2391,7 +2391,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ChipSet",
+          "module": "M3e.Build.ChipSet",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2405,7 +2405,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ChipSet",
+          "module": "M3e.Component.ChipSet",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2415,7 +2415,7 @@
     "m3e-circular-progress-indicator": {
       "cemTag": "m3e-circular-progress-indicator",
       "component": "circularProgressIndicator",
-      "module": "M3e.CircularProgressIndicator",
+      "module": "M3e.Component.CircularProgressIndicator",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2476,7 +2476,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.CircularProgressIndicator",
+          "module": "M3e.Build.CircularProgressIndicator",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2490,7 +2490,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.CircularProgressIndicator",
+          "module": "M3e.Component.CircularProgressIndicator",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2500,7 +2500,7 @@
     "m3e-collapsible": {
       "cemTag": "m3e-collapsible",
       "component": "collapsible",
-      "module": "M3e.Collapsible",
+      "module": "M3e.Component.Collapsible",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2575,7 +2575,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Collapsible",
+          "module": "M3e.Build.Collapsible",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2589,7 +2589,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Collapsible",
+          "module": "M3e.Component.Collapsible",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2599,7 +2599,7 @@
     "m3e-content-pane": {
       "cemTag": "m3e-content-pane",
       "component": "contentPane",
-      "module": "M3e.ContentPane",
+      "module": "M3e.Component.ContentPane",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2630,7 +2630,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ContentPane",
+          "module": "M3e.Build.ContentPane",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2644,7 +2644,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ContentPane",
+          "module": "M3e.Component.ContentPane",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2654,7 +2654,7 @@
     "m3e-date-input": {
       "cemTag": "m3e-date-input",
       "component": "dateInput",
-      "module": "M3e.DateInput",
+      "module": "M3e.Component.DateInput",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2801,7 +2801,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DateInput",
+          "module": "M3e.Build.DateInput",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2815,7 +2815,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DateInput",
+          "module": "M3e.Component.DateInput",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2825,7 +2825,7 @@
     "m3e-datepicker": {
       "cemTag": "m3e-datepicker",
       "component": "datepicker",
-      "module": "M3e.Datepicker",
+      "module": "M3e.Component.Datepicker",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -2973,7 +2973,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Datepicker",
+          "module": "M3e.Build.Datepicker",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -2987,7 +2987,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Datepicker",
+          "module": "M3e.Component.Datepicker",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -2997,7 +2997,7 @@
     "m3e-datepicker-toggle": {
       "cemTag": "m3e-datepicker-toggle",
       "component": "datepickerToggle",
-      "module": "M3e.DatepickerToggle",
+      "module": "M3e.Component.DatepickerToggle",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3031,7 +3031,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DatepickerToggle",
+          "module": "M3e.Build.DatepickerToggle",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3045,7 +3045,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DatepickerToggle",
+          "module": "M3e.Component.DatepickerToggle",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3055,7 +3055,7 @@
     "m3e-dialog": {
       "cemTag": "m3e-dialog",
       "component": "dialog",
-      "module": "M3e.Dialog",
+      "module": "M3e.Component.Dialog",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3136,7 +3136,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Dialog",
+          "module": "M3e.Build.Dialog",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3150,7 +3150,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Dialog",
+          "module": "M3e.Component.Dialog",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3160,7 +3160,7 @@
     "m3e-dialog-action": {
       "cemTag": "m3e-dialog-action",
       "component": "dialogAction",
-      "module": "M3e.DialogAction",
+      "module": "M3e.Component.DialogAction",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3194,7 +3194,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DialogAction",
+          "module": "M3e.Build.DialogAction",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3208,7 +3208,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DialogAction",
+          "module": "M3e.Component.DialogAction",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3218,7 +3218,7 @@
     "m3e-dialog-trigger": {
       "cemTag": "m3e-dialog-trigger",
       "component": "dialogTrigger",
-      "module": "M3e.DialogTrigger",
+      "module": "M3e.Component.DialogTrigger",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3252,7 +3252,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DialogTrigger",
+          "module": "M3e.Build.DialogTrigger",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3266,7 +3266,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DialogTrigger",
+          "module": "M3e.Component.DialogTrigger",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3276,7 +3276,7 @@
     "m3e-divider": {
       "cemTag": "m3e-divider",
       "component": "divider",
-      "module": "M3e.Divider",
+      "module": "M3e.Component.Divider",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3319,7 +3319,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Divider",
+          "module": "M3e.Build.Divider",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3333,7 +3333,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Divider",
+          "module": "M3e.Component.Divider",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3343,7 +3343,7 @@
     "m3e-drawer-container": {
       "cemTag": "m3e-drawer-container",
       "component": "drawerContainer",
-      "module": "M3e.DrawerContainer",
+      "module": "M3e.Component.DrawerContainer",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3460,7 +3460,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DrawerContainer",
+          "module": "M3e.Build.DrawerContainer",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3474,7 +3474,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DrawerContainer",
+          "module": "M3e.Component.DrawerContainer",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3484,7 +3484,7 @@
     "m3e-drawer-toggle": {
       "cemTag": "m3e-drawer-toggle",
       "component": "drawerToggle",
-      "module": "M3e.DrawerToggle",
+      "module": "M3e.Component.DrawerToggle",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3518,7 +3518,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.DrawerToggle",
+          "module": "M3e.Build.DrawerToggle",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3532,7 +3532,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.DrawerToggle",
+          "module": "M3e.Component.DrawerToggle",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3542,7 +3542,7 @@
     "m3e-elevation": {
       "cemTag": "m3e-elevation",
       "component": "elevation",
-      "module": "M3e.Elevation",
+      "module": "M3e.Component.Elevation",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3582,7 +3582,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Elevation",
+          "module": "M3e.Build.Elevation",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3596,7 +3596,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Elevation",
+          "module": "M3e.Component.Elevation",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3606,7 +3606,7 @@
     "m3e-expandable-list-item": {
       "cemTag": "m3e-expandable-list-item",
       "component": "expandableListItem",
-      "module": "M3e.ExpandableListItem",
+      "module": "M3e.Component.ExpandableListItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3699,7 +3699,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ExpandableListItem",
+          "module": "M3e.Build.ExpandableListItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3713,7 +3713,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ExpandableListItem",
+          "module": "M3e.Component.ExpandableListItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3723,7 +3723,7 @@
     "m3e-expansion-header": {
       "cemTag": "m3e-expansion-header",
       "component": "expansionHeader",
-      "module": "M3e.ExpansionHeader",
+      "module": "M3e.Component.ExpansionHeader",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3819,7 +3819,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ExpansionHeader",
+          "module": "M3e.Build.ExpansionHeader",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3833,7 +3833,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ExpansionHeader",
+          "module": "M3e.Component.ExpansionHeader",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -3843,7 +3843,7 @@
     "m3e-expansion-panel": {
       "cemTag": "m3e-expansion-panel",
       "component": "expansionPanel",
-      "module": "M3e.ExpansionPanel",
+      "module": "M3e.Component.ExpansionPanel",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -3955,7 +3955,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ExpansionPanel",
+          "module": "M3e.Build.ExpansionPanel",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -3969,7 +3969,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ExpansionPanel",
+          "module": "M3e.Component.ExpansionPanel",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -3979,7 +3979,7 @@
     "m3e-fab": {
       "cemTag": "m3e-fab",
       "component": "fab",
-      "module": "M3e.Fab",
+      "module": "M3e.Component.Fab",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4170,7 +4170,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Fab",
+          "module": "M3e.Build.Fab",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4184,7 +4184,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Fab",
+          "module": "M3e.Component.Fab",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -4194,7 +4194,7 @@
     "m3e-fab-menu": {
       "cemTag": "m3e-fab-menu",
       "component": "fabMenu",
-      "module": "M3e.FabMenu",
+      "module": "M3e.Component.FabMenu",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4264,7 +4264,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FabMenu",
+          "module": "M3e.Build.FabMenu",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4278,7 +4278,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FabMenu",
+          "module": "M3e.Component.FabMenu",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4288,7 +4288,7 @@
     "m3e-fab-menu-item": {
       "cemTag": "m3e-fab-menu-item",
       "component": "fabMenuItem",
-      "module": "M3e.FabMenuItem",
+      "module": "M3e.Component.FabMenuItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4346,7 +4346,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FabMenuItem",
+          "module": "M3e.Build.FabMenuItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4360,7 +4360,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FabMenuItem",
+          "module": "M3e.Component.FabMenuItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4370,7 +4370,7 @@
     "m3e-fab-menu-trigger": {
       "cemTag": "m3e-fab-menu-trigger",
       "component": "fabMenuTrigger",
-      "module": "M3e.FabMenuTrigger",
+      "module": "M3e.Component.FabMenuTrigger",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4404,7 +4404,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FabMenuTrigger",
+          "module": "M3e.Build.FabMenuTrigger",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4418,7 +4418,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FabMenuTrigger",
+          "module": "M3e.Component.FabMenuTrigger",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4428,7 +4428,7 @@
     "m3e-filter-chip": {
       "cemTag": "m3e-filter-chip",
       "component": "filterChip",
-      "module": "M3e.FilterChip",
+      "module": "M3e.Component.FilterChip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4524,7 +4524,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FilterChip",
+          "module": "M3e.Build.FilterChip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4538,7 +4538,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FilterChip",
+          "module": "M3e.Component.FilterChip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -4548,7 +4548,7 @@
     "m3e-filter-chip-set": {
       "cemTag": "m3e-filter-chip-set",
       "component": "filterChipSet",
-      "module": "M3e.FilterChipSet",
+      "module": "M3e.Component.FilterChipSet",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4607,7 +4607,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FilterChipSet",
+          "module": "M3e.Build.FilterChipSet",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4621,7 +4621,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FilterChipSet",
+          "module": "M3e.Component.FilterChipSet",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4631,7 +4631,7 @@
     "m3e-floating-panel": {
       "cemTag": "m3e-floating-panel",
       "component": "floatingPanel",
-      "module": "M3e.FloatingPanel",
+      "module": "M3e.Component.FloatingPanel",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4696,7 +4696,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FloatingPanel",
+          "module": "M3e.Build.FloatingPanel",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4710,7 +4710,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FloatingPanel",
+          "module": "M3e.Component.FloatingPanel",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4720,7 +4720,7 @@
     "m3e-focus-ring": {
       "cemTag": "m3e-focus-ring",
       "component": "focusRing",
-      "module": "M3e.FocusRing",
+      "module": "M3e.Component.FocusRing",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4760,7 +4760,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FocusRing",
+          "module": "M3e.Build.FocusRing",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4774,7 +4774,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FocusRing",
+          "module": "M3e.Component.FocusRing",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4784,7 +4784,7 @@
     "m3e-focus-trap": {
       "cemTag": "m3e-focus-trap",
       "component": "focusTrap",
-      "module": "M3e.FocusTrap",
+      "module": "M3e.Component.FocusTrap",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4820,7 +4820,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FocusTrap",
+          "module": "M3e.Build.FocusTrap",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4834,7 +4834,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FocusTrap",
+          "module": "M3e.Component.FocusTrap",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4844,7 +4844,7 @@
     "m3e-form-field": {
       "cemTag": "m3e-form-field",
       "component": "formField",
-      "module": "M3e.FormField",
+      "module": "M3e.Component.FormField",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -4970,7 +4970,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.FormField",
+          "module": "M3e.Build.FormField",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -4984,7 +4984,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.FormField",
+          "module": "M3e.Component.FormField",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -4994,7 +4994,7 @@
     "m3e-heading": {
       "cemTag": "m3e-heading",
       "component": "heading",
-      "module": "M3e.Heading",
+      "module": "M3e.Component.Heading",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5101,7 +5101,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Heading",
+          "module": "M3e.Build.Heading",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5115,7 +5115,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Heading",
+          "module": "M3e.Component.Heading",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -5125,7 +5125,7 @@
     "m3e-icon": {
       "cemTag": "m3e-icon",
       "component": "icon",
-      "module": "M3e.Icon",
+      "module": "M3e.Component.Icon",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5221,7 +5221,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Icon",
+          "module": "M3e.Build.Icon",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5235,7 +5235,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Icon",
+          "module": "M3e.Component.Icon",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -5245,7 +5245,7 @@
     "m3e-icon-button": {
       "cemTag": "m3e-icon-button",
       "component": "iconButton",
-      "module": "M3e.IconButton",
+      "module": "M3e.Component.IconButton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5490,7 +5490,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.IconButton",
+          "module": "M3e.Build.IconButton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5504,7 +5504,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.IconButton",
+          "module": "M3e.Component.IconButton",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -5514,7 +5514,7 @@
     "m3e-input-chip": {
       "cemTag": "m3e-input-chip",
       "component": "inputChip",
-      "module": "M3e.InputChip",
+      "module": "M3e.Component.InputChip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5615,7 +5615,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.InputChip",
+          "module": "M3e.Build.InputChip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5629,7 +5629,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.InputChip",
+          "module": "M3e.Component.InputChip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -5639,7 +5639,7 @@
     "m3e-input-chip-set": {
       "cemTag": "m3e-input-chip-set",
       "component": "inputChipSet",
-      "module": "M3e.InputChipSet",
+      "module": "M3e.Component.InputChipSet",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5699,7 +5699,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.InputChipSet",
+          "module": "M3e.Build.InputChipSet",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5713,7 +5713,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.InputChipSet",
+          "module": "M3e.Component.InputChipSet",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -5723,7 +5723,7 @@
     "m3e-linear-progress-indicator": {
       "cemTag": "m3e-linear-progress-indicator",
       "component": "linearProgressIndicator",
-      "module": "M3e.LinearProgressIndicator",
+      "module": "M3e.Component.LinearProgressIndicator",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5816,7 +5816,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.LinearProgressIndicator",
+          "module": "M3e.Build.LinearProgressIndicator",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5830,7 +5830,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.LinearProgressIndicator",
+          "module": "M3e.Component.LinearProgressIndicator",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -5840,7 +5840,7 @@
     "m3e-list": {
       "cemTag": "m3e-list",
       "component": "list",
-      "module": "M3e.List",
+      "module": "M3e.Component.List",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -5902,7 +5902,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.List",
+          "module": "M3e.Build.List",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -5916,7 +5916,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.List",
+          "module": "M3e.Component.List",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -5926,7 +5926,7 @@
     "m3e-list-action": {
       "cemTag": "m3e-list-action",
       "component": "listAction",
-      "module": "M3e.ListAction",
+      "module": "M3e.Component.ListAction",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6043,7 +6043,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ListAction",
+          "module": "M3e.Build.ListAction",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6057,7 +6057,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ListAction",
+          "module": "M3e.Component.ListAction",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6067,7 +6067,7 @@
     "m3e-list-item": {
       "cemTag": "m3e-list-item",
       "component": "listItem",
-      "module": "M3e.ListItem",
+      "module": "M3e.Component.ListItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6148,7 +6148,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ListItem",
+          "module": "M3e.Build.ListItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6162,7 +6162,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ListItem",
+          "module": "M3e.Component.ListItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6172,7 +6172,7 @@
     "m3e-list-item-button": {
       "cemTag": "m3e-list-item-button",
       "component": "listItemButton",
-      "module": "M3e.ListItemButton",
+      "module": "M3e.Component.ListItemButton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6276,7 +6276,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ListItemButton",
+          "module": "M3e.Build.ListItemButton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6290,7 +6290,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ListItemButton",
+          "module": "M3e.Component.ListItemButton",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6300,7 +6300,7 @@
     "m3e-list-option": {
       "cemTag": "m3e-list-option",
       "component": "listOption",
-      "module": "M3e.ListOption",
+      "module": "M3e.Component.ListOption",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6403,7 +6403,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ListOption",
+          "module": "M3e.Build.ListOption",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6417,7 +6417,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ListOption",
+          "module": "M3e.Component.ListOption",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6427,7 +6427,7 @@
     "m3e-loading-indicator": {
       "cemTag": "m3e-loading-indicator",
       "component": "loadingIndicator",
-      "module": "M3e.LoadingIndicator",
+      "module": "M3e.Component.LoadingIndicator",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6479,7 +6479,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.LoadingIndicator",
+          "module": "M3e.Build.LoadingIndicator",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6493,7 +6493,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.LoadingIndicator",
+          "module": "M3e.Component.LoadingIndicator",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6503,7 +6503,7 @@
     "m3e-menu": {
       "cemTag": "m3e-menu",
       "component": "menu",
-      "module": "M3e.Menu",
+      "module": "M3e.Component.Menu",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6613,7 +6613,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Menu",
+          "module": "M3e.Build.Menu",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6627,7 +6627,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Menu",
+          "module": "M3e.Component.Menu",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6637,7 +6637,7 @@
     "m3e-menu-item": {
       "cemTag": "m3e-menu-item",
       "component": "menuItem",
-      "module": "M3e.MenuItem",
+      "module": "M3e.Component.MenuItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6721,7 +6721,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MenuItem",
+          "module": "M3e.Build.MenuItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6735,7 +6735,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MenuItem",
+          "module": "M3e.Component.MenuItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6745,7 +6745,7 @@
     "m3e-menu-item-checkbox": {
       "cemTag": "m3e-menu-item-checkbox",
       "component": "menuItemCheckbox",
-      "module": "M3e.MenuItemCheckbox",
+      "module": "M3e.Component.MenuItemCheckbox",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6806,7 +6806,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MenuItemCheckbox",
+          "module": "M3e.Build.MenuItemCheckbox",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6820,7 +6820,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MenuItemCheckbox",
+          "module": "M3e.Component.MenuItemCheckbox",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6830,7 +6830,7 @@
     "m3e-menu-item-group": {
       "cemTag": "m3e-menu-item-group",
       "component": "menuItemGroup",
-      "module": "M3e.MenuItemGroup",
+      "module": "M3e.Component.MenuItemGroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6867,7 +6867,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MenuItemGroup",
+          "module": "M3e.Build.MenuItemGroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6881,7 +6881,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MenuItemGroup",
+          "module": "M3e.Component.MenuItemGroup",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6891,7 +6891,7 @@
     "m3e-menu-item-radio": {
       "cemTag": "m3e-menu-item-radio",
       "component": "menuItemRadio",
-      "module": "M3e.MenuItemRadio",
+      "module": "M3e.Component.MenuItemRadio",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -6952,7 +6952,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MenuItemRadio",
+          "module": "M3e.Build.MenuItemRadio",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -6966,7 +6966,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MenuItemRadio",
+          "module": "M3e.Component.MenuItemRadio",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -6976,7 +6976,7 @@
     "m3e-menu-trigger": {
       "cemTag": "m3e-menu-trigger",
       "component": "menuTrigger",
-      "module": "M3e.MenuTrigger",
+      "module": "M3e.Component.MenuTrigger",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7010,7 +7010,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MenuTrigger",
+          "module": "M3e.Build.MenuTrigger",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7024,7 +7024,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MenuTrigger",
+          "module": "M3e.Component.MenuTrigger",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7034,7 +7034,7 @@
     "m3e-month-view": {
       "cemTag": "m3e-month-view",
       "component": "monthView",
-      "module": "M3e.MonthView",
+      "module": "M3e.Component.MonthView",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7094,7 +7094,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MonthView",
+          "module": "M3e.Build.MonthView",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7108,7 +7108,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MonthView",
+          "module": "M3e.Component.MonthView",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7118,7 +7118,7 @@
     "m3e-multi-year-view": {
       "cemTag": "m3e-multi-year-view",
       "component": "multiYearView",
-      "module": "M3e.MultiYearView",
+      "module": "M3e.Component.MultiYearView",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7172,7 +7172,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.MultiYearView",
+          "module": "M3e.Build.MultiYearView",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7186,7 +7186,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.MultiYearView",
+          "module": "M3e.Component.MultiYearView",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7196,7 +7196,7 @@
     "m3e-nav-bar": {
       "cemTag": "m3e-nav-bar",
       "component": "navBar",
-      "module": "M3e.NavBar",
+      "module": "M3e.Component.NavBar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7267,7 +7267,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavBar",
+          "module": "M3e.Build.NavBar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7281,7 +7281,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavBar",
+          "module": "M3e.Component.NavBar",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7291,7 +7291,7 @@
     "m3e-nav-item": {
       "cemTag": "m3e-nav-item",
       "component": "navItem",
-      "module": "M3e.NavItem",
+      "module": "M3e.Component.NavItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7395,7 +7395,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavItem",
+          "module": "M3e.Build.NavItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7409,7 +7409,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavItem",
+          "module": "M3e.Component.NavItem",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7419,7 +7419,7 @@
     "m3e-nav-menu": {
       "cemTag": "m3e-nav-menu",
       "component": "navMenu",
-      "module": "M3e.NavMenu",
+      "module": "M3e.Component.NavMenu",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7456,7 +7456,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavMenu",
+          "module": "M3e.Build.NavMenu",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7470,7 +7470,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavMenu",
+          "module": "M3e.Component.NavMenu",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7480,7 +7480,7 @@
     "m3e-nav-menu-item": {
       "cemTag": "m3e-nav-menu-item",
       "component": "navMenuItem",
-      "module": "M3e.NavMenuItem",
+      "module": "M3e.Component.NavMenuItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7577,7 +7577,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavMenuItem",
+          "module": "M3e.Build.NavMenuItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7591,7 +7591,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavMenuItem",
+          "module": "M3e.Component.NavMenuItem",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -7601,7 +7601,7 @@
     "m3e-nav-menu-item-group": {
       "cemTag": "m3e-nav-menu-item-group",
       "component": "navMenuItemGroup",
-      "module": "M3e.NavMenuItemGroup",
+      "module": "M3e.Component.NavMenuItemGroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7645,7 +7645,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavMenuItemGroup",
+          "module": "M3e.Build.NavMenuItemGroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7659,7 +7659,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavMenuItemGroup",
+          "module": "M3e.Component.NavMenuItemGroup",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7669,7 +7669,7 @@
     "m3e-nav-rail": {
       "cemTag": "m3e-nav-rail",
       "component": "navRail",
-      "module": "M3e.NavRail",
+      "module": "M3e.Component.NavRail",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7742,7 +7742,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavRail",
+          "module": "M3e.Build.NavRail",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7756,7 +7756,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavRail",
+          "module": "M3e.Component.NavRail",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7766,7 +7766,7 @@
     "m3e-nav-rail-toggle": {
       "cemTag": "m3e-nav-rail-toggle",
       "component": "navRailToggle",
-      "module": "M3e.NavRailToggle",
+      "module": "M3e.Component.NavRailToggle",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7800,7 +7800,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.NavRailToggle",
+          "module": "M3e.Build.NavRailToggle",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7814,7 +7814,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.NavRailToggle",
+          "module": "M3e.Component.NavRailToggle",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7824,7 +7824,7 @@
     "m3e-optgroup": {
       "cemTag": "m3e-optgroup",
       "component": "optgroup",
-      "module": "M3e.Optgroup",
+      "module": "M3e.Component.Optgroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7868,7 +7868,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Optgroup",
+          "module": "M3e.Build.Optgroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7882,7 +7882,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Optgroup",
+          "module": "M3e.Component.Optgroup",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -7892,7 +7892,7 @@
     "m3e-option": {
       "cemTag": "m3e-option",
       "component": "option",
-      "module": "M3e.Option",
+      "module": "M3e.Component.Option",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -7972,7 +7972,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Option",
+          "module": "M3e.Build.Option",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -7986,7 +7986,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Option",
+          "module": "M3e.Component.Option",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -7996,7 +7996,7 @@
     "m3e-option-panel": {
       "cemTag": "m3e-option-panel",
       "component": "optionPanel",
-      "module": "M3e.OptionPanel",
+      "module": "M3e.Component.OptionPanel",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8108,7 +8108,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.OptionPanel",
+          "module": "M3e.Build.OptionPanel",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8122,7 +8122,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.OptionPanel",
+          "module": "M3e.Component.OptionPanel",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8132,7 +8132,7 @@
     "m3e-paginator": {
       "cemTag": "m3e-paginator",
       "component": "paginator",
-      "module": "M3e.Paginator",
+      "module": "M3e.Component.Paginator",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8250,7 +8250,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Paginator",
+          "module": "M3e.Build.Paginator",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8264,7 +8264,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Paginator",
+          "module": "M3e.Component.Paginator",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8274,7 +8274,7 @@
     "m3e-pseudo-checkbox": {
       "cemTag": "m3e-pseudo-checkbox",
       "component": "pseudoCheckbox",
-      "module": "M3e.PseudoCheckbox",
+      "module": "M3e.Component.PseudoCheckbox",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8314,7 +8314,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.PseudoCheckbox",
+          "module": "M3e.Build.PseudoCheckbox",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8328,7 +8328,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.PseudoCheckbox",
+          "module": "M3e.Component.PseudoCheckbox",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8338,7 +8338,7 @@
     "m3e-pseudo-radio": {
       "cemTag": "m3e-pseudo-radio",
       "component": "pseudoRadio",
-      "module": "M3e.PseudoRadio",
+      "module": "M3e.Component.PseudoRadio",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8375,7 +8375,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.PseudoRadio",
+          "module": "M3e.Build.PseudoRadio",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8389,7 +8389,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.PseudoRadio",
+          "module": "M3e.Component.PseudoRadio",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8399,7 +8399,7 @@
     "m3e-radio": {
       "cemTag": "m3e-radio",
       "component": "radio",
-      "module": "M3e.Radio",
+      "module": "M3e.Component.Radio",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8456,7 +8456,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Radio",
+          "module": "M3e.Build.Radio",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8470,7 +8470,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Radio",
+          "module": "M3e.Component.Radio",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8480,7 +8480,7 @@
     "m3e-radio-group": {
       "cemTag": "m3e-radio-group",
       "component": "radioGroup",
-      "module": "M3e.RadioGroup",
+      "module": "M3e.Component.RadioGroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8537,7 +8537,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.RadioGroup",
+          "module": "M3e.Build.RadioGroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8551,7 +8551,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.RadioGroup",
+          "module": "M3e.Component.RadioGroup",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -8561,7 +8561,7 @@
     "m3e-rich-tooltip": {
       "cemTag": "m3e-rich-tooltip",
       "component": "richTooltip",
-      "module": "M3e.RichTooltip",
+      "module": "M3e.Component.RichTooltip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8711,7 +8711,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.RichTooltip",
+          "module": "M3e.Build.RichTooltip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8725,7 +8725,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.RichTooltip",
+          "module": "M3e.Component.RichTooltip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -8735,7 +8735,7 @@
     "m3e-rich-tooltip-action": {
       "cemTag": "m3e-rich-tooltip-action",
       "component": "richTooltipAction",
-      "module": "M3e.RichTooltipAction",
+      "module": "M3e.Component.RichTooltipAction",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8776,7 +8776,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.RichTooltipAction",
+          "module": "M3e.Build.RichTooltipAction",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8790,7 +8790,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.RichTooltipAction",
+          "module": "M3e.Component.RichTooltipAction",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -8800,7 +8800,7 @@
     "m3e-ripple": {
       "cemTag": "m3e-ripple",
       "component": "ripple",
-      "module": "M3e.Ripple",
+      "module": "M3e.Component.Ripple",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8846,7 +8846,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Ripple",
+          "module": "M3e.Build.Ripple",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8860,7 +8860,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Ripple",
+          "module": "M3e.Component.Ripple",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8870,7 +8870,7 @@
     "m3e-scroll-container": {
       "cemTag": "m3e-scroll-container",
       "component": "scrollContainer",
-      "module": "M3e.ScrollContainer",
+      "module": "M3e.Component.ScrollContainer",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -8939,7 +8939,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ScrollContainer",
+          "module": "M3e.Build.ScrollContainer",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -8953,7 +8953,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ScrollContainer",
+          "module": "M3e.Component.ScrollContainer",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -8963,7 +8963,7 @@
     "m3e-search-bar": {
       "cemTag": "m3e-search-bar",
       "component": "searchBar",
-      "module": "M3e.SearchBar",
+      "module": "M3e.Component.SearchBar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9034,7 +9034,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SearchBar",
+          "module": "M3e.Build.SearchBar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9048,7 +9048,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SearchBar",
+          "module": "M3e.Component.SearchBar",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -9058,7 +9058,7 @@
     "m3e-search-view": {
       "cemTag": "m3e-search-view",
       "component": "searchView",
-      "module": "M3e.SearchView",
+      "module": "M3e.Component.SearchView",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9200,7 +9200,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SearchView",
+          "module": "M3e.Build.SearchView",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9214,7 +9214,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SearchView",
+          "module": "M3e.Component.SearchView",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -9224,7 +9224,7 @@
     "m3e-segmented-button": {
       "cemTag": "m3e-segmented-button",
       "component": "segmentedButton",
-      "module": "M3e.SegmentedButton",
+      "module": "M3e.Component.SegmentedButton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9282,7 +9282,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SegmentedButton",
+          "module": "M3e.Build.SegmentedButton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9296,7 +9296,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SegmentedButton",
+          "module": "M3e.Component.SegmentedButton",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -9306,7 +9306,7 @@
     "m3e-select": {
       "cemTag": "m3e-select",
       "component": "select",
-      "module": "M3e.Select",
+      "module": "M3e.Component.Select",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9387,7 +9387,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Select",
+          "module": "M3e.Build.Select",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9401,7 +9401,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Select",
+          "module": "M3e.Component.Select",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -9411,7 +9411,7 @@
     "m3e-selection-indicator": {
       "cemTag": "m3e-selection-indicator",
       "component": "selectionIndicator",
-      "module": "M3e.SelectionIndicator",
+      "module": "M3e.Component.SelectionIndicator",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9457,7 +9457,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SelectionIndicator",
+          "module": "M3e.Build.SelectionIndicator",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9471,7 +9471,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SelectionIndicator",
+          "module": "M3e.Component.SelectionIndicator",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -9481,7 +9481,7 @@
     "m3e-selection-list": {
       "cemTag": "m3e-selection-list",
       "component": "selectionList",
-      "module": "M3e.SelectionList",
+      "module": "M3e.Component.SelectionList",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9560,7 +9560,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SelectionList",
+          "module": "M3e.Build.SelectionList",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9574,7 +9574,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SelectionList",
+          "module": "M3e.Component.SelectionList",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -9584,7 +9584,7 @@
     "m3e-shape": {
       "cemTag": "m3e-shape",
       "component": "shape",
-      "module": "M3e.Shape",
+      "module": "M3e.Component.Shape",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9834,7 +9834,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Shape",
+          "module": "M3e.Build.Shape",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9848,7 +9848,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Shape",
+          "module": "M3e.Component.Shape",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -9858,7 +9858,7 @@
     "m3e-skeleton": {
       "cemTag": "m3e-skeleton",
       "component": "skeleton",
-      "module": "M3e.Skeleton",
+      "module": "M3e.Component.Skeleton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -9953,7 +9953,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Skeleton",
+          "module": "M3e.Build.Skeleton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -9967,7 +9967,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Skeleton",
+          "module": "M3e.Component.Skeleton",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -9977,7 +9977,7 @@
     "m3e-slide": {
       "cemTag": "m3e-slide",
       "component": "slide",
-      "module": "M3e.Slide",
+      "module": "M3e.Component.Slide",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10013,7 +10013,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Slide",
+          "module": "M3e.Build.Slide",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10027,7 +10027,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Slide",
+          "module": "M3e.Component.Slide",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -10037,7 +10037,7 @@
     "m3e-slide-group": {
       "cemTag": "m3e-slide-group",
       "component": "slideGroup",
-      "module": "M3e.SlideGroup",
+      "module": "M3e.Component.SlideGroup",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10100,7 +10100,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SlideGroup",
+          "module": "M3e.Build.SlideGroup",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10114,7 +10114,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SlideGroup",
+          "module": "M3e.Component.SlideGroup",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -10124,7 +10124,7 @@
     "m3e-slider": {
       "cemTag": "m3e-slider",
       "component": "slider",
-      "module": "M3e.Slider",
+      "module": "M3e.Component.Slider",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10223,7 +10223,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Slider",
+          "module": "M3e.Build.Slider",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10237,7 +10237,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Slider",
+          "module": "M3e.Component.Slider",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -10247,7 +10247,7 @@
     "m3e-slider-thumb": {
       "cemTag": "m3e-slider-thumb",
       "component": "sliderThumb",
-      "module": "M3e.SliderThumb",
+      "module": "M3e.Component.SliderThumb",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10298,7 +10298,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SliderThumb",
+          "module": "M3e.Build.SliderThumb",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10312,7 +10312,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SliderThumb",
+          "module": "M3e.Component.SliderThumb",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -10322,7 +10322,7 @@
     "m3e-snackbar": {
       "cemTag": "m3e-snackbar",
       "component": "snackbar",
-      "module": "M3e.Snackbar",
+      "module": "M3e.Component.Snackbar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10385,7 +10385,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Snackbar",
+          "module": "M3e.Build.Snackbar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10399,7 +10399,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Snackbar",
+          "module": "M3e.Component.Snackbar",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -10409,7 +10409,7 @@
     "m3e-split-button": {
       "cemTag": "m3e-split-button",
       "component": "splitButton",
-      "module": "M3e.SplitButton",
+      "module": "M3e.Component.SplitButton",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10529,7 +10529,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SplitButton",
+          "module": "M3e.Build.SplitButton",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10543,7 +10543,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SplitButton",
+          "module": "M3e.Component.SplitButton",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -10553,7 +10553,7 @@
     "m3e-split-pane": {
       "cemTag": "m3e-split-pane",
       "component": "splitPane",
-      "module": "M3e.SplitPane",
+      "module": "M3e.Component.SplitPane",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10659,7 +10659,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SplitPane",
+          "module": "M3e.Build.SplitPane",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10673,7 +10673,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SplitPane",
+          "module": "M3e.Component.SplitPane",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -10683,7 +10683,7 @@
     "m3e-state-layer": {
       "cemTag": "m3e-state-layer",
       "component": "stateLayer",
-      "module": "M3e.StateLayer",
+      "module": "M3e.Component.StateLayer",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10726,7 +10726,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.StateLayer",
+          "module": "M3e.Build.StateLayer",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10740,7 +10740,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.StateLayer",
+          "module": "M3e.Component.StateLayer",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -10750,7 +10750,7 @@
     "m3e-step": {
       "cemTag": "m3e-step",
       "component": "step",
-      "module": "M3e.Step",
+      "module": "M3e.Component.Step",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10860,7 +10860,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Step",
+          "module": "M3e.Build.Step",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10874,7 +10874,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Step",
+          "module": "M3e.Component.Step",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -10884,7 +10884,7 @@
     "m3e-step-panel": {
       "cemTag": "m3e-step-panel",
       "component": "stepPanel",
-      "module": "M3e.StepPanel",
+      "module": "M3e.Component.StepPanel",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -10918,7 +10918,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.StepPanel",
+          "module": "M3e.Build.StepPanel",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -10932,7 +10932,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.StepPanel",
+          "module": "M3e.Component.StepPanel",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -10942,7 +10942,7 @@
     "m3e-stepper": {
       "cemTag": "m3e-stepper",
       "component": "stepper",
-      "module": "M3e.Stepper",
+      "module": "M3e.Component.Stepper",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11068,7 +11068,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Stepper",
+          "module": "M3e.Build.Stepper",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11082,7 +11082,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Stepper",
+          "module": "M3e.Component.Stepper",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11092,7 +11092,7 @@
     "m3e-stepper-next": {
       "cemTag": "m3e-stepper-next",
       "component": "stepperNext",
-      "module": "M3e.StepperNext",
+      "module": "M3e.Component.StepperNext",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11121,7 +11121,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.StepperNext",
+          "module": "M3e.Build.StepperNext",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11135,7 +11135,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.StepperNext",
+          "module": "M3e.Component.StepperNext",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11145,7 +11145,7 @@
     "m3e-stepper-previous": {
       "cemTag": "m3e-stepper-previous",
       "component": "stepperPrevious",
-      "module": "M3e.StepperPrevious",
+      "module": "M3e.Component.StepperPrevious",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11174,7 +11174,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.StepperPrevious",
+          "module": "M3e.Build.StepperPrevious",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11188,7 +11188,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.StepperPrevious",
+          "module": "M3e.Component.StepperPrevious",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11198,7 +11198,7 @@
     "m3e-stepper-reset": {
       "cemTag": "m3e-stepper-reset",
       "component": "stepperReset",
-      "module": "M3e.StepperReset",
+      "module": "M3e.Component.StepperReset",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11227,7 +11227,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.StepperReset",
+          "module": "M3e.Build.StepperReset",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11241,7 +11241,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.StepperReset",
+          "module": "M3e.Component.StepperReset",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11251,7 +11251,7 @@
     "m3e-suggestion-chip": {
       "cemTag": "m3e-suggestion-chip",
       "component": "suggestionChip",
-      "module": "M3e.SuggestionChip",
+      "module": "M3e.Component.SuggestionChip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11374,7 +11374,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.SuggestionChip",
+          "module": "M3e.Build.SuggestionChip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11388,7 +11388,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.SuggestionChip",
+          "module": "M3e.Component.SuggestionChip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -11398,7 +11398,7 @@
     "m3e-switch": {
       "cemTag": "m3e-switch",
       "component": "switch",
-      "module": "M3e.Switch",
+      "module": "M3e.Component.Switch",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11482,7 +11482,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Switch",
+          "module": "M3e.Build.Switch",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11496,7 +11496,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Switch",
+          "module": "M3e.Component.Switch",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11506,7 +11506,7 @@
     "m3e-tab": {
       "cemTag": "m3e-tab",
       "component": "tab",
-      "module": "M3e.Tab",
+      "module": "M3e.Component.Tab",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11570,7 +11570,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Tab",
+          "module": "M3e.Build.Tab",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11584,7 +11584,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Tab",
+          "module": "M3e.Component.Tab",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11594,7 +11594,7 @@
     "m3e-tab-panel": {
       "cemTag": "m3e-tab-panel",
       "component": "tabPanel",
-      "module": "M3e.TabPanel",
+      "module": "M3e.Component.TabPanel",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11623,7 +11623,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TabPanel",
+          "module": "M3e.Build.TabPanel",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11637,7 +11637,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TabPanel",
+          "module": "M3e.Component.TabPanel",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11647,7 +11647,7 @@
     "m3e-tabs": {
       "cemTag": "m3e-tabs",
       "component": "tabs",
-      "module": "M3e.Tabs",
+      "module": "M3e.Component.Tabs",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11788,7 +11788,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Tabs",
+          "module": "M3e.Build.Tabs",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11802,7 +11802,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Tabs",
+          "module": "M3e.Component.Tabs",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11812,7 +11812,7 @@
     "m3e-text-highlight": {
       "cemTag": "m3e-text-highlight",
       "component": "textHighlight",
-      "module": "M3e.TextHighlight",
+      "module": "M3e.Component.TextHighlight",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11884,7 +11884,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TextHighlight",
+          "module": "M3e.Build.TextHighlight",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11898,7 +11898,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TextHighlight",
+          "module": "M3e.Component.TextHighlight",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11908,7 +11908,7 @@
     "m3e-text-overflow": {
       "cemTag": "m3e-text-overflow",
       "component": "textOverflow",
-      "module": "M3e.TextOverflow",
+      "module": "M3e.Component.TextOverflow",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -11942,7 +11942,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TextOverflow",
+          "module": "M3e.Build.TextOverflow",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -11956,7 +11956,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TextOverflow",
+          "module": "M3e.Component.TextOverflow",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -11966,7 +11966,7 @@
     "m3e-textarea-autosize": {
       "cemTag": "m3e-textarea-autosize",
       "component": "textareaAutosize",
-      "module": "M3e.TextareaAutosize",
+      "module": "M3e.Component.TextareaAutosize",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12009,7 +12009,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TextareaAutosize",
+          "module": "M3e.Build.TextareaAutosize",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12023,7 +12023,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TextareaAutosize",
+          "module": "M3e.Component.TextareaAutosize",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12033,7 +12033,7 @@
     "m3e-theme": {
       "cemTag": "m3e-theme",
       "component": "theme",
-      "module": "M3e.Theme",
+      "module": "M3e.Component.Theme",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12213,7 +12213,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Theme",
+          "module": "M3e.Build.Theme",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12227,7 +12227,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Theme",
+          "module": "M3e.Component.Theme",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12237,7 +12237,7 @@
     "m3e-theme-icon": {
       "cemTag": "m3e-theme-icon",
       "component": "themeIcon",
-      "module": "M3e.ThemeIcon",
+      "module": "M3e.Component.ThemeIcon",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12360,7 +12360,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.ThemeIcon",
+          "module": "M3e.Build.ThemeIcon",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12374,7 +12374,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.ThemeIcon",
+          "module": "M3e.Component.ThemeIcon",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12384,7 +12384,7 @@
     "m3e-timepicker": {
       "cemTag": "m3e-timepicker",
       "component": "timepicker",
-      "module": "M3e.Timepicker",
+      "module": "M3e.Component.Timepicker",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12566,7 +12566,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Timepicker",
+          "module": "M3e.Build.Timepicker",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12580,7 +12580,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Timepicker",
+          "module": "M3e.Component.Timepicker",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12590,7 +12590,7 @@
     "m3e-timepicker-dial": {
       "cemTag": "m3e-timepicker-dial",
       "component": "timepickerDial",
-      "module": "M3e.TimepickerDial",
+      "module": "M3e.Component.TimepickerDial",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12719,7 +12719,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TimepickerDial",
+          "module": "M3e.Build.TimepickerDial",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12733,7 +12733,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TimepickerDial",
+          "module": "M3e.Component.TimepickerDial",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12743,7 +12743,7 @@
     "m3e-timepicker-input": {
       "cemTag": "m3e-timepicker-input",
       "component": "timepickerInput",
-      "module": "M3e.TimepickerInput",
+      "module": "M3e.Component.TimepickerInput",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12891,7 +12891,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TimepickerInput",
+          "module": "M3e.Build.TimepickerInput",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12905,7 +12905,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TimepickerInput",
+          "module": "M3e.Component.TimepickerInput",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12915,7 +12915,7 @@
     "m3e-timepicker-input-period-toggle": {
       "cemTag": "m3e-timepicker-input-period-toggle",
       "component": "timepickerInputPeriodToggle",
-      "module": "M3e.TimepickerInputPeriodToggle",
+      "module": "M3e.Component.TimepickerInputPeriodToggle",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -12973,7 +12973,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TimepickerInputPeriodToggle",
+          "module": "M3e.Build.TimepickerInputPeriodToggle",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -12987,7 +12987,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TimepickerInputPeriodToggle",
+          "module": "M3e.Component.TimepickerInputPeriodToggle",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -12997,7 +12997,7 @@
     "m3e-timepicker-toggle": {
       "cemTag": "m3e-timepicker-toggle",
       "component": "timepickerToggle",
-      "module": "M3e.TimepickerToggle",
+      "module": "M3e.Component.TimepickerToggle",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13031,7 +13031,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TimepickerToggle",
+          "module": "M3e.Build.TimepickerToggle",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13045,7 +13045,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TimepickerToggle",
+          "module": "M3e.Component.TimepickerToggle",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -13055,7 +13055,7 @@
     "m3e-toc": {
       "cemTag": "m3e-toc",
       "component": "toc",
-      "module": "M3e.Toc",
+      "module": "M3e.Component.Toc",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13109,7 +13109,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Toc",
+          "module": "M3e.Build.Toc",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13123,7 +13123,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Toc",
+          "module": "M3e.Component.Toc",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -13133,7 +13133,7 @@
     "m3e-toc-item": {
       "cemTag": "m3e-toc-item",
       "component": "tocItem",
-      "module": "M3e.TocItem",
+      "module": "M3e.Component.TocItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13182,7 +13182,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TocItem",
+          "module": "M3e.Build.TocItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13196,7 +13196,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TocItem",
+          "module": "M3e.Component.TocItem",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -13206,7 +13206,7 @@
     "m3e-toolbar": {
       "cemTag": "m3e-toolbar",
       "component": "toolbar",
-      "module": "M3e.Toolbar",
+      "module": "M3e.Component.Toolbar",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13286,7 +13286,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Toolbar",
+          "module": "M3e.Build.Toolbar",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13300,7 +13300,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Toolbar",
+          "module": "M3e.Component.Toolbar",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -13310,7 +13310,7 @@
     "m3e-tooltip": {
       "cemTag": "m3e-tooltip",
       "component": "tooltip",
-      "module": "M3e.Tooltip",
+      "module": "M3e.Component.Tooltip",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13419,7 +13419,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Tooltip",
+          "module": "M3e.Build.Tooltip",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13433,7 +13433,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Tooltip",
+          "module": "M3e.Component.Tooltip",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -13443,7 +13443,7 @@
     "m3e-tree": {
       "cemTag": "m3e-tree",
       "component": "tree",
-      "module": "M3e.Tree",
+      "module": "M3e.Component.Tree",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13489,7 +13489,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.Tree",
+          "module": "M3e.Build.Tree",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13503,7 +13503,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.Tree",
+          "module": "M3e.Component.Tree",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
@@ -13513,7 +13513,7 @@
     "m3e-tree-item": {
       "cemTag": "m3e-tree-item",
       "component": "treeItem",
-      "module": "M3e.TreeItem",
+      "module": "M3e.Component.TreeItem",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13611,7 +13611,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.TreeItem",
+          "module": "M3e.Build.TreeItem",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13625,7 +13625,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.TreeItem",
+          "module": "M3e.Component.TreeItem",
           "entry": "component",
           "form": "record-double-list",
           "finalizer": null
@@ -13635,7 +13635,7 @@
     "m3e-year-view": {
       "cemTag": "m3e-year-view",
       "component": "yearView",
-      "module": "M3e.YearView",
+      "module": "M3e.Component.YearView",
       "rootNamespace": "M3e",
       "memberPrefix": null,
       "tokenModule": "M3e.Values",
@@ -13689,7 +13689,7 @@
       "surfaces": {
         "build": {
           "facet": "Build",
-          "module": "M3e.YearView",
+          "module": "M3e.Build.YearView",
           "entry": "build",
           "form": "pipeline",
           "finalizer": "toElement"
@@ -13703,7 +13703,7 @@
         },
         "top": {
           "facet": "Standard",
-          "module": "M3e.YearView",
+          "module": "M3e.Component.YearView",
           "entry": "component",
           "form": "double-list",
           "finalizer": null
