@@ -16,6 +16,44 @@ An expandable details-summary view.
 @docs disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
 @docs actions, header, toggleIcon, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Standalone panels" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Standalone panels (2)" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Toggles" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.togglePosition M3e.Values.before, M3e.Component.ExpansionPanel.toggleDirection M3e.Values.horizontal ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Toggles (2)" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.hideToggle True ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Accordion" -->
+```elm
+M3e.Component.Accordion.component { content = M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 1" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the first panel" ] } [] [ M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 2" ] } [] [ M3e.text "I am content for the second panel" ], M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 3" ] } [] [ M3e.text "I am content for the third panel" ] ]
+```
+
+<!-- elm-cem:example title="Accordion (2)" -->
+```elm
+M3e.Component.Accordion.component { content = M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 1" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the first panel" ] } [ M3e.Component.Accordion.multi True ] [ M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 2" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the second panel" ], M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 3" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the third panel" ] ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

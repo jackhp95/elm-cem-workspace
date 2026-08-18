@@ -16,6 +16,51 @@ A calendar used to select a date.
 @docs date, maxDate, minDate, nextMonthLabel, nextMultiYearLabel, nextYearLabel, previousMonthLabel, previousMultiYearLabel, previousYearLabel, rangeEnd, rangeStart, startAt, onChange
 @docs header
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Date selection" -->
+```elm
+[ M3e.Component.Calendar.component [ M3e.Attributes.id "calendar", M3e.Component.Calendar.date "2026-01-01" ] []
+    , TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "id" "selected-date" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Start date" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Component.Calendar.startAt "2026-01-01" ] []
+```
+
+<!-- elm-cem:example title="Start view" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Component.Calendar.startView M3e.Values.multiYear ] []
+```
+
+<!-- elm-cem:example title="Date ranges" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Component.Calendar.rangeStart "2026-01-01", M3e.Component.Calendar.rangeEnd "2026-01-09", M3e.Component.Calendar.startAt "2026-01-01" ] []
+```
+
+<!-- elm-cem:example title="Min and max dates" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Component.Calendar.startAt "2026-04-01", M3e.Component.Calendar.minDate "2026-01-01", M3e.Component.Calendar.maxDate "2026-04-30" ] []
+```
+
+<!-- elm-cem:example title="Blackout dates" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Attributes.id "blackout-dates" ] []
+```
+
+<!-- elm-cem:example title="Special dates" -->
+```elm
+M3e.Component.Calendar.component [ M3e.Attributes.id "special-dates", M3e.Component.Calendar.startAt "2026-04-01" ] []
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

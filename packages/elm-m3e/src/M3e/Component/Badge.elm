@@ -16,6 +16,39 @@ A visual indicator used to label content.
 @docs for
 @docs child
 
+
+## Examples
+
+
+### Sizes
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+[ M3e.Component.Badge.component [ M3e.Component.Badge.size M3e.Values.small ] [ M3e.text "10" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.size M3e.Values.medium ] [ M3e.text "10" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.size M3e.Values.large ] [ M3e.text "10" ]
+    ]
+```
+
+
+### Examples
+
+<!-- elm-cem:example title="Anchoring" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Button", action = M3e.Action.none } [ M3e.Attributes.id "btn", M3e.Component.Button.variant M3e.Values.outlined ] []
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.aboveAfter ] [ M3e.text "AA" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.aboveBefore ] [ M3e.text "AB" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.belowBefore ] [ M3e.text "BB" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.belowAfter ] [ M3e.text "BA" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.before ] [ M3e.text "BE" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.after ] [ M3e.text "AF" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.above ] [ M3e.text "A" ]
+    , M3e.Component.Badge.component [ M3e.Component.Badge.for "btn", M3e.Component.Badge.position M3e.Values.below ] [ M3e.text "B" ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Communication -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

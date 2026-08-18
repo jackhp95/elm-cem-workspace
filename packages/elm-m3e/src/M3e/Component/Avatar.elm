@@ -12,6 +12,22 @@ An image, icon or textual initials representing a user or other identity.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Usage" -->
+```elm
+[ M3e.Component.Avatar.component [] [ M3e.text "AB" ]
+    , M3e.Component.Avatar.component [] [ TypedHtml.img [ TypedHtml.Unsafe.Attributes.customAttribute "src" "https://avatars.githubusercontent.com/u/224686995?s=48&v=4" ] [] ]
+    , M3e.Component.Avatar.component [] [ M3e.Component.Icon.component [ M3e.Component.Icon.name "person" ] [] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Layout & style -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

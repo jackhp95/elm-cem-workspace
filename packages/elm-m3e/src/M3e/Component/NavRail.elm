@@ -16,6 +16,24 @@ A vertical bar, typically used on larger devices, that allows a user to switch b
 @docs onBeforeinput, onInput, onChange
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Modes" -->
+```elm
+M3e.Component.NavRail.component [ M3e.Attributes.id "nav-rail" ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "menu" ] [], ariaLabel = "Toggle navigation", action = M3e.Action.none } [ M3e.Component.IconButton.toggle True ] [ M3e.Component.IconButton.selected (M3e.Component.Icon.component [ M3e.Component.Icon.name "menu_open" ] []), M3e.Component.NavRailToggle.component [ M3e.Component.NavRailToggle.for "nav-rail" ] [] ], M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "edit" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small ] [ M3e.Component.Fab.label (M3e.text "Extended") ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "globe" ] []), M3e.text "Global" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "star" ] []), M3e.text "For you" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "newsstand" ] []), M3e.text "Trending" ] ]
+```
+
+<!-- elm-cem:example title="Items" -->
+```elm
+M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

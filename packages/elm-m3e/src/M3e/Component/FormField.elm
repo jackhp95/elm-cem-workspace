@@ -16,6 +16,72 @@ A container for form controls that applies Material Design styling and behavior.
 @docs hideRequiredMarker
 @docs error, hint, label, prefix, prefixText, suffix, suffixText, child
 
+
+## Examples
+
+
+### Variants
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld1" ] [ M3e.text "Outlined" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld1" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld2" ] [ M3e.text "Filled" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld2" ] [] ]
+    ]
+```
+
+
+### Examples
+
+<!-- elm-cem:example title="Float label" -->
+```elm
+M3e.Component.FormField.component [ M3e.Component.FormField.floatLabel M3e.Values.always ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld3" ] [ M3e.text "Always float label" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld3" ] [] ]
+```
+
+<!-- elm-cem:example title="Hint labels" -->
+```elm
+M3e.Component.FormField.component [ M3e.Component.FormField.hideSubscript M3e.Values.auto ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld4" ] [ M3e.text "Field w/ hint" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld4" ] [], M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "Hint text" ]) ]
+```
+
+<!-- elm-cem:example title="Error messages" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld5" ] [ M3e.text "Required field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld5", TypedHtml.Unsafe.Attributes.customAttribute "required" "" ] [], M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "Hint text" ]) ]
+```
+
+<!-- elm-cem:example title="Error messages (2)" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld6" ] [ M3e.text "Required field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld6", TypedHtml.Unsafe.Attributes.customAttribute "required" "" ] [], M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "Hint text" ]), M3e.Component.FormField.error (TypedHtml.span [] [ M3e.text "Custom error message" ]) ]
+```
+
+<!-- elm-cem:example title="Hiding the required marker" -->
+```elm
+M3e.Component.FormField.component [ M3e.Component.FormField.hideRequiredMarker True ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld7" ] [ M3e.text "Required field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld7", TypedHtml.Unsafe.Attributes.customAttribute "required" "" ] [] ]
+```
+
+<!-- elm-cem:example title="Prefix and suffix" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld8" ] [ M3e.text "Amount" ]), M3e.Component.FormField.prefixText (TypedHtml.span [] [ M3e.text "$" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fld8", TypedHtml.Unsafe.Attributes.customAttribute "type" "number", TypedHtml.Unsafe.Attributes.customAttribute "placeholder" "0" ] [], M3e.Component.FormField.suffixText (TypedHtml.span [] [ M3e.text ".00" ]), M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "clear" ] [], ariaLabel = "Clear", action = M3e.Action.none } [] []) ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined, M3e.Attributes.class "density-3" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld1" ] [ M3e.text "Density -3" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld1" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined, M3e.Attributes.class "density-2" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld2" ] [ M3e.text "Density -2" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld2" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined, M3e.Attributes.class "density-1" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld3" ] [ M3e.text "Density -1" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld3" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined, M3e.Attributes.class "density-0" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld4" ] [ M3e.text "Density 0" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld4" ] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Density (2)" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled, M3e.Attributes.class "density-3" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld5" ] [ M3e.text "Density -3" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld5" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled, M3e.Attributes.class "density-2" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld6" ] [ M3e.text "Density -2" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld6" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled, M3e.Attributes.class "density-1" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld7" ] [ M3e.text "Density -1" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld7" ] [] ]
+    , M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled, M3e.Attributes.class "density-0" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "dfld8" ] [ M3e.text "Density 0" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "dfld8" ] [] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

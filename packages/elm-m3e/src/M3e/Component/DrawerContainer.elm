@@ -16,6 +16,51 @@ A container for one or two sliding drawers.
 @docs endDivider, startDivider, onChange
 @docs end, start, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Drawers" -->
+```elm
+M3e.Component.DrawerContainer.component [] [ M3e.Component.DrawerContainer.start (TypedHtml.div [] [ M3e.text "Start drawer" ]), TypedHtml.div [] [ M3e.text "Main content" ], M3e.Component.DrawerContainer.end (TypedHtml.div [] [ M3e.text "End drawer" ]) ]
+```
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+M3e.Component.DrawerContainer.component [] [ M3e.Component.DrawerContainer.start (TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 200px" ] [ M3e.text "Start drawer" ]), TypedHtml.div [] [ M3e.text "Main content" ] ]
+```
+
+<!-- elm-cem:example title="Modes" -->
+```elm
+M3e.Component.DrawerContainer.component [ M3e.Component.DrawerContainer.startMode M3e.Values.push ] [ M3e.Component.DrawerContainer.start (TypedHtml.div [] [ M3e.text "Start drawer" ]), TypedHtml.div [] [ M3e.text "Main content" ] ]
+```
+
+<!-- elm-cem:example title="Modes (2)" -->
+```elm
+M3e.Component.DrawerContainer.component [ M3e.Component.DrawerContainer.startMode M3e.Values.over ] [ M3e.Component.DrawerContainer.start (TypedHtml.div [] [ M3e.text "Start drawer" ]), TypedHtml.div [] [ M3e.text "Main content" ] ]
+```
+
+<!-- elm-cem:example title="Dividers" -->
+```elm
+M3e.Component.DrawerContainer.component [ M3e.Component.DrawerContainer.endMode M3e.Values.side, M3e.Component.DrawerContainer.endDivider True ] [ TypedHtml.div [] [ M3e.text "Main content" ], M3e.Component.DrawerContainer.end (TypedHtml.div [] [ M3e.text "End drawer" ]) ]
+```
+
+<!-- elm-cem:example title="Toggle" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "menu" ] [], ariaLabel = "Menu", action = M3e.Action.none } [ M3e.Component.IconButton.toggle True ] [ M3e.Component.IconButton.selected (M3e.Component.Icon.component [ M3e.Component.Icon.name "menu_open" ] []), M3e.Component.DrawerToggle.component [ M3e.Component.DrawerToggle.for "nav-drawer" ] [] ]
+    , M3e.Component.DrawerContainer.component [ M3e.Component.DrawerContainer.startMode M3e.Values.over ] [ M3e.Component.DrawerContainer.start (TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "id" "nav-drawer" ] [ M3e.text "Start drawer" ]), TypedHtml.div [] [ M3e.text "Main content" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Accessibility" -->
+```elm
+M3e.Component.DrawerContainer.component [] [ M3e.Component.DrawerContainer.start (TypedHtml.nav [] []), TypedHtml.main_ [] [], M3e.Component.DrawerContainer.end (TypedHtml.aside [] []) ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

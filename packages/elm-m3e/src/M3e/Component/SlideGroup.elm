@@ -14,6 +14,24 @@ Presents pagination controls used to scroll overflowing content.
 @docs disabled, nextPageLabel, previousPageLabel, threshold, vertical
 @docs nextIcon, prevIcon, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.SlideGroup.component [] [ TypedHtml.div [] [ M3e.text "Item 1" ], TypedHtml.div [] [ M3e.text "Item 2" ], TypedHtml.div [] [ M3e.text "Item 3" ], TypedHtml.div [] [ M3e.text "Item 4" ], TypedHtml.div [] [ M3e.text "Item 5" ], TypedHtml.div [] [ M3e.text "Item 6" ], TypedHtml.div [] [ M3e.text "Item 7" ], TypedHtml.div [] [ M3e.text "Item 8" ], TypedHtml.div [] [ M3e.text "Item 9" ], TypedHtml.div [] [ M3e.text "Item 10" ], TypedHtml.div [] [ M3e.text "Item 11" ], TypedHtml.div [] [ M3e.text "Item 12" ], TypedHtml.div [] [ M3e.text "Item 13" ], TypedHtml.div [] [ M3e.text "Item 14" ], TypedHtml.div [] [ M3e.text "Item 15" ], TypedHtml.div [] [ M3e.text "Item 16" ], TypedHtml.div [] [ M3e.text "Item 17" ], TypedHtml.div [] [ M3e.text "Item 18" ], TypedHtml.div [] [ M3e.text "Item 19" ], TypedHtml.div [] [ M3e.text "Item 20" ] ]
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+M3e.Component.SlideGroup.component [ M3e.Component.SlideGroup.vertical True ] [ TypedHtml.div [] [ M3e.text "Item 1" ], TypedHtml.div [] [ M3e.text "Item 2" ], TypedHtml.div [] [ M3e.text "Item 3" ], TypedHtml.div [] [ M3e.text "Item 4" ], TypedHtml.div [] [ M3e.text "Item 5" ], TypedHtml.div [] [ M3e.text "Item 6" ], TypedHtml.div [] [ M3e.text "Item 7" ], TypedHtml.div [] [ M3e.text "Item 8" ], TypedHtml.div [] [ M3e.text "Item 9" ], TypedHtml.div [] [ M3e.text "Item 10" ], TypedHtml.div [] [ M3e.text "Item 11" ], TypedHtml.div [] [ M3e.text "Item 12" ], TypedHtml.div [] [ M3e.text "Item 13" ], TypedHtml.div [] [ M3e.text "Item 14" ], TypedHtml.div [] [ M3e.text "Item 15" ], TypedHtml.div [] [ M3e.text "Item 16" ], TypedHtml.div [] [ M3e.text "Item 17" ], TypedHtml.div [] [ M3e.text "Item 18" ], TypedHtml.div [] [ M3e.text "Item 19" ], TypedHtml.div [] [ M3e.text "Item 20" ] ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

@@ -14,6 +14,60 @@ A container for a set of radio buttons.
 @docs ariaInvalid, disabled, name, required, validationmessages, onBeforeinput, onInput, onChange
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Radio groups" -->
+```elm
+M3e.Component.RadioGroup.component { content = M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "1" ] [], M3e.text "Option 1" ] } [] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "2" ] [], M3e.text "Option 2" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "3" ] [], M3e.text "Option 3" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "4" ] [], M3e.text "Option 4" ] ]
+```
+
+<!-- elm-cem:example title="Labels" -->
+```elm
+[ TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "radio-group" ] [ M3e.text "Select an option" ]
+    , TypedHtml.br [] []
+    , M3e.Component.RadioGroup.component { content = M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "1" ] [], M3e.text "Option 1" ] } [ M3e.Attributes.id "radio-group" ] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "2" ] [], M3e.text "Option 2" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "3" ] [], M3e.text "Option 3" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "4" ] [], M3e.text "Option 4" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "radio-group2" ] [ M3e.text "Select an option" ]
+    , TypedHtml.br [] []
+    , M3e.Component.RadioGroup.component { content = M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.disabled True, M3e.Component.Radio.value "1" ] [], M3e.text "Option 1" ] } [ M3e.Attributes.id "radio-group2" ] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "2" ] [], M3e.text "Option 2" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "3" ] [], M3e.text "Option 3" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "4" ] [], M3e.text "Option 4" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Disabling (2)" -->
+```elm
+[ TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "radio-group3" ] [ M3e.text "Select an option" ]
+    , TypedHtml.br [] []
+    , M3e.Component.RadioGroup.component { content = M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "1" ] [], M3e.text "Option 1" ] } [ M3e.Attributes.id "radio-group3", M3e.Component.RadioGroup.disabled True ] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "2" ] [], M3e.text "Option 2" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "3" ] [], M3e.text "Option 3" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "4" ] [], M3e.text "Option 4" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Required" -->
+```elm
+[ TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "radio-group4" ] [ M3e.text "Select an option" ]
+    , TypedHtml.br [] []
+    , M3e.Component.RadioGroup.component { content = M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "1" ] [], M3e.text "Option 1" ] } [ M3e.Attributes.id "radio-group4", M3e.Component.RadioGroup.required True ] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "2" ] [], M3e.text "Option 2" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "3" ] [], M3e.text "Option 3" ], M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Component.Radio.value "4" ] [], M3e.text "Option 4" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Attributes.class "density-3" ] [], M3e.text "Density -3" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Attributes.class "density-2" ] [], M3e.text "Density -2" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Attributes.class "density-1" ] [], M3e.text "Density -1" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Radio.component [ M3e.Attributes.class "density-0" ] [], M3e.text "Density 0" ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Selection -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

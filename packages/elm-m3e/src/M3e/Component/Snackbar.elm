@@ -14,6 +14,29 @@ Presents short updates about application processes at the bottom of the screen.
 @docs action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
 @docs closeIcon, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Snackbar service" -->
+```elm
+M3e.Component.Button.component { content = M3e.text "Delete file", action = M3e.Action.none } [ M3e.Attributes.id "example1" ] []
+```
+
+<!-- elm-cem:example title="Actions" -->
+```elm
+M3e.Component.Button.component { content = M3e.text "Delete file", action = M3e.Action.none } [ M3e.Attributes.id "example2" ] []
+```
+
+<!-- elm-cem:example title="Dismissal" -->
+```elm
+M3e.Component.Button.component { content = M3e.text "Delete file", action = M3e.Action.none } [ M3e.Attributes.id "example3" ] []
+```
+
+<!-- elm-cem:docmeta category=Communication -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

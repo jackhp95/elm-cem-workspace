@@ -16,6 +16,64 @@ A visual placeholder that mimics the layout of content while it's still loading.
 @docs loaded
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Attributes.id "toggle1" ] [], M3e.text "Loaded" ]
+    , TypedHtml.br [] []
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Attributes.id "skeleton1" ] [ M3e.Component.Card.component [] [ M3e.Component.Card.header (M3e.Component.Heading.component { content = M3e.text "Card Header" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []), M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Card Content" ]), M3e.Component.Card.actions (TypedHtml.div [] [ M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [] ]), M3e.Component.Card.footer (TypedHtml.div [] [ M3e.text "Card Footer" ]) ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Card Header" -->
+```elm
+M3e.Component.Skeleton.component [] [ M3e.Component.Card.component [] [ M3e.Component.Card.header (M3e.Component.Heading.component { content = M3e.text "Card Header" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []), M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Card Content" ]), M3e.Component.Card.actions (TypedHtml.div [] [ M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [] ]), M3e.Component.Card.footer (TypedHtml.div [] [ M3e.text "Card Footer" ]) ] ]
+```
+
+<!-- elm-cem:example title="Shape" -->
+```elm
+[ M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.circular ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.rounded ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.square ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.auto ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px; border-radius: 16px" ] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Animation" -->
+```elm
+[ M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.circular, M3e.Component.Skeleton.animation M3e.Values.pulse ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.rounded, M3e.Component.Skeleton.animation M3e.Values.pulse ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.square, M3e.Component.Skeleton.animation M3e.Values.pulse ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.auto, M3e.Component.Skeleton.animation M3e.Values.pulse ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px; border-radius: 16px" ] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Animation (2)" -->
+```elm
+[ M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.circular, M3e.Component.Skeleton.animation M3e.Values.none ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.rounded, M3e.Component.Skeleton.animation M3e.Values.none ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.square, M3e.Component.Skeleton.animation M3e.Values.none ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px" ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.Skeleton.component [ M3e.Component.Skeleton.shape M3e.Values.auto, M3e.Component.Skeleton.animation M3e.Values.none ] [ TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "style" "width: 100px; height: 100px; border-radius: 16px" ] [] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Communication -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

@@ -14,6 +14,89 @@ A sheet used to show secondary content anchored to the bottom of the screen.
 @docs detent, detents, handle, handleLabel, hideFriction, hideable, modal, open, overshootLimit, onOpening, onClosing, onCancel, onOpened, onClosed
 @docs header, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet" ] [ M3e.text "Open bottom sheet" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet" ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet2" ] [ M3e.text "Open modal bottom sheet" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet2", M3e.Component.BottomSheet.modal True ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Drag handles" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet3" ] [ M3e.text "Open draggable modal bottom sheet" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet3", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Detents" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet4" ] [ M3e.text "Open draggable modal bottom sheet with detents" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet4", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.detents "fit half full" ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Initial height" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet7" ] [ M3e.text "Open draggable modal bottom sheet with detents at half" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet7", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.detents "fit half full", M3e.Component.BottomSheet.detent 1 ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Initial height (2)" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet8", M3e.Component.BottomSheetTrigger.detent 1 ] [ M3e.text "Open draggable modal bottom sheet with detents at half via trigger" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet8", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.detents "fit half full" ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Collapsed height" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet9" ] [ M3e.text "Open draggable modal bottom sheet with detents at collapsed with custom peek" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet9", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.detents "collapsed fit half full", TypedHtml.Unsafe.Attributes.customAttribute "style" "--m3e-bottom-sheet-peek-height: 36px" ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Hideability" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet5" ] [ M3e.text "Open hideable modal bottom sheet" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet5", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.hideable True ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Hideability (2)" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet6" ] [ M3e.text "Open hideable modal bottom sheet with detents" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet6", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.hideable True, M3e.Component.BottomSheet.detents "fit half full" ] [ M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Headers" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.BottomSheetTrigger.component [ M3e.Component.BottomSheetTrigger.for "bottomSheet10" ] [ M3e.text "Open hideable modal bottom sheet with detents and header" ], action = M3e.Action.none } [] []
+    , M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet10", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.hideable True, M3e.Component.BottomSheet.detents "collapsed fit half full", TypedHtml.Aria.labelledby "sheetTitle" ] [ M3e.Component.BottomSheet.header (M3e.Component.Heading.component { content = M3e.text "Choose a destination" } [ M3e.Attributes.id "sheetTitle", M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.large ] []), M3e.Component.ActionList.component [] [ M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Keep" ], M3e.Component.ListAction.supportingText (M3e.text "Add to a note") ], M3e.Component.ListAction.component [] [ M3e.Component.BottomSheetAction.component [] [ M3e.text "Google Docs" ], M3e.Component.ListAction.supportingText (M3e.text "Embed in a document") ] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Choose a destination" -->
+```elm
+M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.hideable True, M3e.Component.BottomSheet.detents "collapsed fit half full" ] [ M3e.Component.BottomSheet.header (M3e.Component.Heading.component { content = M3e.text "Choose a destination" } [ M3e.Attributes.id "sheetTitle", M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.large ] []) ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

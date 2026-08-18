@@ -16,6 +16,90 @@ Enhances a text input with suggested options.
 @docs autoActivate, caseSensitive, for, hideLoading, hideNoData, hideSelectionIndicator, loadingLabel, noDataLabel, panelClass, required, resultsLabel, onChange, onQuery, onToggle
 @docs loading, noData, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Filter modes" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit5" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit5" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit5", M3e.Component.Autocomplete.filter M3e.Values.startsWith, M3e.Component.Autocomplete.caseSensitive True ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Custom filtering" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit4" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit4" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Attributes.class "custom-filter", M3e.Component.Autocomplete.for "fruit4" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="No data" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit6" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit6", TypedHtml.Unsafe.Attributes.customAttribute "value" "Pear" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit6", M3e.Component.Autocomplete.noDataLabel "No data" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Initial load" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "state" ] [ M3e.text "State" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "state" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Attributes.class "lazy", M3e.Component.Autocomplete.for "state" ] [ M3e.Component.Autocomplete.loading (M3e.Component.LoadingIndicator.component [] []) ]
+    ]
+```
+
+<!-- elm-cem:example title="Search as you type" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "state2" ] [ M3e.text "State" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "state2" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Attributes.class "search", M3e.Component.Autocomplete.for "state2", M3e.Component.Autocomplete.filter M3e.Values.none ] [ M3e.Component.Autocomplete.loading (M3e.Component.LoadingIndicator.component [] []) ]
+    ]
+```
+
+<!-- elm-cem:example title="Requiring an option to be selected" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit2" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit2", TypedHtml.Unsafe.Attributes.customAttribute "value" "Apple" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit2", M3e.Component.Autocomplete.required True ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Automatic activation" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit3" ] [ M3e.text "Choose your favorite fruit" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit3" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit3", M3e.Component.Autocomplete.autoActivate True ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Chips" -->
+```elm
+[ M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fruit7" ] [ M3e.text "Choose your favorite fruits" ]), M3e.Component.InputChipSet.component [ TypedHtml.Aria.label "Enter favorite fruits" ] [ M3e.Component.InputChipSet.input (TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "fruit7", TypedHtml.Unsafe.Attributes.customAttribute "placeholder" "Add fruit..." ] []) ] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "fruit7" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "d1" ] [ M3e.text "Density -3" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "d1" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "d1", M3e.Component.Autocomplete.panelClass "density-3" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-2" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "d2" ] [ M3e.text "Density -2" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "d2" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "d2", M3e.Component.Autocomplete.panelClass "density-2" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-1" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "d3" ] [ M3e.text "Density -1" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "d3" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "d3", M3e.Component.Autocomplete.panelClass "density-1" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-0" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "d4" ] [ M3e.text "Density 0" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "id" "d4" ] [] ]
+    , M3e.Component.Autocomplete.component [ M3e.Component.Autocomplete.for "d4", M3e.Component.Autocomplete.panelClass "density-0" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

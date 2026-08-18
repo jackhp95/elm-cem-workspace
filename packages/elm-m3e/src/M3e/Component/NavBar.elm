@@ -16,6 +16,42 @@ A horizontal bar, typically used on smaller devices, that allows a user to switc
 @docs onChange, onBeforeinput, onInput
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Modes" -->
+```elm
+[ M3e.Component.NavBar.component [ M3e.Component.NavBar.mode M3e.Values.compact ] [ M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "globe" ] []), M3e.text "Global" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "star" ] []), M3e.text "For you" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "newsstand" ] []), M3e.text "Trending" ] ]
+    , TypedHtml.br [] []
+    , M3e.Component.NavBar.component [ {- round-trip: dropped mode="extended" on m3e-nav-bar — CEM value "extended" (key "extended") has no matching Elm enum value in "mode" (available: auto, compact, expanded). Refusing to guess a token name. -} ] [ M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "globe" ] []), M3e.text "Global" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "star" ] []), M3e.text "For you" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "newsstand" ] []), M3e.text "Trending" ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Items" -->
+```elm
+M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ]
+```
+
+<!-- elm-cem:example title="Selection" -->
+```elm
+M3e.Component.NavBar.component [] [ M3e.Component.NavItem.component [ M3e.Component.NavItem.selected True ] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "globe" ] []), M3e.text "Global" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "star" ] []), M3e.text "For you" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "newsstand" ] []), M3e.text "Trending" ] ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.NavBar.component [] [ M3e.Component.NavItem.component [ M3e.Component.NavItem.disabled True ] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ], M3e.Component.NavItem.component [ M3e.Component.NavItem.disabledInteractive True ] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "globe" ] []), M3e.text "Global" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "star" ] []), M3e.text "For you" ], M3e.Component.NavItem.component [] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "newsstand" ] []), M3e.text "Trending" ] ]
+```
+
+<!-- elm-cem:example title="Links" -->
+```elm
+M3e.Component.NavBar.component [] [ M3e.Component.NavItem.component [ M3e.Component.NavItem.href "https://www.google.com", M3e.Component.NavItem.target "_blank" ] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ] ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

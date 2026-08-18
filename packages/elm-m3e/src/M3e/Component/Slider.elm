@@ -16,6 +16,67 @@ Allows for the selection of numeric values from a range.
 @docs disabled, discrete, labelled, max, min, step, onBeforeinput, onInput, onChange
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [] [] } [] []
+```
+
+<!-- elm-cem:example title="Selecting a value" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 1.5 ] [] } [ M3e.Component.Slider.min 1, M3e.Component.Slider.max 5, M3e.Component.Slider.step 0.5 ] []
+```
+
+<!-- elm-cem:example title="Selecting a range" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 20 ] [] } [] [ M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 80 ] [] ]
+```
+
+<!-- elm-cem:example title="Negative value ranges" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value -20 ] [] } [ M3e.Component.Slider.min -50 ] []
+```
+
+<!-- elm-cem:example title="Labels" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 20 ] [] } [ M3e.Component.Slider.labelled True ] []
+```
+
+<!-- elm-cem:example title="Tick marks" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 20 ] [] } [ M3e.Component.Slider.discrete True, M3e.Component.Slider.step 10 ] []
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 20 ] [] } [ M3e.Component.Slider.labelled True, M3e.Component.Slider.disabled True ] []
+```
+
+<!-- elm-cem:example title="Disabling (2)" -->
+```elm
+M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 20 ] [] } [ M3e.Component.Slider.labelled True ] [ M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.disabled True, M3e.Component.SliderThumb.value 80 ] [] ]
+```
+
+
+### Sizes
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+[ M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 50 ] [] } [ M3e.Component.Slider.size M3e.Values.extraSmall ] []
+    , M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 50 ] [] } [ M3e.Component.Slider.size M3e.Values.small ] []
+    , M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 50 ] [] } [ M3e.Component.Slider.size M3e.Values.medium ] []
+    , M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 50 ] [] } [ M3e.Component.Slider.size M3e.Values.large ] []
+    , M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [ M3e.Component.SliderThumb.value 50 ] [] } [ M3e.Component.Slider.size M3e.Values.extraLarge ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Selection -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

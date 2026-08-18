@@ -16,6 +16,101 @@ A button users interact with to perform an action.
 @docs disabled, disabledInteractive, download, href, name, rel, target, toggle, value, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, selected, selectedIcon, trailingIcon, child
 
+
+## Examples
+
+
+### Variants
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Elevated", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.elevated ] []
+    , M3e.Component.Button.component { content = M3e.text "Filled", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] []
+    , M3e.Component.Button.component { content = M3e.text "Tonal", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] []
+    , M3e.Component.Button.component { content = M3e.text "Outlined", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.outlined ] []
+    , M3e.Component.Button.component { content = M3e.text "Text", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] []
+    ]
+```
+
+<!-- elm-cem:example title="Shapes" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Square Elevated", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.elevated, M3e.Component.Button.shape M3e.Values.square ] []
+    , M3e.Component.Button.component { content = M3e.text "Square Filled", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.shape M3e.Values.square ] []
+    , M3e.Component.Button.component { content = M3e.text "Square Tonal", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.shape M3e.Values.square ] []
+    , M3e.Component.Button.component { content = M3e.text "Square Outlined", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.outlined, M3e.Component.Button.shape M3e.Values.square ] []
+    , M3e.Component.Button.component { content = M3e.text "Square Text", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text, M3e.Component.Button.shape M3e.Values.square ] []
+    ]
+```
+
+<!-- elm-cem:example title="Toggle" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Elevated Toggle", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.elevated, M3e.Component.Button.toggle True ] []
+    , M3e.Component.Button.component { content = M3e.text "Filled Toggle", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.toggle True ] []
+    , M3e.Component.Button.component { content = M3e.text "Tonal Toggle", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] []
+    , M3e.Component.Button.component { content = M3e.text "Outlined Toggle", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.outlined, M3e.Component.Button.toggle True ] []
+    ]
+```
+
+
+### Sizes
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Extra Small", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.extraSmall ] []
+    , M3e.Component.Button.component { content = M3e.text "Small", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.small ] []
+    , M3e.Component.Button.component { content = M3e.text "Medium", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.medium ] []
+    , M3e.Component.Button.component { content = M3e.text "Large", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.large ] []
+    , M3e.Component.Button.component { content = M3e.text "Extra Large", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.extraLarge ] []
+    ]
+```
+
+
+### Examples
+
+<!-- elm-cem:example title="Icons" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Send", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "send" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Open", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.trailingIcon (M3e.Component.Icon.component [ M3e.Component.Icon.name "open_in_new_window" ] []) ]
+    ]
+```
+
+<!-- elm-cem:example title="Toggle (2)" -->
+```elm
+M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.toggle True ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []), M3e.Component.Button.selectedIcon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stop" ] []), M3e.Component.Button.selected (M3e.text "Stop") ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Disabled", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.disabled True ] []
+    , M3e.Component.Button.component { content = M3e.text "Disabled Interactive", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.disabledInteractive True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Links" -->
+```elm
+M3e.Component.Button.component { content = M3e.text "Google", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.href "https://www.google.com", M3e.Component.Button.target "_blank" ] [ M3e.Component.Button.trailingIcon (M3e.Component.Icon.component [ M3e.Component.Icon.name "open_in_new_window" ] []) ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Density -3", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.size M3e.Values.extraSmall, M3e.Attributes.class "density-3" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density -2", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.size M3e.Values.extraSmall, M3e.Attributes.class "density-2" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density -1", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.size M3e.Values.extraSmall, M3e.Attributes.class "density-1" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density 0", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.size M3e.Values.extraSmall, M3e.Attributes.class "density-0" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    ]
+```
+
+<!-- elm-cem:example title="Density (2)" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.text "Density -3", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Attributes.class "density-3" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density -2", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Attributes.class "density-2" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density -1", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Attributes.class "density-1" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    , M3e.Component.Button.component { content = M3e.text "Density 0", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Attributes.class "density-0" ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "stars" ] []) ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Actions -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

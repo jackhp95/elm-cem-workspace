@@ -14,6 +14,54 @@ An on/off control that can be toggled by clicking.
 @docs Icons, icons
 @docs checked, disabled, name, validationmessages, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.Switch.component [ M3e.Component.Switch.checked True ] []
+```
+
+<!-- elm-cem:example title="Labels" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Switch.component [] [], M3e.text "Switch 1" ]
+    , M3e.Component.Switch.component [ M3e.Attributes.id "switch2" ] []
+    , TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "switch2" ] [ M3e.text "Switch 2" ]
+    ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Switch.component [ M3e.Component.Switch.disabled True ] [], M3e.text "Disabled Switch 1" ]
+    , M3e.Component.Switch.component [ M3e.Attributes.id "chk3", M3e.Component.Switch.disabled True ] []
+    , TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "chk3" ] [ M3e.text "Disabled Switch 2" ]
+    ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.Switch.component [ M3e.Attributes.class "density-3" ] []
+    , M3e.Component.Switch.component [ M3e.Attributes.class "density-2" ] []
+    , M3e.Component.Switch.component [ M3e.Attributes.class "density-1" ] []
+    , M3e.Component.Switch.component [ M3e.Attributes.class "density-0" ] []
+    ]
+```
+
+
+### Icons
+
+<!-- elm-cem:example title="Icons" -->
+```elm
+[ M3e.Component.Switch.component [ M3e.Component.Switch.icons M3e.Values.selected, M3e.Component.Switch.checked True ] []
+    , M3e.Component.Switch.component [ M3e.Component.Switch.icons M3e.Values.both ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Selection -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)
