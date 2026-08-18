@@ -31,12 +31,16 @@ as a **general tool** any CEM+Figma project can adopt.
 | D11 | Upstream `matraic/m3e` PR = **follow-up reminder** at the end, not a plan phase. |
 | D12 | **Avetta is the in-plan second consumer.** Endgame: Figma integration for the future Avetta stack = `avetta/ui` main + Tailwind v4 + elm-m3e + minor Material branding tweaks. |
 | D13 | elm-m3e registry release is out of scope (snippets are strings; nothing blocks on package adoption). |
+| D14 | (2026-08-18) Correspondence stays **external to CEM config**; any Figma association surfaced inside elm-cem's `--config-from` channel is a **derived-only** projection (`figma-links.json` → generated `docMeta`), never hand-authored there. The apparent D2 fileKey conflict is **two roles, not a conflict**: `profile.json`'s `fileKey` is the extraction anchor (settled); the `--file-key` passed to `publish` is a separate, still-open publish-target choice, resolved by one `--dry-run` whenever live Figma access returns — see `plans/2026-08-17-figma-elm-config-integration-design.md`. |
 
-> ⚠️ **D2 fileKey conflict (needs an owner decision).** D2 names
-> `KujuFlfJSwHI6ua1b7RZvL` as the first publish target, but the actual profile
-> (`profiles/m3-kit/profile.json`) and the 2026-07-14 handoff use
-> `UtwpUdPiOZEuxp8Nq1d5yQ`. These disagree and have **not** been reconciled — do not assume
-> either is authoritative. See `STATUS.md`. (Deliberately not resolved here.)
+> ℹ️ **D2 fileKey — resolved as a role split, not a conflict (D14).** D2's
+> `KujuFlfJSwHI6ua1b7RZvL` and `profiles/m3-kit/profile.json`'s `UtwpUdPiOZEuxp8Nq1d5yQ`
+> were never actually disputing the same value — the profile's `fileKey` pins the
+> **extraction anchor** (the epoch every node-id in `correspondence.json` was matched
+> against), while D2 named a candidate **publish target**, a separate `--file-key` passed
+> to `publish` at run time. See `STATUS.md` and `docs/USAGE.md` → "Two different fileKeys,
+> two different roles" for the full account, including the second publish-target candidate
+> (`iPFL8MH2R1Xphe94j7g809`) surfaced 2026-08-04.
 
 ## Verified ground truth (2026-07-10) — what the plans may rely on
 

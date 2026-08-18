@@ -28,7 +28,9 @@ Figma at all.
   `profiles/m3-kit/emitters/elm.mjs` → `generated/m3-kit/elm/`). Both labels coexist on the
   same Figma node, filterable in Dev Mode via `codeConnectLabel`.
 - **`--file-key <key>`** — the Figma file to publish into. Passed explicitly to `publish`;
-  it is not defaulted (see the canonical-target caveat at the bottom).
+  it is not defaulted (see "Two different fileKeys, two different roles" at the bottom —
+  this is the *publish-target* fileKey, distinct from the profile's extraction-anchor
+  fileKey).
 - **`FIGMA_ACCESS_TOKEN`** — required for `publish`/`unpublish` only. Read from the
   **environment only** (`requireToken` in `src/publish/runner.mjs` refuses to read it from a
   file). Needs scopes **Code Connect: Write** + **File content: Read** on a Figma
@@ -163,15 +165,30 @@ Notes:
 
 ---
 
-## ⚠️ Unresolved: the canonical publish `--file-key`
+## Two different fileKeys, two different roles (D14)
 
-The sources disagree on which Figma file is the canonical publish target, and this needs an
-**owner decision** (it is deliberately left open here — do not assume either is correct):
+What looked like a 3-way disagreement was actually two distinct roles being named with the
+same word. Both are settled structurally; only one still needs a live-Figma decision.
 
-- **`KujuFlfJSwHI6ua1b7RZvL`** — named in `plans/plan/README.md` and
-  `plans/00-mission-and-decisions.md` (decision D2) as the canonical target.
-- **`UtwpUdPiOZEuxp8Nq1d5yQ`** — the value in `profiles/m3-kit/profile.json`, and the
-  target the 2026-07-14 handoff treats as settled.
+- **Extraction anchor** — `profiles/m3-kit/profile.json`'s `fileKey` (`UtwpUdPiOZEuxp8Nq1d5yQ`)
+  + `kitVersionTag`. This pins the epoch the checked-in dump
+  (`research/figma-dumps/figma-export.m3-kit.json`) and every node-id in
+  `correspondence.json` were matched against. **Settled, not in question** — it refreshes
+  only when the kit is re-extracted, and `fileKey`/`kitVersionTag` always move together
+  (architecture §1, evidence #5).
+- **Publish target** — the `--file-key` flag passed to `publish` at run time.
+  `materializeStaging` (`src/publish/runner.mjs`) rewrites each staged binding's `// url=`
+  line to this value at publish time; node-ids resolve correctly against **any** duplicate
+  of the same kit version, because component keys re-mint on duplication but node-ids don't
+  (evidence #5). This is genuinely still open between the two candidates below — but
+  resolving it costs one `--dry-run`, and nothing in the pipeline before `publish` depends
+  on the answer.
+  - **`KujuFlfJSwHI6ua1b7RZvL`** — the D2 drafts copy (`plans/00-mission-and-decisions.md`).
+  - **`iPFL8MH2R1Xphe94j7g809`** — a 2026-08-04 writable duplicate
+    (`research/figma-dumps/figma-export.m3-kit-copy.json`), possibly made specifically to
+    get write access — unconfirmed.
 
-`--file-key` is always passed explicitly, so no command picks silently — but pick the right
-file before a real publish, and reconcile `profile.json` / the plans once decided.
+`--file-key` is always passed explicitly, so no command picks silently. Resolve the publish
+target with `node src/cli.mjs publish --profile m3-kit --dry-run --file-key <candidate>`
+the next time live Figma access is available (see `plans/2026-08-17-figma-elm-config-integration-design.md`
+Phase 4) — whichever candidate doesn't error is the answer.

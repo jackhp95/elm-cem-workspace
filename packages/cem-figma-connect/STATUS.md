@@ -52,13 +52,20 @@ pnpm test                                 # unit suite (rm -rf render-cache/resu
 
 ## Open decisions / release blockers (need an owner)
 
-- **Canonical publish `--file-key` is unresolved — now a 3-way disagreement.** The plans
-  (`plans/plan/README.md`, `plans/00-mission-and-decisions.md` D2) name `KujuFlfJSwHI6ua1b7RZvL`;
-  `profiles/m3-kit/profile.json` (and the 2026-07-14 handoff) use `UtwpUdPiOZEuxp8Nq1d5yQ`; and
-  `research/figma-dumps/figma-export.m3-kit-copy.json` (checked in 2026-08-04, an export of a
-  Figma-side "(Copy)" of the community kit — likely made to get write access for a future publish)
-  carries a third, `iPFL8MH2R1Xphe94j7g809`. Pick one before a real publish and reconcile the
-  others. This file deliberately does **not** choose.
+- **Publish-target `--file-key` is still open — but it's one decision, not three (D14,
+  2026-08-18).** What read as a 3-way disagreement was two different *roles* sharing a
+  name: `profiles/m3-kit/profile.json`'s `fileKey` (`UtwpUdPiOZEuxp8Nq1d5yQ`) is the
+  **extraction anchor** the committed dump and every `correspondence.json` node-id are
+  pinned to — settled, not in question. The genuinely open one is the **publish target**
+  passed to `--file-key` at publish time: either the D2 drafts copy
+  (`KujuFlfJSwHI6ua1b7RZvL`, `plans/00-mission-and-decisions.md`) or the 2026-08-04
+  writable duplicate (`iPFL8MH2R1Xphe94j7g809`,
+  `research/figma-dumps/figma-export.m3-kit-copy.json`, possibly made to get write access
+  — unconfirmed). Node-ids resolve correctly against either (evidence #5), so this is a
+  seat/write-access fact, not a design choice — resolve with one `--dry-run` the next time
+  live Figma access is available (`docs/USAGE.md` → "Two different fileKeys, two different
+  roles"; `plans/2026-08-17-figma-elm-config-integration-design.md` Phase 4). Nothing
+  before `publish` depends on the answer.
 - **`extract/` IP review** is a release blocker (the WS-relay + self-hosted-plugin technique
   is a second-generation adaptation of Avetta-authored code). Keep the repo private until
   that review is recorded. See `extract/README.md` → "Release blocker".
