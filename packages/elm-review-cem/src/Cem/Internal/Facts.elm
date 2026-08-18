@@ -125,8 +125,8 @@ handled automatically without code changes here.
 If a hypothetical brand ever used a multi-segment root (e.g. `My.Lib.Button`
 with no intermediate → namespace `["My","Lib"]`), this would WRONGLY derive
 `["My"]` as a barrel root. That case doesn't exist today; the
-`RealFactsShapeTest` meta-guard + `check:index` will catch it if the
-assumption is ever violated by a future facts shape.
+`RealFactsShapeTest` meta-guard will catch it if the assumption is ever
+violated by a future facts shape.
 
 -}
 barrelNamespaceParts : List String -> Maybe (List String)
