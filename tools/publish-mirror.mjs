@@ -141,7 +141,12 @@ function main() {
     const from = path.join(srcAbs, rel);
     const to = path.join(cloneDir, rel);
     mkdirSync(path.dirname(to), { recursive: true });
-    cpSync(from, to, { recursive: true });
+    // verbatimSymlinks: without it, Node resolves a relative symlink
+    // target (e.g. packages/elm-cem/elm-html-intermediate-representation ->
+    // ../elm-html-intermediate-representation) to an absolute, host-local
+    // path before writing it into the mirror clone — corrupting it for
+    // anyone who isn't on this machine. Found by the elm-cem publish audit.
+    cpSync(from, to, { recursive: true, verbatimSymlinks: true });
   }
 
   sh("git", ["-C", cloneDir, "add", "-A"]);
