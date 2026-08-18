@@ -16,7 +16,7 @@
 // Exit codes: 0 = ran (dry-run report, or successful push); 1 = usage/config
 // error; 2 = the mirror clone already matches the workspace (nothing to do).
 
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -73,6 +73,42 @@ function sh(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { encoding: "utf8", ...opts });
 }
 
+// Finding 1.5 (docs/reviews/2026-08-17-thermonuclear-workspace-review.md):
+// this script had no gate precondition at all — nothing stopped publishing a
+// red/stale tree, and check-mirror-drift.mjs only ever catches that AFTER the
+// fact (and only if the publish state was committed). A real `--push` run
+// now refuses unless `tools/gate-all.mjs` — "the ONE command that proves the
+// whole workspace is green" — passes first. This runs the FULL workspace
+// gate, not just the one package being published, because a mirror publish
+// is a public, hard-to-reverse action (this pushes to a real GitHub repo)
+// and the family's own facts-bundle fan-out means packages are not
+// independently verifiable in isolation anyway.
+function assertGateAllPasses() {
+  if (process.env.SKIP_GATE === "1") {
+    console.warn(
+      "WARN: SKIP_GATE=1 — publishing WITHOUT running tools/gate-all.mjs first. " +
+        "This is exactly the gap that let the 2026-08-12->17 mirror-fork incident " +
+        "happen undetected (finding 1.5). Only use this if gate-all has already " +
+        "been verified green through another path in this same run.",
+    );
+    return;
+  }
+  console.log("\n=== Gate precondition: running `node tools/gate-all.mjs` before publishing ===\n");
+  const gate = spawnSync(process.execPath, [path.join(REPO_ROOT, "tools", "gate-all.mjs")], {
+    stdio: "inherit",
+    cwd: REPO_ROOT,
+  });
+  if (gate.status !== 0) {
+    console.error(
+      "\nERROR: tools/gate-all.mjs failed — refusing to publish a red/stale tree " +
+        "(finding 1.5's gate precondition). Fix the gate and re-run, or set " +
+        "SKIP_GATE=1 to override deliberately (not recommended).",
+    );
+    process.exit(1);
+  }
+  console.log("\n=== Gate precondition passed — proceeding with publish ===\n");
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const name = argv.find((a) => !a.startsWith("--"));
@@ -90,6 +126,12 @@ function main() {
     );
     process.exit(1);
   }
+
+  // Gate precondition (finding 1.5) — run BEFORE any clone/wipe work below, so
+  // a red tree fails fast instead of after several minutes of mirror setup.
+  // Only a real `--push --yes-i-am-sure` run pays for this; a dry run does
+  // not push anywhere, so there is nothing to gate.
+  if (push && yes) assertGateAllPasses();
 
   const cfg = FAMILY[name];
   const srcAbs = path.join(REPO_ROOT, cfg.srcDir);
