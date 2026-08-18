@@ -14,6 +14,33 @@ A dialog that provides important prompts in a user flow.
 @docs alert, closeLabel, disableClose, dismissible, noFocusTrap, open, onOpening, onOpened, onClosing, onClosed, onCancel
 @docs actions, closeIcon, header, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Anatomy" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.DialogTrigger.component [ M3e.Component.DialogTrigger.for "dlg" ] [ M3e.text "Open Dialog" ], action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] []
+    , M3e.Component.Dialog.component [ M3e.Attributes.id "dlg", M3e.Component.Dialog.dismissible True ] [ M3e.Component.Dialog.header (M3e.text "Lorem ipsum dolor sit amet"), M3e.text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et\n  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex\n  ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu\n  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt\n  mollit anim id est laborum.", M3e.Component.Dialog.actions (TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "end" "" ] [ M3e.Component.Button.component { content = M3e.Component.DialogAction.component [ M3e.Component.DialogAction.returnValue "ok" ] [ M3e.text "Close" ], action = M3e.Action.none } [ TypedHtml.Unsafe.Attributes.customAttribute "autofocus" "" ] [] ]) ]
+    ]
+```
+
+<!-- elm-cem:example title="Opening" -->
+```elm
+[ M3e.Component.Button.component { content = M3e.Component.DialogTrigger.component [ M3e.Component.DialogTrigger.for "dlg" ] [ M3e.text "Open Dialog" ], action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] []
+    , M3e.Component.Dialog.component [ M3e.Attributes.id "dlg", M3e.Component.Dialog.dismissible True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Actions" -->
+```elm
+M3e.Component.Button.component { content = M3e.Component.DialogAction.component [ M3e.Component.DialogAction.returnValue "ok" ] [ M3e.text "Close" ], action = M3e.Action.none } [] []
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

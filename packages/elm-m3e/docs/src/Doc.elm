@@ -26,6 +26,7 @@ import Doc.Fold as Fold
 import Html exposing (Html, p, text)
 import M3e exposing (Element)
 import M3e.Attributes
+import M3e.Component.AssistChip
 import M3e.Component.Card
 import M3e.Component.ContentPane
 import M3e.Component.Heading
@@ -103,13 +104,21 @@ codeBlock lang s =
 
         wrapperClass : String
         wrapperClass =
-            "overflow-x-auto rounded-md-corner-medium bg-surface-container p-4 text-body-md leading-relaxed text-on-surface"
+            "overflow-x-auto p-4"
     in
     -- Auto-derived folding: the fold tree is computed from the raw
     -- string and highlighted per line, so we assemble nested `<details>`
-    -- ourselves rather than emitting one flat highlighted block.
+    -- ourselves rather than emitting one flat highlighted block. The
+    -- `m3e-card` (`filled`) supplies the surface/radius a deleted
+    -- `.doc-code-block` stylesheet class used to fake; the outer `<div>`
+    -- stays a plain div (its `DivIs` kind is pinned verbatim across 42 call
+    -- sites) with the card nested inside it, the same idiom as
+    -- `recapBox`/`ExampleNav.footer`.
     TypedHtml.div [ TA.class wrapperClass ]
-        [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+        [ M3e.card
+            [ M3e.Attributes.variant Value.filled ]
+            [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+        ]
 
 
 {-| Highlight a single code line, keeping the `.elmshN` token classes. Falls
@@ -222,31 +231,58 @@ slugify text =
 
 {-| The chapter recap box: a "Recap" overline over rendered markdown, in a
 tinted container.
+
+The container is an `m3e-card` (`filled`) rather than a painted `div`, so the
+surface/foreground pairing comes from the component's own tokens. The "Recap"
+overline drops its former `text-primary` accent: no m3e component exposes a
+colour override for `m3e-heading`, and this docs app's own styling ladder has
+no token-backed semantic class to fall back to, so the eyebrow now renders in
+the heading's default colour. See `NoProprietaryDsClasses` burn-down notes.
+
 -}
-recapBox : String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+recapBox : String -> Element (M3e.Component.Card.Is s) adm_ msg
 recapBox md =
-    TypedHtml.div [ TA.class "rounded-md-corner-medium bg-surface-container p-4 space-y-2" ]
-        [ TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-primary" ] [ M3e.text "Recap" ]
-        , TypedHtml.div [ TA.class "text-on-surface-variant" ] [ markdown md ]
+    M3e.card
+        [ M3e.Component.Card.variant Value.filled ]
+        [ TypedHtml.div [ TA.class "p-4 space-y-2" ]
+            [ M3e.heading
+                [ M3e.Component.Heading.variant Value.label
+                , M3e.Component.Heading.size Value.large
+                ]
+                [ M3e.text "Recap" ]
+            , TypedHtml.div [] [ markdown md ]
+            ]
         ]
 
 
-{-| A sentence-case section label (label-lg, tracking-wide, on-surface-variant).
+{-| A sentence-case section label (label-lg, on-surface-variant, via `m3e-heading`).
 Use for overline labels that introduce API sections or content groups.
 No uppercase — M3 permits uppercase only for very short labels (≤20 chars);
 long dynamic labels can exceed that, so this helper always uses sentence case.
 -}
-sectionLabel : String -> Element (TypedHtml.Component.Grouping.PIs s) adm_ msg
+sectionLabel : String -> Element (M3e.Component.Heading.Is s) adm_ msg
 sectionLabel s =
-    TypedHtml.p [ TA.class "text-label-lg tracking-wide text-on-surface-variant" ] [ M3e.text s ]
+    M3e.heading
+        [ M3e.Component.Heading.variant Value.label
+        , M3e.Component.Heading.size Value.large
+        ]
+        [ M3e.text s ]
 
 
-{-| Same as [`sectionLabel`](#sectionLabel) but all-caps, for the short (≤20 char)
-overline labels in the example apps where the M3 uppercase overline is intentional.
+{-| Was the all-caps twin of [`sectionLabel`](#sectionLabel): same role, but
+uppercase. `uppercase`/`tracking-wide` are Tailwind painting utilities (a
+`text-transform`, not a layout concern) with no `m3e-heading` attribute
+equivalent, so under the layout-only-styling policy the visual distinction
+between "sentence case" and "caps" collapsed — this now renders identically to
+`sectionLabel`. Kept as a separate name only so the ≤20 call sites that chose
+it explicitly for its former caps styling don't need touching; consider
+migrating them to `sectionLabel` directly, or restoring caps via
+`String.toUpper` if the visual distinction is worth an a11y/i18n tradeoff
+(screen readers get the transformed text, not the original).
 -}
-sectionLabelCaps : String -> Element (TypedHtml.Component.Grouping.PIs s) adm_ msg
+sectionLabelCaps : String -> Element (M3e.Component.Heading.Is s) adm_ msg
 sectionLabelCaps s =
-    TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide text-on-surface-variant" ] [ M3e.text s ]
+    sectionLabel s
 
 
 markdownBody : String -> List (Html msg)
@@ -272,16 +308,28 @@ markdownBody raw =
 
 {-| A labelled callout box — an eyebrow label over Markdown body — for asides that
 must not read as body prose (e.g. "these modules are yours to write"). The body is
-full Markdown, so it can carry links and inline `code`. Styled with the same surface
-tokens as the rest of the docs; a left accent bar marks it as a notice, not content.
+full Markdown, so it can carry links and inline `code`.
+
+An `m3e-card` (`filled`), replacing the hand-painted surface. This drops the
+former left accent bar (`border-l-4 border-primary`): `m3e-card` has no accent-bar
+affordance, and adding one back would mean inventing a new token-backed CSS class,
+which is out of scope here (see `NoProprietaryDsClasses` burn-down notes) — a
+defensible tradeoff since the eyebrow label above already marks this as a notice.
+
 -}
-callout : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+callout : String -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
 callout label body =
-    TypedHtml.div
-        [ TA.class "rounded-md-corner-medium bg-surface-container border-l-4 border-primary p-4 space-y-2" ]
-        [ TypedHtml.div [ TA.class "text-label-md text-primary uppercase tracking-wide" ] [ M3e.text label ]
-        , TypedHtml.div [ TA.class "doc-prose text-on-surface-variant" ]
-            (List.map M3e.Unsafe.fromHtml (markdownBody body))
+    M3e.card
+        [ M3e.Component.Card.variant Value.filled ]
+        [ TypedHtml.div [ TA.class "p-4 space-y-2" ]
+            [ M3e.heading
+                [ M3e.Component.Heading.variant Value.label
+                , M3e.Component.Heading.size Value.medium
+                ]
+                [ M3e.text label ]
+            , TypedHtml.div [ TA.class "doc-prose" ]
+                (List.map M3e.Unsafe.fromHtml (markdownBody body))
+            ]
         ]
 
 
@@ -289,7 +337,7 @@ callout label body =
 everywhere an example leans on a `Doc.*` helper. One definition, so the framing
 can't drift.
 -}
-userlandNote : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+userlandNote : Element (M3e.Component.Card.Is s) admittedBy msg
 userlandNote =
     callout "These helpers are our examples, not the library"
         """The `Doc.*` helpers in these examples are **this docs app's own module** — not part of `elm-m3e` (they won't resolve from a fresh install). You rarely need anything like them. The library gives you typed components (`M3e.*`) plus `TypedHtml` for standard HTML, and you never import `HtmlIr`: `M3e.Element`, `M3e.Attr`, `M3e.Node`, `M3e.Values.Value` and `M3e.Kind.Supported` / `.Shared` are all re-exported, so every type annotation you need is reachable from the brand. Build layout, text, and links directly from those. The genuine *escapes* ship with the library too, in one greppable, lint-fenced place — `M3e.Unsafe` (`fromHtml`, `fromNode`, `recast`, and `customElement` for a custom tag the types can't express) and `M3e.Unsafe.Attributes`. See [Escapes](/guide/seams)."""
@@ -311,25 +359,35 @@ elmSignature s =
             -- Only the highlighter's output is genuinely raw; the wrapper is a
             -- plain `<div>` the typed layer provides, so the escape covers the
             -- leaf rather than the subtree.
-            TypedHtml.div [ TA.class "text-body-md leading-relaxed" ]
+            TypedHtml.div []
                 [ M3e.Unsafe.fromHtml (SyntaxHighlight.toInlineHtml highlighted) ]
 
         Err _ ->
             -- Same wrapper as the Ok branch so both arms are a `<div>`; the
             -- fallback just carries plain text instead of highlighted spans.
-            TypedHtml.div [ TA.class "text-body-md" ]
+            TypedHtml.div []
                 [ TypedHtml.code [] [ M3e.text trimmed ] ]
 
 
 {-| A rounded "pill" anchor for the reference index (a same-page `#slug` link
 carrying the outline/hover chrome).
+
+This IS `m3e-assist-chip`: a chip that carries a native `href`, which is exactly
+this pill's job. It went through a plain `<a>` for a while because the chip's kind
+(`{ s | assistChip : Brand }`) could not satisfy this function's old
+`{ s | sharedText : Shared }` annotation — `s` is rigid inside the body, so the
+compiler could not add the chip's field to whatever the caller had chosen.
+
+The fix was to widen the annotation rather than to force the crossing. An
+assist-chip genuinely IS phrasing content; the signature was simply too narrow, and
+an escape here would have papered over that rather than fixed it. `Route.Guide`'s
+`chapterLink` re-declares the same type and was widened with it.
+
 -}
-anchorPill : { href : String, label : String } -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
+anchorPill : { href : String, label : String } -> Element { s | assistChip : M3e.Kind.Brand } admittedBy msg
 anchorPill link =
-    TypedHtml.a
-        [ TA.href link.href
-        , TA.class "rounded-full border border-outline px-3 py-1 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface no-underline"
-        ]
+    M3e.assistChip
+        [ M3e.Component.AssistChip.href link.href ]
         [ M3e.text link.label ]
 
 

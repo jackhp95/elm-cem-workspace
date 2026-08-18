@@ -2631,6 +2631,95 @@ resumed; tree clean at HEAD `4b7cab2`; handoff agent `262daa97` idle. Parts: M-I
   positioned panel. M-IA2b must follow that precedent (plain panel, not `m3e-menu`). Recorded as an
   autonomous decision following established precedent rather than a blocking escalation; revertible.
 
+---
+
+# COMPOSE IA-REWORK — remaining parts 2b–6 — branch `exec/compose-ia-2b6` (autonomous execution)
+
+Resumed from `main` @ `a69a427` (Parts 1 + 2a already landed via merge `0e7bceb`). Worktree
+`.worktrees/compose-ia`. Driver = `docs/superpowers/plans/2026-08-15-compose-ia-rework-gauntlet.md`
+(Parts 2b, 2c, 3, 4, 5–6) + `spikes/2026-08-15-compose-ia-review.md`. Surface = docs-app consumer
+route ONLY (`app/Route/Components/Compose.elm` + `tests-browser/compose.spec.ts`); published core
+`packages/elm-cem-compose` untouched (`git diff --quiet` verified per part). Commit per part, no
+push/merge. Baseline before any edit: `compose.spec.ts` 16/16 green on the production build. Commits
+stage explicit source paths only (route + spec + ledger); the tracked `dist/**` build output churns
+on every build and is left for a final regenerate, per D-066 precedent + the "stage explicit paths"
+convention (D-009/D-021).
+
+- **Part 2b: pass** (elm compile 334 modules; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 16/16 on the production build via `REQUIRE_CLONE_GATES=1 browser-guard`). The
+  multi-option add-child affordance is rebuilt from a flat `m3e-menu` into a plain positioned
+  `.compose-slot-panel` (following M-IA2a's picker precedent — an `m3e-menu`'s `Content` cannot host
+  captioned subsections, per the constraint recorded above). The panel leads with the structural
+  primitives the slot affords (`Text`/`Icon`), then a captioned **"Nest a component"** group listing
+  the afforded component types with the picker's editorial labels (M-IA2a's `pickerEntry`/`pickerItem`
+  reused), then a captioned **"Load an example"** group whose items are QUALIFIED by source component
+  ("Heading — Typescale variants and sizes") — fixing audit §1.2's duplicate bare titles. Panel
+  open/close is route `Model` state (`slotPicker : Maybe (Path, String)`); single-option slots keep
+  the direct-fire shortcut (no panel). Removed the dead menu machinery (`slotMenuElement`,
+  `slotMenusFor`, `exampleMenuItemsForAddChild`, `menuItemViewMsg`, `exampleMenuItemView`,
+  `slotMenuId`, the `LoadExample` Msg variant). Spec: 6 tests updated (selectors swapped from
+  `m3e-menu`/`menuitem` to `.compose-slot-panel` buttons — intent preserved per the plan's explicit
+  allowance), incl. the "offers every valid kind" acceptance test now asserting Text+Icon primitives
+  AND all five component types present (none collapsed) in the panel.
+
+- **Part 2c: pass (diagnosis — FALSE ALARM confirmed; NO source change; +1 lock test).** The audit
+  §1.2 saw a listItem's `unnamed` slot menu show the same options as another listItem's `overline`
+  menu and feared a leaked/stale popover or broken slot filtering. Confirmed against the facts
+  (`M3e/Review/Facts.elm`): `listItem`'s `unnamed`, `overline`, and `supporting-text` slots all carry
+  IDENTICAL `slotKinds = [ heading, shared:flow, shared:phrasing, shared:text ]`, so identical
+  add-child options (Text + Heading + heading's examples) is TYPE-DIRECTED-CORRECT, not a bug —
+  matching D-061's earlier read. The "leaked popover" hypothesis is additionally made structurally
+  impossible by Part 2b: each add-child panel is a plain positioned panel addressed by route `Model`
+  state per `(path, slotName)`, so only one `.compose-slot-panel` is ever in the DOM and toggling to
+  another slot REPLACES it (no shared `m3e-menu` id to collide). Added a confirming Playwright test
+  (open `overline` then `supporting-text` on the same listItem: each shows Text + Heading, only one
+  panel at a time) — locks both the correct-by-facts behavior and the no-leak structure.
+  `compose.spec.ts` 17/17.
+
+- **Part 3: pass** (elm compile clean; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 18/18 on the production build). §3.2 + §1.5/§1.6: the Attributes and Slots groups
+  are now real, distinguishable structural kinds — each a container with a colored left border
+  (primary for Attributes, tertiary for Slots) + a faint `bg-surface-container-lowest` tint + a
+  color-matched caption, marked `compose-attr-group`/`compose-slot-group`. And empty vs filled slot
+  chips are categorically different: `slotButton` now leads with the `add` icon ONLY when
+  `info.filled == 0` (marker `compose-slot-empty`); a filled slot drops the `add` icon entirely and
+  shows just name + count badge at the heavier `filled` weight (`compose-slot-filled`), so the `+` is
+  no longer overloaded onto slots that already hold content. `groupLabel` gained a color-class
+  parameter (all call sites updated). New Playwright test asserts (a) both group-marker classes
+  present, (b) the root's FILLED `unnamed` slot has a badge + no `add` icon + `compose-slot-filled`,
+  (c) an EMPTY `overline` slot has the `add` icon + no badge + `compose-slot-empty`.
+
+- **Part 4: pass** (elm compile clean; `check:review` clean; `compose.spec.ts` 19/19 on the
+  production build). §3.4: each recursive `ChildNode` card is wrapped in a fixed per-level left
+  indent (`pl-6`) + a thin left connector line (`border-l border-outline-variant`), applied once per
+  `childRow` so it COMPOUNDS with depth automatically (a depth-2 card sits inside its depth-1
+  parent's own indented wrapper) — no depth arithmetic. Leaf `ChildText`/`ChildIcon` rows are not
+  indented (only structural node nesting earns a level). Marker `compose-depth-N` (N = child node's
+  own path length). New Playwright test builds list > listItem > checkbox and asserts the depth-2
+  card's `boundingBox().x` is strictly greater than the depth-1 card's — indentation objectively
+  present, not just visually claimed.
+
+- **Part 5: pass** (elm compile clean; `check:review` clean; `compose.spec.ts` 20/20 on the
+  production build). §3.5: the rendered custom-element tree is wrapped in a labeled output frame
+  (`livePreview`) — a semantic `<section aria-label="Live preview">` (accessible region) with a
+  visible "Live preview" caption + a subtle bordered/tinted container, marked `compose-preview` — so
+  it reads as an output region rather than incidental page copy. `M3e.Unsafe.fromHtml` erasure is now
+  inside the frame. New Playwright test asserts the frame is visible, carries `aria-label="Live
+  preview"`, shows the visible caption, and contains the live `m3e-list`. Copy (heading "Live
+  preview") owned by the Opus builder per the plan's UX-copy note.
+
+- **Part 6: pass** (elm compile clean; `check:review` clean; `check:compose-attrs` OK;
+  `compose.spec.ts` 21/21 on the production build). §3.6/§1.8: a one-line dismissible caption above
+  the root card ("The root card can't be reordered or removed; use the sidebar to start over with a
+  different root component") makes the silent root-asymmetry rule explicit without permanent chrome —
+  an `info` icon, the sentence, and a "Dismiss" icon button, marked `compose-root-explainer`.
+  Dismissal is session-scoped route state (`rootExplainerDismissed`). **Judgment call:** the plan's
+  localStorage-persistence-across-reloads is marked OPTIONAL in its own G-browser gate; wiring it
+  needs a new port + `index.ts` change, i.e. an app-shell edit OUTSIDE this rework's repeatedly-stated
+  "consumer-route-only" surface, so it is deliberately deferred as a small follow-up rather than
+  silently scope-creeping. The REQUIRED gates (renders on first load; dismiss hides it) are met; the
+  optional reload-persistence assertion is not claimed. Copy owned by the Opus builder per the plan's
+  UX-copy note. New Playwright test asserts first-load visibility + dismissal.
 - **M-IA2b: pass (gate green; critic PENDING — see caveat).** Commit `44001e7`. Builder + fixer
   claude/sonnet-5; manager-run gate. §3.1's second half: the per-slot add-child control is no longer
   a flat `m3e-menu` interleaving primitives / component names / doc-example titles. It is now a plain

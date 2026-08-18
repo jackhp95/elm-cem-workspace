@@ -117,12 +117,12 @@ type alias Post =
 
 posts : List Post
 posts =
-    [ { title = "Motion tokens land in 2.5", excerpt = "Springs and shape morphing now derive from the theme's motion scheme.", category = "Release", author = "Design team", when = "2h", media = "bg-primary-container text-on-primary-container", icon = "animation" }
-    , { title = "Adaptive nav, one destination list", excerpt = "How the rail and the bottom bar share a single producer so they never drift.", category = "Guide", author = "Britta Holt", when = "5h", media = "bg-tertiary-container text-on-tertiary-container", icon = "dashboard" }
-    , { title = "A11y-tree spot-checks", excerpt = "The Playwright recipe for asserting every interactive node has a name.", category = "Guide", author = "Miriam Steketee", when = "1d", media = "bg-secondary-container text-on-secondary-container", icon = "accessibility_new" }
-    , { title = "Re-skin with tokens", excerpt = "A brand refresh is a few Theme inputs, not a sheet of overrides.", category = "Guide", author = "Ali Connors", when = "1d", media = "bg-primary-container text-on-primary-container", icon = "palette" }
-    , { title = "Split panes and refreshed search", excerpt = "The 2.5 layer/form roles get expressive elevation tokens across the board.", category = "Release", author = "Product", when = "2d", media = "bg-tertiary-container text-on-tertiary-container", icon = "space_dashboard" }
-    , { title = "Community: composing rich cards", excerpt = "A pattern for media-topped cards that clip to the shape scale.", category = "Community", author = "Trevor Hansen", when = "3d", media = "bg-secondary-container text-on-secondary-container", icon = "groups" }
+    [ { title = "Motion tokens land in 2.5", excerpt = "Springs and shape morphing now derive from the theme's motion scheme.", category = "Release", author = "Design team", when = "2h", media = "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container", icon = "animation" }
+    , { title = "Adaptive nav, one destination list", excerpt = "How the rail and the bottom bar share a single producer so they never drift.", category = "Guide", author = "Britta Holt", when = "5h", media = "m3e-filled-card-container-color-tertiary-container m3e-filled-card-text-color-on-tertiary-container", icon = "dashboard" }
+    , { title = "A11y-tree spot-checks", excerpt = "The Playwright recipe for asserting every interactive node has a name.", category = "Guide", author = "Miriam Steketee", when = "1d", media = "m3e-filled-card-container-color-secondary-container m3e-filled-card-text-color-on-secondary-container", icon = "accessibility_new" }
+    , { title = "Re-skin with tokens", excerpt = "A brand refresh is a few Theme inputs, not a sheet of overrides.", category = "Guide", author = "Ali Connors", when = "1d", media = "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container", icon = "palette" }
+    , { title = "Split panes and refreshed search", excerpt = "The 2.5 layer/form roles get expressive elevation tokens across the board.", category = "Release", author = "Product", when = "2d", media = "m3e-filled-card-container-color-tertiary-container m3e-filled-card-text-color-on-tertiary-container", icon = "space_dashboard" }
+    , { title = "Community: composing rich cards", excerpt = "A pattern for media-topped cards that clip to the shape scale.", category = "Community", author = "Trevor Hansen", when = "3d", media = "m3e-filled-card-container-color-secondary-container m3e-filled-card-text-color-on-secondary-container", icon = "groups" }
     ]
 
 
@@ -174,7 +174,7 @@ one class.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ desktopRail
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden" ]
             [ appBar
@@ -257,20 +257,36 @@ cardGrid shown =
 postCard : Post -> Element { s | card : M3e.Kind.Brand } adm_ msg
 postCard post =
     M3e.card [ M3e.Attributes.variant Value.elevated ]
-        [ M3e.Component.Card.header
-            (TypedHtml.div
-                [ TA.class (post.media ++ " rounded-md-corner-medium flex h-32 items-center justify-center") ]
-                [ M3e.icon [ TA.name post.icon, TA.class "text-4xl" ] [] ]
-            )
+        [ M3e.Component.Card.header (media post)
         , M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-2 pt-1" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-primary" ] [ M3e.text (String.toUpper post.category) ]
-                , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text post.title ]
-                , TypedHtml.span [ TA.class "text-body-md text-on-surface-variant" ] [ M3e.text post.excerpt ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface-variant" ] [ M3e.text (post.author ++ " · " ++ post.when) ]
+                [ M3e.heading
+                    [ M3e.Attributes.variant Value.label
+                    , M3e.Attributes.size Value.small
+                    ]
+                    [ M3e.text (String.toUpper post.category) ]
+                , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text post.title ]
+                , TypedHtml.span [] [ M3e.text post.excerpt ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text (post.author ++ " · " ++ post.when) ]
                 ]
             )
         ]
+
+
+{-| Placeholder media: a shape-clipped, token-tinted `M3e.card` tile with a
+centered glyph. Nested (as the outer card's `header`) rather than a hand-
+painted div — `post.media` carries the sanctioned
+`m3e-filled-card-container-color-*` / `m3e-filled-card-text-color-*` bridge
+utilities instead of raw `bg-*`/`text-*` Tailwind.
+-}
+media : Post -> Element { s | card : M3e.Kind.Brand } adm_ msg
+media post =
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class (post.media ++ " m3e-card-shape-md-corner-medium")
+        , TA.class "flex h-32 items-center justify-center"
+        ]
+        [ M3e.icon [ TA.name post.icon, M3e.Attributes.opticalSize 40 ] [] ]
 
 
 

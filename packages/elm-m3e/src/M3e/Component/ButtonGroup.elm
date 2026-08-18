@@ -16,6 +16,73 @@ Organizes buttons and adds interactions between them.
 @docs multi
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Standard" -->
+```elm
+M3e.Component.ButtonGroup.component [] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+```
+
+<!-- elm-cem:example title="Standard (2)" -->
+```elm
+M3e.Component.ButtonGroup.component [] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "directions_car" ] []) ], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "share" ] []) ] ]
+```
+
+<!-- elm-cem:example title="Standard (3)" -->
+```elm
+M3e.Component.ButtonGroup.component [] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "fast_rewind" ] [], ariaLabel = "Rewind", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.filled, M3e.Component.IconButton.width M3e.Values.wide ] [], M3e.Component.Button.component { content = M3e.text "Play", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "fast_forward" ] [], ariaLabel = "Fast forward", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.filled, M3e.Component.IconButton.width M3e.Values.wide ] [] ]
+```
+
+<!-- elm-cem:example title="Connected" -->
+```elm
+M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.variant M3e.Values.connected ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [] ]
+```
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.size M3e.Values.large ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [ M3e.Component.IconButton.size M3e.Values.large ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [ M3e.Component.IconButton.size M3e.Values.large ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.size M3e.Values.large, M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [ M3e.Component.IconButton.size M3e.Values.large ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [ M3e.Component.IconButton.size M3e.Values.large ] [] ]
+```
+
+<!-- elm-cem:example title="Sizes (2)" -->
+```elm
+M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.size M3e.Values.large, M3e.Component.ButtonGroup.variant M3e.Values.connected ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.large, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.large, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.size M3e.Values.large, M3e.Component.Button.toggle True ] [] ]
+```
+
+<!-- elm-cem:example title="Selection" -->
+```elm
+M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.multi True ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "format_bold" ] [], ariaLabel = "Bold", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal, M3e.Component.IconButton.toggle True ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "format_italic" ] [], ariaLabel = "Italic", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal, M3e.Component.IconButton.toggle True ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "format_underlined" ] [], ariaLabel = "Underline", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal, M3e.Component.IconButton.toggle True ] [] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.ButtonGroup.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "directions_car" ] []) ], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "share" ] []) ] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Attributes.class "density-2" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "directions_car" ] []) ], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "share" ] []) ] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Attributes.class "density-1" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "directions_car" ] []) ], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "share" ] []) ] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Attributes.class "density-0" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "play_arrow" ] []) ], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "directions_car" ] []) ], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "share" ] []) ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Density (2)" -->
+```elm
+[ M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.variant M3e.Values.connected, M3e.Attributes.class "density-3" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.variant M3e.Values.connected, M3e.Attributes.class "density-2" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.variant M3e.Values.connected, M3e.Attributes.class "density-1" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [] ]
+    , TypedHtml.br [] []
+    , M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.variant M3e.Values.connected, M3e.Attributes.class "density-0" ] [ M3e.Component.Button.component { content = M3e.text "Start", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Directions", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [], M3e.Component.Button.component { content = M3e.text "Share", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal, M3e.Component.Button.toggle True ] [] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Actions -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

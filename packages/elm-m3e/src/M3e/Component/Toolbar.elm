@@ -16,6 +16,44 @@ Presents frequently used actions relevant to the current page.
 @docs elevated, vertical
 @docs child
 
+
+## Examples
+
+
+### Variants
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.standard ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+    , M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.vibrant ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+    ]
+```
+
+
+### Examples
+
+<!-- elm-cem:example title="Shapes" -->
+```elm
+M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.vibrant, M3e.Component.Toolbar.shape M3e.Values.rounded ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+```
+
+<!-- elm-cem:example title="Elevation" -->
+```elm
+M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.vibrant, M3e.Component.Toolbar.shape M3e.Values.rounded, M3e.Component.Toolbar.elevated True ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.vibrant, M3e.Component.Toolbar.shape M3e.Values.rounded, M3e.Component.Toolbar.vertical True ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+M3e.Component.Toolbar.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

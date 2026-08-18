@@ -3942,6 +3942,9 @@
         "actions"
       ],
       "slotKinds": {
+        "header": [
+          "expansionHeader"
+        ],
         "toggle-icon": [
           "shared:icon"
         ]
@@ -5088,6 +5091,7 @@
       "slotKinds": {
         "unnamed": [
           "heading",
+          "shared:phrasing",
           "shared:text"
         ]
       },

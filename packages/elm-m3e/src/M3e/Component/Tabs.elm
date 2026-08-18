@@ -16,6 +16,49 @@ Organizes content into separate views where only one view can be visible at a ti
 @docs nextPageLabel, previousPageLabel, stretch, onChange, onBeforeinput, onInput
 @docs nextIcon, panel, prevIcon, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True, M3e.Component.Tab.for "videos" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "photos" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "audio" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "videos" ] [ M3e.text "Videos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "photos" ] [ M3e.text "Photos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "audio" ] [ M3e.text "Audio" ]) ]
+```
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+M3e.Component.Tabs.component [ M3e.Component.Tabs.variant M3e.Values.primary ] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True, M3e.Component.Tab.for "tab1" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab2" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab3" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab1" ] [ M3e.text "Videos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab2" ] [ M3e.text "Photos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab3" ] [ M3e.text "Audio" ]) ]
+```
+
+<!-- elm-cem:example title="Stretching" -->
+```elm
+M3e.Component.Tabs.component [ M3e.Component.Tabs.stretch True ] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True, M3e.Component.Tab.for "tab7" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab8" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab9" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab7" ] [ M3e.text "Videos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab8" ] [ M3e.text "Photos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab9" ] [ M3e.text "Audio" ]) ]
+```
+
+<!-- elm-cem:example title="Header positions" -->
+```elm
+M3e.Component.Tabs.component [ M3e.Component.Tabs.headerPosition M3e.Values.after ] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True, M3e.Component.Tab.for "tab4" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab5" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab6" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab4" ] [ M3e.text "Videos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab5" ] [ M3e.text "Photos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab6" ] [ M3e.text "Audio" ]) ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True, M3e.Component.Tab.for "tab10" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [ M3e.Component.Tab.disabled True, M3e.Component.Tab.for "tab11" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [ M3e.Component.Tab.for "tab12" ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab10" ] [ M3e.text "Videos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab11" ] [ M3e.text "Photos" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [ M3e.Attributes.id "tab12" ] [ M3e.text "Audio" ]) ]
+```
+
+<!-- elm-cem:example title="Pagination" -->
+```elm
+M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True ] [ M3e.text "Tab 1" ], M3e.Component.Tab.component [] [ M3e.text "Tab 2" ], M3e.Component.Tab.component [] [ M3e.text "Tab 3" ], M3e.Component.Tab.component [] [ M3e.text "Tab 4" ], M3e.Component.Tab.component [] [ M3e.text "Tab 5" ], M3e.Component.Tab.component [] [ M3e.text "Tab 6" ], M3e.Component.Tab.component [] [ M3e.text "Tab 7" ], M3e.Component.Tab.component [] [ M3e.text "Tab 8" ], M3e.Component.Tab.component [] [ M3e.text "Tab 9" ], M3e.Component.Tab.component [] [ M3e.text "Tab 10" ], M3e.Component.Tab.component [] [ M3e.text "Tab 11" ], M3e.Component.Tab.component [] [ M3e.text "Tab 12" ], M3e.Component.Tab.component [] [ M3e.text "Tab 13" ], M3e.Component.Tab.component [] [ M3e.text "Tab 14" ], M3e.Component.Tab.component [] [ M3e.text "Tab 15" ], M3e.Component.Tab.component [] [ M3e.text "Tab 16" ], M3e.Component.Tab.component [] [ M3e.text "Tab 17" ], M3e.Component.Tab.component [] [ M3e.text "Tab 18" ], M3e.Component.Tab.component [] [ M3e.text "Tab 19" ], M3e.Component.Tab.component [] [ M3e.text "Tab 20" ] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+M3e.Component.Tabs.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ] ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

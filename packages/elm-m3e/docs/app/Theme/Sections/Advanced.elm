@@ -25,7 +25,12 @@ import TypedHtml.Component.Grouping
 view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
-        [ TypedHtml.p [ TypedHtml.Attributes.class "text-sm text-on-surface-variant" ]
+        [ -- No m3e component owns standalone muted body prose (see the recipe's
+          -- Tier 4 gap note); `text-sm`/`text-on-surface-variant` are deleted
+          -- rather than routed sideways into a new CSS class, so this reads in
+          -- the plain document body scale/colour until the design system ships
+          -- a body-text component.
+          TypedHtml.p []
             [ M3e.text "Motion durations and state-layer opacities — raw CSS custom-property overrides for the 16 transition-timing tokens and 3 interaction-state opacity tokens @m3e/web exposes." ]
         , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2" ]
             (List.map (durationRow model) Tokens.motionDurationTokens)

@@ -198,15 +198,15 @@ overview d =
                 ++ " categories"
     in
     TypedHtml.div [ TA.class "max-w-2xl space-y-6" ]
-        [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+        [ TypedHtml.p []
             [ M3e.text "This page stacks every component's live Usage examples on a single page. Loading them all at once upgrades hundreds of interactive custom elements, so it can take a moment to become fully interactive." ]
-        , TypedHtml.p [ TA.class "text-body-md text-on-surface" ]
+        , TypedHtml.p []
             [ M3e.text summary ]
-        , TypedHtml.p [ TA.class "text-body-md text-on-surface-variant" ]
+        , TypedHtml.p []
             [ M3e.text (Shared.componentCategories |> List.map Tuple.first |> String.join " · ") ]
-        , TypedHtml.button
-            [ M3e.Events.onClick Reveal
-            , TA.class "inline-flex items-center rounded-full bg-primary px-6 py-3 text-label-lg text-on-primary hover:opacity-90 cursor-pointer"
+        , M3e.button
+            [ M3e.Attributes.variant Value.filled
+            , M3e.Events.onClick Reveal
             ]
             [ M3e.text "Show all components" ]
         ]

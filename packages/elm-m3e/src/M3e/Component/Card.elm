@@ -16,6 +16,72 @@ A content container for text, images (or other media), and actions in the contex
 @docs actionable, disabled, disabledInteractive, download, href, inline, name, rel, target, value, defaultValue, onClick
 @docs actions, content, footer, header, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Anatomy" -->
+```elm
+M3e.Component.Card.component [] [ M3e.Component.Card.header (M3e.Component.Heading.component { content = M3e.text "Card Header" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []), M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Card Content" ]), M3e.Component.Card.actions (TypedHtml.div [] [ M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [] ]), M3e.Component.Card.footer (TypedHtml.div [] [ M3e.text "Card Footer" ]) ]
+```
+
+<!-- elm-cem:example title="Card Header" -->
+```elm
+M3e.Component.Card.component [] [ M3e.Component.Card.header (M3e.Component.Heading.component { content = M3e.text "Card Header" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []), M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Card Content" ]), M3e.Component.Card.actions (TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "end" "" ] [ M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [] ]) ]
+```
+
+<!-- elm-cem:example title="Card Header (2)" -->
+```elm
+M3e.Component.Card.component [] [ M3e.text "Card content" ]
+```
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.filled ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Filled" ]) ]
+    , TypedHtml.br [] []
+    , M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.outlined ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Outlined" ]) ]
+    , TypedHtml.br [] []
+    , M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.elevated ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Elevated" ]) ]
+    ]
+```
+
+<!-- elm-cem:example title="Inline" -->
+```elm
+M3e.Component.Card.component [ M3e.Component.Card.inline True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Inline" ]) ]
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+M3e.Component.Card.component [ M3e.Attributes.class "image-card", M3e.Component.Card.inline True, M3e.Component.Card.orientation M3e.Values.horizontal ] [ M3e.Component.Card.header (TypedHtml.img [ TypedHtml.Unsafe.Attributes.customAttribute "src" "https://www.shutterstock.com/shutterstock/videos/1006393/thumb/1.jpg?ip=x480" ] []), M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Horizontal" ]) ]
+```
+
+<!-- elm-cem:example title="Actionable" -->
+```elm
+[ M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.filled, M3e.Component.Card.actionable True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Filled Actionable" ]) ]
+    , TypedHtml.br [] []
+    , M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.outlined, M3e.Component.Card.actionable True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Outlined Actionable" ]) ]
+    , TypedHtml.br [] []
+    , M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.elevated, M3e.Component.Card.actionable True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Elevated Actionable" ]) ]
+    ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.filled, M3e.Component.Card.actionable True, M3e.Component.Card.disabled True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Disabled" ]) ]
+    , TypedHtml.br [] []
+    , M3e.Component.Card.component [ M3e.Component.Card.variant M3e.Values.filled, M3e.Component.Card.actionable True, M3e.Component.Card.disabledInteractive True ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Disabled Interactive" ]) ]
+    ]
+```
+
+<!-- elm-cem:example title="Links" -->
+```elm
+M3e.Component.Card.component [ M3e.Component.Card.actionable True, M3e.Component.Card.href "https://www.google.com", M3e.Component.Card.target "_blank" ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Google" ]) ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

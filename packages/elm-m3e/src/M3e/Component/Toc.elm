@@ -14,6 +14,19 @@ A table of contents that provides in-page scroll navigation.
 @docs for, maxDepth
 @docs overline, title, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Heading" -->
+```elm
+M3e.Component.Toc.component [ M3e.Component.Toc.for "d1" ] [ M3e.Component.Toc.overline (M3e.text "Overline"), M3e.Component.Toc.title (M3e.text "Title") ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

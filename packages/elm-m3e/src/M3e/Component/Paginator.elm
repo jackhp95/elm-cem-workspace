@@ -16,6 +16,34 @@ Provides navigation for paged information, typically used with a table.
 @docs disabled, firstPageLabel, hidePageSize, itemsPerPageLabel, lastPageLabel, length, nextPageLabel, pageIndex, pageSize, pageSizes, previousPageLabel, showFirstLastButtons, onPage
 @docs firstPageIcon, lastPageIcon, nextPageIcon, previousPageIcon
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.Paginator.component [ M3e.Component.Paginator.length 100 ] []
+```
+
+<!-- elm-cem:example title="Page sizes" -->
+```elm
+M3e.Component.Paginator.component [ M3e.Component.Paginator.length 100, M3e.Component.Paginator.pageSizes "10,50,all", M3e.Component.Paginator.pageSize "all" ] []
+```
+
+<!-- elm-cem:example title="Navigation actions" -->
+```elm
+M3e.Component.Paginator.component [ M3e.Component.Paginator.length 100, M3e.Component.Paginator.showFirstLastButtons True ] []
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+M3e.Component.Paginator.component [ M3e.Attributes.class "density-3", M3e.Component.Paginator.length 100, M3e.Component.Paginator.showFirstLastButtons True ] []
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

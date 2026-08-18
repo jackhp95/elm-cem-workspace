@@ -12,6 +12,24 @@ A shaped surface for vertically scrollable content.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Usage" -->
+```elm
+M3e.Component.ContentPane.component [] [ M3e.Component.Heading.component { content = M3e.text "Content header" } [ M3e.Component.Heading.tocIgnore True, M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large ] [], TypedHtml.p [] [ M3e.text "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae ligula at ipsum pulvinar tincidunt.\n    Integer feugiat, tortor non aliquet facilisis, velit risus faucibus lorem, vitae porttitor justo arcu\n    nec sapien. Curabitur euismod, urna vel placerat dictum, augue sem ullamcorper velit, id interdum neque\n    magna non nisl. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.\n    Suspendisse potenti. Praesent ac orci eget urna volutpat fermentum. Donec non mi sed sapien gravida\n    aliquet. Vivamus at orci id libero scelerisque convallis. Pellentesque habitant morbi tristique senectus\n    et netus et malesuada fames ac turpis egestas. Cras ac erat id velit pharetra luctus. Mauris sed nisl\n    sed arcu facilisis tincidunt. Aliquam erat volutpat. Sed sit amet massa non magna gravida cursus. Sed\n    vulputate, velit id suscipit convallis, lorem ipsum varius neque, sed porttitor lacus justo vitae\n    libero. Integer at felis vel lacus porta posuere. Aenean non lorem ac nulla gravida tincidunt.\n    Pellentesque vel urna id libero dictum gravida. Donec sit amet velit nec sapien ultricies tincidunt.\n    Vivamus in augue id libero sodales tincidunt. Integer id lorem nec sapien bibendum tincidunt. Sed id\n    lacus non justo viverra tincidunt. Curabitur id risus vitae justo tincidunt gravida. Vivamus id ligula\n    non ipsum porta tincidunt. Pellentesque id lorem nec sapien dictum tincidunt. Integer id lorem nec\n    sapien bibendum tincidunt." ] ]
+```
+
+<!-- elm-cem:example title="Content header" -->
+```elm
+M3e.Component.ContentPane.component [] [ M3e.Component.Heading.component { content = M3e.text "Content header" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large ] [], TypedHtml.p [] [] ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

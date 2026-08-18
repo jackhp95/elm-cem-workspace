@@ -200,7 +200,7 @@ view _ _ _ =
         -- not merely below the fold, it is gone, and no amount of scrolling
         -- reaches it.
         (TypedHtml.div
-            [ TA.class "bg-surface text-on-surface flex flex-col h-dvh w-full overflow-hidden" ]
+            [ TA.class "flex flex-col h-dvh w-full overflow-hidden" ]
             [ appBar
             , TypedHtml.div [ TA.class "flex flex-1 min-h-0" ]
                 [ desktopRail
@@ -399,7 +399,7 @@ pageHeader =
     TypedHtml.div [ TA.class "flex flex-col gap-1" ]
         [ Doc.sectionLabelCaps "Overview"
         , M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small ] [ M3e.text "Good morning, Jack" ]
-        , TypedHtml.span [ TA.class "text-body-md text-on-surface-variant" ] [ M3e.text "Here is how your business is doing today." ]
+        , TypedHtml.span [] [ M3e.text "Here is how your business is doing today." ]
         ]
 
 
@@ -418,7 +418,7 @@ kpiCard k =
     M3e.card [ M3e.Attributes.variant Value.filled ]
         [ M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-2 p-4" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ] [ M3e.text k.label ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text k.label ]
                 , M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small ] [ M3e.text k.value ]
                 , trendDelta k.trend k.delta
                 ]
@@ -455,17 +455,23 @@ accountsSection =
         )
 
 
-accountRow : Account -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+accountRow : Account -> Element { s | card : M3e.Kind.Brand } adm_ msg
 accountRow a =
-    TypedHtml.div
-        [ TA.class "bg-surface-container-high text-on-surface rounded-md-corner-large flex items-center gap-3 p-3" ]
-        [ TypedHtml.div
-            [ TA.class "bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center p-2" ]
-            [ M3e.icon [ TA.name a.icon ] [] ]
-        , TypedHtml.div [ TA.class "flex flex-col min-w-0" ]
-            [ TypedHtml.span [ TA.class "text-body-md" ] [ M3e.text a.name ]
-            , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text a.balance ]
-            ]
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class "m3e-card-shape-md-corner-large"
+        ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "flex items-center gap-3 p-3" ]
+                [ M3e.avatar
+                    [ M3e.Attributes.class "m3e-avatar-color-secondary-container m3e-avatar-label-color-on-secondary-container" ]
+                    [ M3e.icon [ TA.name a.icon ] [] ]
+                , TypedHtml.div [ TA.class "flex flex-col min-w-0" ]
+                    [ TypedHtml.span [] [ M3e.text a.name ]
+                    , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text a.balance ]
+                    ]
+                ]
+            )
         ]
 
 
@@ -485,8 +491,8 @@ budgetRow : Budget -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 budgetRow b =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div [ TA.class "flex items-center justify-between gap-2" ]
-            [ TypedHtml.span [ TA.class "text-body-md" ] [ M3e.text b.category ]
-            , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ] [ M3e.text b.amount ]
+            [ TypedHtml.span [] [ M3e.text b.category ]
+            , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text b.amount ]
             ]
         , M3e.linearProgressIndicator
             [ M3e.Component.LinearProgressIndicator.value b.used, M3e.Attributes.max b.max ]
@@ -521,7 +527,7 @@ activityRow a =
     in
     M3e.listItem []
         [ M3e.Component.ListItem.leading
-            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ] [ M3e.text a.date ])
+            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text a.date ])
         , M3e.text a.description
         , M3e.Component.ListItem.trailing
             (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class role ] [ M3e.text a.amount ])

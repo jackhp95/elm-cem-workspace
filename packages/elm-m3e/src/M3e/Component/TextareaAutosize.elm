@@ -12,6 +12,33 @@ A non-visual element used to automatically resize a `textarea` to fit its conten
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs disabled, for, maxRows, minRows
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "field" ] [ M3e.text "Textarea Autosize" ]), TypedHtml.textarea [ TypedHtml.Unsafe.Attributes.customAttribute "id" "field" ] [ M3e.text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." ] ]
+    , M3e.Component.TextareaAutosize.component [ M3e.Component.TextareaAutosize.for "field" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Min and max rows" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.filled ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "field2" ] [ M3e.text "Textarea Autosize" ]), TypedHtml.textarea [ TypedHtml.Unsafe.Attributes.customAttribute "id" "field2" ] [ M3e.text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." ] ]
+    , M3e.Component.TextareaAutosize.component [ M3e.Component.TextareaAutosize.for "field2", M3e.Component.TextareaAutosize.maxRows 5 ] []
+    ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.TextareaAutosize.component [ M3e.Component.TextareaAutosize.for "field", M3e.Component.TextareaAutosize.disabled True ] []
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

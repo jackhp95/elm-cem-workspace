@@ -14,6 +14,49 @@ Presents hierarchical data in a tree structure.
 @docs cascade, multi, onChange
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.Tree.component [] [ M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.component { label = M3e.text "Overview" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Installation" } [] [] ], M3e.Component.TreeItem.component { label = M3e.text "Components" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Button" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Card" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Selection" -->
+```elm
+M3e.Component.Tree.component [] [ M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.component { label = M3e.text "Overview" } [ M3e.Component.TreeItem.selected True ] [], M3e.Component.TreeItem.component { label = M3e.text "Installation" } [] [] ], M3e.Component.TreeItem.component { label = M3e.text "Components" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Button" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Card" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Multiple selection" -->
+```elm
+M3e.Component.Tree.component [ M3e.Component.Tree.multi True ] [ M3e.Component.TreeItem.component { label = M3e.text "Fruits" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Apples" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Oranges" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Bananas" } [] [] ], M3e.Component.TreeItem.component { label = M3e.text "Vegetables" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Carrots" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Broccoli" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Spinach" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Cascade selection" -->
+```elm
+M3e.Component.Tree.component [ M3e.Component.Tree.multi True, M3e.Component.Tree.cascade True ] [ M3e.Component.TreeItem.component { label = M3e.text "Fruits" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Apples" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Oranges" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Bananas" } [] [] ], M3e.Component.TreeItem.component { label = M3e.text "Vegetables" } [] [ M3e.Component.TreeItem.component { label = M3e.text "Carrots" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Broccoli" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Spinach" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Icons" -->
+```elm
+M3e.Component.Tree.component [] [ M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "rocket_launch" ] []), M3e.Component.TreeItem.component { label = M3e.text "Overview" } [] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "near_me" ] []) ], M3e.Component.TreeItem.component { label = M3e.text "Installation" } [] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "package_2" ] []) ] ] ]
+```
+
+<!-- elm-cem:example title="Toggle icons" -->
+```elm
+M3e.Component.Tree.component [] [ M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.toggleIcon (M3e.Component.Icon.component [ M3e.Component.Icon.name "add_box" ] []), M3e.Component.TreeItem.openToggleIcon (M3e.Component.Icon.component [ M3e.Component.Icon.name "indeterminate_check_box" ] []), M3e.Component.TreeItem.component { label = M3e.text "Overview" } [] [], M3e.Component.TreeItem.component { label = M3e.text "Installation" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+M3e.Component.Tree.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "rocket_launch" ] []), M3e.Component.TreeItem.component { label = M3e.text "Overview" } [] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "near_me" ] []) ], M3e.Component.TreeItem.component { label = M3e.text "Installation" } [] [ M3e.Component.TreeItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "package_2" ] []) ] ] ]
+```
+
+<!-- elm-cem:docmeta category=Layout & style -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

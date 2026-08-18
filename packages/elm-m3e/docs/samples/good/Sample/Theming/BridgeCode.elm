@@ -7,21 +7,52 @@ Change the sample there; this file follows.
 
 -}
 
+import M3e
+import M3e.Attributes
+import M3e.Values
 import Sample.Support exposing (rows)
 import TypedHtml
 import TypedHtml.Attributes
 
 
--- GOOD: layout via utility classes; surface + shape + color via M3 token classes.
+-- GOOD: the component owns the surface. `m3e-card` paints its own container
+-- color, corner and foreground from the theme; Tailwind only lays out inside it.
 shown0_ =
-    TypedHtml.div
-        [ TypedHtml.Attributes.class "bg-surface-container rounded-md-corner-large"
-        , TypedHtml.Attributes.class "overflow-hidden flex flex-col"
+    M3e.card
+        [ M3e.Attributes.variant M3e.Values.filled ]
+        [ TypedHtml.div
+            [ TypedHtml.Attributes.class "flex flex-col gap-3 p-4 overflow-hidden" ]
+            rows
         ]
+
+
+-- GOOD: a non-default value for one of the card's OWN documented properties,
+-- via the generated utility for it. Still a Tailwind class, still themed.
+shown1_ =
+    M3e.card
+        [ M3e.Attributes.variant M3e.Values.filled
+        , TypedHtml.Attributes.class "m3e-card-shape-md-corner-large"
+        ]
+        rows
+
+
+-- WRONG: token classes hand-painting a card. Themed, yes — but it is an
+-- `m3e-card` reimplemented in CSS, with no state layer and no density.
+shown2_ =
+    TypedHtml.div
+        [ TypedHtml.Attributes.class "bg-surface-container rounded-md-corner-large" ]
         rows
 
 
 -- WRONG: a raw corner and a raw color doing a token's job — adrift from the
 -- shape scale, and wrong the moment the scheme flips.
-shown1_ =
+shown3_ =
     TypedHtml.div [ TypedHtml.Attributes.class "rounded-3xl bg-[#4285F4] p-4" ] rows
+
+
+-- WRONG, and the worst of the three: moving the paint into a stylesheet. The
+-- call site now says nothing about how it looks, and the missing component
+-- knob never gets reported.
+--     .my-panel { background: var(--md-sys-color-surface-container); }
+shown4_ =
+    TypedHtml.div [ TypedHtml.Attributes.class "my-panel" ] rows

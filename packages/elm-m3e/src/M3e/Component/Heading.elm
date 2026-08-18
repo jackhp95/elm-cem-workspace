@@ -16,6 +16,67 @@ A heading to a page or section.
 @docs emphasized, level, tocIgnore
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Typescale variants and sizes" -->
+```elm
+[ M3e.Component.Heading.component { content = M3e.text "Display Large" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Medium" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.medium ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Small" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Large" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.large ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Medium" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.medium ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Small" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.small ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Large" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.large ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Medium" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.medium ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Small" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.small ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Large" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.large ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Medium" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.medium ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Small" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.small ] []
+    ]
+```
+
+<!-- elm-cem:example title="Emphasized typescale" -->
+```elm
+[ M3e.Component.Heading.component { content = M3e.text "Display Large" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Medium" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.medium, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Small" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Large" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.large, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Medium" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.medium, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Headline Small" } [ M3e.Component.Heading.variant M3e.Values.headline, M3e.Component.Heading.size M3e.Values.small, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Large" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.large, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Medium" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.medium, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Title Small" } [ M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.small, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Large" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.large, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Medium" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.medium, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Label Small" } [ M3e.Component.Heading.variant M3e.Values.label, M3e.Component.Heading.size M3e.Values.small, M3e.Component.Heading.emphasized True ] []
+    ]
+```
+
+
+### Sizes
+
+<!-- elm-cem:example title="Label Small" -->
+```elm
+[ M3e.Component.Heading.component { content = M3e.text "Display Large" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Medium" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.medium ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Small" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small ] []
+    ]
+```
+
+<!-- elm-cem:example title="Label Small (2)" -->
+```elm
+[ M3e.Component.Heading.component { content = M3e.text "Display Large" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.large, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Medium" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.medium, M3e.Component.Heading.emphasized True ] []
+    , M3e.Component.Heading.component { content = M3e.text "Display Small" } [ M3e.Component.Heading.variant M3e.Values.display, M3e.Component.Heading.size M3e.Values.small, M3e.Component.Heading.emphasized True ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Layout & style -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

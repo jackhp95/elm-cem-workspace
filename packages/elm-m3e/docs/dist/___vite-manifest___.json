@@ -6,7 +6,7 @@
     "isDynamicEntry": true
   },
   "elm-stuff/elm-pages/index.html": {
-    "file": "assets/index-BKzBroOp.js",
+    "file": "assets/index-CeMT9oe2.js",
     "name": "index",
     "src": "elm-stuff/elm-pages/index.html",
     "isEntry": true,
@@ -17,7 +17,7 @@
       "../../../node_modules/.pnpm/@m3e+web@2.7.3_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js"
     ],
     "css": [
-      "assets/index-U58w9pAF.css"
+      "assets/index-CQZUX9A5.css"
     ]
   }
 }

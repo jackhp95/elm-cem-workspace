@@ -14,6 +14,58 @@ A form control that allows users to select a value from a set of predefined opti
 @docs disabled, hideSelectionIndicator, multi, name, panelClass, required, validationmessages, onChange, onToggle, onBeforeinput, onInput
 @docs arrow, value, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select1" ] [ M3e.text "Favorite fruit" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [] [] } [ M3e.Attributes.id "select1" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Empty options" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select2" ] [ M3e.text "Favorite fruit" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "None" } [ M3e.Component.Option.value "" ] [] } [ M3e.Attributes.id "select2" ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Option groups" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select3" ] [ M3e.text "Pokemon" ]), M3e.Component.Select.component { content = M3e.Component.Optgroup.component [] [ M3e.Component.Optgroup.label (M3e.text "Grass"), M3e.Component.Option.component { content = M3e.text "Bulbasaur" } [] [], M3e.Component.Option.component { content = M3e.text "Oddish" } [] [], M3e.Component.Option.component { content = M3e.text "Bellsprout" } [] [] ] } [ M3e.Attributes.id "select3" ] [ M3e.Component.Optgroup.component [] [ M3e.Component.Optgroup.label (M3e.text "Water"), M3e.Component.Option.component { content = M3e.text "Squirtle" } [] [], M3e.Component.Option.component { content = M3e.text "Psyduck" } [] [], M3e.Component.Option.component { content = M3e.text "Horsea" } [] [] ], M3e.Component.Optgroup.component [] [ M3e.Component.Optgroup.label (M3e.text "Fire"), M3e.Component.Option.component { content = M3e.text "Charmander" } [] [], M3e.Component.Option.component { content = M3e.text "Vulpix" } [] [], M3e.Component.Option.component { content = M3e.text "Flareon" } [] [] ] ] ]
+```
+
+<!-- elm-cem:example title="Selection" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select4" ] [ M3e.text "Toppings" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Extra cheese" } [ M3e.Component.Option.selected True ] [] } [ M3e.Attributes.id "select4", M3e.Component.Select.multi True ] [ M3e.Component.Option.component { content = M3e.text "Mushroom" } [ M3e.Component.Option.selected True ] [], M3e.Component.Option.component { content = M3e.text "Onion" } [] [], M3e.Component.Option.component { content = M3e.text "Pepperoni" } [] [], M3e.Component.Option.component { content = M3e.text "Sausage" } [] [], M3e.Component.Option.component { content = M3e.text "Tomato" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select5" ] [ M3e.text "Favorite fruit" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [ M3e.Component.Option.selected True ] [] } [ M3e.Attributes.id "select5", M3e.Component.Select.disabled True ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Disabling (2)" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select6" ] [ M3e.text "Favorite fruit" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [ M3e.Component.Option.disabled True ] [] } [ M3e.Attributes.id "select6" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Required" -->
+```elm
+M3e.Component.FormField.component [] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "select7" ] [ M3e.text "Favorite fruit" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "None" } [ M3e.Component.Option.value "" ] [] } [ M3e.Attributes.id "select7", M3e.Component.Select.required True ] [ M3e.Component.Option.component { content = M3e.text "Apples" } [] [], M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "ds1" ] [ M3e.text "Density -3" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [] [] } [ M3e.Attributes.id "ds1", M3e.Component.Select.panelClass "density-3" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-2" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "ds2" ] [ M3e.text "Density -2" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [] [] } [ M3e.Attributes.id "ds2", M3e.Component.Select.panelClass "density-2" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-1" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "ds3" ] [ M3e.text "Density -1" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [] [] } [ M3e.Attributes.id "ds3", M3e.Component.Select.panelClass "density-1" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+    , M3e.Component.FormField.component [ M3e.Attributes.class "density-0" ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "ds4" ] [ M3e.text "Density 0" ]), M3e.Component.Select.component { content = M3e.Component.Option.component { content = M3e.text "Apples" } [] [] } [ M3e.Attributes.id "ds4", M3e.Component.Select.panelClass "density-0" ] [ M3e.Component.Option.component { content = M3e.text "Oranges" } [] [], M3e.Component.Option.component { content = M3e.text "Bananas" } [] [], M3e.Component.Option.component { content = M3e.text "Grapes" } [] [] ] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

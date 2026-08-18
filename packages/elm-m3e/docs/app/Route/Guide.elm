@@ -60,7 +60,7 @@ head _ =
         |> Seo.website
 
 
-chapterLink : String -> String -> Element { s | sharedText : M3e.Kind.Shared } admittedBy msg
+chapterLink : String -> String -> Element { s | assistChip : M3e.Kind.Brand } admittedBy msg
 chapterLink href label =
     Doc.anchorPill { href = href, label = label }
 
@@ -72,7 +72,7 @@ view _ _ =
             [ TypedHtml.div [ TA.class "space-y-12" ]
                 [ TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.pageHeading "The Guide"
-                    , TypedHtml.div [ TA.class "max-w-2xl text-on-surface-variant" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown intro ]
                     ]
                 , TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.markdown chaptersLead
@@ -92,7 +92,7 @@ view _ _ =
                         , chapterLink "/guide/troubleshooting" "Troubleshooting"
                         , chapterLink "/guide/how-we-prove-it" "How we prove it"
                         ]
-                    , TypedHtml.div [ TA.class "max-w-2xl text-on-surface-variant" ] [ Doc.markdown chaptersNote ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown chaptersNote ]
                     , TypedHtml.div [ TA.class "flex flex-wrap gap-3" ]
                         [ chapterLink "/guide/cheat-sheet" "Cheat sheet"
                         , chapterLink "/guide/glossary" "Glossary"

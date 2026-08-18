@@ -16,6 +16,39 @@ A bar, placed a the top of a screen, used to help users navigate through an appl
 @docs centered, for
 @docs leading, leadingIcon, subtitle, title, trailing, trailingIcon
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Anatomy" -->
+```elm
+M3e.Component.AppBar.component [] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark", M3e.Component.Icon.filled True ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal ] []) ]
+```
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+M3e.Component.AppBar.component [ M3e.Component.AppBar.size M3e.Values.medium ] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark", M3e.Component.Icon.filled True ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal ] []) ]
+```
+
+<!-- elm-cem:example title="Sizes (2)" -->
+```elm
+M3e.Component.AppBar.component [ M3e.Component.AppBar.size M3e.Values.large ] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark", M3e.Component.Icon.filled True ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal ] []) ]
+```
+
+<!-- elm-cem:example title="Centered" -->
+```elm
+M3e.Component.AppBar.component [ M3e.Component.AppBar.centered True ] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark" ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [] []), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "help" ] [], ariaLabel = "help", action = M3e.Action.none } [] []) ]
+```
+
+<!-- elm-cem:example title="Scroll effects" -->
+```elm
+TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "id" "scrollContainer" ] [ M3e.Component.AppBar.component [ M3e.Component.AppBar.for "scrollContainer" ] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark", M3e.Component.Icon.filled True ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal ] []) ], TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "class" "scroll-item" ] [ M3e.text "Scroll down to see the elevation effect" ] ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

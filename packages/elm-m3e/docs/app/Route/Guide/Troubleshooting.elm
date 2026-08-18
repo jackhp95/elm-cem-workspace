@@ -77,7 +77,7 @@ view _ _ =
             [ TypedHtml.div [ TA.class "space-y-12" ]
                 [ TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.pageHeading "Troubleshooting"
-                    , TypedHtml.div [ TA.class "max-w-2xl text-on-surface-variant" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown intro ]
                     ]
                 , entry kindMismatch kindMismatchError
                 , entry m3eInNativeSlot m3eInNativeSlotError

@@ -16,6 +16,54 @@ A dual-view layout that separates content with a movable drag handle.
 @docs detents, disabled, label, max, min, name, overshootLimit, step, value, wrapDetents, defaultValue, onChange, onBeforeinput, onInput
 @docs end, start
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50 ] []
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.orientation M3e.Values.vertical ] []
+```
+
+<!-- elm-cem:example title="Min and max sizes" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.min 25, M3e.Component.SplitPane.max 75 ] []
+```
+
+<!-- elm-cem:example title="Step size" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.step 10 ] []
+```
+
+<!-- elm-cem:example title="Detents" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.detents "0 25 50 75 100", M3e.Component.SplitPane.wrapDetents True ] []
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.disabled True ] []
+```
+
+<!-- elm-cem:example title="Conditional rendering" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.Card.component [ TypedHtml.Unsafe.Attributes.customAttribute "hidden" "" ] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50 ] []
+```
+
+<!-- elm-cem:example title="Nested panes" -->
+```elm
+M3e.Component.SplitPane.component { end = M3e.Component.SplitPane.component { end = M3e.Component.Card.component [] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 50, M3e.Component.SplitPane.orientation M3e.Values.vertical ] [], start = M3e.Component.Card.component [] [] } [ M3e.Component.SplitPane.value 25, M3e.Attributes.class "complex" ] []
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

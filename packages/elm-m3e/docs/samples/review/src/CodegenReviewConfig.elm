@@ -59,16 +59,25 @@ narrower, forward-looking job: containing `Recast`, the reserved destination
 module name `ExtractToSeam` (`jackhp95/elm-review-cem`, opt-in `--fix`, kept
 OUT of this gate) writes escapes into when a team runs it to hoist scattered
 `M3e.Unsafe.recast` / `M3e.Unsafe.Attributes.recastAttr` calls into one place.
-Today no `Recast` module exists in this project, so this entry is a no-op
+Today no `Seam` module exists in this project, so this entry is a no-op
 (zero live findings) — but the import fence above only ever gates literal
-`import *.Unsafe`, so a _hoisted_ `Recast.recastFoo` call site would import
-`Recast`, not `M3e.Unsafe`, and would silently slip past it. Reserving
-`"Recast"` here means the day someone runs `ExtractToSeam` with
-`recastModule = "Recast"`, containment is already live with no further gate
-change. If a team picks a different `recastModule` name, add it to both this
-rule's `seamModules` and the import fence's allow-list (`Recast` is
-allow-listed there too, since the destination module legitimately imports
-`M3e.Unsafe` to wrap it).
+`import *.Unsafe`, so a _hoisted_ `Seam.recastFoo` call site would import
+`Seam`, not `M3e.Unsafe`, and would silently slip past it. Reserving
+`"Seam"` here means the day someone runs `ExtractToSeam` with
+`recastModule = "Seam"`, containment is already live with no further gate
+change.
+
+`Seam` is the ONE designated destination for every design-system escape in this
+app, whether it crossed a kind (a recast) or painted a surface (a Tailwind
+styling class — see `NoProprietaryDsClasses`, which takes the same name as its
+`allowedModules`). It was called `Recast` until 2026-08-17; that name was
+renamed rather than joined by a second one, because a Tailwind escape is not a
+recast and two destinations would defeat the point. Neither name ever had a file
+behind it, so this was renaming a name, not moving code. If a team picks a
+different destination, change it in BOTH this rule's `seamModules` and
+`NoProprietaryDsClasses`'s `allowedModules`, plus the import fence's allow-list
+(`Seam` is allow-listed there too, since the destination module legitimately
+imports `M3e.Unsafe` to wrap it).
 
 -}
 config : List Rule
@@ -98,7 +107,7 @@ config =
         , "View"
         , "Route.Examples.Shop"
         , "Route.Guide"
-        , "Recast"
+        , "Seam"
         , "Route.Components.Compose"
         ]
 
@@ -108,7 +117,7 @@ config =
     -- allowed to reference its own functions unqualified; this only ever
     -- fires on a QUALIFIED `Recast.*` call from elsewhere).
     , NoSeamOutsideAllowedModules.rule
-        { seamModules = [ "Recast" ]
+        { seamModules = [ "Seam" ]
         , allowedModules =
             [ "M3e"
             , "TypedHtml"
@@ -117,7 +126,14 @@ config =
             , "View"
             , "Route.Examples.Shop"
             , "Route.Guide"
-            , "Recast"
+            , "Seam"
+
+            -- `Theme.colorAvatar` consumes `Seam.selectionIndicatorShape`.
+            -- Added deliberately, one consumer at a time: this allow-list IS the
+            -- supervision the seam buys us. A module appearing here is a claim
+            -- that its use of an escape was reviewed — so grow it by decision,
+            -- never to silence an error.
+            , "Theme"
             ]
         }
 

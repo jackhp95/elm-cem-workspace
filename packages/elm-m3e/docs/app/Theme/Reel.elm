@@ -164,15 +164,12 @@ cardBadge isActive =
             M3e.icon
                 [ M3e.Component.Icon.name "check_circle"
                 , M3e.Component.Icon.filled True
-                , MA.class "text-base text-primary"
                 ]
                 []
 
           else
             M3e.icon
-                [ M3e.Component.Icon.name "radio_button_unchecked"
-                , MA.class "text-base text-on-surface-variant"
-                ]
+                [ M3e.Component.Icon.name "radio_button_unchecked" ]
                 []
         ]
 

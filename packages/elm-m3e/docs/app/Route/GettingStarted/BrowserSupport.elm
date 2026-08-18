@@ -68,14 +68,18 @@ head _ =
 supportRow : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 supportRow browser note =
     TypedHtml.div [ TA.class "flex items-baseline justify-between gap-4 py-2.5" ]
-        [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text browser ]
-        , TypedHtml.span [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text note ]
+        [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small ] [ M3e.text browser ]
+        , TypedHtml.span [] [ M3e.text note ]
         ]
 
 
-featureItem : String -> Element (TypedHtml.Component.Grouping.LiIs s) TypedHtml.Component.Grouping.LiAdmittedBy msg
+{-| A plain single-line feature description — `m3e-list` + `m3e-list-item`
+instead of a hand-painted `<ul class="list-disc">`, so the row owns its own
+text color/scale rather than a `text-body-lg text-on-surface-variant` pair.
+-}
+featureItem : String -> Element { s | listItem : M3e.Kind.Brand } admittedBy msg
 featureItem note =
-    TypedHtml.li [] [ TypedHtml.span [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text note ] ]
+    M3e.listItem [] [ M3e.text note ]
 
 
 pageHeading : Element { s | heading : M3e.Kind.Brand } adm_ msg
@@ -91,7 +95,7 @@ view _ _ =
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "elm-m3e renders @m3e/web custom elements, so it runs anywhere standard Web Components and ES modules run — the modern-browser baseline." ]
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
@@ -112,12 +116,14 @@ view _ _ =
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ Doc.sectionHeadingWithId (Doc.slugify "Platform features used") "Platform features used"
-                , TypedHtml.ul [ TA.class "list-disc space-y-1.5 pl-5" ]
-                    [ featureItem "Custom Elements v1 and Shadow DOM for the @m3e/web components."
-                    , featureItem "ES modules for component registration (no-bundler import-map usage is also supported upstream)."
-                    , featureItem "CSS custom properties and the light-dark() function for the M3 token cascade and dark mode."
-                    , featureItem "Variable fonts for the self-hosted Material Symbols icon axes."
-                    ]
+                , M3e.list []
+                    (List.intersperse (M3e.divider [] [])
+                        [ featureItem "Custom Elements v1 and Shadow DOM for the @m3e/web components."
+                        , featureItem "ES modules for component registration (no-bundler import-map usage is also supported upstream)."
+                        , featureItem "CSS custom properties and the light-dark() function for the M3 token cascade and dark mode."
+                        , featureItem "Variable fonts for the self-hosted Material Symbols icon axes."
+                        ]
+                    )
                 ]
             ]
         )

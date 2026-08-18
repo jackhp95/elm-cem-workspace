@@ -28,9 +28,11 @@ import Head
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.AppBar
-import M3e.Component.ListAction
+import M3e.Component.Card
 import M3e.Component.ListItem
+import M3e.Component.ListOption
 import M3e.Component.NavItem
+import M3e.Component.SelectionList
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
@@ -171,7 +173,7 @@ overflow class staying put.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ desktopRail
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden" ]
             [ appBar
@@ -218,43 +220,44 @@ body : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 body model =
     TypedHtml.div [ TA.class "flex flex-1 flex-col overflow-hidden md:flex-row" ]
         [ listPane model.selected
+        , M3e.divider [ M3e.Attributes.vertical True, TA.class "hidden md:block" ] []
         , detailPane (selectedContact model.selected)
         ]
 
 
 {-| The master list — full-width on compact, a fixed rail on `md:`.
+`M3e.selectionList` + `M3e.listOption` gives the active contact a real,
+component-painted background (`m3e-list-option`'s own `[selected]` styling)
+instead of a hand-painted class. `hideSelectionIndicator` keeps rows plain —
+no radio dot — since this list has no trailing content the built-in indicator
+would otherwise swap out.
 -}
 listPane : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 listPane selected =
-    TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto border-outline-variant/40 md:w-80 md:flex-none md:shrink-0 md:border-r" ]
-        [ M3e.list []
+    TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto md:w-80 md:flex-none md:shrink-0" ]
+        [ M3e.selectionList
+            [ M3e.Component.SelectionList.hideSelectionIndicator True ]
             (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                 (List.indexedMap (contactRow selected) contacts)
             )
         ]
 
 
-{-| One row — the selected row swaps to surfaceContainer so the active item reads
-against the base surface.
+{-| One row — `m3e-list-option`'s own `[selected]` styling paints the active
+row's background (a real secondary-container fill resolved from
+`--m3e-list-item-selected-container-color`, not a hand-painted class) and its
+`option` role reflects `aria-selected` automatically, so no separate aria
+stopgap is needed.
 -}
-contactRow : Int -> Int -> Contact -> Element { s | listAction : M3e.Kind.Brand } adm_ Msg
+contactRow : Int -> Int -> Contact -> Element { s | listOption : M3e.Kind.Brand } adm_ Msg
 contactRow selected index contact =
-    let
-        rowSurface : String
-        rowSurface =
-            if index == selected then
-                "bg-surface-container text-on-surface"
-
-            else
-                "bg-surface text-on-surface"
-    in
-    M3e.listAction
-        [ TA.class rowSurface
-        , M3e.Component.ListAction.onClick (SelectContact index)
+    M3e.listOption
+        [ M3e.Component.ListOption.selected (index == selected)
+        , M3e.Component.ListOption.onClick (SelectContact index)
         ]
-        [ M3e.Component.ListAction.leading (M3e.avatar [] [ M3e.text contact.initials ])
+        [ M3e.Component.ListOption.leading (M3e.avatar [] [ M3e.text contact.initials ])
         , M3e.text contact.name
-        , M3e.Component.ListAction.supportingText (M3e.text contact.role)
+        , M3e.Component.ListOption.supportingText (M3e.text contact.role)
         ]
 
 
@@ -274,24 +277,29 @@ header : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
 header contact =
     TypedHtml.div [ TA.class "flex flex-col items-center gap-3 pt-2" ]
         [ M3e.avatar [] [ M3e.text contact.initials ]
-        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text contact.name ]
-        , TypedHtml.span [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text contact.role ]
+        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text contact.name ]
+        , TypedHtml.span [] [ M3e.text contact.role ]
         ]
 
 
 {-| The contact's fields, as a surface-container card of divided rows.
 -}
-detailCard : Contact -> Element { s | list : M3e.Kind.Brand } adm_ msg
+detailCard : Contact -> Element { s | card : M3e.Kind.Brand } adm_ msg
 detailCard contact =
-    M3e.list
-        [ TA.class "bg-surface-container text-on-surface rounded-md-corner-large overflow-hidden"
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class "m3e-card-shape-md-corner-large"
         ]
-        (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
-            [ fieldRow "mail" "Email" contact.email
-            , fieldRow "call" "Phone" contact.phone
-            , fieldRow "sticky_note_2" "Note" contact.note
-            ]
-        )
+        [ M3e.Component.Card.content
+            (M3e.list []
+                (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
+                    [ fieldRow "mail" "Email" contact.email
+                    , fieldRow "call" "Phone" contact.phone
+                    , fieldRow "sticky_note_2" "Note" contact.note
+                    ]
+                )
+            )
+        ]
 
 
 fieldRow : String -> String -> String -> Element { s | listItem : M3e.Kind.Brand } adm_ msg

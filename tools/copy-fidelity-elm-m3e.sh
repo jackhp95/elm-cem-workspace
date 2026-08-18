@@ -107,6 +107,11 @@ docs/app/Compose/Codegen.elm
 docs/tests-browser/compose.spec.ts
 docs/app/Compose/FromHtml.elm
 docs/tests/FromHtmlTest.elm
+docs/src/Seam.elm
+review/scripts/gen-m3e-utility-names.mjs
+review/src/M3eUtilityNames.elm
+docs/app/Theme/Sections/CssVariables.elm
+docs/scripts/examples-gen/lib/facts.mjs
 EOF
 )
 # docs/scripts/fix-native-bins.mjs — pnpm 10 wraps every bin entry in an
@@ -154,7 +159,27 @@ EOF
 # docs/tests/FromHtmlTest.elm — Compose G-Ex1: worker-test for the parser
 #   above; new to this monorepo's Compose POC, absent from the upstream
 #   elm-m3e checkout.
-
+# docs/src/Seam.elm — THE seam: the single designated home for design-system
+#   escapes, which every fence in review/ points at (NoProprietaryDsClasses'
+#   allowedModules, NoSeamOutsideAllowedModules' seamModules,
+#   NoUnsafeImportOutsideAllowed's allow-list). New to this monorepo because the
+#   layout-only Tailwind enforcement is what first produced a contained escape;
+#   the upstream elm-m3e checkout has no equivalent module yet.
+# review/scripts/gen-m3e-utility-names.mjs + review/src/M3eUtilityNames.elm —
+#   the generator and its committed output that bake tailwind-m3e-web's REAL
+#   `m3e-*` utility names into an Elm module for `NoProprietaryDsClasses`. The
+#   rule used to accept any `m3e-`-prefixed class on a prefix guess, so a typo
+#   like `m3e-crd-padding-4` passed review and rendered nothing. An elm-review
+#   rule cannot read JSON at runtime, hence a generated module; `check:m3e-utility-names`
+#   byte-compares it against a fresh generation. New to this monorepo, absent
+#   upstream.
+# docs/app/Theme/Sections/CssVariables.elm + docs/scripts/examples-gen/lib/facts.mjs —
+#   NOT from this branch: both arrived with main (the theme drawer's CSS
+#   Variables panel, and a facts helper for the examples generator) and were
+#   never allowlisted, because this gate SKIPS whenever the snapshot is absent
+#   and nobody had run it with one provisioned. Authorized here so the gate is
+#   green on its own terms; if either is meant to go upstream instead, remove the
+#   entry when the snapshot advances.
 # elm-m3e-families/ — the FAMILIES layer (L3): a monorepo-only nested package
 # elm-cem generates alongside the components (its own README/LICENSE/elm.json +
 # one M3e/Family/*.elm module per component family). Like elm-m3e-icons/ it is a

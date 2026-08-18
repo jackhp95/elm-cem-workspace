@@ -751,7 +751,7 @@ skipLink : Element { s | sharedText : M3e.Kind.Shared } adm_ msg
 skipLink =
     TypedHtml.a
         [ TypedHtml.Attributes.href "#main-content"
-        , TypedHtml.Attributes.class "sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary focus:shadow-md-level2"
+        , TypedHtml.Attributes.class "sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
         ]
         [ M3e.text "Skip to main content" ]
 
@@ -874,32 +874,41 @@ settingsBottomSheet model =
 
 
 {-| One accordion entry: a header (plain text label) plus the section's body.
-`M3e.Unsafe.recast` re-kinds both the header and body to the free rows that
-`M3e.Component.ExpansionPanel.component`'s `childAccepts` type variable unifies to. This is the
-sanctioned escape hatch (see `src/M3e/Unsafe.elm`) for exactly this
-"wrap already-built content into a slot it wasn't originally typed for" case.
-Lives here (allow-listed) rather than in `Theme.elm` (not allow-listed) per the
-`NoUnsafeImportOutsideAllowed` fence.
+
+This used to need TWO `M3e.Unsafe.recast` calls, and they were a codegen-config
+bug rather than a genuine type gap. `config/slots.json` declared the panel's
+`header` slot as `"kinds": ["any"]`, exactly like its `unnamed` slot, so codegen
+gave both the SAME `childAccepts` type variable — forcing the header and the body
+to unify to one kind. A real `M3e.expansionHeader` therefore could never coexist
+with arbitrary body content, and erasing both rows with `recast` was the only way
+through. The config now declares `header` as `["expansionHeader"]` (the way
+`Accordion`'s `unnamed` already declared `["expansionPanel"]`), codegen emits a
+dedicated `HeaderSlot`, and the typed header drops straight in. No escape needed.
+
 -}
-sectionPanel : String -> Element cs adm msg -> Element { s | expansionPanel : M3e.Kind.Brand } admittedBy msg
+sectionPanel :
+    String
+    -> Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    -> Element { s | expansionPanel : M3e.Kind.Brand } admittedBy msg
 sectionPanel label body =
     M3e.Component.ExpansionPanel.component
-        { header = M3e.expansionHeader [] [ M3e.text label ] |> M3e.Unsafe.recast }
+        { header = M3e.expansionHeader [] [ M3e.text label ] }
         []
-        [ M3e.Unsafe.recast body ]
+        [ body ]
 
 
 {-| The 6 theme-editor sections wrapped in an accordion. Assembles the
-`sectionsEl` passed to `Theme.view`. Lives here (allow-listed) because
-`sectionPanel` needs `M3e.Unsafe.recast`.
+`sectionsEl` passed to `Theme.view`. The section bodies carry the expansion
+panel's own `ChildAdmittedBy` row rather than a bare type variable, which is what
+lets `sectionPanel` place them in a typed slot with no escape hatch.
 -}
 sectionsAccordion :
-    { color : Element cs adm msg
-    , typography : Element cs adm msg
-    , shape : Element cs adm msg
-    , appearance : Element cs adm msg
-    , advanced : Element cs adm msg
-    , cssVariables : Element cs adm msg
+    { color : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , typography : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , shape : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , appearance : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , advanced : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
+    , cssVariables : Element cs (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg
     }
     -> Element { s | accordion : M3e.Kind.Brand } admittedBy msg
 sectionsAccordion themeSections =
@@ -1115,19 +1124,19 @@ searchResults : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admitted
 searchResults model =
     case model.searchIndex of
         Nothing ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Loading..." ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Loading..." ]
 
         Just (Err _) ->
-            TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Search unavailable" ]
+            TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Search unavailable" ]
 
         Just (Ok entries) ->
             if String.isEmpty (String.trim model.searchQuery) then
-                TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "Type to search" ]
+                TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "Type to search" ]
 
             else
                 case filterSearchEntries model.searchQuery entries of
                     [] ->
-                        TypedHtml.div [ TypedHtml.Attributes.class "p-4 text-on-surface-variant" ] [ M3e.text "No results" ]
+                        TypedHtml.div [ TypedHtml.Attributes.class "p-4" ] [ M3e.text "No results" ]
 
                     matches ->
                         TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1 p-2" ]
@@ -1135,8 +1144,29 @@ searchResults model =
 
 
 {-| Case-insensitive substring match against `heading` (falling back to
-`title` for a page-level entry, where `heading = Nothing`), capped at the
-first 20 matches in index order -- see Global Constraints.
+`title` for a page-level entry, where `heading = Nothing`), RANKED by relevance
+and capped at 20 -- see Global Constraints.
+
+The cap used to take the first 20 matches in raw INDEX order, which made the
+search unable to find its own components. Searching "button" matched ~2700
+entries, and the first 20 in index order were all `/guide/reference` and
+`/guide/roundtrip` prose that happens to mention the word; `/components/button`
+never appeared at all. A user could not reach a component page by typing its
+name.
+
+Ranking, lowest score wins:
+
+1.  the matched text IS the query -- an exact hit;
+2.  it STARTS with the query -- "Button < Components < elm-m3e" for "button".
+    Page titles here are reverse breadcrumbs (see `breadcrumbTitle`), so a page
+    about a thing starts with that thing's name;
+3.  a WORD in it starts with the query -- "Filled Button", "Icon button";
+4.  it merely contains the query somewhere -- "M3e.Component.ButtonGroup".
+
+Ties break toward page-level entries (`heading = Nothing`) over headings buried
+inside a page, then by original index so the order stays deterministic and
+stable.
+
 -}
 filterSearchEntries : String -> List SearchEntry -> List SearchEntry
 filterSearchEntries query entries =
@@ -1144,11 +1174,66 @@ filterSearchEntries query entries =
         needle : String
         needle =
             String.toLower (String.trim query)
+
+        matchedText : SearchEntry -> String
+        matchedText entry =
+            String.toLower (Maybe.withDefault entry.title entry.heading)
+
+        {- Any word starting with the needle, where "word" is a run of
+           alphanumerics -- so `.`, `-`, `/` and `<` all count as boundaries and
+           "M3e.Component.Button" word-matches "button".
+        -}
+        hasWordStartingWithNeedle : String -> Bool
+        hasWordStartingWithNeedle text =
+            text
+                |> String.map
+                    (\c ->
+                        if Char.isAlphaNum c then
+                            c
+
+                        else
+                            ' '
+                    )
+                |> String.words
+                |> List.any (String.startsWith needle)
+
+        relevance : SearchEntry -> Int
+        relevance entry =
+            let
+                text : String
+                text =
+                    matchedText entry
+            in
+            if text == needle then
+                0
+
+            else if String.startsWith needle text then
+                1
+
+            else if hasWordStartingWithNeedle text then
+                2
+
+            else
+                3
+
+        {- A page-level entry names a whole page; a heading names a spot inside
+           one. At equal textual relevance the page is the more useful answer.
+        -}
+        depth : SearchEntry -> Int
+        depth entry =
+            case entry.heading of
+                Nothing ->
+                    0
+
+                Just _ ->
+                    1
     in
     entries
-        |> List.filter
-            (\entry -> String.contains needle (String.toLower (Maybe.withDefault entry.title entry.heading)))
+        |> List.filter (\entry -> String.contains needle (matchedText entry))
+        |> List.indexedMap (\index entry -> ( ( relevance entry, depth entry, index ), entry ))
+        |> List.sortBy Tuple.first
         |> List.take 20
+        |> List.map Tuple.second
 
 
 {-| One result. Primary text is the matched heading when the entry is a
@@ -1174,13 +1259,13 @@ searchResultLink : SearchEntry -> Element { s | sharedText : M3e.Kind.Shared, sh
 searchResultLink entry =
     TypedHtml.a
         [ TypedHtml.Attributes.href (entry.url ++ (entry.anchor |> Maybe.map (\a -> "#" ++ a) |> Maybe.withDefault ""))
-        , TypedHtml.Attributes.class "flex flex-col gap-0.5 rounded-lg px-3 py-2 hover:bg-surface-container-highest"
+        , TypedHtml.Attributes.class "flex flex-col gap-0.5 px-3 py-2"
         , TypedHtml.Events.onClick CloseSearch
         ]
         (M3e.text (Maybe.withDefault entry.title entry.heading)
             :: (case entry.heading of
                     Just _ ->
-                        [ TypedHtml.div [ TypedHtml.Attributes.class "text-on-surface-variant text-sm" ] [ M3e.text entry.title ] ]
+                        [ TypedHtml.div [] [ M3e.text entry.title ] ]
 
                     Nothing ->
                         []
@@ -1662,7 +1747,7 @@ docsNavRail toMsg path =
     M3e.navRail
         [ Aria.label "Sections"
         , M3e.Attributes.id "nav-rail"
-        , TypedHtml.Attributes.class "hidden shrink-0 md:flex flex-col items-stretch w-fit bg-surface-container-lowest"
+        , TypedHtml.Attributes.class "hidden shrink-0 md:flex flex-col items-stretch w-fit"
         ]
         (M3e.iconButton
             [ Aria.label "Toggle rail width"

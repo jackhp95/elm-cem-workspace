@@ -12,6 +12,40 @@ A thin line that separates content in lists or other containers.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs inset, insetEnd, insetStart, vertical
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Lists" -->
+```elm
+M3e.Component.List.component [] [ M3e.Component.ListItem.component [] [ M3e.text "Item 1" ], M3e.Component.Divider.component [] [], M3e.Component.ListItem.component [] [ M3e.text "Item 2" ], M3e.Component.Divider.component [] [], M3e.Component.ListItem.component [] [ M3e.text "Item 3" ] ]
+```
+
+<!-- elm-cem:example title="Inset" -->
+```elm
+[ M3e.Component.Divider.component [] []
+    , TypedHtml.br [] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.inset True ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.insetStart True ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.insetEnd True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+[ M3e.Component.Divider.component [ M3e.Component.Divider.vertical True ] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.vertical True, M3e.Component.Divider.inset True ] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.vertical True, M3e.Component.Divider.insetStart True ] []
+    , M3e.Component.Divider.component [ M3e.Component.Divider.vertical True, M3e.Component.Divider.insetEnd True ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

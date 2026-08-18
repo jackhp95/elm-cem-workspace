@@ -67,7 +67,7 @@ notFoundView =
                     , M3e.Attributes.level 1
                     ]
                     [ M3e.text "Page not found" ]
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant max-w-md" ]
+                , TypedHtml.p [ TA.class "max-w-md" ]
                     [ M3e.text "The page you’re looking for doesn’t exist or has moved." ]
                 , TypedHtml.div [ TA.class "flex flex-wrap gap-3" ]
                     [ M3e.button

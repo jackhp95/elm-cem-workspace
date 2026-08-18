@@ -38,9 +38,10 @@ import M3e.Component.AppBar
 import M3e.Component.AssistChip
 import M3e.Component.DrawerContainer
 import M3e.Component.Fab
-import M3e.Component.ListAction
+import M3e.Component.ListOption
 import M3e.Component.NavItem
 import M3e.Component.SearchBar
+import M3e.Component.SelectionList
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
@@ -239,7 +240,7 @@ content in both directions -- which is what the `relative` here anchors.
 screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
-        [ TA.class "bg-surface text-on-surface relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
+        [ TA.class "relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
         [ navRail
         , TypedHtml.div [ TA.class "flex flex-1 flex-col min-w-0 min-h-0" ]
             [ topBar
@@ -439,13 +440,18 @@ emptyMessage =
     { sender = "", initials = "", subject = "", snippet = "", body = [], time = "", labels = [] }
 
 
-{-| The inbox list: one interactive `M3e.ListAction` per message with an avatar,
+{-| The inbox list: one interactive `M3e.ListOption` per message with an avatar,
 sender, subject, snippet (supporting text) and timestamp, separated by dividers.
-Selecting a row (`onClick`) marks it with a `surfaceContainer` background.
+`M3e.selectionList` + `M3e.listOption` is what gives the selected row a real,
+component-painted background (`m3e-list-option`'s own `[selected]` styling,
+resolving to `--m3e-list-item-selected-container-color`) instead of a
+hand-painted class. `hideSelectionIndicator` keeps the timestamp visible in the
+trailing slot instead of the built-in radio dot swapping it out.
 -}
-messageList : Model -> Element { s | list : M3e.Kind.Brand } adm_ Msg
+messageList : Model -> Element { s | selectionList : M3e.Kind.Brand } adm_ Msg
 messageList model =
-    M3e.list []
+    M3e.selectionList
+        [ M3e.Component.SelectionList.hideSelectionIndicator True ]
         (List.intersperse divider
             (List.indexedMap (messageRow model.selected) inbox)
         )
@@ -456,27 +462,24 @@ divider =
     M3e.divider [ M3e.Attributes.inset True ] []
 
 
-messageRow : Int -> Int -> Message -> Element { s | listAction : M3e.Kind.Brand } adm_ Msg
+{-| `m3e-list-option`'s role is `option`, and its `Selected` mixin reflects
+`aria-selected` on that role automatically whenever `selected` changes — a
+correct listbox-option announcement, and a strict upgrade over the old
+`aria-current` stopgap (which does not belong on an option in the first
+place), so no separate aria attribute is needed here.
+-}
+messageRow : Int -> Int -> Message -> Element { s | listOption : M3e.Kind.Brand } adm_ Msg
 messageRow selected index message =
-    let
-        rowSurface : String
-        rowSurface =
-            if index == selected then
-                "bg-surface-container text-on-surface"
-
-            else
-                "bg-surface text-on-surface"
-    in
-    M3e.listAction
-        [ TA.class rowSurface
-        , M3e.Component.ListAction.onClick (SelectMessage index)
+    M3e.listOption
+        [ M3e.Component.ListOption.selected (index == selected)
+        , M3e.Component.ListOption.onClick (SelectMessage index)
         ]
-        [ M3e.Component.ListAction.leading (M3e.avatar [] [ M3e.text message.initials ])
-        , M3e.Component.ListAction.overline (M3e.text message.sender)
+        [ M3e.Component.ListOption.leading (M3e.avatar [] [ M3e.text message.initials ])
+        , M3e.Component.ListOption.overline (M3e.text message.sender)
         , M3e.text message.subject
-        , M3e.Component.ListAction.supportingText (M3e.text message.snippet)
-        , M3e.Component.ListAction.trailing
-            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface-variant" ] [ M3e.text message.time ])
+        , M3e.Component.ListOption.supportingText (M3e.text message.snippet)
+        , M3e.Component.ListOption.trailing
+            (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text message.time ])
         ]
 
 
@@ -492,18 +495,18 @@ readingPane : Message -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 readingPane message =
     TypedHtml.div [ TA.class "flex flex-col gap-6 p-6" ]
         [ closeReader
-        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text message.subject ]
+        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text message.subject ]
         , TypedHtml.div [ TA.class "flex items-center gap-3" ]
             [ M3e.avatar [] [ M3e.text message.initials ]
             , TypedHtml.div [ TA.class "flex flex-col" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text message.sender ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface-variant" ] [ M3e.text ("to me · " ++ message.time) ]
+                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text message.sender ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text ("to me · " ++ message.time) ]
                 ]
             ]
         , M3e.chipSet [ Aria.label "Labels" ]
             (List.map labelChip message.labels)
         , TypedHtml.div [ TA.class "flex flex-col gap-4" ]
-            (List.map (\p -> TypedHtml.p [ TA.class "text-body-md text-on-surface-variant" ] [ M3e.text p ]) message.body)
+            (List.map (\p -> TypedHtml.p [] [ M3e.text p ]) message.body)
         ]
 
 

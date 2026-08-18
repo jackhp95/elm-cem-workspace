@@ -16,6 +16,35 @@ Adds additional context to a button or other UI element.
 @docs disabled, for, hideDelay, showDelay
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Plain tooltip" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Go back", action = M3e.Action.none } [ M3e.Attributes.id "button" ] []
+    , M3e.Component.Tooltip.component { content = M3e.text "Go Back" } [ M3e.Component.Tooltip.for "button" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Rich tooltip" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "settings" ] [], ariaLabel = "Settings", action = M3e.Action.none } [ M3e.Attributes.id "button2" ] []
+    , M3e.Component.RichTooltip.component { content = M3e.text "Now you can adjust the uploaded image quality, and upgrade your available storage space." } [ M3e.Component.RichTooltip.for "button2" ] [ M3e.Component.RichTooltip.subhead (M3e.text "New settings available") ]
+    ]
+```
+
+<!-- elm-cem:example title="Actions" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "settings" ] [], ariaLabel = "Settings", action = M3e.Action.none } [ M3e.Attributes.id "button3" ] []
+    , M3e.Component.RichTooltip.component { content = M3e.text "Now you can adjust the uploaded image quality, and upgrade your available storage space." } [ M3e.Component.RichTooltip.for "button3" ] [ M3e.Component.RichTooltip.subhead (M3e.text "New settings available"), M3e.Component.RichTooltip.actions (TypedHtml.div [] [ M3e.Component.Button.component { content = M3e.Component.RichTooltipAction.component { content = M3e.text "Learn more" } [] [], action = M3e.Action.none } [] [] ]) ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Communication -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

@@ -12,6 +12,21 @@ Shows indeterminate progress for a short wait time.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Variant, variant
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.LoadingIndicator.component [] []
+    , M3e.Component.LoadingIndicator.component [ M3e.Component.LoadingIndicator.variant M3e.Values.contained ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Communication -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

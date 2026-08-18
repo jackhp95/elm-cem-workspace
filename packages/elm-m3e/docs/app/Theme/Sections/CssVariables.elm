@@ -62,10 +62,17 @@ type alias VarGroup =
 view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
-        [ TypedHtml.p [ TypedHtml.Attributes.class "text-sm text-on-surface-variant" ]
+        [ -- No m3e component owns standalone muted body prose (see the recipe's
+          -- Tier 4 gap note); `text-sm`/`text-on-surface-variant` are deleted
+          -- rather than routed sideways into a new CSS class, so this reads in
+          -- the plain document body scale/colour until the design system ships
+          -- a body-text component.
+          TypedHtml.p []
             [ M3e.text "Non-color @m3e/web CSS custom properties (typescale, shape, motion, state), grouped by name hierarchy. Color tokens live in the Color section. Type a value to override it; clear it to revert. Live default values are not shown — Elm cannot read computed CSS variables." ]
         , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col" ]
-            (List.map (categoryDetails model) (groupVars knownVars))
+            (List.map (categoryDetails model) (groupVars knownVars)
+                |> List.intersperse (M3e.divider [] [])
+            )
         ]
 
 
@@ -77,13 +84,21 @@ open. `<details>` sidesteps that while staying collapsible and keyboard-operable
 -}
 categoryDetails : Theme.Model -> VarGroup -> Element (TypedHtml.Component.Details.DetailsIs s) admittedBy Msg
 categoryDetails model group =
-    TypedHtml.details [ TypedHtml.Attributes.class "border-b border-outline-variant" ]
-        [ TypedHtml.summary [ TypedHtml.Attributes.class "cursor-pointer list-none select-none py-2" ]
+    -- The `border-b` separator moved to a real `M3e.divider` interspersed
+    -- between categories by the caller (`view`), so this element carries no
+    -- border class of its own.
+    TypedHtml.details []
+        [ TypedHtml.summary [ TypedHtml.Attributes.class "cursor-pointer select-none py-2" ]
             -- A `<span>`, not an `m3e-heading`/`<h3>`: `<summary>` admits only
             -- phrasing content, and the disclosure itself is already the
-            -- structural affordance. Type scale comes from the utility class.
-            [ TypedHtml.span
-                [ TypedHtml.Attributes.class "text-title-sm text-on-surface" ]
+            -- structural affordance. No type-scale/colour class either — no m3e
+            -- component owns text inside a native `<summary>`, and this rule
+            -- forbids a hand-painted stand-in, so this is a real design-system
+            -- gap (left unstyled and flagged, not routed around). The native
+            -- disclosure marker glyph, normally hidden with Tailwind's
+            -- `list-none` (itself a forbidden styling class under this rule),
+            -- is left showing for the same reason.
+            [ TypedHtml.span []
                 [ M3e.text (categoryLabel group) ]
             ]
         , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-2 pt-2 pb-3" ]
@@ -147,7 +162,9 @@ cssVarField model prefix cssVar =
         (FormField.label
             (TypedHtml.label [ TypedHtml.Attributes.for fieldId ] [ M3e.text shortLabel ])
             :: FormField.hint
-                (TypedHtml.span [ TypedHtml.Attributes.class "font-mono text-xs" ]
+                -- `style.css` already styles bare `<code>` (background, primary
+                -- colour, 0.875em) — no class needed to read this as a var name.
+                (TypedHtml.code []
                     [ M3e.text ("--" ++ cssVar) ]
                 )
             :: TypedHtml.input

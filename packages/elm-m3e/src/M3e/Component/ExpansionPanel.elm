@@ -1,6 +1,6 @@
 module M3e.Component.ExpansionPanel exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
     , ToggleDirection, toggleDirection, TogglePosition, togglePosition
     , disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
     , actions, header, toggleIcon, child
@@ -11,10 +11,48 @@ module M3e.Component.ExpansionPanel exposing
 An expandable details-summary view.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ToggleIconSlot, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
 @docs ToggleDirection, toggleDirection, TogglePosition, togglePosition
 @docs disabled, hideToggle, open, onOpening, onOpened, onClosing, onClosed
 @docs actions, header, toggleIcon, child
+
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Standalone panels" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Standalone panels (2)" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Toggles" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.togglePosition M3e.Values.before, M3e.Component.ExpansionPanel.toggleDirection M3e.Values.horizontal ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Toggles (2)" -->
+```elm
+M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel header" ] } [ M3e.Component.ExpansionPanel.hideToggle True ] [ M3e.text "Panel contents" ]
+```
+
+<!-- elm-cem:example title="Accordion" -->
+```elm
+M3e.Component.Accordion.component { content = M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 1" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the first panel" ] } [] [ M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 2" ] } [] [ M3e.text "I am content for the second panel" ], M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 3" ] } [] [ M3e.text "I am content for the third panel" ] ]
+```
+
+<!-- elm-cem:example title="Accordion (2)" -->
+```elm
+M3e.Component.Accordion.component { content = M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 1" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the first panel" ] } [ M3e.Component.Accordion.multi True ] [ M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 2" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the second panel" ], M3e.Component.ExpansionPanel.component { header = TypedHtml.span [] [ M3e.text "Panel 3" ] } [ M3e.Component.ExpansionPanel.open True ] [ M3e.text "I am content for the third panel" ] ]
+```
+
+<!-- elm-cem:docmeta category=Containment -->
 
 -}
 
@@ -40,6 +78,12 @@ type alias Is s =
 -}
 type alias Attrs =
     M3e.Internal.Types.ExpansionPanel.Attrs
+
+
+{-| The kinds the `header` slot admits.
+-}
+type alias HeaderSlot =
+    M3e.Internal.Types.ExpansionPanel.HeaderSlot
 
 
 {-| The kinds the `toggle-icon` slot admits.
@@ -87,7 +131,7 @@ type alias SlotCaps =
 {-| Required-content (and action) constructor — omissions are unwritable.
 -}
 component :
-    { header : Element childAccepts (ChildAdmittedBy childAdm) msg }
+    { header : Element HeaderSlot (ChildAdmittedBy childAdm) msg }
     -> List (Attr Attrs msg)
     -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
@@ -169,7 +213,7 @@ actions element =
 {-| Place an element into the named `header` slot (input constrained to the
 slot's kinds; output row free so it composes into the child list).
 -}
-header : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+header : Element HeaderSlot admittedBy msg -> Element free freeAdmittedBy msg
 header element =
     Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "header") (El.toNode element))
 

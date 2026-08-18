@@ -12,6 +12,52 @@ A checkbox that allows a user to select one or more options from a limited numbe
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs checked, disabled, indeterminate, name, required, validationmessages, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onInvalid, onClick
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.Checkbox.component [] []
+    , M3e.Component.Checkbox.component [ M3e.Component.Checkbox.checked True ] []
+    , M3e.Component.Checkbox.component [ M3e.Component.Checkbox.indeterminate True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Labels" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [] [], M3e.text "Checkbox 1" ]
+    , M3e.Component.Checkbox.component [ M3e.Attributes.id "chk2" ] []
+    , TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "chk2" ] [ M3e.text "Checkbox 2" ]
+    ]
+```
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Component.Checkbox.disabled True ] [], M3e.text "Disabled Checkbox 1" ]
+    , M3e.Component.Checkbox.component [ M3e.Attributes.id "chk3", M3e.Component.Checkbox.disabled True ] []
+    , TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "chk3" ] [ M3e.text "Disabled Checkbox 2" ]
+    ]
+```
+
+<!-- elm-cem:example title="Required" -->
+```elm
+TypedHtml.form [] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Component.Checkbox.name "accepted", M3e.Component.Checkbox.required True ] [], M3e.text "I accept the Terms and Conditions" ], TypedHtml.br [] [], M3e.Component.Button.component { content = M3e.text "Submit", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Component.Button.type_ M3e.Values.submit ] [] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Attributes.class "density-3" ] [], M3e.text "Density -3" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Attributes.class "density-2" ] [], M3e.text "Density -2" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Attributes.class "density-1" ] [], M3e.text "Density -1" ]
+    , M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox.component [ M3e.Attributes.class "density-0" ] [], M3e.text "Density 0" ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Selection -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

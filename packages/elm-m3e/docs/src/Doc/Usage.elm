@@ -214,7 +214,7 @@ exampleBlock activeSurface ex =
                 defaultSurfaceFor ex
     in
     TypedHtml.div [ TA.class "space-y-3" ]
-        [ TypedHtml.p [ TA.class "max-w-2xl text-body-md text-on-surface-variant" ] [ M3e.text ex.title ]
+        [ TypedHtml.p [ TA.class "max-w-2xl" ] [ M3e.text ex.title ]
         , Doc.showcase (Doc.rawPreview ex.html)
         , surfaceTabs surface ex
         , Doc.Slider.slidingPanels
@@ -378,16 +378,26 @@ panel in a `Doc.Slider.slidingPanels` stack.
 -}
 identicalSurfaceNote : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
 identicalSurfaceNote surface =
-    TypedHtml.div [ TA.class "overflow-x-auto rounded-md-corner-medium bg-surface-container p-4" ]
-        [ TypedHtml.p [ TA.class "text-body-md leading-relaxed text-on-surface" ]
-            [ M3e.text
-                (surface
-                    ++ " is identical to the M3e tab for this example — its content has no required slots or attributes for the "
-                    ++ surface
-                    ++ " surface to enforce, so it would be a hollow duplicate of M3e. Reach for "
-                    ++ surface
-                    ++ " on an example whose composition it can hold a guarantee over."
-                )
+    -- The outer `<div>` stays a plain div — this is one arm of the `case` in
+    -- `codeFor`, whose other arms are `Doc.codeBlock` (also `DivIs`), and
+    -- `overflow-x-auto` is kept here as the visible scroll affordance. The
+    -- former surface/foreground pair (`bg-surface-container` + `text-on-surface`
+    -- + `rounded-md-corner-medium`) becomes an `m3e-card` (`filled`) in the
+    -- default (unpadded) slot, with `p-4` kept as the inner paragraph's own
+    -- layout padding so the card isn't double-padded.
+    TypedHtml.div [ TA.class "overflow-x-auto" ]
+        [ M3e.card
+            [ M3e.Attributes.variant Value.filled ]
+            [ TypedHtml.p [ TA.class "p-4" ]
+                [ M3e.text
+                    (surface
+                        ++ " is identical to the M3e tab for this example — its content has no required slots or attributes for the "
+                        ++ surface
+                        ++ " surface to enforce, so it would be a hollow duplicate of M3e. Reach for "
+                        ++ surface
+                        ++ " on an example whose composition it can hold a guarantee over."
+                    )
+                ]
             ]
         ]
 

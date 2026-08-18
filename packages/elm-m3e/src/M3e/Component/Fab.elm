@@ -16,6 +16,90 @@ A floating action button (FAB) used to present important actions.
 @docs disabled, disabledInteractive, download, extended, href, lowered, name, rel, target, value, defaultValue, onClick
 @docs closeIcon, label, child
 
+
+## Examples
+
+
+### Variants
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.primary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.primaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.secondary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.secondaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.tertiary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.tertiaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.variant M3e.Values.surface ] []
+    ]
+```
+
+<!-- elm-cem:example title="Lowering" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.primary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.primaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.secondary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.secondaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.tertiary ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.tertiaryContainer ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.lowered True, M3e.Component.Fab.variant M3e.Values.surface ] []
+    ]
+```
+
+
+### Sizes
+
+<!-- elm-cem:example title="Sizes" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.medium ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.large ] []
+    ]
+```
+
+<!-- elm-cem:example title="Extended FABs" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.extended True, M3e.Component.Fab.size M3e.Values.small ] [ M3e.Component.Fab.label (M3e.text "Extended Small") ]
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.extended True, M3e.Component.Fab.size M3e.Values.medium ] [ M3e.Component.Fab.label (M3e.text "Extended Medium") ]
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.extended True, M3e.Component.Fab.size M3e.Values.large ] [ M3e.Component.Fab.label (M3e.text "Extended Large") ]
+    ]
+```
+
+
+### Examples
+
+<!-- elm-cem:example title="Disabling" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.disabled True ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.disabledInteractive True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Links" -->
+```elm
+M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "open_in_new_window" ] [], action = M3e.Action.none } [ M3e.Component.Fab.extended True, M3e.Component.Fab.href "https://www.google.com", M3e.Component.Fab.target "_blank" ] [ M3e.Component.Fab.label (M3e.text "Google") ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small, M3e.Attributes.class "density-3" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small, M3e.Attributes.class "density-2" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small, M3e.Attributes.class "density-1" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.small, M3e.Attributes.class "density-0" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Density (2)" -->
+```elm
+[ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.medium, M3e.Attributes.class "density-3" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.medium, M3e.Attributes.class "density-2" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.medium, M3e.Attributes.class "density-1" ] []
+    , M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], action = M3e.Action.none } [ M3e.Component.Fab.size M3e.Values.medium, M3e.Attributes.class "density-0" ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Actions -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

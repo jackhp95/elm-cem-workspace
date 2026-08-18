@@ -1470,7 +1470,7 @@
       },
       "header": {
         "kinds": [
-          "any"
+          "expansionHeader"
         ],
         "multi": false,
         "required": true
@@ -1596,7 +1596,8 @@
       "unnamed": {
         "kinds": [
           "shared:text",
-          "heading"
+          "heading",
+          "shared:phrasing"
         ],
         "multi": false,
         "required": true

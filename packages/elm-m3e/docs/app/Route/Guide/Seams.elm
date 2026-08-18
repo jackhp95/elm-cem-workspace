@@ -18,6 +18,7 @@ import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Component.AppBar
 import M3e.Component.Button
+import M3e.Component.Card
 import M3e.Component.FormField
 import M3e.Component.Icon
 import M3e.Component.NavMenuItem
@@ -128,16 +129,24 @@ producer, contained and greppable, not scattered through feature code.
 -- @sample-source seamsModelViewer
 
 
-modelViewer : Element (TypedHtml.Component.Grouping.DivIs k) freeAdm msg
+modelViewer : Element (M3e.Component.Card.Is k) freeAdm msg
 modelViewer =
     -- a real seam: a custom element the types can't express, contained once.
-    M3e.Unsafe.customElement "model-viewer"
-        [ TypedHtml.Attributes.src "/models/chair.glb"
-        , M3e.Unsafe.Attributes.customAttribute "camera-controls" ""
-        , M3e.Unsafe.Attributes.customAttribute "auto-rotate" ""
-        , TypedHtml.Attributes.class "block h-48 w-full rounded-lg bg-surface-container"
+    -- The surface the third-party tag renders on comes from `m3e-card` (filled
+    -- variant — same rung the layout-only-styling rule wants for any painted
+    -- container), not hand-rolled `rounded-lg bg-surface-container`: `<model-viewer>`
+    -- has no background/shape of its own, so it needs a container to read as a
+    -- box while its 3D content loads.
+    M3e.card
+        [ M3e.Component.Card.variant Value.filled, TypedHtml.Attributes.class "h-48 w-full" ]
+        [ M3e.Unsafe.customElement "model-viewer"
+            [ TypedHtml.Attributes.src "/models/chair.glb"
+            , M3e.Unsafe.Attributes.customAttribute "camera-controls" ""
+            , M3e.Unsafe.Attributes.customAttribute "auto-rotate" ""
+            , TypedHtml.Attributes.class "block h-full w-full"
+            ]
+            []
         ]
-        []
 
 
 {-| A typed anchor filling a _typed slot_. A nav-menu item's `label` slot accepts
@@ -198,7 +207,7 @@ view _ _ =
             [ TypedHtml.div [ TypedHtml.Attributes.class "space-y-12" ]
                 [ TypedHtml.section [ TypedHtml.Attributes.class "space-y-4" ]
                     [ Doc.pageHeading "Your own seam — one place for your escapes"
-                    , TypedHtml.div [ TypedHtml.Attributes.class "max-w-2xl text-on-surface-variant" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TypedHtml.Attributes.class "max-w-2xl" ] [ Doc.markdown intro ]
                     ]
                 , TypedHtml.section [ TypedHtml.Attributes.class "space-y-4" ]
                     [ Doc.markdown userland

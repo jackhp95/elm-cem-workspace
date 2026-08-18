@@ -303,22 +303,63 @@ correctness =
 configurable `NoSeamOutsideAllowedModules`), `PreferBadgeCount` (`M3e.Badge` has no
 `count`/`label`), and `NoMissingFacadeEntry` (the facade epic #52 is closed).
 
-`NoProprietaryDsClasses` survives unchanged — it still inspects `Attr.class` string
-literals for proprietary `ds-`/`t-` tokens.
+`NoProprietaryDsClasses` was **strengthened** from "no `ds-`/`t-` tokens" into the
+full **layout-only** classifier: Tailwind may position, size and space, but every
+painting utility — background, colour, border, radius, elevation/shadow,
+typography — is an error, because styling belongs to an m3e component. It also
+resolves `class` through `TypedHtml.Attributes`, `M3e.Attributes` and
+`Svg.Attributes` on top of `Html.Attributes`; resolving only the last left it
+toothless on this docs app, where 503 of 591 class call sites go through
+`TypedHtml.Attributes`. See the rule's own docs for the three-bucket
+classification (proprietary / styling / allowed) and why unknown tokens are
+allowed by default.
 
 Opinion-leak audit (the "packages stay unopinionated about seam/kit content"
-principle that retired `NoActionlessButton`): `NoProprietaryDsClasses` is a
-CORRECTNESS check, not a content opinion. A `ds-`/`t-` class renders nothing in
-this component system, so flagging it catches dead markup — it does not dictate
-what a seam or kit may contain. It stays. The structural boundary rules
+principle that retired `NoActionlessButton`): the proprietary half is a
+CORRECTNESS check — a `ds-`/`t-` class renders nothing in this component system,
+so flagging it catches dead markup. The layout-only half is a stated PROJECT
+POLICY, and it is scoped accordingly: it polices the docs app's own surfaces, not
+what a seam or kit may contain. The structural boundary rules
 (`NoSeamOutsideAllowedModules`, `NoInternalImportOutsideAllowed`, the `toHtml`
 gate) likewise enforce WHERE crossings live, not WHAT they contain, so they are
 in-bounds too.
 
+**`Route/Styles/` is exempt.** Those pages apply token utilities as LIVE
+SPECIMENS — a typography page whose job is to show what `text-body-lg` renders has
+to actually apply `text-body-lg`. Linting them would delete the documentation of a
+real feature rather than fix a styling mistake. The exemption is per-directory, so
+it necessarily also lifts the proprietary-token check there; acceptable because
+those pages carry no `ds-`/`t-` tokens, and splitting the rule in two to recover it
+would buy nothing today.
+
+`Route/Guide/Theming.elm` was exempt too and **is not any more.** It was exempt on
+the theory that it "teaches the Tailwind bridge by demonstrating it" — but what it
+actually taught was the anti-pattern: it presented `bg-primary text-on-primary` and
+`rounded-md-corner-large` as _the right move_, and its "Paint with roles, not hex"
+section demonstrated colour roles as `class` tokens on bare `<div>`s. The exemption
+was hiding a page that contradicted the policy the rest of the app is held to. The
+prose now teaches the real order (component → its attributes/slots → its own `m3e-*`
+property → file a gap), its wrong-example blocks are string literals the rule
+correctly ignores, and its live `class` calls are layout-only — so it passes on its
+own merits and needs no exemption.
+
 -}
 materialDiscipline : List Rule
 materialDiscipline =
-    [ NoProprietaryDsClasses.rule
+    [ NoProprietaryDsClasses.rule [ "Seam" ]
+        |> Rule.ignoreErrorsForDirectories
+            [ "app/Route/Styles/", "docs/app/Route/Styles/" ]
+        -- The theme editor's own live previews, exempt for exactly the same
+        -- reason as `Route/Styles/`: the swatch that shows you which corner
+        -- radius you just picked has to APPLY that radius, and the type-scale
+        -- preview has to apply the computed font size. They are specimens of
+        -- the token being edited, not surfaces that forgot to use a component.
+        |> Rule.ignoreErrorsForFiles
+            [ "app/Theme/Sections/Shape.elm"
+            , "docs/app/Theme/Sections/Shape.elm"
+            , "app/Theme/Sections/Typography.elm"
+            , "docs/app/Theme/Sections/Typography.elm"
+            ]
     ]
 
 
@@ -339,9 +380,15 @@ opt-in (used ad hoc by the `docs/scripts/examples-gen` harness, not here).
 
 The seam gate (`NoSeamOutsideAllowedModules`) and the opaque-IR backstop
 (`NoInternalImportOutsideAllowed`) are the M3e-specific rules; they arrive via
-`CodegenReviewConfig.config`, which is concatenated into `config` below. The docs app's Tailwind/raw-HTML crossings are centralised in its
-designated adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared`), which are on
-that rule's allow-list, so feature routes stay seam-free (docs/DESIGN.md §4, #81).
+`CodegenReviewConfig.config`, which is concatenated into `config` below.
+
+NOTE: this paragraph used to claim the docs app centralises its crossings in
+"designated adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared`)". That was
+false on two counts — `Layout`, `Kit` and `Native` do not exist as modules, and
+they were never on that rule's allow-list either. Only `Doc` and `Shared` are
+real. The single designated destination is now `Seam`, named consistently by
+both this rule and `NoSeamOutsideAllowedModules`; it is not created until
+something genuinely needs containing (docs/DESIGN.md §4, #81).
 
 TODO: `jackhp95/elm-review-cem` is not yet published to the Elm registry, so its
 rules are pulled in via the `../../elm-review-cem/src` source-directory in
@@ -365,8 +412,8 @@ codegenAware =
 
         -- `preferBarrel` is a LAYER/FORM PREFERENCE, not a correctness rule, so it
         -- exempts what the facts-derived correctness rules do not: the hand-written
-        -- seam adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared` — the DESIGN §4
-        -- allow-list), which deliberately hold the tight component-module form, so
+        -- seam adapters (`Doc`, `Shared` — the real DESIGN §4 allow-list; `Layout`,
+        -- `Kit`, `Native` never existed, see the NOTE above), which deliberately hold the tight component-module form, so
         -- barrelising them is wrong by design (and several never import the `M3e`
         -- barrel at all). Every other codegen-aware rule stays on everywhere — they
         -- enforce facts-derived correctness that holds on every layer/form. Two path
@@ -455,7 +502,7 @@ complexity =
 
 
 
--- toHtml GATE ----------------------------------------------------------------
+-- toHtml GATE + THE RECAST FENCE ----------------------------------------------
 
 
 {-| `M3e.Node.toHtml` is the single escape hatch from the Node IR to Html. It
@@ -469,10 +516,43 @@ The test suite (which lives in `../tests/` relative to docs/elm.json) calls
 `Node.toHtml` to produce `Html` values for assertion; those are acceptable.
 Because the review is run from `docs/` the path prefix is `../tests/`.
 
+
+## The recast fence
+
+`recast` / `recastAll` / `recastAttr` / `recastAttrAll` re-kind an element or
+attribute by throwing away its phantom rows, so anything drops into any slot.
+They exist for CONSUMERS who deliberately deviate from Material patterns and want
+their deviations to stay internally consistent. **This docs app sticks to standard
+Material, so it should never need one** — a recast here means one of exactly two
+things, and both are bugs with a real fix:
+
+1.  a **codegen-config failure** — a slot in `config/slots.json` is declared with
+    the wrong kinds, so the generated type is wrong; or
+2.  **invalid markup** — the page is putting content somewhere Material does not
+    put it.
+
+That is not a theory. The docs app's only two recast call sites were both in
+`Shared.sectionPanel`, and they were case 1: the expansion panel's `header` slot
+was declared `"kinds": ["any"]`, identical to its `unnamed` slot, so codegen gave
+both the SAME type variable and forced the header and body to unify. Fixing the
+config to `["expansionHeader"]` made both escapes evaporate. The count is now
+ZERO, which is why there is no `Seam` module to centralise into — there is
+nothing left to centralise, and an empty designated module would be worse than
+none.
+
+So the fence allows these functions **only in the library module that defines
+them**. If this rule ever fires, do not add the calling module to the allow-list:
+find out which of the two causes above it is and fix that instead.
+
 -}
 toHtmlGate : List Rule
 toHtmlGate =
     [ NoFunctionOutsideOfModules.rule
-        [ ( [ "M3e.Node.toHtml" ], [ "Shared", "M3e.Node" ] ) ]
+        [ ( [ "M3e.Node.toHtml" ], [ "Shared", "M3e.Node" ] )
+        , ( [ "M3e.Unsafe.recast", "M3e.Unsafe.recastAll" ], [ "M3e.Unsafe" ] )
+        , ( [ "M3e.Unsafe.Attributes.recastAttr", "M3e.Unsafe.Attributes.recastAttrAll" ]
+          , [ "M3e.Unsafe.Attributes" ]
+          )
+        ]
         |> Rule.ignoreErrorsForDirectories [ "../tests/", "tests/" ]
     ]

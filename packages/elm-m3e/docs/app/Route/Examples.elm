@@ -104,7 +104,7 @@ exampleCard ( slug, cardTitle, cardBody ) =
     M3e.card
         [ M3e.Component.Card.variant Value.elevated ]
         [ M3e.Component.Card.header (M3e.heading [ M3e.Component.Heading.variant Value.title ] [ M3e.text cardTitle ])
-        , M3e.Component.Card.content (TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text cardBody ])
+        , M3e.Component.Card.content (TypedHtml.p [] [ M3e.text cardBody ])
         , M3e.Component.Card.actions
             (M3e.button
                 [ M3e.Component.Button.variant Value.filled, M3e.Component.Button.href exampleHref ]
@@ -120,7 +120,7 @@ view _ _ =
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
                 , TypedHtml.div [ TA.class "max-w-2xl" ]
-                    [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                    [ TypedHtml.p []
                         [ M3e.text "Examples are composed, real-world app screens that show many elm-m3e components working together — the way the library is meant to be used. Each one is a real, responsive route, not a screenshot." ]
                     ]
                 ]

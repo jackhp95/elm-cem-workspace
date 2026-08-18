@@ -24,16 +24,17 @@ no persisted-state change.
 
 import Dict
 import M3e exposing (Element)
+import M3e.Attributes
 import M3e.Component.FormField as FormField
 import M3e.Component.Icon
 import M3e.Values as Value
+import Seam
 import Theme exposing (Msg(..))
 import Theme.Tokens as Tokens exposing (ColorToken)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
 import TypedHtml.Component.Grouping
-import TypedHtml.Component.Sectioning
 import TypedHtml.Events
 
 
@@ -46,8 +47,11 @@ view model =
 groupView : Theme.Model -> ( String, List ColorToken ) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 groupView model ( groupName, tokens ) =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
-        [ TypedHtml.Component.Sectioning.h3
-            [ TypedHtml.Attributes.class "text-title-sm text-on-surface-variant" ]
+        [ M3e.heading
+            [ M3e.Attributes.variant Value.title
+            , M3e.Attributes.size Value.small
+            , M3e.Attributes.level 3
+            ]
             [ M3e.text groupName ]
         , TypedHtml.div [ TypedHtml.Attributes.class "flex flex-wrap items-start gap-2" ]
             (List.map (tokenChip model) tokens)
@@ -75,12 +79,21 @@ tokenChip model token =
         -- visually-hidden native `<input type=color>`. Keeping the native input
         -- in the tree (rather than firing a click from Elm) is what keeps the
         -- control keyboard-reachable and screen-reader-labelled.
+        -- The circle itself is a bare `M3e.avatar` (round by default, same
+        -- swatch idiom `Theme.colorAvatar`/`Theme.sourceColorOption` use for
+        -- the curated seed-color picker) instead of a hand-painted
+        -- `rounded-full border`. A native `<label>` only admits phrasing
+        -- content, which a custom element like `m3e-avatar` is not, so —
+        -- exactly like `Theme.sourceColorOption` — the click target is the
+        -- native `<input type=color>` itself, stretched transparently over
+        -- the decorative avatar rather than wrapped in a `<label for>`.
         swatch : Element (TypedHtml.Component.Grouping.DivIs t) admittedBy Msg
         swatch =
             TypedHtml.div [ TypedHtml.Attributes.class "inline-flex items-center" ]
                 [ TypedHtml.label
                     [ TypedHtml.Attributes.for pickerId
-                    , TypedHtml.Attributes.class "size-4 shrink-0 cursor-pointer rounded-full border border-outline"
+                    , TypedHtml.Attributes.class "size-4 shrink-0 cursor-pointer"
+                    , Seam.colorSwatchChrome
                     , TypedHtml.Attributes.style "background-color" (Maybe.withDefault "transparent" current)
                     ]
                     []

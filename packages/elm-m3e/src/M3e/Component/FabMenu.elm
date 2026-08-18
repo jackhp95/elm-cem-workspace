@@ -16,6 +16,19 @@ A menu, opened from a floating action button (FAB), used to display multiple rel
 @docs onBeforetoggle, onToggle
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Icons" -->
+```elm
+M3e.Component.FabMenuItem.component [] [ M3e.Component.FabMenuItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "email", M3e.Component.Icon.filled True ] []), M3e.text "Email" ]
+```
+
+<!-- elm-cem:docmeta category=Actions -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

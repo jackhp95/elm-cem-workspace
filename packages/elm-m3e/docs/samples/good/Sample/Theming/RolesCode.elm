@@ -8,24 +8,46 @@ Change the sample there; this file follows.
 -}
 
 import M3e
-import Sample.Support exposing (children, href, rows)
+import M3e.Attributes
+import M3e.Component.ListItem
+import M3e.Values
+import Sample.Support exposing (children, rows)
 import TypedHtml
 import TypedHtml.Attributes
 
 
--- A selected row is a surface-ROLE swap, not a hand-picked color:
+-- The container-surface role: a filled card. It paints its own background
+-- AND its own foreground from the theme.
 shown0_ =
+    M3e.card [ M3e.Attributes.variant M3e.Values.filled ] rows
+
+
+-- The de-emphasized role: a list item's own slot. Correct color and type
+-- scale, no class involved.
+shown1_ =
+    M3e.listItem []
+        [ M3e.text "Primary line"
+        , M3e.Component.ListItem.supportingText (M3e.text "Secondary text")
+        ]
+
+
+-- The primary-action role: a filled button, with the state layer and focus
+-- ring that come with it.
+shown2_ =
+    M3e.button [ M3e.Attributes.variant M3e.Values.filled ] [ M3e.text "Continue" ]
+
+
+-- WRONG — the right ROLES, but hand-painted onto bare elements. Themed, and
+-- still a card and a list item reimplemented in CSS: no state layer, no
+-- density, no accessibility.
+shown3_ =
     TypedHtml.div [ TypedHtml.Attributes.class "bg-surface-container" ] rows
 
 
-shown1_ =
+shown4_ =
     TypedHtml.span [ TypedHtml.Attributes.class "text-body-lg text-on-surface-variant" ] [ M3e.text "Secondary text" ]
 
 
-shown2_ =
-    TypedHtml.a [ TypedHtml.Attributes.href href, TypedHtml.Attributes.class "text-primary" ] [ M3e.text "Primary action" ]
-
-
 -- WRONG — a raw color, decoupled from the scheme, wrong in dark mode:
-shown3_ =
+shown5_ =
     TypedHtml.div [ TypedHtml.Attributes.class "bg-[#4285F4] text-white" ] children

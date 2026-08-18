@@ -10,10 +10,12 @@ import M3e.Component.Button
 import M3e.Component.Icon
 import M3e.Component.MenuItem
 import M3e.Component.MenuTrigger
+import M3e.Component.SelectionIndicator
 import M3e.Component.Theme
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value exposing (Value)
+import Seam
 import Theme.Fonts
 import Theme.Icons exposing (IconStyle)
 import Theme.Ports
@@ -559,7 +561,6 @@ controlLabel lbl =
     M3e.heading
         [ M3e.Attributes.variant Value.label
         , M3e.Attributes.size Value.large
-        , TypedHtml.Attributes.class "text-on-surface"
         ]
         [ M3e.text lbl ]
 
@@ -726,7 +727,6 @@ colorOptions model =
             [ M3e.heading
                 [ M3e.Attributes.variant Value.label
                 , M3e.Attributes.size Value.small
-                , TypedHtml.Attributes.class "text-on-surface-variant"
                 ]
                 [ M3e.text "Source color" ]
             ]
@@ -748,7 +748,7 @@ stretched over it — clicking anywhere opens the OS color picker and fires
 sourceColorOption : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 sourceColorOption model =
     TypedHtml.div
-        [ TypedHtml.Attributes.class "relative inline-flex rounded-full" ]
+        [ TypedHtml.Attributes.class "relative inline-flex" ]
         [ TypedHtml.div []
             [ M3e.theme [ M3e.Component.Theme.color model.seed ]
                 [ M3e.avatar
@@ -756,7 +756,12 @@ sourceColorOption model =
                     , M3e.Attributes.style "--m3e-avatar-color" "var(--md-sys-color-primary)"
                     , M3e.Attributes.style "--m3e-avatar-label-color" "var(--md-sys-color-on-primary)"
                     ]
-                    [ M3e.icon [ M3e.Component.Icon.name "colorize", M3e.Attributes.class "text-base" ] [] ]
+                    [ M3e.icon
+                        [ M3e.Component.Icon.name "colorize"
+                        , M3e.Attributes.style "font-size" "1rem"
+                        ]
+                        []
+                    ]
                 ]
             ]
         , TypedHtml.div [ TypedHtml.Attributes.class "absolute inset-0" ]
@@ -778,28 +783,43 @@ color's derived primary (via a nested `<m3e-theme>` seeded with the hex). The
 click target is a transparent, empty native `<button>` overlaid on top —
 `onClick` is an interactive-element attribute (a `div` can't carry it), and an
 empty button avoids threading a branded child through the button's
-phrasing-content slot. The active swatch (matching the current seed) gets a
-primary ring in the APP palette so the selected marker reads consistently
-across hues.
+phrasing-content slot.
+
+The active swatch (matching the current seed) gets a real `m3e-selection-indicator`
+ring — the same primitive `m3e-nav-item` uses for its own active pill —
+`for`-attached to the button by id, so it shares the button's hover/focus/press
+state layer as well as its selected fill. Per the component's own contract ("the
+parenting element must be a relative positioned element") the wrapper carries
+`relative`; per its `border-radius: inherit` shape mechanism the wrapper also
+carries an explicit `border-radius`, mirroring the exact token `m3e-avatar`
+itself defaults to (`--md-sys-shape-corner-full`) so the ring stays round and in
+sync with the avatar's own shape. `p-1` gives the indicator's `inset: 0` fill
+room to peek out past the 2rem avatar as a ring, rather than being fully hidden
+behind it.
+
 -}
 colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
 colorAvatar model hex =
+    let
+        controlId : String
+        controlId =
+            "swatch-color-" ++ String.dropLeft 1 hex
+    in
     TypedHtml.div
-        [ TypedHtml.Attributes.class
-            ("relative inline-flex rounded-full "
-                ++ (if model.seed == hex then
-                        -- `on-surface`, not `primary`: the ring is drawn in the
-                        -- APP palette over a swatch whose own nested theme is a
-                        -- different hue, and a primary ring can vanish against a
-                        -- near-primary swatch.
-                        "ring-2 ring-on-surface"
+        [ TypedHtml.Attributes.class "relative inline-flex p-1"
 
-                    else
-                        ""
-                   )
-            )
+        -- `m3e-selection-indicator` has no shape property and takes its radius by
+        -- inheritance from this parent, so the round corner has to come from here.
+        -- Contained in `Seam` rather than applied inline: see that module for what
+        -- the design system cannot express and what would let it be deleted.
+        , Seam.selectionIndicatorShape
         ]
-        [ TypedHtml.div []
+        [ M3e.selectionIndicator
+            [ M3e.Component.SelectionIndicator.for controlId
+            , M3e.Component.SelectionIndicator.selected (model.seed == hex)
+            ]
+            []
+        , TypedHtml.div []
             [ M3e.theme [ M3e.Component.Theme.color hex ]
                 [ M3e.avatar
                     [ M3e.Attributes.class "m3e-avatar-size-[2rem]"
@@ -810,9 +830,10 @@ colorAvatar model hex =
             ]
         , TypedHtml.div [ TypedHtml.Attributes.class "absolute inset-0" ]
             [ TypedHtml.button
-                [ TypedHtml.Events.onClick (SetSeed hex)
+                [ TypedHtml.Attributes.id controlId
+                , TypedHtml.Events.onClick (SetSeed hex)
                 , Aria.label ("Set source color to " ++ hex)
-                , TypedHtml.Attributes.class "size-full rounded-full cursor-pointer"
+                , TypedHtml.Attributes.class "size-full cursor-pointer"
                 ]
                 []
             ]

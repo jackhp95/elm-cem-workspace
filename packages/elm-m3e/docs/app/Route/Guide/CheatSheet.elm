@@ -67,7 +67,7 @@ head _ =
 card : String -> List (M3e.Element (M3e.Component.Heading.Is s) (TypedHtml.Component.Sectioning.SectionChildAdmittedBy childAdm) msg) -> M3e.Element (TypedHtml.Component.Sectioning.SectionIs s2) adm_ msg
 card title items =
     TypedHtml.section [ TA.class "space-y-3" ]
-        (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text title ] :: items)
+        (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text title ] :: items)
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
@@ -77,7 +77,7 @@ view _ _ =
             [ TypedHtml.div [ TA.class "space-y-10" ]
                 [ TypedHtml.section [ TA.class "space-y-4" ]
                     [ Doc.pageHeading "Cheat sheet"
-                    , TypedHtml.div [ TA.class "max-w-2xl text-on-surface-variant" ] [ Doc.markdown intro ]
+                    , TypedHtml.div [ TA.class "max-w-2xl" ] [ Doc.markdown intro ]
                     , Doc.userlandNote
                     ]
                 , card "The surfaces" [ Doc.markdown layers ]

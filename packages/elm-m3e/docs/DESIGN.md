@@ -86,7 +86,7 @@ the trusted/untrusted line is held by exactly one thing:
 > **`NoInternalImportOutsideAllowed`** (from the sibling
 > [`elm-review-cem`](https://github.com/jackhp95/elm-review-cem) package) flags any
 > import of `HtmlIr.Internal` outside a declared allow-list. In this repo the
-> allow-list is `[ "M3e", "TypedHtml", "HtmlIr", "Native", "Layout", "Kit" ]`
+> allow-list is `[ "M3e", "TypedHtml", "HtmlIr" ]`
 > (`review/src/CodegenReviewConfig.elm`): generated brand code and reusable adapter
 > namespaces a consuming project may use — application/docs code is never on it,
 > because the escapes it needs (`M3e.Unsafe`, `M3e.Unsafe.Attributes`) are generated

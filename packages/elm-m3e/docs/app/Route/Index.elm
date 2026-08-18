@@ -70,7 +70,7 @@ view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
 view _ _ =
     View.fromElement "elm-m3e"
         (TypedHtml.div [ TA.class "flex flex-col items-center justify-center gap-4 p-8" ]
-            [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+            [ TypedHtml.p []
                 [ M3e.text "Redirecting to Welcome…" ]
             , M3e.button
                 [ M3e.Component.Button.variant Value.filled

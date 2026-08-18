@@ -15,6 +15,48 @@ current location within an application.
 @docs wrap
 @docs separator, child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Anatomy" -->
+```elm
+M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.text "Dashboard" ] } [] [ M3e.Component.BreadcrumbItem.component [] [ M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.text "Annual" ] ]
+```
+
+<!-- elm-cem:example title="Links" -->
+```elm
+M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [ M3e.Component.BreadcrumbItem.href "https://developer.mozilla.org/en-US/docs/Web", M3e.Component.BreadcrumbItem.target "_blank" ] [ M3e.text "Web" ] } [] []
+```
+
+<!-- elm-cem:example title="Icons" -->
+```elm
+M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [ M3e.Component.BreadcrumbItem.itemLabel "Dashboard" ] [ M3e.Component.Icon.component [ M3e.Component.Icon.name "dashboard" ] [] ] } [] [ M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "analytics" ] []), M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_month" ] []), M3e.text "Annual" ] ]
+```
+
+<!-- elm-cem:example title="Custom separators" -->
+```elm
+M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.text "Dashboard" ] } [] [ M3e.Component.Breadcrumb.separator (TypedHtml.span [] [ M3e.text "/" ]), M3e.Component.BreadcrumbItem.component [] [ M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.text "Annual" ] ]
+```
+
+<!-- elm-cem:example title="Wrapping" -->
+```elm
+M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.text "Lorem ipsum dolor sit amet" ] } [ M3e.Component.Breadcrumb.wrap True ] [ M3e.Component.BreadcrumbItem.component [] [ M3e.text "Consectetur adipiscing elit sed do" ], M3e.Component.BreadcrumbItem.component [] [ M3e.text "Tempor incididunt ut labore et dolore" ], M3e.Component.BreadcrumbItem.component [] [ M3e.text "Magna aliqua ut enim ad minim veniam" ], M3e.Component.BreadcrumbItem.component [] [ M3e.text "Quis nostrud exercitation ullamco laboris nisi ut aliquip" ] ]
+```
+
+<!-- elm-cem:example title="Density" -->
+```elm
+[ M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "dashboard" ] []), M3e.text "Dashboard" ] } [ M3e.Attributes.class "density-3" ] [ M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "analytics" ] []), M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_month" ] []), M3e.text "Annual" ] ]
+    , M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "dashboard" ] []), M3e.text "Dashboard" ] } [ M3e.Attributes.class "density-2" ] [ M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "analytics" ] []), M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_month" ] []), M3e.text "Annual" ] ]
+    , M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "dashboard" ] []), M3e.text "Dashboard" ] } [ M3e.Attributes.class "density-1" ] [ M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "analytics" ] []), M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_month" ] []), M3e.text "Annual" ] ]
+    , M3e.Component.Breadcrumb.component { content = M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "dashboard" ] []), M3e.text "Dashboard" ] } [ M3e.Attributes.class "density-0" ] [ M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "analytics" ] []), M3e.text "Reports" ], M3e.Component.BreadcrumbItem.component [] [ M3e.Component.BreadcrumbItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_month" ] []), M3e.text "Annual" ] ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Navigation -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

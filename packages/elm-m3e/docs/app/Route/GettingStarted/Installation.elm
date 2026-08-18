@@ -83,28 +83,28 @@ view _ _ =
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "elm-m3e ships in two parts. The brand primitives — the shared vocabulary and escape hatches (M3e.Attributes, M3e.Values, M3e.Events, M3e.Html, and friends) — publish to the Elm package registry as jackhp95/elm-m3e. The 128 typed components (M3e.Button, M3e.Card, M3e.Theme, … and the M3e barrel) are NOT published; you generate them into your project with elm-cem's eject command. Follow the four steps below and you will have a themed button rendering in the browser." ]
                 , message "Prerequisites: Elm 0.19.1, Node 18+ (eject runs via npx/pnpm dlx), and a bundler that can serve ES modules (Vite, esbuild, Parcel, or Webpack). The steps below assume Vite, but any bundler that runs npm packages and lets you inject a <script> tag will work."
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "1. Install the primitives and eject the components"
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "Install the published primitives from the Elm registry. This gives you the primitive modules — M3e.Attributes, M3e.Values, M3e.Events, the escape hatches, and M3e.Html (the loose, open-rowed component producers):" ]
                 , codeBlock Shell """
 elm install jackhp95/elm-m3e
 """
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "To get the full typed component surface (M3e.Button, M3e.Card, M3e.Theme, … and the M3e barrel), run elm-cem's eject command. It pulls the pre-generated M3e.* modules into a vendor folder, adds that folder to source-directories in your elm.json, and promotes the dependencies the generated code imports. eject also removes the jackhp95/elm-m3e registry dependency — the vendored superset already contains those primitive modules, so there is no collision:" ]
                 , codeBlock Shell """
 npx elm-cem eject m3e --elm-json=elm.json --write
 """
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "eject defaults to a dry run that prints its plan and writes nothing; pass --write to apply it. The vendored M3e.* modules are a build artifact — re-run eject to update them rather than editing them by hand. Add --with-review to also wire up the elm-review-cem lint rules." ]
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "2. Register the web components"
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "The Elm modules emit <m3e-*> custom elements; they only render once the @m3e/web element definitions are registered. Install the package and import it once, before your Elm app boots:" ]
                 , codeBlock Shell """
 npm i @m3e/web
@@ -116,16 +116,16 @@ import "@m3e/web/all";
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "3. Add the token + utility CSS bridge"
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, …). It is NOT published to npm — it is a private repository. There is no @import from a package name outside its own workspace; you must vendor the CSS files into your project first." ]
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "If you have access to the private repo, clone it and copy its CSS into your project:" ]
                 , codeBlock Shell """
 git clone https://github.com/jackhp95/tailwind-m3e-web.git
 cp -R tailwind-m3e-web/src        your-project/vendor/tailwind-m3e-web/src
 cp -R tailwind-m3e-web/generated  your-project/vendor/tailwind-m3e-web/generated
 """
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "Then reference the vendored files by relative path from your stylesheet:" ]
                 , codeBlock NoLang """
 /* style.css — paths are relative to your vendored copy */
@@ -136,10 +136,10 @@ cp -R tailwind-m3e-web/generated  your-project/vendor/tailwind-m3e-web/generated
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "4. Wrap your app in a theme and render"
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "M3e.Theme is an attribute-style element (not a builder): M3e.Component.Theme.component takes a list of attributes — color, scheme, contrast, density, variant, motion — and a list of child elements. It owns the dynamic color for its subtree, usually the whole app. Here is a complete Main.elm that renders a themed button:" ]
                 , codeBlock Elm mainModule
-                , TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
+                , TypedHtml.p []
                     [ M3e.text "M3e.toHtml turns an M3e Element into elm/html, so Browser.sandbox can render it. Finally, an index.html loads the CSS, registers the components, and boots Elm:" ]
                 , codeBlock Xml """
 <!doctype html>

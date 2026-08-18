@@ -14,6 +14,66 @@ A shape used to add emphasis and decorative flair.
 @docs Name, name
 @docs child
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Shapes" -->
+```elm
+[ M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value12SidedCookie ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value9SidedCookie ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value8LeafClover ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value7SidedCookie ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value6SidedCookie ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value4SidedCookie ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.value4LeafClover ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.arch ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.arrow ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.boom ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.bun ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.diamond ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.fan ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.flower ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.gem ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.ghostIsh ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.heart ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.hexagon ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.pentagon ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.pill ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.pixelCircle ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.pixelTriangle ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.puffy ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.puffyDiamond ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.semicircle ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.slanted ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.softBoom ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.softBurst ] []
+    , TypedHtml.br [] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.square ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.circle ] []
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.triangle ] []
+    ]
+```
+
+<!-- elm-cem:example title="Images and video" -->
+```elm
+[ M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.sunny, M3e.Attributes.class "image-shape" ] [ TypedHtml.img [ TypedHtml.Unsafe.Attributes.customAttribute "src" "https://www.shutterstock.com/shutterstock/videos/1006393/thumb/1.jpg?ip=x480" ] [] ]
+    , M3e.Component.Shape.component [ M3e.Component.Shape.name M3e.Values.sunny, M3e.Attributes.class "image-shape" ] [ TypedHtml.video [ TypedHtml.Unsafe.Attributes.customAttribute "autoplay" "", TypedHtml.Unsafe.Attributes.customAttribute "loop" "", TypedHtml.Unsafe.Attributes.customAttribute "poster" "https://www.shutterstock.com/shutterstock/videos/1006393/thumb/1.jpg?ip=x480", TypedHtml.Unsafe.Attributes.customAttribute "preload" "auto" ] [ TypedHtml.source [ TypedHtml.Unsafe.Attributes.customAttribute "src" "https://www.shutterstock.com/shutterstock/videos/1006393/preview/stock-footage-business-people-working-in-office.webm", TypedHtml.Unsafe.Attributes.customAttribute "type" "video/webm" ] [], TypedHtml.source [ TypedHtml.Unsafe.Attributes.customAttribute "src" "https://www.shutterstock.com/shutterstock/videos/1006393/preview/stock-footage-business-people-working-in-office.mp4", TypedHtml.Unsafe.Attributes.customAttribute "type" "video/mp4" ] [] ] ]
+    ]
+```
+
+<!-- elm-cem:example title="Morphing" -->
+```elm
+M3e.Component.Shape.component [ M3e.Attributes.id "morph" ] []
+```
+
+<!-- elm-cem:docmeta category=Layout & style -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

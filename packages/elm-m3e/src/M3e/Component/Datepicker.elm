@@ -14,6 +14,75 @@ Presents a date picker on a temporary surface.
 @docs StartView, startView, Variant, variant
 @docs clearLabel, clearable, confirmLabel, date, dismissLabel, for, label, maxDate, minDate, nextMonthLabel, nextMultiYearLabel, nextYearLabel, previousMonthLabel, previousMultiYearLabel, previousYearLabel, range, rangeEnd, rangeStart, startAt, onChange, onBeforetoggle, onToggle
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld1" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld1" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "datepicker" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "datepicker" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto ] []
+```
+
+<!-- elm-cem:example title="Date selection" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld8" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld8" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "picker5" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "picker5", M3e.Component.Datepicker.date "2026-01-01", M3e.Component.Datepicker.clearable True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Start date" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld7" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld7" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "picker4" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "picker4", M3e.Component.Datepicker.startAt "2026-01-01" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Start view" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld6" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld6" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "picker3" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "picker3", M3e.Component.Datepicker.startView M3e.Values.multiYear ] []
+    ]
+```
+
+<!-- elm-cem:example title="Date ranges" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Attributes.id "range-field", M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld5" ] [ M3e.text "Date Range Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld5" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "date-range" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY - MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Attributes.id "date-range", M3e.Component.Datepicker.rangeStart "2026-01-01", M3e.Component.Datepicker.rangeEnd "2026-01-09", M3e.Component.Datepicker.startAt "2026-01-01" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Min and max dates" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld4" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld4" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "picker1" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Attributes.id "picker1", M3e.Component.Datepicker.startAt "2026-04-01", M3e.Component.Datepicker.minDate "2026-01-01", M3e.Component.Datepicker.maxDate "2026-04-30" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Blackout dates" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld3" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld3" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "blackout-dates" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "blackout-dates" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Special dates" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld2" ] [ M3e.text "Date Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld2" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "calendar_today" ] [], ariaLabel = "Open calendar", action = M3e.Action.none } [] [ M3e.Component.DatepickerToggle.component [ M3e.Component.DatepickerToggle.for "special-dates" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "MM/DD/YYYY" ]) ]
+    , M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values.auto, M3e.Attributes.id "special-dates", M3e.Component.Datepicker.startAt "2026-04-01" ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

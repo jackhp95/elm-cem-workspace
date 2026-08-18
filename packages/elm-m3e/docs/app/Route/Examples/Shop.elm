@@ -119,14 +119,14 @@ type alias Product =
 
 products : List Product
 products =
-    [ { name = "Vagabond sack", price = "$120", category = "Apparel", media = "bg-primary-container text-on-primary-container", icon = "backpack" }
-    , { name = "Stella sunglasses", price = "$58", category = "Apparel", media = "bg-tertiary-container text-on-tertiary-container", icon = "eyeglasses" }
-    , { name = "Chambray shirt", price = "$70", category = "Apparel", media = "bg-secondary-container text-on-secondary-container", icon = "apparel" }
-    , { name = "Gilt desk trio", price = "$58", category = "Home", media = "bg-secondary-container text-on-secondary-container", icon = "table_restaurant" }
-    , { name = "Copper wire rack", price = "$44", category = "Home", media = "bg-primary-container text-on-primary-container", icon = "shelves" }
-    , { name = "Terracotta vase", price = "$36", category = "Home", media = "bg-tertiary-container text-on-tertiary-container", icon = "potted_plant" }
-    , { name = "Rosewater mist", price = "$28", category = "Beauty", media = "bg-tertiary-container text-on-tertiary-container", icon = "spa" }
-    , { name = "Velvet lip tint", price = "$22", category = "Beauty", media = "bg-primary-container text-on-primary-container", icon = "brush" }
+    [ { name = "Vagabond sack", price = "$120", category = "Apparel", media = "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container", icon = "backpack" }
+    , { name = "Stella sunglasses", price = "$58", category = "Apparel", media = "m3e-filled-card-container-color-tertiary-container m3e-filled-card-text-color-on-tertiary-container", icon = "eyeglasses" }
+    , { name = "Chambray shirt", price = "$70", category = "Apparel", media = "m3e-filled-card-container-color-secondary-container m3e-filled-card-text-color-on-secondary-container", icon = "apparel" }
+    , { name = "Gilt desk trio", price = "$58", category = "Home", media = "m3e-filled-card-container-color-secondary-container m3e-filled-card-text-color-on-secondary-container", icon = "table_restaurant" }
+    , { name = "Copper wire rack", price = "$44", category = "Home", media = "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container", icon = "shelves" }
+    , { name = "Terracotta vase", price = "$36", category = "Home", media = "m3e-filled-card-container-color-tertiary-container m3e-filled-card-text-color-on-tertiary-container", icon = "potted_plant" }
+    , { name = "Rosewater mist", price = "$28", category = "Beauty", media = "m3e-filled-card-container-color-tertiary-container m3e-filled-card-text-color-on-tertiary-container", icon = "spa" }
+    , { name = "Velvet lip tint", price = "$22", category = "Beauty", media = "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container", icon = "brush" }
     ]
 
 
@@ -177,7 +177,7 @@ view _ _ model =
         -- instead of its flex basis, unbounding the scroll region and pushing the
         -- bar off-viewport.
         (TypedHtml.div
-            [ TA.class "bg-surface text-on-surface flex h-dvh w-full flex-col overflow-hidden md:flex-row" ]
+            [ TA.class "flex h-dvh w-full flex-col overflow-hidden md:flex-row" ]
             [ navRail model
             , TypedHtml.div [ TA.class "flex min-h-0 min-w-0 flex-1 flex-col" ]
                 [ appBar model
@@ -239,8 +239,8 @@ appBar : Model -> Element { s | appBar : M3e.Kind.Brand } adm_ (PagesMsg Msg)
 appBar model =
     M3e.appBar
         [ TA.class "px-2" ]
-        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True, TA.class "text-primary" ] [])
-        , M3e.Component.AppBar.title (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Maru Market" ])
+        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True ] [])
+        , M3e.Component.AppBar.title (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Maru Market" ])
         , M3e.Component.AppBar.trailing (iconAction "search")
         , M3e.Component.AppBar.trailing (cartAction model.cart)
         ]
@@ -347,13 +347,19 @@ navDestination current dest =
 
 {-| A small welcome banner painted on a container surface.
 -}
-hero : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+hero : Element { s | card : M3e.Kind.Brand } adm_ msg
 hero =
-    TypedHtml.div
-        [ TA.class "bg-primary-container text-on-primary-container rounded-md-corner-extra-large flex flex-col gap-1 p-6" ]
-        [ TypedHtml.p [ TA.class "text-label-lg uppercase tracking-wide" ] [ M3e.text "New season" ]
-        , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Everyday goods, thoughtfully made" ]
-        , TypedHtml.span [ TA.class "text-body-md" ] [ M3e.text "Free shipping on orders over $75." ]
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container m3e-card-shape-md-corner-extra-large"
+        ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "flex flex-col gap-1 p-6" ]
+                [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "New season" ]
+                , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Everyday goods, thoughtfully made" ]
+                , TypedHtml.span [] [ M3e.text "Free shipping on orders over $75." ]
+                ]
+            )
         ]
 
 
@@ -396,13 +402,17 @@ productCard product =
         [ M3e.Component.Card.header (media product)
         , M3e.Component.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-0.5 px-1" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text product.name ]
-                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ] [ M3e.text product.category ]
+                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text product.name ]
+                , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text product.category ]
                 ]
             )
         , M3e.Component.Card.actions
             (TypedHtml.div [ TA.class "flex w-full items-center justify-between px-1" ]
-                [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large, TA.class "text-primary" ] [ M3e.text product.price ]
+                [ M3e.heading
+                    [ M3e.Attributes.variant Value.title
+                    , M3e.Attributes.size Value.large
+                    ]
+                    [ M3e.text product.price ]
                 , M3e.iconButton
                     [ M3e.Attributes.variant Value.tonal, Aria.label "Add to cart", M3e.Events.onClick (PagesMsg.fromMsg AddToCart) ]
                     [ M3e.icon [ TA.name "add_shopping_cart" ] [] ]
@@ -411,12 +421,19 @@ productCard product =
         ]
 
 
-{-| Placeholder media: a shape-clipped surface tile with a centered glyph.
+{-| Placeholder media: a shape-clipped, token-tinted `M3e.card` tile with a
+centered glyph. Nested (as the outer card's `header`) rather than a hand-
+painted div — `product.media` carries the sanctioned
+`m3e-filled-card-container-color-*` / `m3e-filled-card-text-color-*` bridge
+utilities instead of raw `bg-*`/`text-*` Tailwind.
 -}
-media : Product -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+media : Product -> Element { s | card : M3e.Kind.Brand } adm_ msg
 media product =
-    TypedHtml.div
-        [ TA.class (product.media ++ " rounded-md-corner-large flex aspect-square items-center justify-center") ]
+    M3e.card
+        [ M3e.Attributes.variant Value.filled
+        , M3e.Attributes.class (product.media ++ " m3e-card-shape-md-corner-large")
+        , TA.class "flex aspect-square items-center justify-center"
+        ]
         [ M3e.icon [ TA.name product.icon, M3e.Attributes.opticalSize 48 ] [] ]
 
 

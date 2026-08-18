@@ -36,6 +36,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const BUNDLE_PATH = join(ROOT, "data", "cem-facts.json");
 const OUT_UTILITIES = join(ROOT, "generated", "utilities.css");
+const OUT_MANIFEST = join(ROOT, "generated", "utilities.json");
 const OUT_DOC = join(ROOT, "generated", "CSS_CUSTOM_PROPERTIES.md");
 
 /* ──────────────────────────────────────────────────────────────────
@@ -197,6 +198,40 @@ export function emitUtilities(flatUnique) {
 }
 
 /* ──────────────────────────────────────────────────────────────────
+   Emit utilities.json — the machine-readable companion to utilities.css
+   ────────────────────────────────────────────────────────────────── */
+
+/**
+ * The same utility set as `utilities.css`, as data rather than CSS syntax.
+ *
+ * Consumers need to answer "is `m3e-foo-bar-baz` a REAL utility?" and cannot do
+ * that against the CSS without parsing it. The concrete consumer today is
+ * elm-m3e's `NoProprietaryDsClasses` lint rule, which permits `m3e-*` classes as
+ * the sanctioned styling bridge — it previously accepted anything starting with
+ * `m3e-`, so a typo like `m3e-crd-padding-4` passed review and then rendered
+ * nothing. Exactly the dead-class failure that rule exists to catch.
+ *
+ * Names are emitted WITHOUT the trailing `-*`: `@utility m3e-card-padding-*`
+ * becomes `"m3e-card-padding"`. A call site is a match when it equals a name or
+ * starts with `name + "-"`, which is what Tailwind's `-*` means.
+ */
+export function emitUtilityManifest(flatUnique) {
+  const utilities = [...flatUnique.keys()]
+    .map((n) => n.replace(/^--/, ""))
+    .sort();
+  return `${JSON.stringify(
+    {
+      $comment:
+        "AUTO-GENERATED — DO NOT EDIT. Written by bin/generate-component-utilities.mjs from data/cem-facts.json, alongside generated/utilities.css. Utility name prefixes WITHOUT the trailing `-*`; a class matches when it equals a name or starts with name + '-'.",
+      count: utilities.length,
+      utilities,
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+/* ──────────────────────────────────────────────────────────────────
    Emit CSS_CUSTOM_PROPERTIES.md
    ────────────────────────────────────────────────────────────────── */
 
@@ -257,9 +292,11 @@ async function main() {
 
   await mkdir(dirname(OUT_UTILITIES), { recursive: true });
   await writeFile(OUT_UTILITIES, emitUtilities(flatUnique));
+  await writeFile(OUT_MANIFEST, emitUtilityManifest(flatUnique));
   await writeFile(OUT_DOC, emitDoc(byComponent, flatUnique));
 
   console.log(`Wrote ${flatUnique.size} @utility rules → ${OUT_UTILITIES}`);
+  console.log(`Wrote ${flatUnique.size} utility names → ${OUT_MANIFEST}`);
   console.log(`Wrote ${byComponent.size} component sections → ${OUT_DOC}`);
 }
 

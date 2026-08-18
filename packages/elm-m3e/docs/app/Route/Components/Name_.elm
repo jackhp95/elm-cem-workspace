@@ -207,7 +207,7 @@ summaryBlock summary =
 
     else
         [ TypedHtml.div [ TA.class "max-w-2xl" ]
-            [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ] [ M3e.text summary ] ]
+            [ TypedHtml.p [] [ M3e.text summary ] ]
         ]
 
 

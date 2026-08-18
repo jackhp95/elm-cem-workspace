@@ -14,6 +14,83 @@ Presents a time picker on a temporary surface.
 @docs Format, format, Mode, mode, Orientation, orientation, Variant, variant
 @docs confirmLabel, date, dialLabel, dismissLabel, for, hideModeToggle, hourLabel, inputLabel, maxTime, minTime, minuteLabel, modeToggleLabel, periodToggleLabel, secondLabel, showSeconds, onChange, onBeforetoggle, onToggle
 
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic usage" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld1" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld1" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker", M3e.Component.Timepicker.variant M3e.Values.auto ] []
+    ]
+```
+
+<!-- elm-cem:example title="Variants" -->
+```elm
+M3e.Component.Timepicker.component [ M3e.Component.Timepicker.variant M3e.Values.auto ] []
+```
+
+<!-- elm-cem:example title="Orientation" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld2" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld2" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker2" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker2", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.orientation M3e.Values.horizontal ] []
+    ]
+```
+
+<!-- elm-cem:example title="Modes" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld3" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld3" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker3" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker3", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.mode M3e.Values.input, M3e.Component.Timepicker.hideModeToggle True ] []
+    ]
+```
+
+<!-- elm-cem:example title="Time selection" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld6" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld6" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker6" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker6", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.date "2026-07-13T23:30:00Z" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Hour format" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld4" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld4" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker4" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker4", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.format M3e.Values.value24 ] []
+    ]
+```
+
+<!-- elm-cem:example title="Min and max times" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld5" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld5" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker5" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker5", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.minTime "8:15 AM", M3e.Component.Timepicker.maxTime "5:30 PM" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Blackout times" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld7" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld7" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "blackout-times" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "blackout-times", M3e.Component.Timepicker.variant M3e.Values.auto ] []
+    ]
+```
+
+<!-- elm-cem:example title="Seconds" -->
+```elm
+[ M3e.Component.FormField.component [ M3e.Component.FormField.variant M3e.Values.outlined ] [ M3e.Component.FormField.label (TypedHtml.label [ TypedHtml.Unsafe.Attributes.customAttribute "for" "fld8" ] [ M3e.text "Time Field" ]), TypedHtml.input [ TypedHtml.Unsafe.Attributes.customAttribute "autocomplete" "off", TypedHtml.Unsafe.Attributes.customAttribute "id" "fld8" ] [], M3e.Component.FormField.suffix (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "schedule" ] [], ariaLabel = "Open time picker", action = M3e.Action.none } [] [ M3e.Component.TimepickerToggle.component [ M3e.Component.TimepickerToggle.for "timepicker8" ] [] ]), M3e.Component.FormField.hint (TypedHtml.span [] [ M3e.text "HH:MM:SS" ]) ]
+    , M3e.Component.Timepicker.component [ M3e.Attributes.id "timepicker8", M3e.Component.Timepicker.variant M3e.Values.auto, M3e.Component.Timepicker.showSeconds True ] []
+    ]
+```
+
+<!-- elm-cem:example title="À-la-carte usage" -->
+```elm
+[ M3e.Component.TimepickerInput.component [ M3e.Attributes.id "input", M3e.Component.TimepickerInput.for "dial" ] []
+    , M3e.Component.TimepickerDial.component [ M3e.Attributes.id "dial" ] []
+    , TypedHtml.span [ TypedHtml.Unsafe.Attributes.customAttribute "id" "inputValue" ] [ M3e.text "hour = , minute =" ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Text inputs -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)
