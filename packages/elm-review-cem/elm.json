@@ -15,6 +15,7 @@
         "NoRedundantAttributeEscape",
         "NoMergedPipeAndSetter",
         "NoMissingComponentApiNames",
+        "NoHandEditedGeneratedM3e",
         "ExtractToSeam",
         "Cem.PreferBarrel",
         "Cem.TranslateToRecord",
@@ -34,6 +35,7 @@
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
         "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0",
         "jfmengels/elm-review": "2.16.0 <= v < 3.0.0",
         "stil4m/elm-syntax": "7.3.0 <= v < 8.0.0"
