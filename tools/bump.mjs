@@ -111,6 +111,31 @@ function fail(msg) {
     process.exit(1);
 }
 
+// Closes a gap independent review found in finding 1.6: `fail()` above only
+// catches EXPECTED failures — the ones this file itself detects and routes
+// through a `fail(...)` call. An unexpected raw JS exception after
+// `rollbackArmed` flips true (malformed JSON from a consumer's bundle file,
+// a throw inside generateBundleToTemp(), bad `pnpm ls -r --json` output) does
+// NOT go through `fail()` — it propagates straight past every rollback site
+// and would leave the tree half-mutated with no rollback, exactly the
+// failure mode 1.6 exists to prevent. This is the catch-all for that case.
+// Every function bump.mjs calls here is synchronous (spawnSync throughout,
+// no promises) so a plain try/catch around `main()` catches 100% of the
+// realistic cases; the process-level handlers below are a pure backstop in
+// case async code is ever added later, not load-bearing today.
+let rolledBackOnCrash = false;
+function rollbackOnCrash(err) {
+    console.error(`\nbump: UNCAUGHT ERROR — ${err && err.stack ? err.stack : err}`);
+    if (rollbackArmed && !rolledBackOnCrash) {
+        rolledBackOnCrash = true;
+        rollbackArmed = false;
+        rollback();
+    }
+    process.exit(1);
+}
+process.on("uncaughtException", rollbackOnCrash);
+process.on("unhandledRejection", rollbackOnCrash);
+
 function run(name, command, args, options = {}) {
     console.log(`\n${"─".repeat(72)}\n▶ ${name}\n$ ${command} ${args.join(" ")}`);
     const result = spawnSync(command, args, { stdio: "inherit", cwd: repoRoot, ...options });
@@ -369,4 +394,8 @@ function main() {
     }
 }
 
-main();
+try {
+    main();
+} catch (err) {
+    rollbackOnCrash(err);
+}
