@@ -91,7 +91,8 @@ type alias Type =
 
 
 type alias Variant =
-    { filled : Supported
+    { elevated : Supported
+    , filled : Supported
     , outlined : Supported
     , standard : Supported
     , tonal : Supported

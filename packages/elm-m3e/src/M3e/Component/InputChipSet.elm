@@ -1,7 +1,7 @@
 module M3e.Component.InputChipSet exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-    , disabled, name, required, validationmessages, vertical, onChange
+    , disabled, maxChips, name, required, validationmessages, vertical, onChange
     , input, child
     )
 
@@ -11,7 +11,7 @@ A container that transforms user input into a cohesive set of interactive chips,
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-@docs disabled, name, required, validationmessages, vertical, onChange
+@docs disabled, maxChips, name, required, validationmessages, vertical, onChange
 @docs input, child
 
 -}
@@ -85,6 +85,13 @@ component =
 disabled : Bool -> Attr { c | disabled : Supported } msg
 disabled =
     A.disabled
+
+
+{-| See `M3e.Attributes.maxChips`.
+-}
+maxChips : Float -> Attr { c | maxChips : Supported } msg
+maxChips =
+    A.maxChips
 
 
 {-| The name that identifies the element when submitting the associated form.

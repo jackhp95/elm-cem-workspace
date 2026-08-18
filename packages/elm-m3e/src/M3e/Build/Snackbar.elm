@@ -1,7 +1,7 @@
 module M3e.Build.Snackbar exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy
-    , withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withSlot, withStyle
+    , withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle
     , closeIcon
     , withCloseIcon, withChild
     )
@@ -10,7 +10,7 @@ module M3e.Build.Snackbar exposing
 
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy
-@docs withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withSlot, withStyle
+@docs withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle
 @docs closeIcon
 @docs withCloseIcon, withChild
 
@@ -147,6 +147,12 @@ withDismissible value_ =
 withDuration : Float -> Builder { a | duration : Available } slotCaps msg kind -> Builder { a | duration : Used } slotCaps msg kind
 withDuration value_ =
     B.withAttribute (A.duration value_)
+
+
+{-| -}
+withOpen : Bool -> Builder { a | open : Available } slotCaps msg kind -> Builder { a | open : Used } slotCaps msg kind
+withOpen value_ =
+    B.withAttribute (A.open value_)
 
 
 {-| -}

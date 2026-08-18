@@ -1,7 +1,7 @@
 module M3e.Component.OptionPanel exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LoadingSlot, ChildAdmittedBy
-    , ScrollStrategy, scrollStrategy, State, state
+    , ScrollStrategy, scrollStrategy
     , anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
     , loading, noData, child
     )
@@ -12,7 +12,7 @@ Presents a list of options on a temporary surface.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LoadingSlot, ChildAdmittedBy
-@docs ScrollStrategy, scrollStrategy, State, state
+@docs ScrollStrategy, scrollStrategy
 @docs anchorOffset, fitAnchorWidth, onBeforetoggle, onToggle
 @docs loading, noData, child
 
@@ -66,12 +66,6 @@ type alias ScrollStrategy =
     M3e.Internal.Types.OptionPanel.ScrollStrategy
 
 
-{-| The `state` values valid on this component (compile-tight narrowing).
--}
-type alias State =
-    M3e.Internal.Types.OptionPanel.State
-
-
 {-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
@@ -105,13 +99,6 @@ component =
 scrollStrategy : Value ScrollStrategy -> Attr { c | scrollStrategy : Supported } msg
 scrollStrategy value_ =
     Ir.attribute "scroll-strategy" (Val.toString value_)
-
-
-{-| The state for which to present content. (default: `"content"`)
--}
-state : Value State -> Attr { c | state : Supported } msg
-state value_ =
-    Ir.attribute "state" (Val.toString value_)
 
 
 {-| See `M3e.Attributes.anchorOffset`.

@@ -1,7 +1,7 @@
 module M3e.Component.Snackbar exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
-    , action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
+    , action, closeLabel, dismissible, duration, open, onBeforetoggle, onToggle
     , closeIcon, child
     )
 
@@ -11,7 +11,7 @@ Presents short updates about application processes at the bottom of the screen.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, CloseIconSlot, ChildAdmittedBy
-@docs action, closeLabel, dismissible, duration, onBeforetoggle, onToggle
+@docs action, closeLabel, dismissible, duration, open, onBeforetoggle, onToggle
 @docs closeIcon, child
 
 
@@ -135,6 +135,13 @@ dismissible =
 duration : Float -> Attr { c | duration : Supported } msg
 duration =
     A.duration
+
+
+{-| See `M3e.Attributes.open`.
+-}
+open : Bool -> Attr { c | open : Supported } msg
+open =
+    A.open
 
 
 {-| See `M3e.Events.onBeforetoggle`.

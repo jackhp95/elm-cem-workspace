@@ -22,6 +22,7 @@ type alias Attrs =
     , id : Supported
     , onBeforetoggle : Supported
     , onToggle : Supported
+    , open : Supported
     , slot : Supported
     , style : Supported
     }
@@ -54,6 +55,7 @@ type alias AttrCaps =
     , id : Available
     , onBeforetoggle : Available
     , onToggle : Available
+    , open : Available
     , slot : Available
     , style : Available
     }

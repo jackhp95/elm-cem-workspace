@@ -1,7 +1,7 @@
 module M3e.Build.OptionPanel exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy
-    , withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withState, withStyle
+    , withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
     , loading, noData
     , withNoData, withLoading, withChild
     )
@@ -10,7 +10,7 @@ module M3e.Build.OptionPanel exposing
 
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy
-@docs withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withState, withStyle
+@docs withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
 @docs loading, noData
 @docs withNoData, withLoading, withChild
 
@@ -158,12 +158,6 @@ withFitAnchorWidth value_ =
 withScrollStrategy : Value Component.ScrollStrategy -> Builder { a | scrollStrategy : Available } slotCaps msg kind -> Builder { a | scrollStrategy : Used } slotCaps msg kind
 withScrollStrategy value_ =
     B.withAttribute (Component.scrollStrategy value_)
-
-
-{-| -}
-withState : Value Component.State -> Builder { a | state : Available } slotCaps msg kind -> Builder { a | state : Used } slotCaps msg kind
-withState value_ =
-    B.withAttribute (Component.state value_)
 
 
 {-| -}

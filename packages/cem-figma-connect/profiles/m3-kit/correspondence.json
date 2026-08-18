@@ -3234,7 +3234,7 @@
           "nodeId": "57994:10081",
           "setName": "Icon button",
           "fixedAttrs": {
-            "variant": "filled"
+            "variant": "standard"
           }
         },
         {
@@ -3279,7 +3279,7 @@
                 "tag": "m3e-icon",
                 "slot": "selected",
                 "attrs": {
-                  "name": "star"
+                  "name": "stars"
                 }
               }
             ]
@@ -3299,14 +3299,14 @@
               {
                 "tag": "m3e-icon",
                 "attrs": {
-                  "name": "favorite_border"
+                  "name": "stars"
                 }
               },
               {
                 "tag": "m3e-icon",
                 "slot": "selected",
                 "attrs": {
-                  "name": "favorite"
+                  "name": "stars"
                 }
               }
             ]
@@ -3326,14 +3326,14 @@
               {
                 "tag": "m3e-icon",
                 "attrs": {
-                  "name": "favorite_border"
+                  "name": "stars"
                 }
               },
               {
                 "tag": "m3e-icon",
                 "slot": "selected",
                 "attrs": {
-                  "name": "favorite"
+                  "name": "stars"
                 }
               }
             ]
@@ -3353,14 +3353,14 @@
               {
                 "tag": "m3e-icon",
                 "attrs": {
-                  "name": "favorite_border"
+                  "name": "stars"
                 }
               },
               {
                 "tag": "m3e-icon",
                 "slot": "selected",
                 "attrs": {
-                  "name": "favorite"
+                  "name": "stars"
                 }
               }
             ]
@@ -3415,7 +3415,7 @@
       ],
       "confidence": 1,
       "provenance": "auto-exact",
-      "rationale": "page 'Buttons': fused 4 sibling sets (bare 'Icon button' + 3 '<Base> - <value>') sharing variant axes [Type, Size, Width, State] | exact tier: normalized name 'icon-button' == CEM tag slug | fused sets bind attr 'variant'; bare 'Icon button' → 'filled' (leftover)",
+      "rationale": "page 'Buttons': fused 4 sibling sets (bare 'Icon button' + 3 '<Base> - <value>') sharing variant axes [Type, Size, Width, State] | exact tier: normalized name 'icon-button' == CEM tag slug | fused sets bind attr 'variant'; bare 'Icon button' → 'standard' (cem-default)",
       "status": "proposed"
     }
   },

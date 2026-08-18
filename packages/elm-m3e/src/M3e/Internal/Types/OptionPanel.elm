@@ -23,7 +23,6 @@ type alias Attrs =
     , onToggle : Supported
     , scrollStrategy : Supported
     , slot : Supported
-    , state : Supported
     , style : Supported
     }
 
@@ -53,13 +52,6 @@ type alias ScrollStrategy =
     }
 
 
-type alias State =
-    { content : Supported
-    , loading : Supported
-    , noData : Supported
-    }
-
-
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
@@ -73,7 +65,6 @@ type alias AttrCaps =
     , onToggle : Available
     , scrollStrategy : Available
     , slot : Available
-    , state : Available
     , style : Available
     }
 

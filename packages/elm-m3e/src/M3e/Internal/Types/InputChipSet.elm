@@ -17,6 +17,7 @@ type alias Attrs =
     { class : Supported
     , disabled : Supported
     , id : Supported
+    , maxChips : Supported
     , name : Supported
     , onChange : Supported
     , required : Supported
@@ -43,6 +44,7 @@ type alias AttrCaps =
     { class : Available
     , disabled : Available
     , id : Available
+    , maxChips : Available
     , name : Available
     , onChange : Available
     , required : Available

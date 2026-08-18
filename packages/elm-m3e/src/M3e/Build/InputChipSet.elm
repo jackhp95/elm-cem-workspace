@@ -1,7 +1,7 @@
 module M3e.Build.InputChipSet exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDisabled, withId, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
+    , withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
     , input
     , withInput, withChild
     )
@@ -10,7 +10,7 @@ module M3e.Build.InputChipSet exposing
 
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
+@docs withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
 @docs input
 @docs withInput, withChild
 
@@ -123,6 +123,12 @@ withStyle property value_ =
 withDisabled : Bool -> Builder { a | disabled : Available } slotCaps msg kind -> Builder { a | disabled : Used } slotCaps msg kind
 withDisabled value_ =
     B.withAttribute (A.disabled value_)
+
+
+{-| -}
+withMaxChips : Float -> Builder { a | maxChips : Available } slotCaps msg kind -> Builder { a | maxChips : Used } slotCaps msg kind
+withMaxChips value_ =
+    B.withAttribute (A.maxChips value_)
 
 
 {-| -}

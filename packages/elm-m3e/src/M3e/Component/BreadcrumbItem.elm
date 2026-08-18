@@ -94,7 +94,7 @@ component =
     H.breadcrumbItem
 
 
-{-| Indicates the current item in the breadcrumb path.
+{-| Indicates the current item in the breadcrumb path. (default: `null`)
 -}
 current : Value Current -> Attr { c | current : Supported } msg
 current value_ =
