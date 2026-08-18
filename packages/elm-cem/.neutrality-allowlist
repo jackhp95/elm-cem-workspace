@@ -100,6 +100,14 @@ codegen/Generate/Phantom/Emit.elm
 codegen/Generate/Phantom/Model.elm
 codegen/Generate/SharedAttrs.elm
 
+# --- Emit.elm split (thermonuclear audit W2): same class, carried forward to the
+# sibling modules the monolith was decomposed into ---
+bin/post-generate.js
+codegen/Generate/Phantom/Emit/AttrsRow.elm
+codegen/Generate/Phantom/Emit/Component.elm
+codegen/Generate/Phantom/Emit/General.elm
+codegen/Generate/Phantom/Emit/Guard.elm
+
 # --- Docs: pedagogical reference using m3e as the worked example ---
 # config-primitives.md is the accurate config-primitives reference; it teaches the
 # neutral pipeline using the real elm-m3e config as its running worked example.
