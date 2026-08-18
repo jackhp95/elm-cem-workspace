@@ -130,7 +130,7 @@ size value_ =
     Ir.attribute "size" (String.fromInt value_)
 
 
-{-| Track URL.
+{-| Source URL.
 -}
 src : String -> Attr { c | src : Supported } msg
 src =

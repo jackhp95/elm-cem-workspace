@@ -3,8 +3,10 @@ module IRTest exposing (suite)
 {-| Unit tests for the real attribute IR and naming logic (Attr/Naming),
 which the generator now uses for classification and identifier generation.
 
-Unlike the older GenerationTest (which reimplemented logic in the test file),
-these import and exercise the actual modules.
+These import and exercise the actual modules (unlike the now-deleted
+GenerationTest, which reimplemented logic in the test file and never
+imported Generate — see finding 9,
+docs/reviews/2026-08-17-thermonuclear-workspace-review.md Theme 5).
 
 -}
 
