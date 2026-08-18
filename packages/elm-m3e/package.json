@@ -1,7 +1,7 @@
 {
   "name": "elm-m3e",
   "version": "0.1.0",
-  "description": "M3e.* — type-safe Make-Impossible-States-Impossible Elm layer over the @m3e/web Material 3 Expressive web components (introspectable IR + phantom-typed slots).",
+  "description": "M3e.* \u2014 type-safe Make-Impossible-States-Impossible Elm layer over the @m3e/web Material 3 Expressive web components (introspectable IR + phantom-typed slots).",
   "license": "BSD-3-Clause",
   "private": true,
   "type": "module",
@@ -42,7 +42,8 @@
     "check:families": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/docs/vendor/elm-foundation}\" node \"${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}\" regen-drift --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --nested-pkg=elm-m3e-families",
     "hooks:install": "git config core.hooksPath hooks",
     "postinstall": "node scripts/fix-native-bins.mjs",
-    "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ../../node_modules/.bin/elm make app/IconUse.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotPlacersOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/EnumNarrowingOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotApiOk.elm --output=/dev/null && ../../node_modules/.bin/elm make bad/SlotPlacersWrongKind.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingSplitButton.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingBuilder.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/SlotApiWrongKind.elm --output=/dev/null 2>/dev/null"
+    "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ../../node_modules/.bin/elm make app/IconUse.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotPlacersOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/EnumNarrowingOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotApiOk.elm --output=/dev/null && ../../node_modules/.bin/elm make bad/SlotPlacersWrongKind.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingSplitButton.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingBuilder.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/SlotApiWrongKind.elm --output=/dev/null 2>/dev/null",
+    "check:m3e-utility-names": "node review/scripts/gen-m3e-utility-names.mjs --check"
   },
   "devDependencies": {
     "elm": "0.19.1-6",
