@@ -86,75 +86,53 @@ process.on("exit", cleanupTempFiles);
     process.exit(0);
   }
 
-  // Subcommand: split — partition a generated src tree into per-facet mirror trees.
-  if (rawArgs[0] === "split") {
-    require("./split").run(rawArgs.slice(1));
-    process.exit(0);
-  }
+  // Subcommand dispatch table (finding 4, Theme 4 of the 2026-08-17 thermonuclear
+  // review): each entry is `[lazy require, why it exists]`; the require is lazy
+  // (only the invoked subcommand's module loads) so this stays equivalent to the
+  // former if-chain's short-circuit behavior.
+  const SUBCOMMANDS = {
+    // split — partition a generated src tree into per-facet mirror trees.
+    split: () => require("./split"),
+    // regen-drift — regenerate a brand into a temp dir, elm-format, and diff
+    // against the committed src/ + elm.json. Fails on any drift (issue #49,
+    // finding NB5 — the gate whose absence let committed src go stale).
+    "regen-drift": () => require("./regen-drift"),
+    // registry-check — prove a publishable package compiles as it would from
+    // the registry (static coverage gate + package-shaped compile whose module
+    // resolution is gated by the declared deps). Catches NB1 (issue #49 / B2).
+    "registry-check": () => require("./registry-check"),
+    // gate — the full brand release gate: regen-drift + registry-check + acid,
+    // in order. The one command a brand's `npm run gate` invokes (#50).
+    gate: () => require("./gate"),
+    // validate — docs-size gate. Single-package measure, or per-split-package
+    // when a packages.json is present (folds the per-brand measure-docs +
+    // validate.mjs forks — issue #50).
+    validate: () => require("./validate"),
+    // acid — the shared phantom-type ACID gate (positive probes must compile,
+    // negative probes must fail). Folds the per-brand acid-probe.mjs forks (#50).
+    acid: () => require("./acid"),
+    // check-gates — assert no check can be silently switched off. A gate that
+    // quietly drops one of its checks is worse than no gate: it produces
+    // confident false assurance. See bin/check-gates.js.
+    "check-gates": () => require("./check-gates"),
+    // brand-sync — materialize a brand's gate scripts + ci.yml + ReviewConfig +
+    // README from the family template so brands carry only config (issue #50).
+    "brand-sync": () => require("./brand-sync"),
+    // eject — the published-primitives → vendored-full-brand cutover for a
+    // consumer's elm.json (docs/distribution-model.md). Pulls the brand's
+    // component surface into vendor/<Brand>, adds it to source-directories,
+    // removes the superseded published brand dep, promotes the family deps the
+    // vendored code imports (detected via bin/family-deps.js), pins @m3e/web,
+    // and optionally wires elm-review-cem. --dry-run (default) prints the plan;
+    // --write applies it.
+    eject: () => require("./eject"),
+  };
 
-  // Subcommand: regen-drift — regenerate a brand into a temp dir, elm-format, and
-  // diff against the committed src/ + elm.json. Fails on any drift (issue #49,
-  // finding NB5 — the gate whose absence let committed src go stale).
-  if (rawArgs[0] === "regen-drift") {
-    require("./regen-drift").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: registry-check — prove a publishable package compiles as it would
-  // from the registry (static coverage gate + package-shaped compile whose module
-  // resolution is gated by the declared deps). Catches NB1 (issue #49 / B2).
-  if (rawArgs[0] === "registry-check") {
-    require("./registry-check").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: gate — the full brand release gate: regen-drift + registry-check
-  // + acid, in order. The one command a brand's `npm run gate` invokes (#50).
-  if (rawArgs[0] === "gate") {
-    require("./gate").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: validate — docs-size gate. Single-package measure, or per-split-
-  // package when a packages.json is present (folds the per-brand measure-docs +
-  // validate.mjs forks — issue #50).
-  if (rawArgs[0] === "validate") {
-    require("./validate").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: acid — the shared phantom-type ACID gate (positive probes must
-  // compile, negative probes must fail). Folds the per-brand acid-probe.mjs
-  // forks (issue #50).
-  if (rawArgs[0] === "acid") {
-    require("./acid").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: check-gates — assert no check can be silently switched off.
-  // A gate that quietly drops one of its checks is worse than no gate: it
-  // produces confident false assurance. See bin/check-gates.js.
-  if (rawArgs[0] === "check-gates") {
-    require("./check-gates").run();
-    process.exit(0);
-  }
-
-  // Subcommand: brand-sync — materialize a brand's gate scripts + ci.yml +
-  // ReviewConfig + README from the family template so brands carry only config
-  // (issue #50).
-  if (rawArgs[0] === "brand-sync") {
-    require("./brand-sync").run(rawArgs.slice(1));
-    process.exit(0);
-  }
-
-  // Subcommand: eject — the published-primitives → vendored-full-brand cutover
-  // for a consumer's elm.json (docs/distribution-model.md). Pulls the brand's
-  // component surface into vendor/<Brand>, adds it to source-directories, removes
-  // the superseded published brand dep, promotes the family deps the vendored code
-  // imports (detected via bin/family-deps.js), pins @m3e/web, and optionally wires
-  // elm-review-cem. --dry-run (default) prints the plan; --write applies it.
-  if (rawArgs[0] === "eject") {
-    require("./eject").run(rawArgs.slice(1));
+  if (Object.prototype.hasOwnProperty.call(SUBCOMMANDS, rawArgs[0])) {
+    // check-gates takes no argv; every other subcommand takes rawArgs.slice(1).
+    const mod = SUBCOMMANDS[rawArgs[0]]();
+    if (rawArgs[0] === "check-gates") mod.run();
+    else mod.run(rawArgs.slice(1));
     process.exit(0);
   }
 }
@@ -242,24 +220,9 @@ function resolveElmCodegen() {
   return null;
 }
 
-// After the Elm codegen step, run any supplemental Node.js generators that
-// produce modules the Elm codegen cannot: currently the icon-module generator
-// (WS-C), which writes <Lib>.Icon from a config-declared ligature-name catalog.
-// This runs before syncExposedModules so the emitted file is included in the
-// exposed-modules computation (or filtered by _internalModules as configured).
+// Icon-module + family-package generation — see bin/post-generate.js.
 if (outputDir) {
-  const configFromPaths = [];
-  for (let i = 0; i < process.argv.length; i++) {
-    const a = process.argv[i];
-    if (a.startsWith("--config-from=")) configFromPaths.push(a.slice("--config-from=".length));
-    else if (a === "--config-from" && process.argv[i + 1]) { configFromPaths.push(process.argv[i + 1]); i++; }
-  }
-  require("./gen-icon-module").run(process.argv.slice(2), configFromPaths, outputDir);
-  // Family-grouped standalone package (item 4): re-exports the freshly generated
-  // flat M3e.Component.* surface under nested M3e.Family.* paths. Runs AFTER the
-  // flat gen so it re-exports the current surface; purely additive (a separate
-  // package tree), never touches the flat src just written.
-  require("./gen-family-package").run(process.argv.slice(2), configFromPaths, outputDir);
+  require("./post-generate").runPostGenerate(process.argv.slice(2), outputDir);
 }
 
 // The generator knows exactly which modules it wrote, so it owns the package's
