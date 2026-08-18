@@ -1079,5 +1079,119 @@
       }
     ],
     "note": "Manual 2026-07-30: DateInputElement is the date TEXT-ENTRY field (M3e.DateInput, upstreamed after the prior facts pin; see elm-facts bump). Adopted the two text-entry Figma sets that were mis-bound to m3e-datepicker (a calendar) — conflict #1."
+  },
+  "m3e-card": {
+    "setExamples": [
+      {
+        "nodeId": "52346:27573",
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-avatar",
+              "slot": "header"
+            },
+            {
+              "tag": "m3e-icon-button",
+              "slot": "header",
+              "children": [
+                {
+                  "tag": "m3e-icon",
+                  "attrs": {
+                    "name": "more_vert"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "img",
+              "attrs": {
+                "src": "data:image/png;base64,iVBORw0KGgo=",
+                "alt": "Media"
+              }
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Title"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Subtitle"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Supporting text, lorem ipsum dolor sit amet."
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Secondary"
+                }
+              ]
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Primary"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nodeId": "52350:27876",
+        "example": {
+          "children": [
+            {
+              "tag": "img",
+              "slot": "header",
+              "attrs": {
+                "src": "data:image/png;base64,iVBORw0KGgo=",
+                "alt": "Media"
+              }
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Headline"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Supporting text, lorem ipsum dolor sit amet."
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Action"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "note": "Phase 3.1 (2026-08-18, plans/2026-08-17-figma-elm-config-integration-design.md): m3e-card fuses TWO structurally different nodes (Stacked=vertical: header avatar+more_vert, media, Title/Subtitle/Supporting, Secondary/Primary actions; Horizontal: media in header slot, Headline/Supporting, single action) that previously shared ONE cemTag-level examples.json entry — wrong for at least one of them. setExamples overlays per-set content onto the matcher-s own contains-tier fusion (matcherKind/provenance/fixedAttrs/axes/props untouched). Tags/slots validated offline against src/emit/example-content.mjs validateExamples() (no live Figma this session) — visual approval is a Phase 4 task."
   }
 }

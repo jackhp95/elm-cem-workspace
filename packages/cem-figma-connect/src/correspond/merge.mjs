@@ -444,6 +444,31 @@ export function validateManualCorrespondence(manual, { cem, figma }) {
         );
       }
     }
+    // setExamples: content-only overlay onto an ALREADY-BOUND entry's EXISTING
+    // sets (Phase 3.1, plans/2026-08-17-figma-elm-config-integration-design.md).
+    // Unlike figmaSets/appendSets, this never touches matcherKind/provenance/
+    // fixedAttrs/axes/props — it exists for exactly the case appendSets and
+    // the figmaSets-replace path both refuse: a component the matcher ALREADY
+    // bound correctly (real auto candidate, e.g. contains-tier), where only
+    // the per-set representative EXAMPLE needs authoring (the single
+    // cemTag-level examples.json entry can't fit two structurally different
+    // nodes — see m3e-card). Only nodeId is validated here (existence +
+    // COMPONENT/COMPONENT_SET type); the entry-bound / nodeId-belongs-to-entry
+    // checks happen at merge time (applySetExamples), where the entry set is
+    // known.
+    for (const { nodeId } of entry.setExamples ?? []) {
+      const node = componentById.get(nodeId);
+      if (!node) {
+        throw new Error(
+          `manual-correspondence.json: setExamples nodeId '${nodeId}' (for '${cemTag}') does not exist in the figma export`
+        );
+      }
+      if (node.type !== "COMPONENT_SET" && node.type !== "COMPONENT") {
+        throw new Error(
+          `manual-correspondence.json: setExamples nodeId '${nodeId}' (for '${cemTag}') is type '${node.type}', not a COMPONENT_SET or COMPONENT`
+        );
+      }
+    }
     // appendSets: validate each appended set's nodeId/setName against the
     // figma export, exactly as with figmaSets above.
     for (const { nodeId, setName } of entry.appendSets ?? []) {
@@ -484,6 +509,45 @@ function isUnbound(entry) {
 // Shared by applyManualCorrespondence (proposed side) and applyManualToExisting
 // (stored side) so both build byte-identical objects — key order matters for the
 // JSON.stringify byte-stability comparison in mergeCorrespondence.
+// applySetExamplesToEntry(entry, setExamples, cemTag) -> entry with `.example`
+// attached to each named figmaSet, by nodeId. Phase 3.1
+// (plans/2026-08-17-figma-elm-config-integration-design.md §"core question"
+// verdict, extended per the m3e-card case it flagged): content-only overlay
+// onto sets the entry ALREADY has (whatever bound them — auto match or
+// manual) — never touches matcherKind/provenance/fixedAttrs/axes/props, so a
+// real auto-matched entry (e.g. m3e-card's contains-tier fusion) can gain
+// per-set representative examples without losing its matcher-derived
+// axes/props or being relabeled "manual".
+//
+// `cemTag` (used only for the error message) selects strict vs. lenient
+// behavior: non-null -> throws if any setExamples nodeId isn't among the
+// entry's actual figmaSets (proposed/strict side, applyManualCorrespondence
+// — a typo'd nodeId should fail loud, not silently no-op forever); `null` ->
+// never throws (existing-side, applyManualToExisting — same
+// idempotent-on-a-stale-tree discipline as appendSets there).
+function applySetExamplesToEntry(entry, setExamples, cemTag) {
+  if (!setExamples?.length || !Array.isArray(entry.figmaSets) || entry.figmaSets.length === 0) {
+    return entry;
+  }
+  const byNodeId = new Map(setExamples.map((s) => [s.nodeId, s.example]));
+  let changed = false;
+  const figmaSets = entry.figmaSets.map((set) => {
+    if (!byNodeId.has(set.nodeId)) return set;
+    changed = true;
+    return { ...set, example: byNodeId.get(set.nodeId) };
+  });
+  if (cemTag !== null) {
+    for (const { nodeId } of setExamples) {
+      if (!entry.figmaSets.some((s) => s.nodeId === nodeId)) {
+        throw new Error(
+          `setExamples: nodeId '${nodeId}' (for '${cemTag}') is not among '${cemTag}'s existing figmaSets — bind it first via figmaSets/appendSets`
+        );
+      }
+    }
+  }
+  return changed ? { ...entry, figmaSets } : entry;
+}
+
 function toAppendedFigmaSet(appendSet) {
   return {
     nodeId: appendSet.nodeId,
@@ -543,6 +607,23 @@ export function applyManualCorrespondence(entries, manual) {
         ...existing,
         figmaSets: [...existing.figmaSets, ...appendedFigmaSets],
       };
+      if (manualEntry.setExamples?.length) {
+        result[idx] = applySetExamplesToEntry(result[idx], manualEntry.setExamples, cemTag);
+      }
+      continue;
+    }
+
+    // -- setExamples-only path: content overlay onto an ALREADY-BOUND entry
+    // (whatever bound it — real auto match or a prior manual entry), no
+    // rebinding. See applySetExamplesToEntry's header for the full rationale.
+    if (manualEntry.setExamples?.length && !manualEntry.figmaSets) {
+      const idx = result.findIndex((e) => e.cemTag === cemTag);
+      if (idx === -1 || !Array.isArray(result[idx].figmaSets) || result[idx].figmaSets.length === 0) {
+        throw new Error(
+          `setExamples: '${cemTag}' is not an existing bound entry — setExamples overlays an already-matched component, use figmaSets for a gap`
+        );
+      }
+      result[idx] = applySetExamplesToEntry(result[idx], manualEntry.setExamples, cemTag);
       continue;
     }
 
@@ -623,7 +704,16 @@ export function applyManualToExisting(existing, manual) {
       const toAdd = manualEntry.appendSets
         .filter((s) => !present.has(s.nodeId))
         .map(toAppendedFigmaSet);
-      return toAdd.length > 0 ? { ...entry, figmaSets: [...entry.figmaSets, ...toAdd] } : entry;
+      const appended = toAdd.length > 0 ? { ...entry, figmaSets: [...entry.figmaSets, ...toAdd] } : entry;
+      return applySetExamplesToEntry(appended, manualEntry.setExamples, null);
+    }
+
+    // setExamples-only: content overlay onto an already-bound entry, no
+    // rebinding — the existing-side mirror of applyManualCorrespondence's
+    // setExamples-only path above (see applySetExamplesToEntry's header).
+    // Lenient (never throws) like the rest of this function.
+    if (manualEntry.setExamples?.length && !manualEntry.figmaSets) {
+      return applySetExamplesToEntry(entry, manualEntry.setExamples, null);
     }
 
     // figmaSets: a manual list is the full desired set for that tag; adopt it.
@@ -631,12 +721,13 @@ export function applyManualToExisting(existing, manual) {
     // they land LIVE (not parked in proposedUpdate) — mirrors the proposed side
     // in applyManualCorrespondence, keeping re-match byte-stable.
     if (manualEntry.figmaSets) {
-      return {
+      const replaced = {
         ...entry,
         figmaSets: manualEntry.figmaSets,
         ...(manualEntry.axes !== undefined ? { axes: manualEntry.axes } : {}),
         ...(manualEntry.props !== undefined ? { props: manualEntry.props } : {}),
       };
+      return applySetExamplesToEntry(replaced, manualEntry.setExamples, null);
     }
 
     return entry;

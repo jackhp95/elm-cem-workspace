@@ -7,7 +7,7 @@ import figma from "figma"
  * bound to Figma set "Stacked card" (52346:27573).
  * token names resolved from the elm-cem facts bundle Face C (profiles/m3-kit/facts/elm-api-facts.json); provenance stamp lives in that file's provenance object; NOT the golden's stale short names.
  * children -> rendered from examples.json / inline example into the M3e.Component.Card.component child list (defect D fix).
- * example child (not emitted): <img> slot="header" — opaque HTML element with no verified elm-m3e element seam; the Web Components emitter renders it, the Elm emitter has no verified seam.
+ * example child (not emitted): <img> — opaque HTML element with no verified elm-m3e element seam; the Web Components emitter renders it, the Elm emitter has no verified seam.
  * axis: Style -> variant
  * axis (unmapped): Layout — no CEM enum attribute shares its value set (options: Slot, Media & text)
  * prop: Header text -> content
@@ -33,12 +33,15 @@ export default {
     [ M3e.Component.Card.orientation M3e.Values.vertical
     , M3e.Component.Card.variant ${variant}
     ]
-    [ M3e.Component.Card.content (M3e.text "Headline")
+    [ M3e.Component.Card.header (M3e.Component.Avatar.component [] [])
+    , M3e.Component.Card.header (M3e.Component.IconButton.component { content = M3e.Icon.icon M3e.Icon.moreVert [] [], action = M3e.Action.none } [] [])
+    , M3e.Component.Card.content (M3e.text "Title")
+    , M3e.Component.Card.content (M3e.text "Subtitle")
     , M3e.Component.Card.content (M3e.text "Supporting text, lorem ipsum dolor sit amet.")
-    , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
-    , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
+    , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Secondary", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
+    , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Primary", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
     ]`,
-  imports: ["import M3e", "import M3e.Action", "import M3e.Component.Button", "import M3e.Component.Card", "import M3e.Values"],
+  imports: ["import M3e", "import M3e.Action", "import M3e.Component.Avatar", "import M3e.Component.Button", "import M3e.Component.Card", "import M3e.Component.IconButton", "import M3e.Icon", "import M3e.Values"],
   id: "m3e-card-vertical-elm",
   metadata: {
     nestable: true,

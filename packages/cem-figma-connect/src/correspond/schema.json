@@ -36,7 +36,7 @@
               "$comment": "The fixed CEM attr=value this set contributes to the fusion (e.g. {\"variant\":\"tonal\"}); {} for a non-fused set/standalone."
             },
             "slugSuffix": { "type": "string", "$comment": "appendSets mechanism (T1/T2): when present, REPLACES the fixedAttrs-derived slug segment in the emitted filename/id. Stored only on appended sets injected via manual-correspondence appendSets." },
-            "example": { "type": "object", "$comment": "appendSets mechanism (T1/T2): inline per-set example content. Shape mirrors examples.json entries — a 'children' array of child descriptors. Takes precedence over any cemTag-level examples.json entry for this set." }
+            "example": { "type": "object", "$comment": "Inline per-set example content (shape mirrors examples.json entries — a 'children' array of child descriptors). Takes precedence over any cemTag-level examples.json entry for this set. Two origins: the appendSets mechanism (T1/T2, a newly-appended set), or manual-correspondence.json's setExamples mechanism (Phase 3.1, plans/2026-08-17-figma-elm-config-integration-design.md) — a content-only overlay onto a set the entry ALREADY has (any origin, incl. a real auto match), which changes only this field and leaves matcherKind/provenance/fixedAttrs untouched." }
           }
         }
       },

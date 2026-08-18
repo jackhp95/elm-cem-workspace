@@ -37,7 +37,6 @@ export default {
     [ M3e.Component.Card.content (M3e.text "Headline")
     , M3e.Component.Card.content (M3e.text "Supporting text, lorem ipsum dolor sit amet.")
     , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
-    , M3e.Component.Card.actions (M3e.Component.Button.component { content = M3e.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [])
     ]`,
   imports: ["import M3e", "import M3e.Action", "import M3e.Component.Button", "import M3e.Component.Card", "import M3e.Values"],
   id: "m3e-card-horizontal-elm",

@@ -309,6 +309,190 @@ test("existing-mirror: a tag not named in manual is byte-identical", () => {
 });
 
 // ---------------------------------------------------------------------------
+// T3: setExamples mechanism — content-only overlay onto an ALREADY-BOUND
+// entry (Phase 3.1, plans/2026-08-17-figma-elm-config-integration-design.md).
+// Unlike appendSets/figmaSets, this never touches matcherKind/provenance/
+// fixedAttrs/axes/props — see applySetExamplesToEntry's header in merge.mjs.
+// ---------------------------------------------------------------------------
+
+test("T3: setExamples overlays example onto the matching figmaSet, preserves everything else (the m3e-card case)", () => {
+  const entries = [makeBoundEntry("m3e-card")]; // matcherKind:"fusion", provenance:"auto-exact", 2 figmaSets
+  const manual = {
+    "m3e-card": {
+      setExamples: [
+        { nodeId: "100:1", example: { children: [{ tag: "div", text: "Vertical" }] } },
+        { nodeId: "100:2", example: { children: [{ tag: "div", text: "Horizontal" }] } },
+      ],
+    },
+  };
+
+  const result = applyManualCorrespondence(entries, manual);
+  const entry = result.find((e) => e.cemTag === "m3e-card");
+
+  assert.deepEqual(entry.figmaSets[0].example, { children: [{ tag: "div", text: "Vertical" }] });
+  assert.deepEqual(entry.figmaSets[1].example, { children: [{ tag: "div", text: "Horizontal" }] });
+
+  // The matcher-derived identity of the entry is completely untouched — this
+  // is the whole point (contrast with the figmaSets/manual path, which
+  // relabels matcherKind:"manual", provenance:"manual").
+  assert.equal(entry.matcherKind, "fusion", "matcherKind untouched");
+  assert.equal(entry.provenance, "auto-exact", "provenance untouched");
+  assert.equal(entry.status, "confirmed", "status untouched");
+  assert.deepEqual(entry.figmaSets[0].fixedAttrs, { variant: "filled" }, "fixedAttrs untouched");
+  assert.equal(entry.axes.length, 1, "axes untouched");
+});
+
+test("T3: setExamples for an ABSENT cemTag THROWS", () => {
+  const entries = [makeBoundEntry("m3e-something-else")];
+  const manual = {
+    "m3e-does-not-exist": {
+      setExamples: [{ nodeId: "999:1", example: { children: [] } }],
+    },
+  };
+  assert.throws(
+    () => applyManualCorrespondence(entries, manual),
+    (err) =>
+      err instanceof Error &&
+      err.message.includes("setExamples") &&
+      err.message.includes("m3e-does-not-exist") &&
+      err.message.includes("not an existing bound entry"),
+    "must throw with setExamples key and tag name"
+  );
+});
+
+test("T3: setExamples for an UNBOUND (figmaSets:[]) entry THROWS", () => {
+  const unboundEntry = {
+    cemTag: "m3e-unbound",
+    matcherKind: "code-only",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    confidence: 0,
+    provenance: "auto-gap",
+    rationale: "code-only",
+    status: "proposed",
+  };
+  const manual = {
+    "m3e-unbound": { setExamples: [{ nodeId: "999:1", example: { children: [] } }] },
+  };
+  assert.throws(
+    () => applyManualCorrespondence([unboundEntry], manual),
+    (err) =>
+      err instanceof Error &&
+      err.message.includes("setExamples") &&
+      err.message.includes("m3e-unbound") &&
+      err.message.includes("not an existing bound entry"),
+    "must throw for an unbound entry"
+  );
+});
+
+test("T3: setExamples with a nodeId NOT among the entry's figmaSets THROWS (typo guard)", () => {
+  const entries = [makeBoundEntry("m3e-card")];
+  const manual = {
+    "m3e-card": { setExamples: [{ nodeId: "100:9-typo", example: { children: [] } }] },
+  };
+  assert.throws(
+    () => applyManualCorrespondence(entries, manual),
+    (err) =>
+      err instanceof Error &&
+      err.message.includes("setExamples") &&
+      err.message.includes("100:9-typo") &&
+      err.message.includes("not among"),
+    "must throw naming the mismatched nodeId, not silently no-op"
+  );
+});
+
+test("T3: setExamples + appendSets together — the appended set can ALSO get setExamples in one manual entry", () => {
+  const entries = [makeBoundEntry("m3e-synthetic")];
+  const manual = {
+    "m3e-synthetic": {
+      appendSets: [{ nodeId: "200:1", setName: "Synthetic - toggle", fixedAttrs: {} }],
+      setExamples: [{ nodeId: "200:1", example: { children: [{ tag: "span", text: "Toggle" }] } }],
+    },
+  };
+  const result = applyManualCorrespondence(entries, manual);
+  const entry = result.find((e) => e.cemTag === "m3e-synthetic");
+  const appended = entry.figmaSets.find((s) => s.nodeId === "200:1");
+  assert.deepEqual(appended.example, { children: [{ tag: "span", text: "Toggle" }] });
+});
+
+test("T3 existing-mirror: setExamples onto a CONFIRMED bound entry overlays example, no throw, other fields untouched", () => {
+  const existing = [makeBoundEntry("m3e-card")];
+  const manual = {
+    "m3e-card": { setExamples: [{ nodeId: "100:1", example: { children: [{ tag: "div", text: "V" }] } }] },
+  };
+  const out = applyManualToExisting(existing, manual);
+  const e = out.find((x) => x.cemTag === "m3e-card");
+  assert.deepEqual(e.figmaSets[0].example, { children: [{ tag: "div", text: "V" }] });
+  assert.equal(e.figmaSets[1].example, undefined, "the other set is untouched");
+  assert.equal(e.matcherKind, "fusion", "matcherKind untouched");
+  assert.equal(e.status, "confirmed", "status untouched");
+});
+
+test("T3 existing-mirror: re-applying setExamples is idempotent", () => {
+  const existing = [makeBoundEntry("m3e-card")];
+  const manual = {
+    "m3e-card": { setExamples: [{ nodeId: "100:1", example: { children: [{ tag: "div", text: "V" }] } }] },
+  };
+  const once = applyManualToExisting(existing, manual);
+  const twice = applyManualToExisting(once, manual);
+  assert.equal(JSON.stringify(once), JSON.stringify(twice), "second application is a no-op");
+});
+
+test("T3 existing-mirror: setExamples with an unknown nodeId is a silent no-op, never throws (lenient, unlike the proposed side)", () => {
+  const existing = [makeBoundEntry("m3e-card")];
+  const manual = {
+    "m3e-card": { setExamples: [{ nodeId: "does-not-exist", example: { children: [] } }] },
+  };
+  let out;
+  assert.doesNotThrow(() => {
+    out = applyManualToExisting(existing, manual);
+  });
+  assert.equal(JSON.stringify(out), JSON.stringify(existing), "unmatched nodeId leaves the entry byte-identical");
+});
+
+// ---------------------------------------------------------------------------
+// T3 validate: validateManualCorrespondence — setExamples nodeId checks
+// ---------------------------------------------------------------------------
+
+test("T3 validate: valid setExamples nodeId passes without throwing", () => {
+  const manual = {
+    "m3e-synthetic": { setExamples: [{ nodeId: "100:1", example: { children: [] } }] },
+  };
+  assert.doesNotThrow(() =>
+    validateManualCorrespondence(manual, { cem: syntheticCem, figma: syntheticFigma })
+  );
+});
+
+test("T3 validate: setExamples with non-existent nodeId THROWS", () => {
+  const manual = {
+    "m3e-synthetic": { setExamples: [{ nodeId: "999:9", example: { children: [] } }] },
+  };
+  assert.throws(
+    () => validateManualCorrespondence(manual, { cem: syntheticCem, figma: syntheticFigma }),
+    (err) =>
+      err instanceof Error &&
+      err.message.includes("setExamples") &&
+      err.message.includes("999:9") &&
+      err.message.includes("does not exist")
+  );
+});
+
+test("T3 validate: setExamples nodeId of a non-bindable type (FRAME) THROWS", () => {
+  const manual = {
+    "m3e-synthetic": { setExamples: [{ nodeId: "200:2", example: { children: [] } }] },
+  };
+  assert.throws(
+    () => validateManualCorrespondence(manual, { cem: syntheticCem, figma: syntheticFigma }),
+    (err) =>
+      err instanceof Error &&
+      err.message.includes("setExamples") &&
+      err.message.includes("200:2") &&
+      err.message.includes("COMPONENT_SET")
+  );
+});
+
+// ---------------------------------------------------------------------------
 // T1: validateManualCorrespondence — appendSets nodeId/setName checks
 // ---------------------------------------------------------------------------
 

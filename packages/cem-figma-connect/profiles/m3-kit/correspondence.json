@@ -693,6 +693,74 @@
         "setName": "Stacked card",
         "fixedAttrs": {
           "orientation": "vertical"
+        },
+        "example": {
+          "children": [
+            {
+              "tag": "m3e-avatar",
+              "slot": "header"
+            },
+            {
+              "tag": "m3e-icon-button",
+              "slot": "header",
+              "children": [
+                {
+                  "tag": "m3e-icon",
+                  "attrs": {
+                    "name": "more_vert"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "img",
+              "attrs": {
+                "src": "data:image/png;base64,iVBORw0KGgo=",
+                "alt": "Media"
+              }
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Title"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Subtitle"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Supporting text, lorem ipsum dolor sit amet."
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Secondary"
+                }
+              ]
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Primary"
+                }
+              ]
+            }
+          ]
         }
       },
       {
@@ -700,6 +768,41 @@
         "setName": "Horizontal card",
         "fixedAttrs": {
           "orientation": "horizontal"
+        },
+        "example": {
+          "children": [
+            {
+              "tag": "img",
+              "slot": "header",
+              "attrs": {
+                "src": "data:image/png;base64,iVBORw0KGgo=",
+                "alt": "Media"
+              }
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Headline"
+            },
+            {
+              "tag": "div",
+              "slot": "content",
+              "text": "Supporting text, lorem ipsum dolor sit amet."
+            },
+            {
+              "tag": "m3e-button",
+              "slot": "actions",
+              "attrs": {
+                "variant": "text"
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "text": "Action"
+                }
+              ]
+            }
+          ]
         }
       }
     ],

@@ -112,54 +112,6 @@
       }
     ]
   },
-  "m3e-card": {
-    "children": [
-      {
-        "tag": "img",
-        "slot": "header",
-        "attrs": {
-          "src": "data:image/png;base64,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",
-          "alt": "Media"
-        }
-      },
-      {
-        "tag": "div",
-        "slot": "content",
-        "text": "Headline"
-      },
-      {
-        "tag": "div",
-        "slot": "content",
-        "text": "Supporting text, lorem ipsum dolor sit amet."
-      },
-      {
-        "tag": "m3e-button",
-        "slot": "actions",
-        "attrs": {
-          "variant": "text"
-        },
-        "children": [
-          {
-            "tag": "span",
-            "text": "Action"
-          }
-        ]
-      },
-      {
-        "tag": "m3e-button",
-        "slot": "actions",
-        "attrs": {
-          "variant": "text"
-        },
-        "children": [
-          {
-            "tag": "span",
-            "text": "Action"
-          }
-        ]
-      }
-    ]
-  },
   "m3e-menu-item": {
     "children": [
       {
