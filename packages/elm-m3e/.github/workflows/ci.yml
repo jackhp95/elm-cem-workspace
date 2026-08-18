@@ -19,8 +19,11 @@ jobs:
       # The codegen-aware elm-review rules live in the sibling public repo
       # jackhp95/elm-review-cem. The review config and the examples-gen pipeline
       # both expect it at $REPO/../elm-review-cem (matches the local dev layout).
-      - name: Fetch elm-review-cem rules (sibling)
-        run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"
+      # Finding 1.9: this step used to be copy-pasted identically into all
+      # three jobs below — extracted to a composite action so there is one
+      # copy to maintain instead of three.
+      - name: Fetch elm-review-cem (sibling)
+        uses: ./.github/actions/fetch-elm-review-cem
 
       # `npm test` (the tests/ unit suite), the `elm-review` step, and the docs
       # job's `build:reference` full-surface `elm make --docs` all need HtmlIr.*
@@ -144,8 +147,11 @@ jobs:
       # The codegen-aware elm-review rules live in the sibling public repo
       # jackhp95/elm-review-cem. The review config and the examples-gen pipeline
       # both expect it at $REPO/../elm-review-cem (matches the local dev layout).
-      - name: Fetch elm-review-cem rules (sibling)
-        run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"
+      # Finding 1.9: this step used to be copy-pasted identically into all
+      # three jobs below — extracted to a composite action so there is one
+      # copy to maintain instead of three.
+      - name: Fetch elm-review-cem (sibling)
+        uses: ./.github/actions/fetch-elm-review-cem
 
       - uses: pnpm/action-setup@v6
         with:
@@ -190,8 +196,11 @@ jobs:
       # The codegen-aware elm-review rules live in the sibling public repo
       # jackhp95/elm-review-cem. The review config and the examples-gen pipeline
       # both expect it at $REPO/../elm-review-cem (matches the local dev layout).
-      - name: Fetch elm-review-cem rules (sibling)
-        run: git clone --depth 1 https://github.com/jackhp95/elm-review-cem.git "$GITHUB_WORKSPACE/../elm-review-cem"
+      # Finding 1.9: this step used to be copy-pasted identically into all
+      # three jobs below — extracted to a composite action so there is one
+      # copy to maintain instead of three.
+      - name: Fetch elm-review-cem (sibling)
+        uses: ./.github/actions/fetch-elm-review-cem
 
       - uses: pnpm/action-setup@v6
         with:
