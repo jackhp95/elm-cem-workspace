@@ -149,6 +149,16 @@ function main() {
     cpSync(from, to, { recursive: true, verbatimSymlinks: true });
   }
 
+  // The workspace root's .gitignore already covers elm-stuff/, node_modules/,
+  // etc. for every package, so no individual package tracks its own — but a
+  // standalone mirror consumer has no root .gitignore to inherit. Regenerate
+  // a minimal one whenever the workspace didn't supply one for this package
+  // (found via the elm-cem-facts publish audit, where wiping-then-repopulate
+  // was silently deleting the mirror's only .gitignore on every publish).
+  if (!existsSync(path.join(cloneDir, ".gitignore"))) {
+    writeFileSync(path.join(cloneDir, ".gitignore"), "elm-stuff/\nnode_modules/\n");
+  }
+
   sh("git", ["-C", cloneDir, "add", "-A"]);
   const diffStat = sh("git", ["-C", cloneDir, "diff", "--cached", "--stat"]).trim();
 
