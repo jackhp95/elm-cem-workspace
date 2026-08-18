@@ -337,7 +337,7 @@ own merits and needs no exemption.
 -}
 materialDiscipline : List Rule
 materialDiscipline =
-    [ NoProprietaryDsClasses.rule
+    [ NoProprietaryDsClasses.rule [ "Seam" ]
         |> Rule.ignoreErrorsForDirectories
             [ "app/Route/Styles/", "docs/app/Route/Styles/" ]
         -- The theme editor's own live previews, exempt for exactly the same
@@ -371,9 +371,15 @@ opt-in (used ad hoc by the `docs/scripts/examples-gen` harness, not here).
 
 The seam gate (`NoSeamOutsideAllowedModules`) and the opaque-IR backstop
 (`NoInternalImportOutsideAllowed`) are the M3e-specific rules; they arrive via
-`CodegenReviewConfig.config`, which is concatenated into `config` below. The docs app's Tailwind/raw-HTML crossings are centralised in its
-designated adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared`), which are on
-that rule's allow-list, so feature routes stay seam-free (docs/DESIGN.md §4, #81).
+`CodegenReviewConfig.config`, which is concatenated into `config` below.
+
+NOTE: this paragraph used to claim the docs app centralises its crossings in
+"designated adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared`)". That was
+false on two counts — `Layout`, `Kit` and `Native` do not exist as modules, and
+they were never on that rule's allow-list either. Only `Doc` and `Shared` are
+real. The single designated destination is now `Seam`, named consistently by
+both this rule and `NoSeamOutsideAllowedModules`; it is not created until
+something genuinely needs containing (docs/DESIGN.md §4, #81).
 
 TODO: `jackhp95/elm-review-cem` is not yet published to the Elm registry, so its
 rules are pulled in via the `../../elm-review-cem/src` source-directory in

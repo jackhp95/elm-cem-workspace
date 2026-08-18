@@ -91,6 +91,32 @@ compiler. If you are reading this because the rule flagged you, the fix is up th
 list, never sideways into CSS.
 
 
+## The seam: where a genuine escape is allowed to live
+
+Steps 1–4 cover mistakes. They do not cover the honest case: a real design-system
+gap that someone has to work around **today**, before the component gains the knob.
+For that there is a fifth option, and it is the reason this rule takes an
+`allowedModules` argument.
+
+Inside a designated module, this rule does not fire. That module is the **seam** —
+the same destination the Elm-component fences use (`NoSeamOutsideAllowedModules`),
+so every design-system escape in the app lands in one reviewable place regardless
+of whether it crossed a KIND (a recast) or painted a SURFACE (a styling class).
+Both are the same artifact to a reviewer: a small, named producer that contains an
+escape.
+
+The discipline that makes this work is the same one the seam guide already
+teaches for `recast`: do not call the escape inline at the point of need. Wrap it
+in a named producer in the seam module, so the escape is greppable, countable, and
+has somewhere to carry its justification. A styling class scattered across forty
+call sites is invisible; the same class in one `Seam.mutedText` is a line item
+someone can delete when the component ships its property.
+
+Passing `[]` makes the rule unconditional — correct for a codebase that has no
+seam module yet, which is the docs app's current state (zero violations, so
+nothing has needed containing).
+
+
 ## Known limit
 
 The rule reads literals, not values. It descends through `++`, parentheses, and
@@ -120,31 +146,61 @@ painting class behind a function to dodge this rule, that is on you.
     M3e.card [ MA.class "m3e-card-padding-[0.625rem]" ] []
 
 -}
-rule : Rule
-rule =
-    Rule.newModuleRuleSchemaUsingContextCreator "NoProprietaryDsClasses" initialContext
+rule : List String -> Rule
+rule allowedModules =
+    Rule.newModuleRuleSchemaUsingContextCreator "NoProprietaryDsClasses" (initialContext allowedModules)
         |> Rule.withExpressionEnterVisitor expressionVisitor
         |> Rule.fromModuleRuleSchema
 
 
 type alias Context =
-    { lookupTable : ModuleNameLookupTable }
+    { lookupTable : ModuleNameLookupTable
+    , gated : Bool
+    }
 
 
-initialContext : Rule.ContextCreator () Context
-initialContext =
-    Rule.initContextCreator (\lookupTable () -> { lookupTable = lookupTable })
+initialContext : List String -> Rule.ContextCreator () Context
+initialContext allowedModules =
+    Rule.initContextCreator
+        (\lookupTable moduleName () ->
+            { lookupTable = lookupTable
+            , gated = not (isAllowedModule allowedModules (String.join "." moduleName))
+            }
+        )
         |> Rule.withModuleNameLookupTable
+        |> Rule.withModuleName
+
+
+{-| A module is allowed when its name equals, or is nested under (at a dot
+boundary), one of the allow-list prefixes — so `"Seam"` covers `Seam` and
+`Seam.Surface`. Same matching as `NoSeamOutsideAllowedModules.isAllowed`, on
+purpose: the two fences share a destination and should agree on what "inside it"
+means.
+-}
+isAllowedModule : List String -> String -> Bool
+isAllowedModule allowed currentModule =
+    List.any
+        (\prefix -> currentModule == prefix || String.startsWith (prefix ++ ".") currentModule)
+        allowed
 
 
 expressionVisitor : Node Expression -> Context -> ( List (Error {}), Context )
 expressionVisitor node context =
-    case Node.value node of
-        Expression.Application (fn :: arg :: []) ->
-            ( checkClassCall context fn arg, context )
+    if not context.gated then
+        -- Inside the designated seam. A styling class here is the CONTAINED,
+        -- reviewable form this rule exists to push people toward, so it is not an
+        -- error. The proprietary `ds-`/`t-` check is skipped too: those render
+        -- nothing at all, but a seam module is exactly where a deliberate
+        -- dead-class workaround would be parked and justified.
+        ( [], context )
 
-        _ ->
-            ( [], context )
+    else
+        case Node.value node of
+            Expression.Application (fn :: arg :: []) ->
+                ( checkClassCall context fn arg, context )
+
+            _ ->
+                ( [], context )
 
 
 checkClassCall : Context -> Node Expression -> Node Expression -> List (Error {})

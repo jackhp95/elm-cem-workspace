@@ -52,7 +52,7 @@ expectStyling name classes =
     test name <|
         \() ->
             typedHtmlModule classes
-                |> Review.Test.run rule
+                |> Review.Test.run (rule [])
                 |> Review.Test.expectErrors
                     [ Review.Test.error
                         { message = stylingMessage
@@ -67,7 +67,7 @@ expectAllowed name classes =
     test name <|
         \() ->
             typedHtmlModule classes
-                |> Review.Test.run rule
+                |> Review.Test.run (rule [])
                 |> Review.Test.expectNoErrors
 
 
@@ -82,7 +82,7 @@ import Html
 import Html.Attributes as Attr
 view = Html.div [ Attr.class "ds-card-media" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -97,7 +97,7 @@ import Html
 import Html.Attributes as Attr
 view = Html.div [ Attr.class "t-primary" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -111,7 +111,7 @@ view = Html.div [ Attr.class "t-primary" ] []
 import Ui.Shape
 view = Ui.Shape.withClass "ds-w-16"
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -126,7 +126,7 @@ import Html
 import Html.Attributes as Attr
 view = Html.div [ Attr.class "flex ds-card items-center" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -141,7 +141,7 @@ import Html
 import Html.Attributes as Attr
 view active = Html.div [ Attr.classList [ ( "ds-active", active ) ] ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -156,7 +156,7 @@ import Html
 import Html.Attributes as Attr
 view = Html.div [ Attr.class "cards tools grid-ds" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectNoErrors
             ]
         , describe "class-bearing modules beyond Html.Attributes"
@@ -168,7 +168,7 @@ import M3e
 import M3e.Attributes as MA
 view = M3e.card [ MA.class "rounded-lg" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -183,7 +183,7 @@ import Svg
 import Svg.Attributes as SvgAttr
 view = Svg.circle [ SvgAttr.class "fill-primary" ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -197,7 +197,7 @@ view = Svg.circle [ SvgAttr.class "fill-primary" ] []
 import Csv
 view = Csv.class "bg-surface"
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectNoErrors
             ]
         , describe "styling: background and colour"
@@ -270,7 +270,7 @@ view = Csv.class "bg-surface"
             [ test "reports styling once, naming every offending token, and leaves layout alone" <|
                 \() ->
                     typedHtmlModule "flex items-center gap-2 bg-surface rounded-lg text-body-md"
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -281,7 +281,7 @@ view = Csv.class "bg-surface"
             , test "reports proprietary and styling as separate errors" <|
                 \() ->
                     typedHtmlModule "ds-card bg-surface"
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = proprietaryMessage
@@ -296,6 +296,80 @@ view = Csv.class "bg-surface"
                             ]
             , expectAllowed "empty class string" ""
             ]
+        , describe "the seam fence (allowedModules)"
+            [ test "a styling class OUTSIDE the designated module is still caught" <|
+                \() ->
+                    """module Route.Page exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view = TH.div [ TA.class "bg-surface-container" ] []
+"""
+                        |> Review.Test.run (rule [ "Seam" ])
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "bg-surface-container"
+                                , under = "\"bg-surface-container\""
+                                }
+                            ]
+            , test "the SAME usage inside the designated module is not flagged" <|
+                \() ->
+                    """module Seam exposing (mutedPanel)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+mutedPanel = TH.div [ TA.class "bg-surface-container" ] []
+"""
+                        |> Review.Test.run (rule [ "Seam" ])
+                        |> Review.Test.expectNoErrors
+            , test "the fence covers modules nested under the seam, at a dot boundary" <|
+                \() ->
+                    """module Seam.Surface exposing (panel)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+panel = TH.div [ TA.class "rounded-lg text-on-surface-variant" ] []
+"""
+                        |> Review.Test.run (rule [ "Seam" ])
+                        |> Review.Test.expectNoErrors
+            , test "a module merely PREFIXED like the seam is NOT inside it" <|
+                \() ->
+                    """module Seamless exposing (view)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+view = TH.div [ TA.class "bg-surface" ] []
+"""
+                        |> Review.Test.run (rule [ "Seam" ])
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "bg-surface"
+                                , under = "\"bg-surface\""
+                                }
+                            ]
+            , test "an empty allow-list makes the rule unconditional — nowhere is exempt" <|
+                \() ->
+                    """module Seam exposing (mutedPanel)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+mutedPanel = TH.div [ TA.class "bg-surface-container" ] []
+"""
+                        |> Review.Test.run (rule [])
+                        |> Review.Test.expectErrors
+                            [ Review.Test.error
+                                { message = stylingMessage
+                                , details = stylingDetails "bg-surface-container"
+                                , under = "\"bg-surface-container\""
+                                }
+                            ]
+            , test "layout classes inside the seam are still fine (no false positives either way)" <|
+                \() ->
+                    """module Seam exposing (row)
+import TypedHtml as TH
+import TypedHtml.Attributes as TA
+row = TH.div [ TA.class "flex items-center gap-2" ] []
+"""
+                        |> Review.Test.run (rule [ "Seam" ])
+                        |> Review.Test.expectNoErrors
+            ]
         , describe "non-literal class arguments"
             [ test "finds a painting class concatenated onto a computed part" <|
                 \() ->
@@ -304,7 +378,7 @@ import TypedHtml as TH
 import TypedHtml.Attributes as TA
 view bodyCls = TH.span [ TA.class (bodyCls ++ " text-on-surface-variant") ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -319,7 +393,7 @@ import TypedHtml as TH
 import TypedHtml.Attributes as TA
 view shadow = TH.div [ TA.class ("bg-surface-container-high p-4 " ++ shadow) ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -334,7 +408,7 @@ import TypedHtml as TH
 import TypedHtml.Attributes as TA
 view selected = TH.div [ TA.class (if selected then "bg-surface-container" else "flex gap-2") ] []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -357,7 +431,7 @@ view kind =
         ]
         []
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectErrors
                             [ Review.Test.error
                                 { message = stylingMessage
@@ -373,7 +447,7 @@ import TypedHtml.Attributes as TA
 view density = TH.div [ TA.class (densityClass density) ] []
 densityClass d = "bg-surface"
 """
-                        |> Review.Test.run rule
+                        |> Review.Test.run (rule [])
                         |> Review.Test.expectNoErrors
             ]
         ]
