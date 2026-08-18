@@ -8,9 +8,13 @@ Change the sample there; this file follows.
 -}
 
 import M3e
+import M3e.Action
+import M3e.Component.IconButton
 import TypedHtml.Attributes as TA
 
 
 shown0_ =
-    M3e.iconButton []
-        [ M3e.icon [ TA.name "help" ] [] ]
+    M3e.Component.IconButton.component
+        { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
+        []
+        []

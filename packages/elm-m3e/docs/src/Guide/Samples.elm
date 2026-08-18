@@ -51,8 +51,7 @@ guideEmailField =
 -}
 guideHelpButton : String
 guideHelpButton =
-    """M3e.iconButton [ Aria.label "Help" ]
-    [ M3e.icon [ TA.name "help" ] [] ]"""
+    """M3e.Component.IconButton.component { content = M3e.icon [ TA.name "help" ] [], ariaLabel = "Help", action = M3e.Action.none } [] []"""
 
 
 {-| `savedButton`, from `docs/app/Route/Guide/InvalidStates.elm`.
