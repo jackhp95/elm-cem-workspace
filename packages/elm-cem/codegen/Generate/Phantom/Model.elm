@@ -350,6 +350,13 @@ type alias Comp =
     -- setter is the kind of gap a reader "fixes" by adding one back, and the note
     -- is what stops that.
     , blockedAttrs : List Attr.AttrSpec
+
+    -- Config-supplied doc content (`examples`/`docMeta` config keys), rendered
+    -- into the module doc comment by `Docs.examplesSection`/`Docs.docMetaMarker`
+    -- in `Emit.elm`. Opt-in per component; absent ⇒ `[]`, so most components
+    -- emit no `## Examples` section at all.
+    , examples : List RawExample
+    , docMeta : List ( String, String )
     }
 
 
@@ -469,7 +476,21 @@ type alias RawComp =
     , actionMap : List ( String, String )
     , attrForm : List ( String, String )
     , propertyOnly : List String
+    , examples : List RawExample
+    , docMeta : List ( String, String )
     }
+
+
+{-| A config-supplied usage example (`examples` config key), rendered into the
+component module's `## Examples` doc-comment section by `Docs.examplesSection`.
+Mirrors `Generate.Types.ExampleRecord` (the legacy front-end's decoded shape)
+but is decoded independently here because the phantom pipeline's `RawComp`
+decoder is self-contained (see the module doc). `codeRecord` is accepted by
+the legacy decoder but has never been consumed by any renderer, so it is not
+carried forward here.
+-}
+type alias RawExample =
+    { title : String, code : String, section : Maybe String }
 
 
 {-| A per-component typed event decoder (config `events`): decode `path`
@@ -957,6 +978,21 @@ rawCompDecoder =
         |> andMap (D.oneOf [ D.field "actionMap" pairListDecoder, D.succeed [] ])
         |> andMap (D.oneOf [ D.field "attrForm" attrFormDecoder, D.succeed [] ])
         |> andMap (D.oneOf [ D.field "propertyOnly" (D.list D.string), D.succeed [] ])
+        |> andMap (D.oneOf [ D.field "examples" (D.list rawExampleDecoder), D.succeed [] ])
+        |> andMap (D.oneOf [ D.field "docMeta" (D.keyValuePairs D.string), D.succeed [] ])
+
+
+{-| One config-supplied usage example. `title`/`code` default to `""` (never
+fail-loud — an author who forgets one gets an empty-but-valid string, not a
+config-decode error); `section` is optional (unsectioned examples group under
+the renderer's "Examples" default).
+-}
+rawExampleDecoder : D.Decoder RawExample
+rawExampleDecoder =
+    D.map3 (\t c s -> { title = t, code = c, section = s })
+        (D.oneOf [ D.field "title" D.string, D.succeed "" ])
+        (D.oneOf [ D.field "code" D.string, D.succeed "" ])
+        (D.maybe (D.field "section" D.string))
 
 
 andMap : D.Decoder a -> D.Decoder (a -> b) -> D.Decoder b
@@ -1835,6 +1871,8 @@ resolveWith detectedLib eventPrefix raw declarations =
                       , actionMap = cfg |> Maybe.map .actionMap |> Maybe.withDefault []
                       , propertyOnly = cfg |> Maybe.map .propertyOnly |> Maybe.withDefault [] |> List.sort
                       , blockedAttrs = blocked |> List.sortBy .htmlName
+                      , examples = cfg |> Maybe.map .examples |> Maybe.withDefault []
+                      , docMeta = cfg |> Maybe.map .docMeta |> Maybe.withDefault []
                       }
                     , compNotes
                     )
