@@ -5,7 +5,7 @@
 
 Structured reference for every public CSS custom property exposed by m3e web components, grouped by component, with inferred Tailwind v4 type and (where applicable) the theme namespace used by the matching `@utility` setter class.
 
-Total: **2347 unique** public vars across **100 components**.
+Total: **2361 unique** public vars across **100 components**.
 
 ## Components
 
@@ -1563,6 +1563,7 @@ An item of a floating action button (FAB) menu.
 
 | Var | Type | Theme namespace | Description |
 |---|---|---|---|
+| `--m3e-fab-menu-item-bottom-space` | `length` | — | Padding at the bottom of the menu item. |
 | `--m3e-fab-menu-item-font-size` | `length` | `--text-*` | Font size of the menu item label. |
 | `--m3e-fab-menu-item-font-weight` | `number` | `--font-weight-*` | Font weight of the menu item label. |
 | `--m3e-fab-menu-item-height` | `length` | — | Height of the menu item. |
@@ -1571,6 +1572,7 @@ An item of a floating action button (FAB) menu.
 | `--m3e-fab-menu-item-line-height` | `length` | `--leading-*` | Line height of the menu item label. |
 | `--m3e-fab-menu-item-shape` | `length` | `--radius-*` | Border radius of the menu item. |
 | `--m3e-fab-menu-item-spacing` | `length` | — | Gap between icon and label. |
+| `--m3e-fab-menu-item-top-space` | `length` | — | Padding at the top of the menu item. |
 | `--m3e-fab-menu-item-tracking` | `length` | `--tracking-*` | Letter spacing of the menu item label. |
 | `--m3e-fab-menu-item-trailing-space` | `length` | — | Padding at the end of the menu item. |
 
@@ -3651,11 +3653,17 @@ Presents frequently used actions relevant to the current page.
 
 | Var | Type | Theme namespace | Description |
 |---|---|---|---|
-| `--m3e-toolbar-rounded-padding` | `length` | — | Padding for rounded shape. |
+| `--m3e-toolbar-rounded-bottom-space` | `length` | — | Bottom space for rounded shape. |
+| `--m3e-toolbar-rounded-leading-space` | `length` | — | Leading space for rounded shape. |
 | `--m3e-toolbar-rounded-shape` | `length` | `--radius-*` | Border radius for rounded shape. |
+| `--m3e-toolbar-rounded-top-space` | `length` | — | Top space for rounded shape. |
+| `--m3e-toolbar-rounded-trailing-space` | `length` | — | Trailing space for rounded shape. |
 | `--m3e-toolbar-size` | `length` | — | The size (height or width) of the toolbar. |
 | `--m3e-toolbar-spacing` | `length` | — | The gap between toolbar items. |
-| `--m3e-toolbar-square-padding` | `length` | — | Padding for square shape. |
+| `--m3e-toolbar-square-bottom-space` | `length` | — | Bottom space for square shape. |
+| `--m3e-toolbar-square-leading-space` | `length` | — | Leading space for square shape. |
+| `--m3e-toolbar-square-top-space` | `length` | — | Top space for square shape. |
+| `--m3e-toolbar-square-trailing-space` | `length` | — | Trailing space for square shape. |
 | `--m3e-toolbar-standard-color` | `color` | `--color-*` | Foreground color for the standard variant. |
 | `--m3e-toolbar-standard-container-color` | `color` | `--color-*` | Container color for the standard variant. |
 | `--m3e-toolbar-vibrant-color` | `color` | `--color-*` | Foreground color for the vibrant variant. |
@@ -3695,23 +3703,29 @@ An expandable item in a tree.
 
 | Var | Type | Theme namespace | Description |
 |---|---|---|---|
+| `--m3e-tree-item-bottom-space` | `length` | — | Bottom space for the item. |
+| `--m3e-tree-item-checkbox-label-space` | `length` | — | Space between checkbox and label. |
 | `--m3e-tree-item-disabled-color` | `color` | `--color-*` | Text color for disabled item. |
 | `--m3e-tree-item-disabled-color-opacity` | `number` | — | Opacity for disabled item text color. |
 | `--m3e-tree-item-font-size` | `length` | `--text-*` | Font size for the item label. |
 | `--m3e-tree-item-font-weight` | `number` | `--font-weight-*` | Font weight for the item label. |
 | `--m3e-tree-item-height` | `length` | — | Height of the item. |
+| `--m3e-tree-item-icon-label-space` | `length` | — | Space between icon and label. |
 | `--m3e-tree-item-icon-size` | `length` | — | Size of the icon. |
 | `--m3e-tree-item-inset` | `length` | — | Indentation for nested items. |
 | `--m3e-tree-item-label-color` | `color` | `--color-*` | Text color for the item label. |
+| `--m3e-tree-item-leading-space` | `length` | — | Leading space for the item. |
 | `--m3e-tree-item-line-height` | `length` | `--leading-*` | Line height for the item label. |
-| `--m3e-tree-item-padding` | `length` | — | Inline padding for the item. |
 | `--m3e-tree-item-selected-container-color` | `color` | `--color-*` | Background color for selected item. |
 | `--m3e-tree-item-selected-container-focus-color` | `color` | `--color-*` | Focus color for selected item container. |
 | `--m3e-tree-item-selected-container-hover-color` | `color` | `--color-*` | Hover color for selected item container. |
 | `--m3e-tree-item-selected-label-color` | `color` | `--color-*` | Text color for selected item label. |
 | `--m3e-tree-item-selected-ripple-color` | `color` | `--color-*` | Ripple color for selected item. |
 | `--m3e-tree-item-shape` | `length` | `--radius-*` | Border radius of the item and focus ring. |
+| `--m3e-tree-item-toggle-label-space` | `length` | — | Space between toggle and label. |
+| `--m3e-tree-item-top-space` | `length` | — | Top space for the item. |
 | `--m3e-tree-item-tracking` | `length` | `--tracking-*` | Letter spacing for the item label. |
+| `--m3e-tree-item-trailing-space` | `length` | — | Trailing space for the item. |
 | `--m3e-tree-item-unselected-container-focus-color` | `color` | `--color-*` | Focus color for unselected item container. |
 | `--m3e-tree-item-unselected-container-hover-color` | `color` | `--color-*` | Hover color for unselected item container. |
 | `--m3e-tree-item-unselected-ripple-color` | `color` | `--color-*` | Ripple color for unselected item. |

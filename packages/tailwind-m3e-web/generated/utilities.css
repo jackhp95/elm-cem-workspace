@@ -5,7 +5,7 @@
  * data/cem-facts.json (elm-cem's Face B facts bundle).
  *
  * One @utility rule per public --m3e-* CSS custom property in the
- * m3e manifest (2347 rules). Each rule lets call sites pass
+ * m3e manifest (2361 rules). Each rule lets call sites pass
  * either an arbitrary value or a Tailwind v4 theme key.
  *
  * INERT UNTIL TAILWIND v4. @utility is unrecognized syntax in v3;
@@ -2496,6 +2496,10 @@
   --m3e-fab-medium-trailing-space: --value([length]);
 }
 
+@utility m3e-fab-menu-item-bottom-space-* {
+  --m3e-fab-menu-item-bottom-space: --value([length]);
+}
+
 @utility m3e-fab-menu-item-font-size-* {
   --m3e-fab-menu-item-font-size: --value([length], --text-*);
 }
@@ -2526,6 +2530,10 @@
 
 @utility m3e-fab-menu-item-spacing-* {
   --m3e-fab-menu-item-spacing: --value([length]);
+}
+
+@utility m3e-fab-menu-item-top-space-* {
+  --m3e-fab-menu-item-top-space: --value([length]);
 }
 
 @utility m3e-fab-menu-item-tracking-* {
@@ -8784,12 +8792,24 @@
   --m3e-tonal-icon-button-unselected-icon-color: --value([color], --color-*);
 }
 
-@utility m3e-toolbar-rounded-padding-* {
-  --m3e-toolbar-rounded-padding: --value([length]);
+@utility m3e-toolbar-rounded-bottom-space-* {
+  --m3e-toolbar-rounded-bottom-space: --value([length]);
+}
+
+@utility m3e-toolbar-rounded-leading-space-* {
+  --m3e-toolbar-rounded-leading-space: --value([length]);
 }
 
 @utility m3e-toolbar-rounded-shape-* {
   --m3e-toolbar-rounded-shape: --value([length], --radius-*);
+}
+
+@utility m3e-toolbar-rounded-top-space-* {
+  --m3e-toolbar-rounded-top-space: --value([length]);
+}
+
+@utility m3e-toolbar-rounded-trailing-space-* {
+  --m3e-toolbar-rounded-trailing-space: --value([length]);
 }
 
 @utility m3e-toolbar-size-* {
@@ -8800,8 +8820,20 @@
   --m3e-toolbar-spacing: --value([length]);
 }
 
-@utility m3e-toolbar-square-padding-* {
-  --m3e-toolbar-square-padding: --value([length]);
+@utility m3e-toolbar-square-bottom-space-* {
+  --m3e-toolbar-square-bottom-space: --value([length]);
+}
+
+@utility m3e-toolbar-square-leading-space-* {
+  --m3e-toolbar-square-leading-space: --value([length]);
+}
+
+@utility m3e-toolbar-square-top-space-* {
+  --m3e-toolbar-square-top-space: --value([length]);
+}
+
+@utility m3e-toolbar-square-trailing-space-* {
+  --m3e-toolbar-square-trailing-space: --value([length]);
 }
 
 @utility m3e-toolbar-standard-color-* {
@@ -8868,6 +8900,14 @@
   --m3e-tooltip-supporting-text-tracking: --value([length], --tracking-*);
 }
 
+@utility m3e-tree-item-bottom-space-* {
+  --m3e-tree-item-bottom-space: --value([length]);
+}
+
+@utility m3e-tree-item-checkbox-label-space-* {
+  --m3e-tree-item-checkbox-label-space: --value([length]);
+}
+
 @utility m3e-tree-item-disabled-color-* {
   --m3e-tree-item-disabled-color: --value([color], --color-*);
 }
@@ -8888,6 +8928,10 @@
   --m3e-tree-item-height: --value([length]);
 }
 
+@utility m3e-tree-item-icon-label-space-* {
+  --m3e-tree-item-icon-label-space: --value([length]);
+}
+
 @utility m3e-tree-item-icon-size-* {
   --m3e-tree-item-icon-size: --value([length]);
 }
@@ -8900,12 +8944,12 @@
   --m3e-tree-item-label-color: --value([color], --color-*);
 }
 
-@utility m3e-tree-item-line-height-* {
-  --m3e-tree-item-line-height: --value([length], --leading-*);
+@utility m3e-tree-item-leading-space-* {
+  --m3e-tree-item-leading-space: --value([length]);
 }
 
-@utility m3e-tree-item-padding-* {
-  --m3e-tree-item-padding: --value([length]);
+@utility m3e-tree-item-line-height-* {
+  --m3e-tree-item-line-height: --value([length], --leading-*);
 }
 
 @utility m3e-tree-item-selected-container-color-* {
@@ -8932,8 +8976,20 @@
   --m3e-tree-item-shape: --value([length], --radius-*);
 }
 
+@utility m3e-tree-item-toggle-label-space-* {
+  --m3e-tree-item-toggle-label-space: --value([length]);
+}
+
+@utility m3e-tree-item-top-space-* {
+  --m3e-tree-item-top-space: --value([length]);
+}
+
 @utility m3e-tree-item-tracking-* {
   --m3e-tree-item-tracking: --value([length], --tracking-*);
+}
+
+@utility m3e-tree-item-trailing-space-* {
+  --m3e-tree-item-trailing-space: --value([length]);
 }
 
 @utility m3e-tree-item-unselected-container-focus-color-* {

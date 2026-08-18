@@ -4,7 +4,7 @@
     "seed": 2,
     "reference": 72,
     "system": 220,
-    "component": 2251
+    "component": 2265
   },
   "componentCount": 99,
   "density": {
@@ -5969,6 +5969,13 @@
       ]
     },
     {
+      "name": "--m3e-fab-menu-item-bottom-space",
+      "tier": "component",
+      "components": [
+        "m3e-fab-menu-item"
+      ]
+    },
+    {
       "name": "--m3e-fab-menu-item-font-size",
       "tier": "component",
       "components": [
@@ -6019,6 +6026,13 @@
     },
     {
       "name": "--m3e-fab-menu-item-spacing",
+      "tier": "component",
+      "components": [
+        "m3e-fab-menu-item"
+      ]
+    },
+    {
+      "name": "--m3e-fab-menu-item-top-space",
       "tier": "component",
       "components": [
         "m3e-fab-menu-item"
@@ -17382,7 +17396,14 @@
       ]
     },
     {
-      "name": "--m3e-toolbar-rounded-padding",
+      "name": "--m3e-toolbar-rounded-bottom-space",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-rounded-leading-space",
       "tier": "component",
       "components": [
         "m3e-toolbar"
@@ -17390,6 +17411,20 @@
     },
     {
       "name": "--m3e-toolbar-rounded-shape",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-rounded-top-space",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-rounded-trailing-space",
       "tier": "component",
       "components": [
         "m3e-toolbar"
@@ -17410,7 +17445,28 @@
       ]
     },
     {
-      "name": "--m3e-toolbar-square-padding",
+      "name": "--m3e-toolbar-square-bottom-space",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-square-leading-space",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-square-top-space",
+      "tier": "component",
+      "components": [
+        "m3e-toolbar"
+      ]
+    },
+    {
+      "name": "--m3e-toolbar-square-trailing-space",
       "tier": "component",
       "components": [
         "m3e-toolbar"
@@ -17529,6 +17585,20 @@
       ]
     },
     {
+      "name": "--m3e-tree-item-bottom-space",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
+      "name": "--m3e-tree-item-checkbox-label-space",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
       "name": "--m3e-tree-item-disabled-color",
       "tier": "component",
       "components": [
@@ -17564,6 +17634,13 @@
       ]
     },
     {
+      "name": "--m3e-tree-item-icon-label-space",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
       "name": "--m3e-tree-item-icon-size",
       "tier": "component",
       "components": [
@@ -17585,14 +17662,14 @@
       ]
     },
     {
-      "name": "--m3e-tree-item-line-height",
+      "name": "--m3e-tree-item-leading-space",
       "tier": "component",
       "components": [
         "m3e-tree-item"
       ]
     },
     {
-      "name": "--m3e-tree-item-padding",
+      "name": "--m3e-tree-item-line-height",
       "tier": "component",
       "components": [
         "m3e-tree-item"
@@ -17641,7 +17718,28 @@
       ]
     },
     {
+      "name": "--m3e-tree-item-toggle-label-space",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
+      "name": "--m3e-tree-item-top-space",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
       "name": "--m3e-tree-item-tracking",
+      "tier": "component",
+      "components": [
+        "m3e-tree-item"
+      ]
+    },
+    {
+      "name": "--m3e-tree-item-trailing-space",
       "tier": "component",
       "components": [
         "m3e-tree-item"

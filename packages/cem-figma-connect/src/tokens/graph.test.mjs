@@ -21,22 +21,25 @@ const graphModule = path.join(here, "graph.mjs");
 test("L1: node tier counts equal the measured sources", () => {
   const graph = buildGraph();
 
-  // Counts measured 2026-08-17 from the real sources (see graph.mjs header):
+  // Counts measured from the real sources (see graph.mjs header):
   //   seed.css: --md-seed-primary/-error
   //   ref/palette.css: 6 palettes x 12 tones
   //   sys/*.css: every --md-sys-* declaration
   //   cem-facts.json: unique --m3e-* cssProperties
+  // Component count re-measured 2026-08-18 after the @m3e/web 2.7.3 -> 2.7.6 bump
+  // (facts regenerated from the 2.7.6 CEM): 2251 -> 2265 (+14 new --m3e-* component
+  // vars). seed / reference / system tiers are @m3e/web-version-independent.
   assert.equal(graph.tiers.seed, 2, "2 seed nodes (primary + error)");
   assert.equal(graph.tiers.reference, 72, "72 reference nodes (6 palettes x 12 tones)");
   assert.equal(graph.tiers.system, 220, "220 system nodes across sys/*.css");
-  assert.equal(graph.tiers.component, 2251, "2251 unique --m3e-* component vars");
+  assert.equal(graph.tiers.component, 2265, "2265 unique --m3e-* component vars (@m3e/web 2.7.6)");
   assert.equal(graph.componentCount, 99, "99 components declare >=1 --m3e-* var");
 
   // The tier totals must actually be present as nodes (not just a header count).
   const byTier = {};
   for (const n of graph.nodes) byTier[n.tier] = (byTier[n.tier] ?? 0) + 1;
-  assert.deepEqual(byTier, { seed: 2, reference: 72, system: 220, component: 2251 });
-  assert.equal(graph.nodes.length, 2 + 72 + 220 + 2251);
+  assert.deepEqual(byTier, { seed: 2, reference: 72, system: 220, component: 2265 });
+  assert.equal(graph.nodes.length, 2 + 72 + 220 + 2265);
 });
 
 test("L1: every node carries a tier; families/components are shaped per tier", () => {

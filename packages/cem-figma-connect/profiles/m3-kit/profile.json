@@ -5,9 +5,9 @@
   "kitVersionTag": "m3-community-2026-07-13",
   "figmaExportPath": "research/figma-dumps/figma-export.m3-kit.json",
   "cem": {
-    "$comment": "M3.a: manifestPath now points at elm-cem's own canonical facts bundle Face B (docs/facts-bundle/schema.json) for elm-m3e's @m3e/web 2.7.3 — the same input elm-m3e itself generates from — instead of a vendored raw-manifest + .d.ts copy this repo parsed independently. src/ingest/cem.mjs's loadCem() reads Face B directly; there is no dtsDir to configure anymore (Face B is already .d.ts-resolved).",
+    "$comment": "M3.a: manifestPath now points at elm-cem's own canonical facts bundle Face B (docs/facts-bundle/schema.json) for elm-m3e's @m3e/web 2.7.6 — the same input elm-m3e itself generates from — instead of a vendored raw-manifest + .d.ts copy this repo parsed independently. src/ingest/cem.mjs's loadCem() reads Face B directly; there is no dtsDir to configure anymore (Face B is already .d.ts-resolved).",
     "package": "@m3e/web",
-    "version": "2.7.3",
+    "version": "2.7.6",
     "manifestPath": "profiles/m3-kit/facts/cem-facts.json"
   },
   "htmlLabel": {

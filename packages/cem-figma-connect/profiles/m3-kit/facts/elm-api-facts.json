@@ -5369,6 +5369,12 @@
           "aliasName": "Variant",
           "values": [
             {
+              "elm": "elevated",
+              "key": "elevated",
+              "token": "M3e.Values.elevated",
+              "raw": "elevated"
+            },
+            {
               "elm": "filled",
               "key": "filled",
               "token": "M3e.Values.filled",
@@ -5648,6 +5654,7 @@
       "actionMap": {},
       "setters": {
         "disabled": "disabled",
+        "max-chips": "maxChips",
         "name": "name",
         "required": "required",
         "validationMessages": "validationmessages",
@@ -5655,6 +5662,7 @@
       },
       "setterArgTypes": {
         "disabled": "bool",
+        "maxChips": "float",
         "name": "string",
         "required": "bool",
         "validationmessages": "string",
@@ -5665,6 +5673,7 @@
         "class": "withClass",
         "disabled": "withDisabled",
         "id": "withId",
+        "maxChips": "withMaxChips",
         "name": "withName",
         "onChange": "withOnChange",
         "required": "withRequired",
@@ -8006,14 +8015,12 @@
       "setters": {
         "anchor-offset": "anchorOffset",
         "fit-anchor-width": "fitAnchorWidth",
-        "scroll-strategy": "scrollStrategy",
-        "state": "state"
+        "scroll-strategy": "scrollStrategy"
       },
       "setterArgTypes": {
         "anchorOffset": "float",
         "fitAnchorWidth": "bool",
-        "scrollStrategy": "enum",
-        "state": "enum"
+        "scrollStrategy": "enum"
       },
       "enums": {
         "scrollStrategy": {
@@ -8032,29 +8039,6 @@
               "raw": "reposition"
             }
           ]
-        },
-        "state": {
-          "aliasName": "State",
-          "values": [
-            {
-              "elm": "content",
-              "key": "content",
-              "token": "M3e.Values.content",
-              "raw": "content"
-            },
-            {
-              "elm": "loading",
-              "key": "loading",
-              "token": "M3e.Values.loading",
-              "raw": "loading"
-            },
-            {
-              "elm": "noData",
-              "key": "nodata",
-              "token": "M3e.Values.noData",
-              "raw": "no-data"
-            }
-          ]
         }
       },
       "pipeSetters": {
@@ -8066,7 +8050,6 @@
         "onToggle": "withOnToggle",
         "scrollStrategy": "withScrollStrategy",
         "slot": "withSlot",
-        "state": "withState",
         "style": "withStyle",
         "no-data": "withNoData",
         "loading": "withLoading"
@@ -10333,13 +10316,15 @@
         "action": "action",
         "close-label": "closeLabel",
         "dismissible": "dismissible",
-        "duration": "duration"
+        "duration": "duration",
+        "open": "open"
       },
       "setterArgTypes": {
         "action": "string",
         "closeLabel": "string",
         "dismissible": "bool",
-        "duration": "float"
+        "duration": "float",
+        "open": "bool"
       },
       "enums": {},
       "pipeSetters": {
@@ -10351,6 +10336,7 @@
         "id": "withId",
         "onBeforetoggle": "withOnBeforetoggle",
         "onToggle": "withOnToggle",
+        "open": "withOpen",
         "slot": "withSlot",
         "style": "withStyle",
         "close-icon": "withCloseIcon"
@@ -13730,7 +13716,7 @@
     },
     "source": {
       "package": "@m3e/web",
-      "version": "2.7.3",
+      "version": "2.7.6",
       "sha": null
     }
   }

@@ -8,7 +8,7 @@
     },
     "source": {
       "package": "@m3e/web",
-      "version": "2.7.3",
+      "version": "2.7.6",
       "sha": null,
       "manifestPath": "docs/node_modules/@m3e/web/dist/custom-elements.json",
       "upstreamRepo": "git+https://github.com/matraic/m3e.git",
@@ -16,7 +16,7 @@
     },
     "dts": {
       "dir": "docs/node_modules/@m3e/web/dist",
-      "fileCount": 459,
+      "fileCount": 463,
       "aliasCount": 89
     }
   },
@@ -677,11 +677,12 @@
     },
     {
       "name": "IconButtonVariant",
-      "union": "\"filled\" | \"tonal\" | \"outlined\" | \"standard\"",
+      "union": "\"filled\" | \"tonal\" | \"outlined\" | \"elevated\" | \"standard\"",
       "values": [
         "filled",
         "tonal",
         "outlined",
+        "elevated",
         "standard"
       ],
       "closed": true,
@@ -1512,24 +1513,6 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eListElement"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -1687,6 +1670,24 @@
             "parsed": "'text' | 'video' | 'image' | 'avatar' | 'icon'",
             "aliasName": "ListItemContentType",
             "source": "dts-alias"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eListElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
           },
           "attribute": null,
           "inheritedFrom": "M3eListElement"
@@ -2017,6 +2018,24 @@
           "inheritedFrom": "HtmlFor"
         },
         {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleTitleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -2267,6 +2286,42 @@
           },
           "attribute": null,
           "inheritedFrom": "HtmlFor"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -2625,7 +2680,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -2641,7 +2696,7 @@
         {
           "name": "disabled-interactive",
           "fieldName": "disabledInteractive",
-          "description": "A value indicating whether the element is disabled and interactive.",
+          "description": "Whether the element is disabled and interactive.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -2657,7 +2712,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -2821,7 +2876,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "M3eChipElement"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -2955,7 +3010,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -3370,6 +3425,24 @@
           "static": null,
           "readonly": true,
           "description": "The textual label of the chip.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eChipElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -3978,6 +4051,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#slot",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "HTMLSlotElement | null | undefined",
+            "resolved": "HTMLSlotElement | null | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#ignoreFocusVisible",
           "kind": "field",
           "privacy": "private",
@@ -4266,6 +4357,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#slotChangeHandler",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#menuPressedOption",
           "kind": "field",
           "privacy": "private",
@@ -4291,6 +4400,24 @@
           "readonly": true,
           "description": null,
           "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#mutationController",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true, }, callback: () => this.#handleMutation(), })",
           "type": {
             "raw": null,
             "resolved": null,
@@ -4734,7 +4861,43 @@
           "inheritedFrom": null
         },
         {
+          "name": "reconnectedCallback",
+          "kind": "method",
+          "privacy": null,
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
+        },
+        {
           "name": "#handleOptionStateChange",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#initMutation",
           "kind": "method",
           "privacy": "private",
           "static": null,
@@ -4933,6 +5096,24 @@
         },
         {
           "name": "#handleMenuToggle",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#removeMenu",
           "kind": "method",
           "privacy": "private",
           "static": null,
@@ -5200,6 +5381,24 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "[_wasConnected]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "false",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
         },
         {
           "name": "[_control]",
@@ -5503,7 +5702,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": null
+          "inheritedFrom": "SupportsDirectionality"
         },
         {
           "name": "#anchorCleanup",
@@ -5614,6 +5813,60 @@
           "inheritedFrom": "HtmlFor"
         },
         {
+          "name": "reconnectedCallback",
+          "kind": "method",
+          "privacy": null,
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#updatePadding",
           "kind": "method",
           "privacy": "private",
@@ -5666,6 +5919,42 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "#initAnchoring",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "[_wasConnected]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "false",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
         },
         {
           "name": "[_control]",
@@ -5738,6 +6027,42 @@
           },
           "attribute": null,
           "inheritedFrom": "HtmlFor"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -6934,24 +7259,6 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -7763,13 +8070,13 @@
           "name": "current",
           "fieldName": "current",
           "description": "Indicates the current item in the breadcrumb path.",
-          "default": "undefined",
+          "default": "null",
           "deprecated": null,
           "kind": "enum",
           "type": {
-            "raw": "BreadcrumbItemCurrent | undefined",
-            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | undefined",
-            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | undefined",
+            "raw": "BreadcrumbItemCurrent | null",
+            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | null",
+            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null",
             "aliasName": "BreadcrumbItemCurrent",
             "source": "dts-alias"
           },
@@ -7828,7 +8135,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the internal link target will be downloaded, optionally specifying a file name.",
+          "description": "Whether the internal link target will be downloaded, optionally specifying a file name.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -7938,11 +8245,11 @@
           "static": null,
           "readonly": null,
           "description": "Indicates the current item in the breadcrumb path.",
-          "default": "undefined",
+          "default": "null",
           "type": {
-            "raw": "BreadcrumbItemCurrent | undefined",
-            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | undefined",
-            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | undefined",
+            "raw": "BreadcrumbItemCurrent | null",
+            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | null",
+            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null",
             "aliasName": "BreadcrumbItemCurrent",
             "source": "dts-alias"
           },
@@ -8153,7 +8460,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -8218,24 +8525,6 @@
           },
           "attribute": null,
           "inheritedFrom": "LinkButton"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -8447,13 +8736,13 @@
           "name": "current",
           "fieldName": "current",
           "description": "Indicates the current item in the breadcrumb path.",
-          "default": "undefined",
+          "default": "null",
           "deprecated": null,
           "kind": "enum",
           "type": {
-            "raw": "BreadcrumbItemCurrent | undefined",
-            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | undefined",
-            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | undefined",
+            "raw": "BreadcrumbItemCurrent | null",
+            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | null",
+            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null",
             "aliasName": "BreadcrumbItemCurrent",
             "source": "dts-alias"
           },
@@ -8528,7 +8817,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -8638,11 +8927,11 @@
           "static": null,
           "readonly": null,
           "description": "Indicates the current item in the breadcrumb path.",
-          "default": "undefined",
+          "default": "null",
           "type": {
-            "raw": "BreadcrumbItemCurrent | undefined",
-            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | undefined",
-            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | undefined",
+            "raw": "BreadcrumbItemCurrent | null",
+            "resolved": "\"page\" | \"step\" | \"location\" | \"date\" | \"time\" | \"true\" | null",
+            "parsed": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null",
             "aliasName": "BreadcrumbItemCurrent",
             "source": "dts-alias"
           },
@@ -8871,7 +9160,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -8972,24 +9261,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -9096,7 +9367,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -9543,6 +9814,60 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyShape",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleClick",
           "kind": "method",
           "privacy": "private",
@@ -9836,7 +10161,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -9918,7 +10243,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -12655,6 +12980,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#updateButtons",
           "kind": "method",
           "privacy": "private",
@@ -12725,6 +13086,42 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -13223,24 +13620,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -14822,7 +15201,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -15102,6 +15481,42 @@
             "source": "dts-alias"
           },
           "attribute": "orientation",
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
           "inheritedFrom": null
         },
         {
@@ -15398,7 +15813,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -15480,7 +15895,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -16448,7 +16863,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -17668,6 +18083,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderContent",
           "kind": "method",
           "privacy": "private",
@@ -17738,24 +18171,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -18590,24 +19005,6 @@
           "inheritedFrom": "ProgressElementIndicatorBase"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "ProgressElementIndicatorBase"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -18695,6 +19092,24 @@
             "source": "dts-alias"
           },
           "attribute": "variant",
+          "inheritedFrom": "ProgressElementIndicatorBase"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
           "inheritedFrom": "ProgressElementIndicatorBase"
         }
       ],
@@ -18915,6 +19330,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -18985,24 +19418,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -19493,7 +19908,7 @@
         {
           "name": "readonly",
           "fieldName": "readOnly",
-          "description": "A value indicating whether the element is read-only.",
+          "description": "Whether the element is read-only.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -20904,7 +21319,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_defaultValue]",
@@ -21074,7 +21489,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the element is read-only.",
+          "description": "Whether the element is read-only.",
           "default": "false",
           "type": {
             "raw": "boolean",
@@ -22779,24 +23194,6 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -23722,24 +24119,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -24948,6 +25327,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
           "name": "[_wasConnected]",
           "kind": "field",
           "privacy": "private",
@@ -24964,24 +25361,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -26131,24 +26510,6 @@
           "inheritedFrom": "M3eListItemElement"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eListItemElement"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -27056,6 +27417,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyTogglePosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyToggleDirection",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderToggle",
           "kind": "method",
           "privacy": "private",
@@ -27216,24 +27613,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -27722,6 +28101,42 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyTogglePosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyToggleDirection",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderToggleIcon",
           "kind": "method",
           "privacy": "private",
@@ -27864,24 +28279,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -28177,7 +28574,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -28548,6 +28945,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -28751,7 +29184,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -28833,7 +29266,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -31039,6 +31472,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -31109,24 +31560,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -31336,7 +31769,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -31719,7 +32152,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -31802,24 +32235,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -31927,6 +32342,18 @@
         {
           "name": "--m3e-fab-menu-item-trailing-space",
           "description": "Padding at the end of the menu item.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-fab-menu-item-top-space",
+          "description": "Padding at the top of the menu item.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-fab-menu-item-bottom-space",
+          "description": "Padding at the bottom of the menu item.",
           "default": null,
           "syntax": null
         },
@@ -32166,7 +32593,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -32182,7 +32609,7 @@
         {
           "name": "disabled-interactive",
           "fieldName": "disabledInteractive",
-          "description": "A value indicating whether the element is disabled and interactive.",
+          "description": "Whether the element is disabled and interactive.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -32198,7 +32625,7 @@
         {
           "name": "selected",
           "fieldName": "selected",
-          "description": "A value indicating whether the element is selected.",
+          "description": "Whether the element is selected.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -32267,7 +32694,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "M3eChipElement"
+          "inheritedFrom": null
         },
         {
           "name": "#clickHandler",
@@ -32708,6 +33135,24 @@
           "static": null,
           "readonly": true,
           "description": "The textual label of the chip.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eChipElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -33420,7 +33865,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -34211,24 +34656,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -35187,6 +35614,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "_labelSlot",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "HTMLSlotElement",
+            "resolved": "HTMLSlotElement",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#labelMutationController",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true, characterData: true }, callback: () => this.#updateLabel(), })",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#hintMutationController",
           "kind": "field",
           "privacy": "private",
@@ -35229,7 +35692,7 @@
           "static": null,
           "readonly": true,
           "description": null,
-          "default": "new PressedController(this, { target: null, filter: (e) => this.#ignoreEvent(e), callback: (pressed) => setCustomState(this, \"--pressed\", pressed && !(this.#control?.disabled ?? true)), })",
+          "default": "new PressedController(this, { target: null, filter: (e) => this.#ignoreEvent(e), callback: (pressed) => { setCustomState(this, \"--pressed\", pressed && !(this.#control?.disabled ?? true)); if (!pressed && !this.#shouldFloatLabel) { deleteCustomState(this, \"--float-label\"); } }, })",
           "type": {
             "raw": null,
             "resolved": null,
@@ -35529,6 +35992,60 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyFloatLabel",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyHideSubscriptType",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#initialize",
           "kind": "method",
           "privacy": "private",
@@ -35548,6 +36065,24 @@
         },
         {
           "name": "#handleLabelSlotChange",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#updateLabel",
           "kind": "method",
           "privacy": "private",
           "static": null,
@@ -35815,24 +36350,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -36250,6 +36767,78 @@
           },
           "attribute": "level",
           "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -37121,6 +37710,96 @@
           },
           "attribute": "optical-size",
           "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyGrade",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyWeight",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [],
@@ -37179,7 +37858,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -37391,8 +38070,8 @@
           "kind": "enum",
           "type": {
             "raw": "IconButtonVariant",
-            "resolved": "\"filled\" | \"tonal\" | \"outlined\" | \"standard\"",
-            "parsed": "'filled' | 'outlined' | 'tonal' | 'standard'",
+            "resolved": "\"filled\" | \"tonal\" | \"outlined\" | \"elevated\" | \"standard\"",
+            "parsed": "'filled' | 'outlined' | 'elevated' | 'tonal' | 'standard'",
             "aliasName": "IconButtonVariant",
             "source": "dts-alias"
           },
@@ -37401,6 +38080,7 @@
               "filled",
               "tonal",
               "outlined",
+              "elevated",
               "standard"
             ],
             "open": false
@@ -37549,8 +38229,8 @@
           "default": "\"standard\"",
           "type": {
             "raw": "IconButtonVariant",
-            "resolved": "\"filled\" | \"tonal\" | \"outlined\" | \"standard\"",
-            "parsed": "'filled' | 'outlined' | 'tonal' | 'standard'",
+            "resolved": "\"filled\" | \"tonal\" | \"outlined\" | \"elevated\" | \"standard\"",
+            "parsed": "'filled' | 'outlined' | 'elevated' | 'tonal' | 'standard'",
             "aliasName": "IconButtonVariant",
             "source": "dts-alias"
           },
@@ -37654,6 +38334,78 @@
           "static": null,
           "readonly": true,
           "description": "Whether the button is contained by a button group.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyShape",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyWidth",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -37959,7 +38711,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -38041,7 +38793,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -39902,7 +40654,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "M3eChipElement"
+          "inheritedFrom": null
         },
         {
           "name": "cell",
@@ -40271,6 +41023,24 @@
           "static": null,
           "readonly": true,
           "description": "The textual label of the chip.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eChipElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -40702,6 +41472,22 @@
           "enum": null
         },
         {
+          "name": "max-chips",
+          "fieldName": "maxChips",
+          "description": "Maximum number of chips to display when not focused. When focused, all chips are displayed.",
+          "default": "null",
+          "deprecated": null,
+          "kind": "other",
+          "type": {
+            "raw": "number | null",
+            "resolved": "number | null",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "enum": null
+        },
+        {
           "name": "validationMessages",
           "fieldName": "validationMessages",
           "description": "Validation messages mapped to individual error types.",
@@ -40954,6 +41740,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "_focused",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "false",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "maxChips",
+          "kind": "field",
+          "privacy": null,
+          "static": null,
+          "readonly": null,
+          "description": "Maximum number of chips to display when not focused. When focused, all chips are displayed.",
+          "default": "null",
+          "type": {
+            "raw": "number | null",
+            "resolved": "number | null",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": "max-chips",
+          "inheritedFrom": null
+        },
+        {
           "name": "chips",
           "kind": "field",
           "privacy": null,
@@ -41189,6 +42011,24 @@
         },
         {
           "name": "#handleInputKeyDown",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#updateChipVisibility",
           "kind": "method",
           "privacy": "private",
           "static": null,
@@ -41635,7 +42475,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_defaultValue]",
@@ -42162,6 +43002,24 @@
           "inheritedFrom": "ProgressElementIndicatorBase"
         },
         {
+          "name": "#applyMode",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#initialize",
           "kind": "method",
           "privacy": "private",
@@ -42270,6 +43128,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
           "name": "[_wasConnected]",
           "kind": "field",
           "privacy": "private",
@@ -42280,24 +43156,6 @@
           "type": {
             "raw": "boolean",
             "resolved": "boolean",
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "ProgressElementIndicatorBase"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -42393,6 +43251,24 @@
             "source": "dts-alias"
           },
           "attribute": "variant",
+          "inheritedFrom": "ProgressElementIndicatorBase"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
           "inheritedFrom": "ProgressElementIndicatorBase"
         }
       ],
@@ -42611,7 +43487,7 @@
           "inheritedFrom": null
         },
         {
-          "name": "#handleSlotChange",
+          "name": "#applyVariant",
           "kind": "method",
           "privacy": "private",
           "static": null,
@@ -42629,13 +43505,13 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
+          "name": "#handleSlotChange",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
           "type": {
             "raw": null,
             "resolved": null,
@@ -42644,7 +43520,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": null
         },
         {
           "name": "[_internals]",
@@ -42789,7 +43665,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -43028,7 +43904,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -43120,24 +43996,6 @@
           "readonly": null,
           "description": null,
           "default": null,
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eListItemElement"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
           "type": {
             "raw": null,
             "resolved": null,
@@ -43998,24 +44856,6 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -44436,7 +45276,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -44707,7 +45547,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -44808,24 +45648,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eListItemElement"
         },
         {
           "name": "[_internals]",
@@ -45774,24 +46596,6 @@
           "inheritedFrom": "Disabled"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eListItemElement"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -46679,6 +47483,24 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "[_wasConnected]",
           "kind": "field",
           "privacy": "private",
@@ -46695,6 +47517,42 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [],
@@ -46824,7 +47682,7 @@
         {
           "name": "submenu",
           "fieldName": "submenu",
-          "description": "A value indicating whether the menu is a submenu.",
+          "description": "Whether the menu is a submenu.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -47097,7 +47955,7 @@
           "privacy": null,
           "static": null,
           "readonly": true,
-          "description": "A value indicating whether the menu is open.",
+          "description": "Whether the menu is open.",
           "default": null,
           "type": {
             "raw": null,
@@ -47115,7 +47973,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the menu is a submenu.",
+          "description": "Whether the menu is a submenu.",
           "default": "false",
           "type": {
             "raw": "boolean",
@@ -47188,6 +48046,42 @@
           "static": null,
           "readonly": null,
           "description": "Toggles the menu.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -47288,24 +48182,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -47850,7 +48726,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -47999,24 +48875,6 @@
           "type": {
             "raw": "number",
             "resolved": "number",
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "MenuItemElementBase"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -48591,24 +49449,6 @@
           "type": {
             "raw": "number",
             "resolved": "number",
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "MenuItemElementBase"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -49342,24 +50182,6 @@
           "type": {
             "raw": "number",
             "resolved": "number",
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "MenuItemElementBase"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -50986,6 +51808,24 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyMode",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#initBreakpointMonitoring",
           "kind": "method",
           "privacy": "private",
@@ -51056,24 +51896,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -51206,7 +52028,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -51222,7 +52044,7 @@
         {
           "name": "disabled-interactive",
           "fieldName": "disabledInteractive",
-          "description": "A value indicating whether the element is disabled and interactive.",
+          "description": "Whether the element is disabled and interactive.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -51238,7 +52060,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -51308,7 +52130,7 @@
         {
           "name": "selected",
           "fieldName": "selected",
-          "description": "A value indicating whether the element is selected.",
+          "description": "Whether the element is selected.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -51510,6 +52332,24 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleClick",
           "kind": "method",
           "privacy": "private",
@@ -51580,6 +52420,24 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
         },
         {
           "name": "[_wasConnected]",
@@ -51677,7 +52535,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -51940,24 +52798,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -53194,24 +54034,6 @@
           "inheritedFrom": "Disabled"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -53611,24 +54433,6 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -53824,24 +54628,6 @@
           "inheritedFrom": "M3eNavBarElement"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eNavBarElement"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -53978,6 +54764,24 @@
           "type": {
             "raw": "Exclude<NavBarMode, \"auto\">",
             "resolved": "Exclude<NavBarMode, \"auto\">",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eNavBarElement"
+        },
+        {
+          "name": "#applyMode",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -54898,24 +55702,6 @@
           "inheritedFrom": "Disabled"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -55130,29 +55916,6 @@
       },
       "attributes": [
         {
-          "name": "state",
-          "fieldName": "state",
-          "description": "The state for which to present content.",
-          "default": "\"content\"",
-          "deprecated": null,
-          "kind": "enum",
-          "type": {
-            "raw": "OptionPanelState",
-            "resolved": "\"loading\" | \"no-data\" | \"content\"",
-            "parsed": "'loading' | 'no-data' | 'content'",
-            "aliasName": "OptionPanelState",
-            "source": "dts-alias"
-          },
-          "enum": {
-            "values": [
-              "loading",
-              "no-data",
-              "content"
-            ],
-            "open": false
-          }
-        },
-        {
           "name": "scroll-strategy",
           "fieldName": "scrollStrategy",
           "description": "The strategy that controls how the panel behaves when its trigger scrolls.",
@@ -55208,24 +55971,6 @@
         }
       ],
       "properties": [
-        {
-          "name": "state",
-          "kind": "field",
-          "privacy": null,
-          "static": null,
-          "readonly": null,
-          "description": "The state for which to present content.",
-          "default": "\"content\"",
-          "type": {
-            "raw": "OptionPanelState",
-            "resolved": "\"loading\" | \"no-data\" | \"content\"",
-            "parsed": "'loading' | 'no-data' | 'content'",
-            "aliasName": "OptionPanelState",
-            "source": "dts-alias"
-          },
-          "attribute": "state",
-          "inheritedFrom": null
-        },
         {
           "name": "#handleOptionStateChange",
           "kind": "method",
@@ -55297,24 +56042,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "M3eFloatingPanelElement"
         },
         {
           "name": "[_internals]",
@@ -56561,6 +57288,60 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -56641,7 +57422,7 @@
         {
           "name": "checked",
           "fieldName": "checked",
-          "description": "A value indicating whether the element is checked.",
+          "description": "Whether the element is checked.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -56657,7 +57438,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -56673,7 +57454,7 @@
         {
           "name": "indeterminate",
           "fieldName": "indeterminate",
-          "description": "A value indicating whether the element's checked state is indeterminate.",
+          "description": "Whether the element's checked state is indeterminate.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -56840,7 +57621,7 @@
         {
           "name": "checked",
           "fieldName": "checked",
-          "description": "A value indicating whether the element is checked.",
+          "description": "Whether the element is checked.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -56856,7 +57637,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -57232,7 +58013,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -58210,7 +58991,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -59489,24 +60270,6 @@
           "inheritedFrom": "TooltipElementBase"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "TooltipElementBase"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -60658,24 +61421,6 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -61024,24 +61769,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -61825,6 +62552,24 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyMode",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderIconOrBackButton",
           "kind": "method",
           "privacy": "private",
@@ -62219,24 +62964,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -62755,7 +63482,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -63360,6 +64087,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#slot",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "HTMLSlotElement | null | undefined",
+            "resolved": "HTMLSlotElement | null | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#menu",
           "kind": "field",
           "privacy": "private",
@@ -63558,6 +64303,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#slotChangeHandler",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#menuPressedOption",
           "kind": "field",
           "privacy": "private",
@@ -63604,6 +64367,24 @@
           "type": {
             "raw": "M3eFocusRingElement | undefined",
             "resolved": "M3eFocusRingElement | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#mutationController",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true, }, callback: () => this.#handleMutation(), })",
+          "type": {
+            "raw": null,
+            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -63828,6 +64609,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "reconnectedCallback",
+          "kind": "method",
+          "privacy": null,
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
+        },
+        {
+          "name": "#initMutation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleOptionStateChange",
           "kind": "method",
           "privacy": "private",
@@ -63972,6 +64789,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#removeMenu",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#destroyMenu",
           "kind": "method",
           "privacy": "private",
@@ -64098,6 +64933,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "[_wasConnected]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "false",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "ReconnectedCallback"
+        },
+        {
           "name": "[_tabindex]",
           "kind": "field",
           "privacy": "private",
@@ -64131,7 +64984,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -65317,24 +66170,6 @@
           "inheritedFrom": "HtmlFor"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -65731,7 +66566,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "M3eListElement"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -66215,6 +67050,24 @@
             "parsed": "'text' | 'video' | 'image' | 'avatar' | 'icon'",
             "aliasName": "ListItemContentType",
             "source": "dts-alias"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eListElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
           },
           "attribute": null,
           "inheritedFrom": "M3eListElement"
@@ -66744,6 +67597,42 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyAnimation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyShape",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -66940,6 +67829,42 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -67112,24 +68037,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -67752,7 +68659,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": null
+          "inheritedFrom": "SupportsDirectionality"
         },
         {
           "name": "_base",
@@ -67918,6 +68825,24 @@
         },
         {
           "name": "#cachedClientWidth",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "0",
+          "type": {
+            "raw": "number",
+            "resolved": "number",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#lastThumbMoveTimestamp",
           "kind": "field",
           "privacy": "private",
           "static": null,
@@ -68161,6 +69086,24 @@
           "type": {
             "raw": "M3eSliderThumbElement | null",
             "resolved": "M3eSliderThumbElement | null",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
             "parsed": null,
             "aliasName": null,
             "source": "cem"
@@ -68473,24 +69416,6 @@
           },
           "attribute": null,
           "inheritedFrom": null
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -69094,7 +70019,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_defaultValue]",
@@ -69532,6 +70457,22 @@
             "source": "cem"
           },
           "enum": null
+        },
+        {
+          "name": "open",
+          "fieldName": "open",
+          "description": "Whether the snackbar is open.",
+          "default": "false",
+          "deprecated": null,
+          "kind": "boolean",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "enum": null
         }
       ],
       "properties": [
@@ -69591,6 +70532,24 @@
         },
         {
           "name": "#beforeToggleHandler",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": true,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#toggleHandler",
           "kind": "field",
           "privacy": "private",
           "static": null,
@@ -69677,6 +70636,24 @@
             "source": "cem"
           },
           "attribute": "dismissible",
+          "inheritedFrom": null
+        },
+        {
+          "name": "open",
+          "kind": "field",
+          "privacy": null,
+          "static": null,
+          "readonly": null,
+          "description": "Whether the snackbar is open.",
+          "default": "false",
+          "type": {
+            "raw": "boolean",
+            "resolved": "boolean",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": "open",
           "inheritedFrom": null
         },
         {
@@ -70074,6 +71051,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applySize",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleLeadingSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -70180,6 +71193,42 @@
           },
           "attribute": null,
           "inheritedFrom": null
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -71107,6 +72156,24 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderDragHandle",
           "kind": "method",
           "privacy": "private",
@@ -71518,7 +72585,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_defaultValue]",
@@ -72780,6 +73847,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
           "name": "selected",
           "kind": "field",
           "privacy": null,
@@ -73012,24 +74097,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -73480,6 +74547,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
           "name": "_orientation",
           "kind": "field",
           "privacy": "private",
@@ -73732,6 +74817,60 @@
           "inheritedFrom": "ReconnectedCallback"
         },
         {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyLabelPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyHeaderPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderHeader",
           "kind": "method",
           "privacy": "private",
@@ -73876,6 +75015,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#updateLabelPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "[_wasConnected]",
           "kind": "field",
           "privacy": "private",
@@ -73892,24 +75049,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -74280,7 +75419,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -74296,7 +75435,7 @@
         {
           "name": "disabled-interactive",
           "fieldName": "disabledInteractive",
-          "description": "A value indicating whether the element is disabled and interactive.",
+          "description": "Whether the element is disabled and interactive.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -74312,7 +75451,7 @@
         {
           "name": "download",
           "fieldName": "download",
-          "description": "A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.",
           "default": "null",
           "deprecated": null,
           "kind": "other",
@@ -74476,7 +75615,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "M3eChipElement"
+          "inheritedFrom": "FormSubmitter"
         },
         {
           "name": "name",
@@ -74610,7 +75749,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
+          "description": "Whether the `target` of the link button will be downloaded,\r\noptionally specifying the new name of the file.",
           "default": "null",
           "type": {
             "raw": "string | null",
@@ -75025,6 +76164,24 @@
           "static": null,
           "readonly": true,
           "description": "The textual label of the chip.",
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "M3eChipElement"
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
           "default": null,
           "type": {
             "raw": null,
@@ -75592,6 +76749,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyIcons",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderIcon",
           "kind": "method",
           "privacy": "private",
@@ -75628,6 +76803,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#directionalitySubscription",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "() => void | undefined",
+            "resolved": "() => void | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "SupportsDirectionality"
+        },
+        {
           "name": "formAssociated",
           "kind": "field",
           "privacy": null,
@@ -75643,7 +76836,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "FormAssociated"
         },
         {
           "name": "[_eventHandler]",
@@ -77276,24 +78469,6 @@
           "inheritedFrom": "Disabled"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -77910,6 +79085,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyHeaderPosition",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderHeader",
           "kind": "method",
           "privacy": "private",
@@ -78180,24 +79391,6 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -78368,7 +79561,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether text highlighting is disabled.",
+          "description": "Whether text highlighting is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -78500,7 +79693,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether text highlighting is disabled.",
+          "description": "Whether text highlighting is disabled.",
           "default": "false",
           "type": {
             "raw": "boolean",
@@ -78572,7 +79765,7 @@
           "privacy": null,
           "static": null,
           "readonly": true,
-          "description": "A value indicating whether text highlighting is supported by the browser.",
+          "description": "Whether text highlighting is supported by the browser.",
           "default": null,
           "type": {
             "raw": "boolean",
@@ -79425,7 +80618,7 @@
           "type": {
             "raw": "ThemeVariant",
             "resolved": "\"monochrome\" | \"neutral\" | \"tonal-spot\" | \"vibrant\" | \"expressive\" | \"fidelity\" | \"content\" | \"rainbow\" | \"fruit-salad\"",
-            "parsed": "'content' | 'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'rainbow' | 'fruit-salad'",
+            "parsed": "'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'content' | 'rainbow' | 'fruit-salad'",
             "aliasName": "ThemeVariant",
             "source": "dts-alias"
           },
@@ -79605,7 +80798,7 @@
           "type": {
             "raw": "ThemeVariant",
             "resolved": "\"monochrome\" | \"neutral\" | \"tonal-spot\" | \"vibrant\" | \"expressive\" | \"fidelity\" | \"content\" | \"rainbow\" | \"fruit-salad\"",
-            "parsed": "'content' | 'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'rainbow' | 'fruit-salad'",
+            "parsed": "'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'content' | 'rainbow' | 'fruit-salad'",
             "aliasName": "ThemeVariant",
             "source": "dts-alias"
           },
@@ -79862,7 +81055,7 @@
           "type": {
             "raw": "ThemeVariant",
             "resolved": "\"monochrome\" | \"neutral\" | \"tonal-spot\" | \"vibrant\" | \"expressive\" | \"fidelity\" | \"content\" | \"rainbow\" | \"fruit-salad\"",
-            "parsed": "'content' | 'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'rainbow' | 'fruit-salad'",
+            "parsed": "'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'content' | 'rainbow' | 'fruit-salad'",
             "aliasName": "ThemeVariant",
             "source": "dts-alias"
           },
@@ -79966,7 +81159,7 @@
           "type": {
             "raw": "ThemeVariant",
             "resolved": "\"monochrome\" | \"neutral\" | \"tonal-spot\" | \"vibrant\" | \"expressive\" | \"fidelity\" | \"content\" | \"rainbow\" | \"fruit-salad\"",
-            "parsed": "'content' | 'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'rainbow' | 'fruit-salad'",
+            "parsed": "'vibrant' | 'expressive' | 'monochrome' | 'neutral' | 'tonal-spot' | 'fidelity' | 'content' | 'rainbow' | 'fruit-salad'",
             "aliasName": "ThemeVariant",
             "source": "dts-alias"
           },
@@ -81248,6 +82441,24 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyMode",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#renderHeader",
           "kind": "method",
           "privacy": "private",
@@ -81678,24 +82889,6 @@
           },
           "attribute": null,
           "inheritedFrom": "ReconnectedCallback"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -82743,24 +83936,6 @@
           "inheritedFrom": null
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -82776,7 +83951,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "TimepickerInputElementBase"
         },
         {
           "name": "[_customState]",
@@ -82794,7 +83969,7 @@
             "source": "cem"
           },
           "attribute": null,
-          "inheritedFrom": "AttachInternals"
+          "inheritedFrom": "TimepickerInputElementBase"
         },
         {
           "name": "#hour",
@@ -83822,6 +84997,24 @@
           "inheritedFrom": "HtmlFor"
         },
         {
+          "name": "#applyOrientation",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#syncControl",
           "kind": "method",
           "privacy": "private",
@@ -84108,6 +85301,42 @@
           },
           "attribute": null,
           "inheritedFrom": "HtmlFor"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "TimepickerInputElementBase"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "TimepickerInputElementBase"
         },
         {
           "name": "#hour",
@@ -85462,24 +86691,6 @@
           "inheritedFrom": "HtmlFor"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -85668,7 +86879,7 @@
         {
           "name": "disabled",
           "fieldName": "disabled",
-          "description": "A value indicating whether the element is disabled.",
+          "description": "Whether the element is disabled.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -85770,24 +86981,6 @@
           },
           "attribute": "disabled",
           "inheritedFrom": "Disabled"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
         },
         {
           "name": "[_internals]",
@@ -86124,6 +87317,42 @@
           "inheritedFrom": null
         },
         {
+          "name": "#applyShape",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
+          "name": "#applyVariant",
+          "kind": "method",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": null
+        },
+        {
           "name": "#handleSlotChange",
           "kind": "method",
           "privacy": "private",
@@ -86194,6 +87423,42 @@
           },
           "attribute": "vertical",
           "inheritedFrom": "Vertical"
+        },
+        {
+          "name": "[_internals]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": null,
+          "type": {
+            "raw": "ElementInternals | undefined",
+            "resolved": "ElementInternals | undefined",
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
+        },
+        {
+          "name": "[_customState]",
+          "kind": "field",
+          "privacy": "private",
+          "static": null,
+          "readonly": null,
+          "description": null,
+          "default": "new Set<string>()",
+          "type": {
+            "raw": null,
+            "resolved": null,
+            "parsed": null,
+            "aliasName": null,
+            "source": "cem"
+          },
+          "attribute": null,
+          "inheritedFrom": "AttachInternals"
         }
       ],
       "slots": [
@@ -86223,14 +87488,50 @@
           "syntax": null
         },
         {
-          "name": "--m3e-toolbar-rounded-padding",
-          "description": "Padding for rounded shape.",
+          "name": "--m3e-toolbar-rounded-leading-space",
+          "description": "Leading space for rounded shape.",
           "default": null,
           "syntax": null
         },
         {
-          "name": "--m3e-toolbar-square-padding",
-          "description": "Padding for square shape.",
+          "name": "--m3e-toolbar-rounded-trailing-space",
+          "description": "Trailing space for rounded shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-rounded-top-space",
+          "description": "Top space for rounded shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-rounded-bottom-space",
+          "description": "Bottom space for rounded shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-square-leading-space",
+          "description": "Leading space for square shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-square-trailing-space",
+          "description": "Trailing space for square shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-square-top-space",
+          "description": "Top space for square shape.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-toolbar-square-bottom-space",
+          "description": "Bottom space for square shape.",
           "default": null,
           "syntax": null
         },
@@ -86686,24 +87987,6 @@
           "readonly": null,
           "description": null,
           "default": null,
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "TooltipElementBase"
-        },
-        {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
           "type": {
             "raw": null,
             "resolved": null,
@@ -87675,7 +88958,7 @@
         {
           "name": "indeterminate",
           "fieldName": "indeterminate",
-          "description": "A value indicating whether the element's selected / checked state is indeterminate.",
+          "description": "Whether the element's selected / checked state is indeterminate.",
           "default": "false",
           "deprecated": null,
           "kind": "boolean",
@@ -87890,7 +89173,7 @@
           "privacy": null,
           "static": null,
           "readonly": null,
-          "description": "A value indicating whether the element's selected / checked state is indeterminate.",
+          "description": "Whether the element's selected / checked state is indeterminate.",
           "default": "false",
           "type": {
             "raw": "boolean",
@@ -88299,24 +89582,6 @@
           "inheritedFrom": "Disabled"
         },
         {
-          "name": "formAssociated",
-          "kind": "field",
-          "privacy": null,
-          "static": true,
-          "readonly": true,
-          "description": "Indicates that this custom element participates in form submission, validation, and form state restoration.",
-          "default": "formAssociated",
-          "type": {
-            "raw": null,
-            "resolved": null,
-            "parsed": null,
-            "aliasName": null,
-            "source": "cem"
-          },
-          "attribute": null,
-          "inheritedFrom": "AttachInternals"
-        },
-        {
           "name": "[_internals]",
           "kind": "field",
           "privacy": "private",
@@ -88462,8 +89727,26 @@
           "syntax": null
         },
         {
-          "name": "--m3e-tree-item-padding",
-          "description": "Inline padding for the item.",
+          "name": "--m3e-tree-item-leading-space",
+          "description": "Leading space for the item.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-trailing-space",
+          "description": "Trailing space for the item.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-top-space",
+          "description": "Top space for the item.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-bottom-space",
+          "description": "Bottom space for the item.",
           "default": null,
           "syntax": null
         },
@@ -88482,6 +89765,24 @@
         {
           "name": "--m3e-tree-item-icon-size",
           "description": "Size of the icon.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-checkbox-label-space",
+          "description": "Space between checkbox and label.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-icon-label-space",
+          "description": "Space between icon and label.",
+          "default": null,
+          "syntax": null
+        },
+        {
+          "name": "--m3e-tree-item-toggle-label-space",
+          "description": "Space between toggle and label.",
           "default": null,
           "syntax": null
         },
@@ -88904,14 +90205,14 @@
     }
   ],
   "stats": {
-    "declarations": 272,
+    "declarations": 348,
     "components": 130,
-    "attributes": 583,
-    "enumAttributes": 110,
+    "attributes": 584,
+    "enumAttributes": 109,
     "openUnionAttributes": 14,
     "aliasesCollected": 89,
-    "attributesResolvedFromAlias": 123,
-    "cssProperties": 2906,
-    "dtsFilesScanned": 459
+    "attributesResolvedFromAlias": 122,
+    "cssProperties": 2920,
+    "dtsFilesScanned": 463
   }
 }
