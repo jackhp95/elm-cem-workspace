@@ -422,6 +422,52 @@ inputs (Avetta priorities; legal review) this plan can't supply.
    Phase 4 dry-run either way.
 2. **Figma URLs in published docs** (Phase 2.4): should generated elm-m3e doc-comments
    carry node URLs into a private file (visible to anyone reading the published/ejected
-   docs), or stay local-docs-only behind a flag?
+   docs), or stay local-docs-only behind a flag? **Sharpened by Phase 2.3's finding
+   (see progress log below): today the answer doesn't even matter — `docMeta` renders
+   as an invisible marker that `docs/scripts/extract-reference.mjs` actively strips.
+   The real question is now "is it worth extending the docs renderer to surface this at
+   all," not just "public vs. local."**
 3. **`m3e-search-view` pixel-match**: the standing instruction is "only if asked" — this
    plan keeps that default; say the word and it joins Phase 3/4.
+
+## 8. Progress log
+
+- **2026-08-18 — Phase 0 done** (`e5f874f`): D14 added to the decision ledger; `STATUS.md`
+  and `docs/USAGE.md` rewritten to state the fileKey role split (extraction anchor vs.
+  publish target).
+- **2026-08-18 — Phase 1.2 + 1.3 done** (`3572182`): `check:facts` provenance-staleness
+  gate (`scripts/check-facts.mjs`) + `docs/PROFILE-CONTRACT.md`. **Phase 1.1 deliberately
+  deferred** — it touches a purity-contract-protected module-init load in
+  `profiles/m3-kit/emitters/elm.mjs` (~1000 lines) and has no live urgency (no second Elm
+  consumer exists; that's Phase 5). Flagged, not attempted.
+- **2026-08-18 — Phase 2.1 + 2.2 done** (`f062df6`): `links` CLI subcommand
+  (`src/links/derive.mjs`) derives `profiles/m3-kit/figma-links.json` from
+  `correspondence.json` ⊕ `overrides.json` ⊕ `profile.json`; `check:links` drift gate.
+  52 confirmed entries linked; the iconTable collapses to one row with an honestly-labeled
+  `representative: true` node (no single "icon page" node exists in the data — see the
+  module's own comment for why a fabricated one wasn't used).
+- **2026-08-18 — Phase 2.3 partially done** (`7c47a99`): `tools/gen-figma-config.mjs`
+  joins `figma-links.json` with elm-cem's Face C bundle and writes
+  `packages/elm-m3e/config/figma.generated.json` (52 components, `docMeta.figmaUrl` +
+  `docMeta.figmaStatus`), keyed by the module's constructor-name suffix (verified against
+  `config/examples.generated.json`'s real key casing — Face C's own `component` field is
+  lowercase and would NOT have matched). **Deliberately NOT added to
+  `tools/lib/regen.mjs`'s `GEN_CONFIG_ARGS`** — source-read verification (not assumed)
+  found `docMeta` renders as an invisible `<!-- elm-cem:docmeta … -->` HTML-comment marker
+  (`packages/elm-cem/codegen/Docs.elm`'s `docMetaMarker`), and
+  `packages/elm-m3e/docs/scripts/extract-reference.mjs` explicitly drops that marker
+  before rendering the public reference pages. Wiring it in today would embed private-file
+  Figma URLs into shipped package doc-comment bytes for zero visible effect — this is
+  open question 2 above, now concrete. Held for Jack's steer; see the script's header for
+  the full account.
+- **Not started: Phase 3** (coverage worklist — `m3e-card`, `m3e-date-input` docked set,
+  `m3e-fab-menu`). Deliberately not rushed into the same pass as Phases 0–2: the plan
+  itself rates this fiddly per-component example-authoring work at a higher tier
+  (opus/medium vs. Phases 1–2's sonnet/medium), and `plans/next-agent-handoff.md` flags
+  real per-component traps (`m3e-fab-menu`'s portal/sibling-layout trap). Worth its own
+  focused pass rather than being squeezed in.
+- **Phase 4 (live-Figma bridge session): still fully blocked**, runbook unchanged — this
+  is the "run one command when I have Figma access" step; everything through Phase 2 was
+  designed so that session should need at most the fileKey dry-run (open question 1) plus
+  whatever Phase 3 leaves for live pixel-approval.
+- **Phase 5: untouched**, no dependency from anything above.
