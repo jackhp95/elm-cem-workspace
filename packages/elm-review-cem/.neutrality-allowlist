@@ -251,3 +251,24 @@ src/NoMergedPipeAndSetter.elm::Generated component and builder modules (`M3e.But
 src/NoMergedPipeAndSetter.elm::{ allowedModules = [ "M3e", "Sl", "Wa" ] }
 src/NoMergedPipeAndSetter.elm::brand roots like `"M3e"`, `"Sl"`, `"Wa"`).
 src/NoMergedPipeAndSetter.elm::[ "The K5/#58 structural guarantee requires pipes (with<X> family) to live in M3e.<Component>.Build modules and bare setters (<x> family) to live in M3e.<Component> modules. Merging both into one module recreates the name collision the 3‑package split was designed to avoid."
+
+# NoNonLayoutTailwindClasses.elm: a rule module ported (widened) from
+# elm-m3e's `NoProprietaryDsClasses` (`layout-only-styling` branch) into this
+# namespace-agnostic package. It hardcodes no brand — `classModules`,
+# `proprietaryPrefixes`, `tokenUtilities` and `allowedModules` are all
+# config-driven — but its `## Configuring` example and the `TokenUtilityBridge`
+# doc comment use M3e's real `m3e-*` generated-component-token-utility bridge as
+# the worked example, same convention as `Cem.fences`'s M3e-worked-example
+# config sample above. Not baked into rule logic.
+src/NoNonLayoutTailwindClasses.elm::M3e.card [ MA.class "m3e-card-padding-[0.625rem]" ] []
+src/NoNonLayoutTailwindClasses.elm::, [ "M3e", "Attributes" ]
+src/NoNonLayoutTailwindClasses.elm::{ prefix = "m3e-"
+src/NoNonLayoutTailwindClasses.elm::, names = M3eUtilityNames.names
+src/NoNonLayoutTailwindClasses.elm::`@utility m3e-card-padding-*`). Setting one of these is styling _through_ the
+src/NoNonLayoutTailwindClasses.elm::allowed. `names` carries no trailing `-*`: `@utility m3e-card-padding-*`
+src/NoNonLayoutTailwindClasses.elm::appears as `"m3e-card-padding"`. A class matches a name when it equals the name
+src/NoNonLayoutTailwindClasses.elm::(`[--m3e-nav-rail-icon-button-inset:auto]`, `bg-[url(https://x)]`), and splitting
+src/NoNonLayoutTailwindClasses.elm::`m3e-crd-padding-4` slip through: it is not a utility, ships no CSS, and renders
+src/NoNonLayoutTailwindClasses.elm::what Tailwind's `-*` suffix means: `@utility m3e-card-padding-*` admits
+src/NoNonLayoutTailwindClasses.elm::`m3e-card-padding-[0.625rem]` and `m3e-card-padding-4`.
+src/NoNonLayoutTailwindClasses.elm::{-| A bare arbitrary property (`[--m3e-inset:auto]`, `[color:red]`). Setting a
