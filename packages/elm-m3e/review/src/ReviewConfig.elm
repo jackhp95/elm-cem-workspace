@@ -412,8 +412,8 @@ codegenAware =
 
         -- `preferBarrel` is a LAYER/FORM PREFERENCE, not a correctness rule, so it
         -- exempts what the facts-derived correctness rules do not: the hand-written
-        -- seam adapters (`Layout`, `Kit`, `Native`, `Doc`, `Shared` — the DESIGN §4
-        -- allow-list), which deliberately hold the tight component-module form, so
+        -- seam adapters (`Doc`, `Shared` — the real DESIGN §4 allow-list; `Layout`,
+        -- `Kit`, `Native` never existed, see the NOTE above), which deliberately hold the tight component-module form, so
         -- barrelising them is wrong by design (and several never import the `M3e`
         -- barrel at all). Every other codegen-aware rule stays on everywhere — they
         -- enforce facts-derived correctness that holds on every layer/form. Two path
@@ -536,7 +536,7 @@ That is not a theory. The docs app's only two recast call sites were both in
 was declared `"kinds": ["any"]`, identical to its `unnamed` slot, so codegen gave
 both the SAME type variable and forced the header and body to unify. Fixing the
 config to `["expansionHeader"]` made both escapes evaporate. The count is now
-ZERO, which is why there is no `Recast` module to centralise into — there is
+ZERO, which is why there is no `Seam` module to centralise into — there is
 nothing left to centralise, and an empty designated module would be worse than
 none.
 
