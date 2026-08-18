@@ -26,6 +26,7 @@ import Dict
 import M3e exposing (Element)
 import M3e.Component.FormField as FormField
 import M3e.Component.Icon
+import M3e.Values as Value
 import Theme exposing (Msg(..))
 import Theme.Tokens as Tokens exposing (ColorToken)
 import TypedHtml
@@ -110,7 +111,12 @@ tokenChip model token =
                 Nothing ->
                     []
     in
-    M3e.formField [ TypedHtml.Attributes.class "w-max max-w-full" ]
+    M3e.formField
+        [ FormField.variant Value.outlined
+        , FormField.floatLabel Value.auto
+        , FormField.hideSubscript Value.auto
+        , TypedHtml.Attributes.class "w-max max-w-full"
+        ]
         (FormField.label
             (TypedHtml.label [ TypedHtml.Attributes.for hexId ] [ M3e.text token.role ])
             :: FormField.prefix swatch
@@ -119,7 +125,11 @@ tokenChip model token =
                 , TypedHtml.Attributes.type_ "text"
                 , TypedHtml.Attributes.value (Maybe.withDefault "" current)
                 , TypedHtml.Attributes.placeholder "#RRGGBB"
-                , TypedHtml.Attributes.class "field-sizing-content px-2"
+
+                -- A floor on the width: `field-sizing-content` collapses an
+                -- empty input to nothing, leaving an unset token with no visible
+                -- typing target at all.
+                , TypedHtml.Attributes.class "field-sizing-content min-w-[8ch] px-2"
                 , TypedHtml.Events.onInput (SetColorOverride token.cssVar)
                 , Aria.label ("Hex value for " ++ token.role)
                 ]

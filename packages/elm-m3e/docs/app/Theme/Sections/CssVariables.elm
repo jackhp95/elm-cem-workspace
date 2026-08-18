@@ -155,7 +155,11 @@ cssVarField model prefix cssVar =
                 , TypedHtml.Attributes.type_ "text"
                 , TypedHtml.Attributes.value (Maybe.withDefault "" current)
                 , TypedHtml.Attributes.placeholder "(default)"
-                , TypedHtml.Attributes.class "field-sizing-content px-2"
+
+                -- A floor on the width: `field-sizing-content` collapses an
+                -- empty input to nothing, leaving an un-overridden var with no
+                -- visible typing target.
+                , TypedHtml.Attributes.class "field-sizing-content min-w-[10ch] px-2"
                 , TypedHtml.Events.onInput (SetCssOverride cssVar)
                 , Aria.label ("Value for --" ++ cssVar)
                 ]
