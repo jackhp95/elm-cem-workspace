@@ -23,6 +23,7 @@ import { runGapReport } from "./correspond/gap-report.mjs";
 import { runEmit } from "./emit/run.mjs";
 import { runCheck } from "./publish/check.mjs";
 import { publish, unpublish } from "./publish/runner.mjs";
+import { writeFigmaLinks } from "./links/derive.mjs";
 
 const COMMANDS = [
   "match",
@@ -31,6 +32,7 @@ const COMMANDS = [
   "gap",
   "extract",
   "emit",
+  "links",
   "publish",
   "unpublish",
   "check",
@@ -182,6 +184,20 @@ async function runEmitCommand(options) {
   return 0;
 }
 
+// Phase 2.1 (plans/2026-08-17-figma-elm-config-integration-design.md):
+// `links` derives profiles/<p>/figma-links.json — a read-only projection of
+// correspondence.json's confirmed entries into {cemTag, sets:[{nodeId,
+// setName, url}], gate, labels}, for a downstream consumer (elm-cem's
+// config channel) to pick up as GENERATED data. See src/links/derive.mjs.
+function runLinksCommand(options) {
+  const profileDir = requireProfileDir(options);
+  const data = writeFigmaLinks(profileDir);
+  console.log(
+    `links: wrote ${path.join(profileDir, "figma-links.json")} (${data.links.length} entries)`
+  );
+  return 0;
+}
+
 // B4: `check` (CI drift/orphan gate, src/publish/check.mjs) — re-emits in
 // memory and diffs code-only against committed `generated/**`. Exit code 1
 // (not 2 — this isn't an arg/usage error) on any DRIFT/ORPHAN.
@@ -308,6 +324,7 @@ const HANDLERS = {
   confirm: runConfirmCommand,
   gap: runGapCommand,
   emit: runEmitCommand,
+  links: runLinksCommand,
   check: runCheckCommand,
   publish: runPublishCommand,
   unpublish: runUnpublishCommand,

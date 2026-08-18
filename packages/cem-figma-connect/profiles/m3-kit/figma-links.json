@@ -1,0 +1,1000 @@
+{
+  "fileKey": "UtwpUdPiOZEuxp8Nq1d5yQ",
+  "kitVersionTag": "m3-community-2026-07-13",
+  "links": [
+    {
+      "cemTag": "m3e-app-bar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58114:20565",
+          "setName": "App bar",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58114-20565"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-assist-chip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:28089",
+          "setName": "Assistive chip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-28089"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-avatar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "50731:13725",
+          "setName": "Generic avatar",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=50731-13725"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-badge",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51592:4768",
+          "setName": "Badges",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51592-4768"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-bottom-sheet",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51827:5859",
+          "setName": "Bottom sheet",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51827-5859"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-button",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57994:2227",
+          "setName": "Button",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-2227"
+        },
+        {
+          "nodeId": "58650:8094",
+          "setName": "Button - text",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58650-8094"
+        },
+        {
+          "nodeId": "58650:9294",
+          "setName": "Button - elevated",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58650-9294"
+        },
+        {
+          "nodeId": "58650:10213",
+          "setName": "Button - outline",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58650-10213"
+        },
+        {
+          "nodeId": "58651:11237",
+          "setName": "Button - tonal",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58651-11237"
+        },
+        {
+          "nodeId": "57994:2328",
+          "setName": "Toggle button",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-2328"
+        },
+        {
+          "nodeId": "58653:13968",
+          "setName": "Toggle button - elevated",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58653-13968"
+        },
+        {
+          "nodeId": "58653:16237",
+          "setName": "Toggle button - outline",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58653-16237"
+        },
+        {
+          "nodeId": "58653:17539",
+          "setName": "Toggle button - tonal",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58653-17539"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-button-group",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57998:47111",
+          "setName": "Connected button group",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-47111"
+        },
+        {
+          "nodeId": "58424:8117",
+          "setName": "Standard button group",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58424-8117"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-button-segment",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:36691",
+          "setName": "Building Blocks/Segmented button/Button segment (middle)",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-36691"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-card",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "52346:27573",
+          "setName": "Stacked card",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52346-27573"
+        },
+        {
+          "nodeId": "52350:27876",
+          "setName": "Horizontal card",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52350-27876"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-checkbox",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51859:5628",
+          "setName": "Checkboxes",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51859-5628"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-chip-set",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57376:5501",
+          "setName": "Chip groups",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57376-5501"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-circular-progress-indicator",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58005:8459",
+          "setName": "Circular-determinate progress indicator",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-8459"
+        },
+        {
+          "nodeId": "58005:8525",
+          "setName": "Circular-indeterminate progress indicator",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-8525"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-date-input",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51954:18540",
+          "setName": "Input date picker",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51954-18540"
+        },
+        {
+          "nodeId": "51954:18567",
+          "setName": "Docked input date picker [desktop]",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51954-18567"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-datepicker",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51954:18136",
+          "setName": "Modal date picker",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51954-18136"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-dialog",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "50723:10929",
+          "setName": "Basic dialog",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=50723-10929"
+        },
+        {
+          "nodeId": "52112:29186",
+          "setName": "Scrollable list dialog",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52112-29186"
+        },
+        {
+          "nodeId": "52112:28937",
+          "setName": "List dialog",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52112-28937"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-drawer-container",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53198:27851",
+          "setName": "Side Sheet",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53198-27851"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-expandable-list-item",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "59106:13316",
+          "setName": "List item - Accordion ",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13316"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-fab",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57998:43426",
+          "setName": "FAB",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-43426"
+        },
+        {
+          "nodeId": "57998:43095",
+          "setName": "Extended FAB",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-43095"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-fab-menu",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57998:42986",
+          "setName": "FAB menu",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-42986"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-fab-menu-item",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57998:42953",
+          "setName": ".Building Blocks/FAB Menu/Primary/Segment",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-42953"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-filter-chip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:28270",
+          "setName": "Filter chip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-28270"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-form-field",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "52798:24373",
+          "setName": "Text field",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52798-24373"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-icon",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58001:59569",
+          "setName": "wifi",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58001-59569",
+          "representative": true
+        }
+      ],
+      "iconCount": 141,
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-icon-button",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57994:10081",
+          "setName": "Icon button",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-10081"
+        },
+        {
+          "nodeId": "58663:30358",
+          "setName": "Icon button - standard",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58663-30358"
+        },
+        {
+          "nodeId": "58663:30359",
+          "setName": "Icon button - outline",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58663-30359"
+        },
+        {
+          "nodeId": "58665:33976",
+          "setName": "Icon button - tonal",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58665-33976"
+        },
+        {
+          "nodeId": "57994:10368",
+          "setName": "Icon button togglable",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-10368"
+        },
+        {
+          "nodeId": "58665:42416",
+          "setName": "Icon button togglable - standard",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58665-42416"
+        },
+        {
+          "nodeId": "58668:45603",
+          "setName": "Icon button togglable - outline",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58668-45603"
+        },
+        {
+          "nodeId": "58668:48104",
+          "setName": "Icon button togglable - tonal",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58668-48104"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-input-chip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:27888",
+          "setName": "Input chip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-27888"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-linear-progress-indicator",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58005:7997",
+          "setName": "Linear-determinate progress indicator",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-7997"
+        },
+        {
+          "nodeId": "58005:8284",
+          "setName": "Linear-indeterminate progress indicator",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-8284"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-list",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "59106:13028",
+          "setName": "List",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13028"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-list-item",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "59106:13183",
+          "setName": "List item",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13183"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-loading-indicator",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58005:8555",
+          "setName": "Loading indicator",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-8555"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-menu",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58966:3975",
+          "setName": "Menu",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58966-3975"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-menu-item",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58966:4100",
+          "setName": "Menu item/Standard",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58966-4100"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-nav-bar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58016:37236",
+          "setName": "Navigation Bar: Horizontal items",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58016-37236"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-nav-item",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51593:5254",
+          "setName": "Building Blocks / Nav item",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51593-5254"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-nav-menu",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51593:5827",
+          "setName": "Navigation Drawer",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51593-5827"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-nav-rail",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58016:36879",
+          "setName": "Navigation Rail",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58016-36879"
+        },
+        {
+          "nodeId": "58016:36670",
+          "setName": "Navigation Rail: Expanded",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58016-36670"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-radio",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "51739:4608",
+          "setName": "Radio buttons",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51739-4608"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-rich-tooltip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "54061:33872",
+          "setName": "Rich Tooltip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54061-33872"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-search-bar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "52977:33813",
+          "setName": "Search bar",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52977-33813"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-search-view",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "59178:4992",
+          "setName": "Search docked layout",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59178-4992"
+        },
+        {
+          "nodeId": "59178:4963",
+          "setName": "Search full-screen layout",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59178-4963"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-segmented-button",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:36615",
+          "setName": "Segmented button",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-36615"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-shape",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58548:7248",
+          "setName": "Shape Set",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58548-7248"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-slider",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58008:10356",
+          "setName": "Standard slider",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58008-10356"
+        },
+        {
+          "nodeId": "58008:11810",
+          "setName": "Range slider",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58008-11810"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-snackbar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53977:33575",
+          "setName": "Snackbar",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53977-33575"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-split-button",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "57994:15751",
+          "setName": "Split button",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-15751"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-suggestion-chip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "53923:28679",
+          "setName": "Suggestion chip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-28679"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-switch",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "54446:25289",
+          "setName": "Switch",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54446-25289"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-tab",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "54563:40142",
+          "setName": "Primary tabs/Icon and label",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40142"
+        },
+        {
+          "nodeId": "54563:40209",
+          "setName": "Primary tabs/Icon only",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40209"
+        },
+        {
+          "nodeId": "54563:40268",
+          "setName": "Primary tabs/Label only",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40268"
+        },
+        {
+          "nodeId": "54563:40366",
+          "setName": "Secondary tabs/Icon and label",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40366"
+        },
+        {
+          "nodeId": "54563:40319",
+          "setName": "Secondary tabs/Label only",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40319"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-tabs",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "54563:40023",
+          "setName": "Tabs",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40023"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-timepicker",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "52949:27916",
+          "setName": "Dial picker",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-27916"
+        },
+        {
+          "nodeId": "52949:28053",
+          "setName": "Keyboard picker",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-28053"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-timepicker-input-period-toggle",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "52949:28132",
+          "setName": ".Building Blocks/Period Selector",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-28132"
+        },
+        {
+          "nodeId": "52949:28175",
+          "setName": ".Building Blocks/Period Selector - Horizontal",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-28175"
+        }
+      ],
+      "gate": "approved",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-toolbar",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "58467:8206",
+          "setName": "Toolbar",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58467-8206"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    },
+    {
+      "cemTag": "m3e-tooltip",
+      "status": "confirmed",
+      "sets": [
+        {
+          "nodeId": "54061:33881",
+          "setName": "Plain Tooltip",
+          "url": "https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54061-33881"
+        }
+      ],
+      "gate": "example-verified",
+      "labels": [
+        "Web Components",
+        "Elm"
+      ]
+    }
+  ]
+}
