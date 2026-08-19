@@ -66,6 +66,7 @@
     "check:format": "elm-format tests/src --validate",
     "check:gates": "node bin/elm-cem.js check-gates",
     "check:neutrality": "bash .github/neutrality-check.sh",
+    "check:skills": "node skills/check-skills.mjs",
     "test": "run-p \"test:*\"",
     "check": "run-p \"check:*\"",
     "gate": "run-s check test",
