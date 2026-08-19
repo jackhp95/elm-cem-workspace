@@ -290,7 +290,7 @@ export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files, iconN
     return { ok: failures.length === 0, failures };
 }
 
-// ── R-008: brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm carries a build
+// ── R-008: brands/m3e/generated/package/elm-m3e/docs/.elm-pages/Pages.elm carries a build
 // timestamp (`builtAt = Time.millisToPosix <epoch-ms>`) that any docs build
 // rewrites. A naive byte-diff against this file is red on every docs build
 // for a reason nobody can act on. Normalize the timestamp out before

@@ -74,7 +74,7 @@ function barrelise(items) {
   writeReviewConfig(cfgDir, {
     reviewSrcDir: `${REPO}/review/src`,
     reviewElm,
-    extraSourceDirs: [`${REPO}/src`, `${REPO}/../../../../pipeline/elm-review-cem/src`],
+    extraSourceDirs: [`${REPO}/src`, `${REPO}/../../../../../pipeline/elm-review-cem/src`],
     reviewConfigElm: REVIEW_CONFIG,
   });
   const text = writeCorpusApp(targetDir, items, SRC_DIRS);

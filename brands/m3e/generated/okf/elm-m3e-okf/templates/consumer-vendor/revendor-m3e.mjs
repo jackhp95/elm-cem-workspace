@@ -72,7 +72,7 @@ export const MIRROR_URL =
 // so the elm-review rule — which globs `vendor/**` relative to the project's
 // elm.json — can compare against them with a direct dict lookup.
 export const DEFAULT_TREES = [
-  { name: "elm-m3e", srcPath: "brands/m3e/outputs/elm-m3e/src", dest: "vendor/elm-m3e" },
+  { name: "elm-m3e", srcPath: "brands/m3e/generated/package/elm-m3e/src", dest: "vendor/elm-m3e" },
   {
     name: "elm-html-ir",
     srcPath: "core/elm-html-intermediate-representation/src",

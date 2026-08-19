@@ -49,7 +49,7 @@ import {
   renderSlot,
   renderList,
   renderTextSeam,
-} from "../../../../../../../../pipeline/elm-cem/src/elm-shape.mjs";
+} from "../../../../../../../../../pipeline/elm-cem/src/elm-shape.mjs";
 
 // ── the current userland seam (post-docs/kit) ──────────────────────────────
 const TEXT_SEAM = "M3e"; // renderTextSeam(TEXT_SEAM, t) => `M3e.text "…"`

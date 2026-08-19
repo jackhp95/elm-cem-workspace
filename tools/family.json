@@ -6,7 +6,7 @@
       "mirror": { "auditedExclusions": false }
     },
     "elm-m3e": {
-      "srcDir": "brands/m3e/outputs/elm-m3e",
+      "srcDir": "brands/m3e/generated/package/elm-m3e",
       "mirror": { "auditedExclusions": true },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_ELM_M3E",

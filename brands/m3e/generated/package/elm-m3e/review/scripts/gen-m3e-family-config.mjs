@@ -26,7 +26,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
-const CONFIG = path.join(ROOT, "..", "..", "..", "inputs", "cem", "config", "slots.json");
+const CONFIG = path.join(ROOT, "..", "..", "..", "..", "inputs", "cem", "config", "slots.json");
 const OUTPUT_PATH = path.join(ROOT, "src", "M3e", "Review", "Families.elm");
 
 function flattenedMembers(spec) {

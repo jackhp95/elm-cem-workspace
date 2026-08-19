@@ -35,7 +35,7 @@ export function elmCemCli(repoRoot) {
 }
 
 export function defaultElmM3e(repoRoot) {
-    return process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+    return process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
 }
 
 /**

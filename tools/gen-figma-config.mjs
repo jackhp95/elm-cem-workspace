@@ -6,7 +6,7 @@
 // DERIVED, read-only projection of correspondence.json — see
 // core/cem-figma-connect/src/links/derive.mjs) with elm-cem's Face C
 // facts bundle (component -> Elm module name) by cemTag, and writes
-// brands/m3e/outputs/elm-m3e/config/figma.generated.json: per-component `docMeta`
+// brands/m3e/generated/package/elm-m3e/config/figma.generated.json: per-component `docMeta`
 // entries (`figmaUrl`, `figmaStatus`) in the shape elm-cem's config decoder
 // expects (`Generate/Config.elm`: `opt "docMeta" (keyValuePairs string) []`,
 // keyed by CONSTRUCTOR NAME — the module's last dotted segment, e.g.
@@ -20,7 +20,7 @@
 // core/elm-cem/codegen/Docs.elm's docMetaMarker: `docMeta` renders as an
 // INVISIBLE HTML-comment marker (`<!-- elm-cem:docmeta k=v; ... -->`) in the
 // generated module's doc comment — not a visible Markdown line. Worse:
-// brands/m3e/outputs/elm-m3e/docs/scripts/extract-reference.mjs (the docs-site's own
+// brands/m3e/generated/package/elm-m3e/docs/scripts/extract-reference.mjs (the docs-site's own
 // reference extractor) explicitly DROPS `elm-cem:docmeta` directives before
 // rendering the public reference pages. So wiring this file into
 // GEN_CONFIG_ARGS today would embed Figma node-ids/URLs (pointing at Jack's

@@ -36,9 +36,9 @@ const vendorDir = join(docsDir, "vendor", "elm-foundation");
 
 export const htmlIrSrc =
   process.env.HTMLIR_SRC ??
-  resolve(docsDir, "..", "..", "..", "..", "..", "packages", "elm-virtual-dom-intermediate-representation", "src");
+  resolve(docsDir, "..", "..", "..", "..", "..", "..", "packages", "elm-virtual-dom-intermediate-representation", "src");
 export const typedHtmlSrc =
-  process.env.TYPEDHTML_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "brands", "html", "generated", "package", "elm-typed-html", "src");
+  process.env.TYPEDHTML_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "..", "brands", "html", "generated", "package", "elm-typed-html", "src");
 
 // The entries this script owns inside a vendor dir: deleted and recopied fresh
 // on every run so upstream deletions propagate. Anything else in the vendor dir

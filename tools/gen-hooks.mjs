@@ -45,7 +45,7 @@ const PLAIN_TARGETS = [
     "brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push",
     "pipeline/elm-cem-figma-connect/hooks/pre-push",
 ];
-const ELM_M3E_TARGET = "brands/m3e/outputs/elm-m3e/hooks/pre-push";
+const ELM_M3E_TARGET = "brands/m3e/generated/package/elm-m3e/hooks/pre-push";
 
 function extractBody(baseSrc) {
     const start = baseSrc.indexOf("# --- BODY START");

@@ -2,11 +2,11 @@
     "type": "application",
     "source-directories": [
         "src",
-        "../../../src",
-        "../../../../../../../pipeline/elm-review-cem/src",
-        "../../../../../../../pipeline/elm-cem/facts/src",
-        "../../../../../../../packages/elm-virtual-dom-intermediate-representation/src",
-        "../../../../../../../brands/html/generated/package/elm-typed-html/src"
+        "../src",
+        "../../../../../../pipeline/elm-review-cem/src",
+        "../../../../../../pipeline/elm-cem/facts/src",
+        "../../../../../../packages/elm-virtual-dom-intermediate-representation/src",
+        "../../../../../../brands/html/generated/package/elm-typed-html/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {

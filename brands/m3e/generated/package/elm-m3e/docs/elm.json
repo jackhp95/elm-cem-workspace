@@ -6,8 +6,8 @@
         ".elm-pages",
         "../src",
         "../elm-m3e-families/src",
-        "../../../../../pipeline/elm-cem/facts/src",
-        "../../../../../pipeline/elm-cem-compose/src",
+        "../../../../../../pipeline/elm-cem/facts/src",
+        "../../../../../../pipeline/elm-cem-compose/src",
         "vendor/elm-foundation"
     ],
     "elm-version": "0.19.1",

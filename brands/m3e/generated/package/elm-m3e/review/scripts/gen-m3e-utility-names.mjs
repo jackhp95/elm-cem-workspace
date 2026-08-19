@@ -26,7 +26,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
-const MANIFEST = path.join(ROOT, "..", "..", "..", "generated", "style", "elm-m3e-tailwind", "generated", "utilities.json");
+const MANIFEST = path.join(ROOT, "..", "..", "..", "..", "generated", "style", "elm-m3e-tailwind", "generated", "utilities.json");
 const OUTPUT_PATH = path.join(ROOT, "src", "M3eUtilityNames.elm");
 
 function generate() {

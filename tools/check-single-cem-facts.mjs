@@ -23,9 +23,9 @@
 // An earlier version of this script approximated that invariant with a blunt
 // rule: "at most one `Cem/Facts.elm` FILE anywhere under packages/". That rule
 // is WRONG in one direction — it condemns files that are provably not in any
-// published graph. It cost us `brands/m3e/outputs/elm-m3e/editor/stub/Cem/Facts.elm`, a
+// published graph. It cost us `brands/m3e/generated/package/elm-m3e/editor/stub/Cem/Facts.elm`, a
 // git-tracked, deliberately-designed, editor-only stub (see
-// brands/m3e/outputs/elm-m3e/editor/README.md) that exists so Elm LSP can type-check
+// brands/m3e/generated/package/elm-m3e/editor/README.md) that exists so Elm LSP can type-check
 // elm-m3e's generated `src/` without resolving the real facts package. Deleting
 // a legitimate tracked file to satisfy a checker is never the right repair; the
 // checker's rule gets narrowed instead. That is what this file now does.

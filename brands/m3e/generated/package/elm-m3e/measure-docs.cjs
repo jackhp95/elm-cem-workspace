@@ -93,7 +93,7 @@ function measurePackage(pkgDirName) {
 
   // Build external deps
   const knownInternal = new Set([
-    "jackhp95/elm-html-intermediate-representation", "jackhp95/elm-cem-facts",
+    "jackhp95/elm-virtual-dom-intermediate-representation", "jackhp95/elm-cem-facts",
     "jackhp95/elm-m3e", "jackhp95/elm-m3e-components", "jackhp95/elm-m3e-builder",
   ]);
   const externalDeps = {};

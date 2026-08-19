@@ -139,7 +139,7 @@ const consumers = [
     // tests). See docs/plans/2026-08-17-phase1-L4-facec-coverage-audit.md. Flip
     // `migrated` to true when L5 lands; the import is then ENFORCED below.
     name: "elm-m3e docs (to-elm)",
-    file: "brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",
+    file: "brands/m3e/generated/package/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",
     migrated: false,
   },
 ];

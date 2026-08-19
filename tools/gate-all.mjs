@@ -41,7 +41,7 @@
 // Env:
 //   PRISTINE_ELM_CEM     passed through to tools/ab-elm-cem.sh
 //   ELM_M3E              elm-m3e checkout used by the E2E bundle proof
-//                        (default: the in-workspace brands/m3e/outputs/elm-m3e)
+//                        (default: the in-workspace brands/m3e/generated/package/elm-m3e)
 //   GATE_ALL_CONCURRENCY overrides the scheduler's worker-pool width
 //                        (default: os.cpus().length)
 
@@ -65,7 +65,7 @@ const require = createRequire(import.meta.url);
 const LIST_STEPS_ONLY = process.argv.includes("--list-steps-only");
 const LIST_STEPS_FULL = process.argv.includes("--list-steps-full");
 
-const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
 // tools/family.json — the one manifest of "which packages exist, where, and
 // what mirror/bundle-copy/copy-fidelity gates apply to them" (Theme 3 of the
 // 2026-08-17 audit, "the manifest move"). The copy-fidelity sweep below is

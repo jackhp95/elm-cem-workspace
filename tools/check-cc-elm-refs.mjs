@@ -35,8 +35,8 @@ const strict = process.argv.includes("--strict");
 // `M3e.Values`, `M3e.Action`, …); the docs vendor carries the `TypedHtml.*`
 // plain-HTML foundation the snippets use for scaffolding.
 const SRC_ROOTS = [
-  path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "src"),
-  path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "docs", "vendor", "elm-foundation"),
+  path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e", "src"),
+  path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e", "docs", "vendor", "elm-foundation"),
 ];
 
 // Where the emitted Code Connect Elm snippets live.

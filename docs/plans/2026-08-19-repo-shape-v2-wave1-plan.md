@@ -1093,14 +1093,14 @@ against `generated/package/elm-m3e` once — see Architecture).
   `gen-figma-config.mjs` (any elm-m3e literal). Re-verify `install-toolchains.mjs`'s `brands` walk
   reaches `generated/*/*` (finding Q).
 
-- [ ] **Step 4.1: Move**
+- [x] **Step 4.1: Move**
 
 ```bash
 mkdir -p brands/m3e/generated/package
 git mv brands/m3e/outputs/elm-m3e brands/m3e/generated/package/elm-m3e
 ```
 
-- [ ] **Step 4.2: Retarget the `config` symlink (finding S #2)**
+- [x] **Step 4.2: Retarget the `config` symlink (finding S #2)**
 
 ```bash
 rm brands/m3e/generated/package/elm-m3e/config
@@ -1108,7 +1108,7 @@ ln -s ../../../inputs/cem/config brands/m3e/generated/package/elm-m3e/config
 git add brands/m3e/generated/package/elm-m3e/config
 ```
 
-- [ ] **Step 4.3: Fix the package's non-docs internal refs (+1 depth, finding T)**
+- [x] **Step 4.3: Fix the package's non-docs internal refs (+1 depth, finding T)**
 
 `review/elm.json` `source-directories` (re-read — by now the `core`→`pipeline`/`packages` rename
 from Task 1 is reflected, **including the IR dir now being `packages/elm-virtual-dom-intermediate-representation`**;
@@ -1117,7 +1117,7 @@ ref, and re-grep the package **excluding `docs/`** for `../../../../../` cross-p
 (The `docs/` subtree's own refs are handled in Task 5 — do not touch `docs/` here beyond letting it
 ride along.)
 
-- [ ] **Step 4.3b: Apply the IR published-name dependency edits (finding A2, Task-4 side)**
+- [x] **Step 4.3b: Apply the IR published-name dependency edits (finding A2, Task-4 side)**
 
 The IR rename (`jackhp95/elm-html-intermediate-representation` → `…/elm-virtual-dom-intermediate-representation`)
 cascades into three `elm.json` dependency keys that move with `elm-m3e`:
@@ -1127,7 +1127,7 @@ Update the dependency key in each. **Do NOT touch `HtmlIr.*` module imports** (n
 `grep -rn "jackhp95/elm-html-intermediate-representation"` after Task 4 → zero hits should remain
 outside the elm-cem symlink alias + its exclusion glob.
 
-- [ ] **Step 4.4: Update `tools/*` for the relocation**
+- [x] **Step 4.4: Update `tools/*` for the relocation**
 
 Apply every **Task 4** entry from findings B–R: `gate-all.mjs` L68; `check-drift.mjs` L55 +
 L176 (interim `generated/package/elm-m3e/docs/…`); `check-drift.test.mjs` L20; `bump.mjs` L34 +
@@ -1137,7 +1137,7 @@ L142 (interim); `measure-docs-size.mjs` L81; `check-m3e-5pkg.mjs` L6; `ab-elm-ce
 The "interim" entries point at `generated/package/elm-m3e/docs/…` now and get their **final**
 `generated/docs/elm-m3e-docs/…` value in Task 5 (documented double-edit — see findings C, E, H).
 
-- [ ] **Step 4.5: Reinstall + gate**
+- [x] **Step 4.5: Reinstall + gate**
 
 ```bash
 pnpm install && node tools/gate-all.mjs
@@ -1146,7 +1146,7 @@ Watch: `elm-m3e`'s `check`/`test:browser` (the dominant task; uses `ELM_M3E`), `
 `check-cc-elm-refs`, the E2E facts-bundle proof (`--config-from=config/…` via the retargeted
 symlink — an `ENOENT` here means the symlink is wrong). Patch forward, re-run until green.
 
-- [ ] **Step 4.6: Commit**
+- [x] **Step 4.6: Commit**
 
 ```bash
 git add -A
