@@ -147,17 +147,23 @@ Established by four parallel investigations; every claim carries a `path:line`.
 ### 3.4 The generated API is one package with several facets, each with its own contract
 
 `elm-m3e` is **one** published Elm package (not a `core/elements/components/
-builders` package split). Within it, the real module-layers ("facets") and their
-composition-enforcement contracts:
+builders` package split). The **facets** are the construction *forms* the
+codebase already emits — keys taken verbatim from
+`Generate/Phantom/Emit/FactsBundle.elm:73-76`, not invented:
 
-| Facet | Modules | Composition contract |
-|---|---|---|
-| **strict** | `M3e.Component.<X>` (Standard + Record forms) | compiler — closed phantom rows + slot-setters |
-| **builder** | `M3e.Build.<X>` | compiler — `Available`/`Used` capability rows |
-| **general** | `M3e` (barrel: `button`, `listItem`, `slotLeading…`) | **elm-review** (`ValidSlotKind` / `ValidEnumValue`) for raw children / shared-vocab enums |
-| **loose** | `M3e.Html` | none (free rows) — *internalized, not exposed* |
-| **escape** | `M3e.Unsafe` | none (only redundancy-linted by `NoRedundantElementEscape`) |
-| **vocab/core** | `M3e.Internal.*`, `M3e.Attributes`/`Values`/`Events`/`Action`/`Kind` | shared types + library-wide enum unions |
+| Facet key | Form | Hosting module(s) | Composition enforcement |
+|---|---|---|---|
+| `top` | Standard `[attrs][children]` (double-list) | `M3e.Component.<X>` (strict) and the `M3e` barrel | **compiler** via closed rows when a child is routed through a slot-setter; **elm-review** (`ValidSlotKind`/`ValidEnumValue`) for a raw child sitting in the content list |
+| `build` | pipeline builder (finalizer `toElement`) | `M3e.Build.<X>` | **compiler** — `Available`/`Used` capability rows |
+| `record` | required-fields-record-first ctor | `M3e.Component.<X>` | **compiler** — as `top`, with a required-fields record |
+| `html` | loose double-list (free rows) | `M3e.Html` (*internalized, not exposed*) | **none** |
+
+Plus one non-facet escape surface — `M3e.Unsafe` — free rows, enforcement
+**none** (only redundancy-linted by `NoRedundantElementEscape`) — and the shared
+vocab/core (`M3e.Internal.*`, `M3e.Attributes`/`Values`/`Events`/`Action`/`Kind`).
+Note the *enforcement contract is (form × module × placement mechanism)*, not a
+property of the facet key alone — the `top` form is compiler-checked in
+`M3e.Component` but elm-review-checked for raw children in the `M3e` barrel.
 
 One `admits` fact, projected three ways: a phantom **row type**
 (`Internal/Types/ListItem.elm` `LeadingSlot`), **elm-review data**
@@ -196,11 +202,11 @@ no cross-file join.
       // ── target bindings (Elm-aware consumers) ──
       "targets": {
         "elm": {
+          // keys are the codebase's own facet forms (top/build/record/html)
           "facets": {
-            "strict":  { "module": "M3e.Component.ListItem", "ctor": "component",
-                         "slotSetters": { "leading": "leading", "trailing": "trailing" } },
-            "builder": { "module": "M3e.Build.ListItem", "seed": "build" },
-            "general": { "module": "M3e", "fn": "listItem" }
+            "top":   { "module": "M3e.Component.ListItem", "ctor": "component",
+                       "slotSetters": { "leading": "leading", "trailing": "trailing" } },
+            "build": { "module": "M3e.Build.ListItem", "seed": "build", "finalizer": "toElement" }
           }
         }
       }
@@ -276,10 +282,12 @@ Two levels, distinct:
   "components": { "m3e-list-item": { "targets": { "elm": { "facets": { /* bindings */ } } } } },
   "targets": {
     "elm": {
+      // illustrative; precise contract axis is (form × module × placement), locked in phase 1
       "contracts": {
-        "strict":  { "composition": "compiler",   "attributes": "compiler" },
-        "general": { "composition": "elm-review", "attributes": "elm-review" },
-        "escape":  { "composition": "none",        "attributes": "none" }
+        "top":    { "slotSetterChild": "compiler", "rawContentChild": "elm-review" },
+        "build":  { "composition": "compiler" },
+        "html":   { "composition": "none" },
+        "unsafe": { "composition": "none" }
       }
     }
   }
@@ -338,8 +346,11 @@ superset rather than joining two producers at encode time:
   (`"shared:icon"`, `"avatar"`) as-is (mirror the truth), and let the Elm binding
   layer carry the field-name mapping (`sharedIcon`). Confirm during planning.
 - **Naming to lock:** the file (`brand-facts.json`), the top key (`components`),
-  facet keys (`strict`/`builder`/`general`/`loose`/`escape`), `targets`,
-  `contracts`. Strawman above; finalize in phase 1.
+  `targets`, `contracts`. **Facet keys are not invented** — use the codebase's own
+  emitted facet forms `top` / `build` / `record` / `html`
+  (`Generate/Phantom/Emit/FactsBundle.elm:73-76`), plus `M3e.Unsafe` as a separate
+  escape surface; phase 1 reconciles these against the generated modules. (The
+  earlier `strict`/`loose`/`general`/`escape` labels were mine and are dropped.)
 - **`schemaVersion` bump** to `2` and whether the hand-rolled validator
   (`validate-facts-bundle.js`) is extended or replaced.
 
