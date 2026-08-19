@@ -1,23 +1,23 @@
 {
-  "../../../node_modules/.pnpm/@m3e+web@2.7.3_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js": {
-    "file": "assets/all-DuBGuTcV.js",
+  "../../../node_modules/.pnpm/@m3e+web@2.7.6_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js": {
+    "file": "assets/all-3BBycE9k.js",
     "name": "all",
-    "src": "../../../node_modules/.pnpm/@m3e+web@2.7.3_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js",
+    "src": "../../../node_modules/.pnpm/@m3e+web@2.7.6_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js",
     "isDynamicEntry": true
   },
   "elm-stuff/elm-pages/index.html": {
-    "file": "assets/index-CeMT9oe2.js",
+    "file": "assets/index-mJLORz0A.js",
     "name": "index",
     "src": "elm-stuff/elm-pages/index.html",
     "isEntry": true,
     "imports": [
-      "../../../node_modules/.pnpm/@m3e+web@2.7.3_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js"
+      "../../../node_modules/.pnpm/@m3e+web@2.7.6_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js"
     ],
     "dynamicImports": [
-      "../../../node_modules/.pnpm/@m3e+web@2.7.3_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js"
+      "../../../node_modules/.pnpm/@m3e+web@2.7.6_@floating-ui+utils@0.2.12_lit@3.3.3_tslib@2.8.1/node_modules/@m3e/web/dist/all.js"
     ],
     "css": [
-      "assets/index-CQZUX9A5.css"
+      "assets/index-33RsKK6U.css"
     ]
   }
 }

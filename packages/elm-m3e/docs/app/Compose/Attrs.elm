@@ -113,6 +113,7 @@ kinds =
         , ( "loadingLabel", Cem.Compose.StringAttr )
         , ( "lowered", Cem.Compose.BoolAttr )
         , ( "max", Cem.Compose.FloatAttr )
+        , ( "maxChips", Cem.Compose.FloatAttr )
         , ( "maxDate", Cem.Compose.StringAttr )
         , ( "maxDepth", Cem.Compose.FloatAttr )
         , ( "maxRows", Cem.Compose.FloatAttr )
@@ -340,6 +341,7 @@ witness =
     , always () (M3e.Attributes.loadingLabel "")
     , always () (M3e.Attributes.lowered True)
     , always () (M3e.Attributes.max 0)
+    , always () (M3e.Attributes.maxChips 0)
     , always () (M3e.Attributes.maxDate "")
     , always () (M3e.Attributes.maxDepth 0)
     , always () (M3e.Attributes.maxRows 0)
@@ -558,9 +560,6 @@ witness =
     , always () (M3e.Attributes.startView M3e.Values.month)
     , always () (M3e.Attributes.startView M3e.Values.multiYear)
     , always () (M3e.Attributes.startView M3e.Values.year)
-    , always () (M3e.Attributes.state M3e.Values.content)
-    , always () (M3e.Attributes.state M3e.Values.loading)
-    , always () (M3e.Attributes.state M3e.Values.noData)
     , always () (M3e.Attributes.timeFormat M3e.Values.auto)
     , always () (M3e.Attributes.timeFormat M3e.Values.value12)
     , always () (M3e.Attributes.timeFormat M3e.Values.value24)
@@ -952,6 +951,9 @@ setterFor name =
         "max" ->
             Just "M3e.Attributes.max"
 
+        "maxChips" ->
+            Just "M3e.Attributes.maxChips"
+
         "maxDate" ->
             Just "M3e.Attributes.maxDate"
 
@@ -1227,9 +1229,6 @@ setterFor name =
 
         "startView" ->
             Just "M3e.Attributes.startView"
-
-        "state" ->
-            Just "M3e.Attributes.state"
 
         "step" ->
             Just "M3e.Attributes.step"
