@@ -1,9 +1,13 @@
 packages:
-  - "packages/*"
-  - "packages/*/*"
+  - "packages/_probe/*"
+  - "core/*"
+  - "brands/*/inputs/*"
+  - "brands/*/inputs/*/*"
+  - "brands/*/outputs/*"
+  - "brands/*/outputs/*/*"
   - "!**/node_modules"
   - "!**/elm-stuff"
-  - "!packages/*/elm-html-intermediate-representation"
+  - "!core/*/elm-html-intermediate-representation"
 
 allowBuilds:
   '@parcel/watcher': true

@@ -17,8 +17,8 @@ import { checkConsumerBundleDrift, comparePagesElmIgnoringTimestamp } from "./li
 import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consumer-output-drift.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
-const realCommittedCemFacts = path.join(repoRoot, "packages", "m3e-okf", "data", "cem-facts.json");
+const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+const realCommittedCemFacts = path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json");
 const descriptorsByKey = Object.fromEntries(consumerOutputDescriptors(repoRoot).map((d) => [d.key, d]));
 
 /** Copy just the descriptor's committed `paths` into a scratch dir — never touches the real package. */
@@ -107,7 +107,7 @@ test("check-drift core (R-008): a real content change beyond the timestamp still
 //
 // Prior to this, check-drift covered each consumer's facts-bundle COPY but
 // never its downstream generated output — verified by hand: appending a line
-// to packages/tailwind-m3e-web/generated/utilities.css left check-drift.mjs
+// to brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left check-drift.mjs
 // (and gate-all.mjs) fully green. One GREEN + one RED test per consumer,
 // below, proves that hole is closed. Every perturbation happens on a scratch
 // COPY (copyCommittedPathsToScratch) — the real tracked tree is never

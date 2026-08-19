@@ -24,15 +24,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateBundleToTemp } from "./lib/regen.mjs";
 import { comparePagesElmIgnoringTimestamp } from "./lib/check-drift-core.mjs";
-import { classifyDelta, readBaseSources } from "../packages/cem-figma-connect/src/tokens/classify-delta.mjs";
-import { changesFromVerdict, runGate } from "../packages/cem-figma-connect/src/tokens/token-change-report.mjs";
+import { classifyDelta, readBaseSources } from "../core/cem-figma-connect/src/tokens/classify-delta.mjs";
+import { changesFromVerdict, runGate } from "../core/cem-figma-connect/src/tokens/token-change-report.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const EXACT_VERSION = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/;
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 const REPORT_PATH = path.join(repoRoot, "docs", "facts-bundle", "m4-bump-report.md");
-const ELM_M3E = path.join(repoRoot, "packages", "elm-m3e");
-const PAGES_ELM_REL = "packages/elm-m3e/docs/.elm-pages/Pages.elm";
+const ELM_M3E = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+const PAGES_ELM_REL = "brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm";
 
 // Consumers, in a fixed (arbitrary — none depends on another) order, so the
 // fan-out is deterministic run to run.
@@ -40,17 +40,17 @@ const CONSUMERS = [
     {
         pkgName: "cem-figma-connect",
         committed: [
-            { path: path.join(repoRoot, "packages", "cem-figma-connect", "profiles", "m3-kit", "facts", "cem-facts.json"), bundleFile: "cem-facts.json" },
-            { path: path.join(repoRoot, "packages", "cem-figma-connect", "profiles", "m3-kit", "facts", "elm-api-facts.json"), bundleFile: "elm-api-facts.json" },
+            { path: path.join(repoRoot, "core", "cem-figma-connect", "profiles", "m3-kit", "facts", "cem-facts.json"), bundleFile: "cem-facts.json" },
+            { path: path.join(repoRoot, "core", "cem-figma-connect", "profiles", "m3-kit", "facts", "elm-api-facts.json"), bundleFile: "elm-api-facts.json" },
         ],
     },
     {
         pkgName: "m3e-okf",
-        committed: [{ path: path.join(repoRoot, "packages", "m3e-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
+        committed: [{ path: path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
     {
         pkgName: "tailwind-m3e-web",
-        committed: [{ path: path.join(repoRoot, "packages", "tailwind-m3e-web", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
+        committed: [{ path: path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
 ];
 
@@ -315,7 +315,7 @@ function main() {
 
     // Snapshot the "before" bundle for the report, before anything changes.
     const beforeSnapshotPath = CONSUMERS[1].committed[0].path; // m3e-okf's data/cem-facts.json
-    const fromVersionPkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "packages", "tailwind-m3e-web", "package.json"), "utf8"));
+    const fromVersionPkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "package.json"), "utf8"));
     const fromVersion = fromVersionPkg.devDependencies?.["@m3e/web"] || "unknown";
     const before = fs.existsSync(beforeSnapshotPath) ? JSON.parse(fs.readFileSync(beforeSnapshotPath, "utf8")) : { components: [] };
 

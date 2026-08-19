@@ -26,7 +26,7 @@
 // Env:
 //   PRISTINE_ELM_CEM  passed through to tools/ab-elm-cem.sh
 //   ELM_M3E           elm-m3e checkout used by the E2E bundle proof
-//                     (default: the in-workspace packages/elm-m3e)
+//                     (default: the in-workspace brands/m3e/outputs/elm-m3e)
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -39,7 +39,7 @@ import { runFactsGenerator } from "./lib/regen.mjs";
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
 
-const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 // tools/family.json — the one manifest of "which packages exist, where, and
 // what mirror/bundle-copy/copy-fidelity gates apply to them" (Theme 3 of the
 // 2026-08-17 audit, "the manifest move"). The copy-fidelity sweep below is
@@ -167,7 +167,9 @@ function discoverPackages() {
             walk(full);
         }
     };
-    walk(path.join(repoRoot, "packages"));
+    walk(path.join(repoRoot, "core"));
+    walk(path.join(repoRoot, "brands"));
+    walk(path.join(repoRoot, "packages", "_probe"));
     return found;
 }
 
@@ -238,7 +240,7 @@ function factsBundleE2E() {
             return false;
         }
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
-        const { validate } = require(path.join(repoRoot, "packages", "elm-cem", "bin", "validate-facts-bundle.js"));
+        const { validate } = require(path.join(repoRoot, "core", "elm-cem", "bin", "validate-facts-bundle.js"));
 
         const faces = [
             { file: "cem-facts.json", definition: "faceB", label: "Face B" },

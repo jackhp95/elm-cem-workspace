@@ -2,7 +2,7 @@
 // check-single-cem-facts.mjs — workspace guard: exactly one `Cem.Facts` in any
 // compiled dependency graph.
 //
-// jackhp95/elm-cem-facts (packages/elm-cem/facts) is the sole canonical OWNER of
+// jackhp95/elm-cem-facts (core/elm-cem/facts) is the sole canonical OWNER of
 // the `Cem.Facts` module (the `Fact`/`Facet` types). Before the Stage-F cutover,
 // elm-review-cem kept a byte-synced vendored copy so it could compile as an
 // unpublished-dependency-free Elm package; that copy is gone now that
@@ -23,9 +23,9 @@
 // An earlier version of this script approximated that invariant with a blunt
 // rule: "at most one `Cem/Facts.elm` FILE anywhere under packages/". That rule
 // is WRONG in one direction — it condemns files that are provably not in any
-// published graph. It cost us `packages/elm-m3e/editor/stub/Cem/Facts.elm`, a
+// published graph. It cost us `brands/m3e/outputs/elm-m3e/editor/stub/Cem/Facts.elm`, a
 // git-tracked, deliberately-designed, editor-only stub (see
-// packages/elm-m3e/editor/README.md) that exists so Elm LSP can type-check
+// brands/m3e/outputs/elm-m3e/editor/README.md) that exists so Elm LSP can type-check
 // elm-m3e's generated `src/` without resolving the real facts package. Deleting
 // a legitimate tracked file to satisfy a checker is never the right repair; the
 // checker's rule gets narrowed instead. That is what this file now does.
@@ -62,7 +62,7 @@
 //      Anything else FAILS, specifically:
 //        * a file inside ANY package's published source tree other than the
 //          canonical owner's — this is the re-vendored copy the old rule was
-//          built to catch (e.g. packages/elm-review-cem/src/Cem/Facts.elm), and
+//          built to catch (e.g. core/elm-review-cem/src/Cem/Facts.elm), and
 //          it still fails here, because a package's `src/` IS the published
 //          graph;
 //        * an ORPHAN file, reachable from no elm.json at all — dead code today
@@ -83,7 +83,11 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const packagesDir = join(repoRoot, "packages");
+const SEARCH_ROOTS = [
+    join(repoRoot, "core"),
+    join(repoRoot, "brands"),
+    join(repoRoot, "packages", "_probe"),
+];
 const SKIP_DIRS = new Set(["node_modules", "elm-stuff", ".git"]);
 const MODULE_PATH = join("Cem", "Facts.elm");
 
@@ -107,9 +111,11 @@ function walk(dir, onFile) {
 /** Every elm.json under packages/, parsed, with its compile roots resolved. */
 function readProjects() {
     const paths = [];
-    walk(packagesDir, (file) => {
-        if (file.endsWith("elm.json")) paths.push(file);
-    });
+    for (const root of SEARCH_ROOTS) {
+        walk(root, (file) => {
+            if (file.endsWith("elm.json")) paths.push(file);
+        });
+    }
     paths.sort();
 
     const projects = [];
@@ -142,9 +148,11 @@ function readProjects() {
 /** Every Cem/Facts.elm file under packages/, as a real (symlink-free) path. */
 function findFactsFiles() {
     const files = [];
-    walk(packagesDir, (file) => {
-        if (file.replace(/\\/g, "/").endsWith("/Cem/Facts.elm")) files.push(file);
-    });
+    for (const root of SEARCH_ROOTS) {
+        walk(root, (file) => {
+            if (file.replace(/\\/g, "/").endsWith("/Cem/Facts.elm")) files.push(file);
+        });
+    }
     return files.sort();
 }
 
@@ -167,7 +175,7 @@ function main() {
     const { projects, parseErrors } = readProjects();
     for (const e of parseErrors) failures.push(`cannot parse ${e}`);
 
-    console.log(`check-single-cem-facts: scanned ${projects.length} elm.json file(s) under packages/.`);
+    console.log(`check-single-cem-facts: scanned ${projects.length} elm.json file(s) under core/+brands/.`);
 
     // ── 1. ownership ─────────────────────────────────────────────────────────
     const exposers = projects.filter((p) => p.type === "package" && p.exposed.includes("Cem.Facts"));
@@ -187,7 +195,7 @@ function main() {
 
     // ── 2. per-graph ambiguity ───────────────────────────────────────────────
     const factsFiles = findFactsFiles();
-    console.log(`check-single-cem-facts: ${factsFiles.length} Cem/Facts.elm file(s) present under packages/:`);
+    console.log(`check-single-cem-facts: ${factsFiles.length} Cem/Facts.elm file(s) present under core/+brands/:`);
     for (const f of factsFiles) console.log(`  - ${rel(f)}`);
 
     if (factsFiles.length === 0) {

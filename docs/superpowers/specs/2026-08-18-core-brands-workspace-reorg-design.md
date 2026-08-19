@@ -1,7 +1,7 @@
 # core/ vs brands/ workspace reorg — design
 
 Date: 2026-08-18
-Status: draft, pending user review
+Status: implemented (2026-08-18) — see docs/plans/2026-08-18-core-brands-workspace-reorg-plan.md
 
 ## Problem
 

@@ -5,7 +5,7 @@
 // own `node_modules/.bin`. Two packages — `elm-cem` and `elm-review-cem` —
 // deliberately OMIT a `postinstall: elm-tooling install` of their own, because
 // they are published to npm and must not force a ~50 MB toolchain download on
-// their consumers (see packages/elm-cem/RELEASE-CHECKLIST.md). In a source
+// their consumers (see core/elm-cem/RELEASE-CHECKLIST.md). In a source
 // checkout those two got their binaries from a prior standalone
 // `elm-tooling install`; in a FRESH clone of this workspace they would have
 // none, so `elm-cem: test` and `elm-review-cem: check`/`test` fail on a cold
@@ -40,13 +40,20 @@ function selfInstalls(dir) {
 }
 
 const dirs = [repoRoot];
-const pkgsDir = path.join(repoRoot, "packages");
-if (existsSync(pkgsDir)) {
-    for (const name of readdirSync(pkgsDir)) {
-        const dir = path.join(pkgsDir, name);
+function scanFor(baseDir, depth) {
+    if (!existsSync(baseDir)) return;
+    for (const name of readdirSync(baseDir)) {
+        const dir = path.join(baseDir, name);
+        if (depth > 1) {
+            scanFor(dir, depth - 1);
+            continue;
+        }
         if (existsSync(path.join(dir, "elm-tooling.json")) && !selfInstalls(dir)) dirs.push(dir);
     }
 }
+scanFor(path.join(repoRoot, "core"), 1);
+scanFor(path.join(repoRoot, "brands"), 3); // brands/<brand>/{inputs,outputs}/<name>
+scanFor(path.join(repoRoot, "packages", "_probe"), 1);
 
 function elmToolingBin(dir) {
     // Prefer the location's own pinned elm-tooling, then the root's.

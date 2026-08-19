@@ -6,7 +6,7 @@
 // derivation (Theme 3 of docs/reviews/2026-08-17-thermonuclear-workspace-review.md).
 //
 // Regenerates one or more bundle-copy files from the WORKSPACE producer
-// (packages/elm-cem) against elm-m3e's own config — the same invocation
+// (core/elm-cem) against elm-m3e's own config — the same invocation
 // tools/gate-all.mjs's E2E proof and tools/ab-elm-cem.sh use (shared
 // definition: tools/lib/regen.mjs) — and writes them into `destDir`. This is
 // the only writer of those files; never hand-edit them.
@@ -32,7 +32,7 @@ import { generateBundleToTemp } from "./regen.mjs";
  *   short-circuits regeneration.
  */
 export function runGenFacts({ repoRoot, pkgDir, destDir, files, tmpPrefix, writeExtra }) {
-    const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+    const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 
     // PREGENERATED_BUNDLE_DIR: skip regeneration and copy from this directory
     // instead (used by tools/bump.mjs so the whole workspace bump regenerates

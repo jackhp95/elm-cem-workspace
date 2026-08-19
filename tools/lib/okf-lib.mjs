@@ -1,10 +1,11 @@
 // okf-lib.mjs — dependency-free helpers for reading/validating Markdown docs
 // bundles with YAML frontmatter (Open Knowledge Format-style). Zero m3e/brand
-// references — lives in tools/lib/ (not packages/m3e-okf/) so a second-brand
-// docs bundle can import it without depending on m3e-okf at all. Currently
-// consumed only by m3e-okf's scripts/*.mjs; promoted here per the
-// thermonuclear audit (Theme 6, trapped-generic-modules #1) ahead of a second
-// consumer actually existing.
+// references — lives in tools/lib/ (not brands/m3e/{inputs/material-okf,
+// outputs/m3e-api-okf}/) so a second-brand docs bundle can import it without
+// depending on either m3e-okf half. Currently consumed by material-okf's and
+// m3e-api-okf's scripts/*.mjs; promoted here per the thermonuclear audit
+// (Theme 6, trapped-generic-modules #1) ahead of a second consumer actually
+// existing.
 //
 // A minimal YAML-frontmatter reader (dep-free by design) plus link
 // extraction, kept separate from the build/validate CLIs so they're
