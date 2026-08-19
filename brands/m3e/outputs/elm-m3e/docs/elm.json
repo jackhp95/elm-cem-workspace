@@ -5,6 +5,7 @@
         "src",
         ".elm-pages",
         "../src",
+        "../elm-m3e-families/src",
         "../../../../../core/elm-cem/facts/src",
         "../../../../../core/elm-cem-compose/src",
         "vendor/elm-foundation"

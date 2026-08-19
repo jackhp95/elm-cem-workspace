@@ -44,7 +44,8 @@
     "hooks:install": "node ../../../../tools/hooks-install.mjs",
     "postinstall": "node scripts/fix-native-bins.mjs",
     "check:spike": "cd tests/spike && ../../node_modules/.bin/elm make app/ApiConsolidation.elm --output=/dev/null && ../../node_modules/.bin/elm make app/AnnotationOnly.elm --output=/dev/null && ../../node_modules/.bin/elm make app/IconUse.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotPlacersOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/EnumNarrowingOk.elm --output=/dev/null && ../../node_modules/.bin/elm make app/SlotApiOk.elm --output=/dev/null && ../../node_modules/.bin/elm make bad/SlotPlacersWrongKind.elm --output=/dev/null && ! ../../node_modules/.bin/elm make bad/WrongKindBuilderIntoIconSlot.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingSplitButton.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/EnumNarrowingBuilder.elm --output=/dev/null 2>/dev/null && ! ../../node_modules/.bin/elm make bad/SlotApiWrongKind.elm --output=/dev/null 2>/dev/null",
-    "check:m3e-utility-names": "node review/scripts/gen-m3e-utility-names.mjs --check"
+    "check:m3e-utility-names": "node review/scripts/gen-m3e-utility-names.mjs --check",
+    "check:m3e-family-config": "node review/scripts/gen-m3e-family-config.mjs --check"
   },
   "devDependencies": {
     "elm": "0.19.1-6",

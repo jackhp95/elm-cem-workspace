@@ -21,6 +21,7 @@ import Docs.ReviewAtDocs
 import Docs.ReviewLinksAndSections
 import Docs.UpToDateReadmeLinks
 import M3e.Review.Facts
+import M3e.Review.Families
 import NoConfusingPrefixOperator
 import NoDebug.Log
 import NoDebug.TodoOrToString
@@ -70,7 +71,21 @@ config =
         -- So it is deliberately EXEMPT from `ignoreGeneratedSubstrate` (which
         -- otherwise hides `../src/` when review runs from `docs/`). It self-scopes
         -- to `M3e.Component.*` modules, so it is a no-op on the docs app.
-        ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Component" ] } ]
+        ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Component" ] }
+
+           -- `NoFamilyMemberDrift` is the other rule that must run ON generated
+           -- code: it checks each `M3e.Family.<F>` module in `elm-m3e-families/`
+           -- (also swallowed by `ignoreGeneratedSubstrate` otherwise) against the
+           -- family config (`M3e.Review.Families`, generated from
+           -- `config/slots.json`'s `_families` by
+           -- `review/scripts/gen-m3e-family-config.mjs`). Self-scopes to
+           -- `M3e.Family.*` modules, so it is a no-op elsewhere.
+           , Cem.noFamilyMemberDrift
+                { componentNamespace = [ "M3e", "Component" ]
+                , familyNamespace = [ "M3e", "Family" ]
+                , families = M3e.Review.Families.families
+                }
+           ]
 
 
 {-| The generated brand surfaces, the IR, and the vendored foundation copies
@@ -90,6 +105,7 @@ ignoreGeneratedSubstrate : Rule -> Rule
 ignoreGeneratedSubstrate =
     Rule.ignoreErrorsForDirectories
         [ "../src/"
+        , "../elm-m3e-families/src/"
         , "../../../../../core/elm-typed-html/src/"
         , "../../../../../core/elm-html-intermediate-representation/src/"
         , "../../../../../core/elm-cem/facts/src/"
@@ -152,7 +168,7 @@ working directory the review runs from.
 ignoreVendor : Rule -> Rule
 ignoreVendor rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 
@@ -163,7 +179,7 @@ style rules do not.
 ignoreGenerated : Rule -> Rule
 ignoreGenerated rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", ".elm-pages/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/", ".elm-pages/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 
@@ -246,7 +262,7 @@ so that the ignore works regardless of working directory.
 ignorePublicApi : Rule -> Rule
 ignorePublicApi rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 

@@ -12,6 +12,7 @@ module Cem exposing
     , requireFabLabel
     , fences
     , noMergedPipeAndSetter
+    , noFamilyMemberDrift
     )
 
 {-| Codegen-aware, namespace-agnostic `elm-review` rules driven by a generated
@@ -80,6 +81,11 @@ component module, with autofix. Opt-in transforms for a docs harness; not part o
 
 @docs noMergedPipeAndSetter
 
+
+## Family/component drift guard
+
+@docs noFamilyMemberDrift
+
 -}
 
 import Cem.Facts exposing (Fact)
@@ -97,6 +103,7 @@ import Cem.TranslateToBuild
 import Cem.TranslateToRecord
 import Cem.ValidEnumValue
 import Cem.ValidSlotKind
+import NoFamilyMemberDrift
 import NoInternalImportOutsideAllowed
 import NoMergedPipeAndSetter
 import NoRedundantAttributeEscape
@@ -468,3 +475,38 @@ known‑good project to prevent accidental barrel merges:
 noMergedPipeAndSetter : { allowedModules : List String } -> Rule
 noMergedPipeAndSetter config =
     NoMergedPipeAndSetter.rule config
+
+
+{-| Flag drift between a generated **family module** (`<familyNamespace>.<F>`,
+e.g. `M3e.Family.Chip`) and the family CONFIG it was generated from: a
+declared member the family module no longer imports ("component missing from
+family"), or an import the family module carries that the config no longer
+declares as a member ("family referencing a dead/unlisted component").
+
+Opt-in — NOT in `Cem.all`. Like `Cem.requireFormFieldLabel`/`Cem.requireFabLabel`,
+this package holds no brand's family config hardcoded; a brand generates its
+flattened family list into an Elm module the same way `M3eUtilityNames` is
+generated from `utilities.json` (`elm-review` can't read JSON at review time),
+and wires it in:
+
+    config =
+        Cem.all M3e.Review.Facts.facts
+            ++ [ Cem.noFamilyMemberDrift
+                    { componentNamespace = [ "M3e", "Component" ]
+                    , familyNamespace = [ "M3e", "Family" ]
+                    , families = M3e.Review.Families.families
+                    }
+               ]
+
+See `NoFamilyMemberDrift` for the exact matching rule and its two error
+shapes.
+
+-}
+noFamilyMemberDrift :
+    { componentNamespace : List String
+    , familyNamespace : List String
+    , families : List NoFamilyMemberDrift.Family
+    }
+    -> Rule
+noFamilyMemberDrift =
+    NoFamilyMemberDrift.rule
