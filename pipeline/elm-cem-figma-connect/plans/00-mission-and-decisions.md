@@ -23,7 +23,7 @@ as a **general tool** any CEM+Figma project can adopt.
 | D3 | Plan is complete start-to-finish; **all uncertain claims verified before planning** (done — see evidence ledger); no half-steps. |
 | D4 | Snippet philosophy: **web component always preferred** — if an attribute models it, never a utility class. Tailwind = layout scaffolding + token vocabulary only. |
 | D5 | Elm label surface: **configurable, top `M3e.*` default**. |
-| D6 | Code-only / Figma-only gaps are **logged as a first-class report**; no Figma authoring in this plan. |
+| D6 | Code-only / Figma-only gaps are **logged as a first-class report**; **no code-driven Figma content authoring, ever** — permanent, not scoped to this plan or any session. Mechanically enforced; see note below the table. |
 | D7 | Match scope: **all component sets including Building Blocks AND the 141 icons**. |
 | D8 | **Visual diff is a gate**: a match graduates to a published binding only after its renders pass (or a human approves the flagged diff). Review webapp in scope. |
 | D9 | Engine = **this repo** (`jackhp95/cem-figma-connect`), private until release; a general tool; vendors a generalized extraction path; the Figma dump is checked in as deterministic input. |
@@ -32,6 +32,12 @@ as a **general tool** any CEM+Figma project can adopt.
 | D12 | **Avetta is the in-plan second consumer.** Endgame: Figma integration for the future Avetta stack = `avetta/ui` main + Tailwind v4 + elm-m3e + minor Material branding tweaks. |
 | D13 | elm-m3e registry release is out of scope (snippets are strings; nothing blocks on package adoption). |
 | D14 | (2026-08-18) Correspondence stays **external to CEM config**; any Figma association surfaced inside elm-cem's `--config-from` channel is a **derived-only** projection (`figma-links.json` → generated `docMeta`), never hand-authored there. The apparent D2 fileKey conflict is **two roles, not a conflict**: `profile.json`'s `fileKey` is the extraction anchor (settled); the `--file-key` passed to `publish` is a separate, still-open publish-target choice, resolved by one `--dry-run` whenever live Figma access returns — see `plans/2026-08-17-figma-elm-config-integration-design.md`. |
+
+> ⛔ **D6 enforcement.** Mechanically blocked by `tools/check-figma-write-block.mjs`
+> (wired as a `PreToolUse` hook), which stops `use_figma` writes, `create_new_file`, and
+> `generate_figma_design` outright — regardless of plan or session. This does not cover
+> `send_code_connect_mappings`, `add_code_connect_map`, or this package's own
+> `publish`/`unpublish` CLI, which are the sanctioned, gated Code Connect bridge.
 
 > ℹ️ **D2 fileKey — resolved as a role split, not a conflict (D14).** D2's
 > `KujuFlfJSwHI6ua1b7RZvL` and `profiles/m3-kit/profile.json`'s `UtwpUdPiOZEuxp8Nq1d5yQ`
