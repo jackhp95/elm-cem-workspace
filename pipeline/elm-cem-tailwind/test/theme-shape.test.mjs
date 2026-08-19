@@ -9,7 +9,7 @@ const SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
 // tailwind-m3e-web; sys/*.css stayed there (brand-specific). SYS_SRC lets the
 // first describe block below (which cross-checks theme.css against every
 // declared --md-sys-* var) keep reading sys/*.css from its real home.
-const SYS_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
+const SYS_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "src");
 
 const SPEC_ROLES = [
   "primary", "on-primary", "primary-container", "on-primary-container",

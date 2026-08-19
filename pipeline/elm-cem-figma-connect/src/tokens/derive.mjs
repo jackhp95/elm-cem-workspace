@@ -79,8 +79,8 @@ export const repoRoot = path.join(here, "..", "..");
 
 export const DEFAULT_PATHS = {
   variablesPath: path.join(repoRoot, "research", "figma-dumps", "kit-variables.json"),
-  themeCssPath: path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src", "theme.css"),
-  typescaleCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src", "sys", "typescale.css"),
+  themeCssPath: path.join(repoRoot, "..", "..", "pipeline", "elm-cem-tailwind", "src", "theme.css"),
+  typescaleCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "src", "sys", "typescale.css"),
   customElementsPath: path.join(repoRoot, "test", "fixtures", "m3e-web-2.5.14", "dist", "custom-elements.json"),
   tokensPath: path.join(repoRoot, "profiles", "m3-kit", "tokens.json"),
   overridesPath: path.join(repoRoot, "profiles", "m3-kit", "tokens-overrides.json"),

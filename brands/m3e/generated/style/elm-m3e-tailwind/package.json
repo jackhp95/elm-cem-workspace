@@ -1,5 +1,5 @@
 {
-  "name": "tailwind-m3e-web",
+  "name": "elm-m3e-tailwind",
   "version": "0.1.0",
   "description": "Tailwind v4 utility surface for matraic's @m3e/web — Material 3 Expressive web components.",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "./roles-extended": "./src/roles-extended.css"
   },
   "dependencies": {
-    "tailwind-md3": "workspace:*"
+    "elm-cem-tailwind": "workspace:*"
   },
   "peerDependencies": {
     "@m3e/web": "2.7.6"
@@ -71,7 +71,7 @@
     "gen:facts": "node scripts/gen-facts.mjs",
     "check:privates": "node bin/check-privates.mjs",
     "check": "node bin/check-privates.mjs",
-    "hooks:install": "node ../../../../tools/hooks-install.mjs",
+    "hooks:install": "node ../../../../../tools/hooks-install.mjs",
     "prepublishOnly": "pnpm run generate && git diff --exit-code -- generated/ && pnpm test",
     "release:version": "changeset version",
     "release:publish": "changeset publish"

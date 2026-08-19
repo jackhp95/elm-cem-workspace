@@ -37,7 +37,7 @@ import {
   emitUtilities,
   emitUtilityManifest,
   emitDoc,
-} from "../../../../../tools/lib/component-css-utilities.mjs";
+} from "../../../../../../pipeline/elm-cem-tailwind/src/component-css-utilities.mjs";
 
 export { inferType, extractCssProperties, emitUtilities, emitUtilityManifest, emitDoc };
 

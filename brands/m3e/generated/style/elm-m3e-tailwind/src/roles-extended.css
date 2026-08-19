@@ -2,4 +2,4 @@
    for the actual success/info/warning role-extended palette definitions.
    This shim keeps `@import "tailwind-m3e-web/roles-extended"` working for
    existing consumers through the brand package's barrel. */
-@import "tailwind-md3/roles-extended";
+@import "elm-cem-tailwind/roles-extended";

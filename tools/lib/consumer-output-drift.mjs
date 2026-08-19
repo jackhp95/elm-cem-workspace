@@ -90,17 +90,18 @@ export function consumerOutputDescriptors(repoRoot) {
             },
         },
         {
-            key: "tailwind-m3e-web",
-            label: "check-drift: tailwind-m3e-web generated utilities (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "tailwind-m3e-web"),
+            key: "elm-m3e-tailwind",
+            label: "check-drift: elm-m3e-tailwind generated utilities (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-m3e-tailwind"),
             exclude: [],
             symlinks: [],
-            // Theme 6 (thermonuclear audit) promoted this script's generic core to
-            // tools/lib/component-css-utilities.mjs, imported via a relative
-            // specifier that walks out of packages/tailwind-m3e-web/bin/ into the
-            // shared workspace tools/lib/ — needs the scratch copy to have that
-            // sibling present at the same repo-root-relative position.
-            externalSymlinks: ["tools/lib"],
+            // repo-shape-v2 (2026-08-19): the generic component-css-utilities.mjs
+            // generator moved into pipeline/elm-cem-tailwind/src/ (single-consumer
+            // absorb), imported by bin/generate-component-utilities.mjs via a
+            // relative specifier that walks out of the package into
+            // pipeline/elm-cem-tailwind/ — the scratch copy needs that sibling
+            // present at the same repo-root-relative position.
+            externalSymlinks: ["pipeline/elm-cem-tailwind"],
             paths: ["generated/utilities.css", "generated/CSS_CUSTOM_PROPERTIES.md"],
             generate: (dest) => runNodeScript(dest, "bin/generate-component-utilities.mjs"),
         },

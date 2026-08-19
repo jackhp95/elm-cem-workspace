@@ -1,7 +1,7 @@
 {
-  "name": "tailwind-md3",
+  "name": "elm-cem-tailwind",
   "version": "0.1.0",
-  "description": "Generic Material 3 Tailwind v4 theme — OKLCH tonal-palette color science, ref tokens, and role-extended (success/info/warning) palettes. Brand-neutral: usable by any M3-based design system, not just @m3e/web.",
+  "description": "Brand-agnostic elm-cem Tailwind codegen: OKLCH tonal-palette color science, ref tokens, role-extended (success/info/warning) palettes, and the CEM-facts→Tailwind component-utility generator (src/component-css-utilities.mjs). Usable by any M3-based design system, not just @m3e/web.",
   "license": "MIT",
   "author": "Jack H Peterson",
   "type": "module",

@@ -118,8 +118,8 @@
       "mirror": { "auditedExclusions": false },
       "$TODO_external_sync": "Per the design spec's 'Sync mechanism' section, this should eventually sync from a separate external OKF repo via copyFidelity (sourceEnvVar + tools/snapshot-refs.json entry), same pattern as m3e-okf. Not wired up in this structure-only pass -- needs Jack to confirm the real external repo's URL + pinned SHA first. For now this package's content is locally-authored (moved from this workspace's own former packages/m3e-okf/data/knowledge/**), not synced from anywhere."
     },
-    "tailwind-m3e-web": {
-      "srcDir": "brands/m3e/outputs/tailwind-m3e-web",
+    "elm-m3e-tailwind": {
+      "srcDir": "brands/m3e/generated/style/elm-m3e-tailwind",
       "mirror": { "auditedExclusions": true },
       "bundleCopy": {
         "dir": "data",
@@ -128,7 +128,7 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_TAILWIND_M3E_WEB",
-        "sourceDefaultRelToRepoRoot": ".cache/snapshots/tailwind-m3e-web",
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/elm-m3e-tailwind",
         "$sourceDefaultNote": "tools/snapshot-refs.json pins tailwind-m3e-web to its real upstream repo+sha, materialized by tools/fetch-snapshots.mjs, rather than defaulting to a $SNAPSHOT_ROOT/tailwind-m3e-web sibling clone that may not exist on every machine.",
         "authorizedAbsent": [
           "pnpm-lock.yaml",

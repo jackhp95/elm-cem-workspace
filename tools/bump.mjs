@@ -49,8 +49,8 @@ const CONSUMERS = [
         committed: [{ path: path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
     {
-        pkgName: "tailwind-m3e-web",
-        committed: [{ path: path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
+        pkgName: "elm-m3e-tailwind",
+        committed: [{ path: path.join(repoRoot, "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
 ];
 
@@ -315,7 +315,7 @@ function main() {
 
     // Snapshot the "before" bundle for the report, before anything changes.
     const beforeSnapshotPath = CONSUMERS[1].committed[0].path; // m3e-okf's data/cem-facts.json
-    const fromVersionPkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "package.json"), "utf8"));
+    const fromVersionPkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "package.json"), "utf8"));
     const fromVersion = fromVersionPkg.devDependencies?.["@m3e/web"] || "unknown";
     const before = fs.existsSync(beforeSnapshotPath) ? JSON.parse(fs.readFileSync(beforeSnapshotPath, "utf8")) : { components: [] };
 

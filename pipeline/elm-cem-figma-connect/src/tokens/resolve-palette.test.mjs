@@ -26,7 +26,7 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..", "..");
-const VENDORED = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
+const VENDORED = path.join(repoRoot, "..", "..", "pipeline", "elm-cem-tailwind", "src");
 
 const seedCss = fs.readFileSync(path.join(VENDORED, "seed.css"), "utf8");
 const toneTableCss = fs.readFileSync(path.join(VENDORED, "ref", "_tone-table.css"), "utf8");

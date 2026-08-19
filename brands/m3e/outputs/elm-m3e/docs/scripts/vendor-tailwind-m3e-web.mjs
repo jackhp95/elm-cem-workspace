@@ -66,9 +66,9 @@ const docsDir = resolve(here, "..");
 const vendorDir = join(docsDir, "vendor", "tailwind-m3e-web");
 
 export const tailwindM3eWebSrc =
-  process.env.TAILWIND_M3E_WEB_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web");
+  process.env.TAILWIND_M3E_WEB_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind");
 export const tailwindMd3Src =
-  process.env.TAILWIND_MD3_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "core", "tailwind-md3");
+  process.env.TAILWIND_MD3_SRC ?? resolve(docsDir, "..", "..", "..", "..", "..", "pipeline", "elm-cem-tailwind");
 
 // Files vendored, relative to their OWN package root, mirroring the src/ and
 // generated/ structure so the relative @imports inside them keep resolving.

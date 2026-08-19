@@ -27,6 +27,34 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
+  brands/m3e/generated/style/elm-m3e-tailwind:
+    dependencies:
+      elm-cem-tailwind:
+        specifier: workspace:*
+        version: link:../../../../../pipeline/elm-cem-tailwind
+    devDependencies:
+      '@changesets/cli':
+        specifier: ^2.31.0
+        version: 2.31.1(@types/node@26.2.0)
+      '@m3e/web':
+        specifier: 2.7.6
+        version: 2.7.6(@floating-ui/utils@0.2.12)(lit@3.3.3)(tslib@2.8.1)
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      '@tailwindcss/cli':
+        specifier: ^4.3.2
+        version: 4.3.3
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
+      tailwindcss:
+        specifier: ^4.3.2
+        version: 4.3.3
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
+
   brands/m3e/inputs/material-okf:
     devDependencies:
       npm-run-all2:
@@ -121,49 +149,6 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
-  brands/m3e/outputs/tailwind-m3e-web:
-    dependencies:
-      tailwind-md3:
-        specifier: workspace:*
-        version: link:../../../../core/tailwind-md3
-    devDependencies:
-      '@changesets/cli':
-        specifier: ^2.31.0
-        version: 2.31.1(@types/node@26.2.0)
-      '@m3e/web':
-        specifier: 2.7.6
-        version: 2.7.6(@floating-ui/utils@0.2.12)(lit@3.3.3)(tslib@2.8.1)
-      '@material/material-color-utilities':
-        specifier: ^0.3.0
-        version: 0.3.0
-      '@tailwindcss/cli':
-        specifier: ^4.3.2
-        version: 4.3.3
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
-      tailwindcss:
-        specifier: ^4.3.2
-        version: 4.3.3
-      vitest:
-        specifier: ^4.1.9
-        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
-
-  core/tailwind-md3:
-    devDependencies:
-      '@material/material-color-utilities':
-        specifier: ^0.3.0
-        version: 0.3.0
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
-      tonal-palette-oklch:
-        specifier: workspace:*
-        version: link:../../packages/tonal-palette-oklch
-      vitest:
-        specifier: ^4.1.9
-        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
-
   packages/elm-virtual-dom-intermediate-representation:
     devDependencies:
       elm-format:
@@ -246,6 +231,21 @@ importers:
       pngjs:
         specifier: ^7.0.0
         version: 7.0.0
+
+  pipeline/elm-cem-tailwind:
+    devDependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
+      tonal-palette-oklch:
+        specifier: workspace:*
+        version: link:../../packages/tonal-palette-oklch
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
 
   pipeline/elm-review-cem:
     devDependencies:

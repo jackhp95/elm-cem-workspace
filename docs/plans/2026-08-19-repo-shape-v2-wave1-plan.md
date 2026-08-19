@@ -880,14 +880,14 @@ and rename its package `name`.
   `scripts/gen-facts.mjs` (+1 depth), `tools/family.json` (L122), `tools/bump.mjs` (L53, L318),
   `tools/gen-hooks.mjs` (if any tailwind hook target — re-grep).
 
-- [ ] **Step 2.1: Rename the agnostic package**
+- [x] **Step 2.1: Rename the agnostic package**
 
 ```bash
 git mv core/tailwind-md3 pipeline/elm-cem-tailwind
 rmdir core 2>/dev/null || ls core   # core/ should now be gone
 ```
 
-- [ ] **Step 2.2: Update `pipeline/elm-cem-tailwind/package.json`**
+- [x] **Step 2.2: Update `pipeline/elm-cem-tailwind/package.json`**
 
 Change `"name": "tailwind-md3"` → `"name": "elm-cem-tailwind"`. Update the `description` to
 note it now also hosts the component-utility generator. `hooks:install` stays
@@ -898,7 +898,7 @@ update those to `elm-cem-tailwind` (at minimum `brands/m3e/outputs/tailwind-m3e-
 `"tailwind-md3": "workspace:*"` (verified L48) and its `src/index.css` `@import "tailwind-md3"`
 + `@import "tailwind-md3/roles-extended"`). Update all to `elm-cem-tailwind`.
 
-- [ ] **Step 2.3: Absorb `component-css-utilities.mjs` (finding U)**
+- [x] **Step 2.3: Absorb `component-css-utilities.mjs` (finding U)**
 
 ```bash
 git mv tools/lib/component-css-utilities.mjs pipeline/elm-cem-tailwind/src/component-css-utilities.mjs
@@ -906,7 +906,7 @@ git mv tools/lib/component-css-utilities.mjs pipeline/elm-cem-tailwind/src/compo
 (Place under `src/` or `lib/` per the package's own convention — read the package layout
 first.) **Leave `tools/lib/gen-facts-runner.mjs` where it is** (3 consumers, finding U).
 
-- [ ] **Step 2.3b: Add the deprecation comment to `tools/lib/gen-facts-runner.mjs` (spec decision #4 / plan decision #4)**
+- [x] **Step 2.3b: Add the deprecation comment to `tools/lib/gen-facts-runner.mjs` (spec decision #4 / plan decision #4)**
 
 `gen-facts-runner.mjs` stays in `tools/lib` because it has 3 genuinely non-tailwind-specific
 consumers (tailwind, m3e-okf, cem-figma-connect — finding U). Add a short **code comment** at the top
@@ -917,7 +917,7 @@ a redundant private copy of the same facts bundle, fanned out via this shared ru
 deleted/gutted and the 3 consumers switched to a `workspace:*` dependency on `elm-m3e-facts` instead of
 a private copy. (Comment only — no behavior change.)
 
-- [ ] **Step 2.4: Relocate the brand package + rename it**
+- [x] **Step 2.4: Relocate the brand package + rename it**
 
 ```bash
 mkdir -p brands/m3e/generated/style
@@ -928,7 +928,7 @@ In `brands/m3e/generated/style/elm-m3e-tailwind/package.json`: `"name": "tailwin
 name and update dependents (docs `vendor-tailwind-m3e-web.mjs`, any `@import "tailwind-m3e-web…"`)
 — note the docs consumer is handled in Task 5, but if a non-docs consumer exists, fix here.
 
-- [ ] **Step 2.5: Fix the relocated brand package's internal imports (+1 depth / absorb)**
+- [x] **Step 2.5: Fix the relocated brand package's internal imports (+1 depth / absorb)**
 
 - `bin/generate-component-utilities.mjs` L40: was `"../../../../../tools/lib/component-css-utilities.mjs"`
   → now imports from `elm-cem-tailwind` (moved in 2.3). Preferred: import by workspace name
@@ -942,7 +942,7 @@ name and update dependents (docs `vendor-tailwind-m3e-web.mjs`, any `@import "ta
   `node ../../../../../tools/hooks-install.mjs`.
 - Re-grep the whole package for `../../../../../` and apply +1 to any remaining cross-package ref.
 
-- [ ] **Step 2.6: Update `tools/*` for the brand relocation**
+- [x] **Step 2.6: Update `tools/*` for the brand relocation**
 
 `family.json` L122 srcDir → `brands/m3e/generated/style/elm-m3e-tailwind`; `bump.mjs` L53
 (cem-facts.json path) + L318 (package.json path) → `generated/style/elm-m3e-tailwind`;
@@ -966,7 +966,7 @@ old `tools/lib` location (verified comment L99 — check whether it's functional
   and its `family.json` `.cache/snapshots/tailwind-m3e-web` path (L131) in lockstep. **Keep** the
   `publish-mirror-state.json`/mirror `jackhp95/${name}` identity pointed at the real mirror (carve-out).
 
-- [ ] **Step 2.7: Reinstall + gate**
+- [x] **Step 2.7: Reinstall + gate**
 
 ```bash
 pnpm install && node tools/gate-all.mjs
@@ -975,7 +975,7 @@ Watch: `elm-cem-tailwind`'s `check` (tone-table regen byte-identical), `elm-m3e-
 `check`/`test`, the component-utilities generation (`generate:utilities`), and the E2E
 facts-bundle proof (CSS-independent). Patch forward, re-run until green.
 
-- [ ] **Step 2.8: Commit**
+- [x] **Step 2.8: Commit**
 
 ```bash
 git add -A

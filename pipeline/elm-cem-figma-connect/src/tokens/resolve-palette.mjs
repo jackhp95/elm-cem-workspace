@@ -44,7 +44,7 @@ const repoRoot = path.join(here, "..", "..");
 
 // POST-REORG SPLIT (2026-08-18): seed.css/ref/_tone-table.css moved to
 // core/tailwind-md3 (brand-neutral color science).
-const VENDORED_DIR = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
+const VENDORED_DIR = path.join(repoRoot, "..", "..", "pipeline", "elm-cem-tailwind", "src");
 const FIXTURE_PATH = path.join(repoRoot, "test", "fixtures", "tailwind-computed-palette.json");
 
 // Version of the workspace tailwind-md3 package this fixture was computed
@@ -52,7 +52,7 @@ const FIXTURE_PATH = path.join(repoRoot, "test", "fixtures", "tailwind-computed-
 // fixture (`--write`) whenever that package's src/seed.css, src/ref/*.css
 // change.
 const TAILWIND_M3E_WEB_VERSION = JSON.parse(
-  fs.readFileSync(path.join(repoRoot, "..", "..", "core", "tailwind-md3", "package.json"), "utf8")
+  fs.readFileSync(path.join(repoRoot, "..", "..", "pipeline", "elm-cem-tailwind", "package.json"), "utf8")
 ).version;
 
 const TONES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100];

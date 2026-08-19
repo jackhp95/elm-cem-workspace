@@ -44,10 +44,10 @@ import { byKey } from "../lib/order.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const repoRoot = path.join(here, "..", "..");
-const twSrc = path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
+const twSrc = path.join(repoRoot, "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "src");
 // POST-REORG SPLIT (2026-08-18): seed.css/ref/palette.css moved to
 // core/tailwind-md3; sys/*.css and density.css stayed (brand-specific).
-const md3Src = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
+const md3Src = path.join(repoRoot, "..", "..", "pipeline", "elm-cem-tailwind", "src");
 
 export const DEFAULT_PATHS = {
   seedCssPath: path.join(md3Src, "seed.css"),

@@ -46,8 +46,8 @@ export const DEFAULT_PATHS = {
   variablesPath: path.join(repoRoot, "research", "figma-dumps", "kit-variables.json"),
   tokensPath: path.join(repoRoot, "profiles", "m3-kit", "tokens.json"),
   computedPalettePath: path.join(repoRoot, "test", "fixtures", "tailwind-computed-palette.json"),
-  typescaleCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src", "sys", "typescale.css"),
-  shapeCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src", "sys", "shape.css"),
+  typescaleCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "src", "sys", "typescale.css"),
+  shapeCssPath: path.join(repoRoot, "..", "..", "brands", "m3e", "generated", "style", "elm-m3e-tailwind", "src", "sys", "shape.css"),
   reportPath: path.join(repoRoot, "profiles", "m3-kit", "token-audit.md"),
 };
 

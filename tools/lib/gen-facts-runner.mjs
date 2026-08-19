@@ -11,6 +11,14 @@
 // definition: tools/lib/regen.mjs) — and writes them into `destDir`. This is
 // the only writer of those files; never hand-edit them.
 //
+// DEPRECATION (repo-shape-v2, 2026-08-19): this runner stays in tools/lib only
+// because there is no real `elm-m3e-facts` package yet — its 3 consumers
+// (elm-cem-figma-connect, m3e-okf/elm-m3e-okf, tailwind-m3e-web/elm-m3e-tailwind)
+// each keep a redundant private copy of the same facts bundle, fanned out through
+// this shared runner. When the deferred 5-package explosion (spec decision #7)
+// creates a real `elm-m3e-facts` package, delete/gut this runner and switch the 3
+// consumers to a `workspace:*` dependency on `elm-m3e-facts` instead of a private copy.
+//
 // Zero dependencies (plain Node ESM).
 
 import fs from "node:fs";

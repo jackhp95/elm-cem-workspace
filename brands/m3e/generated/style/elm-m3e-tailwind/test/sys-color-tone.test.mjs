@@ -12,7 +12,7 @@ import { converter, formatHex, differenceCiede2000 } from "culori";
    for ref/_tone-table.css, the source of the derived tone L values below). */
 
 const SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
-const MD3_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..", "..", "core", "tailwind-md3", "src");
+const MD3_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..", "..", "..", "pipeline", "elm-cem-tailwind", "src");
 
 /* ── Regression guard: on-*-container light-mode tone assignment ──
    M3's revised spec (and @m3e/web's own baked fallback) put the light-mode
