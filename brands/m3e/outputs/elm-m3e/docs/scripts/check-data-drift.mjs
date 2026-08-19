@@ -125,6 +125,18 @@ const scratchDocs = path.join(scratch, "docs");
 try {
   // Copy the repo minus the heavy, regenerable directories. node_modules is
   // symlinked back so the generators keep their toolchain without a reinstall.
+  //
+  // test-results/ (Playwright's own run-artifact directory: traces,
+  // screenshots, retry output) was missing from this list — irrelevant to
+  // data drift, but a real hazard once `test:browser` can run CONCURRENTLY
+  // with this check (2026-08-19 chronic-skip fix made both do real work at
+  // the same time for the first time): Playwright writes/rotates files
+  // under test-results/ while its suite runs, so `cpSync` here could try to
+  // copy a trace file mid-write and hit an ENOENT on it — a real,
+  // reproduced failure, not hypothetical. Excluding it removes the hazard
+  // at its root (nothing here should ever read Playwright's own scratch
+  // output) rather than papering over it with a scheduler mutual-exclusion
+  // tag for two steps that have no actual reason to conflict.
   fs.cpSync(REPO, scratch, {
     recursive: true,
     filter: (src) => {
@@ -136,6 +148,7 @@ try {
       if (top.includes("elm-stuff")) return false;
       if (top.includes(".elm-pages")) return false;
       if (top.includes("dist")) return false;
+      if (top.includes("test-results")) return false;
       return true;
     },
   });
