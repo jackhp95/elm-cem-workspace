@@ -5,7 +5,7 @@
 //
 // Two hazards, both handled explicitly (see the M4 spec for the write-up):
 //
-//   R-008 — packages/elm-m3e/docs/.elm-pages/Pages.elm is a TRACKED file
+//   R-008 — brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm is a TRACKED file
 //   containing a build timestamp (`builtAt = Time.millisToPosix <epoch-ms>`).
 //   Any docs build rewrites it. This gate normalizes that one field out
 //   before comparing (tools/lib/check-drift-core.mjs), rather than excluding
@@ -32,7 +32,7 @@
 // intake of the facts bundle — they never regenerated a consumer's own
 // GENERATED OUTPUT and diffed it against committed. That was a real hole
 // (verified by hand: appending a line to
-// packages/tailwind-m3e-web/generated/utilities.css left this gate green).
+// brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left this gate green).
 // checkConsumerOutputs() below closes it: each consumer's full pipeline runs
 // in a scratch COPY of the package (tools/lib/consumer-output-drift.mjs,
 // tools/lib/check-drift-core.mjs's regeneratePackageOutput) — never in

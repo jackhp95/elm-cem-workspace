@@ -3,7 +3,7 @@
 //
 // Stream 2 (see docs/plans/2026-08-17-stream2-cc-elm-naming-reconciliation.md):
 // cem-figma-connect emits Code Connect Elm snippets
-// (packages/cem-figma-connect/generated/m3-kit/elm/*.figma.ts). Every module a
+// (core/cem-figma-connect/generated/m3-kit/elm/*.figma.ts). Every module a
 // snippet imports or calls into MUST exist in the real elm-m3e API, or a
 // consumer who pastes the snippet cannot compile it. This gate proves that by
 // checking every module reference in each emitted snippet against the ACTUAL

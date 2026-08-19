@@ -3,7 +3,7 @@
 # elm-cem `split` command against the SAME generated elm-m3e src/ tree and the
 # SAME packages.json, and diff the emitted package mirror trees.
 #
-# This exercises packages/elm-cem/bin/split.js (the facet-family splitter),
+# This exercises core/elm-cem/bin/split.js (the facet-family splitter),
 # which is what produces the elm-m3e / elm-m3e-components / elm-m3e-builder
 # package trees. The three-way core/components/builder split is retained as-is
 # — this harness only proves the SPLIT STEP is unchanged after the elm-m3e
@@ -27,7 +27,7 @@
 #   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
 #                       checkouts (default: the workspace's parent directory)
 #   ELM_M3E             elm-m3e config/checkout to generate the src/ tree from
-#                       (default: the in-workspace packages/elm-m3e)
+#                       (default: the in-workspace brands/m3e/outputs/elm-m3e)
 #   REQUIRE_SNAPSHOT_GATES=1  make a missing PRISTINE_ELM_CEM a hard failure
 #                       instead of a SKIP
 set -euo pipefail

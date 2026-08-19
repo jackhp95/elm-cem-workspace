@@ -5,7 +5,7 @@
 // own `node_modules/.bin`. Two packages — `elm-cem` and `elm-review-cem` —
 // deliberately OMIT a `postinstall: elm-tooling install` of their own, because
 // they are published to npm and must not force a ~50 MB toolchain download on
-// their consumers (see packages/elm-cem/RELEASE-CHECKLIST.md). In a source
+// their consumers (see core/elm-cem/RELEASE-CHECKLIST.md). In a source
 // checkout those two got their binaries from a prior standalone
 // `elm-tooling install`; in a FRESH clone of this workspace they would have
 // none, so `elm-cem: test` and `elm-review-cem: check`/`test` fail on a cold

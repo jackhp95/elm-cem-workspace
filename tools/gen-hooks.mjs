@@ -5,7 +5,7 @@
 // 7 byte-identical hand-duplicated copies (packages/{elm-cem,
 // elm-html-intermediate-representation, elm-review-cem, elm-typed-html,
 // m3e-okf, cem-figma-connect}/hooks/pre-push +
-// packages/elm-cem/templates/pre-push) plus a silently-diverged 176-line
+// core/elm-cem/templates/pre-push) plus a silently-diverged 176-line
 // elm-m3e variant with Netlify auto-deploy logic interleaved and no marker
 // separating the shared base from the brand-specific part — so a fix to the
 // shared 66-line gate-running logic could never mechanically reach elm-m3e's

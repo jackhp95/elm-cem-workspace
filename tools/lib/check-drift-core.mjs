@@ -46,7 +46,7 @@ export function listFilesRecursive(dir) {
 // ── M4.b (round 2): a consumer's committed GENERATED OUTPUT (not just its
 // bundle copy) can drift from what the producer's full pipeline emits today,
 // and nothing previously caught that (verified by hand: appending a line to
-// packages/tailwind-m3e-web/generated/utilities.css left check-drift green).
+// brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left check-drift green).
 // These two helpers close that hole for any consumer, generically:
 //
 //   regeneratePackageOutput — copies a package to a scratch temp dir (so the
@@ -67,7 +67,7 @@ export function listFilesRecursive(dir) {
  * with the scratch copy's root as its argument.
  *
  * The scratch copy preserves `pkgDir`'s real position relative to `repoRoot`
- * (e.g. `packages/tailwind-m3e-web`, not just `tailwind-m3e-web`) — a
+ * (e.g. `brands/m3e/outputs/tailwind-m3e-web`, not just `tailwind-m3e-web`) — a
  * generation script that imports a REPO-ROOT-relative sibling via a relative
  * specifier (e.g. `../../../tools/lib/x.mjs`, walking up out of `packages/*`
  * to a shared `tools/lib/`) resolves against the running script's own real
@@ -290,7 +290,7 @@ export function checkConsumerBundleDrift({ repoRoot, elmM3e, label, files, iconN
     return { ok: failures.length === 0, failures };
 }
 
-// ── R-008: packages/elm-m3e/docs/.elm-pages/Pages.elm carries a build
+// ── R-008: brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm carries a build
 // timestamp (`builtAt = Time.millisToPosix <epoch-ms>`) that any docs build
 // rewrites. A naive byte-diff against this file is red on every docs build
 // for a reason nobody can act on. Normalize the timestamp out before

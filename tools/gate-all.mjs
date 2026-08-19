@@ -26,7 +26,7 @@
 // Env:
 //   PRISTINE_ELM_CEM  passed through to tools/ab-elm-cem.sh
 //   ELM_M3E           elm-m3e checkout used by the E2E bundle proof
-//                     (default: the in-workspace packages/elm-m3e)
+//                     (default: the in-workspace brands/m3e/outputs/elm-m3e)
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";

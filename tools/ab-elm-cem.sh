@@ -9,7 +9,7 @@
 #   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
 #                       checkouts (default: the workspace's parent directory)
 #   ELM_M3E             elm-m3e config/checkout to generate against
-#                       (default: the in-workspace packages/elm-m3e)
+#                       (default: the in-workspace brands/m3e/outputs/elm-m3e)
 #   REQUIRE_SNAPSHOT_GATES=1  make a missing PRISTINE_ELM_CEM a hard failure
 #                       instead of a SKIP
 set -euo pipefail

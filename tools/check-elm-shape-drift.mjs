@@ -2,7 +2,7 @@
 // check-elm-shape-drift.mjs — Phase 1 (L6): the canonical-engine drift gate.
 //
 // Phase 1 collapsed the duplicated html→elm shape grammar into ONE engine,
-// packages/elm-cem/src/elm-shape.mjs. This gate keeps it one engine:
+// core/elm-cem/src/elm-shape.mjs. This gate keeps it one engine:
 //
 //   1. The engine still exports its full canonical API (Layer 1 resolvers +
 //      Layer 2 renderers). Deleting/renaming one is caught here.
