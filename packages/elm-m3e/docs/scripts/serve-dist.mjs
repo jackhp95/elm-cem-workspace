@@ -12,9 +12,13 @@
 import http from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
+import { resolveWorktreePort } from "./worktree-port.mjs";
 
 const root = process.argv[2] || "dist";
-const port = Number(process.argv[3] || process.env.PORT || 1239);
+// Falls back to this worktree's derived port (scripts/worktree-port.mjs),
+// not a hardcoded one — a fixed fallback here is exactly what let two
+// different worktrees' `npm run serve` collide on the same port before.
+const port = Number(process.argv[3] || process.env.PORT || resolveWorktreePort());
 
 const TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -64,6 +68,24 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404, { "content-type": "text/plain" });
     res.end("not found");
   }
+});
+
+// A real bind failure here means something ELSE already holds this
+// worktree's derived port (a leftover process, or — vanishingly rarely — a
+// hash collision with a sibling worktree, see worktree-port.mjs). Fail loud
+// instead of the old behaviour of silently reusing/attaching to whatever was
+// already there: that silent reuse was the root cause this port-derivation
+// scheme replaces.
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(
+      `serve-dist: port ${port} (this worktree's derived port) is already in use by another process.\n` +
+        `If that process is a stale leftover, the pretest:browser hook (scripts/kill-stale-server.mjs) should have freed it — check what's holding it: lsof -i:${port}\n` +
+        `If it's a genuine hash collision with a sibling worktree, set WORKTREE_PORT_SALT=<n> in one of the two worktrees and retry.`,
+    );
+    process.exit(1);
+  }
+  throw err;
 });
 
 server.listen(port, () => {
