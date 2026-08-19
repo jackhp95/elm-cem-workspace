@@ -648,6 +648,26 @@ function buildSteps() {
     steps.push(
         step("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [path.join(repoRoot, "tools", "check-m3e-5pkg.mjs")]),
     );
+    // check-m3e-5pkg above verifies the split's SHAPE (packages.json vs the
+    // emitted trees); this verifies the split's SUBSTANCE — that each of the 5
+    // emitted packages compiles registry-faithfully (`elm-cem split` +
+    // per-package `registry-check`). elm-m3e's own `check` only registry-checks
+    // the two NESTED packages it declares (--nested-pkg elm-m3e-icons via
+    // check:cem, elm-m3e-families via check:families); nothing in gate-all
+    // compiled elm-m3e-components / -builder / -html as standalone packages, so
+    // a split that shipped an unresolvable dependency there passed every gate.
+    // ELM_HOME isolated because check-split's registry-check STAGES intra-family
+    // dep packages into ELM_HOME — the same shared-cache writer hazard
+    // elm-review-cem's check:review carries (spec §2 constraint 3); isolating it
+    // keeps it off the warm cache the concurrent readers share.
+    steps.push(
+        step(
+            "workspace: verify-split (elm-m3e 5-package registry-faithfulness)",
+            "pnpm",
+            ["--filter", "elm-m3e", "run", "verify:split"],
+            { env: { ELM_HOME: isolatedElmHome("verify-split") } },
+        ),
+    );
     steps.push(
         step("workspace: check-hooks-sync (pre-push hook drift, Theme 3)", process.execPath, [
             path.join(repoRoot, "tools", "gen-hooks.mjs"),

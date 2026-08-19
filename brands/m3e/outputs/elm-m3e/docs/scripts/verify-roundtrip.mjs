@@ -5,8 +5,9 @@
 // via elm-pages and semantically DOM-diff each cell against its raw corpus HTML.
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, rmSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseHTML } from "linkedom";
 import { buildMatrix, SURFACES } from "./roundtrip/join.mjs";
@@ -18,9 +19,38 @@ import { diffHtml } from "./roundtrip/dom-diff.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..", "..");
 const CONFIG = resolve(REPO, "config");
+// Layer 2 (--render) output: the full report the docs `/guide/roundtrip` page
+// renders. Written ONLY under --render (elm-pages SSR, ~30s), never by the
+// cheap Layer-1 path — which used to clobber it with lesser data (mutating a
+// tracked file on every run, why check:roundtrip could not be gated).
 const OUT = resolve(REPO, "docs", "data", "roundtrip-report.json");
+// Layer 1 baseline: the cheap (pure-JS, no SSR) conversion + escape-hatch
+// projection, committed so `--check` can byte-compare against it without
+// touching OUT or paying the Layer-2 render cost.
+const LAYER1_OUT = resolve(REPO, "docs", "data", "roundtrip-layer1.json");
 
 const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
+
+// The Layer-1 fields (present in both layers): per-surface conversion counts +
+// per-cell converted/escapeHatch. A drift here is a real conversion regression;
+// the Layer-2 roundtrip DOM-diff is deliberately NOT part of this cheap gate
+// (it stays a --render / gen concern).
+function layer1Projection(report) {
+  const perSurface = {};
+  for (const [s, v] of Object.entries(report.perSurface || {})) {
+    perSurface[s] = { total: v.total, converted: v.converted, clean: v.clean, usedEscapeHatch: v.usedEscapeHatch };
+  }
+  const cells = (report.cells || []).map((c) => ({
+    id: c.id,
+    module: c.module,
+    index: c.index,
+    surface: c.surface,
+    title: c.title,
+    converted: c.converted,
+    escapeHatch: c.escapeHatch,
+  }));
+  return { perSurface, cells };
+}
 
 // Layer 2: generate the transient harness route, SSR-render it via elm-pages,
 // then DOM-diff each converted cell's rendered output against its raw corpus.
@@ -121,10 +151,42 @@ function main() {
     perSurface,
     cells: outCells,
   };
-  writeFileSync(OUT, JSON.stringify(report, null, 2) + "\n");
   const totalConverted = cells.filter((c) => c.converted).length;
-  const layer = render ? "Layer 2 (render)" : "Layer 1";
-  console.log(`roundtrip ${layer}: ${cells.length} cells, ${totalConverted} converted -> ${OUT}`);
+
+  // Layer 2 (--render): the docs artifact. This is the ONLY path that writes
+  // OUT — the roundtrip DOM-diff data the /guide/roundtrip page renders.
+  if (render) {
+    writeFileSync(OUT, JSON.stringify(report, null, 2) + "\n");
+    console.log(`roundtrip Layer 2 (render): ${cells.length} cells, ${totalConverted} converted -> ${OUT}`);
+    return;
+  }
+
+  const layer1Str = JSON.stringify(layer1Projection(report), null, 2) + "\n";
+
+  // --check: non-mutating drift gate. Compare the fresh Layer-1 projection
+  // against the committed baseline; never write OUT or LAYER1_OUT.
+  if (process.argv.includes("--check")) {
+    const committed = existsSync(LAYER1_OUT) ? readFileSync(LAYER1_OUT, "utf8") : null;
+    if (committed !== layer1Str) {
+      const fresh = resolve(tmpdir(), `roundtrip-layer1-fresh-${process.pid}.json`);
+      writeFileSync(fresh, layer1Str);
+      console.error(
+        `check:roundtrip: FAIL — the Layer-1 conversion/escape-hatch projection drifted from ` +
+          `${relative(REPO, LAYER1_OUT)} (${cells.length} cells, ${totalConverted} converted). ` +
+          `Fresh projection written to ${fresh}. Regenerate with: npm --prefix docs run gen:roundtrip`,
+      );
+      process.exit(1);
+    }
+    console.log(
+      `check:roundtrip: OK — Layer-1 projection (${cells.length} cells, ${totalConverted} converted) matches ${relative(REPO, LAYER1_OUT)}.`,
+    );
+    return;
+  }
+
+  // Default (gen:roundtrip): (re)write the committed Layer-1 baseline. Cheap —
+  // pure-JS conversion, no elm-pages SSR.
+  writeFileSync(LAYER1_OUT, layer1Str);
+  console.log(`roundtrip Layer 1: ${cells.length} cells, ${totalConverted} converted -> ${LAYER1_OUT}`);
 }
 
 main();
