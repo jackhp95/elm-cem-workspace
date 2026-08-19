@@ -4,10 +4,12 @@
 `plan/repo-shape-v2-wave1` (off `spec/repo-shape-v2-research`, off `main`).
 
 **Design of record:** `docs/superpowers/specs/2026-08-19-repo-shape-v2-design.md`
-— specifically **§9 "Resolved decisions"** (the Jack-confirmed live-session record)
-and its **"Net effect: what's actually in this wave"** summary. §9 supersedes §0–§8
-wherever they conflict. This plan executes §9's wave-1 slice only; everything §9 marks
-deferred is enumerated under "Out of scope" below.
+— specifically its **"Key decisions & rationale"** appendix (the Jack-confirmed
+live-session record, numbered 1–11 + the two wave-1-session renames) and its
+**"Net effect: what's actually in this wave"** summary, with the decided architecture
+stated inline throughout §1–§7. This plan executes that wave-1 slice only; everything the
+spec marks deferred is enumerated under "Out of scope" below. Decision references below use
+the form **"spec decision #N"** (the appendix numbering).
 
 **Methodology template:** `docs/plans/2026-08-18-core-brands-workspace-reorg-plan.md`
 (implemented earlier today, 2026-08-19). That plan reshaped `packages/` → `core/` +
@@ -28,20 +30,22 @@ NOT copied from that plan (its line numbers and `packages/…` strings are stale
 Execute the **directory reshape** slice of Repo Shape v2 in `elm-cem-workspace`, keeping
 `node tools/gate-all.mjs` green after every task:
 
-1. `core/` → `pipeline/` (brand-agnostic machinery) — §9/#5.
-2. Extract the two truly-foundational libs to a new top-level `packages/` — §9/#3 + the
-   IR's dictated placement.
+1. `core/` → `pipeline/` (brand-agnostic machinery) — spec decision #5 — **including the
+   `cem-figma-connect` → `elm-cem-figma-connect` rename** (spec, wave-1-session rename).
+2. Extract the two truly-foundational libs to a new top-level `packages/` — spec decision #3 +
+   the IR's dictated placement — **including the `elm-html-intermediate-representation` →
+   `elm-virtual-dom-intermediate-representation` rename** (spec, wave-1-session rename).
 3. `tailwind-md3` → `pipeline/elm-cem-tailwind` + `tailwind-m3e-web` →
-   `brands/m3e/generated/style/elm-m3e-tailwind` (finish the split) — §9/#1.
+   `brands/m3e/generated/style/elm-m3e-tailwind` (finish the split) — spec decision #1.
 4. Extract the docs site to `brands/m3e/generated/docs/elm-m3e-docs` with an internal
-   `generated/`/`authored/` split — §9/#9.
-5. `m3e-okf` → `elm-m3e-okf`, relocate to `brands/m3e/generated/okf/` — §9/#10.
+   `generated/`/`authored/` labeling — spec decision #9.
+5. `m3e-okf` → `elm-m3e-okf`, relocate to `brands/m3e/generated/okf/` — spec decision #10.
 6. `brands/m3e/outputs/` → `brands/m3e/generated/{package,okf,style,docs}/` — the umbrella
    move (item 6 of scope).
 7. Relocate the html brand: `elm-typed-html` → `brands/html/generated/package/`,
-   `config/config.json` → `brands/html/inputs/config.json` — §9/#8.
+   `config/config.json` → `brands/html/inputs/config.json` — spec decision #8.
 
-**Not in this wave** (§9/#4, #7, #9-partial, #8-partial): the 5-package explosion, the
+**Not in this wave** (spec decisions #4, #7, #9-partial, #8-partial): the 5-package explosion, the
 `packages.json` rewrite, the `-elements`/`-components` naming inversion, the 3 docs codegen
 wins, the guide-markdown migration, and every brand beyond m3e + html. See "Out of scope."
 
@@ -50,11 +54,15 @@ wins, the guide-markdown migration, and every brand beyond m3e + html. See "Out 
 Seven sequential, independently-gated tasks (Task 0 is an additive no-op safety net).
 Ordering is dependency-driven, not scope-list order:
 
-- **Task 1 (foundation)** does the `core/`→`pipeline/` rename, the `packages/` extraction,
-  AND the html-brand relocation together — because `elm-typed-html`, `elm-cem`'s IR symlink,
-  and `elm-cem`'s test `elm.json`s all reference the same IR/`elm-cem` dirs that move here.
-  Splitting them would force provisional double-edits (move to `pipeline/`, then re-move).
+- **Task 1 (foundation)** does the `core/`→`pipeline/` rename (including the
+  `cem-figma-connect`→`elm-cem-figma-connect` package rename), the `packages/` extraction
+  (including the `elm-html-intermediate-representation`→`elm-virtual-dom-intermediate-representation`
+  rename), AND the html-brand relocation together — because `elm-typed-html`, `elm-cem`'s IR
+  symlink, and `elm-cem`'s test `elm.json`s all reference the same IR/`elm-cem` dirs that move
+  here. Splitting them would force provisional double-edits (move to `pipeline/`, then re-move).
   Doing them atomically means every cross-reference is edited **once, to its final value**.
+  Folding the two renames into this same move-set means the new *names* are also applied once,
+  to final value, rather than moved-then-renamed.
 - **Tasks 2–5** handle the packages that need real surgery or relocation (tailwind split,
   `m3e-okf` rename, `elm-m3e` relocation, docs extraction).
 - **Task 6** is cleanup + final verification + spec-status flip.
@@ -76,8 +84,8 @@ root:
 | `core/elm-cem` → `pipeline/elm-cem` | 2 | 2 | 0 | none (literal `core/`→`pipeline/` string only) |
 | `core/elm-cem-compose` → `pipeline/elm-cem-compose` | 2 | 2 | 0 | none |
 | `core/elm-review-cem` → `pipeline/elm-review-cem` | 2 | 2 | 0 | none |
-| `core/cem-figma-connect` → `pipeline/cem-figma-connect` | 2 | 2 | 0 | none (name unchanged — see Open Q #2) |
-| `core/elm-html-intermediate-representation` → `packages/…` | 2 | 2 | 0 | none for the pkg itself; **its referrers change `core/`→`packages/`** |
+| `core/cem-figma-connect` → `pipeline/elm-cem-figma-connect` | 2 | 2 | 0 | none for depth — literal `core/`→`pipeline/` + the `cem-figma-connect`→`elm-cem-figma-connect` **rename** (spec decision, confirmed). A rename does not change segment depth. |
+| `core/elm-html-intermediate-representation` → `packages/elm-virtual-dom-intermediate-representation` | 2 | 2 | 0 | none for depth (rename does not change depth); its referrers change `core/`→`packages/` **and** the dir name `elm-html-…`→`elm-virtual-dom-…`. |
 | `core/tonal-palette-oklch` → `packages/tonal-palette-oklch` | 2 | 2 | 0 | none (only consumer imports it by workspace name) |
 | `core/tailwind-md3` → `pipeline/elm-cem-tailwind` | 2 | 2 | 0 | none for depth; rename + internal absorb (Task 2) |
 | `core/elm-typed-html` → `brands/html/generated/package/elm-typed-html` | 2 | 5 | **+3** | every `../`-import to a sibling/`tools/` gains **+3** `../` |
@@ -112,20 +120,69 @@ that needs editing. Every entry marked **verified** was read directly this sessi
 | `elm-cem` | `core/elm-cem` (L5) | `pipeline/elm-cem` | 1 |
 | `elm-cem-compose` | `core/elm-cem-compose` (L81) | `pipeline/elm-cem-compose` | 1 |
 | `elm-review-cem` | `core/elm-review-cem` (L89) | `pipeline/elm-review-cem` | 1 |
-| `cem-figma-connect` | `core/cem-figma-connect` (L148) | `pipeline/cem-figma-connect` | 1 |
+| `cem-figma-connect` | `core/cem-figma-connect` (L148) | `pipeline/elm-cem-figma-connect` | 1 |
 | `elm-cem-facts` | `core/elm-cem/facts` (L144) | `pipeline/elm-cem/facts` | 1 |
-| `elm-html-intermediate-representation` | `core/elm-html-intermediate-representation` (L85) | `packages/elm-html-intermediate-representation` | 1 |
+| `elm-html-intermediate-representation` | `core/elm-html-intermediate-representation` (L85) | `packages/elm-virtual-dom-intermediate-representation` | 1 |
 | `elm-typed-html` | `core/elm-typed-html` (L93) | `brands/html/generated/package/elm-typed-html` | 1 |
 | `tailwind-m3e-web` | `brands/m3e/outputs/tailwind-m3e-web` (L122) | `brands/m3e/generated/style/elm-m3e-tailwind` | 2 |
-| `m3e-okf` | `brands/m3e/outputs/m3e-api-okf` (L97) | `brands/m3e/generated/okf/elm-m3e-okf` | 3 |
+| `elm-m3e-okf` (was key `m3e-okf`) | `brands/m3e/outputs/m3e-api-okf` (L97) | `brands/m3e/generated/okf/elm-m3e-okf` | 3 |
 | `elm-m3e` | `brands/m3e/outputs/elm-m3e` (L9) | `brands/m3e/generated/package/elm-m3e` | 4 |
 
-Notes: `material-okf` (L116, `brands/m3e/inputs/material-okf`) is **unchanged** this wave.
-`m3e-okf`'s `pnpmFilterName: "m3e-docs"` (L98) is a pre-existing package-name mismatch
-(its `package.json` `name` is `m3e-docs`) — **out of scope, leave as-is** (Open Q #3).
-`elm-m3e`'s `authorizedExtraPrefixes: ["elm-m3e-families/"]` (L76) is a relative-within-srcDir
-prefix and needs **no** change when `elm-m3e` relocates. There is **no `tonal-palette-oklch`
-or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit for those two.
+Notes:
+- **Family.json table keys — rename policy.** Only the **okf** key is renamed (`m3e-okf` →
+  `elm-m3e-okf`, spec decision #10, Task 3 — full local consistency). The **`cem-figma-connect`**
+  and **`elm-html-intermediate-representation`** keys are **kept as-is** even though their package
+  *names* and *dirs* rename: the key is an arbitrary internal identifier (the pre-existing
+  `m3e-okf` key already didn't match its `m3e-api-okf` dir), and renaming a key risks any gate
+  code that indexes `family.json` by the literal key string. Renaming the dir + `srcDir` +
+  `package.json`/`elm.json` `name` is sufficient for the two Task-1 renames. **(Flag: spec
+  decisions #1/#2 confirmed the *package* renames but did not separately address the family.json
+  keys the way #3 did for okf — Jack may want cfc/IR keys aligned too; kept unchanged here to
+  avoid an un-enumerated indexing cascade. See "Decisions log".)**
+- **`m3e-okf`'s `pnpmFilterName: "m3e-docs"` (L98) is a pre-existing stale/false entry — fixed in
+  Task 3.** Its `$pnpmFilterNameNote` (L99) claims the package's `package.json` `name` is
+  `"m3e-docs"`; verified **false** — the actual current `name` is `m3e-okf` (no `package.json`
+  anywhere is named `m3e-docs`, grepped workspace-wide). Task 3 renames the `name` to `elm-m3e-okf`
+  and updates `pnpmFilterName` → `elm-m3e-okf`, deleting the stale note in the same edit (spec
+  decision #10). (`pnpmFilterName` is at real L98, not the L117-118 an earlier draft cited.)
+- `material-okf` (`brands/m3e/inputs/material-okf`) is **unchanged** this wave.
+- `elm-m3e`'s `authorizedExtraPrefixes: ["elm-m3e-families/"]` (L76) is a relative-within-srcDir
+  prefix and needs **no** change when `elm-m3e` relocates. There is **no `tonal-palette-oklch`
+  or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit for those two.
+
+### A2. Rename-specific `name`/dependency edits (verified — new cascade the relocate-only sweep didn't need)
+
+The two Task-1 renames (`cem-figma-connect`→`elm-cem-figma-connect`,
+`elm-html-intermediate-representation`→`elm-virtual-dom-intermediate-representation`) change
+package **identity**, not just paths — so they touch `package.json`/`elm.json` `name` fields and
+every dependent that references the old published name. These edits are **additional to** the
+srcDir/relative-path edits in findings A/S/T:
+
+- **`cem-figma-connect`→`elm-cem-figma-connect` (Task 1):** edit `core/cem-figma-connect/package.json`
+  `"name": "cem-figma-connect"` → `"elm-cem-figma-connect"`. **No other `package.json` depends on it
+  by workspace name** (verified: the only `"cem-figma-connect"` `package.json` occurrence is its own
+  `name` field; `tools/bump.mjs` et al. reference it by *path*, already covered in findings E/F/…).
+  So cfc's rename cascade is just its own `name` field + the path edits.
+- **`elm-html-intermediate-representation`→`elm-virtual-dom-intermediate-representation` — Elm
+  published-name cascade (5 `elm.json` edits, verified):**
+  - `packages/…/elm.json` (the IR's own, currently `core/elm-html-intermediate-representation/elm.json:3`):
+    `"name": "jackhp95/elm-html-intermediate-representation"` → `"jackhp95/elm-virtual-dom-intermediate-representation"` (**Task 1**).
+  - `brands/html/generated/package/elm-typed-html/elm.json` (currently `core/elm-typed-html/elm.json:40`):
+    dependency key `"jackhp95/elm-html-intermediate-representation"` → new name (**Task 1**, same task the html brand moves).
+  - `brands/m3e/generated/package/elm-m3e/elm.json` (currently `brands/m3e/outputs/elm-m3e/elm.json:153`):
+    dependency key → new name (**Task 4**, moves with `elm-m3e`).
+  - `brands/m3e/generated/package/elm-m3e/elm-m3e-families/elm.json` (currently `…/elm-m3e-families/elm.json:36`): dependency key → new name (**Task 4**).
+  - `brands/m3e/generated/package/elm-m3e/elm-m3e-icons/elm.json` (currently `…/elm-m3e-icons/elm.json:16`): dependency key → new name (**Task 4**).
+  - The **module namespace `HtmlIr.*` is unaffected** by the package rename (Elm package name ≠
+    module names) — do NOT touch `HtmlIr.` imports. Only the `elm.json` `name`/dependency strings
+    and the dir-name paths change. **Re-grep the whole workspace for
+    `jackhp95/elm-html-intermediate-representation` before committing each of Task 1 and Task 4** —
+    any remaining hit is an un-migrated dependent.
+  - **The elm-cem IR symlink alias name is deliberately KEPT** as `elm-html-intermediate-representation`
+    (see finding S) — that string legitimately survives the rename in exactly two places (the symlink
+    LHS and its exclusion glob), because it is elm-cem's internal resolution alias, not the package
+    identity. Renaming the alias would force edits to elm-cem's own `source-directories` and is out of
+    scope (flagged in "Decisions log").
 
 ### B. `tools/gate-all.mjs` (verified)
 
@@ -146,10 +203,10 @@ or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit 
 
 ### E. `tools/bump.mjs` (verified)
 
-- L27–28: `import … from "../core/cem-figma-connect/src/tokens/{classify-delta,token-change-report}.mjs";` → `"../pipeline/cem-figma-connect/…"` (**Task 1**).
+- L27–28: `import … from "../core/cem-figma-connect/src/tokens/{classify-delta,token-change-report}.mjs";` → `"../pipeline/elm-cem-figma-connect/…"` (**Task 1**).
 - L34: `const ELM_M3E = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");` → `generated/package/elm-m3e` (**Task 4**).
 - L35: `const PAGES_ELM_REL = "brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm";` → interim `…/generated/package/elm-m3e/docs/…` (**Task 4**), then `…/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm` (**Task 5**). Double-edit.
-- L43–44: `path.join(repoRoot, "core", "cem-figma-connect", "profiles", …)` (×2) → `"pipeline", "cem-figma-connect", …` (**Task 1**).
+- L43–44: `path.join(repoRoot, "core", "cem-figma-connect", "profiles", …)` (×2) → `"pipeline", "elm-cem-figma-connect", …` (**Task 1**).
 - L49: `path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json")` → `generated/okf/elm-m3e-okf/…` (**Task 3**).
 - L53: `path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "data", "cem-facts.json")` → `generated/style/elm-m3e-tailwind/…` (**Task 2**).
 - L318: `path.join(repoRoot, "brands", "m3e", "outputs", "tailwind-m3e-web", "package.json")` → `generated/style/elm-m3e-tailwind/package.json` (**Task 2**).
@@ -157,17 +214,17 @@ or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit 
 ### F. `tools/gen-hooks.mjs` (verified — the 7-entry pre-push target list, L40–48)
 
 - L40–41: `core/elm-cem/hooks/pre-push`, `core/elm-cem/templates/pre-push` → `pipeline/elm-cem/…` (**Task 1**).
-- L42: `core/elm-html-intermediate-representation/hooks/pre-push` → `packages/elm-html-intermediate-representation/hooks/pre-push` (**Task 1**).
+- L42: `core/elm-html-intermediate-representation/hooks/pre-push` → `packages/elm-virtual-dom-intermediate-representation/hooks/pre-push` (**Task 1**).
 - L43: `core/elm-review-cem/hooks/pre-push` → `pipeline/elm-review-cem/…` (**Task 1**).
 - L44: `core/elm-typed-html/hooks/pre-push` → `brands/html/generated/package/elm-typed-html/hooks/pre-push` (**Task 1**).
 - L45: `brands/m3e/outputs/m3e-api-okf/hooks/pre-push` → `brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push` (**Task 3**).
-- L46: `core/cem-figma-connect/hooks/pre-push` → `pipeline/cem-figma-connect/…` (**Task 1**).
+- L46: `core/cem-figma-connect/hooks/pre-push` → `pipeline/elm-cem-figma-connect/…` (**Task 1**).
 - L48: `const ELM_M3E_TARGET = "brands/m3e/outputs/elm-m3e/hooks/pre-push";` → `generated/package/elm-m3e/hooks/pre-push` (**Task 4**).
 
 ### G. `tools/check-elm-shape-drift.mjs` (verified)
 
 - L48: `} from "../core/elm-cem/src/elm-shape.mjs";` → `"../pipeline/elm-cem/src/elm-shape.mjs"` (**Task 1**).
-- L133: `file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",` → `"pipeline/cem-figma-connect/…"` (**Task 1**).
+- L133: `file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",` → `"pipeline/elm-cem-figma-connect/…"` (**Task 1**).
 - L142: `file: "brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",` → interim `…/generated/package/elm-m3e/docs/…` (**Task 4**), then `…/generated/docs/elm-m3e-docs/scripts/examples-gen/lib/to-elm.mjs` (**Task 5**). Double-edit.
 
 ### H. `tools/check-cc-elm-refs.mjs` (verified)
@@ -178,7 +235,7 @@ or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit 
 
 ### I. `tools/gen-figma-config.mjs` (verified)
 
-- L46: `const cfcDir = path.join(repoRoot, "core", "cem-figma-connect");` → `"pipeline", "cem-figma-connect"` (**Task 1**).
+- L46: `const cfcDir = path.join(repoRoot, "core", "cem-figma-connect");` → `"pipeline", "elm-cem-figma-connect"` (**Task 1**).
 - The `elm-m3e` config dir is resolved via the `elm-m3e` path; when `elm-m3e` relocates (Task 4) grep this file again for any `brands/m3e/outputs/elm-m3e` literal and swap to `generated/package/elm-m3e`. (Comment refs at L9, L23 are cosmetic — Task 6.)
 
 ### J. `tools/ab-elm-cem.sh` / `tools/ab-elm-m3e-split.sh` (verified)
@@ -188,13 +245,13 @@ or `tailwind-md3` entry** in `family.json` today (verified) — nothing to edit 
 
 ### K. `tools/measure-docs-size.mjs` (verified)
 
-- L77: `process.env.IR_SRC || path.join(ROOT, "core/elm-html-intermediate-representation/src")` → `"packages/elm-html-intermediate-representation/src"` (**Task 1**).
+- L77: `process.env.IR_SRC || path.join(ROOT, "core/elm-html-intermediate-representation/src")` → `"packages/elm-virtual-dom-intermediate-representation/src"` (**Task 1**).
 - L78: `process.env.FACTS_SRC || path.join(ROOT, "core/elm-cem/facts/src")` → `"pipeline/elm-cem/facts/src"` (**Task 1**).
 - L81: `const DEFAULT_TARGETS = ["brands/m3e/outputs/elm-m3e/elm-m3e-icons"];` → `["brands/m3e/generated/package/elm-m3e/elm-m3e-icons"]` (**Task 4**).
 
 ### L. `tools/check-emit-determinism-cfc.mjs` (verified)
 
-- L39: `const pkgDir = path.join(repoRoot, "core", "cem-figma-connect");` → `"pipeline", "cem-figma-connect"` (**Task 1**).
+- L39: `const pkgDir = path.join(repoRoot, "core", "cem-figma-connect");` → `"pipeline", "elm-cem-figma-connect"` (**Task 1**).
 
 ### M. `tools/check-single-cem-facts.mjs` (verified — NOT in the old plan; new gap)
 
@@ -244,9 +301,11 @@ is discovered today. The `brands/*/generated/*/*` glob covers `elm-m3e-docs` aft
 ### S. Symlinks (verified — 2 exist, both need retargeting)
 
 1. `core/elm-cem/elm-html-intermediate-representation -> ../elm-html-intermediate-representation`
-   → moves with `elm-cem` to `pipeline/elm-cem/…`; IR moves to `packages/`. Retarget to
-   `../../packages/elm-html-intermediate-representation` (**Task 1**). The exclusion glob
-   (item R) tracks it: `!pipeline/*/elm-html-intermediate-representation`.
+   → moves with `elm-cem` to `pipeline/elm-cem/…`; IR moves to `packages/` **and is renamed**.
+   Retarget the symlink to `../../packages/elm-virtual-dom-intermediate-representation` (**Task 1**).
+   **The symlink alias name stays `elm-html-intermediate-representation`** (elm-cem's internal
+   resolution alias — renaming it would force edits to elm-cem's own `source-directories`, out of
+   scope). The exclusion glob (item R) tracks the alias: `!pipeline/*/elm-html-intermediate-representation`.
 2. `brands/m3e/outputs/elm-m3e/config -> ../../inputs/cem/config` → moves with `elm-m3e` to
    `brands/m3e/generated/package/elm-m3e/config`. Retarget `../../inputs/cem/config` →
    `../../../inputs/cem/config` (+1 segment; **Task 4**).
@@ -255,15 +314,15 @@ is discovered today. The `brands/*/generated/*/*` glob covers `elm-m3e-docs` aft
 
 **`core/elm-typed-html` (→ `brands/html/generated/package/elm-typed-html`, +3 depth) — Task 1:**
 - `scripts/regen.sh` L7: `ELM_CEM_BIN="${ELM_CEM_BIN:-../elm-cem/bin/elm-cem.js}"` (resolves to `core/elm-cem` today) → `../../../../../pipeline/elm-cem/bin/elm-cem.js`. Also references `$REPO_ROOT/manifest/native.cem.json`, `$REPO_ROOT/config/config.json`, `$REPO_ROOT/src` — all package-internal (`REPO_ROOT` computed from `$0`), so they follow the package move automatically. **But `config/config.json` physically relocates to `brands/html/inputs/config.json`** — update the `--config-from` arg to point there (`$REPO_ROOT/../../../inputs/config.json` from `brands/html/generated/package/elm-typed-html`, i.e. 3 up to `brands/html`, then `inputs/config.json`). See Task 1 Step for exact value.
-- `scripts/validate.mjs` L62: `path.resolve(repoRoot, "../elm-html-intermediate-representation/src")` → `path.resolve(repoRoot, "../../../../../packages/elm-html-intermediate-representation/src")`. L75: `path.resolve(repoRoot, "../elm-cem/facts/src")` → `path.resolve(repoRoot, "../../../../../pipeline/elm-cem/facts/src")`.
+- `scripts/validate.mjs` L62: `path.resolve(repoRoot, "../elm-html-intermediate-representation/src")` → `path.resolve(repoRoot, "../../../../../packages/elm-virtual-dom-intermediate-representation/src")`. L75: `path.resolve(repoRoot, "../elm-cem/facts/src")` → `path.resolve(repoRoot, "../../../../../pipeline/elm-cem/facts/src")`.
 - `package.json` L20: `"hooks:install": "node ../../tools/hooks-install.mjs"` → `"node ../../../../../tools/hooks-install.mjs"`.
-- `review/elm.json` L5–8 (`source-directories`): `../src` (package-internal, keep), `../../elm-review-cem/src` → `../../../../../../pipeline/elm-review-cem/src`, `../../elm-cem/facts/src` → `../../../../../../pipeline/elm-cem/facts/src`, `../../elm-html-intermediate-representation/src` → `../../../../../../packages/elm-html-intermediate-representation/src`. (From `review/` at depth 6: 6 `../` reaches root.)
-- `verify/elm.json` L3 (`source-directories`): `[ "src", "bad", "../src", "../../elm-html-intermediate-representation/src", "../../elm-cem/facts/src" ]` → keep `src`/`bad`/`../src`; `../../elm-html-intermediate-representation/src` → `../../../../../../packages/elm-html-intermediate-representation/src`; `../../elm-cem/facts/src` → `../../../../../../pipeline/elm-cem/facts/src`. (`verify/` at depth 6.)
+- `review/elm.json` L5–8 (`source-directories`): `../src` (package-internal, keep), `../../elm-review-cem/src` → `../../../../../../pipeline/elm-review-cem/src`, `../../elm-cem/facts/src` → `../../../../../../pipeline/elm-cem/facts/src`, `../../elm-html-intermediate-representation/src` → `../../../../../../packages/elm-virtual-dom-intermediate-representation/src`. (From `review/` at depth 6: 6 `../` reaches root.)
+- `verify/elm.json` L3 (`source-directories`): `[ "src", "bad", "../src", "../../elm-html-intermediate-representation/src", "../../elm-cem/facts/src" ]` → keep `src`/`bad`/`../src`; `../../elm-html-intermediate-representation/src` → `../../../../../../packages/elm-virtual-dom-intermediate-representation/src`; `../../elm-cem/facts/src` → `../../../../../../pipeline/elm-cem/facts/src`. (`verify/` at depth 6.)
 
 **`core/elm-cem` (→ `pipeline/elm-cem`, depth unchanged) — Task 1** (IR leaves `core/` for `packages/`, so its sibling refs break):
-- `tests/phantom/native/acid/elm.json` L7: `../../../../../elm-html-intermediate-representation/src` (5 `../` from that dir reaches `core/`) → `../../../../../../packages/elm-html-intermediate-representation/src` (+1 `../` to reach root, then `packages/`). Dir `pipeline/elm-cem/tests/phantom/native/acid` is depth 6; 6 `../` reaches root.
-- `tests/phantom/acid/elm.json` L7: `../../../../elm-html-intermediate-representation/src` (4 `../` reaches `core/`) → `../../../../../packages/elm-html-intermediate-representation/src` (+1). Dir depth 5.
-- Grep `core/elm-cem` for any other `elm-html-intermediate-representation` relative ref before committing; the two above are the ones that cross the `core/`→`packages/` boundary this session's sweep found.
+- `tests/phantom/native/acid/elm.json` L7: `../../../../../elm-html-intermediate-representation/src` (5 `../` from that dir reaches `core/`) → `../../../../../../packages/elm-virtual-dom-intermediate-representation/src` (+1 `../` to reach root, then `packages/` + renamed dir). Dir `pipeline/elm-cem/tests/phantom/native/acid` is depth 6; 6 `../` reaches root.
+- `tests/phantom/acid/elm.json` L7: `../../../../elm-html-intermediate-representation/src` (4 `../` reaches `core/`) → `../../../../../packages/elm-virtual-dom-intermediate-representation/src` (+1 + renamed dir). Dir depth 5.
+- Grep `core/elm-cem` (now `pipeline/elm-cem`) for any other `elm-html-intermediate-representation` relative ref before committing; the two above are the ones that cross the `core/`→`packages/` boundary this session's sweep found. (Each such ref's target dir also picks up the `elm-html-…`→`elm-virtual-dom-…` rename.)
 
 **`brands/m3e/outputs/tailwind-m3e-web` (→ `generated/style/elm-m3e-tailwind`, +1 depth) — Task 2:**
 - `bin/generate-component-utilities.mjs` L40: `} from "../../../../../tools/lib/component-css-utilities.mjs";` — **this dependency moves INTO the package** (see Task 2, item 3b) → becomes a package-local import (e.g. `"../src/component-css-utilities.mjs"` or `"../lib/…"`, per where it lands). If for any reason it stays in `tools/lib`, the depth fix is +1 → `"../../../../../../tools/lib/…"`.
@@ -294,8 +353,8 @@ Read `tools/lib/` in full. Two files are candidates to pull into `pipeline/elm-c
   It is a **shared** facts-generation runner, not tailwind-specific. → **Leave it in `tools/lib`.**
   Moving it into `elm-cem-tailwind` would break the m3e-okf and cem-figma-connect imports.
   (This is a mild divergence from item-3b's phrasing, which grouped "gen-facts-runner's
-  tailwind-relevant path" with the absorb — the grep shows it is shared substrate. Flagged
-  as Open Q #4 for confirmation; the plan proceeds on the evidence.)
+  tailwind-relevant path" with the absorb — the grep shows it is shared substrate. **Confirmed live**
+  (Decisions log #4): leave it in `tools/lib` and add a deprecation comment there — Task 2 Step 2.3b.)
 
 ### V. Cosmetic-only prose/comment references (Task 6, non-blocking)
 
@@ -388,8 +447,8 @@ and the m3e outputs (Tasks 2–5) do **not** reference these relatively and are 
 - `core/elm-cem` → `pipeline/elm-cem`
 - `core/elm-cem-compose` → `pipeline/elm-cem-compose`
 - `core/elm-review-cem` → `pipeline/elm-review-cem`
-- `core/cem-figma-connect` → `pipeline/cem-figma-connect` (name unchanged — Open Q #2)
-- `core/elm-html-intermediate-representation` → `packages/elm-html-intermediate-representation`
+- `core/cem-figma-connect` → `pipeline/elm-cem-figma-connect` (**rename** — spec decision #2)
+- `core/elm-html-intermediate-representation` → `packages/elm-virtual-dom-intermediate-representation` (**rename** — spec decision, IR)
 - `core/tonal-palette-oklch` → `packages/tonal-palette-oklch`
 - `core/elm-typed-html` → `brands/html/generated/package/elm-typed-html`
 - `core/elm-typed-html/config/config.json` → `brands/html/inputs/config.json`
@@ -401,21 +460,26 @@ mkdir -p pipeline packages
 git mv core/elm-cem pipeline/elm-cem
 git mv core/elm-cem-compose pipeline/elm-cem-compose
 git mv core/elm-review-cem pipeline/elm-review-cem
-git mv core/cem-figma-connect pipeline/cem-figma-connect
+git mv core/cem-figma-connect pipeline/elm-cem-figma-connect   # move + rename (spec decision #2)
 ```
 
 - [ ] **Step 1.2: Extract the two foundational libs to top-level `packages/`**
 
 ```bash
-git mv core/elm-html-intermediate-representation packages/elm-html-intermediate-representation
+git mv core/elm-html-intermediate-representation packages/elm-virtual-dom-intermediate-representation   # move + rename (IR)
 git mv core/tonal-palette-oklch packages/tonal-palette-oklch
 ```
 
 - [ ] **Step 1.3: Retarget the `elm-cem` IR symlink (finding S #1)**
 
+The symlink **alias name is deliberately kept** as `elm-html-intermediate-representation` (it is
+elm-cem's internal resolution alias, referenced by elm-cem's own `source-directories`; renaming the
+alias would force edits there — out of scope, flagged in "Decisions log"). Only the **target** is
+retargeted, to the renamed package dir:
+
 ```bash
 rm pipeline/elm-cem/elm-html-intermediate-representation
-ln -s ../../packages/elm-html-intermediate-representation pipeline/elm-cem/elm-html-intermediate-representation
+ln -s ../../packages/elm-virtual-dom-intermediate-representation pipeline/elm-cem/elm-html-intermediate-representation
 git add pipeline/elm-cem/elm-html-intermediate-representation
 ```
 
@@ -429,7 +493,7 @@ git mv brands/html/generated/package/elm-typed-html/config/config.json brands/ht
 rmdir brands/html/generated/package/elm-typed-html/config 2>/dev/null || true
 ```
 
-Note per §9/#8 and the research spec §3: `elm-typed-html`'s CEM manifest is `manifest/native.cem.json`
+Note per spec decision #8 and the research spec §3: `elm-typed-html`'s CEM manifest is `manifest/native.cem.json`
 (a committed file, moves with the package) — there is **no** live `custom-elements-manifest.json`
 to place under `brands/html/inputs/`; do not invent one. `brands/html/inputs/` holds only
 `config.json`.
@@ -445,18 +509,33 @@ Leave `tailwind-md3` in `core/` — Task 2 renames+moves it and removes the empt
 - [ ] **Step 1.6: `pnpm-workspace.yaml` — flip the IR-exclusion glob**
 
 Change `!core/*/elm-html-intermediate-representation` → `!pipeline/*/elm-html-intermediate-representation`.
-(Old `core/*`, `brands/*/outputs/*` globs still stand — `tailwind-md3` + the m3e outputs still
-live under them until Tasks 2–5.)
+The glob keeps the alias name `elm-html-intermediate-representation` because it matches the **symlink
+alias** (kept name, Step 1.3), not the renamed package dir. (Old `core/*`, `brands/*/outputs/*` globs
+still stand — `tailwind-md3` + the m3e outputs still live under them until Tasks 2–5.)
 
 - [ ] **Step 1.7: Fix all `tools/*` files with `core/`→`pipeline/`/`packages/` refs**
 
-Apply every **Task 1** entry from findings A–R above, file by file, using the exact current
-strings cited: `family.json` (elm-cem, elm-cem-compose, elm-review-cem, cem-figma-connect,
-elm-cem-facts, IR, elm-typed-html), `gate-all.mjs` (L195 walk, L268), `check-drift.mjs` (L90),
-`bump.mjs` (L27–28, L43–44), `gen-hooks.mjs` (L40–44, L46), `check-elm-shape-drift.mjs` (L48, L133),
-`check-cc-elm-refs.mjs` (L45), `gen-figma-config.mjs` (L46), `ab-elm-cem.sh` (L25),
-`ab-elm-m3e-split.sh` (L42), `measure-docs-size.mjs` (L77–78), `check-emit-determinism-cfc.mjs` (L39),
-`check-single-cem-facts.mjs` (L86–88), `lib/regen.mjs` (L34), `install-toolchains.mjs` (L54).
+Apply every **Task 1** entry from findings A–R above (and **finding A2** below, for the rename-identity
+edits), file by file, using the exact current strings cited: `family.json` (elm-cem, elm-cem-compose,
+elm-review-cem, cem-figma-connect→`pipeline/elm-cem-figma-connect`, elm-cem-facts,
+IR→`packages/elm-virtual-dom-intermediate-representation`, elm-typed-html), `gate-all.mjs` (L195 walk,
+L268), `check-drift.mjs` (L90), `bump.mjs` (L27–28, L43–44), `gen-hooks.mjs` (L40–44, L46),
+`check-elm-shape-drift.mjs` (L48, L133), `check-cc-elm-refs.mjs` (L45), `gen-figma-config.mjs` (L46),
+`ab-elm-cem.sh` (L25), `ab-elm-m3e-split.sh` (L42), `measure-docs-size.mjs` (L77–78),
+`check-emit-determinism-cfc.mjs` (L39), `check-single-cem-facts.mjs` (L86–88), `lib/regen.mjs` (L34),
+`install-toolchains.mjs` (L54).
+
+- [ ] **Step 1.7b: Apply the rename-identity edits (finding A2)**
+
+The two renames change package *identity*, not just paths:
+- `core/cem-figma-connect/package.json` `"name": "cem-figma-connect"` → `"elm-cem-figma-connect"`
+  (edit before or after the `git mv`; no other `package.json` depends on it by workspace name — verified).
+- The IR's own `elm.json` `name` → `jackhp95/elm-virtual-dom-intermediate-representation`, plus the
+  **Task-1 dependents' `elm.json` dependency keys** (`elm-typed-html/elm.json:40`). The **Task-4**
+  dependents (`elm-m3e`, `elm-m3e-families`, `elm-m3e-icons`) are edited when they move (finding A2,
+  Task 4). **Do NOT touch `HtmlIr.*` module imports** — the module namespace is unchanged by a package
+  rename. `grep -rn "jackhp95/elm-html-intermediate-representation"` before committing Task 1; only the
+  symlink alias + its exclusion glob may still legitimately contain `elm-html-intermediate-representation`.
 
 - [ ] **Step 1.8: Fix `elm-typed-html` internal cross-boundary refs (finding T)**
 
@@ -488,7 +567,7 @@ known-unrelated failure from Task 0's baseline).
 
 ```bash
 git add -A
-git commit -m "reorg(shape-v2): core/->pipeline/, extract IR+tonal to packages/, relocate html brand"
+git commit -m "reorg(shape-v2): core/->pipeline/ (+ cem-figma-connect->elm-cem-figma-connect), extract IR (->elm-virtual-dom-intermediate-representation)+tonal to packages/, relocate html brand"
 ```
 
 ---
@@ -537,6 +616,17 @@ git mv tools/lib/component-css-utilities.mjs pipeline/elm-cem-tailwind/src/compo
 ```
 (Place under `src/` or `lib/` per the package's own convention — read the package layout
 first.) **Leave `tools/lib/gen-facts-runner.mjs` where it is** (3 consumers, finding U).
+
+- [ ] **Step 2.3b: Add the deprecation comment to `tools/lib/gen-facts-runner.mjs` (spec decision #4 / plan decision #4)**
+
+`gen-facts-runner.mjs` stays in `tools/lib` because it has 3 genuinely non-tailwind-specific
+consumers (tailwind, m3e-okf, cem-figma-connect — finding U). Add a short **code comment** at the top
+of the file recording *why* it's still here and when it should die: it is scaffolding that exists only
+because there is no real `elm-m3e-facts` package yet for those three to depend on directly — each keeps
+a redundant private copy of the same facts bundle, fanned out via this shared runner. Once the deferred
+5-package explosion (spec decision #7) produces a real `elm-m3e-facts` package, this runner should be
+deleted/gutted and the 3 consumers switched to a `workspace:*` dependency on `elm-m3e-facts` instead of
+a private copy. (Comment only — no behavior change.)
 
 - [ ] **Step 2.4: Relocate the brand package + rename it**
 
@@ -608,15 +698,15 @@ mkdir -p brands/m3e/generated/okf
 git mv brands/m3e/outputs/m3e-api-okf brands/m3e/generated/okf/elm-m3e-okf
 ```
 
-- [ ] **Step 3.2: Rename the package**
+- [ ] **Step 3.2: Rename the package (full local consistency — spec decision #10)**
 
-In `brands/m3e/generated/okf/elm-m3e-okf/package.json`, change the `name` field to
-`elm-m3e-okf`. **Verify the current value first** — the research spec §9/#10 says it "still
-literally says `m3e-okf`", while `family.json`'s `pnpmFilterName: "m3e-docs"` note (L98–99)
-claims the `name` is `m3e-docs`. Read the actual `package.json` and set `name: "elm-m3e-okf"`
-regardless of which it currently is. If the `family.json` key/`pnpmFilterName` must track the
-new name, update L98 `pnpmFilterName` accordingly (see Step 3.4). (This resolves the long-standing
-mismatch noted in `family.json` L98–99 — but confirm it's desired, Open Q #3.)
+In `brands/m3e/generated/okf/elm-m3e-okf/package.json`, set the `name` field to `elm-m3e-okf`.
+(The current on-disk `name` is `m3e-okf` — verified this session; the `family.json`
+`$pnpmFilterNameNote` claim that it's `m3e-docs` is **stale/false**, fixed in Step 3.4.) Spec
+decision #10 is **full local consistency**: the directory (Step 3.1), the `package.json` `name`
+(here), AND the `family.json` table key (Step 3.4) all become `elm-m3e-okf`. The mirror repo
+`jackhp95/m3e-okf` stays external (a separate, deliberate publishing action, not swept into this
+structural commit).
 
 - [ ] **Step 3.3: Fix the package's internal cross-boundary refs (+1 depth, finding T)**
 
@@ -625,14 +715,21 @@ mismatch noted in `family.json` L98–99 — but confirm it's desired, Open Q #3
 ref — apply +1 (`../../../../../` → `../../../../../../`). Re-grep the package for
 `../../../../../` and fix uniformly.
 
-- [ ] **Step 3.4: Update `tools/family.json`**
+- [ ] **Step 3.4: Update `tools/family.json` (rename key + fix the stale `pnpmFilterName`)**
 
-L97 srcDir → `brands/m3e/generated/okf/elm-m3e-okf`. **Keep** the `mirror`, `bundleCopy`,
-`copyFidelity` blocks (publishing/mirror config is out of scope — the mirror repo stays
-`jackhp95/m3e-okf`). Update `pnpmFilterName` (L98) to match the new `package.json` `name`
-if it changed. The table **key** `"m3e-okf"` may stay (it tracks the mirror identity) — do
-NOT rename the key unless the mirror repo is also renamed (it isn't). Flag any residual
-name/key/dir divergence in Open Q #3.
+- **Rename the table key** `"m3e-okf"` → `"elm-m3e-okf"` (spec decision #10, full local
+  consistency). Re-grep `tools/` for any gate code that indexes `family.json["m3e-okf"]` by that
+  literal and update it (gate-all is the safety net if any is missed).
+- `srcDir` (L97) → `brands/m3e/generated/okf/elm-m3e-okf`.
+- **Fix the stale `pnpmFilterName`** (L98): currently `"m3e-docs"` with a `$pnpmFilterNameNote`
+  (L99) claiming that's the package's `name` — **verified false** (the actual current `name` is
+  `m3e-okf`; no `package.json` anywhere is named `m3e-docs`). Set `pnpmFilterName` → `elm-m3e-okf`
+  (matching the Step 3.2 `name`) and **delete the stale `$pnpmFilterNameNote`** in the same edit —
+  don't leave a second known-broken mismatch next to the one being fixed. This is a pre-existing
+  broken entry, unrelated to the rename, resolved opportunistically because Task 3 already edits this
+  exact entry.
+- **Keep** the `mirror`, `bundleCopy`, `copyFidelity` blocks and their repo coordinates
+  (`jackhp95/m3e-okf`, the `.cache/snapshots/…` paths) — publishing/mirror config is out of scope.
 
 - [ ] **Step 3.5: Update the other `tools/*` refs**
 
@@ -662,7 +759,7 @@ git commit -m "reorg(shape-v2): m3e-okf->elm-m3e-okf, relocate to brands/m3e/gen
 **Model tier (informational):** sonnet / medium (+1 depth relocation; docs subtree rides along).
 
 Pure relocation one level deeper under a `package/` folder — `elm-m3e` stays monolithic
-(§9/#7, the 5-package explosion is deferred). The `docs/` subtree moves **with** elm-m3e here
+(spec decision #7, the 5-package explosion is deferred). The `docs/` subtree moves **with** elm-m3e here
 and is extracted in Task 5 (doing elm-m3e first means Task 5 computes docs' final cross-refs
 against `generated/package/elm-m3e` once — see Architecture).
 
@@ -694,11 +791,22 @@ git add brands/m3e/generated/package/elm-m3e/config
 
 - [ ] **Step 4.3: Fix the package's non-docs internal refs (+1 depth, finding T)**
 
-`review/elm.json` `source-directories` (re-read — by now the `core`→`pipeline`/`packages`
-rename from Task 1 is reflected; apply +1 `../` to each cross-package entry), `package.json`
-`hooks:install` + any `../../../../tools` ref, and re-grep the package **excluding `docs/`**
-for `../../../../../` cross-package refs; apply +1. (The `docs/` subtree's own refs are handled
-in Task 5 — do not touch `docs/` here beyond letting it ride along.)
+`review/elm.json` `source-directories` (re-read — by now the `core`→`pipeline`/`packages` rename
+from Task 1 is reflected, **including the IR dir now being `packages/elm-virtual-dom-intermediate-representation`**;
+apply +1 `../` to each cross-package entry), `package.json` `hooks:install` + any `../../../../tools`
+ref, and re-grep the package **excluding `docs/`** for `../../../../../` cross-package refs; apply +1.
+(The `docs/` subtree's own refs are handled in Task 5 — do not touch `docs/` here beyond letting it
+ride along.)
+
+- [ ] **Step 4.3b: Apply the IR published-name dependency edits (finding A2, Task-4 side)**
+
+The IR rename (`jackhp95/elm-html-intermediate-representation` → `…/elm-virtual-dom-intermediate-representation`)
+cascades into three `elm.json` dependency keys that move with `elm-m3e`:
+`brands/m3e/generated/package/elm-m3e/elm.json` (was `brands/m3e/outputs/elm-m3e/elm.json:153`),
+`…/elm-m3e/elm-m3e-families/elm.json` (was `…:36`), `…/elm-m3e/elm-m3e-icons/elm.json` (was `…:16`).
+Update the dependency key in each. **Do NOT touch `HtmlIr.*` module imports** (namespace unchanged).
+`grep -rn "jackhp95/elm-html-intermediate-representation"` after Task 4 → zero hits should remain
+outside the elm-cem symlink alias + its exclusion glob.
 
 - [ ] **Step 4.4: Update `tools/*` for the relocation**
 
@@ -741,11 +849,11 @@ arithmetic correction). The docs package also gains its **own** `node_modules` (
 independently installed), so scripts that resolved `@m3e/web`/`elm`/`elm-format` via
 `<elm-m3e>/docs/node_modules` now resolve them locally.
 
-Per §9/#9, also reorganize the package internals into `generated/` (facts-sourced: reference
+Per spec decision #9, also reorganize the package internals into `generated/` (facts-sourced: reference
 pages, examples, search index, `Compose/Attrs.elm`, family/token pages) vs `authored/` (the
 guide chapters under today's `app/Route/Guide/`). **Physical boundary + top-level
 `generated/`/`authored/` split only** — do NOT migrate the 9 still-inline-Elm guide chapters
-to `.md`, and do NOT touch any chapter's content/format (§9/#9 explicitly defers that).
+to `.md`, and do NOT touch any chapter's content/format (spec decision #9 explicitly defers that).
 
 **Files:**
 - Move: `brands/m3e/generated/package/elm-m3e/docs` → `brands/m3e/generated/docs/elm-m3e-docs`.
@@ -792,7 +900,7 @@ must now split into (a) the **docs package root** (for OUT dirs, `data/`, local 
 - `scripts/gen-compose-attrs.mjs` — `M3E_ROOT` (`src/M3e/Attributes.elm`, `src/M3e/Review/Facts.elm` → `../../package/elm-m3e/src/…`), `DOCS` OUTPUT (`app/Compose/Attrs.elm` → docs-local), `ELM_FORMAT` (docs-local node_modules).
 - `scripts/samples-gen/extract-samples.mjs` — `DOCS`/`REPO`: `DOCS` = docs root (local), `REPO` was `elm-m3e` (docs's parent) → now `../../package/elm-m3e`; the `SRC_DIRS`, `REPO/review/elm.json`, `REPO/review/src/CodegenReviewConfig.elm`, and the L290–293 source-directory rewrite all repoint to `../../package/elm-m3e/*`.
 - `scripts/search-index-gen/build-search-index.mjs` — verified all paths are `docs/dist`-local; **no change**.
-- `scripts/vendor-foundation.mjs`, `scripts/vendor-tailwind-m3e-web.mjs` — vendor IR/typed-html/tailwind srcs via `../../../../../core/…`: IR → `packages/elm-html-intermediate-representation`, typed-html → `brands/html/generated/package/elm-typed-html`, tailwind → `brands/m3e/generated/style/elm-m3e-tailwind`. Recompute from the docs root (depth 5 → 5 `../` to root). **`vendor-tailwind-m3e-web.mjs` likely also needs the `tailwind-m3e-web`→`elm-m3e-tailwind` rename from Task 2** — grep it.
+- `scripts/vendor-foundation.mjs`, `scripts/vendor-tailwind-m3e-web.mjs` — vendor IR/typed-html/tailwind srcs via `../../../../../core/…`: IR → `packages/elm-virtual-dom-intermediate-representation`, typed-html → `brands/html/generated/package/elm-typed-html`, tailwind → `brands/m3e/generated/style/elm-m3e-tailwind`. Recompute from the docs root (depth 5 → 5 `../` to root). **`vendor-tailwind-m3e-web.mjs` likely also needs the `tailwind-m3e-web`→`elm-m3e-tailwind` rename from Task 2** — grep it.
 
 - [ ] **Step 5.4: Fix `docs/samples/review/elm.json`** (verified current values)
 
@@ -800,18 +908,19 @@ must now split into (a) the **docs package root** (for OUT dirs, `data/`, local 
 - `"../../../src"` (→ was `elm-m3e/src`) → `"../../../../package/elm-m3e/src"`. (From `elm-m3e-docs/samples/review`, `../../../` = docs root; need `../../../../package/elm-m3e/src`.)
 - `"../../../../../../../core/elm-review-cem/src"` → `"../../../../../../../pipeline/elm-review-cem/src"` (same count, `core`→`pipeline`).
 - `"../../../../../../../core/elm-cem/facts/src"` → `"../../../../../../../pipeline/elm-cem/facts/src"`.
-- `"../../../../../../../core/elm-html-intermediate-representation/src"` → `"../../../../../../../packages/elm-html-intermediate-representation/src"`.
+- `"../../../../../../../core/elm-html-intermediate-representation/src"` → `"../../../../../../../packages/elm-virtual-dom-intermediate-representation/src"`.
 - `"../../../../../../../core/elm-typed-html/src"` (if present) → `"../../../../../../../brands/html/generated/package/elm-typed-html/src"` (**re-verify** — typed-html moved to a deeper path; count `../` from `samples/review/` at docs depth 5 + 2 = 7 to root, then descend). **Read the file in full at execution time and recompute each entry.**
 
 - [ ] **Step 5.5: Document the `generated/`/`authored/` correspondence — labeling only, no move**
-  (Open Q #5 — resolved live with Jack, 2026-08-19: option (c))
+  (resolved live with Jack, 2026-08-19: documentation-only correspondence, neither a physical split
+  nor a deferral — see "Decisions log" #5)
 
 **Resolved: no physical filesystem split.** `elm-pages` requires every route module to live
 under `app/Route/`, and its folder names become public URL path segments (`Route/Guide/TheLayers.elm`
 is the live URL `/guide/the-layers`) — so moving `Route/Guide/` under a top-level `authored/` dir
 (or `Route/Components/`, `Route/Family.elm`, `Route/Styles/` under `generated/`) would change public
 URLs, not just relocate files. That's a real behavior change, not "physical-only" as originally
-scoped — out of bounds per §9/#9's "do not touch chapter prose/format" spirit (a URL change is a
+scoped — out of bounds per spec decision #9's "do not touch chapter prose/format" spirit (a URL change is a
 user-facing format change even without touching prose).
 
 The split is **already substantially true today via existing folder names** — no move needed to
@@ -887,7 +996,7 @@ required for gate-all; verify nothing was load-bearing via the final run.
 
 In `docs/superpowers/specs/2026-08-19-repo-shape-v2-design.md`, update the `Status:` line to
 note wave 1 is implemented, citing this plan (`docs/plans/2026-08-19-repo-shape-v2-wave1-plan.md`).
-Leave the deferred items (§9/#4, #7, #9-partial, #8-partial) noted as still-pending.
+Leave the deferred items (spec decisions #4, #7, #9-partial, #8-partial) noted as still-pending.
 
 - [ ] **Step 6.4: Final full gate-all run**
 
@@ -895,8 +1004,9 @@ Leave the deferred items (§9/#4, #7, #9-partial, #8-partial) noted as still-pen
 node tools/gate-all.mjs
 ```
 Expect `GATE-ALL GREEN` (modulo the Task-0 baseline known-unrelated failure). The summary
-package list should show the new names/paths: `pipeline/elm-cem`, `pipeline/elm-cem-tailwind`,
-`packages/elm-html-intermediate-representation`, `packages/tonal-palette-oklch`,
+package list should show the new names/paths: `pipeline/elm-cem`, `pipeline/elm-cem-figma-connect`,
+`pipeline/elm-cem-tailwind`, `packages/elm-virtual-dom-intermediate-representation`,
+`packages/tonal-palette-oklch`,
 `brands/html/generated/package/elm-typed-html`, `brands/m3e/generated/package/elm-m3e`,
 `brands/m3e/generated/style/elm-m3e-tailwind`, `brands/m3e/generated/okf/elm-m3e-okf`,
 `brands/m3e/generated/docs/elm-m3e-docs`. Zero unexpected skips beyond pre-existing `CHRONIC_SKIPS`.
@@ -912,129 +1022,86 @@ git commit -m "docs(shape-v2): drop dead workspace globs, cosmetic path cleanup,
 
 ## Out of scope (explicitly deferred — do NOT plan or execute here)
 
-Per §9's "Net effect" summary, these are separate later projects:
+Per the spec's "Net effect" summary, these are separate later projects:
 
 - **The 5-package explosion** — `elm-m3e` → `elm-m3e-{core,elements,components,build,facts}`
   as real standalone packages; the same for `elm-typed-html`; the `packages.json` rewrite this
-  requires; the `-elements`/`-components` naming inversion execution (§9/#4, #7). `elm-m3e` and
-  `elm-typed-html` stay **monolithic** internally this wave. `tools/check-m3e-5pkg.mjs`'s
+  requires; the `-elements`/`-components` naming inversion execution (spec decisions #4, #7). `elm-m3e`
+  and `elm-typed-html` stay **monolithic** internally this wave. `tools/check-m3e-5pkg.mjs`'s
   assertion of the deferred `packages.json` shape is preserved (path only), not acted on.
 - **The 3 docs codegen wins** — `Route.Family` from `slots.json`, `Route.Styles/` token tables
-  from the token manifest, `Installation` strings from package metadata (§9/#9).
+  from the token manifest, `Installation` strings from package metadata (spec decision #9).
 - **The guide-markdown migration** — moving the 9 still-inline-Elm guide chapters to `.md`
-  (§9/#9). This wave does the physical `generated/`/`authored/` split only; chapter content
-  and format are untouched.
+  (spec decision #9). This wave does **only the documentation-only `generated/`/`authored/` labeling**
+  (Step 5.5 — no physical filesystem split, since elm-pages folder names are public URLs); chapter
+  content and format are untouched, and the physical split waits for this same guide-markdown project.
 - **Every brand beyond m3e + html** — `svg` (blocked on an IR namespaced-node additive),
-  `shoelace`, `web-awesome`, `calcite`, `fluent-ui`, `warp`, `etc/` (§9/#8). No empty brand
+  `shoelace`, `web-awesome`, `calcite`, `fluent-ui`, `warp`, `etc/` (spec decision #8). No empty brand
   dirs are scaffolded.
 - **`brands/m3e/inputs/` changes** — the 10 config files stay separate, the live-resolved CEM
-  stays uncommitted (§9/#6). Already landed in the 2026-08-18 reorg; no further change.
+  stays uncommitted (spec decision #6). Already landed in the 2026-08-18 reorg; no further change.
 - **Publishing / mirror rewiring** — the `mirror`/`bundleCopy`/`copyFidelity` blocks in
   `family.json` keep their existing repo coordinates (e.g. `jackhp95/m3e-okf`); only `srcDir`
   values move. No `jackhp95/<name>` mirror repo is touched.
 - **The 3 pending-merge worktree branches** (`.claude/worktrees/agent-{a8e48485eed5250b1,adf03debc8e3b774c,ae099ba76362fbf0d}`)
   — not touched; their content is not assumed on `main`.
-- **Turbo/Nx adoption** — rejected in §6; continue on `tools/lib/gate-scheduler.mjs`.
+- **Turbo/Nx adoption** — rejected in spec §6; continue on `tools/lib/gate-scheduler.mjs`.
 
 ---
 
-## Open questions for Jack
+## Decisions log (2026-08-19, live session with Jack)
 
-1. **IR package rename (flagged per scope item 2 — NOT resolved here).** The name
-   `elm-virtual-dom-intermediate-representation` appeared **once**, in Jack's original dictated
-   tree (research spec §1a L77), describing what the package does. Unlike every other rename in
-   §9, it was **never separately confirmed** in the live Q&A. This plan relocates
-   `elm-html-intermediate-representation` to `packages/` **under its current name** and does not
-   rename it. **Confirm separately** whether the IR should be renamed to
-   `elm-virtual-dom-intermediate-representation` (or another name); if so it becomes its own
-   small follow-up (a published-package rename cascades to every dependent's `elm.json`).
+Five decisions were made live that shape this plan; each is now **folded into the task bodies above**
+(this log is the condensed trail + the rationale, so the deliberation isn't lost — it is not a list of
+open items). The two package renames (#1, #2) and the okf consistency fix (#3) are the highest-leverage
+and most error-prone, so their reasoning is preserved in full.
 
-2. **`cem-figma-connect` rename.** The research reconciliation table (spec §1a L75) suggested
-   `cem-figma-connect` → `elm-cem-figma-connect` (matching VISION.md's 2026-08-17 open question),
-   but **§9 does not list this rename**, and scope item 1 enumerates it as a plain re-parent.
-   This plan moves it to `pipeline/cem-figma-connect` **unchanged**. Confirm whether the
-   `elm-cem-figma-connect` rename should be folded in (mechanically cheap — same class as the
-   `m3e-okf` rename) or deferred.
+1. **IR rename — `elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation`,
+   confirmed.** Done as part of the `packages/` extraction in **Task 1** (not a separate follow-up). It
+   is a genuine published-package rename, so beyond the srcDir/relative-path edits (findings A/S/T) it
+   cascades to the package's own `elm.json` `name` **and 4 dependents' `elm.json` dependency keys**
+   (elm-typed-html in Task 1; elm-m3e + families + icons in Task 4) — enumerated in **finding A2**. The
+   `HtmlIr.*` module namespace is untouched (package name ≠ module names). The elm-cem symlink **alias**
+   name is deliberately kept as `elm-html-intermediate-representation` (retarget only) to avoid editing
+   elm-cem's own `source-directories`.
+2. **`cem-figma-connect` rename — → `elm-cem-figma-connect`, confirmed.** Done as part of Task 1's
+   `core/`→`pipeline/` move (finding A2). Same mechanical class as the other Task-1 renames; the only
+   identity edit beyond paths is its own `package.json` `name` (no other package depends on it by
+   workspace name — verified). Mirror repo `jackhp95/cem-figma-connect` stays external.
+3. **`elm-m3e-okf` — full local consistency, mirror stays separate.** Rename directory + `package.json`
+   `name` + `tools/family.json` table key all to `elm-m3e-okf` together in **Task 3** — no reason to
+   leave the key mismatched (same local bookkeeping risk class as every other rename). The mirror repo
+   `jackhp95/m3e-okf` stays unrenamed — a live external published resource; renaming it is a separate
+   deliberate publishing action, not swept into a structural commit. **Opportunistic fix folded in
+   (Task 3, Step 3.4):** `family.json`'s `pnpmFilterName: "m3e-docs"` (L98) + its `$pnpmFilterNameNote`
+   claim are stale/false — the real current `name` is `m3e-okf` (verified; no `package.json` is named
+   `m3e-docs`) — so `pnpmFilterName` → `elm-m3e-okf` and the note is deleted in the same edit.
+4. **`gen-facts-runner.mjs` — stays in `tools/lib`, gets a deprecation comment.** 3 genuinely
+   non-tailwind consumers (tailwind, m3e-okf, cem-figma-connect — finding U), so only the single-consumer
+   `component-css-utilities.mjs` moves into `pipeline/elm-cem-tailwind`. **Task 2 Step 2.3b** adds a code
+   comment recording *why* it survives: it's scaffolding for a missing real `elm-m3e-facts` package; once
+   the deferred explosion (spec decision #7) creates one, this runner should be deleted and the 3
+   consumers switched to a `workspace:*` dep on `elm-m3e-facts`.
+5. **Docs `generated/`/`authored/` split — documentation-only correspondence (neither a physical split
+   nor a deferral).** No physical filesystem move under `app/Route/`, ever: elm-pages makes folder names
+   public URL segments, so a literal move changes URLs — a bigger behavior change than "physical-only" as
+   originally scoped. **Task 5 Step 5.5** documents the already-true correspondence (`Route/Guide/` =
+   authored; `Route/Components/`+`Route/Family.elm`+`Route/Styles/` = generated-or-should-be) in a short
+   README note, zero file moves. A real physical split waits for the guide-markdown-migration project
+   (when Guide content leaves `.elm` route modules for `BackendTask.File`-read `.md` files — no longer
+   URL-routing-constrained).
 
-3. **`elm-m3e-okf` name/key/mirror divergence.** After the rename, three identifiers may
-   disagree: the directory (`elm-m3e-okf`), the `package.json` `name` (currently `m3e-docs` per
-   `family.json` L98's note, or `m3e-okf` per spec §9/#10 — **verify at execution**), the
-   `family.json` table key (`m3e-okf`), and the mirror repo (`jackhp95/m3e-okf`). This plan sets
-   `package.json` `name` → `elm-m3e-okf` and leaves the mirror key/repo as `m3e-okf` (publishing
-   is out of scope). Confirm this is the intended end-state, or whether the mirror repo should
-   also be renamed (a separate publishing action).
-
-4. **`gen-facts-runner.mjs` placement (finding U).** Item 3b implied both
-   `component-css-utilities.mjs` and `gen-facts-runner.mjs`'s tailwind path move into
-   `pipeline/elm-cem-tailwind`. The grep shows `gen-facts-runner.mjs` has **3 consumers**
-   (tailwind, m3e-okf, cem-figma-connect) — it is shared substrate, so this plan **leaves it in
-   `tools/lib`** and moves only the single-consumer `component-css-utilities.mjs`. Confirm this
-   reading (or, if `gen-facts-runner` should become a real `pipeline/elm-cem-tailwind` export
-   that m3e-okf + cem-figma-connect then depend on by workspace name, that's a larger refactor
-   worth its own task).
-
-5. **Docs `generated/`/`authored/` physical split feasibility (Task 5, Step 5.5).** §9/#9 wants
-   the internal split done "at extraction time," but the elm-pages route structure (`app/Route/…`)
-   may not cleanly split on the filesystem without touching route wiring or chapter content — and
-   §9/#9 forbids touching chapter prose/format. If a clean directory-only split proves infeasible
-   without prose edits, this plan **stops and asks** rather than forcing it. Confirm the fallback:
-   (a) do the physical split even if it requires benign route-wiring edits (no prose change), or
-   (b) defer the `generated/`/`authored/` split to the same later project as the guide-markdown
-   migration, and this wave only relocates the docs package as-is.
-
----
-
-## Resolutions (2026-08-19, live session with Jack)
-
-All 5 open questions above resolved directly with Jack. This section is authoritative; where it
-disagrees with the numbered list above, this section wins.
-
-1. **IR rename — confirmed yes.** Rename `elm-html-intermediate-representation` →
-   `elm-virtual-dom-intermediate-representation` as part of the `packages/` extraction in Task 1
-   (not a separate follow-up). Cascades to every dependent's `elm.json`/relative-path reference
-   already enumerated for the `core/`→`packages/` move in finding S/T — re-verify each of those
-   under the new name before committing Task 1.
-
-2. **`cem-figma-connect` rename — confirmed yes.** Rename to `elm-cem-figma-connect` as part of
-   Task 1's `core/`→`pipeline/` move (not deferred). Same mechanical class as the other Task-1
-   renames — fold into that task's grep sweep rather than treating as a separate pass.
-
-3. **`elm-m3e-okf` name/key/mirror divergence — full local consistency, mirror stays separate.**
-   Rename directory, `package.json` `name`, AND the `tools/family.json` table key all to
-   `elm-m3e-okf` together in Task 3 — no reason to leave the key mismatched, it's the same local
-   bookkeeping risk class as every other rename here. The mirror repo (`jackhp95/m3e-okf`) stays
-   unrenamed — it's a live, external, published resource; renaming it is a separate, deliberate,
-   Jack-approved publishing action outside this wave's scope, not because it's risky, but because
-   it's external and shouldn't get silently swept into a 30-file structural commit.
-   **Additional fix, found while verifying this item (not in the original open question):**
-   `tools/family.json` L117-118's `pnpmFilterName` field currently reads `"m3e-docs"` with a note
-   claiming that's the package's real name — verified **false**, no `package.json` anywhere is
-   named `m3e-docs` (grepped workspace-wide), the actual current name is `m3e-okf`. This is a
-   pre-existing, already-broken entry, unrelated to this wave's rename. Since Task 3 already edits
-   this exact `family.json` entry, fix `pnpmFilterName` → `elm-m3e-okf` and delete the stale note
-   in the same edit — don't leave a second known-broken mismatch next to the one being fixed.
-
-4. **`gen-facts-runner.mjs` placement — confirmed, leave in `tools/lib`, add a deprecation note.**
-   The plan's evidence-backed reading (3 genuinely non-tailwind-specific consumers) is correct;
-   do not move it into `pipeline/elm-cem-tailwind`. Root cause discussed live: this script exists
-   only because there's no real `elm-m3e-facts` package yet for `tailwind`/`m3e-okf`/
-   `cem-figma-connect` to depend on directly — each keeps a redundant private copy of the same
-   facts bundle, regenerated or fanned-out via this shared runner, instead of all three just
-   importing one real dependency. **Add a code comment to `tools/lib/gen-facts-runner.mjs`** (small
-   addition to Task 2 or Task 6) noting it's scaffolding: once the deferred 5-package explosion
-   produces a real `elm-m3e-facts` package, this runner should be deleted/gutted and the 3
-   consumers switched to a `workspace:*` dependency on `elm-m3e-facts` instead of a private copy.
-   No task-sequencing change beyond that comment.
-
-5. **Docs `generated/`/`authored/` split — resolved as option (c), neither of the plan's original
-   (a)/(b).** No physical filesystem split, ever, under `app/Route/` — `elm-pages` makes folder
-   names into public URL segments, so a literal move changes URLs, which is a bigger behavior
-   change than "physical-only" as scoped. Instead: document the existing (already-true) folder
-   correspondence (`Route/Guide/` = authored, `Route/Components/`+`Route/Family.elm`+
-   `Route/Styles/` = generated-or-should-be) in a short README note, zero file moves. See the
-   rewritten Step 5.5 above for the exact scope. A real physical split, if ever wanted, waits for
-   the guide-markdown-migration project, where Guide content leaves `.elm` route modules for `.md`
-   files read via `BackendTask.File` — not URL-routing-constrained the same way, cheap then.
+**Open flags carried into execution (surface to Jack — NOT silently resolved):**
+- **family.json table keys for cfc/IR.** Spec decisions #1/#2 confirmed the *package* renames but, unlike
+  #3 for okf, did not separately address the `family.json` keys. This plan **keeps** the
+  `cem-figma-connect` and `elm-html-intermediate-representation` keys unchanged (renaming only dir +
+  `srcDir` + `package.json`/`elm.json` `name`), to avoid an un-enumerated cascade in any gate code that
+  indexes `family.json` by the literal key. If Jack wants those keys aligned to the new names too (per
+  decision #3's stated "same bookkeeping risk class" principle), it's a small extra edit-set. See
+  finding A's rename-policy note.
+- **elm-cem IR symlink alias name.** Kept as `elm-html-intermediate-representation` (retarget only). If
+  Jack wants the alias renamed to match the package, elm-cem's own `source-directories` referencing the
+  alias must be re-grepped and edited — deferred/flagged, not done here.
 
 ---
 
@@ -1055,7 +1122,9 @@ disagrees with the numbered list above, this section wins.
   minimizes edits to docs' many internal refs; see Architecture).
 - **Depth arithmetic corrected** vs. an early sub-agent sweep: docs stays depth-5→depth-5; the
   break is un-nesting, not depth.
-- **Genuine ambiguities surfaced, not silently resolved:** 5 open questions, IR rename included
-  per instruction, each cited to a spec section or grep finding.
-- **Out-of-scope section** mirrors §9's deferred set so a reader isn't left wondering why the
+- **All live decisions folded into the task bodies**, with the condensed trail + rationale kept in the
+  "Decisions log." The 5 live decisions (2 package renames, okf consistency, gen-facts-runner comment,
+  docs labeling) are stated directly where they execute; the only genuinely open items are the two flags
+  in the Decisions log (cfc/IR family.json keys; IR symlink alias name), surfaced for Jack.
+- **Out-of-scope section** mirrors the spec's deferred set so a reader isn't left wondering why the
   explosion / docs-codegen / other brands aren't here.
