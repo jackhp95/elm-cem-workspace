@@ -19,6 +19,12 @@ move"). The gate itself only needs the path lists; this doc is where the
   workspace, verified individually against both source-code citations and
   cross-doc citations before removal (not a blanket sweep). Full reasoning
   per path: `docs/facts-bundle/m6-deep-clean.md`.
+- `docs/data/roundtrip-layer1.json` — the committed Layer-1 baseline for the
+  `check:roundtrip` drift gate (docs/scripts/verify-roundtrip.mjs `--check`,
+  2026-08-19). Cheap pure-JS conversion/escape-hatch projection, byte-compared
+  by the gate so it never mutates the Layer-2 docs artifact. A new workspace
+  addition; it will reach the standalone repo on the next `publish-mirror`,
+  at which point it can move out of `authorizedExtra`.
 - `.github/actions/fetch-elm-review-cem/action.yml` — a workspace-only CI
   composite action for fetching `elm-review-cem` inside this monorepo's
   Actions runs. The standalone elm-m3e repo has no such need (it isn't the

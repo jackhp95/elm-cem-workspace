@@ -78,6 +78,7 @@
           "docs/scripts/kill-stale-server.mjs",
           "docs/scripts/worktree-port.mjs",
           "docs/scripts/worktree-port.test.mjs",
+          "docs/data/roundtrip-layer1.json",
           "review/scripts/gen-m3e-family-config.mjs",
           "review/src/M3e/Review/Families.elm"
         ],
