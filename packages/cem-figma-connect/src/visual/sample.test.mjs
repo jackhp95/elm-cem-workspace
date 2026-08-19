@@ -186,6 +186,67 @@ test("a code-only entry (no figmaSets) yields no states — nothing to visually 
   assert.deepEqual(sampleAudit(codeOnlyEntry, figmaExport), []);
 });
 
+// -- publish live-test finding: entries whose figmaSets ALL lack captured ---
+// -- setProperties (e.g. m3e-nav-menu, a standalone Figma COMPONENT bound  ---
+// -- via a non-"standalone" matcherKind) are gate-exempt, not a throw       --
+//
+// Extraction (extract/README.md) only calls `get_component_properties` on
+// COMPONENT_SET node ids — a correspondence entry whose only figmaSet(s)
+// resolve to a standalone COMPONENT will NEVER have a captured setProperties
+// entry, by design. Before this fix, drive.mjs's definitionsFor threw in
+// this case (no axis grid to derive defaults from), which used to propagate
+// all the way up through sampleDefault/status() and abort the whole
+// publish run for every OTHER binding too (see src/publish/runner.mjs's
+// per-entry statusFn try/catch fix, which this exemption makes unnecessary
+// for this specific, legitimate case — it's caught structurally here
+// instead of generically there).
+
+test("an entry whose figmaSets ALL lack captured setProperties (standalone-Figma-COMPONENT-bound-via-non-'standalone'-matcherKind, e.g. the real m3e-nav-menu shape) is gate-exempt: sampleDefault/sampleAudit both return no states", () => {
+  const navMenuLikeEntry = {
+    ...buttonEntry,
+    cemTag: "m3e-fake-nav-menu",
+    matcherKind: "manual",
+    figmaSets: [{ nodeId: "99999:9999", setName: "Fake Standalone Component", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+  };
+  assert.deepEqual(sampleDefault(navMenuLikeEntry, figmaExport), []);
+  assert.deepEqual(sampleAudit(navMenuLikeEntry, figmaExport), []);
+});
+
+test("an entry with a MIX of one captured COMPONENT_SET figmaSet and one uncaptured standalone-COMPONENT figmaSet still drives normally off the captured sibling — NOT gate-exempt, and does not regress", () => {
+  const mixedEntry = {
+    ...buttonEntry,
+    cemTag: "m3e-fake-mixed",
+    figmaSets: [
+      buttonEntry.figmaSets[0], // real, captured (57994:2227)
+      { nodeId: "99999:9999", setName: "Fake Standalone Sibling", fixedAttrs: {} }, // uncaptured
+    ],
+  };
+
+  const states = sampleDefault(mixedEntry, figmaExport);
+  assert.ok(states.length > 0, "a mixed entry must still produce real states, not be exempted");
+  assert.ok(states.some((s) => s.stateId === "default"), "the captured sibling still drives the base default state");
+  assert.ok(
+    states.some((s) => s.stateId === "set-fake-standalone-sibling"),
+    "the uncaptured sibling still contributes its own sample state (driven off the captured sibling's defs)"
+  );
+
+  // The base ("default") state — driven off the CAPTURED sibling — still
+  // drives cleanly through C2's driveState, proving definitionsFor really
+  // did fall back to the captured sibling's setProperties rather than
+  // silently producing a broken/empty defs object. (The uncaptured
+  // sibling's own sample state resolves fine at the sampling layer — its
+  // axisValues/propValues are correctly derived from the captured sibling's
+  // defs, per definitionsFor's fusion-group convention — but driving it all
+  // the way to a figmaNodeQuery would require the uncaptured node to ALSO
+  // have real variant children to resolve against, which a genuinely
+  // standalone COMPONENT never has; that's a separate, pre-existing
+  // driveState concern, out of scope for this exemption.)
+  const defaultState = states.find((s) => s.stateId === "default");
+  assert.doesNotThrow(() => driveState(mixedEntry, figmaExport, defaultState.state, iconTable));
+});
+
 // -- Step 2: --audit = full cartesian of DRAWN variants ----------------------
 
 test("--audit produces the full cartesian of drawn variants: 5 figmaSets x 2 Types x 5 Sizes (State pinned to Enabled) = 50", () => {
