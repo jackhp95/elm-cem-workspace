@@ -46,12 +46,24 @@ function summarizeProps(entry) {
     .join("; ");
 }
 
+// Mirrors summarizeAxes/summarizeProps's mapped→"X" / unmapped→"X: unmapped"
+// convention. `entry.slots` is OMITTED (not `[]`) on entries with zero
+// SLOT-typed Figma properties (merge.mjs) — same "(none)" default as the
+// other two summarizers give an empty/absent array.
+function summarizeSlots(entry) {
+  if (!entry.slots || entry.slots.length === 0) return "(none)";
+  return entry.slots
+    .map((s) => (s.mappedTo ? `${s.figmaSlotName}→${s.mappedTo}` : `${s.figmaSlotName}: unmapped`))
+    .join("; ");
+}
+
 function rowFor(entry) {
   const isIcon = entry.kind === "iconTable";
   const accept = entry.status === "confirmed" ? "[x]" : "[ ]";
   const sets = isIcon ? `icon table (${entry.icons.length} icons)` : summarizeSets(entry);
   const axes = isIcon ? "(n/a — value table)" : summarizeAxes(entry);
   const props = isIcon ? "(n/a — value table)" : summarizeProps(entry);
+  const slots = isIcon ? "(n/a — value table)" : summarizeSlots(entry);
   const confidence = typeof entry.confidence === "number" ? entry.confidence.toFixed(3) : "";
 
   return (
@@ -63,6 +75,7 @@ function rowFor(entry) {
       escapeCell(sets),
       escapeCell(axes),
       escapeCell(props),
+      escapeCell(slots),
       confidence,
       entry.provenance,
       entry.status,
@@ -83,8 +96,8 @@ export function renderReviewMarkdown(profileName, entries) {
       "`status` to `confirmed` and `provenance` to `human`; a future `match` re-run will " +
       "never modify it again (new auto data lands as `proposedUpdate` instead).",
     "",
-    "| Accept | Tag | Kind | Figma sets | Axis proposals | Property proposals | Confidence | Provenance | Status | Rationale |",
-    "|---|---|---|---|---|---|---|---|---|---|",
+    "| Accept | Tag | Kind | Figma sets | Axis proposals | Property proposals | Slot proposals | Confidence | Provenance | Status | Rationale |",
+    "|---|---|---|---|---|---|---|---|---|---|---|",
   ];
   const rows = entries.map(rowFor);
   return [...header, ...rows, ""].join("\n");

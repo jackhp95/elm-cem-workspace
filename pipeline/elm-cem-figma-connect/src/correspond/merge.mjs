@@ -149,7 +149,21 @@ function buildProps(candidate) {
 // three-way subset of the entry-level provenance enum (see schema.json's
 // slots[].provenance $comment) — "synonym" folds into "auto-exact" since
 // bestValueMatch ranks it alongside exact for tie-breaking purposes.
+// proposeSlot's own default-slot fallback (matcher.mjs) also reports
+// method:"exact" (a deterministic name-heuristic match, not a fuzz), so it
+// folds in here too — every method value proposeSlot can produce is listed;
+// an unrecognized one is a real bug upstream, never silently mis-tiered.
 const SLOT_PROVENANCE = { exact: "auto-exact", synonym: "auto-exact", fuzzy: "auto-fuzzy" };
+
+function slotProvenance(method) {
+  const provenance = SLOT_PROVENANCE[method];
+  if (!provenance) {
+    throw new Error(
+      `buildSlots: unrecognized slot-match method '${method}' — expected one of ${Object.keys(SLOT_PROVENANCE).join(", ")} (proposeSlot/bestValueMatch contract violation)`
+    );
+  }
+  return provenance;
+}
 
 function buildSlots(candidate) {
   return (candidate.slotProposals ?? []).map((slot) =>
@@ -163,7 +177,7 @@ function buildSlots(candidate) {
           // that data exists upstream.
           multi: false,
           mappedTo: slot.target,
-          provenance: SLOT_PROVENANCE[slot.method] ?? "auto-fuzzy",
+          provenance: slotProvenance(slot.method),
         }
       : { figmaSlotName: slot.property, kind: "slot", multi: false, unmapped: slot.reason, provenance: "auto-gap" }
   );
@@ -302,6 +316,7 @@ const SUBSTANTIVE_FIELDS = [
   "figmaSets",
   "axes",
   "props",
+  "slots",
   "icons",
   "confidence",
   "rationale",

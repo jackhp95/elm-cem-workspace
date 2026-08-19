@@ -400,28 +400,51 @@ function proposeProperty(prop, component) {
 // catch-all case — see the two `match()` call sites below, which filter SLOT
 // out of the non-VARIANT property list before it ever reaches
 // proposeProperty(). Matching is a straight fuzzy value match of the Figma
-// slot name against the bound CEM component's slot names (same
+// slot name against the bound CEM component's NAMED slots (same
 // bestValueMatch() used for fusion/axis value matching elsewhere in this
-// file — no separate fuzzy-matching scheme).
+// file — no separate fuzzy-matching scheme), falling back to the CEM
+// component's unnamed DEFAULT slot (name:"") for a generic-content Figma
+// SLOT prop when no named slot matches — mirrors proposeProperty's own
+// TEXT→default-content-slot convention (evidence #10) for the analogous
+// SLOT case, e.g. a Dialog's "Content" SLOT prop has no CEM slot literally
+// named "content" but plainly belongs in the default slot.
 function proposeSlot(prop, component) {
   const cemSlotNames = component.slots.map((s) => s.name);
-  const best = bestValueMatch(prop.name, cemSlotNames);
-  if (!best) {
+  const namedSlotNames = cemSlotNames.filter((n) => n !== "");
+  const best = bestValueMatch(prop.name, namedSlotNames);
+  if (best) {
     return {
       property: prop.name,
       type: prop.type,
-      mapped: false,
-      reason: `no CEM slot matches Figma SLOT property '${prop.name}'`,
-      rationale: `SLOT '${prop.name}' unmapped: no CEM slot counterpart`,
+      mapped: true,
+      target: best.value,
+      method: best.method, // "exact" | "synonym" | "fuzzy" — threaded through for merge.mjs provenance
+      rationale: `SLOT '${prop.name}' → CEM slot '${best.value}' (${best.method} match)`,
     };
   }
+
+  // Generic-content fallback: a Figma SLOT prop whose name reads as
+  // general/default content (e.g. "Content", "Content (standard)") maps to
+  // the CEM component's unnamed default slot, when it has one — never
+  // silently left unmapped just because no NAMED slot happens to share the
+  // word "content".
+  if (/\bcontent\b/i.test(prop.name) && cemSlotNames.includes("")) {
+    return {
+      property: prop.name,
+      type: prop.type,
+      mapped: true,
+      target: "(default)",
+      method: "exact",
+      rationale: `SLOT '${prop.name}' → CEM default (unnamed) slot (generic-content name, no named slot counterpart)`,
+    };
+  }
+
   return {
     property: prop.name,
     type: prop.type,
-    mapped: true,
-    target: best.value,
-    method: best.method, // "exact" | "synonym" | "fuzzy" — threaded through for merge.mjs provenance
-    rationale: `SLOT '${prop.name}' → CEM slot '${best.value}' (${best.method} match)`,
+    mapped: false,
+    reason: `no CEM slot matches Figma SLOT property '${prop.name}'`,
+    rationale: `SLOT '${prop.name}' unmapped: no CEM slot counterpart`,
   };
 }
 

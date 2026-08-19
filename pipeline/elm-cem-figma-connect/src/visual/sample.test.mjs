@@ -22,24 +22,34 @@ const correspondencePath = path.join(repoRoot, "profiles", "m3-kit", "correspond
 const correspondence = readCorrespondence(correspondencePath);
 const iconTable = loadIconTable(correspondencePath);
 
-// The real, checked-in correspondence.json's confirmed m3e-button entry
-// predates SLOT support and carries no slots[] (real m3-kit export has no
-// SLOT-typed props on Button). This test file, however, deliberately drives
-// that same entry against test/fixtures/figma-export.m3-kit.json — which
-// DOES carry two SLOT props on button's bare set (57994:2227): "Trailing
-// slot" (Task 1's original fixture addition, no CEM counterpart) and
-// "Trailing icon" (Task 3's fixture addition, exact-matches m3e-button's
-// real "trailing-icon" CEM slot). Overlay the slots[] a real re-match
-// against that fixture would produce, so drive.mjs's "never silent"
-// coverage gate (task 3) has something to check against — without touching
-// the real correspondence.json, which stays byte-identical on disk.
+// The real, checked-in correspondence.json's confirmed m3e-button entry has
+// NO record at all — in either props[] or slots[] — of "Trailing slot"/
+// "Trailing icon", because those two SLOT properties only exist in
+// test/fixtures/figma-export.m3-kit.json (added by Tasks 1 and 3 purely for
+// matcher-level test coverage; the real m3-kit export never had them on
+// Button). This test file deliberately drives the real button entry against
+// that test fixture, so unlike the 8 real confirmed entries that DO carry a
+// legacy `kind:"slot"` props[] item drive.mjs's coverage gate now tolerates
+// (see src/visual/drive.test.mjs's "migration tolerance" test, exercised
+// against real data with NO overlay), there is no legacy shape here to fall
+// back to — the overlay below stands in for a re-match this test
+// intentionally never runs, not for a migration state. Field shapes/values
+// mirror exactly what a real `proposeSlot`/`buildSlots` pass over this
+// fixture produces (see test/matcher.test.mjs's "SLOT properties are routed
+// to slotProposals" test), including provenance.
 const rawButtonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
 assert.ok(rawButtonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
 const buttonEntry = {
   ...rawButtonEntry,
   slots: [
-    { figmaSlotName: "Trailing slot", kind: "slot", multi: false, unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'" },
-    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon" },
+    {
+      figmaSlotName: "Trailing slot",
+      kind: "slot",
+      multi: false,
+      unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'",
+      provenance: "auto-gap",
+    },
+    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon", provenance: "auto-exact" },
   ],
 };
 

@@ -53,6 +53,26 @@ const m3KitMatcherConfig = loadMatcherConfig(path.join(here, "..", "profiles", "
 const proposed = buildProposals(cem, figma, m3KitMatcherConfig);
 const byTag = (tag) => proposed.find((e) => e.cemTag === tag);
 
+// Task 3 (matcher — populate the slots dimension): the 8 CONFIRMED entries
+// in the REAL m3-kit profile (profiles/m3-kit/correspondence.json, distinct
+// from the test fixtures loaded above) that carry a real SLOT-typed Figma
+// property still mislabeled inside `props[]` (kind:"slot", unmapped —
+// exactly the bug this task fixes). Re-matching against the real export now
+// legitimately relocates those into slotProposals/slots[], which differs
+// from the frozen confirmed data and surfaces as a new `proposedUpdate` —
+// shared by both A8 acceptance tests below so the tag list and its
+// reasoning live in exactly one place.
+const SLOT_RELOCATION_DRIFT_TAGS = [
+  "m3e-bottom-sheet",
+  "m3e-card",
+  "m3e-dialog",
+  "m3e-list-item",
+  "m3e-menu",
+  "m3e-menu-item",
+  "m3e-tabs",
+  "m3e-toolbar",
+];
+
 function tmpPath(name) {
   return path.join(os.tmpdir(), `cem-figma-connect-${name}-${process.pid}-${Date.now()}.json`);
 }
@@ -511,6 +531,33 @@ test("review: every row's Accept column reflects status, and the tag is backtick
   assert.match(markdown, /\| \[ \] \| `m3e-button` \|/);
 });
 
+test("review: the header carries a 'Slot proposals' column, and a row with SLOT props summarizes them mapped/unmapped (task 3)", () => {
+  const markdown = renderReviewMarkdown("m3-kit", proposed);
+  assert.match(markdown, /\| Slot proposals \|/, "header must carry the Slot proposals column");
+
+  // m3e-button (this test file's `proposed`, built against the TEST fixture
+  // figma export) has two SLOT properties: "Trailing icon" (mapped ->
+  // trailing-icon) and "Trailing slot" (unmapped) — mirrors summarizeAxes/
+  // summarizeProps's mapped→"X→Y" / unmapped→"X: unmapped" convention.
+  const btn = byTag("m3e-button");
+  assert.ok(btn.slots?.length > 0, "fixture setup: m3e-button must carry slots[] in this test's proposed set");
+  const buttonRow = markdown.split("\n").find((l) => l.includes("`m3e-button`"));
+  assert.ok(buttonRow, "m3e-button row must be present");
+  assert.match(buttonRow, /Trailing icon→trailing-icon/);
+  assert.match(buttonRow, /Trailing slot: unmapped/);
+});
+
+test("review: an entry with no SLOT properties renders '(none)' in the Slot proposals column", () => {
+  const markdown = renderReviewMarkdown("m3-kit", proposed);
+  const tabRow = markdown.split("\n").find((l) => l.includes("`m3e-tab`"));
+  assert.ok(tabRow, "m3e-tab row must be present");
+  assert.equal(byTag("m3e-tab").slots, undefined, "fixture setup: m3e-tab has no slots[] key at all");
+  // Column order: Accept|Tag|Kind|Sets|Axes|Props|Slots|Confidence|... — the
+  // Slots cell is the 7th pipe-delimited field.
+  const cells = tabRow.split("|").map((c) => c.trim());
+  assert.equal(cells[7], "(none)");
+});
+
 test("review + confirm: checking a row's box flips that entry's status/provenance; others are untouched", () => {
   const markdown = renderReviewMarkdown("m3-kit", proposed);
   const checked = markdown.replace("| [ ] | `m3e-button` |", "| [x] | `m3e-button` |");
@@ -854,28 +901,10 @@ test("A8 tracer acceptance: real m3-kit correspondence.json has exactly the bank
   // Byte-stability / provenance-respecting: re-running match against a COPY
   // of the real on-disk file (never overwriting the checked-in artifact
   // itself here — that's covered manually/by the CLI, this proves the pure
-  // mechanism) must reproduce it byte-for-byte.
-  //
-  // Task 3 (matcher — populate the slots dimension) exception: 8 CONFIRMED
-  // entries in the real m3-kit export carry a real SLOT-typed Figma property
-  // that today lives mislabeled inside `props[]` (kind:"slot", unmapped —
-  // exactly the bug this task fixes). Relocating those into `slotProposals`/
-  // `slots[]` is a genuine, intentional change to the FRESH proposal for
-  // those 8 tags, so re-matching now legitimately produces a new
-  // `proposedUpdate` on them (the confirmed entry itself is untouched —
-  // proposedUpdate is the human-preserving merge's designed-for-this
-  // mechanism, not overwritten data). Every other entry (44 of 52 confirmed
-  // + all non-confirmed) has zero SLOT properties and stays byte-identical.
-  const SLOT_RELOCATION_DRIFT_TAGS = [
-    "m3e-bottom-sheet",
-    "m3e-card",
-    "m3e-dialog",
-    "m3e-list-item",
-    "m3e-menu",
-    "m3e-menu-item",
-    "m3e-tabs",
-    "m3e-toolbar",
-  ];
+  // mechanism) must reproduce it byte-for-byte, EXCEPT the module-level
+  // SLOT_RELOCATION_DRIFT_TAGS (see its doc comment above) — every other
+  // entry (44 of 52 confirmed + all non-confirmed) has zero SLOT properties
+  // and stays byte-identical.
   const tmp = tmpPath("a8-rerun-correspondence");
   fs.copyFileSync(realCorrespondencePath, tmp);
   const rerun = runMatch({ profileDir, correspondencePath: tmp, loadCem, loadFigmaExport });
@@ -891,11 +920,25 @@ test("A8 tracer acceptance: real m3-kit correspondence.json has exactly the bank
     );
   }
 
+  // Strips exactly the two effects the SLOT relocation has on a
+  // proposedUpdate object — the new `slots` key, and the removal of any
+  // `kind:"slot"` item from `props` (moved, not dropped) — so everything
+  // ELSE about a proposedUpdate (axes, remaining props, confidence,
+  // rationale, matcherKind, figmaSets, cemTag) is still held to full
+  // byte-equality below, not blanket-exempted.
+  function stripSlotRelocationEffects(proposedUpdate) {
+    const stripped = { ...proposedUpdate };
+    delete stripped.slots;
+    stripped.props = stripped.props.filter((p) => p.kind !== "slot");
+    return stripped;
+  }
+
   // The 8 SLOT-relocation-affected confirmed entries: the stored (confirmed)
   // entry itself is byte-identical (still protected — human data is never
   // silently rewritten); only `proposedUpdate` picks up the new slots[].
   for (const tag of SLOT_RELOCATION_DRIFT_TAGS) {
     const before = { ...onDiskByTag[tag] };
+    const storedProposedUpdate = before.proposedUpdate;
     delete before.proposedUpdate;
     const after = { ...rerunByTag[tag] };
     const proposedUpdate = after.proposedUpdate;
@@ -911,6 +954,18 @@ test("A8 tracer acceptance: real m3-kit correspondence.json has exactly the bank
       proposedUpdate.props.every((p) => p.kind !== "slot"),
       `'${tag}': proposedUpdate.props must no longer contain any kind:"slot" item`
     );
+    // Full-fidelity check for the 1 of these 8 tags (m3e-dialog) that
+    // already had a real, unrelated proposedUpdate on disk BEFORE this
+    // task: everything about it other than the SLOT relocation's own two
+    // effects must still match exactly — this task must not silently swallow
+    // or alter any other pending drift already surfaced for review.
+    if (storedProposedUpdate) {
+      assert.deepEqual(
+        stripSlotRelocationEffects(proposedUpdate),
+        stripSlotRelocationEffects(storedProposedUpdate),
+        `'${tag}': proposedUpdate fields OTHER than the SLOT relocation itself must be unchanged from what was already on disk`
+      );
+    }
   }
 
   // Card's "Content" SLOT property exact-matches the CEM "content" slot —
@@ -1246,22 +1301,11 @@ test("manual-correspondence A8: m3e-tab on disk is matcherKind:manual, and all 5
   );
 
   // Byte-stability: re-running match against a copy of the real on-disk file
-  // reproduces it byte-for-byte — EXCEPT the 8 confirmed entries whose real
-  // Figma set carries a SLOT-typed property that used to be mislabeled
-  // inside props[] (see the "A8 tracer acceptance" test above for the full
-  // explanation and the fixed tag list). Those 8 now legitimately pick up a
-  // proposedUpdate reflecting the slots[] relocation; every other tag,
-  // including m3e-tab itself, stays byte-identical.
-  const SLOT_RELOCATION_DRIFT_TAGS = [
-    "m3e-bottom-sheet",
-    "m3e-card",
-    "m3e-dialog",
-    "m3e-list-item",
-    "m3e-menu",
-    "m3e-menu-item",
-    "m3e-tabs",
-    "m3e-toolbar",
-  ];
+  // reproduces it byte-for-byte — EXCEPT the module-level
+  // SLOT_RELOCATION_DRIFT_TAGS (see the "A8 tracer acceptance" test above for
+  // the full explanation, the shared tag list, and the detailed
+  // proposedUpdate assertions). Every other tag, including m3e-tab itself,
+  // stays byte-identical.
   const tmp = tmpPath("manual-a8-rerun-correspondence");
   fs.copyFileSync(realCorrespondencePath, tmp);
   const rerun = runMatch({ profileDir, correspondencePath: tmp, loadCem, loadFigmaExport });
@@ -1273,6 +1317,13 @@ test("manual-correspondence A8: m3e-tab on disk is matcherKind:manual, and all 5
       JSON.stringify(entry),
       `re-running match must reproduce '${entry.cemTag}' byte-for-byte (JSON-value-identical)`
     );
+  }
+  // Compensating assertion for the skipped tags (not just a silent
+  // continue): each still surfaces the expected SLOT-relocation
+  // proposedUpdate, without re-asserting the full detail the other A8 test
+  // already covers.
+  for (const tag of SLOT_RELOCATION_DRIFT_TAGS) {
+    assert.ok(rerunByTag[tag].proposedUpdate?.slots?.length > 0, `'${tag}': expected SLOT-relocation proposedUpdate`);
   }
   fs.rmSync(tmp);
 });

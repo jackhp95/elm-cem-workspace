@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadFigmaExport } from "../ingest/figma.mjs";
-import { readCorrespondence } from "../correspond/merge.mjs";
+import { readCorrespondence, loadProfile, repoRoot as mergeRepoRoot } from "../correspond/merge.mjs";
 import {
   buildDefaultState,
   driveState,
@@ -27,24 +27,35 @@ const correspondencePath = path.join(repoRoot, "profiles", "m3-kit", "correspond
 const correspondence = readCorrespondence(correspondencePath);
 const iconTable = loadIconTable(correspondencePath);
 
-// The real, checked-in correspondence.json's confirmed m3e-button entry
-// predates SLOT support and carries no slots[] (the real m3-kit export has
-// no SLOT-typed props on Button). This test file deliberately drives that
-// same entry against test/fixtures/figma-export.m3-kit.json, which DOES
-// carry two SLOT props on button's bare set (57994:2227) — "Trailing slot"
-// (Task 1, no CEM counterpart) and "Trailing icon" (Task 3, exact-matches
-// m3e-button's real "trailing-icon" CEM slot). Overlay the slots[] a real
-// re-match against that fixture would produce, so drive.mjs's "never
-// silent" slot-coverage gate (task 3) has something to check against —
-// without touching the real correspondence.json on disk.
+// The real, checked-in correspondence.json's confirmed m3e-button entry has
+// NO record at all — in either props[] or slots[] — of "Trailing slot"/
+// "Trailing icon", because those two SLOT properties only exist in
+// test/fixtures/figma-export.m3-kit.json (added by Tasks 1 and 3 purely for
+// matcher-level test coverage; the real m3-kit export never had them on
+// Button). This test file deliberately drives the real button entry against
+// that test fixture, so unlike the 8 real confirmed entries that DO carry a
+// legacy `kind:"slot"` props[] item drive.mjs's coverage gate now tolerates
+// (see drive.test.mjs's "migration tolerance" test below, exercised against
+// real data with NO overlay), there is no legacy shape here to fall back to
+// — the overlay below is standing in for a re-match this test intentionally
+// never runs, not for a migration state. Field shapes/values mirror exactly
+// what a real `proposeSlot`/`buildSlots` pass over this fixture produces
+// (see test/matcher.test.mjs's "SLOT properties are routed to
+// slotProposals" test), including provenance.
 const rawButtonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
 assert.ok(rawButtonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
 assert.equal(rawButtonEntry.status, "confirmed");
 const buttonEntry = {
   ...rawButtonEntry,
   slots: [
-    { figmaSlotName: "Trailing slot", kind: "slot", multi: false, unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'" },
-    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon" },
+    {
+      figmaSlotName: "Trailing slot",
+      kind: "slot",
+      multi: false,
+      unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'",
+      provenance: "auto-gap",
+    },
+    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon", provenance: "auto-exact" },
   ],
 };
 
@@ -435,4 +446,37 @@ test("RC2 chip Configuration→slot-visibility: instanceSwap with no iconTable e
   const { harnessParams } = driveState(brandEntry, brandIconExport, state, CHIP_ICON_TABLE);
   assert.deepEqual(harnessParams.slots, {}, "slot absent when iconTable entry is missing (brand logo)");
   assert.equal(harnessParams.text, "Label");
+});
+
+// -- Task 3 migration tolerance: real, un-re-matched confirmed entries ------
+//
+// 8 real confirmed entries in the checked-in profiles/m3-kit correspondence
+// still cover their real SLOT property the OLD way — a legacy `kind:"slot"`
+// item inside props[] — because nothing has re-run match/review/confirm on
+// them since the slots[] relocation shipped (that's a human action, out of
+// this task's remit). assertFullyMapped's SLOT coverage gate must accept
+// that legacy shape as valid coverage, not just entry.slots[], or every one
+// of these real entries would fail to drive at all. This exercises the REAL
+// m3-kit export + REAL correspondence.json (no synthetic/overlaid fixture)
+// to prove the production data actually drives cleanly, not just a
+// hand-crafted test double.
+test("migration tolerance: a real confirmed entry whose SLOT property is still covered via legacy props[] (not yet re-matched into slots[]) drives cleanly", () => {
+  const profileDir = path.join(mergeRepoRoot, "profiles", "m3-kit");
+  const profile = loadProfile(profileDir);
+  const realFigmaExport = loadFigmaExport(profile.figmaExportPath);
+  const realCorrespondencePath = path.join(profileDir, "correspondence.json");
+  const realCorrespondence = readCorrespondence(realCorrespondencePath);
+  const realIconTable = loadIconTable(realCorrespondencePath);
+
+  const dialog = realCorrespondence.find((e) => e.cemTag === "m3e-dialog");
+  assert.ok(dialog, "fixture setup: m3e-dialog must be present in the real correspondence.json");
+  assert.equal(dialog.status, "confirmed");
+  assert.equal(dialog.slots, undefined, "pre-migration: m3e-dialog has no slots[] yet");
+  assert.ok(
+    dialog.props.some((p) => p.kind === "slot" && p.figmaProp === "Content" && p.unmapped),
+    "pre-migration: m3e-dialog's real SLOT property is still a legacy kind:'slot' item inside props[]"
+  );
+
+  const state = buildDefaultState(dialog, realFigmaExport);
+  assert.doesNotThrow(() => driveState(dialog, realFigmaExport, state, realIconTable));
 });

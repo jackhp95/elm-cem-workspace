@@ -106,7 +106,7 @@
             "figmaSlotName": { "type": "string", "$comment": "The name of the Figma SLOT property." },
             "kind": { "type": "string", "enum": ["slot"], "$comment": "Discriminator: always 'slot'. This array only ever holds SLOT-typed Figma properties by construction." },
             "multi": { "type": "boolean", "$comment": "Slot multiplicity. Whether the slot can accept multiple children. Currently always false (CEM-facts input does not yet carry multiplicity data)." },
-            "mappedTo": { "type": "string", "$comment": "When present: the CEM slot name this Figma SLOT property maps to." },
+            "mappedTo": { "type": "string", "$comment": "When present: the CEM slot name this Figma SLOT property maps to. The sentinel '(default)' means the CEM component's unnamed default slot (name:\"\") — used for generic-content Figma SLOT props (e.g. 'Content') with no CEM slot literally named 'content'; mirrors props[]'s TEXT→default-content-slot convention." },
             "unmapped": { "type": "string", "$comment": "When present: reason there is no CEM counterpart for this slot." },
             "provenance": { "type": "string", "enum": ["auto-exact", "auto-fuzzy", "auto-gap"], "$comment": "Per-slot-item match tier, distinct from the whole-entry provenance field above (which is about the CANDIDATE's own tier, not any one slot's). Derived from proposeSlot()'s bestValueMatch() method: exact/synonym -> auto-exact, fuzzy -> auto-fuzzy, unmapped -> auto-gap. Same three-way subset of the entry-level provenance enum (auto-contains/human/manual don't apply — every slots[] item today is machine-derived within a single match() run)." }
           }

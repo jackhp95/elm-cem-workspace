@@ -210,18 +210,30 @@ function assertFullyMapped(entry, defs) {
   // (mappedTo) or unmapped (unmapped reason) — never absent. entry.slots is
   // omitted (not []) on entries with zero SLOT properties (merge.mjs), so
   // default to [] here rather than treating a missing array as a bug.
+  //
+  // MIGRATION TOLERANCE: real, already-confirmed correspondence entries
+  // predate the slots[] relocation and were never re-matched (that requires
+  // a human `runReview`/`runConfirm` pass, out of this gate's remit) — their
+  // SLOT properties are still covered the OLD way, as a legacy `kind:"slot"`
+  // item inside props[] (the exact shape proposeProperty's catch-all used to
+  // emit before this task). Accept EITHER shape as coverage so this gate
+  // doesn't strand real mid-migration data while still catching a genuinely
+  // silent drop (present in neither list).
   for (const slotDef of defs.slots) {
-    const found = (entry.slots ?? []).find((s) => s.figmaSlotName === slotDef.figmaProp);
+    const foundInSlots = (entry.slots ?? []).find((s) => s.figmaSlotName === slotDef.figmaProp);
+    const foundLegacyInProps = entry.props.find((p) => p.kind === "slot" && p.figmaProp === slotDef.figmaProp);
+    const found = foundInSlots ?? foundLegacyInProps;
     if (!found) {
       throw new Error(
         `drive: figma SLOT property '${slotDef.figmaProp}' on entry '${entry.cemTag}' is not present in ` +
-          `correspondence slots[] at all (neither mapped nor marked unmapped) — a silent unmapped SLOT ` +
-          `property is exactly the icon-mismatch bug evidence #14 warns about`
+          `correspondence slots[] (or, pre-migration, props[]) at all (neither mapped nor marked unmapped) — ` +
+          `a silent unmapped SLOT property is exactly the icon-mismatch bug evidence #14 warns about`
       );
     }
-    if (!found.unmapped && !found.mappedTo) {
+    const mapped = foundInSlots ? found.mappedTo : found.binding;
+    if (!found.unmapped && !mapped) {
       throw new Error(
-        `drive: slot '${slotDef.figmaProp}' on entry '${entry.cemTag}' is malformed — needs mappedTo or unmapped`
+        `drive: slot '${slotDef.figmaProp}' on entry '${entry.cemTag}' is malformed — needs mappedTo/binding or unmapped`
       );
     }
   }
