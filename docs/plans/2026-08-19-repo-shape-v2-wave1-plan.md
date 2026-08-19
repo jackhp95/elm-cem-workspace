@@ -553,7 +553,7 @@ for `check-coverage-map.mjs`), `docs/facts-bundle/m3c-generated-diff.md` (5),
 
 **Files:** Modify `pnpm-workspace.yaml`.
 
-- [ ] **Step 0.1: Add new globs alongside the old ones (superset — new dirs don't exist yet, so a no-op)**
+- [x] **Step 0.1: Add new globs alongside the old ones (superset — new dirs don't exist yet, so a no-op)**
 
 ```yaml
 packages:
@@ -582,14 +582,14 @@ minimumReleaseAgeExclude:
   - '@m3e/web@2.5.13'
 ```
 
-- [ ] **Step 0.2: Verify no-op**
+- [x] **Step 0.2: Verify no-op** — serial gate-all (`GATE_ALL_CONCURRENCY=1`) GREEN 33/42, 0 failed, identical to baseline. (Parallel gate-all has a pre-existing cfc emit-determinism concurrency race — `cem-figma-connect: check`/`test` and `check-emit-determinism-cfc` both emit into the real `generated/m3-kit` dir; unrelated to this change. Verifying serially throughout — reliable + faster, ~78s.)
 
 Run: `pnpm install && node tools/gate-all.mjs` → expect identical `GATE-ALL GREEN` (new globs
 match nothing yet). Note the pre-existing baseline (per the old plan, `workspace:
 check-mirror-drift` is a known-unrelated pre-existing failure — confirm the same set of
 green/known-fail items before and after).
 
-- [ ] **Step 0.3: Commit**
+- [x] **Step 0.3: Commit**
 
 ```bash
 git add pnpm-workspace.yaml
