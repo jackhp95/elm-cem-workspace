@@ -120,9 +120,9 @@ that needs editing. Every entry marked **verified** was read directly this sessi
 | `elm-cem` | `core/elm-cem` (L5) | `pipeline/elm-cem` | 1 |
 | `elm-cem-compose` | `core/elm-cem-compose` (L81) | `pipeline/elm-cem-compose` | 1 |
 | `elm-review-cem` | `core/elm-review-cem` (L89) | `pipeline/elm-review-cem` | 1 |
-| `cem-figma-connect` | `core/cem-figma-connect` (L148) | `pipeline/elm-cem-figma-connect` | 1 |
+| `elm-cem-figma-connect` (was key `cem-figma-connect`) | `core/cem-figma-connect` (L148) | `pipeline/elm-cem-figma-connect` | 1 |
 | `elm-cem-facts` | `core/elm-cem/facts` (L144) | `pipeline/elm-cem/facts` | 1 |
-| `elm-html-intermediate-representation` | `core/elm-html-intermediate-representation` (L85) | `packages/elm-virtual-dom-intermediate-representation` | 1 |
+| `elm-virtual-dom-intermediate-representation` (was key `elm-html-intermediate-representation`) | `core/elm-html-intermediate-representation` (L85) | `packages/elm-virtual-dom-intermediate-representation` | 1 |
 | `elm-typed-html` | `core/elm-typed-html` (L93) | `brands/html/generated/package/elm-typed-html` | 1 |
 | `tailwind-m3e-web` | `brands/m3e/outputs/tailwind-m3e-web` (L122) | `brands/m3e/generated/style/elm-m3e-tailwind` | 2 |
 | `elm-m3e-okf` (was key `m3e-okf`) | `brands/m3e/outputs/m3e-api-okf` (L97) | `brands/m3e/generated/okf/elm-m3e-okf` | 3 |
