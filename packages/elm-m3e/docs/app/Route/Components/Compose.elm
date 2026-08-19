@@ -1483,15 +1483,19 @@ childCards ctx path node model =
 `ChildIcon` renders its `Cem.Compose.Msg` field row, lifted to `Msg` with
 `M3e.mapMsg ComposeMsg` at this boundary.
 
-A `ChildNode`'s recursive card carries a fixed per-level left indent
-(`pl-6`), so nesting depth reads at a glance the way the code panel's own
-indentation already does. The indent is applied once per `childRow` and
-therefore COMPOUNDS with depth automatically — a depth-2 card sits inside its
-depth-1 parent's own indented wrapper — with no depth arithmetic. The
-`compose-depth-N` marker (N = the child node's own path length) lets a test
-assert the indent is objectively present, not just claimed. `ChildText`/
-`ChildIcon` rows are leaves (never recurse), so they are not indented — only
-structural node nesting earns a level.
+A `ChildNode`'s recursive card carries a fixed per-level left indent (`pl-6`) for
+every level EXCEPT the first: a depth-1 child already renders as a fully bordered
+card inside its parent card, so the border alone reads as "this is nested" — an
+additional indent there stacked one nesting cue on top of another. From depth 2
+onward the card border repeats at every level (so it stops being a distinguishing
+cue on its own), and the indent is what makes depth legible again. The indent still
+COMPOUNDS from depth 2 up — a depth-3 card sits inside its depth-2 parent's own
+indented wrapper — with no depth arithmetic. The `compose-depth-N` marker (N = the
+child node's own path length) lets a test assert a depth-2 card renders objectively
+further right than its depth-1 parent (`tests-browser/compose.spec.ts`), which is
+also why depth 2+ can't drop the indent entirely — only depth 1's is redundant.
+`ChildText`/`ChildIcon` rows are leaves (never recurse), so they are not indented —
+only structural node nesting earns a level.
 
 -}
 childRow : MenuCtx -> Cem.Compose.Path -> String -> Int -> Cem.Compose.Child -> Model -> Element (Grouping.DivIs s) admittedBy Msg
@@ -1502,9 +1506,21 @@ childRow ctx path slotName index child model =
                 childPath : Cem.Compose.Path
                 childPath =
                     path ++ [ Cem.Compose.IntoSlot slotName index ]
+
+                depth : Int
+                depth =
+                    List.length childPath
+
+                indentClass : String
+                indentClass =
+                    if depth <= 1 then
+                        ""
+
+                    else
+                        " pl-6"
             in
             TypedHtml.div
-                [ TA.class ("compose-child compose-depth-" ++ String.fromInt (List.length childPath) ++ " pl-6") ]
+                [ TA.class ("compose-child compose-depth-" ++ String.fromInt depth ++ indentClass) ]
                 [ viewNode ctx childPath inner model ]
 
         Cem.Compose.ChildText text ->

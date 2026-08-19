@@ -217,7 +217,7 @@ same filled, rounded code block the Usage section uses (matraic's install card i
 a bare `<pre>`); wrapping it in an outlined Card would nest a surface-container
 fill inside a card border — a box-in-box that fights the M3 surface roles.
 -}
-installCard : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+installCard : Element (M3e.Component.Card.Is s) adm_ msg
 installCard =
     Doc.codeBlock Doc.Elm "import M3e\nimport M3e.Values"
 
@@ -239,9 +239,11 @@ apiLayers component =
 
 {-| The API-reference section, rendered like an elm module page: a page-wide Types
 block (the component's aliases/unions, un-tabbed, above — they are not
-layer-specific), then the 4-tab layer strip driven by the shared `activeSurface`,
-then the selected layer's members grouped by role (constructor, attribute setters,
-slot setters, events, other), each group an overline-labelled outlined card.
+layer-specific), then a card whose header is the 4-tab layer strip (driven by the
+shared `activeSurface`) and whose content is the selected layer's members grouped by
+role (constructor, attribute setters, slot setters, events, other), each group an
+overline-labelled outlined card — same header/content anatomy as `Doc.Usage.exampleBlock`,
+so the tabs read as controlling the group cards below rather than floating above them.
 Members keep their `@docs` order within a group. Empty groups drop out.
 -}
 apiSection : Usage.Surface -> Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg
@@ -260,8 +262,14 @@ apiSection activeSurface component =
     TypedHtml.div [ TA.class "space-y-6" ]
         (Doc.sectionHeadingWithId (Doc.slugify "API") "API"
             :: typesBlock component.types
-            ++ [ apiTabStrip activeSurface component ]
-            ++ List.filterMap (apiGroup activeLayer) apiGroups
+            ++ [ M3e.card []
+                    [ M3e.Component.Card.header (apiTabStrip activeSurface component)
+                    , M3e.Component.Card.content
+                        (TypedHtml.div [ TA.class "space-y-3" ]
+                            (List.filterMap (apiGroup activeLayer) apiGroups)
+                        )
+                    ]
+               ]
         )
 
 

@@ -95,29 +95,29 @@ type Lang
 
 
 {-| -}
-codeBlock : Lang -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+codeBlock : Lang -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
 codeBlock lang s =
     let
         trimmed : String
         trimmed =
             String.trim s
-
-        wrapperClass : String
-        wrapperClass =
-            "overflow-x-auto p-4"
     in
     -- Auto-derived folding: the fold tree is computed from the raw
     -- string and highlighted per line, so we assemble nested `<details>`
     -- ourselves rather than emitting one flat highlighted block. The
     -- `m3e-card` (`filled`) supplies the surface/radius a deleted
-    -- `.doc-code-block` stylesheet class used to fake; the outer `<div>`
-    -- stays a plain div (its `DivIs` kind is pinned verbatim across 42 call
-    -- sites) with the card nested inside it, the same idiom as
-    -- `recapBox`/`ExampleNav.footer`.
-    TypedHtml.div [ TA.class wrapperClass ]
-        [ M3e.card
-            [ M3e.Attributes.variant Value.filled ]
-            [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+    -- `.doc-code-block` stylesheet class used to fake. Content goes through
+    -- the `content` slot so padding comes free from the card's own tokens
+    -- (verified in `@m3e/web`'s CSS: `slot[name="content"]` gets a margin
+    -- from `CardToken.padding`) instead of a hand-painted `p-4`. Only the
+    -- horizontal-scroll concern needs its own div, scoped to the text so the
+    -- card's border/corners stay fixed while just the code scrolls.
+    M3e.card
+        [ M3e.Attributes.variant Value.filled ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "overflow-x-auto" ]
+                [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
+            )
         ]
 
 
