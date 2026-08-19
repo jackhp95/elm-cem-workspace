@@ -653,7 +653,7 @@ open unrequested on a route the user never asked to search from.
 
 -}
 subscriptions : UrlPath -> Model -> Sub Msg
-subscriptions path _ =
+subscriptions path model =
     Sub.batch
         [ Browser.Events.onResize (\w _ -> ViewportResized w)
         , Sub.map ThemeMsg Theme.subscriptions
@@ -661,6 +661,11 @@ subscriptions path _ =
         , Theme.Ports.readSurface SurfaceLoaded
         , if hasDocsShell path then
             Ports.onOpenSearchRequested (\_ -> OpenSearch)
+
+          else
+            Sub.none
+        , if model.searchOpen then
+            Browser.Events.onClick outsideSearchClickDecoder
 
           else
             Sub.none
@@ -1156,7 +1161,8 @@ searchOverlay model =
 
     else
         M3e.searchView
-            [ TypedHtml.Attributes.class "fixed inset-x-0 top-2 z-50 mx-auto w-full max-w-2xl"
+            [ M3e.Attributes.id searchOverlayId
+            , TypedHtml.Attributes.class "fixed inset-x-0 top-2 z-50 mx-auto w-full max-w-2xl"
             , M3e.Component.SearchView.mode (searchModeFor model.viewportWidth)
             , M3e.Component.SearchView.open model.searchViewOpen
             , M3e.Events.onQueryWith searchQueryDecoder
@@ -1573,6 +1579,71 @@ searchToggleDecoder =
                 else
                     Decode.fail "search view opened (Elm already knows)"
             )
+
+
+{-| The DOM id `searchOverlay` puts on the `m3e-search-view` host, so
+`outsideSearchClickDecoder` has something stable to walk `parentNode` up
+towards.
+-}
+searchOverlayId : String
+searchOverlayId =
+    "search-overlay"
+
+
+{-| Click-outside-to-close for the search overlay.
+
+`m3e-search-view` is mounted with `popover="manual"` (set imperatively by the
+component itself in both its docked- and fullscreen-open paths -- see
+`searchOverlay`'s own doc comment), which deliberately opts out of the native
+popover light-dismiss behavior `"auto"` would give for free. That opt-out is
+load-bearing, not an oversight: the component's close paths
+(`#closeDocked`/`#closeFullscreen`) unwind scroll-lock, inert-lock, anchor
+position tracking and a CSS closing-transition before calling `hidePopover()`
+-- a browser-driven `"auto"` light-dismiss would call `hidePopover()` directly
+and skip all of that teardown, leaving the scroll lock and inert state stuck
+after an outside click. So this subscription reimplements light-dismiss on
+the Elm side instead of switching the vendored component to `"auto"`.
+
+Only armed while `model.searchOpen` (see `subscriptions`), so it can't fire
+before the overlay exists or race the FAB's own `OpenSearch` click. A closed
+overlay's own internal escape/close-icon paths still go through
+`searchToggleDecoder` exactly as before -- this only adds the "click
+elsewhere on the page" case nothing else covers.
+
+-}
+outsideSearchClickDecoder : Decode.Decoder Msg
+outsideSearchClickDecoder =
+    Decode.field "target" (isOutsideElement searchOverlayId)
+        |> Decode.andThen
+            (\isOutside ->
+                if isOutside then
+                    Decode.succeed CloseSearch
+
+                else
+                    Decode.fail "click landed inside the search overlay"
+            )
+
+
+{-| True once we've walked all the way up a clicked node's `parentNode` chain
+without finding an element whose `id` is `targetId`. Recurses via
+`Decode.lazy` since DOM ancestry decoders can't be written as a plain
+non-recursive value.
+-}
+isOutsideElement : String -> Decode.Decoder Bool
+isOutsideElement targetId =
+    Decode.oneOf
+        [ Decode.field "id" Decode.string
+            |> Decode.andThen
+                (\id ->
+                    if id == targetId then
+                        Decode.succeed False
+
+                    else
+                        Decode.fail "keep climbing"
+                )
+        , Decode.field "parentNode" (Decode.lazy (\_ -> isOutsideElement targetId))
+        , Decode.succeed True
+        ]
 
 
 {-| The docs sidebar nav, an `M3e.NavMenu` of nested `NavMenuItem` groups. Each
