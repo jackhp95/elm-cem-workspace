@@ -1,5 +1,15 @@
 # core/ vs brands/ Workspace Reorg — Implementation Plan
 
+**Status: implemented (2026-08-19).** All 6 tasks executed, committed on
+`reorg/core-brands-plan` (6 commits: `e224187`..`50c0963`). `node
+tools/gate-all.mjs` is green except `workspace: check-mirror-drift`, which
+is a pre-existing, verified-unrelated failure (confirmed via `git stash`
+against the branch's base commit — a direct commit to the standalone
+`jackhp95/elm-m3e` mirror outside this reorg's scope). Several path-fix
+gaps not caught by this plan's own grep sweep were found and fixed during
+execution — see `~/.claude/frictions/agent/20260819T*` for the four
+detailed write-ups if repeating a similar large-scale move/split reorg.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Reorganize `elm-cem-workspace`'s `packages/` into `core/` (library-agnostic codegen/tooling) and `brands/m3e/{inputs,outputs}/` (M3E-specific input config and generated/enriched output), per `docs/superpowers/specs/2026-08-18-core-brands-workspace-reorg-design.md`, while keeping `node tools/gate-all.mjs` green throughout.
@@ -144,7 +154,7 @@ Enumerated below, verified against actual file contents (not paraphrased) for ev
 **Files:**
 - Modify: `pnpm-workspace.yaml`
 
-- [ ] **Step 1.1: Add the new glob patterns alongside the old ones**
+- [x] **Step 1.1: Add the new glob patterns alongside the old ones**
 
 ```yaml
 packages:
@@ -168,12 +178,12 @@ minimumReleaseAgeExclude:
   - '@m3e/web@2.5.13'
 ```
 
-- [ ] **Step 1.2: Verify nothing broke (superset glob, no new dirs exist yet, so this should be a no-op)**
+- [x] **Step 1.2: Verify nothing broke (superset glob, no new dirs exist yet, so this should be a no-op)**
 
 Run: `pnpm install && node tools/gate-all.mjs`
 Expected: `GATE-ALL GREEN` (identical result to before this change — the new globs match nothing yet).
 
-- [ ] **Step 1.3: Commit**
+- [x] **Step 1.3: Commit**
 
 ```bash
 git add pnpm-workspace.yaml
@@ -190,7 +200,7 @@ Moves 9 packages that need **no internal splitting** — `elm-cem`, `elm-cem-com
 - Move (git mv): `packages/elm-cem` → `core/elm-cem`, `packages/elm-cem-compose` → `core/elm-cem-compose`, `packages/elm-review-cem` → `core/elm-review-cem`, `packages/elm-html-intermediate-representation` → `core/elm-html-intermediate-representation`, `packages/elm-typed-html` → `core/elm-typed-html`, `packages/cem-figma-connect` → `core/cem-figma-connect`, `packages/tonal-palette-oklch` → `core/tonal-palette-oklch`, `packages/elm-m3e` → `brands/m3e/outputs/elm-m3e`, `packages/tailwind-m3e-web` → `brands/m3e/outputs/tailwind-m3e-web`
 - Modify: every file listed in "Resolved open questions §1" above (family.json, gate-all.mjs, check-drift.mjs, check-drift.test.mjs, bump.mjs, gen-hooks.mjs, check-elm-shape-drift.mjs, check-cc-elm-refs.mjs, gen-figma-config.mjs, ab-elm-cem.sh, ab-elm-m3e-split.sh, measure-docs-size.mjs, check-emit-determinism-cfc.mjs, lib/gen-facts-runner.mjs, lib/regen.mjs, install-toolchains.mjs, pnpm-workspace.yaml, plus elm-m3e's internal `docs/scripts/examples-gen/lib/to-elm.mjs`, `docs/samples/review/elm.json`, `docs/scripts/samples-gen/extract-samples.mjs`, and tailwind-m3e-web's `bin/generate-component-utilities.mjs` + `scripts/gen-facts.mjs`)
 
-- [ ] **Step 2.1: Move the 7 core-bound packages**
+- [x] **Step 2.1: Move the 7 core-bound packages**
 
 ```bash
 mkdir -p core
@@ -205,7 +215,7 @@ git mv packages/tonal-palette-oklch core/tonal-palette-oklch
 
 Note: `core/elm-cem/elm-html-intermediate-representation` (the symlink to `../elm-html-intermediate-representation`) moves automatically with `elm-cem` and needs no target-path edit — both packages are still siblings under `core/`.
 
-- [ ] **Step 2.2: Move the 2 brand-output packages**
+- [x] **Step 2.2: Move the 2 brand-output packages**
 
 ```bash
 mkdir -p brands/m3e/outputs
@@ -213,7 +223,7 @@ git mv packages/elm-m3e brands/m3e/outputs/elm-m3e
 git mv packages/tailwind-m3e-web brands/m3e/outputs/tailwind-m3e-web
 ```
 
-- [ ] **Step 2.3: Fix `pnpm-workspace.yaml` — drop the old globs, keep `_probe` reachable**
+- [x] **Step 2.3: Fix `pnpm-workspace.yaml` — drop the old globs, keep `_probe` reachable**
 
 ```yaml
 packages:
@@ -236,7 +246,7 @@ minimumReleaseAgeExclude:
   - '@m3e/web@2.5.13'
 ```
 
-- [ ] **Step 2.4: Fix `tools/family.json` — update `srcDir` for the 9 moved entries**
+- [x] **Step 2.4: Fix `tools/family.json` — update `srcDir` for the 9 moved entries**
 
 Use Edit on `tools/family.json`, changing each `"srcDir": "packages/<name>"` to its new location:
 - `elm-cem` → `"core/elm-cem"`
@@ -251,7 +261,7 @@ Use Edit on `tools/family.json`, changing each `"srcDir": "packages/<name>"` to 
 
 (`m3e-okf`'s entry is handled in Task 4, not here.)
 
-- [ ] **Step 2.5: Fix `tools/gate-all.mjs`**
+- [x] **Step 2.5: Fix `tools/gate-all.mjs`**
 
 Edit line 42:
 ```js
@@ -285,18 +295,18 @@ Replace the `discoverPackages()` fallback walk (around line 150) so it covers th
     return found;
 ```
 
-- [ ] **Step 2.6: Fix `tools/check-drift.mjs`, `tools/check-drift.test.mjs`, `tools/bump.mjs`, `tools/gen-hooks.mjs`, `tools/check-elm-shape-drift.mjs`, `tools/check-cc-elm-refs.mjs`, `tools/gen-figma-config.mjs`, `tools/ab-elm-cem.sh`, `tools/ab-elm-m3e-split.sh`, `tools/measure-docs-size.mjs`, `tools/check-emit-determinism-cfc.mjs`, `tools/lib/gen-facts-runner.mjs`, `tools/lib/regen.mjs`**
+- [x] **Step 2.6: Fix `tools/check-drift.mjs`, `tools/check-drift.test.mjs`, `tools/bump.mjs`, `tools/gen-hooks.mjs`, `tools/check-elm-shape-drift.mjs`, `tools/check-cc-elm-refs.mjs`, `tools/gen-figma-config.mjs`, `tools/ab-elm-cem.sh`, `tools/ab-elm-m3e-split.sh`, `tools/measure-docs-size.mjs`, `tools/check-emit-determinism-cfc.mjs`, `tools/lib/gen-facts-runner.mjs`, `tools/lib/regen.mjs`**
 
 Apply every exact old→new string replacement enumerated in "Resolved open questions §1" above, file by file (each entry there gives the literal current line and its replacement — use Edit with those exact strings). For `gen-figma-config.mjs` line 47, use the **intermediate** value for now (`path.join(repoRoot, "packages", "elm-m3e", "config")` → keep resolving through elm-m3e until Task 5 moves `config/` — see Step 2.6a) since `brands/m3e/inputs/cem` doesn't exist until Task 5.
 
-- [ ] **Step 2.6a: `gen-figma-config.mjs` line 47 interim fix**
+- [x] **Step 2.6a: `gen-figma-config.mjs` line 47 interim fix**
 
 ```js
 const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "config");
 ```
 (Task 5 will change this again once `config/` physically moves to `inputs/cem/`.)
 
-- [ ] **Step 2.7: Fix elm-m3e's internal cross-package references**
+- [x] **Step 2.7: Fix elm-m3e's internal cross-package references**
 
 `brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs` line 52:
 ```js
@@ -317,7 +327,7 @@ const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e
 ```
 (Read the file first to confirm the exact current `source-directories` array shape/ordering before editing — the first entry, likely `"../../../src"` or similar pointing at the sample's own source, stays relative and unaffected.)
 
-- [ ] **Step 2.8: Fix tailwind-m3e-web's `tools/lib/` imports**
+- [x] **Step 2.8: Fix tailwind-m3e-web's `tools/lib/` imports**
 
 `brands/m3e/outputs/tailwind-m3e-web/bin/generate-component-utilities.mjs` line 40:
 ```js
@@ -329,11 +339,11 @@ const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e
 import { runGenFacts } from "../../../../../tools/lib/gen-facts-runner.mjs";
 ```
 
-- [ ] **Step 2.9: Verify `extract-samples.mjs`'s computed path**
+- [x] **Step 2.9: Verify `extract-samples.mjs`'s computed path**
 
 Read `brands/m3e/outputs/elm-m3e/docs/scripts/samples-gen/extract-samples.mjs` around line 293 (the `path.posix.join("../../..", ...)` call) and confirm by inspection whether `"../../.."` is computed relative to a base that changed depth. If elm-m3e's own internal directory structure (docs/scripts/samples-gen/ → docs/samples/) didn't change (only the whole `elm-m3e` package moved as a unit), this stays correct unchanged — the join is internal to the package, not cross-package. Confirm via the gate-all run in Step 2.13; only edit if it fails.
 
-- [ ] **Step 2.10: Fix `tools/install-toolchains.mjs`'s discovery walk**
+- [x] **Step 2.10: Fix `tools/install-toolchains.mjs`'s discovery walk**
 
 Replace the current single-level `packages/` walk (lines ~42–47) with:
 ```js
@@ -354,13 +364,13 @@ scanFor(path.join(repoRoot, "brands"), 3); // brands/<brand>/{inputs,outputs}/<n
 scanFor(path.join(repoRoot, "packages", "_probe"), 1);
 ```
 
-- [ ] **Step 2.11: Run the gate, iterate on failures**
+- [x] **Step 2.11: Run the gate, iterate on failures**
 
 Run: `node tools/gate-all.mjs`
 
 This is the primary safety net for anything the enumeration above missed (computed paths, an overlooked comment that turned out to be load-bearing, etc.). Read `FAILED ITEMS`, patch forward, re-run. Do not proceed to Step 2.12 until `GATE-ALL GREEN`.
 
-- [ ] **Step 2.12: Commit**
+- [x] **Step 2.12: Commit**
 
 ```bash
 git add -A
@@ -377,7 +387,7 @@ git commit -m "reorg(workspace): move core packages to core/, elm-m3e+tailwind-m
 - Modify: `brands/m3e/outputs/tailwind-m3e-web/src/index.css`, `brands/m3e/outputs/tailwind-m3e-web/package.json`, `tools/family.json` (no `tailwind-md3` entry needed — it has no mirror/copyFidelity relationship, it's newly born from this reorg)
 - Create (shim): `brands/m3e/outputs/tailwind-m3e-web/src/roles-extended.css`
 
-- [ ] **Step 3.1: Move the generic files**
+- [x] **Step 3.1: Move the generic files**
 
 ```bash
 mkdir -p core/tailwind-md3/src core/tailwind-md3/bin
@@ -388,11 +398,11 @@ git mv brands/m3e/outputs/tailwind-m3e-web/src/seed.css core/tailwind-md3/src/se
 git mv brands/m3e/outputs/tailwind-m3e-web/bin/calibrate-tones.mjs core/tailwind-md3/bin/calibrate-tones.mjs
 ```
 
-- [ ] **Step 3.2: Rename the private OKLCH tone vars**
+- [x] **Step 3.2: Rename the private OKLCH tone vars**
 
 In `core/tailwind-md3/src/ref/_tone-table.css`, `core/tailwind-md3/src/ref/palette.css`, and `core/tailwind-md3/src/roles-extended.css`, replace every occurrence of `--_m3e-tone-` with `--_md-tone-` (24 declarations in `_tone-table.css`, ~72 usages combined across `palette.css` and `roles-extended.css` — use a project-wide find/replace scoped to these 3 files, e.g. `sed -i '' 's/--_m3e-tone-/--_md-tone-/g' core/tailwind-md3/src/ref/_tone-table.css core/tailwind-md3/src/ref/palette.css core/tailwind-md3/src/roles-extended.css`).
 
-- [ ] **Step 3.3: Write `core/tailwind-md3/package.json`**
+- [x] **Step 3.3: Write `core/tailwind-md3/package.json`**
 
 ```json
 {
@@ -426,7 +436,7 @@ In `core/tailwind-md3/src/ref/_tone-table.css`, `core/tailwind-md3/src/ref/palet
 }
 ```
 
-- [ ] **Step 3.4: Write `core/tailwind-md3/src/index.css`**
+- [x] **Step 3.4: Write `core/tailwind-md3/src/index.css`**
 
 ```css
 /*
@@ -453,7 +463,7 @@ In `core/tailwind-md3/src/ref/_tone-table.css`, `core/tailwind-md3/src/ref/palet
 @import "./theme.css";
 ```
 
-- [ ] **Step 3.5: Rewrite `brands/m3e/outputs/tailwind-m3e-web/src/index.css`**
+- [x] **Step 3.5: Rewrite `brands/m3e/outputs/tailwind-m3e-web/src/index.css`**
 
 ```css
 /*
@@ -488,7 +498,7 @@ In `core/tailwind-md3/src/ref/_tone-table.css`, `core/tailwind-md3/src/ref/palet
 @import "./density.css";
 ```
 
-- [ ] **Step 3.6: Create the `roles-extended.css` re-export shim**
+- [x] **Step 3.6: Create the `roles-extended.css` re-export shim**
 
 `brands/m3e/outputs/tailwind-m3e-web/src/roles-extended.css` (replaces the moved-out real content):
 ```css
@@ -501,17 +511,17 @@ In `core/tailwind-md3/src/ref/_tone-table.css`, `core/tailwind-md3/src/ref/palet
 
 `brands/m3e/outputs/tailwind-m3e-web/package.json`'s `exports["./roles-extended"]` field stays `"./src/roles-extended.css"` unchanged — only the file's content changed.
 
-- [ ] **Step 3.7: Update `brands/m3e/outputs/tailwind-m3e-web/package.json` dependencies**
+- [x] **Step 3.7: Update `brands/m3e/outputs/tailwind-m3e-web/package.json` dependencies**
 
 Remove `"tonal-palette-oklch": "workspace:*"` from `devDependencies` (moved with `calibrate-tones.mjs` to `tailwind-md3`). Add `"tailwind-md3": "workspace:*"` to `dependencies` (a real runtime CSS dependency, not dev-only — tailwind-m3e-web's own `src/index.css` now `@import`s it).
 
-- [ ] **Step 3.8: Reinstall + run the gate**
+- [x] **Step 3.8: Reinstall + run the gate**
 
 Run: `pnpm install && node tools/gate-all.mjs`
 
 Watch specifically for: `tailwind-md3`'s new `check` script running and passing (confirms `_tone-table.css` regenerates byte-identical after the rename), `tailwind-m3e-web`'s `check`/`test` still passing, and the E2E facts-bundle proof (unaffected — it doesn't touch CSS). Patch forward on any failure, then re-run until green.
 
-- [ ] **Step 3.9: Commit**
+- [x] **Step 3.9: Commit**
 
 ```bash
 git add -A
@@ -527,7 +537,7 @@ git commit -m "reorg(tailwind): split core/tailwind-md3 out of tailwind-m3e-web 
 - Move (git mv): `packages/m3e-okf/data/knowledge` → `brands/m3e/inputs/material-okf/data/knowledge`, `packages/m3e-okf/knowledge` → `brands/m3e/inputs/material-okf/knowledge`, `packages/m3e-okf/scripts/check-paraphrase.mjs` → `brands/m3e/inputs/material-okf/scripts/check-paraphrase.mjs`, `packages/m3e-okf/scripts/lib/validate-okf.mjs` (+ test) → `brands/m3e/inputs/material-okf/scripts/lib/`; everything else in `packages/m3e-okf/` → `brands/m3e/outputs/m3e-api-okf/`
 - Modify: `packages/m3e-okf/scripts/build-okf.mjs` (split), `scripts/check-skills-meta.mjs`, `tools/family.json`, `tools/gen-hooks.mjs` (already pointed at the outputs path in Task 2, Step 2.6 — confirm), `tools/bump.mjs` (already fixed in Task 2), `tools/check-drift.test.mjs` (already fixed in Task 2)
 
-- [ ] **Step 4.1: Move the knowledge-side files to `material-okf`**
+- [x] **Step 4.1: Move the knowledge-side files to `material-okf`**
 
 ```bash
 mkdir -p brands/m3e/inputs/material-okf/scripts/lib
@@ -541,7 +551,7 @@ git mv packages/m3e-okf/scripts/lib/validate-okf.test.mjs brands/m3e/inputs/mate
 ```
 (If `validate-okf.test.mjs` doesn't exist under that exact name, `ls packages/m3e-okf/scripts/lib/` first and adjust — move whatever test file(s) accompany `validate-okf.mjs`.)
 
-- [ ] **Step 4.2: Move everything else to `m3e-api-okf`**
+- [x] **Step 4.2: Move everything else to `m3e-api-okf`**
 
 ```bash
 mkdir -p brands/m3e/outputs/m3e-api-okf
@@ -563,7 +573,7 @@ git mv packages/m3e-okf/SECURITY.md brands/m3e/outputs/m3e-api-okf/SECURITY.md
 
 Note: `data/knowledge` already left this tree in Step 4.1, so `git mv packages/m3e-okf/data` here moves everything else under `data/` (`components.json`, `guidance.json`, `examples.json`, `cem-facts.json`, `sources.json`, etc.) intact.
 
-- [ ] **Step 4.3: Split `build-okf.mjs`**
+- [x] **Step 4.3: Split `build-okf.mjs`**
 
 Write `brands/m3e/inputs/material-okf/scripts/build-knowledge.mjs`:
 ```js
@@ -711,7 +721,7 @@ fs.writeFileSync(path.join(IMPL, "index.md"), implIndex);
 console.log(`build-okf: ${cardFiles.length} CEM-verified cards under implementations/m3e-web/`);
 ```
 
-- [ ] **Step 4.4: Fix `+2 ../` depth in the remaining `m3e-api-okf` scripts**
+- [x] **Step 4.4: Fix `+2 ../` depth in the remaining `m3e-api-okf` scripts**
 
 `brands/m3e/outputs/m3e-api-okf/scripts/check-paraphrase.mjs` already moved to material-okf (Step 4.1) — skip. For the scripts that stayed (`check-skills-meta.mjs`, `gen-facts.mjs`, and `scripts/lib/validate-okf.mjs`'s former importers if any remain), find every `../../../tools/lib/` and change to `../../../../../tools/lib/`:
 
@@ -727,7 +737,7 @@ grep -rl '\.\./\.\./\.\./tools/lib/' brands/m3e/inputs/material-okf/scripts/
 
 `check-paraphrase.mjs` and `validate-okf.mjs` both import `../../../tools/lib/okf-lib.mjs` (3 `../`) — fix to `../../../../tools/lib/okf-lib.mjs` (`material-okf/scripts/` is 4 segments deep: `brands/m3e/inputs/material-okf/scripts` — wait, `validate-okf.mjs` lives in `scripts/lib/` (5 segments deep), so its fix is `../../../../../tools/lib/okf-lib.mjs`; `check-paraphrase.mjs` lives directly in `scripts/` (4 segments deep), so its fix is `../../../../tools/lib/okf-lib.mjs`. Verify each file's actual nesting depth before editing (`scripts/` vs `scripts/lib/` differ by one segment) rather than applying a single blanket rule.
 
-- [ ] **Step 4.5: Write `brands/m3e/inputs/material-okf/package.json`**
+- [x] **Step 4.5: Write `brands/m3e/inputs/material-okf/package.json`**
 
 Base it on the original `m3e-okf/package.json`'s shared boilerplate, trimmed to only what `build-knowledge.mjs` + `check-paraphrase.mjs` + `validate-okf.mjs` need:
 ```json
@@ -753,11 +763,11 @@ Base it on the original `m3e-okf/package.json`'s shared boilerplate, trimmed to 
 }
 ```
 
-- [ ] **Step 4.6: Fix `check-skills-meta.mjs`'s cross-package `/knowledge/` link resolution**
+- [x] **Step 4.6: Fix `check-skills-meta.mjs`'s cross-package `/knowledge/` link resolution**
 
 Read `brands/m3e/outputs/m3e-api-okf/scripts/check-skills-meta.mjs` in full (the earlier sweep found the relevant logic around line 74-79, resolving `/knowledge/...`-prefixed links). Change the base directory used to resolve `/knowledge/`-prefixed link targets from a local `knowledge/` lookup to `path.join(ROOT, "..", "..", "inputs", "material-okf", "knowledge")` (or equivalent, matching whatever variable name the file already uses for its `ROOT` constant) — `/implementations/`-prefixed links keep resolving locally, unchanged.
 
-- [ ] **Step 4.7: Update `tools/family.json`**
+- [x] **Step 4.7: Update `tools/family.json`**
 
 Replace the `"m3e-okf"` entry's `srcDir` with `"brands/m3e/outputs/m3e-api-okf"` (keep the `mirror`, `bundleCopy`, and `copyFidelity` blocks exactly as-is — per the spec's non-goal, publishing/mirror config is untouched). Add a new entry:
 ```json
@@ -768,20 +778,20 @@ Replace the `"m3e-okf"` entry's `srcDir` with `"brands/m3e/outputs/m3e-api-okf"`
 }
 ```
 
-- [ ] **Step 4.8: Remove the now-empty `packages/m3e-okf` directory**
+- [x] **Step 4.8: Remove the now-empty `packages/m3e-okf` directory**
 
 ```bash
 rmdir packages/m3e-okf 2>/dev/null || find packages/m3e-okf -type f
 ```
 If any files remain (something this plan's enumeration missed), move them to the correct new home based on whether they're knowledge-side or implementation-side, following the same test used throughout this task.
 
-- [ ] **Step 4.9: Reinstall + run the gate**
+- [x] **Step 4.9: Reinstall + run the gate**
 
 Run: `pnpm install && node tools/gate-all.mjs`
 
 Watch specifically for: `material-okf: check`/`test`, `m3e-api-okf: check`/`test` (both newly-discovered via `pnpm ls -r`), `workspace: copy-fidelity m3e-okf` (now pointing at `m3e-api-okf`'s `srcDir`), and the E2E facts-bundle proof (uses `ELM_M3E`, unaffected by this task). Patch forward on any failure, re-run until green.
 
-- [ ] **Step 4.10: Commit**
+- [x] **Step 4.10: Commit**
 
 ```bash
 git add -A
@@ -797,14 +807,14 @@ git commit -m "reorg(m3e-okf): split into brands/m3e/inputs/material-okf (knowle
 - Create: symlink `brands/m3e/outputs/elm-m3e/config` → `../../inputs/cem/config`
 - Modify: `tools/gen-figma-config.mjs` (line 47, again — final value this time)
 
-- [ ] **Step 5.1: Move the config files**
+- [x] **Step 5.1: Move the config files**
 
 ```bash
 mkdir -p brands/m3e/inputs/cem
 git mv brands/m3e/outputs/elm-m3e/config brands/m3e/inputs/cem/config
 ```
 
-- [ ] **Step 5.2: Recreate the symlink so relative `config/*.json` invocations keep working**
+- [x] **Step 5.2: Recreate the symlink so relative `config/*.json` invocations keep working**
 
 ```bash
 ln -s ../../inputs/cem/config brands/m3e/outputs/elm-m3e/config
@@ -813,20 +823,20 @@ git add brands/m3e/outputs/elm-m3e/config
 
 This mirrors the existing `core/elm-cem/elm-html-intermediate-representation -> ../elm-html-intermediate-representation` precedent already in this repo. `tools/lib/regen.mjs`'s `--config-from=config/slots.json` etc. (resolved relative to `cwd: elmM3e`) and `tools/ab-elm-cem.sh`/`tools/ab-elm-m3e-split.sh`'s equivalent invocations need **zero further edits** — `config/` still resolves through the symlink.
 
-- [ ] **Step 5.3: Point `gen-figma-config.mjs` at the real location**
+- [x] **Step 5.3: Point `gen-figma-config.mjs` at the real location**
 
 Edit line 47 (currently the Step 2.6a interim value):
 ```js
 const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "inputs", "cem", "config");
 ```
 
-- [ ] **Step 5.4: Run the gate**
+- [x] **Step 5.4: Run the gate**
 
 Run: `node tools/gate-all.mjs`
 
 The E2E facts-bundle proof (`factsBundleE2E`) is the sharpest test here — it invokes `runFactsGenerator`, which shells out with `cwd: elmM3e` and the `--config-from=config/*.json` args; if the symlink is wrong this fails immediately with an `ENOENT` on a config file. Patch forward, re-run until green.
 
-- [ ] **Step 5.5: Commit**
+- [x] **Step 5.5: Commit**
 
 ```bash
 git add -A
@@ -841,7 +851,7 @@ git commit -m "reorg(m3e-inputs): move elm-m3e's config/*.json to brands/m3e/inp
 - Modify: cosmetic-only comment fixes in `tools/install-toolchains.mjs`, `tools/check-single-cem-facts.mjs`, `tools/gate-all.mjs`, `tools/publish-mirror.mjs`, `tools/gen-hooks.mjs`, `tools/ab-elm-cem.sh`, `tools/ab-elm-m3e-split.sh`, `tools/check-drift.mjs`, `tools/gen-figma-config.mjs`, `tools/snapshot-refs.json`
 - Modify: `docs/superpowers/specs/2026-08-18-core-brands-workspace-reorg-design.md` (status line)
 
-- [ ] **Step 6.1: Sweep remaining cosmetic `packages/<old-name>` mentions in comments**
+- [x] **Step 6.1: Sweep remaining cosmetic `packages/<old-name>` mentions in comments**
 
 ```bash
 grep -rn "packages/elm-cem\b\|packages/elm-m3e\b\|packages/elm-cem-compose\b\|packages/elm-html-intermediate-representation\b\|packages/elm-review-cem\b\|packages/elm-typed-html\b\|packages/m3e-okf\b\|packages/tailwind-m3e-web\b\|packages/cem-figma-connect\b" tools/ .github/ 2>/dev/null
@@ -849,7 +859,7 @@ grep -rn "packages/elm-cem\b\|packages/elm-m3e\b\|packages/elm-cem-compose\b\|pa
 
 For each hit remaining after Tasks 2–5 (should now be comment-only prose — anything functional would already have failed a `gate-all` run), update the path in the comment text to match its new location. This is pure documentation accuracy, not required for gate-all to pass — verify with a final gate run in Step 6.3 that nothing here was accidentally load-bearing.
 
-- [ ] **Step 6.2: Flip the spec's status line**
+- [x] **Step 6.2: Flip the spec's status line**
 
 In `docs/superpowers/specs/2026-08-18-core-brands-workspace-reorg-design.md`, change:
 ```
@@ -860,13 +870,13 @@ to:
 Status: implemented (2026-08-18) — see docs/plans/2026-08-18-core-brands-workspace-reorg-plan.md
 ```
 
-- [ ] **Step 6.3: Final full gate-all run**
+- [x] **Step 6.3: Final full gate-all run**
 
 Run: `node tools/gate-all.mjs`
 
 Expected: `GATE-ALL GREEN`, with the summary package list showing the new names/paths (`core/elm-cem`, `brands/m3e/outputs/elm-m3e`, `tailwind-md3`, `material-okf`, `m3e-api-okf`, etc.) and zero unexpected skips beyond the pre-existing `CHRONIC_SKIPS` (network-dependent snapshot gates, unrelated to this reorg).
 
-- [ ] **Step 6.4: Commit**
+- [x] **Step 6.4: Commit**
 
 ```bash
 git add -A
