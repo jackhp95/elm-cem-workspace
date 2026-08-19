@@ -129,16 +129,19 @@ that needs editing. Every entry marked **verified** was read directly this sessi
 | `elm-m3e` | `brands/m3e/outputs/elm-m3e` (L9) | `brands/m3e/generated/package/elm-m3e` | 4 |
 
 Notes:
-- **Family.json table keys — rename policy.** Only the **okf** key is renamed (`m3e-okf` →
-  `elm-m3e-okf`, spec decision #10, Task 3 — full local consistency). The **`cem-figma-connect`**
-  and **`elm-html-intermediate-representation`** keys are **kept as-is** even though their package
-  *names* and *dirs* rename: the key is an arbitrary internal identifier (the pre-existing
-  `m3e-okf` key already didn't match its `m3e-api-okf` dir), and renaming a key risks any gate
-  code that indexes `family.json` by the literal key string. Renaming the dir + `srcDir` +
-  `package.json`/`elm.json` `name` is sufficient for the two Task-1 renames. **(Flag: spec
-  decisions #1/#2 confirmed the *package* renames but did not separately address the family.json
-  keys the way #3 did for okf — Jack may want cfc/IR keys aligned too; kept unchanged here to
-  avoid an un-enumerated indexing cascade. See "Decisions log".)**
+- **Family.json table keys — rename policy: RENAME ALL THREE (resolved 2026-08-19, full local
+  consistency).** The `cem-figma-connect`→`elm-cem-figma-connect` (Task 1), `elm-html-intermediate-representation`→`elm-virtual-dom-intermediate-representation` (Task 1),
+  and `m3e-okf`→`elm-m3e-okf` (Task 3) table keys all rename to match their new package names — no
+  key is left carrying an old name. Jack's directive (verbatim, this session): *"I want correctness…
+  I don't want a whiff of the old names. That only makes things more confusing in the future,"* and
+  *"fix it all. blast radius be damned."* This **reverses** an earlier draft that kept the cfc/IR keys
+  to avoid an indexing cascade; the cascade is small and fully enumerated in **finding A3** (every
+  literal `family.json`-key lookup, name comparison, and gate step-name assertion). The **one
+  carve-out** is the mirror-facing side: keys/values that a gate reads to derive the *external* mirror
+  repo (`jackhp95/${name}` in `check-mirror-drift.mjs:23,82` and `publish-mirror.mjs:238…345`) stay
+  pointed at the real current mirror name — that is Jack's separately-confirmed mirror exception
+  (renaming a live external mirror is its own explicit action), NOT covered by "blast radius be
+  damned." See **finding A3** for the exact per-file split and the "Decisions log" for the resolution.
 - **`m3e-okf`'s `pnpmFilterName: "m3e-docs"` (L98) is a pre-existing stale/false entry — fixed in
   Task 3.** Its `$pnpmFilterNameNote` (L99) claims the package's `package.json` `name` is
   `"m3e-docs"`; verified **false** — the actual current `name` is `m3e-okf` (no `package.json`
@@ -178,11 +181,99 @@ srcDir/relative-path edits in findings A/S/T:
     and the dir-name paths change. **Re-grep the whole workspace for
     `jackhp95/elm-html-intermediate-representation` before committing each of Task 1 and Task 4** —
     any remaining hit is an un-migrated dependent.
-  - **The elm-cem IR symlink alias name is deliberately KEPT** as `elm-html-intermediate-representation`
-    (see finding S) — that string legitimately survives the rename in exactly two places (the symlink
-    LHS and its exclusion glob), because it is elm-cem's internal resolution alias, not the package
-    identity. Renaming the alias would force edits to elm-cem's own `source-directories` and is out of
-    scope (flagged in "Decisions log").
+  - **The elm-cem IR symlink alias name is ALSO RENAMED** (resolved 2026-08-19 — see finding S #1 and
+    finding A3) from `elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation`,
+    so no old name survives anywhere local. **Re-verified this session:** *no* `elm.json`
+    `source-directories` under `core/elm-cem` actually consumes the alias name (the only IR
+    `source-directories` refs — `tests/phantom/native/acid/elm.json:7`, `tests/phantom/acid/elm.json:7` —
+    reach the *sibling* `core/`→`packages/` path, already retargeted in finding T; and `elm-cem` has no
+    root `elm.json`). So the earlier "renaming the alias would force `source-directories` edits" rationale
+    is **not borne out** — the alias rename is a symlink-name + exclusion-glob change with no `elm.json`
+    cascade. Grep `core/elm-cem` for the alias name at execution time to confirm zero remaining
+    consumers before committing.
+
+### A3. Rename-identity: table keys, load-bearing name/step-name assertions, and the mirror carve-out (verified 2026-08-19 — new; supersedes the earlier "keep keys" flag)
+
+Per the resolved rename-all-keys policy (finding A note + Decisions log), these are **every** local
+spot that carries `cem-figma-connect` or `elm-html-intermediate-representation` as a lookup key, name
+comparison, or asserted step-name — each must move to the new name in lockstep or a gate silently
+mis-resolves. Re-grepped from current file contents this session (`grep -rn` across `tools/`).
+
+**`cem-figma-connect` → `elm-cem-figma-connect` (Task 1):**
+
+| File:line | Current | New | Why load-bearing |
+|---|---|---|---|
+| `tools/family.json:147` | key `"cem-figma-connect"` | `"elm-cem-figma-connect"` | table key; `gate-all.mjs:426` builds the `copy-fidelity <key>` step name straight from `Object.keys(family)` |
+| `tools/family.json:158` | `.cache/snapshots/cem-figma-connect` | `.cache/snapshots/elm-cem-figma-connect` | local snapshot cache path; must track the `snapshot-refs.json` key (below) in lockstep |
+| `tools/lib/consumer-output-drift.mjs:46` | `familySrcDir(repoRoot, "cem-figma-connect")` | `"elm-cem-figma-connect"` | **the arg is a literal `family.json`-key lookup** — must equal the new key or `pkgDir` resolves `undefined` |
+| `tools/lib/consumer-output-drift.mjs:44,45` | descriptor `key: "cem-figma-connect"` + its `label` | `elm-cem-figma-connect` | descriptor key is looked up by literal in `check-drift.test.mjs:128` |
+| `tools/check-drift.test.mjs:128` | `for (const key of ["cem-figma-connect", …])` | `"elm-cem-figma-connect"` | must equal the renamed descriptor key (`descriptorsByKey[key]` else `undefined`) |
+| `tools/bump.mjs:41` | `pkgName: "cem-figma-connect"` | `"elm-cem-figma-connect"` | **`bump.mjs:336-337` runs `pnpm --filter ${pkgName} run gen:facts`** — the filter is the `package.json` `name`, which the base rename already changes; unchanged here → filter matches nothing |
+| `tools/gate-all.mjs:434` | step label `"workspace: check-emit-determinism cem-figma-connect"` | `…elm-cem-figma-connect` | hardcoded step name asserted in `gate-all-expected-steps.json:33` |
+| `tools/gate-all-expected-steps.json:10,11` | `"cem-figma-connect: check"`, `": test"` | `"elm-cem-figma-connect: check/test"` | **asserted by `check-gate-all-step-membership.test.mjs`** (the "no silent skip" invariant); step names derive from `package.json` `name` |
+| `tools/gate-all-expected-steps.json:32` | `"workspace: copy-fidelity cem-figma-connect"` | `…elm-cem-figma-connect` | derives from the `family.json` key (gate-all.mjs:426) |
+| `tools/gate-all-expected-steps.json:33` | `"workspace: check-emit-determinism cem-figma-connect"` | `…elm-cem-figma-connect` | matches the `gate-all.mjs:434` literal above |
+| `tools/snapshot-refs.json:8` | key `"cem-figma-connect"` | `"elm-cem-figma-connect"` | **KEY only** — read by `fetch-snapshots.mjs` to materialize `.cache/snapshots/<key>` (local); its `repo` URL VALUE is a mirror → **keep unchanged** (see carve-out) |
+| `tools/check-cc-elm-refs.mjs:46` | `"cem-figma-connect"` (a path segment in the `CC_ELM_DIR` list) | `"elm-cem-figma-connect"` | path built by joining segments; finding H's L45 `core`→`pipeline` swap is **not enough** — this sibling segment renames too |
+| `tools/check-elm-shape-drift.mjs:132` | descriptor `name: "cem-figma-connect (elm emitter)"` | `"elm-cem-figma-connect (elm emitter)"` | descriptor identity label (path L133 already in finding G) |
+| `tools/measure-docs-size.mjs` | (no cfc entry) | — | n/a |
+| `tools/family.json:174` | copy-fidelity exclude `".claude-memory/cem-figma-connect-state.md"` | (renames only if the physical file is renamed) | **cosmetic/deep** — this is an exclude path that must keep matching the actual committed file inside the package; rename the entry only if the file itself is renamed. Left as a Task-6 cosmetic item, not load-bearing for gate-all. |
+
+**`elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation` (Task 1):**
+
+| File:line | Current | New | Why load-bearing |
+|---|---|---|---|
+| `tools/family.json:84` | key `"elm-html-intermediate-representation"` | `"elm-virtual-dom-intermediate-representation"` | table key (srcDir at L85 already in finding A) |
+| `tools/gate-all-expected-steps.json:16,17` | `"elm-html-intermediate-representation: check/test"` | `"elm-virtual-dom-intermediate-representation: check/test"` | asserted by `check-gate-all-step-membership.test.mjs`; derives from `elm.json` `name` |
+| `tools/measure-docs-size.mjs:76` | **key** `"jackhp95/elm-html-intermediate-representation":` | `"jackhp95/elm-virtual-dom-intermediate-representation":` | **published-name lookup key** (its value/path is finding K's L77) — the published name renames in finding A2, so this key must too |
+| `core/elm-cem/elm-html-intermediate-representation` (symlink) | alias name `elm-html-intermediate-representation` | `elm-virtual-dom-intermediate-representation` | symlink NAME rename (finding S #1) + exclusion glob (finding R / Step 1.6) |
+
+**The family.json key ↔ mirror-target coupling (important — determines what's safe):** the mirror repo
+URL is derived by *convention* `https://github.com/jackhp95/${name}.git`, where `name` is:
+- in the **manual** `publish-mirror.mjs` (L150–238) — the **`family.json` top-level key** (CLI arg,
+  validated against `FAMILY[name]`); and
+- in the **automated** `check-mirror-drift.mjs` (L37,58,82) — the **`publish-mirror-state.json` key**
+  (`Object.keys(state)`), a *separate* store holding only 7 packages.
+
+So renaming a `family.json` key is **safe for every automated gate in `gate-all`** — no automated gate
+derives a mirror URL from the `family.json` key (copy-fidelity uses the key only for the *local*
+`.cache/snapshots/<key>` compare + step name; `check-mirror-drift` reads `publish-mirror-state.json`, not
+`family.json`). The *only* consumer of `jackhp95/${family-key}` is the **manual, gated** `publish-mirror.mjs`
+— which is exactly the deliberate publishing action during which Jack renames the external mirror to match.
+That makes the `family.json` key rename correct-by-construction: local gates go green now; the manual
+mirror push targets the new name precisely when the external mirror is (explicitly) renamed. **This is the
+resolution — rename the `family.json` keys.**
+
+**Mirror carve-out — DO NOT rename (Jack's mirror exception; NOT "blast radius be damned"):**
+
+- `tools/publish-mirror-state.json:28` — key `"elm-html-intermediate-representation"` **stays**. The
+  briefing assumed this was "pure local bookkeeping, no URL to preserve"; **verified false this session** —
+  `check-mirror-drift.mjs:37,82` reads `state[name]` and reports drift against `jackhp95/${name}`, and
+  `check-mirror-drift.mjs:23` derives the *external* mirror repo as `jackhp95/${name}`. This gate runs in
+  `gate-all` (against the 7 stateful packages), so renaming this key would point an **automated** gate at a
+  **nonexistent** `jackhp95/elm-virtual-dom-intermediate-representation` and turn a currently-known state
+  into a hard 404. It is a mirror-tracking identity → stays until the live external mirror is itself
+  renamed (Jack's explicit per-mirror go, precedent: `m3e-okf`, Decisions log #3). Consequence: for IR,
+  `family.json` key = **new**, `publish-mirror-state.json` key = **old**, until the mirror rename — each
+  serves its correct master (local gates vs. automated mirror-drift). **Flag surfaced in Decisions log.**
+  (No `cem-figma-connect` key exists in this file — verified; the 7 keys are elm-cem, elm-m3e,
+  elm-cem-facts, elm-review-cem, elm-typed-html, elm-html-intermediate-representation, elm-cem-compose —
+  so cfc/okf/tailwind have no `publish-mirror-state.json` entry and this carve-out only bites IR.)
+- `tools/snapshot-refs.json:8` — the `repo` VALUE `https://github.com/jackhp95/cem-figma-connect.git`
+  and its `sha` **stay** (mirror URL). Only the containing KEY renames (row above). The KEY is safe to
+  rename because `snapshot-refs.json` is read *only* by `fetch-snapshots.mjs` (local `.cache/snapshots/<key>`
+  materialization) — it does **not** feed any `jackhp95/${name}` derivation, unlike `publish-mirror-state.json`.
+- `tools/family.json` `mirror`/`bundleCopy`/`copyFidelity` blocks — their repo coordinates stay (already
+  out of scope per "Out of scope → Publishing/mirror rewiring").
+
+**Flagged, does-not-cleanly-resolve (surfaced to Jack, NOT silently swept):** `tools/check-coverage-map.mjs:36,37`
+carries the consumer identifiers `"cem-figma-connect-matcher"` and `"cem-figma-connect-elm-emitter"`,
+asserted against `docs/facts-bundle/coverage-map.json` (100+ `"consumer": "cem-figma-connect-*"` entries,
+plus the facts-bundle audit docs). These are a **facts-bundle audit naming scheme** (logical face roles),
+not a package dir/key — renaming them is a large, self-contained cascade into a committed data artifact +
+audit prose that belongs with the facts-bundle work, not this structural wave. Left for Jack to confirm
+scope (see Decisions log). Under a strict "no whiff" reading they eventually rename; they are not
+load-bearing for the reshape gates and renaming them now would not affect any `git mv`/path correctness.
 
 ### B. `tools/gate-all.mjs` (verified)
 
@@ -204,6 +295,12 @@ srcDir/relative-path edits in findings A/S/T:
 ### E. `tools/bump.mjs` (verified)
 
 - L27–28: `import … from "../core/cem-figma-connect/src/tokens/{classify-delta,token-change-report}.mjs";` → `"../pipeline/elm-cem-figma-connect/…"` (**Task 1**).
+- **L41: `pkgName: "cem-figma-connect"` → `"elm-cem-figma-connect"` (**Task 1**, finding A3).** Load-bearing:
+  `bump.mjs:336-337` runs `pnpm --filter ${pkgName} run gen:facts`, so `pkgName` **is** the `package.json`
+  `name` — the base rename changes the name, so an un-updated `pkgName` filters nothing. **Sibling
+  `pkgName` entries in the same `CONSUMERS` array are the same class and were missed by the earlier
+  sweep:** L48 `pkgName: "m3e-okf"` → `"elm-m3e-okf"` (**Task 3**), L52 `pkgName: "tailwind-m3e-web"` →
+  `"elm-m3e-tailwind"` (**Task 2**) — fixed in their respective tasks, flagged in the final report.
 - L34: `const ELM_M3E = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");` → `generated/package/elm-m3e` (**Task 4**).
 - L35: `const PAGES_ELM_REL = "brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm";` → interim `…/generated/package/elm-m3e/docs/…` (**Task 4**), then `…/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm` (**Task 5**). Double-edit.
 - L43–44: `path.join(repoRoot, "core", "cem-figma-connect", "profiles", …)` (×2) → `"pipeline", "elm-cem-figma-connect", …` (**Task 1**).
@@ -224,6 +321,7 @@ srcDir/relative-path edits in findings A/S/T:
 ### G. `tools/check-elm-shape-drift.mjs` (verified)
 
 - L48: `} from "../core/elm-cem/src/elm-shape.mjs";` → `"../pipeline/elm-cem/src/elm-shape.mjs"` (**Task 1**).
+- L132: descriptor `name: "cem-figma-connect (elm emitter)"` → `"elm-cem-figma-connect (elm emitter)"` (**Task 1**, finding A3 — identity label).
 - L133: `file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",` → `"pipeline/elm-cem-figma-connect/…"` (**Task 1**).
 - L142: `file: "brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",` → interim `…/generated/package/elm-m3e/docs/…` (**Task 4**), then `…/generated/docs/elm-m3e-docs/scripts/examples-gen/lib/to-elm.mjs` (**Task 5**). Double-edit.
 
@@ -231,7 +329,10 @@ srcDir/relative-path edits in findings A/S/T:
 
 - L38: `path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "src")` → `generated/package/elm-m3e/src` (**Task 4**).
 - L39: `path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "docs", "vendor", "elm-foundation")` → interim `generated/package/elm-m3e/docs/vendor/elm-foundation` (**Task 4**), then `generated/docs/elm-m3e-docs/vendor/elm-foundation` (**Task 5**). Double-edit.
-- L45: the `CC_ELM_DIR` list contains `"core"` as a path segment for `core/cem-figma-connect/generated/m3-kit/elm` → `"pipeline"` (**Task 1**). Read L44–49 in full and swap the `core`→`pipeline` segment.
+- L45–46: the `CC_ELM_DIR` list builds `core/cem-figma-connect/generated/m3-kit/elm` from **two** literal
+  segments — L45 `"core"` → `"pipeline"` **and L46 `"cem-figma-connect"` → `"elm-cem-figma-connect"`
+  (finding A3)**. Read L44–49 in full and swap **both** segments (the earlier sweep noted only the
+  `core`→`pipeline` one).
 
 ### I. `tools/gen-figma-config.mjs` (verified)
 
@@ -245,6 +346,7 @@ srcDir/relative-path edits in findings A/S/T:
 
 ### K. `tools/measure-docs-size.mjs` (verified)
 
+- L76: the **map key** `"jackhp95/elm-html-intermediate-representation":` → `"jackhp95/elm-virtual-dom-intermediate-representation":` (**Task 1**, finding A3 — this table is keyed by published Elm name, which renames in finding A2).
 - L77: `process.env.IR_SRC || path.join(ROOT, "core/elm-html-intermediate-representation/src")` → `"packages/elm-virtual-dom-intermediate-representation/src"` (**Task 1**).
 - L78: `process.env.FACTS_SRC || path.join(ROOT, "core/elm-cem/facts/src")` → `"pipeline/elm-cem/facts/src"` (**Task 1**).
 - L81: `const DEFAULT_TARGETS = ["brands/m3e/outputs/elm-m3e/elm-m3e-icons"];` → `["brands/m3e/generated/package/elm-m3e/elm-m3e-icons"]` (**Task 4**).
@@ -291,7 +393,7 @@ packages:
   - "brands/*/generated/*/*/*"   # NEW — nested elm-m3e-families / elm-m3e-icons under generated/package/elm-m3e
   - "!**/node_modules"
   - "!**/elm-stuff"
-  - "!pipeline/*/elm-html-intermediate-representation"   # the elm-cem IR symlink (was !core/*/…)
+  - "!pipeline/*/elm-virtual-dom-intermediate-representation"   # the elm-cem IR symlink, renamed alias (was !core/*/elm-html-intermediate-representation)
 ```
 
 Note: `brands/*/outputs/*` today ALSO matches `brands/m3e/outputs/elm-m3e/docs` (via
@@ -302,10 +404,15 @@ is discovered today. The `brands/*/generated/*/*` glob covers `elm-m3e-docs` aft
 
 1. `core/elm-cem/elm-html-intermediate-representation -> ../elm-html-intermediate-representation`
    → moves with `elm-cem` to `pipeline/elm-cem/…`; IR moves to `packages/` **and is renamed**.
-   Retarget the symlink to `../../packages/elm-virtual-dom-intermediate-representation` (**Task 1**).
-   **The symlink alias name stays `elm-html-intermediate-representation`** (elm-cem's internal
-   resolution alias — renaming it would force edits to elm-cem's own `source-directories`, out of
-   scope). The exclusion glob (item R) tracks the alias: `!pipeline/*/elm-html-intermediate-representation`.
+   **Rename the symlink itself AND retarget** (resolved 2026-08-19 — no old name survives): new alias
+   name `pipeline/elm-cem/elm-virtual-dom-intermediate-representation`, target
+   `../../packages/elm-virtual-dom-intermediate-representation` (**Task 1**). **Verified this session:**
+   *no* `elm.json` `source-directories` under `core/elm-cem` consumes the alias name (the earlier
+   "renaming forces `source-directories` edits" concern is **not borne out** — the two IR test-elm.json
+   refs use the sibling `core/`→`packages/` path, retargeted in finding T, not the alias; `elm-cem` has
+   no root `elm.json`). So the alias rename is a symlink-name + exclusion-glob change only. The exclusion
+   glob (item R) tracks the **new** alias: `!pipeline/*/elm-virtual-dom-intermediate-representation`.
+   Grep `core/elm-cem` for the old alias at execution time to confirm zero remaining consumers.
 2. `brands/m3e/outputs/elm-m3e/config -> ../../inputs/cem/config` → moves with `elm-m3e` to
    `brands/m3e/generated/package/elm-m3e/config`. Retarget `../../inputs/cem/config` →
    `../../../inputs/cem/config` (+1 segment; **Task 4**).
@@ -470,17 +577,19 @@ git mv core/elm-html-intermediate-representation packages/elm-virtual-dom-interm
 git mv core/tonal-palette-oklch packages/tonal-palette-oklch
 ```
 
-- [ ] **Step 1.3: Retarget the `elm-cem` IR symlink (finding S #1)**
+- [ ] **Step 1.3: Rename + retarget the `elm-cem` IR symlink (finding S #1)**
 
-The symlink **alias name is deliberately kept** as `elm-html-intermediate-representation` (it is
-elm-cem's internal resolution alias, referenced by elm-cem's own `source-directories`; renaming the
-alias would force edits there — out of scope, flagged in "Decisions log"). Only the **target** is
-retargeted, to the renamed package dir:
+The symlink is **renamed AND retargeted** (resolved 2026-08-19, full local rename — no old name
+survives). Delete the old-named symlink, create the new-named one pointing at the renamed package dir.
+Verified: no `elm.json` under `core/elm-cem` consumes the alias name, so there is no `source-directories`
+edit to make here (finding S #1) — but grep to confirm before committing:
 
 ```bash
 rm pipeline/elm-cem/elm-html-intermediate-representation
-ln -s ../../packages/elm-virtual-dom-intermediate-representation pipeline/elm-cem/elm-html-intermediate-representation
-git add pipeline/elm-cem/elm-html-intermediate-representation
+ln -s ../../packages/elm-virtual-dom-intermediate-representation pipeline/elm-cem/elm-virtual-dom-intermediate-representation
+git add pipeline/elm-cem/elm-virtual-dom-intermediate-representation
+# confirm nothing still references the old alias name from inside elm-cem:
+grep -rn "elm-html-intermediate-representation" pipeline/elm-cem --include=elm.json && echo "FIX these" || echo "clean"
 ```
 
 - [ ] **Step 1.4: Relocate the html brand**
@@ -508,10 +617,11 @@ Leave `tailwind-md3` in `core/` — Task 2 renames+moves it and removes the empt
 
 - [ ] **Step 1.6: `pnpm-workspace.yaml` — flip the IR-exclusion glob**
 
-Change `!core/*/elm-html-intermediate-representation` → `!pipeline/*/elm-html-intermediate-representation`.
-The glob keeps the alias name `elm-html-intermediate-representation` because it matches the **symlink
-alias** (kept name, Step 1.3), not the renamed package dir. (Old `core/*`, `brands/*/outputs/*` globs
-still stand — `tailwind-md3` + the m3e outputs still live under them until Tasks 2–5.)
+Change `!core/*/elm-html-intermediate-representation` → `!pipeline/*/elm-virtual-dom-intermediate-representation`
+(both segments change: `core`→`pipeline` **and** the alias name, since the symlink is renamed in Step 1.3).
+The glob must match the **renamed symlink alias**, not the renamed package dir. (Old `core/*`,
+`brands/*/outputs/*` globs still stand — `tailwind-md3` + the m3e outputs still live under them until
+Tasks 2–5.)
 
 - [ ] **Step 1.7: Fix all `tools/*` files with `core/`→`pipeline/`/`packages/` refs**
 
@@ -534,8 +644,45 @@ The two renames change package *identity*, not just paths:
   **Task-1 dependents' `elm.json` dependency keys** (`elm-typed-html/elm.json:40`). The **Task-4**
   dependents (`elm-m3e`, `elm-m3e-families`, `elm-m3e-icons`) are edited when they move (finding A2,
   Task 4). **Do NOT touch `HtmlIr.*` module imports** — the module namespace is unchanged by a package
-  rename. `grep -rn "jackhp95/elm-html-intermediate-representation"` before committing Task 1; only the
-  symlink alias + its exclusion glob may still legitimately contain `elm-html-intermediate-representation`.
+  rename. `grep -rn "jackhp95/elm-html-intermediate-representation"` before committing Task 1 → **zero
+  hits** should remain (the symlink alias is now renamed too, Step 1.3; only Task-4 dependents may still
+  carry the old published name until Task 4).
+
+- [ ] **Step 1.7c: Apply the rename-identity table-key + step-name edits (finding A3)**
+
+Full-rename policy (resolved 2026-08-19 — no old name survives locally). Apply every **cfc** and **IR**
+row from **finding A3**:
+- `tools/family.json`: rename key L147 `"cem-figma-connect"` → `"elm-cem-figma-connect"`, key L84
+  `"elm-html-intermediate-representation"` → `"elm-virtual-dom-intermediate-representation"`, and the
+  local snapshot cache path L158 `.cache/snapshots/cem-figma-connect` → `…/elm-cem-figma-connect`
+  (lockstep with the `snapshot-refs.json` key below).
+- `tools/lib/consumer-output-drift.mjs`: L46 `familySrcDir(repoRoot, "cem-figma-connect")` arg → new key
+  (**must equal `family.json`'s renamed key**); L44 descriptor `key` + L45 `label` → `elm-cem-figma-connect`.
+- `tools/check-drift.test.mjs`: L128 loop literal `"cem-figma-connect"` → `"elm-cem-figma-connect"`
+  (must equal the renamed descriptor key).
+- `tools/bump.mjs`: L41 `pkgName: "cem-figma-connect"` → `"elm-cem-figma-connect"` (load-bearing
+  `pnpm --filter`; see finding E).
+- `tools/gate-all.mjs`: L434 step label `check-emit-determinism cem-figma-connect` → `…elm-cem-figma-connect`.
+- `tools/check-cc-elm-refs.mjs`: L46 segment `"cem-figma-connect"` → `"elm-cem-figma-connect"` (finding H).
+- `tools/check-elm-shape-drift.mjs`: L132 descriptor `name` label → `elm-cem-figma-connect (elm emitter)` (finding G).
+- `tools/measure-docs-size.mjs`: L76 map key `"jackhp95/elm-html-intermediate-representation"` →
+  `"jackhp95/elm-virtual-dom-intermediate-representation"` (finding K).
+- `tools/snapshot-refs.json`: L8 **key** `"cem-figma-connect"` → `"elm-cem-figma-connect"` — **KEEP the
+  `repo` URL + `sha` values unchanged** (mirror; finding A3 carve-out).
+- `tools/gate-all-expected-steps.json`: L10–11 `cem-figma-connect: check/test` → `elm-cem-figma-connect: …`;
+  L16–17 `elm-html-intermediate-representation: check/test` → `elm-virtual-dom-intermediate-representation: …`;
+  L32 `copy-fidelity cem-figma-connect` → `…elm-cem-figma-connect`; L33 `check-emit-determinism cem-figma-connect`
+  → `…elm-cem-figma-connect`. This file is **asserted by `check-gate-all-step-membership.test.mjs`** — the
+  cleanest way to get it right is to regenerate it after the moves: `node tools/gate-all.mjs --list-steps-only`
+  (per that test's own remediation hint), then diff to confirm only the renamed step-names changed.
+- **DO NOT rename** `tools/publish-mirror-state.json:28` key (mirror identity → `jackhp95/${name}`;
+  finding A3 carve-out) — it stays `elm-html-intermediate-representation` until the external mirror is
+  itself renamed. **DO NOT touch** the `tools/check-coverage-map.mjs:36-37` `cem-figma-connect-{matcher,elm-emitter}`
+  identifiers here (flagged in finding A3 + Decisions log for separate scope confirmation).
+- **Verify:** after these edits, `grep -rn 'cem-figma-connect\|elm-html-intermediate-representation' tools/`
+  should return only (a) prose/comments (Task 6 cosmetic) and (b) the two deliberately-preserved mirror
+  identities (`publish-mirror-state.json:28` key, `snapshot-refs.json:8` `repo` URL value). Anything else
+  is a missed functional hit — fix before committing.
 
 - [ ] **Step 1.8: Fix `elm-typed-html` internal cross-boundary refs (finding T)**
 
@@ -661,6 +808,22 @@ re-grep `tools/` for `tailwind-m3e-web` and `tailwind-md3` literals and update a
 Update `tools/lib/consumer-output-drift.mjs` if it references `component-css-utilities.mjs`'s
 old `tools/lib` location (verified comment L99 — check whether it's functional).
 
+**Load-bearing name/key identity fixes for the `tailwind-m3e-web`→`elm-m3e-tailwind` rename
+(separately-missed by the earlier sweep — same class as finding A3, apply full-rename policy):**
+- `tools/family.json` **rename the table key** `"tailwind-m3e-web"` → `"elm-m3e-tailwind"` (not just its
+  srcDir) — the `copy-fidelity <key>` step name derives from it (`gate-all.mjs:426`).
+- `tools/lib/consumer-output-drift.mjs` L93 descriptor `key: "tailwind-m3e-web"` → `"elm-m3e-tailwind"`,
+  L94 `label`, and L95 `familySrcDir(repoRoot, "tailwind-m3e-web")` arg → new key (must match `family.json`).
+- `tools/check-drift.test.mjs` L128 loop literal `"tailwind-m3e-web"` → `"elm-m3e-tailwind"`.
+- `tools/bump.mjs` L52 `pkgName: "tailwind-m3e-web"` → `"elm-m3e-tailwind"` (load-bearing `pnpm --filter`).
+- `tools/gate-all-expected-steps.json` L8–9 `tailwind-m3e-web: check/test` → `elm-m3e-tailwind: …`, L31
+  `copy-fidelity tailwind-m3e-web` → `…elm-m3e-tailwind`, **and L21–22 `tailwind-md3: check/test` →
+  `elm-cem-tailwind: check/test`** (the agnostic-package rename from Step 2.1/2.2 — also a missed
+  step-name assertion). Regenerate the whole file via `node tools/gate-all.mjs --list-steps-only` and diff.
+- `tools/snapshot-refs.json` L7 **key** `"tailwind-m3e-web"` → `"elm-m3e-tailwind"` (keep `repo` URL + `sha`),
+  and its `family.json` `.cache/snapshots/tailwind-m3e-web` path (L131) in lockstep. **Keep** the
+  `publish-mirror-state.json`/mirror `jackhp95/${name}` identity pointed at the real mirror (carve-out).
+
 - [ ] **Step 2.7: Reinstall + gate**
 
 ```bash
@@ -718,8 +881,22 @@ ref — apply +1 (`../../../../../` → `../../../../../../`). Re-grep the packa
 - [ ] **Step 3.4: Update `tools/family.json` (rename key + fix the stale `pnpmFilterName`)**
 
 - **Rename the table key** `"m3e-okf"` → `"elm-m3e-okf"` (spec decision #10, full local
-  consistency). Re-grep `tools/` for any gate code that indexes `family.json["m3e-okf"]` by that
-  literal and update it (gate-all is the safety net if any is missed).
+  consistency) **and every literal that looks it up — these were separately missed by the earlier
+  sweep (same class as finding A3), enumerate them, don't just "re-grep":**
+  - `tools/lib/consumer-output-drift.mjs` L62 descriptor `key: "m3e-okf"` → `"elm-m3e-okf"`, L63 `label`,
+    L64 `familySrcDir(repoRoot, "m3e-okf")` arg → `"elm-m3e-okf"` (must equal the renamed `family.json` key).
+  - `tools/check-drift.test.mjs` L128 loop literal `"m3e-okf"` → `"elm-m3e-okf"`; also the human labels
+    L54 `"m3e-okf (clean)"` / L76 `"m3e-okf (staled copy)"` (test-case names — rename for no-whiff).
+  - `tools/bump.mjs` L48 `pkgName: "m3e-okf"` → `"elm-m3e-okf"` (load-bearing `pnpm --filter`; finding E).
+  - `tools/gate-all-expected-steps.json` L6–7 `m3e-okf: check/test` → `elm-m3e-okf: …`, L30 `copy-fidelity
+    m3e-okf` → `…elm-m3e-okf` (asserted by `check-gate-all-step-membership.test.mjs`; regenerate via
+    `node tools/gate-all.mjs --list-steps-only`).
+  - `tools/snapshot-refs.json` L6 **key** `"m3e-okf"` → `"elm-m3e-okf"` (keep `repo` URL + `sha`), and the
+    `family.json` `.cache/snapshots/m3e-okf` path (L108) in lockstep.
+  - **Mirror carve-out:** `m3e-okf` has **no** `publish-mirror-state.json` entry (verified), so no
+    automated mirror gate breaks; the manual `publish-mirror.mjs elm-m3e-okf` → `jackhp95/elm-m3e-okf`
+    target is correct-by-construction for the deferred external mirror rename (finding A3 coupling note).
+    Keep the `family.json` `mirror`/`bundleCopy` repo coordinates (`jackhp95/m3e-okf`) unchanged.
 - `srcDir` (L97) → `brands/m3e/generated/okf/elm-m3e-okf`.
 - **Fix the stale `pnpmFilterName`** (L98): currently `"m3e-docs"` with a `$pnpmFilterNameNote`
   (L99) claiming that's the package's `name` — **verified false** (the actual current `name` is
@@ -1051,23 +1228,30 @@ Per the spec's "Net effect" summary, these are separate later projects:
 
 ## Decisions log (2026-08-19, live session with Jack)
 
-Five decisions were made live that shape this plan; each is now **folded into the task bodies above**
+Six decisions were made live that shape this plan; each is now **folded into the task bodies above**
 (this log is the condensed trail + the rationale, so the deliberation isn't lost — it is not a list of
-open items). The two package renames (#1, #2) and the okf consistency fix (#3) are the highest-leverage
-and most error-prone, so their reasoning is preserved in full.
+open items). The two package renames (#1, #2), the okf consistency fix (#3), and the full-rename
+resolution (#6, which extends #1–#3 to every local key/string/symlink) are the highest-leverage and
+most error-prone, so their reasoning is preserved in full.
 
 1. **IR rename — `elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation`,
    confirmed.** Done as part of the `packages/` extraction in **Task 1** (not a separate follow-up). It
    is a genuine published-package rename, so beyond the srcDir/relative-path edits (findings A/S/T) it
    cascades to the package's own `elm.json` `name` **and 4 dependents' `elm.json` dependency keys**
    (elm-typed-html in Task 1; elm-m3e + families + icons in Task 4) — enumerated in **finding A2**. The
-   `HtmlIr.*` module namespace is untouched (package name ≠ module names). The elm-cem symlink **alias**
-   name is deliberately kept as `elm-html-intermediate-representation` (retarget only) to avoid editing
-   elm-cem's own `source-directories`.
+   `HtmlIr.*` module namespace is untouched (package name ≠ module names). The elm-cem symlink **alias
+   name is also renamed** to `elm-virtual-dom-intermediate-representation` (resolved by decision #6 below;
+   verified no `elm.json` `source-directories` under `core/elm-cem` consumes the alias, so the earlier
+   "avoid editing `source-directories`" reason was unfounded) — symlink-name + exclusion-glob change only.
+   The `family.json` table key + every literal that looks it up also rename (finding A3).
 2. **`cem-figma-connect` rename — → `elm-cem-figma-connect`, confirmed.** Done as part of Task 1's
-   `core/`→`pipeline/` move (finding A2). Same mechanical class as the other Task-1 renames; the only
-   identity edit beyond paths is its own `package.json` `name` (no other package depends on it by
-   workspace name — verified). Mirror repo `jackhp95/cem-figma-connect` stays external.
+   `core/`→`pipeline/` move (finding A2). Beyond paths, the identity edits are its own `package.json`
+   `name` (no other package depends on it by workspace name — verified) **and — per decision #6 — the
+   `family.json` table key + every literal that looks it up** (`consumer-output-drift.mjs`,
+   `check-drift.test.mjs`, `bump.mjs` `pkgName`, `gate-all.mjs`/`gate-all-expected-steps.json` step-names,
+   `snapshot-refs.json` key, `check-cc-elm-refs.mjs` segment, `check-elm-shape-drift.mjs` label — finding
+   A3, Step 1.7c). Mirror repo `jackhp95/cem-figma-connect` stays external (its URL/`repo` values and the
+   `jackhp95/${key}` manual-publish target are the carve-out).
 3. **`elm-m3e-okf` — full local consistency, mirror stays separate.** Rename directory + `package.json`
    `name` + `tools/family.json` table key all to `elm-m3e-okf` together in **Task 3** — no reason to
    leave the key mismatched (same local bookkeeping risk class as every other rename). The mirror repo
@@ -1091,19 +1275,89 @@ and most error-prone, so their reasoning is preserved in full.
    (when Guide content leaves `.elm` route modules for `BackendTask.File`-read `.md` files — no longer
    URL-routing-constrained).
 
-**Open flags carried into execution (surface to Jack — NOT silently resolved):**
-- **family.json table keys for cfc/IR.** Spec decisions #1/#2 confirmed the *package* renames but, unlike
-  #3 for okf, did not separately address the `family.json` keys. This plan **keeps** the
-  `cem-figma-connect` and `elm-html-intermediate-representation` keys unchanged (renaming only dir +
-  `srcDir` + `package.json`/`elm.json` `name`), to avoid an un-enumerated cascade in any gate code that
-  indexes `family.json` by the literal key. If Jack wants those keys aligned to the new names too (per
-  decision #3's stated "same bookkeeping risk class" principle), it's a small extra edit-set. See
-  finding A's rename-policy note.
-- **elm-cem IR symlink alias name.** Kept as `elm-html-intermediate-representation` (retarget only). If
-  Jack wants the alias renamed to match the package, elm-cem's own `source-directories` referencing the
-  alias must be re-grepped and edited — deferred/flagged, not done here.
+6. **Full local rename of the cfc/IR family.json keys + the elm-cem IR symlink alias — RESOLVED (both
+   items, 2026-08-19).** The two previously-open flags (below) are now **closed as full renames**, on
+   Jack's direct instruction this session. Jack, verbatim, when asked whether to also rename the
+   `family.json` keys and the symlink alias (given a key rename means chasing every literal lookup):
+   *"I want correctness. When in this process have I shown concern for blast radius. I don't want a whiff
+   of the old names. That only makes things more confusing in the future,"* and *"again, fix it all.
+   blast radius be damned."* So — for anything **inside this repo** — every local key, string comparison,
+   asserted gate step-name, and the symlink name renames to the new package name. The **one exception**
+   (separately confirmed, NOT covered by "blast radius be damned") is the **external GitHub mirror repos**
+   `jackhp95/cem-figma-connect` and `jackhp95/elm-html-intermediate-representation` — live published
+   resources whose rename is a real external action needing Jack's explicit per-mirror go (same standing
+   rule as `m3e-okf`'s mirror, decision #3). Concretely:
+   - **family.json keys rename** (`cem-figma-connect`→`elm-cem-figma-connect` L147, `elm-html-…`→`elm-virtual-dom-…`
+     L84; `m3e-okf`→`elm-m3e-okf` L-okf already in #3; `tailwind-m3e-web`→`elm-m3e-tailwind` and
+     `tailwind-md3`→`elm-cem-tailwind`). Full cascade enumerated in **finding A3** (+ the okf/tailwind
+     additions in Tasks 2–3): `consumer-output-drift.mjs` descriptor keys + `familySrcDir` args,
+     `check-drift.test.mjs` loop, `bump.mjs` `pkgName` (`pnpm --filter`), `gate-all.mjs:434` label,
+     `gate-all-expected-steps.json` step-name assertions, `snapshot-refs.json` keys, `check-cc-elm-refs.mjs`
+     segment, `check-elm-shape-drift.mjs` name label, `measure-docs-size.mjs` published-name key.
+   - **elm-cem IR symlink alias renames** to `elm-virtual-dom-intermediate-representation` (Step 1.3) +
+     the pnpm-workspace exclusion glob (Step 1.6). **Verified this session:** no `elm.json`
+     `source-directories` under `core/elm-cem` actually consumes the alias, so the earlier "would force
+     `source-directories` edits" rationale was unfounded — the alias rename is symlink-name + glob only.
+
+**Open flags carried into execution (genuinely unresolved — surface to Jack, NOT silently swept):**
+- **IR `publish-mirror-state.json` key stays old — a deliberate mismatch until the external mirror
+  renames.** The briefing assumed `publish-mirror-state.json`'s key was "pure local bookkeeping, no URL to
+  preserve"; **verified false** — the automated `check-mirror-drift.mjs` (a `gate-all` step) reads
+  `state[name]` and derives the external mirror as `jackhp95/${name}`. So this key **cannot** rename until
+  the live mirror `jackhp95/elm-html-intermediate-representation` is itself renamed (Jack's reserved
+  external action). Net for IR after this wave: `family.json` key = `elm-virtual-dom-…` (new), but
+  `publish-mirror-state.json` key = `elm-html-…` (old) — each correct for its own gate (local vs.
+  automated-mirror). **Whoever renames the external mirror must, in the same action, rename this key.**
+  (cfc/okf/tailwind have no `publish-mirror-state.json` entry, so this only affects IR.) See finding A3.
+- **family.json key ↔ manual `publish-mirror.mjs` target coupling.** `publish-mirror.mjs` derives the
+  push target `jackhp95/${family-key}`. It is manual + gated (never in automated `gate-all`), so the
+  key rename is safe for all automated gates now; but the **next** `publish-mirror.mjs` run for a renamed
+  package will target `jackhp95/<new-name>` — which must coincide with the external mirror rename. Flagged
+  so the eventual publisher pairs the two, not a blocker for this wave. See finding A3 coupling note.
+- **`check-coverage-map.mjs:36–37` `cem-figma-connect-{matcher,elm-emitter}` consumer identifiers.** These
+  are a **facts-bundle audit naming scheme** (logical face roles), asserted against
+  `docs/facts-bundle/coverage-map.json` (100+ `"consumer": "cem-figma-connect-*"` entries) + the
+  facts-bundle audit docs. Not a package dir/key and not load-bearing for any reshape gate — renaming them
+  is a large self-contained cascade into a committed data artifact + prose that belongs with the
+  facts-bundle work, not this structural wave. **Left for Jack to confirm scope** (under a strict
+  "no whiff" reading they eventually rename; deliberately NOT swept here to avoid churning a data file
+  unrelated to the directory reshape). See finding A3.
+- **`.claude-memory/cem-figma-connect-state.md`** (a committed file inside the package, referenced as a
+  copy-fidelity exclude at `family.json:174`). The exclude entry must keep matching the physical filename;
+  renaming the *file* (to purge the old name) is optional cosmetic cleanup batched to Task 6, not
+  load-bearing. Flagged, not mandated.
 
 ---
+
+## Rename-sweep verification (2026-08-19 fold-in) — every functional hit accounted for
+
+This plan is **doc-only** (no `git mv`/code edits executed yet), so a whole-repo grep still returns the
+old names everywhere — the evidence below is that **every functional occurrence is now covered by a
+concrete plan step**, and that the deliberately-preserved mirror identities are the only non-cosmetic
+hits left un-renamed. Command run this session (excludes `node_modules`, `.git`):
+
+```
+grep -rIn 'cem-figma-connect\|elm-html-intermediate-representation' tools/
+```
+
+**35 functional (non-comment) `tools/` lines**, each mapped:
+
+| Class | Lines | Covered by |
+|---|---|---|
+| Path refs (`core/`→`pipeline`/`packages` + rename) | `check-emit-determinism-cfc.mjs:39`, `check-elm-shape-drift.mjs:133`, `gen-figma-config.mjs:46`, `measure-docs-size.mjs:77`, `family.json:85,148` (srcDir), `gen-hooks.mjs:42,46`, `bump.mjs:27,28,43,44` | findings A, E, F, G, I, K, L (pre-existing) |
+| Table keys / name-identity / step-name assertions | `family.json:84,147` (keys), `family.json:158` (cache path), `consumer-output-drift.mjs:44,45,46`, `check-drift.test.mjs:128`, `bump.mjs:41` (pkgName), `gate-all.mjs:434` (label), `gate-all-expected-steps.json:10,11,16,17,32,33`, `check-cc-elm-refs.mjs:46`, `check-elm-shape-drift.mjs:132`, `measure-docs-size.mjs:76`, `snapshot-refs.json:8` (**key**) | **finding A3 → Step 1.7c** (+ okf/tailwind siblings in Tasks 2–3) |
+| **Mirror identities — deliberately preserved (carve-out)** | `publish-mirror-state.json:28` (key → `jackhp95/${name}` mirror), `snapshot-refs.json:8` (`repo` URL **value**) | finding A3 carve-out + Decisions log open-flags |
+| **Flagged, separate scope (NOT swept here)** | `check-coverage-map.mjs:36,37` (facts-bundle audit consumer names), `family.json:174` (`.claude-memory/*-state.md` exclude) | Decisions log open-flags |
+
+**Result: zero un-accounted functional hits.** The only `tools/` occurrences that survive execution are
+(1) the two mirror identities above (intended — external mirrors stay until Jack's explicit per-mirror
+rename), (2) the two flagged-for-scope items, and (3) prose/comments, which Task 6's cosmetic sweep
+(finding V) clears. Whole-repo hits **outside `tools/`** (VISION.md, README, `docs/**`, `brands/**`,
+`core/**` SKILL/README/spec prose) are either the packages' own docs that move+rename with them, the
+`elm.json` `name`/dependency strings enumerated in **finding A2**, or narrative prose batched to Task 6 —
+none introduce a new load-bearing surface beyond what findings A/A2/A3/T already enumerate. At execution
+time, the per-task `grep … → zero hits` gates in Steps 1.7b/1.7c, 4.3b, and each task's re-grep are the
+final machine check that the sweep landed clean.
 
 ## Self-review notes
 
@@ -1123,8 +1377,22 @@ and most error-prone, so their reasoning is preserved in full.
 - **Depth arithmetic corrected** vs. an early sub-agent sweep: docs stays depth-5→depth-5; the
   break is un-nesting, not depth.
 - **All live decisions folded into the task bodies**, with the condensed trail + rationale kept in the
-  "Decisions log." The 5 live decisions (2 package renames, okf consistency, gen-facts-runner comment,
-  docs labeling) are stated directly where they execute; the only genuinely open items are the two flags
-  in the Decisions log (cfc/IR family.json keys; IR symlink alias name), surfaced for Jack.
+  "Decisions log." The 6 live decisions (2 package renames, okf consistency, gen-facts-runner comment,
+  docs labeling, **and the full-rename resolution #6**) are stated directly where they execute. The two
+  formerly-open flags (cfc/IR `family.json` keys; IR symlink alias) are now **resolved as full renames**
+  (decision #6, finding A3 + Step 1.7c). The genuinely-open items are now the **mirror-coupling flags**
+  (IR `publish-mirror-state.json` key must stay old until the external mirror renames; `publish-mirror.mjs`'s
+  `jackhp95/${family-key}` target) and the two scope flags (`check-coverage-map.mjs` audit names;
+  `.claude-memory/*-state.md` filename) — all surfaced in the Decisions log, none blocking this wave.
+- **Rename-sweep completeness (2026-08-19 fold-in):** re-grepped `tools/` first-hand; found and folded
+  in the load-bearing spots the earlier passes missed — `gate-all-expected-steps.json` step-name
+  assertions (all renames), `consumer-output-drift.mjs` descriptor keys + `familySrcDir` args,
+  `check-drift.test.mjs` key loop, `bump.mjs` `pkgName` `pnpm --filter` names (cfc/okf/tailwind),
+  `check-cc-elm-refs.mjs:46` sibling segment, `measure-docs-size.mjs:76` published-name key,
+  `check-elm-shape-drift.mjs:132` label. **Corrected two briefing assumptions against current code:**
+  (a) the claimed `gate-all.mjs` `pkg.name === "cem-figma-connect"` comparison **does not exist** on this
+  branch (main moved) — the real load-bearing surface is `gate-all-expected-steps.json`; (b)
+  `publish-mirror-state.json`'s key is **not** "pure local bookkeeping" — it derives the external mirror,
+  so it is preserved, not renamed. See the "Rename-sweep verification" section for the full mapping.
 - **Out-of-scope section** mirrors the spec's deferred set so a reader isn't left wondering why the
   explosion / docs-codegen / other brands aren't here.
