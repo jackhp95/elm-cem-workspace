@@ -38,8 +38,11 @@
 //
 // USAGE
 //   node revendor-m3e.mjs --commit <40-hex-sha> [options]
-//     --commit <sha>       REQUIRED for reproducibility (defaults to the resolved
-//                          workspace HEAD with a warning if omitted).
+//     --commit <ref>       Commit-ish to pin: full/short SHA, branch, or tag. It
+//                          is EXPANDED to the full 40-char SHA before the manifest
+//                          is written (CI mirror fetch-by-SHA only resolves a full
+//                          SHA — see expandCommit). Defaults to the resolved
+//                          workspace HEAD (with a warning) if omitted.
 //     --consumer <path>    consumer repo root (default: cwd) — where vendor/ lives.
 //     --workspace <path>   co-located elm-cem-workspace checkout (else env/default/mirror).
 //     --trees a,b,c        subset of {elm-m3e,elm-html-ir,cem-facts} (default: all three).
@@ -142,6 +145,29 @@ export function resolveWorkspace({ workspace, commit } = {}) {
     }
   }
   return { dir: mirrorFetch(commit), kind: "mirror" };
+}
+
+// Resolve any commit-ish (full/short SHA, branch, tag, HEAD) to its full 40-char
+// commit SHA, verified present in `workspaceDir`. The manifest MUST store the
+// FULL SHA: check-vendor.mjs (and any CI drift gate) fetches canonical@pin from
+// the public GitHub mirror BY SHA, and GitHub's fetch-by-SHA
+// (uploadpack.allowReachableSHA1InWant) only resolves a full 40-char SHA — a
+// short SHA fails "couldn't find remote ref". Expanding here is the single choke
+// point that guarantees a full SHA regardless of what the caller passed
+// (rollout plan §11.7).
+export function expandCommit(workspaceDir, ref) {
+  const r = run("git", ["-C", workspaceDir, "rev-parse", "--verify", "--quiet", `${ref}^{commit}`], {
+    encoding: "utf8",
+  });
+  const full = (r.stdout || "").toString().trim();
+  if (r.status !== 0 || !/^[0-9a-f]{40}$/.test(full)) {
+    throw new Error(
+      `could not resolve "${ref}" to a full 40-char commit SHA in ${workspaceDir}. ` +
+        `Pass a commit-ish that exists there (SHA, branch, tag, or HEAD).` +
+        (r.stderr ? `\n${r.stderr.toString().trim()}` : ""),
+    );
+  }
+  return full;
 }
 
 // Extract the tree at <commit>:<srcPath> into destDir (files land relative to
@@ -265,13 +291,15 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   const trees = selectTrees(args.trees);
 
-  // resolveWorkspace already guarantees the requested commit is present (local:
-  // ensureCommit; mirror: mirrorFetch throws otherwise), so no re-check here.
-  let commit = args.commit;
-  const { dir: workspaceDir, kind } = resolveWorkspace({ workspace: args.workspace, commit: commit || "HEAD" });
-  if (!commit) {
-    const head = run("git", ["-C", workspaceDir, "rev-parse", "HEAD"], { encoding: "utf8" });
-    commit = head.stdout.trim();
+  // resolveWorkspace guarantees the requested commit-ish is present (local:
+  // ensureCommit; mirror: mirrorFetch throws otherwise). Whatever was passed
+  // (short SHA / branch / tag / HEAD) is then EXPANDED to the full 40-char SHA
+  // before anything is written — the manifest must pin a full SHA so the CI
+  // mirror fetch-by-SHA can resolve it (see expandCommit).
+  const requested = args.commit || "HEAD";
+  const { dir: workspaceDir, kind } = resolveWorkspace({ workspace: args.workspace, commit: requested });
+  const commit = expandCommit(workspaceDir, requested);
+  if (!args.commit) {
     console.warn(
       `revendor-m3e: WARNING — no --commit given; pinning to workspace HEAD ${commit}. ` +
         `Pass --commit explicitly for reproducible vendoring.`,
