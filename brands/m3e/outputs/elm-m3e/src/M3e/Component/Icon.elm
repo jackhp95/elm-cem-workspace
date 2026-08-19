@@ -35,7 +35,7 @@ M3e.Component.Icon.component [ M3e.Component.Icon.name "home" ] []
     ]
 ```
 
-<!-- elm-cem:docmeta category=Layout & style -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58001-59569; figmaStatus=example-verified -->
 
 -}
 

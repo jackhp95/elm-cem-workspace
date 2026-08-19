@@ -95,7 +95,7 @@ A sheet used to show secondary content anchored to the bottom of the screen.
 M3e.Component.BottomSheet.component [ M3e.Attributes.id "bottomSheet", M3e.Component.BottomSheet.modal True, M3e.Component.BottomSheet.handle True, M3e.Component.BottomSheet.hideable True, M3e.Component.BottomSheet.detents "collapsed fit half full" ] [ M3e.Component.BottomSheet.header (M3e.Component.Heading.component { content = M3e.text "Choose a destination" } [ M3e.Attributes.id "sheetTitle", M3e.Component.Heading.variant M3e.Values.title, M3e.Component.Heading.size M3e.Values.large ] []) ]
 ```
 
-<!-- elm-cem:docmeta category=Containment -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51827-5859; figmaStatus=approved -->
 
 -}
 

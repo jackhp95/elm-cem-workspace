@@ -26,7 +26,7 @@ An image, icon or textual initials representing a user or other identity.
     ]
 ```
 
-<!-- elm-cem:docmeta category=Layout & style -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=50731-13725; figmaStatus=approved -->
 
 -}
 

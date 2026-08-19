@@ -81,7 +81,7 @@ M3e.Component.ButtonGroup.component [ M3e.Component.ButtonGroup.multi True ] [ M
     ]
 ```
 
-<!-- elm-cem:docmeta category=Actions -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-47111; figmaStatus=example-verified -->
 
 -}
 

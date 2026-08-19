@@ -14,6 +14,8 @@ A segmented input for entering date and/or time values using a keyboard.
 @docs TimeFormat, timeFormat, Type, type_
 @docs dayLabel, disabled, hourLabel, maxDate, maxTime, minDate, minTime, minuteLabel, monthLabel, name, periodLabel, readonly, required, secondLabel, showSeconds, validationmessages, value, yearLabel, defaultValue, onChange, onBeforeinput, onInput, onInvalid
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51954-18540; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

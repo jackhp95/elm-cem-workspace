@@ -14,6 +14,8 @@ A option that can be selected within a segmented button.
 @docs checked, disabled, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-36691; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

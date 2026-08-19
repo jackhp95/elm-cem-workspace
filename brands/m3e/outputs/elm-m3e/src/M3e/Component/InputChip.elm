@@ -16,6 +16,8 @@ A chip which represents a discrete piece of information entered by a user.
 @docs disabled, disabledInteractive, removable, removeLabel, value, defaultValue, onRemove, onClick
 @docs avatar, icon, removeIcon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-27888; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

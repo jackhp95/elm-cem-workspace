@@ -80,7 +80,7 @@ M3e.Component.Card.component [ M3e.Attributes.class "image-card", M3e.Component.
 M3e.Component.Card.component [ M3e.Component.Card.actionable True, M3e.Component.Card.href "https://www.google.com", M3e.Component.Card.target "_blank" ] [ M3e.Component.Card.content (TypedHtml.div [] [ M3e.text "Google" ]) ]
 ```
 
-<!-- elm-cem:docmeta category=Containment -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52346-27573; figmaStatus=example-verified -->
 
 -}
 

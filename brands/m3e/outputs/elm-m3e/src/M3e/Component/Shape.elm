@@ -72,7 +72,7 @@ A shape used to add emphasis and decorative flair.
 M3e.Component.Shape.component [ M3e.Attributes.id "morph" ] []
 ```
 
-<!-- elm-cem:docmeta category=Layout & style -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58548-7248; figmaStatus=approved -->
 
 -}
 

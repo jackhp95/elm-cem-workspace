@@ -125,7 +125,7 @@ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3
     ]
 ```
 
-<!-- elm-cem:docmeta category=Actions -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-10081; figmaStatus=approved -->
 
 -}
 

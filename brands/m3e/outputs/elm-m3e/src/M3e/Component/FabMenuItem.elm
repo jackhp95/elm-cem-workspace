@@ -14,6 +14,8 @@ An item of a floating action button (FAB) menu.
 @docs disabled, download, href, rel, target, onClick
 @docs icon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-42953; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

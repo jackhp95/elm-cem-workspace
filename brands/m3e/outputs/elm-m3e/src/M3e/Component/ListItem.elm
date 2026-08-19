@@ -12,6 +12,8 @@ An item in a list.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
 @docs leading, overline, supportingText, trailing, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13183; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

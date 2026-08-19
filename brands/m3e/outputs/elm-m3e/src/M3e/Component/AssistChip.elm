@@ -16,6 +16,8 @@ A chip users interact with to perform a smart or automated action that can span 
 @docs disabled, disabledInteractive, download, href, name, rel, target, value, defaultValue, onClick
 @docs icon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-28089; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

@@ -52,7 +52,7 @@ M3e.Component.Toolbar.component [ M3e.Component.Toolbar.variant M3e.Values.vibra
 M3e.Component.Toolbar.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_forward" ] [], ariaLabel = "Forward", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] [], ariaLabel = "Add", action = M3e.Action.none } [ M3e.Component.IconButton.width M3e.Values.wide, M3e.Component.IconButton.variant M3e.Values.filled ] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "picture_in_picture" ] [], ariaLabel = "Picture in picture", action = M3e.Action.none } [] [], M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "more_vert" ] [], ariaLabel = "More options", action = M3e.Action.none } [] [] ]
 ```
 
-<!-- elm-cem:docmeta category=Containment -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58467-8206; figmaStatus=example-verified -->
 
 -}
 

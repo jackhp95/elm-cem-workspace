@@ -12,6 +12,8 @@ A radio button that allows a user to select one option from a set of options.
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs checked, disabled, name, required, value, defaultChecked, defaultValue, onBeforeinput, onInput, onChange, onClick
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51739-4608; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)
