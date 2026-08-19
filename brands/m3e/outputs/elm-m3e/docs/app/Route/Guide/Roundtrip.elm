@@ -322,7 +322,7 @@ surfaceRow ( name, agg ) =
                 [ TypedHtml.div
                     []
                     [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text name ] ]
-                , TypedHtml.span []
+                , TypedHtml.div []
                     [ M3e.text
                         (String.fromInt agg.converted
                             ++ " / "
@@ -334,7 +334,7 @@ surfaceRow ( name, agg ) =
                             ++ " used escape hatch"
                         )
                     ]
-                , TypedHtml.span []
+                , TypedHtml.div []
                     [ M3e.text
                         (String.fromInt agg.roundtripFunctionalMatched
                             ++ " functional clean · "
@@ -342,7 +342,7 @@ surfaceRow ( name, agg ) =
                             ++ " functional deviated"
                         )
                     ]
-                , TypedHtml.span []
+                , TypedHtml.div []
                     [ M3e.text
                         ("(strict: "
                             ++ String.fromInt agg.roundtripMatched
@@ -369,6 +369,15 @@ cellsSection cells =
         ]
 
 
+{-| `deviationText` and `escapeText` are two separate pieces of information
+(round-trip status vs seam/native/chars breakdown) and are rendered as
+sibling `TypedHtml.div`s rather than `TypedHtml.span`s -- `span` is inline,
+so two adjacent spans with no rendered separator run their text together
+(e.g. "…functional" immediately abutting "seam…" reads as "functionalseam").
+`div` is block by default, which is what actually makes the card content's
+`space-y-1` (margin-top only) put daylight between the two lines, matching
+`surfaceRow`'s identical block-stack-of-stats pattern above.
+-}
 cellRow : Cell -> Element { s | card : M3e.Kind.Brand } admittedBy msg
 cellRow c =
     let
@@ -404,8 +413,8 @@ cellRow c =
                 [ TypedHtml.div
                     []
                     [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ TypedHtml.code [] [ M3e.text c.id ] ] ]
-                , TypedHtml.span [] [ M3e.text deviationText ]
-                , TypedHtml.span [] [ M3e.text escapeText ]
+                , TypedHtml.div [] [ M3e.text deviationText ]
+                , TypedHtml.div [] [ M3e.text escapeText ]
                 ]
             )
         ]

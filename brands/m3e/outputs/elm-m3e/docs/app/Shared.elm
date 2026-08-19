@@ -58,6 +58,7 @@ import M3e.Component.Icon
 import M3e.Component.IconButton
 import M3e.Component.NavItem
 import M3e.Component.NavMenuItem
+import M3e.Component.NavMenuItemGroup
 import M3e.Component.NavRailToggle
 import M3e.Component.SearchView
 import M3e.Component.Theme
@@ -653,7 +654,7 @@ open unrequested on a route the user never asked to search from.
 
 -}
 subscriptions : UrlPath -> Model -> Sub Msg
-subscriptions path _ =
+subscriptions path model =
     Sub.batch
         [ Browser.Events.onResize (\w _ -> ViewportResized w)
         , Sub.map ThemeMsg Theme.subscriptions
@@ -661,6 +662,11 @@ subscriptions path _ =
         , Theme.Ports.readSurface SurfaceLoaded
         , if hasDocsShell path then
             Ports.onOpenSearchRequested (\_ -> OpenSearch)
+
+          else
+            Sub.none
+        , if model.searchOpen then
+            Browser.Events.onClick outsideSearchClickDecoder
 
           else
             Sub.none
@@ -1156,7 +1162,8 @@ searchOverlay model =
 
     else
         M3e.searchView
-            [ TypedHtml.Attributes.class "fixed inset-x-0 top-2 z-50 mx-auto w-full max-w-2xl"
+            [ M3e.Attributes.id searchOverlayId
+            , TypedHtml.Attributes.class "fixed inset-x-0 top-2 z-50 mx-auto w-full max-w-2xl"
             , M3e.Component.SearchView.mode (searchModeFor model.viewportWidth)
             , M3e.Component.SearchView.open model.searchViewOpen
             , M3e.Events.onQueryWith searchQueryDecoder
@@ -1336,69 +1343,99 @@ searchResultLink entry =
 -- SIDEBAR NAVIGATION (matraic IA)
 
 
-{-| One top-level section's flat page list for the tree drawer, looked up by
+{-| One top-level section's page list for the tree drawer, looked up by
 `prefix` (matching `Section.prefix`) in `currentSectionItems`. No title/icon
 fields — the tree never labels itself, since it only ever shows the ONE
 section the rail already highlights.
+
+`groups` splits the section into named sub-runs so `navMenu` can drop a
+divider (and, if named, an `M3e.NavMenuItemGroup` heading) between them --
+see `navMenu`'s own comment for why. Every section but Guide is one
+`Nothing`-labelled group, i.e. today's flat list with nothing to divide;
+Guide is the only one with more than one run.
+
 -}
 type alias NavSection =
-    { prefix : String, items : List ( String, String ) }
+    { prefix : String, groups : List ( Maybe String, List ( String, String ) ) }
 
 
 navSections : List NavSection
 navSections =
     [ { prefix = "getting-started"
-      , items =
-            [ ( "/getting-started/welcome", "Welcome" )
-            , ( "/getting-started/installation", "Installation" )
-            , ( "/getting-started/browser-support", "Browser Support" )
+      , groups =
+            [ ( Nothing
+              , [ ( "/getting-started/welcome", "Welcome" )
+                , ( "/getting-started/installation", "Installation" )
+                , ( "/getting-started/browser-support", "Browser Support" )
+                ]
+              )
             ]
       }
+
+    -- The three runs mirror `Route/Guide.elm`'s own index page structure:
+    -- the lone landing link, then its first `chapterLink` row ("Chapters",
+    -- first-component .. how-we-prove-it), then its second row after
+    -- `chaptersNote` ("Reference", cheat-sheet .. roundtrip). Splitting the
+    -- tree drawer's list along the same seams the index page already draws
+    -- keeps the two views of "what's in Guide" telling the same story
+    -- instead of inventing a second taxonomy.
     , { prefix = "guide"
-      , items =
-            [ ( "/guide", "Start here" )
-            , ( "/guide/first-component", "Your first component" )
-            , ( "/guide/invalid-states", "Invalid states don't compile" )
-            , ( "/guide/strictness", "The strictness dial" )
-            , ( "/guide/accessible-by-construction", "Accessibility you can't forget" )
-            , ( "/guide/accessibility", "Accessibility reference" )
-            , ( "/guide/composition-text-field", "Composition, not injection" )
-            , ( "/guide/theming", "Theming with tokens" )
-            , ( "/guide/motion", "Motion" )
-            , ( "/guide/generated-and-inspectable", "Generated & inspectable" )
-            , ( "/guide/the-layers", "The layer map" )
-            , ( "/guide/seams", "Your own seam" )
-            , ( "/guide/tooling-refactors", "The tooling refactors for you" )
-            , ( "/guide/troubleshooting", "Troubleshooting" )
-            , ( "/guide/how-we-prove-it", "How we prove it" )
-            , ( "/guide/cheat-sheet", "Cheat sheet" )
-            , ( "/guide/glossary", "Glossary" )
-            , ( "/guide/reference", "Full API reference" )
-            , ( "/guide/roundtrip", "Round-trip report" )
+      , groups =
+            [ ( Nothing, [ ( "/guide", "Start here" ) ] )
+            , ( Just "Chapters"
+              , [ ( "/guide/first-component", "Your first component" )
+                , ( "/guide/invalid-states", "Invalid states don't compile" )
+                , ( "/guide/strictness", "The strictness dial" )
+                , ( "/guide/accessible-by-construction", "Accessibility you can't forget" )
+                , ( "/guide/accessibility", "Accessibility reference" )
+                , ( "/guide/composition-text-field", "Composition, not injection" )
+                , ( "/guide/theming", "Theming with tokens" )
+                , ( "/guide/motion", "Motion" )
+                , ( "/guide/generated-and-inspectable", "Generated & inspectable" )
+                , ( "/guide/the-layers", "The layer map" )
+                , ( "/guide/seams", "Your own seam" )
+                , ( "/guide/tooling-refactors", "The tooling refactors for you" )
+                , ( "/guide/troubleshooting", "Troubleshooting" )
+                , ( "/guide/how-we-prove-it", "How we prove it" )
+                ]
+              )
+            , ( Just "Reference"
+              , [ ( "/guide/cheat-sheet", "Cheat sheet" )
+                , ( "/guide/glossary", "Glossary" )
+                , ( "/guide/reference", "Full API reference" )
+                , ( "/guide/roundtrip", "Round-trip report" )
+                ]
+              )
             ]
       }
     , { prefix = "styles"
-      , items =
-            [ ( "/styles/color", "Color" )
-            , ( "/styles/typography", "Typography" )
-            , ( "/styles/shape", "Shape" )
-            , ( "/styles/elevation", "Elevation" )
-            , ( "/styles/state-layers", "State Layers" )
-            , ( "/styles/motion", "Motion" )
-            , ( "/styles/density", "Density" )
+      , groups =
+            [ ( Nothing
+              , [ ( "/styles/color", "Color" )
+                , ( "/styles/typography", "Typography" )
+                , ( "/styles/shape", "Shape" )
+                , ( "/styles/elevation", "Elevation" )
+                , ( "/styles/state-layers", "State Layers" )
+                , ( "/styles/motion", "Motion" )
+                , ( "/styles/density", "Density" )
+                ]
+              )
             ]
       }
     , { prefix = "examples"
-      , items =
-            [ ( "/examples", "Overview" )
-            , ( "/examples/dashboard", "Dashboard" )
-            , ( "/examples/shop", "Shop" )
-            , ( "/examples/mail", "Mail" )
-            , ( "/examples/travel", "Travel" )
-            , ( "/examples/settings", "Settings" )
-            , ( "/examples/list-detail", "List-detail" )
-            , ( "/examples/supporting-pane", "Supporting pane" )
-            , ( "/examples/feed", "Feed" )
+      , groups =
+            [ ( Nothing
+              , [ ( "/examples", "Overview" )
+                , ( "/examples/dashboard", "Dashboard" )
+                , ( "/examples/shop", "Shop" )
+                , ( "/examples/mail", "Mail" )
+                , ( "/examples/travel", "Travel" )
+                , ( "/examples/settings", "Settings" )
+                , ( "/examples/list-detail", "List-detail" )
+                , ( "/examples/supporting-pane", "Supporting pane" )
+                , ( "/examples/feed", "Feed" )
+                ]
+              )
             ]
       }
     ]
@@ -1575,6 +1612,71 @@ searchToggleDecoder =
             )
 
 
+{-| The DOM id `searchOverlay` puts on the `m3e-search-view` host, so
+`outsideSearchClickDecoder` has something stable to walk `parentNode` up
+towards.
+-}
+searchOverlayId : String
+searchOverlayId =
+    "search-overlay"
+
+
+{-| Click-outside-to-close for the search overlay.
+
+`m3e-search-view` is mounted with `popover="manual"` (set imperatively by the
+component itself in both its docked- and fullscreen-open paths -- see
+`searchOverlay`'s own doc comment), which deliberately opts out of the native
+popover light-dismiss behavior `"auto"` would give for free. That opt-out is
+load-bearing, not an oversight: the component's close paths
+(`#closeDocked`/`#closeFullscreen`) unwind scroll-lock, inert-lock, anchor
+position tracking and a CSS closing-transition before calling `hidePopover()`
+-- a browser-driven `"auto"` light-dismiss would call `hidePopover()` directly
+and skip all of that teardown, leaving the scroll lock and inert state stuck
+after an outside click. So this subscription reimplements light-dismiss on
+the Elm side instead of switching the vendored component to `"auto"`.
+
+Only armed while `model.searchOpen` (see `subscriptions`), so it can't fire
+before the overlay exists or race the FAB's own `OpenSearch` click. A closed
+overlay's own internal escape/close-icon paths still go through
+`searchToggleDecoder` exactly as before -- this only adds the "click
+elsewhere on the page" case nothing else covers.
+
+-}
+outsideSearchClickDecoder : Decode.Decoder Msg
+outsideSearchClickDecoder =
+    Decode.field "target" (isOutsideElement searchOverlayId)
+        |> Decode.andThen
+            (\isOutside ->
+                if isOutside then
+                    Decode.succeed CloseSearch
+
+                else
+                    Decode.fail "click landed inside the search overlay"
+            )
+
+
+{-| True once we've walked all the way up a clicked node's `parentNode` chain
+without finding an element whose `id` is `targetId`. Recurses via
+`Decode.lazy` since DOM ancestry decoders can't be written as a plain
+non-recursive value.
+-}
+isOutsideElement : String -> Decode.Decoder Bool
+isOutsideElement targetId =
+    Decode.oneOf
+        [ Decode.field "id" Decode.string
+            |> Decode.andThen
+                (\id ->
+                    if id == targetId then
+                        Decode.succeed False
+
+                    else
+                        Decode.fail "keep climbing"
+                )
+        , Decode.field "parentNode" (Decode.lazy (\_ -> isOutsideElement targetId))
+        , Decode.succeed True
+        ]
+
+
 {-| The docs sidebar nav, an `M3e.NavMenu` of nested `NavMenuItem` groups. Each
 leaf's **label** is a real `a[href]` supplied through the `link` seam (see
 `navLeaf`): `config/slots.json` declares `NavMenuItem.label`'s `link` kind, so a
@@ -1589,6 +1691,14 @@ Components branch, with its 7 category sub-groups sitting alongside 4 other
 whole sections, the reason the drawer felt overwhelming rather than a page
 tree.
 
+A section with more than one `NavSection` group (today, only Guide) gets an
+`M3e.divider` between each pair of groups, and any NAMED group also gets an
+`M3e.navMenuItemGroup` heading -- both are the same `m3e-nav-menu` children
+the component's own "Grouping top-level items" example uses, just driven from
+data instead of hand-written per page. This is still ONE flat menu (nothing
+here nests or collapses) -- the dividers are a visual read on an ordering
+that was already there, not a new information architecture.
+
 -}
 navMenu : List NavComponent -> UrlPath -> Element { s | navMenu : M3e.Kind.Brand } admittedBy msg
 navMenu components path =
@@ -1596,19 +1706,54 @@ navMenu components path =
         currentPath : String
         currentPath =
             normalizePath (UrlPath.toAbsolute path)
+
+        renderGroup index ( maybeLabel, items ) =
+            let
+                leaves =
+                    items |> List.map (navLeaf currentPath)
+
+                body =
+                    case maybeLabel of
+                        Nothing ->
+                            leaves
+
+                        Just groupLabel ->
+                            [ M3e.Component.NavMenuItemGroup.component []
+                                (M3e.Component.NavMenuItemGroup.label
+                                    (M3e.heading
+                                        [ M3e.Attributes.tocIgnore True
+                                        , M3e.Attributes.variant Value.label
+                                        , M3e.Attributes.size Value.large
+                                        ]
+                                        [ M3e.text groupLabel ]
+                                    )
+                                    :: leaves
+                                )
+                            ]
+            in
+            if index == 0 then
+                body
+
+            else
+                M3e.divider [] [] :: body
     in
     M3e.navMenu [ Aria.label "Primary", TypedHtml.Attributes.class "primary-nav-drawer w-fit flex-auto" ]
-        (currentSectionItems components path |> List.map (navLeaf currentPath))
+        (currentSectionItems components path
+            |> List.indexedMap renderGroup
+            |> List.concat
+        )
 
 
-{-| The current top-level section's flat page list, looked up by the route's
-first path segment (matching `Section.prefix`). Components' list is derived
-from the shared component data — sorted alphabetically by label, with "All
-components" pinned first (matching `/components/all`'s kitchen-sink page) —
-rather than the static lookup every other section uses, since it isn't known
-until `Shared.data` loads it. No section sub-groups: `componentCategories`
-still exists for `/components/all`'s own grouping, but the tree itself no
-longer nests by category (see `navMenu`).
+{-| The current top-level section's page groups, looked up by the route's
+first path segment (matching `Section.prefix`) -- see `NavSection` for what
+the `Maybe String` group label means and `navMenu` for how groups become
+dividers. Components' list is derived from the shared component data --
+sorted alphabetically by label, with "All components" pinned first (matching
+`/components/all`'s kitchen-sink page) -- rather than the static lookup
+every other section uses, since it isn't known until `Shared.data` loads it,
+and stays a single unlabeled group: `componentCategories` still exists for
+`/components/all`'s own grouping, but the tree itself doesn't nest by
+category (see `navMenu`).
 
 A path with no matching section falls through to `[]` — there is no section
 for the tree to show, so the drawer is legitimately empty (the `start`
@@ -1617,22 +1762,25 @@ be a panel with nothing in it). Every route in the app currently belongs to
 a section, so this is a defensive fallback rather than a live case today.
 
 -}
-currentSectionItems : List NavComponent -> UrlPath -> List ( String, String )
+currentSectionItems : List NavComponent -> UrlPath -> List ( Maybe String, List ( String, String ) )
 currentSectionItems components path =
     case List.head path of
         Just "components" ->
-            ( "/components/all", "All components" )
-                :: ( "/components/compose", "Compose" )
-                :: (components
-                        |> List.sortBy (\c -> String.toLower c.label)
-                        |> List.map (\c -> ( "/components/" ++ c.slug, c.label ))
-                   )
+            [ ( Nothing
+              , ( "/components/all", "All components" )
+                    :: ( "/components/compose", "Compose" )
+                    :: (components
+                            |> List.sortBy (\c -> String.toLower c.label)
+                            |> List.map (\c -> ( "/components/" ++ c.slug, c.label ))
+                       )
+              )
+            ]
 
         Just prefix ->
             navSections
                 |> List.filter (\s -> s.prefix == prefix)
                 |> List.head
-                |> Maybe.map .items
+                |> Maybe.map .groups
                 |> Maybe.withDefault []
 
         Nothing ->
