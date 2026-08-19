@@ -1,249 +1,524 @@
 #!/usr/bin/env node
-// tools/check-figma-write-block.mjs — pure, dependency-free static-analysis
-// classifier for `use_figma` MCP tool calls: decides whether a JS `code`
-// string is read-only inspection or performs a Figma Plugin API WRITE.
+// tools/check-figma-write-block.mjs — dependency-free static-analysis
+// classifier for Figma MCP tool calls PLUS the Claude Code `PreToolUse` hook
+// CLI that uses it. BOTH live in this one file (mirroring
+// tools/check-layout-only-classes.mjs's file shape: the pure classifier and
+// the CLI entry point ship together; the test file imports the pure exports
+// directly, never through the CLI).
 //
-// MODES (mirrors tools/check-layout-only-classes.mjs's file shape: one file
-// holds both the pure classifier AND the CLI/hook entry point; the test file
-// imports the pure exports directly, never through the CLI):
-//   node tools/check-figma-write-block.mjs --hook   Claude Code PreToolUse:
-//       reads the hook JSON on stdin (tool_name + tool_input), and:
-//         - `create_new_file` / `generate_figma_design` (any matched
-//           wire-format spelling — see WIRE-NAME MATCHING below): ALWAYS
-//           denied (D6 ruling: no code-driven Figma content authoring).
-//         - `use_figma`: runs checkFigmaCode(tool_input.code); denies with
-//           explain(result) if blocked, allows otherwise.
-//         - any other tool_name: passes through immediately, unaffected.
-//       Blocking is signalled via the PreToolUse JSON contract (stdout JSON
-//       body `{ hookSpecificOutput: { hookEventName, permissionDecision:
-//       "deny", permissionDecisionReason } }`, exit 0), NOT via a nonzero
-//       exit code — this is DIFFERENT from check-layout-only-classes.mjs's
-//       PostToolUse contract (blocks via exit 2 + stderr text). Confirmed
-//       against the working PreToolUse example already live in this harness,
-//       ~/.claude/hooks/block-external-pr.sh (wired in ~/.claude/settings.json
-//       under PreToolUse/Bash), which uses this exact JSON+exit-0 shape.
+// WHAT THIS FILE IS
+//   1. `checkFigmaCode(code)` — a pure function that decides whether a
+//      `use_figma` JavaScript `code` string is read-only inspection or
+//      performs a Figma Plugin API WRITE. Returns
+//      `{ blocked, reason, matchedPattern }`.
+//   2. `explain(result)` — the human-readable deny message.
+//   3. `--hook` mode — a Claude Code `PreToolUse` hook: reads the hook JSON on
+//      stdin (`tool_name` + `tool_input`) and:
+//        - any tool in ALWAYS_DENY_TOOLS (`create_new_file`,
+//          `generate_figma_design`, `generate_diagram`, `upload_assets`,
+//          `weave_upload_asset`): ALWAYS denied. These have no read-only mode;
+//          every one of them creates or mutates Figma content.
+//        - `use_figma`: runs checkFigmaCode(tool_input.code); denies with
+//          explain(result) if blocked, allows otherwise.
+//        - any other tool_name: passes through immediately, unaffected.
+//      Blocking is signalled via the PreToolUse JSON contract (stdout JSON
+//      body `{ hookSpecificOutput: { hookEventName, permissionDecision:
+//      "deny", permissionDecisionReason } }`, exit 0), NOT via a nonzero exit
+//      code — this is DIFFERENT from check-layout-only-classes.mjs's
+//      PostToolUse contract (blocks via exit 2 + stderr text). Confirmed
+//      against the working PreToolUse example already live in this harness,
+//      ~/.claude/hooks/block-external-pr.sh.
 //
-// WIRE-NAME MATCHING (judgment call, flagged — see task-2-report.md):
-//   `mcp__claude_ai_Figma__use_figma` and `mcp__claude_ai_Figma__create_new_file`
-//   are CONFIRMED live wire-format tool names in this session's MCP surface
-//   (prefix `mcp__claude_ai_Figma__` + snake_case tool name). `generate_figma_design`
-//   is NOT currently invocable in this session's MCP surface (only documented
-//   by name in shipped skill docs), so its exact wire name could not be
-//   empirically confirmed. Ruling: match `mcp__claude_ai_Figma__generate_figma_design`
-//   (same confirmed convention) AND ALSO match the bare name
-//   `generate_figma_design` as defense-in-depth in case it ships under a
-//   different prefix. This hook matches by taking the tool_name's suffix
-//   after the last `__` (or the whole name if there is no `__`), so both the
-//   prefixed and bare spellings of all three tool names are covered
-//   uniformly without an explicit allowlist of full names.
+// WIRE-NAME MATCHING
+//   Claude Code MCP tool names arrive wire-formatted as `mcp__<server>__<tool>`
+//   (confirmed live: `mcp__claude_ai_Figma__use_figma`). This hook matches on
+//   the suffix after the last `__` (see bareToolName), so it is INDEPENDENT of
+//   which MCP server name the Figma connector happens to register under. The
+//   `.claude/settings.json` matcher is correspondingly written as a
+//   prefix-tolerant regex — `^(mcp__.*__)?(use_figma|...)$` — because Claude
+//   Code treats a matcher containing non-word characters as an unanchored
+//   JavaScript regex (a matcher of only letters/digits/`_`/`-`/`|`/`,` is
+//   compared as EXACT strings instead). That wiring is pinned by a test in
+//   check-figma-write-block.test.mjs so a typo cannot ship silently.
 //
 // ERROR-SAFETY: an internal error reading/parsing THIS hook's own stdin JSON
-// (bad JSON, missing fields, etc.) must NEVER accidentally block an
-// unrelated tool call — it fails safe by NOT blocking (mirroring
+// (bad JSON, missing fields, etc.) must NEVER accidentally block an unrelated
+// tool call — it fails safe by NOT blocking (mirroring
 // check-layout-only-classes.mjs's "never block an edit because THIS script
 // broke" policy), but DOES log to stderr so the failure is visible. This is
 // intentionally DIFFERENT from the "default to block on ambiguity" principle
-// that governs classifying `use_figma` CODE content (checkFigmaCode's job,
-// above) — that principle is about content classification, not
-// hook-infrastructure errors.
+// that governs classifying `use_figma` CODE content (checkFigmaCode's job) —
+// that principle is about content classification, not hook-infrastructure
+// errors.
 //
 // WHY THIS EXISTS (see docs/plans/2026-08-19-block-figma-content-authoring.md):
 // on 2026-08-19 an agent used the `use_figma` tool to author Figma content
 // directly via arbitrary JS (creating ~56 component instances with
 // `figma.createAutoLayout()` / `.createInstance()` / `.appendChild()`,
 // overriding text with `.setProperties()`, then `.remove()`-ing nodes during
-// cleanup) instead of going through the reviewed, skill-driven authoring
-// workflow. This module is the pure decision function for a later PreToolUse
-// hook (NOT built here) that will block `use_figma` calls whose `code`
-// contains a Plugin API write. This file only exports the classifier + a
-// human-readable explainer; it does not read stdin, parse hook JSON, or wire
-// into `.claude/settings.json` — that's a separate task.
+// cleanup) instead of leaving content authoring to a human in the Figma UI.
+// D6 (core/cem-figma-connect/plans/00-mission-and-decisions.md) bans
+// code-driven Figma content authoring permanently; this file is the mechanical
+// enforcement of that ban.
 //
-// DENYLIST SOURCE OF TRUTH: every name below was found by grepping the
-// installed Figma plugin's own TypeScript API typings —
-//   ~/.claude/plugins/cache/claude-plugins-official/figma/2.2.95/skills/figma-use/references/plugin-api-standalone.d.ts
-// (11,329 lines, checked 2026-08-19). See task-1-report.md for the exact
-// grep commands and line numbers. Two names mentioned as "check for these"
-// in the task brief do NOT exist in this typings file and are deliberately
-// OMITTED (not invented): `createSlot` (no such method anywhere in the
-// file) and any bare `setVariableCodeSyntax`-style getter — the real name is
-// `Variable.setVariableCodeSyntax(platform, value)`, which IS included below.
+// ===========================================================================
+// DENYLIST PROVENANCE — how WRITE_METHODS / WRITE_PROPERTIES were built
+// ===========================================================================
+// Source of truth (the ONLY source; nothing below was written from memory):
+//   ~/.claude/plugins/cache/claude-plugins-official/figma/2.2.95/skills/
+//     figma-use/references/plugin-api-standalone.d.ts
+//   11,329 lines, Figma plugin package version 2.2.95, swept 2026-08-19.
 //
-// DETECTION STRATEGY (deliberate subset — this is NOT a JS parser):
-//   - Method calls: matched as `.methodName(` OR the equivalent computed
-//     member-access call with a STATIC string-literal key —
-//     `["methodName"](`/`['methodName'](`/`` [`methodName`]( ``. The leading
-//     `.` (or bracket) plus an immediately-following `(` (whitespace
-//     allowed) means a bare function call (`remove()`) or an unrelated
-//     identifier that merely CONTAINS the name (`removeCommentsList()`,
-//     `list.set(...)` on a plain `Map`/`Array`) never matches. Only
-//     Figma-specific, spelled-out method names are denylisted — generic JS
-//     built-ins (`Map#set`, `Array#forEach`, `Array#filter`, …) are never in
-//     this list, so `uniqueSets.set(key, …)` in an otherwise read-only
-//     inspection script is not a match.
-//   - Property writes: matched as `.propName` OR the bracket-literal
-//     equivalent (`["propName"]`/`['propName']`), followed by optional
-//     whitespace and a single `=` that is NOT itself followed by another
-//     `=` (so `==` / `===` comparisons never match; `!=`/`<=`/`>=` already
-//     fail because the character immediately after propName+whitespace is
-//     `!`/`<`/`>`, not `=`).
+// This section is deliberately self-contained: earlier revisions of this file
+// pointed at `task-1-report.md` / `task-2-report.md` for the grep evidence,
+// but those live under `.superpowers/sdd/` which is gitignored, so anyone who
+// clones this branch cannot read them. The methodology is therefore inlined.
+//
+// METHODS sweep (mechanical, not hand-picked):
+//   Extract every method DECLARATION in the typings file — lines matching
+//     /^\s{2,}([A-Za-z_$][A-Za-z0-9_$]*)\??(?:<[^(]*>)?\(/
+//   (indented `name(` or `name<T>(` signature; this shape excludes doc-comment
+//   prose, which is always prefixed by `*`), then keep those whose name starts
+//   with any of these 20 mutation-verb prefixes:
+//     set insert delete add create move append swap combine clone remove
+//     resize import edit union subtract intersect exclude group ungroup flatten
+//   Raw hits: 160 distinct names. 8 were removed by hand as verified
+//   NON-content-mutating, each checked at its declaration site:
+//     - `set`            BaseNodeMixin.set(props) / QueryResult.set(props) —
+//                        a REAL bulk write, but the bare name collides with
+//                        `Map#set`/`Set#add`-style everyday JS. Handled
+//                        separately by BULK_WRITE_PATTERNS below, which
+//                        requires an object-literal first argument
+//                        (`.set({ … })`) — see the residual-risk note.
+//     - `setAsync`       ClientStorageAPI.setAsync — plugin-local storage.
+//     - `setError`, `setSuggestions`, `setLoadingMessage`
+//                        parameter-input UI (SuggestionResults), not content.
+//     - `setCurrentPageAsync`  navigation only; a legitimate read-only script
+//                        may need it to inspect another page.
+//     - `setPaymentStatusInDevelopment`  payments API, not content.
+//   Final: 152 method names.
+//
+// PROPERTIES sweep (mechanical, then hand-verified):
+//   Extract every NON-`readonly` field declaration — lines matching
+//     /^\s{2,}([A-Za-z_$][A-Za-z0-9_$]*)\??:\s/
+//   (the `readonly ` keyword, when present, sits between the indentation and
+//   the name, so `readonly` fields simply do not match this anchor). Then keep
+//   a name only if at least one of its declaring interfaces is a document
+//   object — interface name ending in Node / Mixin / Style / Variable /
+//   VariableCollection / Document — and NOT an options/event/result-shaped
+//   interface (…Options, …Event, …Change, …API, …Result, …Settings, …Data,
+//   …Manifest, …Preferences, …Parameters, …Response, …Request, …Info,
+//   …Payload, …Message, …Config).
+//   Raw hits: 188 names. 26 removed by hand after checking each declaration
+//   site: they matched only because they are method-PARAMETER-object or
+//   return-object fields nested inside a Node/Mixin interface body, not
+//   settable node properties — and each is a common everyday-JS identifier
+//   whose inclusion would have caused real false positives:
+//     id type node nodes start end side offset key value values field fields
+//     options newValue criteria freeText variable variableId url currentUrl
+//     resolvedType boundVariables modeId parentModeId libraryName placeholder
+//   Final: 162 property names, including every name the review called out:
+//   fills strokes effects characters visible locked name x y rotation opacity
+//   cornerRadius itemSpacing layoutMode and all five *StyleId fields.
+//
+// HONEST SCOPE STATEMENT — READ THIS BEFORE TRUSTING THIS GATE
+//   This is an ENUMERATION against a FIXED, SNAPSHOTTED API surface (Figma
+//   plugin typings 2.2.95). It is NOT a formal guarantee and NOT a proof of
+//   completeness. It is broad and systematically derived rather than
+//   hand-picked, but:
+//     - a write method that Figma ADDS in a future API version is not covered
+//       until this sweep is re-run against the new typings;
+//     - a write method whose name does not begin with one of the 20 mutation
+//       verbs above (an unusual naming choice, but possible) is not covered;
+//     - the 8 methods and 26 properties excluded above are deliberate
+//       false-positive trade-offs, and `set`/`setAsync`/`value` in particular
+//       are real (if awkwardly named) write surfaces that are only partially
+//       covered.
+//   A future or unusual write call not covered by this sweep CAN still slip
+//   through this hook undetected. That is a disclosed residual risk, not a
+//   solved problem. The durable protection against code-driven Figma authoring
+//   remains the D6 ruling itself; this hook is a mechanical backstop for the
+//   known API surface.
+//
+// DETECTION STRATEGY (deliberately not a JS parser):
+//   - Method calls: matched by NAME ANYWHERE it is called, as
+//     `\bmethodName\s*\(` — with or without a receiver. This intentionally
+//     covers ALL of:
+//         node.remove()                 ordinary call
+//         node . remove ()              whitespace around the dot / paren
+//         node\n  .remove()             chained/multiline formatting
+//         const { createFrame } = figma; createFrame()
+//                                       destructured / aliased call
+//         getNode().remove()            computed receiver
+//     Requiring a leading `.` (the previous behaviour) was live-proven
+//     bypassable by ordinary destructuring, so the receiver is no longer part
+//     of the pattern. The cost is that a hypothetical unrelated LOCAL function
+//     sharing a Figma write-method name would also be blocked — accepted, the
+//     same over-blocking trade-off already accepted for common-word property
+//     names. `\b` + an immediately-following `(` still means
+//     `removeCommentsList()` never matches `remove`, and generic JS built-ins
+//     (`Map#set`, `Array#filter`, …) are not on the list at all.
+//   - Method calls, bracket form: the computed member-access call with a
+//     STATIC string-literal key is also matched —
+//     `["methodName"](` / `['methodName'](` / `` [`methodName`]( ``.
+//   - Property writes: matched as `.propName =` (whitespace tolerated around
+//     the dot and before the `=`) or the bracket-literal equivalent
+//     (`["propName"] =`), where the `=` is NOT followed by another `=` (so
+//     `==` / `===` never match; `!=` / `<=` / `>=` never reach the lookahead
+//     because the character right after propName+whitespace is `!`/`<`/`>`).
+//     Property writes still REQUIRE a receiver dot/bracket — matching a bare
+//     `propName =` would flag every `const name = …` in ordinary JS.
 //
 // KNOWN LIMITATIONS (documented, not silently accepted):
-//   1. This is regex/substring scanning over the raw source text, NOT an AST
-//      parse. A write call name that happens to appear inside a STRING
-//      LITERAL or a COMMENT (e.g. `// remember: instance.remove() is scary`
-//      or `const msg = "call frame.appendChild(x)"`) WILL still match and
-//      cause a block, even though no write actually executes. This is a
-//      false positive, not a false negative — for a blocking security-ish
-//      gate we accept over-blocking (safe failure mode) rather than risk
-//      under-blocking disguised writes; see the "disguised write" test case.
-//   2. A handful of Figma property names are common English words that could
-//      appear as a plain-JS object's own property outside any Figma context
-//      (`.name = `, `.visible = `, `.locked = `). If a `use_figma` script
-//      also manipulates an unrelated local object with one of these property
-//      names via direct assignment, that would also be flagged. This is a
-//      deliberate false-positive risk we accept in exchange for catching
-//      real Figma node renames/visibility/lock writes, which ARE
-//      content-authoring actions.
-//   3. Chained/computed receivers (`getNode().remove()`, `arr[0].remove()`)
-//      still match because detection only requires a literal `.` immediately
-//      before the name — it does not attempt to resolve what the receiver
-//      is. This is intentional: we'd rather over-block an ambiguous receiver
-//      than miss a real Figma write reached through a helper function.
-//   4. No attempt is made to understand control flow, so a write call inside
-//      an `if (false)` branch or dead code still blocks. Given the goal (gate
-//      agent-authored `use_figma` scripts before they run), this is the
-//      correct conservative default.
-//   5. BRACKET NOTATION with a STATIC string-literal key IS detected
-//      (`node["remove"]()`, `node['name'] = "x"`) — see DETECTION STRATEGY
-//      above. What is still a genuine, UNDETECTED gap: a bracket access
-//      whose key is a VARIABLE or computed expression, e.g.
-//      `const m = "remove"; node[m]()`, or a template literal with
-//      interpolation (`` node[`re${"move"}`]() ``). Resolving those requires
-//      at minimum constant-folding/light data-flow analysis, which is out of
-//      scope for a regex-based scanner. Also undetected: whole-object
-//      mutation helpers like `Object.assign(node, { visible: false })` or
-//      `Object.defineProperty(node, "visible", …)` — these never take the
-//      `.propName =` or `["propName"] =` shape this scanner looks for. Both
-//      are accepted gaps for this task; a later hardening pass could add a
-//      lightweight check for `Object.assign(` / `Object.defineProperty(`
-//      calls whose second argument is an object literal or string containing
-//      a denylisted property name, if this proves to be exploited in
-//      practice.
+//   1. This is regex scanning over raw source text, NOT an AST parse. A write
+//      call name appearing inside a STRING LITERAL or COMMENT (e.g.
+//      `// never call instance.remove()`) WILL match and block, even though no
+//      write executes. That is a false positive, not a false negative — for a
+//      blocking gate we accept over-blocking over risking under-blocking.
+//   2. Several Figma property names are common English words (`name`,
+//      `visible`, `locked`, `x`, `y`, `description`, `code`). Direct
+//      assignment to one of these on an unrelated local object also blocks.
+//      Deliberate trade-off.
+//   3. No control-flow understanding: a write inside `if (false)` still blocks.
+//   4. Bracket access with a VARIABLE or computed key is NOT detected
+//      (`const m = "remove"; node[m]()`, `` node[`re${"move"}`]() ``).
+//      Resolving those needs constant folding / data-flow analysis.
+//   5. Whole-object mutation helpers are NOT detected:
+//      `Object.assign(node, { visible: false })`,
+//      `Object.defineProperty(node, "visible", …)` — neither takes the
+//      `.propName =` shape. `.set({ … })` IS detected (BULK_WRITE_PATTERNS),
+//      but `node.set(propsFromAVariable)` is not.
+//   6. See the HONEST SCOPE STATEMENT above: API-surface completeness is not
+//      guaranteed.
 
 // ---------------------------------------------------------------------------
 // Denylist: Figma Plugin API methods that create, mutate, reparent, restyle,
-// or delete document content. Grouped by typings-file section for traceability.
+// or delete document content. Generated by the METHODS sweep documented above
+// (152 names, prefix-verb sweep of plugin typings 2.2.95, 8 hand-verified
+// non-content names removed).
 // ---------------------------------------------------------------------------
 
 const WRITE_METHODS = [
-  // Node/style/variable creation (figma.createX(...) factory methods).
-  "createRectangle",
-  "createLine",
-  "createEllipse",
-  "createPolygon",
-  "createStar",
-  "createVector",
-  "createText",
-  "createFrame",
+  "addAnnotationCategoryAsync",
+  "addComponentProperty",
+  "addDevResourceAsync",
+  "addMeasurement",
+  "addMode",
+  "appendChild",
+  "appendChildAt",
+  "clone",
+  "cloneWidget",
+  "combineAsVariants",
   "createAutoLayout",
+  "createBooleanOperation",
+  "createCanvasRow",
+  "createCodeBlock",
   "createComponent",
   "createComponentFromNode",
+  "createConnector",
+  "createEffectStyle",
+  "createEllipse",
+  "createFrame",
+  "createGif",
+  "createGridStyle",
+  "createImage",
+  "createImageAsync",
+  "createInstance",
+  "createLine",
+  "createLinkPreviewAsync",
+  "createNodeFromJSXAsync",
+  "createNodeFromSvg",
   "createPage",
   "createPageDivider",
+  "createPaintStyle",
+  "createPolygon",
+  "createRectangle",
+  "createSection",
+  "createShapeWithText",
   "createSlice",
   "createSlide",
   "createSlideRow",
+  "createStar",
   "createSticky",
-  "createConnector",
-  "createShapeWithText",
-  "createCodeBlock",
-  "createSection",
   "createTable",
+  "createText",
   "createTextPath",
-  "createNodeFromJSXAsync",
-  "createBooleanOperation",
-  "createPaintStyle",
   "createTextStyle",
-  "createEffectStyle",
-  "createGridStyle",
-  "createNodeFromSvg",
-  "createImage",
-  "createImageAsync",
-  "createVideoAsync",
-  "createLinkPreviewAsync",
-  "createGif",
-  "createCanvasRow",
   "createVariable",
-  "createVariableCollection",
   "createVariableAlias",
   "createVariableAliasByIdAsync",
-  "createInstance",
-
-  // Tree mutation: reparenting, resizing, duplicating, deleting.
-  "appendChild",
-  "appendChildAt",
-  "insertChild",
-  "remove",
-  "resize",
-  "clone",
-  "group",
-  "ungroup",
-  "flatten",
-  "union",
-  "subtract",
-  "intersect",
-  "exclude",
-
-  // Instance/component-property content overrides.
-  "setProperties",
-
-  // Variable binding (ties node fields to design-token variables).
-  "setBoundVariable",
-  "setBoundVariableForPaint",
-  "setBoundVariableForEffect",
-  "setBoundVariableForLayoutGrid",
-  "setVariableCodeSyntax",
-
-  // Style application — the async setters that assign a shared style id.
-  "setFillStyleIdAsync",
-  "setStrokeStyleIdAsync",
-  "setEffectStyleIdAsync",
-  "setGridStyleIdAsync",
-  "setTextStyleIdAsync",
-
-  // Component/variant authoring.
-  "combineAsVariants",
-  "addComponentProperty",
-  "editComponentProperty",
+  "createVariableCollection",
+  "createVector",
+  "createVideoAsync",
+  "deleteAsync",
+  "deleteCharacters",
   "deleteComponentProperty",
-
-  // Node metadata writes + library imports (imports create local nodes/styles).
-  // NOTE: `setPluginData` (without "Shared") was removed from this list after
-  // a 2026-08-19 review found zero occurrences of that exact name anywhere in
-  // the typings file — only `setSharedPluginData` is real. Do not re-add it
-  // without a fresh grep hit as evidence.
-  "setSharedPluginData",
-  "setRelaunchData",
+  "deleteDevResourceAsync",
+  "deleteMeasurement",
+  "editComponentProperty",
+  "editDevResourceAsync",
+  "editMeasurement",
+  "exclude",
+  "flatten",
+  "group",
   "importComponentByKeyAsync",
   "importComponentSetByKeyAsync",
   "importStyleByKeyAsync",
+  "importVariableByKeyAsync",
+  "insertCharacters",
+  "insertChild",
+  "insertColumn",
+  "insertRow",
+  "intersect",
+  "moveColumn",
+  "moveLocalEffectFolderAfter",
+  "moveLocalEffectStyleAfter",
+  "moveLocalGridFolderAfter",
+  "moveLocalGridStyleAfter",
+  "moveLocalPaintFolderAfter",
+  "moveLocalPaintStyleAfter",
+  "moveLocalTextFolderAfter",
+  "moveLocalTextStyleAfter",
+  "moveNodesToCoord",
+  "moveRow",
+  "remove",
+  "removeColumn",
+  "removeMode",
+  "removeOverrideForMode",
+  "removeOverrides",
+  "removeOverridesForVariable",
+  "removeRow",
+  "removeVariableCodeSyntax",
+  "resize",
+  "resizeColumn",
+  "resizeRow",
+  "resizeWithoutConstraints",
+  "setBoundVariable",
+  "setBoundVariableForEffect",
+  "setBoundVariableForLayoutGrid",
+  "setBoundVariableForPaint",
+  "setBuzzAssetTypeForNode",
+  "setCanvasGrid",
+  "setColor",
+  "setDevResourcePreviewAsync",
+  "setEffectStyleIdAsync",
+  "setExplicitVariableModeForCollection",
+  "setFileThumbnailNodeAsync",
+  "setFillStyleIdAsync",
+  "setFillsAsync",
+  "setGridChildPosition",
+  "setGridStyleIdAsync",
+  "setLabel",
+  "setMediaAsync",
+  "setProperties",
+  "setRangeBoundVariable",
+  "setRangeFillStyleId",
+  "setRangeFillStyleIdAsync",
+  "setRangeFills",
+  "setRangeFontName",
+  "setRangeFontSize",
+  "setRangeHyperlink",
+  "setRangeIndentation",
+  "setRangeLetterSpacing",
+  "setRangeLineHeight",
+  "setRangeListOptions",
+  "setRangeListSpacing",
+  "setRangeParagraphIndent",
+  "setRangeParagraphSpacing",
+  "setRangeTextCase",
+  "setRangeTextDecoration",
+  "setRangeTextDecorationColor",
+  "setRangeTextDecorationOffset",
+  "setRangeTextDecorationSkipInk",
+  "setRangeTextDecorationStyle",
+  "setRangeTextDecorationThickness",
+  "setRangeTextStyleId",
+  "setRangeTextStyleIdAsync",
+  "setReactionsAsync",
+  "setRelaunchData",
+  "setSharedPluginData",
+  "setSlideGrid",
+  "setSlideTransition",
+  "setStrokeStyleIdAsync",
+  "setStrokesAsync",
+  "setTextStyleIdAsync",
+  "setValueAsync",
+  "setValueForMode",
+  "setVariableCodeSyntax",
+  "setVectorNetworkAsync",
+  "setWidgetSyncedState",
+  "subtract",
+  "swapComponent",
+  "ungroup",
+  "union",
 ];
 
-// Figma node properties that are plain, settable (non-readonly) TS fields in
-// the typings file — assigning to them directly mutates document content.
+// Figma document-object properties that are plain, settable (non-`readonly`)
+// TS fields in the typings file — assigning to one directly mutates document
+// content. Generated by the PROPERTIES sweep documented above (162 names).
 const WRITE_PROPERTIES = [
-  "fills",
-  "strokes",
+  "annotations",
+  "arcData",
+  "authorName",
+  "authorVisible",
+  "autoRename",
+  "backgroundStyleId",
+  "backgrounds",
+  "blendMode",
+  "booleanOperation",
+  "bottomLeftRadius",
+  "bottomRightRadius",
   "characters",
-  "visible",
-  "locked",
-  "name",
-  "textStyleId",
-  "fillStyleId",
-  "strokeStyleId",
+  "clipsContent",
+  "code",
+  "complexStrokeProperties",
+  "connectorEnd",
+  "connectorEndStrokeCap",
+  "connectorLineType",
+  "connectorStart",
+  "connectorStartStrokeCap",
+  "constrainProportions",
+  "constraints",
+  "cornerRadius",
+  "cornerSmoothing",
+  "counterAxisAlignContent",
+  "counterAxisAlignItems",
+  "counterAxisSizingMode",
+  "counterAxisSpacing",
+  "dashPattern",
+  "defaultValue",
+  "description",
+  "descriptionMarkdown",
+  "devStatus",
+  "documentationLinks",
   "effectStyleId",
+  "effects",
+  "expanded",
+  "explicitVariableModes",
+  "exportSettings",
+  "fillStyleId",
+  "fills",
+  "flowStartingPoints",
+  "focusedNode",
+  "focusedSlide",
+  "fontName",
+  "fontSize",
+  "gridChildHorizontalAlign",
+  "gridChildVerticalAlign",
+  "gridColumnCount",
+  "gridColumnGap",
+  "gridColumnSizes",
+  "gridColumnSpan",
+  "gridRowCount",
+  "gridRowGap",
+  "gridRowSizes",
+  "gridRowSpan",
   "gridStyleId",
+  "guides",
+  "handleMirroring",
+  "hangingList",
+  "hangingPunctuation",
+  "hiddenFromPublishing",
+  "horizontalPadding",
+  "hyperlink",
+  "inferredAutoLayout",
+  "innerRadius",
+  "isExposedInstance",
+  "isMask",
+  "isPageDivider",
+  "isSkippedSlide",
+  "isWideWidth",
+  "itemReverseZIndex",
+  "itemSpacing",
+  "layoutAlign",
+  "layoutGrids",
+  "layoutGrow",
+  "layoutMode",
+  "layoutPositioning",
+  "layoutSizingHorizontal",
+  "layoutSizingVertical",
+  "layoutWrap",
+  "leadingTrim",
+  "letterSpacing",
+  "lineHeight",
+  "listSpacing",
+  "locked",
+  "mainComponent",
+  "maskType",
+  "maxHeight",
+  "maxLines",
+  "maxWidth",
+  "minHeight",
+  "minWidth",
+  "name",
+  "nodeId",
+  "numberOfFixedChildren",
+  "opacity",
+  "overflowDirection",
+  "overriddenFields",
+  "paddingBottom",
+  "paddingLeft",
+  "paddingRight",
+  "paddingTop",
+  "paints",
+  "paragraphIndent",
+  "paragraphSpacing",
+  "pointCount",
+  "preferredValues",
+  "primaryAxisAlignItems",
+  "primaryAxisSizingMode",
+  "propertyName",
+  "prototypeBackgrounds",
+  "reactions",
+  "relativeTransform",
+  "resolvedVariableModes",
+  "rotation",
+  "scaleFactor",
+  "scopes",
+  "sectionContentsHidden",
+  "selectedTextRange",
+  "selection",
+  "speakerNotes",
+  "strokeAlign",
+  "strokeBottomWeight",
+  "strokeCap",
+  "strokeJoin",
+  "strokeLeftWeight",
+  "strokeMiterLimit",
+  "strokeRightWeight",
+  "strokeStyleId",
+  "strokeTopWeight",
+  "strokeWeight",
+  "strokes",
+  "strokesIncludedInLayout",
+  "stuckTo",
+  "syncedMap",
+  "syncedMapOverrides",
+  "syncedState",
+  "syncedStateOverrides",
+  "textAlignHorizontal",
+  "textAlignVertical",
+  "textAutoResize",
+  "textCase",
+  "textDecoration",
+  "textDecorationColor",
+  "textDecorationOffset",
+  "textDecorationSkipInk",
+  "textDecorationStyle",
+  "textDecorationThickness",
+  "textPathStartData",
+  "textStyleId",
+  "textTruncation",
+  "topLeftRadius",
+  "topRightRadius",
+  "transformModifiers",
+  "variableWidthStrokeProperties",
+  "vectorNetwork",
+  "vectorPaths",
+  "verticalPadding",
+  "visible",
+  "x",
+  "y",
 ];
 
 // ---------------------------------------------------------------------------
@@ -256,39 +531,45 @@ const WRITE_PROPERTIES = [
 const QUOTE = `['"\`]`;
 
 function methodPattern(name) {
-  // Two call shapes, either is a real Figma write:
-  //   - `.name(`               dot-prefixed so a bare `remove()` call never
-  //                            matches, and the immediately-following `(`
-  //                            (mod whitespace) so `removeCommentsList(`
-  //                            never matches `remove`.
-  //   - `["name"](`/`['name'](` — the equivalent computed-member-access call
-  //                            shape with a STATIC string-literal key. Only
-  //                            a literal key is detected; a *variable* key
-  //                            (`node[m]()`) cannot be resolved by regex and
-  //                            remains a documented limitation (see header).
-  const dot = `\\.${name}\\s*\\(`;
+  // Match the method NAME being CALLED, regardless of receiver:
+  //   `node.remove()`, `node . remove ()`, `node\n  .remove()`,
+  //   `createFrame()` (destructured off `figma`), `getNode().remove()`.
+  // `\b` plus an immediately-following `(` (whitespace allowed) means
+  // `removeCommentsList()` never matches `remove`.
+  const bare = `\\b${name}\\s*\\(`;
+  // Computed member access with a STATIC string-literal key.
   const bracket = `\\[\\s*${QUOTE}${name}${QUOTE}\\s*\\]\\s*\\(`;
-  return { name, kind: "method call", regex: new RegExp(`(?:${dot}|${bracket})`, "g") };
+  return { name, kind: "method call", regex: new RegExp(`(?:${bare}|${bracket})`, "g") };
 }
 
 function propertyPattern(name) {
-  // Two assignment shapes, either is a real Figma write:
-  //   - `.name =`         but not `.name ==`/`.name ===`. `.name !=`/
-  //                       `.name <=`/`.name >=` never reach the lookahead
-  //                       because the char right after `name`+whitespace is
-  //                       `!`/`<`/`>`, not `=`.
-  //   - `["name"] =`/`['name'] =` — the equivalent computed-member-access
-  //                       assignment with a STATIC string-literal key; same
-  //                       `==`/`===` exclusion. A variable key remains a
-  //                       documented limitation.
-  const dot = `\\.${name}\\s*=(?!=)`;
+  // `.name =` (whitespace tolerated around the dot and before the `=`) or the
+  // bracket-literal equivalent. `=(?!=)` excludes `==`/`===`. A receiver
+  // dot/bracket IS required here — a bare `name =` would flag every ordinary
+  // `const name = …`.
+  const dot = `\\.\\s*${name}\\s*=(?!=)`;
   const bracket = `\\[\\s*${QUOTE}${name}${QUOTE}\\s*\\]\\s*=(?!=)`;
   return { name, kind: "property assignment", regex: new RegExp(`(?:${dot}|${bracket})`, "g") };
 }
 
+// Special-cased bulk writes whose method name is too generic to denylist by
+// name alone. `BaseNodeMixin.set(props)` / `QueryResult.set(props)` are real
+// bulk property writes (`node.set({ opacity: 0.5, name: "Card" })`), but the
+// bare name `set` collides with `Map#set` and friends, so we require an
+// object-literal first argument. `node.set(varHoldingProps)` is therefore an
+// accepted gap (limitation 5 above).
+const BULK_WRITE_PATTERNS = [
+  {
+    name: "set",
+    kind: "bulk property write",
+    regex: /\bset\s*\(\s*\{/g,
+  },
+];
+
 const DENYLIST = [
   ...WRITE_METHODS.map(methodPattern),
   ...WRITE_PROPERTIES.map(propertyPattern),
+  ...BULK_WRITE_PATTERNS,
 ];
 
 // ---------------------------------------------------------------------------
@@ -325,8 +606,14 @@ export function checkFigmaCode(code) {
 }
 
 /**
- * Human-readable explanation for a blocked result, suitable for surfacing to
- * an agent as PreToolUse feedback (built by the later hook-wiring task).
+ * Human-readable explanation for a blocked result, surfaced to the agent as
+ * PreToolUse feedback.
+ *
+ * Deliberately offers NO code-driven workaround: every code path that could
+ * author Figma content (`use_figma` writes, `generate_figma_design`,
+ * `generate_diagram`, `create_new_file`, asset upload) is denied by this same
+ * hook, so pointing at a "use the skill workflow instead" alternative would
+ * send the agent into a loop.
  *
  * @param {{ blocked: boolean, reason: string | null, matchedPattern: string | null }} result
  * @returns {string}
@@ -336,15 +623,22 @@ export function explain(result) {
   return [
     result.reason,
     "",
-    "Direct `use_figma` JavaScript may not create, mutate, restyle, reparent,",
-    "or delete Figma document content. Content authoring must go through the",
-    "reviewed `figma-generate-design` / `figma-code-connect` skill workflows,",
-    "not ad hoc Plugin API calls.",
+    "Code-driven Figma content authoring is NOT AVAILABLE in this repo, by",
+    "design and permanently (decision D6). There is no alternative tool, skill,",
+    "or workflow that will let you do this — every code path that creates or",
+    "mutates Figma content is blocked by this same hook.",
+    "",
+    "Any Figma content change must be made by a HUMAN directly in the Figma UI.",
+    "Report what needs to change and stop; do not look for a way around this.",
+    "",
+    "Read-only `use_figma` inspection is still allowed — if you only meant to",
+    "inspect, remove the write call(s) named above and retry.",
     "  - See: docs/plans/2026-08-19-block-figma-content-authoring.md",
+    "  - See: core/cem-figma-connect/plans/00-mission-and-decisions.md (D6)",
   ].join("\n");
 }
 
-export { DENYLIST, WRITE_METHODS, WRITE_PROPERTIES };
+export { DENYLIST, WRITE_METHODS, WRITE_PROPERTIES, BULK_WRITE_PATTERNS };
 
 // ---------------------------------------------------------------------------
 // CLI / PreToolUse hook entry point.
@@ -353,18 +647,37 @@ export { DENYLIST, WRITE_METHODS, WRITE_PROPERTIES };
 import { fileURLToPath } from "node:url";
 
 // Tool names that are ALWAYS denied, regardless of their argument content —
-// these are pure code-driven content-authoring entry points with no
-// read-only mode (D6 ruling). Matched against the tool_name SUFFIX (see
-// bareToolName below), so both `mcp__claude_ai_Figma__create_new_file` and a
-// bare `create_new_file` match.
-const ALWAYS_DENY_TOOLS = ["create_new_file", "generate_figma_design"];
+// these are pure content-authoring entry points with no read-only mode (D6).
+// Matched against the tool_name SUFFIX (see bareToolName), so both
+// `mcp__claude_ai_Figma__create_new_file` and a bare `create_new_file` match.
+//
+// SCOPE NOTE: the originating plan named only `create_new_file` and
+// `generate_figma_design`. `generate_diagram` (places a diagram into an
+// EXISTING FigJam file when given a `fileKey`), `upload_assets` (creates
+// frames with image fills) and `weave_upload_asset` (sets an image fill on an
+// existing node) are additional live tools in this session's Figma MCP surface
+// that create or mutate Figma content. They are covered here under the plan's
+// own broader goal statement — "any tool call that creates or mutates Figma
+// content" — as a controller-approved scope expansion.
+const ALWAYS_DENY_TOOLS = [
+  "create_new_file",
+  "generate_figma_design",
+  "generate_diagram",
+  "upload_assets",
+  "weave_upload_asset",
+];
 
-// Claude Code MCP tool names arrive wire-formatted as
-// `mcp__<server>__<tool>` (confirmed live: `mcp__claude_ai_Figma__use_figma`,
-// `mcp__claude_ai_Figma__create_new_file`). Taking the suffix after the last
-// `__` recovers the bare tool name uniformly for both prefixed and
-// (possible, unconfirmed for generate_figma_design) bare spellings.
-function bareToolName(toolName) {
+// The bare tool names this hook must intercept, exported so the settings.json
+// wiring test can assert the matcher actually catches every one of them.
+const INTERCEPTED_TOOLS = ["use_figma", ...ALWAYS_DENY_TOOLS];
+
+export { ALWAYS_DENY_TOOLS, INTERCEPTED_TOOLS };
+
+// Claude Code MCP tool names arrive wire-formatted as `mcp__<server>__<tool>`
+// (confirmed live: `mcp__claude_ai_Figma__use_figma`). Taking the suffix after
+// the last `__` recovers the bare tool name uniformly, so the hook is
+// independent of the MCP server's registered name.
+export function bareToolName(toolName) {
   if (typeof toolName !== "string") return "";
   const parts = toolName.split("__");
   return parts[parts.length - 1];
@@ -389,7 +702,9 @@ function runHookMode() {
   process.stdin.on("end", () => {
     let payload;
     try {
-      payload = JSON.parse(input || "{}");
+      // `.trim()` so an all-whitespace stdin falls back to the intended `{}`
+      // default instead of throwing into the catch branch.
+      payload = JSON.parse(input.trim() || "{}");
     } catch (err) {
       // Never block an unrelated tool call because THIS hook's own stdin
       // was malformed — but log it so the failure is visible.
@@ -407,11 +722,15 @@ function runHookMode() {
       if (ALWAYS_DENY_TOOLS.includes(bareName)) {
         denyAndExit(
           [
-            `Blocked by design: \`${toolName}\` performs code-driven Figma content authoring,`,
-            "which is never permitted regardless of arguments (D6 ruling — no code-driven",
-            "Figma content authoring). Content authoring must go through the reviewed",
-            "`figma-generate-design` / `figma-code-connect` skill workflows, not this tool.",
+            `Blocked by design: \`${toolName}\` creates or mutates Figma content, which is`,
+            "never permitted from code in this repo regardless of arguments (decision D6).",
+            "",
+            "There is no alternative tool, skill, or workflow for this — every code path",
+            "that authors Figma content is blocked by this same hook. Any Figma content",
+            "change must be made by a HUMAN directly in the Figma UI. Report what needs to",
+            "change and stop; do not look for a way around this.",
             "  - See: docs/plans/2026-08-19-block-figma-content-authoring.md",
+            "  - See: core/cem-figma-connect/plans/00-mission-and-decisions.md (D6)",
           ].join("\n"),
         );
         return;

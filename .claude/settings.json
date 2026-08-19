@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__claude_ai_Figma__use_figma|mcp__claude_ai_Figma__create_new_file|mcp__claude_ai_Figma__generate_figma_design|generate_figma_design",
+        "matcher": "^(mcp__.*__)?(use_figma|create_new_file|generate_figma_design|generate_diagram|upload_assets|weave_upload_asset)$",
         "hooks": [
           {
             "type": "command",
