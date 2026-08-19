@@ -33,6 +33,7 @@
     "check:drift": "npm --prefix docs run check:drift",
     "check:vendor": "npm --prefix docs run check:vendor",
     "check:samples": "npm --prefix docs run check:samples",
+    "check:compose-attrs": "npm --prefix docs run check:compose-attrs",
     "dev": "npm --prefix docs run dev",
     "serve": "npm --prefix docs run serve",
     "gate": "run-s check build:site test",

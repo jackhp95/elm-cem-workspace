@@ -91,6 +91,34 @@ that touch gate-all's own internal facts regen are marked "overlaps Track A, def
 
 ---
 
+# Remediation status (2026-08-19) — see `docs/plans/2026-08-19-tools-scripts-caching-remediation.md`
+
+A remediation pass (branch `fix/tools-scripts-caching`) executed the actionable items with
+toolchain-verified evidence. **Three findings below were corrected during execution** — verifying
+before implementing (receiving-code-review discipline) revealed the "dead scripts" are actually
+legitimately-unwired *manual/maintenance tools*, not dead code:
+
+- **SHIPPED:** (1) fixed the broken `tailwind-m3e-web` `generate:tones` (removed; `generate` →
+  `generate:utilities`); (2) unified the `check-skills.mjs` trio to the richer elm-review-cem version
+  (verified it passes on all 3 dirs first; kept per-package for mirror independence); (3) wired the
+  orphaned `check:compose-attrs` drift-gate into elm-m3e's `check` (pure `--check`, side-effect-free,
+  verified green).
+- **CORRECTED — do NOT delete (§1 rows superseded):** `fetch-mdn-native-summaries.mjs` regenerates a
+  *live consumed* config (`native-mdn.json`); `elm-cem-compose/bin/stage-facts-elm-home.mjs` is the
+  *standalone-mirror* facts-staging mechanism (elm-cem-compose is mirror-published + depends on
+  `elm-cem-facts`) — its real gap is being unwired, not being dead; `a11y-icon-button-labels.mjs` is an
+  ongoing corpus a11y codemod. Deleting the first two would be a reproducibility/mirror regression.
+- **DEFERRED (with reasons):** `verify:split` wiring (ELM_HOME concurrency hazard → Track A's isolation
+  work); `check:roundtrip` wiring (mutates a tracked report file → needs a temp-path write first);
+  `gen-figma-config.mjs` (genuine unfinished WIP — needs a product decision, don't destroy it);
+  `fix-native-bins` dedup (mirror self-sufficiency); docs `check:drift` caching (§2.1 — build on Track
+  A's `build-site-cache.mjs`, not a second mechanism).
+
+The original findings below are preserved as-written; the corrections above supersede the specific
+"delete" recommendations for the three tools named.
+
+---
+
 # 1. Dead / dubious-value scripts
 
 Legend: **dead** = zero automatic *and* manual invocations found; **orphaned-target** = a defined

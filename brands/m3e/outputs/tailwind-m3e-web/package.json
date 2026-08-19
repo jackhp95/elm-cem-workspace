@@ -65,9 +65,8 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:tones": "node bin/calibrate-tones.mjs",
     "generate:utilities": "node bin/generate-component-utilities.mjs",
-    "generate": "pnpm run generate:tones && pnpm run generate:utilities",
+    "generate": "pnpm run generate:utilities",
     "gen:facts": "node scripts/gen-facts.mjs",
     "check:privates": "node bin/check-privates.mjs",
     "check": "node bin/check-privates.mjs",
