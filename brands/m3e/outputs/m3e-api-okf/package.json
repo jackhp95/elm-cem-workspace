@@ -1,0 +1,31 @@
+{
+  "name": "m3e-okf",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Generates a verified Claude Code skill for the @m3e/web component library",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "gen:facts": "node scripts/gen-facts.mjs",
+    "gen:extract": "node scripts/extract.mjs",
+    "gen:guidance": "node scripts/guidance.mjs",
+    "gen:examples": "node scripts/build-examples.mjs",
+    "gen:skill": "node scripts/build-skill.mjs",
+    "gen:okf": "node scripts/build-okf.mjs",
+    "gen": "run-s gen:extract gen:guidance gen:examples gen:skill gen:okf",
+    "check:skill": "node scripts/check-skill.mjs",
+    "check:skills-meta": "node scripts/check-skills-meta.mjs",
+    "check:okf": "node scripts/check-okf.mjs",
+    "check:staleness": "node scripts/check-staleness.mjs",
+    "check": "run-p \"check:!(staleness)\"",
+    "test:lib": "node --test scripts/lib/*.test.mjs ../../../../tools/lib/okf-lib.test.mjs",
+    "test:templates": "node --test templates/consumer-vendor/*.test.mjs",
+    "test": "run-p \"test:*\"",
+    "hooks:install": "node ../../../../tools/hooks-install.mjs",
+    "gate": "run-s check test"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "npm-run-all2": "^9.0.3"
+  }
+}

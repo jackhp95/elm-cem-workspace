@@ -1,0 +1,31 @@
+{
+  "name": "tailwind-md3",
+  "version": "0.1.0",
+  "description": "Generic Material 3 Tailwind v4 theme — OKLCH tonal-palette color science, ref tokens, and role-extended (success/info/warning) palettes. Brand-neutral: usable by any M3-based design system, not just @m3e/web.",
+  "license": "MIT",
+  "author": "Jack H Peterson",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "files": [
+    "src/**/*.css",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./src/index.css",
+    "./roles-extended": "./src/roles-extended.css"
+  },
+  "devDependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "culori": "^4.0.2",
+    "tonal-palette-oklch": "workspace:*",
+    "vitest": "^4.1.9"
+  },
+  "scripts": {
+    "generate:tones": "node bin/calibrate-tones.mjs",
+    "generate": "pnpm run generate:tones",
+    "check": "pnpm run generate:tones && git diff --exit-code -- src/ref/_tone-table.css",
+    "test": "vitest run",
+    "hooks:install": "node ../../tools/hooks-install.mjs"
+  }
+}

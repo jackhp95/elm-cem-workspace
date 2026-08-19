@@ -69,11 +69,14 @@ export function consumerOutputDescriptors(repoRoot) {
             // W6 promoted scripts/lib/okf-lib.mjs's generic core to the shared
             // workspace tools/lib/okf-lib.mjs (same pattern as tailwind-m3e-web
             // below) — build-okf.mjs imports it via a relative specifier that
-            // walks out of packages/m3e-okf/scripts/ into tools/lib/, so the
+            // walks out of brands/m3e/outputs/m3e-api-okf/scripts/ into tools/lib/, so the
             // scratch copy needs that sibling present at the same
             // repo-root-relative position.
             externalSymlinks: ["tools/lib"],
-            paths: ["data/components.json", "skills/m3e", "knowledge", "implementations/m3e-web"],
+            // POST-REORG SPLIT (2026-08-18): "knowledge" removed -- it moved to the
+            // sibling brands/m3e/inputs/material-okf package and is no longer
+            // generated or present in m3e-api-okf's own tree.
+            paths: ["data/components.json", "skills/m3e", "implementations/m3e-web"],
             generate: (dest) => {
                 for (const script of [
                     "scripts/extract.mjs",

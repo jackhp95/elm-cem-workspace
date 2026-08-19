@@ -15,81 +15,13 @@ importers:
         specifier: ^1.15.1
         version: 1.20.0
 
-  packages/cem-figma-connect:
-    dependencies:
-      '@figma/code-connect':
-        specifier: ^1.4.9
-        version: 1.5.3
-      elm-cem:
-        specifier: workspace:*
-        version: link:../elm-cem
+  brands/m3e/inputs/material-okf:
     devDependencies:
-      '@fontsource-variable/material-symbols-outlined':
-        specifier: ^5.2.45
-        version: 5.3.2
-      '@fontsource/roboto':
-        specifier: ^5.2.10
-        version: 5.3.0
-      '@m3e/web':
-        specifier: 2.7.6
-        version: 2.7.6(@floating-ui/utils@0.2.12)(lit@3.3.3)(tslib@2.8.1)
-      culori:
-        specifier: 4.0.2
-        version: 4.0.2
-      esbuild:
-        specifier: ^0.28.1
-        version: 0.28.2
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-      pixelmatch:
-        specifier: ^7.2.0
-        version: 7.2.0
-      playwright:
-        specifier: ^1.61.1
-        version: 1.62.1
-      pngjs:
-        specifier: ^7.0.0
-        version: 7.0.0
-
-  packages/elm-cem:
-    dependencies:
-      elm-codegen:
-        specifier: ^0.6.3
-        version: 0.6.3
-    devDependencies:
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^8.0.4
-        version: 8.0.4
-
-  packages/elm-cem-compose:
-    devDependencies:
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
       npm-run-all2:
         specifier: ^9.0.3
         version: 9.0.3
 
-  packages/elm-html-intermediate-representation:
-    devDependencies:
-      elm-format:
-        specifier: 0.8.7
-        version: 0.8.7
-      elm-review:
-        specifier: ^2.13.5
-        version: 2.13.5
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  packages/elm-m3e:
+  brands/m3e/outputs/elm-m3e:
     devDependencies:
       elm:
         specifier: 0.19.1-6
@@ -107,7 +39,7 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
-  packages/elm-m3e/docs:
+  brands/m3e/outputs/elm-m3e/docs:
     dependencies:
       '@m3e/web':
         specifier: 2.7.6
@@ -121,7 +53,7 @@ importers:
     devDependencies:
       '@iconify-json/material-symbols':
         specifier: ^1.2.88
-        version: 1.2.88
+        version: 1.2.89
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
@@ -168,31 +100,7 @@ importers:
         specifier: ^8.2.0
         version: 8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)
 
-  packages/elm-review-cem:
-    devDependencies:
-      elm-review:
-        specifier: ^2.13.5
-        version: 2.13.5
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  packages/elm-typed-html:
-    devDependencies:
-      elm-review:
-        specifier: ^2.13.5
-        version: 2.13.5
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  packages/m3e-okf:
+  brands/m3e/outputs/m3e-api-okf:
     devDependencies:
       jsdom:
         specifier: ^29.1.1
@@ -201,7 +109,11 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
-  packages/tailwind-m3e-web:
+  brands/m3e/outputs/tailwind-m3e-web:
+    dependencies:
+      tailwind-md3:
+        specifier: workspace:*
+        version: link:../../../../core/tailwind-md3
     devDependencies:
       '@changesets/cli':
         specifier: ^2.31.0
@@ -221,6 +133,116 @@ importers:
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.3
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
+
+  core/cem-figma-connect:
+    dependencies:
+      '@figma/code-connect':
+        specifier: ^1.4.9
+        version: 1.5.3
+      elm-cem:
+        specifier: workspace:*
+        version: link:../elm-cem
+    devDependencies:
+      '@fontsource-variable/material-symbols-outlined':
+        specifier: ^5.2.45
+        version: 5.3.2
+      '@fontsource/roboto':
+        specifier: ^5.2.10
+        version: 5.3.0
+      '@m3e/web':
+        specifier: 2.7.6
+        version: 2.7.6(@floating-ui/utils@0.2.12)(lit@3.3.3)(tslib@2.8.1)
+      culori:
+        specifier: 4.0.2
+        version: 4.0.2
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.2
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+      pixelmatch:
+        specifier: ^7.2.0
+        version: 7.2.0
+      playwright:
+        specifier: ^1.61.1
+        version: 1.62.1
+      pngjs:
+        specifier: ^7.0.0
+        version: 7.0.0
+
+  core/elm-cem:
+    dependencies:
+      elm-codegen:
+        specifier: ^0.6.3
+        version: 0.6.3
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^8.0.4
+        version: 8.0.4
+
+  core/elm-cem-compose:
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  core/elm-html-intermediate-representation:
+    devDependencies:
+      elm-format:
+        specifier: 0.8.7
+        version: 0.8.7
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  core/elm-review-cem:
+    devDependencies:
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  core/elm-typed-html:
+    devDependencies:
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  core/tailwind-md3:
+    devDependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       tonal-palette-oklch:
         specifier: workspace:*
         version: link:../tonal-palette-oklch
@@ -228,7 +250,7 @@ importers:
         specifier: ^4.1.9
         version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
 
-  packages/tonal-palette-oklch:
+  core/tonal-palette-oklch:
     dependencies:
       '@material/material-color-utilities':
         specifier: ^0.3.0
@@ -802,8 +824,8 @@ packages:
     resolution: {integrity: sha512-GmzA9ckNokPypTg10pgpeHNQe7ph+iIKKmhKu3Ob9ANkswreCx7R3cKmY781K8QK3AqVL3xVh9A42JvIAbkkSA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@iconify-json/material-symbols@1.2.88':
-    resolution: {integrity: sha512-lx5EwRkKckCkczozRrKiyrtD+K2/tIn+/kf9HFrUez/6DGMQKb2sI7b+/agN7jItLvmY/VYUajs/ZcEjj6xiaA==}
+  '@iconify-json/material-symbols@1.2.89':
+    resolution: {integrity: sha512-wYJjKAOptNhc8Bq65PPJVEz/4Ozm+b3ZWEB3H65yGw37dr9AvXibW0GkEdVD7qrCtbD6aC6fY7SLmQCuUGtEAQ==}
 
   '@iconify-json/mdi@1.2.3':
     resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
@@ -2067,8 +2089,8 @@ packages:
     resolution: {integrity: sha512-x1VCxdX4t+8wVfd1so/9w+vQ4vx7lKd2Qp5tDRutErwmR85OgmfX7RlLRMWafRMY7hbEiXIbudNrjOAPa/hL8Q==}
     engines: {node: '>=18'}
 
-  default-browser@5.5.0:
-    resolution: {integrity: sha512-H9LMLr5zwIbSxrmvikGuI/5KGhZ8E2zH3stkMgM5LpOWDutGM2JZaj460Udnf1a+946zc7YBgrqEWwbk7zHvGw==}
+  default-browser@5.5.1:
+    resolution: {integrity: sha512-m1pAzaJgZ/gssEqlOhJkPJp8Xly7QyW6xcrkUa2KKcDeDSEMP7X8xipU3snUcfisTQx0w1AGae+9UtJSfVnXGw==}
     engines: {node: '>=18'}
 
   defaults@1.0.4:
@@ -4617,7 +4639,7 @@ snapshots:
 
   '@gar/promise-retry@1.0.3': {}
 
-  '@iconify-json/material-symbols@1.2.88':
+  '@iconify-json/material-symbols@1.2.89':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -5697,7 +5719,7 @@ snapshots:
 
   default-browser-id@5.0.1: {}
 
-  default-browser@5.5.0:
+  default-browser@5.5.1:
     dependencies:
       bundle-name: 4.1.0
       default-browser-id: 5.0.1
@@ -6401,7 +6423,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.7
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -6413,7 +6435,7 @@ snapshots:
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.7
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -6992,7 +7014,7 @@ snapshots:
 
   open@10.2.0:
     dependencies:
-      default-browser: 5.5.0
+      default-browser: 5.5.1
       define-lazy-prop: 3.0.0
       is-inside-container: 1.0.0
       wsl-utils: 0.1.0
@@ -7467,7 +7489,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.7
+      debug: 4.4.3
       socks: 2.8.9
     transitivePeerDependencies:
       - supports-color

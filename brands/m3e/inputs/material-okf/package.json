@@ -1,0 +1,20 @@
+{
+  "name": "material-okf",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Technology-neutral Material 3 knowledge bundle (OKF v0.1) -- foundations, styles, components, patterns. Brand input: consumed by brands/m3e/outputs/m3e-api-okf and the applying-material-design skill.",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "gen": "node scripts/build-knowledge.mjs",
+    "check:paraphrase": "node scripts/check-paraphrase.mjs",
+    "check:validity": "node scripts/lib/validate-okf.mjs",
+    "check": "run-p check:paraphrase check:validity",
+    "test:lib": "node --test scripts/lib/*.test.mjs",
+    "test": "run-p test:*",
+    "hooks:install": "node ../../../../tools/hooks-install.mjs"
+  },
+  "devDependencies": {
+    "npm-run-all2": "^9.0.3"
+  }
+}

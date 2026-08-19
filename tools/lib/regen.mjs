@@ -30,11 +30,11 @@ export const GEN_CONFIG_ARGS = [
 ];
 
 export function elmCemCli(repoRoot) {
-    return path.join(repoRoot, "packages", "elm-cem", "bin", "elm-cem.js");
+    return path.join(repoRoot, "core", "elm-cem", "bin", "elm-cem.js");
 }
 
 export function defaultElmM3e(repoRoot) {
-    return process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+    return process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 }
 
 /**
