@@ -173,10 +173,19 @@ elm-review backstops raw children); `elements`/`components` — compiler (closed
 rows + slot-setters); `builder` — compiler (`Available`/`Used` capability rows).
 (Exact per-package contract to be confirmed with the rework.)
 
-Two terms of caution: (1) the child-only-tag folding in `components` is the
-**slot-acceptance graph** Facts already stores — Facts *exposes* that data for the
-families infra to consume, but does **not** own the partition. (2) "facet" is
-overloaded in the codebase — `split.js` calls the **packages** facets;
+Two terms of caution: (1) the `components` family folding is driven by the
+**`home`** config primitive (P10 — `homeOf`, `Generate/Phantom/Emit/Shared.elm:182-193`),
+and child-only *validity* by the **independent** **`parents`** primitive (P4 —
+`Comp.admittedBy`, `Model.elm:1724-1749`). **Neither is derived from the slot-`admits`
+graph** (`config-primitives.md:218-222`: a tag can sit in ten slots yet keep open
+`parents`). Facts carries all three (`admits`, `parents`, `home`) as independent
+facts; the partition infra consumes them and Facts does **not** own the partition.
+Note the partition currently has *two* ungoverned mechanisms —
+`split.js`/`packages.json` buckets and a separate `gen-family-package.js`/`_families`
+generator emitting `M3e.Family.*` with zero bucket coverage — which the rework
+reconciles; Facts treats `packages.json` as a **versioned input** and fails loud on
+any generated module no bucket covers (mirroring `split.js`'s totality gate). (2)
+"facet" is overloaded in the codebase — `split.js` calls the **packages** facets;
 `FactsBundle.elm:73-76` calls the **construction forms** (`top`/Standard,
 `build`/Build, `record`/Record, `html`/Html) facets. Those form keys are
 **vestigial**; Brand Facts subsumes Face C and drops/renames them rather than
@@ -257,28 +266,37 @@ There are two dual relations (both already modelled in the generated types):
   the kind rows `LeadingSlot`/`TrailingSlot`/`Content`. This is what `admits`
   provides. **We store this**, container-keyed: `components[C].slots[S].admits`.
 - **Placement** (child ↔ the slot it claims — `<foo-bar slot="example">`): the
-  slot-setter functions + `admittedBy`/`ChildAdmittedBy` rows. **Derived** by
-  inverting acceptance — `foo-bar` may bear `slot="example"` in `fizz-buzz` iff
-  `foo-bar`'s kind ∈ `fizz-buzz.example.admits` (absent ⇒ any). There is no
-  free-standing "`example` is a valid slot" fact; `slot=` is meaningful only
-  relative to a container's declared slots.
+  slot-setter functions + `admittedBy`/`ChildAdmittedBy` rows. Governed by the
+  **conjunction of two stored facts**, not by inverting acceptance alone —
+  (a) acceptance: `foo-bar`'s kind ∈ `fizz-buzz.example.admits` (absent ⇒ any),
+  **and** (b) the child's authored **`parents`** restriction: open ⇒ any parent,
+  else `fizz-buzz` ∈ `foo-bar`'s parents. `parents` (P4 → `Comp.admittedBy`,
+  `Model.elm:1724-1749`) is a **separate authored fact, not derivable from
+  `admits`** — a tag can be admitted by many slots yet be restricted to specific
+  parents, or vice-versa. So Facts also stores it per component:
+  `components[T].admittedBy` (absent ⇒ open). The slot-name itself is still
+  meaningful only relative to a container's declared slots.
 
 Three defaults, each its own knob:
 
 | Dimension | Default when unspecified | Source |
 |---|---|---|
 | **slot inventory** — which named slots container `C` has | **CLOSED** — exactly the CEM's `decl.slots` | CEM |
-| **kind constraint** — what `C.S` accepts (`admits`) | **absent → open, `[]` → sealed, `[…]` → listed** | config, optional |
-| **placement** — may a child bear `slot="S"` in `C` | **derived** (invert acceptance); open only as the shadow of an absent kind-constraint, scoped to `C` | derived |
+| **kind constraint** — what `C.S` accepts (`admits`) | absent → open, `[]` → sealed, `[…]` → listed | config, optional |
+| **parents restriction** — which parents child `T` may sit under (`admittedBy`) | absent → open (any parent) | config, optional |
+| **placement** — may child `T` bear `slot="S"` in `C` | **derived**: acceptance ∩ parents (both stored above) | derived |
 
 Reference derivation (placement + validation):
 
 ```js
-function validPlacement(childKind, containerTag, slot, facts) {
-  const comp = facts.components[containerTag];
-  if (!comp || !(slot in comp.slots)) return false;   // inventory CLOSED
-  const admits = comp.slots[slot].admits;
-  return admits === undefined || admits.includes(childKind); // absent→open, []→sealed, [..]→listed
+function validPlacement(child, containerTag, slot, facts) {
+  const parent = facts.components[containerTag];
+  if (!parent || !(slot in parent.slots)) return false;                 // inventory CLOSED
+  const admits = parent.slots[slot].admits;
+  const kindOk = admits === undefined || admits.includes(child.kind);   // absent→open, []→sealed, [..]→listed
+  const parents = facts.components[child.tag]?.admittedBy;
+  const parentOk = parents === undefined || parents.includes(containerTag); // absent→open
+  return kindOk && parentOk;                                            // acceptance ∩ parents
 }
 ```
 
@@ -340,6 +358,32 @@ superset rather than joining two producers at encode time:
 - Slot admission gets **one** representation (§4.3); `slotKinds` / `requiredSlots`
   / `multiSlots` become derived views, not stored duplicates.
 
+### 4.7 Deriving the `targets.elm` bindings (baked-in from existing config, not authored)
+
+The bindings are **computed**, from the same resolved model + the `packages.json`
+bucket config — largely a re-projection of Face C's existing derivation onto the
+destination-package axis, plus a bucket join. Not new naming logic.
+
+1. **Module names per surface** — reuse `componentModuleName` (`SharedAttrs.elm:62`,
+   already stamped onto `comp.name`) + `homeOf`/`memberRef` (`Shared.elm:182-234`):
+   no `home` ⇒ `M3e.Component.<name>` / `M3e.Build.<name>` / `M3e.Internal.Types.<name>`;
+   `home = h` ⇒ shared `M3e.Component.<h>` (multiple tags → **same** module — record
+   the N:1); the barrel `M3e` re-exports every ctor.
+2. **Per-component identifiers** — reuse Face C's `encodeComponent`
+   (`FactsBundle.elm:262`): `setters`/`setterArgTypes`, `enums`, `slotSetters`/
+   `slotSetterMap`, `pipeSetters`, `eventHandlers`, `requiredSlots`/`multiSlots`,
+   `slotKinds`, `group`. **Ignore** the dead `groupConstructors`/`slotUpgrades = []`
+   placeholders (`FactsBundle.elm:372,378`); reconstruct family membership by
+   **bucketing on `group.module`**.
+3. **Module → package** — match each module name against `packages.json` buckets,
+   **iterating packages in file order, buckets in file order, first `prefix`/`exact`
+   hit wins** (replicate `split.js:110-124` exactly — declared order is the
+   semantics, not longest-prefix). Emit `{package, module}` per surface.
+4. **Totality** — run the matcher over the *full* generated module list; any module
+   no bucket covers is a **hard error** (mirror `split.js:125-128`), never a silent
+   omission — that is the lossy-projection failure mode this design closes, and it
+   surfaces the current `gen-family-package.js`/`M3e.Family.*` coverage gap.
+
 ## 5. Decisions (locked)
 
 1. **One comprehensive `brand-facts.json`**, canonical core + `targets.<lang>`
@@ -354,6 +398,14 @@ superset rather than joining two producers at encode time:
 7. **Facets carry their enforcement contract** as first-class data.
 8. **Facts is language-neutral**; Elm identifiers are namespaced under
    `targets.elm`, never smeared into canonical fields.
+9. **Three independent composition primitives, all carried:** `admits` (slot
+   acceptance, per container), `parents`→`admittedBy` (child placement restriction,
+   per component), `home` (module grouping). None derives from another; placement =
+   acceptance ∩ parents.
+10. **Bindings are derived, not authored** — reuse the resolved model's naming +
+    Face C's identifier derivation, join to packages via `packages.json` buckets in
+    file order (first-match), and **fail loud** on any generated module no bucket
+    covers (mirror `split.js` totality).
 
 ## 6. Open questions (resolve during planning)
 
@@ -377,6 +429,11 @@ superset rather than joining two producers at encode time:
   the earlier invented `strict`/`loose`/`general`/`escape` — both dropped.
 - **`schemaVersion` bump** to `2` and whether the hand-rolled validator
   (`validate-facts-bundle.js`) is extended or replaced.
+- **Two ungoverned partition generators to reconcile** (with the rework):
+  `split.js`/`packages.json` buckets vs `gen-family-package.js`/`_families`
+  (emits `M3e.Family.*`, currently zero bucket coverage). And Face C's
+  `groupConstructors`/`slotUpgrades` are dead `[]` placeholders — populate or drop
+  when subsuming Face C.
 
 ## 7. Phase decomposition
 
@@ -390,7 +447,9 @@ Each phase becomes its own plan (`superpowers:writing-plans`) with its own revie
    `validate-facts-bundle.js`. *No behavior change yet.*
 2. **Enrich the model + unified producer.** `Comp` retains `source :
    Cem.Declaration`; comprehensive Elm encoder; fold Face B's JS value-adds in;
-   emit one `brand-facts.json`. Ship it **alongside** the existing bundles.
+   derive `targets.elm` bindings by reusing Face C's identifier derivation + the
+   `packages.json` bucket join (§4.7, fail-loud on coverage gap); carry `admits`/
+   `parents`/`home`. Emit one `brand-facts.json` **alongside** the existing bundles.
 3. **Slot-default flip + dead-input cleanup** *(separable; see §6).* Flip codegen
    absent→open + consult CEM-declared slots; drop `_native`/`_nativeAttrTable`.
 4. **Migrate consumers.** Point cem-figma-connect / okf / `oracle.mjs` / tailwind
@@ -415,11 +474,13 @@ gate green between phases.
 
 **Coordination dependency (not owned here):** the elm-m3e package rework
 (`elm-m3e`→`-html` incl. barrel; `-components`→`-elements`; `-families`→
-`-components`; per §3.4) is concurrent. Brand Facts keys `targets.elm` by the
-**destination** package names and **consumes** the partition (contents, families
-folding) rather than defining it — the families-generation infra owns that. Facts
-exposes the slot-acceptance graph that infra reads; it does not drive the split.
-Phase 4 (consumer migration) sequences after the rework's package names settle.
+`-components`; per §3.4) is concurrent, and it reconciles the two current partition
+mechanisms (`split.js`/`packages.json` buckets vs `gen-family-package.js`/`_families`).
+Brand Facts keys `targets.elm` by the **destination** package names, **consumes**
+the partition via the `packages.json` bucket join (§4.7), and **carries** the
+`admits`/`parents`/`home` config primitives the partition infra reads — but does
+**not** define the split. Phase 4 (consumer migration) sequences after the rework's
+package names settle.
 
 Consistent with the workspace stance: prefer the correct shape over a small blast
 radius; blast radius is a cost, not a blocker.
