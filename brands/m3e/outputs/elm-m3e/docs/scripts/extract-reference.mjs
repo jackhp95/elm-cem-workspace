@@ -323,6 +323,25 @@ function overview(comment) {
   return out.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+// 3b. Recover the `<!-- elm-cem:docmeta k=v; k=v -->` marker overview() drops.
+//     Format (core/elm-cem/codegen/Docs.elm docMetaMarker): pairs joined by
+//     "; ", each `k=escapeMarker(v)`, terminated by the first literal `-->`
+//     (escapeMarker rewrites any `-->` inside a value to `--&gt;`, so the first
+//     `-->` is always the real terminator). Returns null when absent.
+function parseDocMeta(comment) {
+  const m = (comment || "").match(/<!--\s*elm-cem:docmeta\s+(.*?)\s*-->/);
+  if (!m) return null;
+  const pairs = {};
+  for (const part of m[1].split(";")) {
+    const t = part.trim();
+    if (!t) continue;
+    const eq = t.indexOf("=");
+    if (eq === -1) continue;
+    pairs[t.slice(0, eq).trim()] = t.slice(eq + 1).trim().replace(/--&gt;/g, "-->");
+  }
+  return Object.keys(pairs).length ? pairs : null;
+}
+
 // 4. Order members by their first appearance in the module comment's `@docs`
 //    sections (docs.json sorts each array alphabetically, but the @docs order
 //    is what the rendered page should reflect). Anything not referenced by
@@ -478,6 +497,10 @@ function moduleEntry(mod, modulesByName, barrelSlice) {
   });
 
   const over = overview(mod.comment || "");
+  // Recover the invisible `<!-- elm-cem:docmeta … -->` marker (overview() drops
+  // it from the prose) so the reference page can surface a "View in Figma" link
+  // — the sole reader of the docMeta elm-cem emits from config/figma.generated.json.
+  const docMeta = parseDocMeta(mod.comment || "");
   // Join the editorial override (config/categories.json) by slug: a matched
   // entry makes this a nav component (category + editorial label); an unmatched
   // one gets an empty category (dropped from the nav) and falls back to `name`.
@@ -498,6 +521,8 @@ function moduleEntry(mod, modulesByName, barrelSlice) {
     overview: over,
     types,
     layers: { m3e: m3eLayer, components: componentsLayer, builder: builderLayer, raw: rawLayer },
+    // Present only for components with a Figma correspondence (52 of them).
+    ...(docMeta && docMeta.figmaUrl ? { figma: { url: docMeta.figmaUrl, status: docMeta.figmaStatus || "" } } : {}),
   };
 }
 

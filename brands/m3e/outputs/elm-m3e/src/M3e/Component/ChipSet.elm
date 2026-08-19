@@ -14,6 +14,8 @@ A container used to organize chips into a cohesive unit.
 @docs vertical
 @docs child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57376-5501; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

@@ -89,7 +89,7 @@ M3e.Component.Timepicker.component [ M3e.Component.Timepicker.variant M3e.Values
     ]
 ```
 
-<!-- elm-cem:docmeta category=Text inputs -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-27916; figmaStatus=approved -->
 
 -}
 

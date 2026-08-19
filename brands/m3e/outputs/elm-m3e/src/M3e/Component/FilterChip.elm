@@ -16,6 +16,8 @@ A chip users interact with to select/deselect options.
 @docs disabled, disabledInteractive, selected, value, defaultSelected, defaultValue, onBeforeinput, onInput, onChange, onClick
 @docs icon, trailingIcon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-28270; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

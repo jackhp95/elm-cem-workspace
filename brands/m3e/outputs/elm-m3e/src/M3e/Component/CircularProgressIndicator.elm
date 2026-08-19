@@ -16,6 +16,8 @@ A circular indicator of progress and activity.
 @docs indeterminate, max, value, defaultValue
 @docs child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-8459; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

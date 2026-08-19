@@ -50,7 +50,7 @@ M3e.Component.NavBar.component [] [ M3e.Component.NavItem.component [ M3e.Compon
 M3e.Component.NavBar.component [] [ M3e.Component.NavItem.component [ M3e.Component.NavItem.href "https://www.google.com", M3e.Component.NavItem.target "_blank" ] [ M3e.Component.NavItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "news" ] []), M3e.text "News" ] ]
 ```
 
-<!-- elm-cem:docmeta category=Navigation -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58016-37236; figmaStatus=example-verified -->
 
 -}
 

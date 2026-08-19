@@ -14,6 +14,8 @@ An item in a list that can be expanded to show more items.
 @docs disabled, open, onOpening, onOpened, onClosing, onClosed
 @docs items, leading, overline, supportingText, toggleIcon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13316; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

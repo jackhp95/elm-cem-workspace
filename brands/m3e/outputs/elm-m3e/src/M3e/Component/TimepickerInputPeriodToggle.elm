@@ -12,6 +12,8 @@ module M3e.Component.TimepickerInputPeriodToggle exposing
 @docs Period, period
 @docs orientation, onChange
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52949-28132; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

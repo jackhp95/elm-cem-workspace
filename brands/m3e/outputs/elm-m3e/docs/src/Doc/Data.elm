@@ -1,6 +1,7 @@
 module Doc.Data exposing
     ( Component
     , ExampleUsage
+    , FigmaLink
     , Layers
     , Member
     , allComponents
@@ -36,6 +37,17 @@ type alias Layers =
     }
 
 
+{-| A component's correspondence to the public Material 3 Design Kit (Community)
+Figma file, recovered by extract-reference.mjs from the `<!-- elm-cem:docmeta -->`
+marker elm-cem emits from config/figma.generated.json. Present only for the
+components that have a Figma correspondence.
+-}
+type alias FigmaLink =
+    { url : String
+    , status : String
+    }
+
+
 type alias Component =
     { name : String
     , slug : String
@@ -45,6 +57,7 @@ type alias Component =
     , overview : String
     , types : List Member
     , layers : Layers
+    , figma : Maybe FigmaLink
     }
 
 
@@ -60,21 +73,34 @@ memberDecoder =
 
 componentDecoder : Decode.Decoder Component
 componentDecoder =
-    Decode.map8 Component
-        (Decode.field "name" Decode.string)
-        (Decode.field "slug" Decode.string)
-        (Decode.oneOf [ Decode.field "category" Decode.string, Decode.succeed "" ])
-        -- The editorial nav label; older reference.json lacked it, so fall back
-        -- to the bare `name`.
-        (Decode.oneOf [ Decode.field "label" Decode.string, Decode.field "name" Decode.string ])
-        (Decode.oneOf [ Decode.field "summary" Decode.string, Decode.succeed "" ])
-        (Decode.field "overview" Decode.string)
-        (Decode.oneOf
-            [ Decode.field "types" (Decode.list memberDecoder)
-            , legacyMembers |> Decode.map (List.filter (\m -> m.kind == "type"))
-            ]
+    -- elm/json's map tops out at map8, so the 9th field (`figma`) is applied
+    -- via `map2 (|>)`: the map8 yields a partially-applied `Maybe FigmaLink ->
+    -- Component`, which `(|>)` then feeds the decoded (optional) figma value.
+    Decode.map2 (|>)
+        (Decode.maybe (Decode.field "figma" figmaDecoder))
+        (Decode.map8 Component
+            (Decode.field "name" Decode.string)
+            (Decode.field "slug" Decode.string)
+            (Decode.oneOf [ Decode.field "category" Decode.string, Decode.succeed "" ])
+            -- The editorial nav label; older reference.json lacked it, so fall back
+            -- to the bare `name`.
+            (Decode.oneOf [ Decode.field "label" Decode.string, Decode.field "name" Decode.string ])
+            (Decode.oneOf [ Decode.field "summary" Decode.string, Decode.succeed "" ])
+            (Decode.field "overview" Decode.string)
+            (Decode.oneOf
+                [ Decode.field "types" (Decode.list memberDecoder)
+                , legacyMembers |> Decode.map (List.filter (\m -> m.kind == "type"))
+                ]
+            )
+            layersDecoder
         )
-        layersDecoder
+
+
+figmaDecoder : Decode.Decoder FigmaLink
+figmaDecoder =
+    Decode.map2 FigmaLink
+        (Decode.field "url" Decode.string)
+        (Decode.oneOf [ Decode.field "status" Decode.string, Decode.succeed "" ])
 
 
 {-| An older flat `reference.json` carried one `members` array. Decode it (or an

@@ -81,7 +81,7 @@ M3e.Component.Datepicker.component [ M3e.Component.Datepicker.variant M3e.Values
     ]
 ```
 
-<!-- elm-cem:docmeta category=Text inputs -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51954-18136; figmaStatus=approved -->
 
 -}
 

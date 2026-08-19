@@ -93,7 +93,7 @@ Presents a list of choices on a temporary surface.
     ]
 ```
 
-<!-- elm-cem:docmeta category=Navigation -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58966-3975; figmaStatus=example-verified -->
 
 -}
 

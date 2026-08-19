@@ -14,6 +14,8 @@ An interactive element that, when activated, presents an associated tab panel.
 @docs disabled, for, selected, defaultSelected, onBeforeinput, onInput, onChange, onClick
 @docs icon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40142; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

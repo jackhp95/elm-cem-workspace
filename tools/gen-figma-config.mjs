@@ -14,27 +14,29 @@
 // config/examples.generated.json's key casing, NOT Face C's own lowercase
 // `component` field).
 //
-// -- WHY THIS IS NOT YET WIRED INTO tools/lib/regen.mjs's GEN_CONFIG_ARGS ---
+// -- WIRED + VISIBLE (2026-08-19, docs/plans/2026-08-19-figma-docmeta-visible.md) ---
 //
-// Verified this session (source-read, not assumed) against
-// core/elm-cem/codegen/Docs.elm's docMetaMarker: `docMeta` renders as an
-// INVISIBLE HTML-comment marker (`<!-- elm-cem:docmeta k=v; ... -->`) in the
-// generated module's doc comment — not a visible Markdown line. Worse:
-// brands/m3e/outputs/elm-m3e/docs/scripts/extract-reference.mjs (the docs-site's own
-// reference extractor) explicitly DROPS `elm-cem:docmeta` directives before
-// rendering the public reference pages. So wiring this file into
-// GEN_CONFIG_ARGS today would embed Figma node-ids/URLs (pointing at Jack's
-// PRIVATE kit file) into the actual shipped elm-m3e package's doc-comment
-// bytes, for ZERO visible effect anywhere a human reads the docs — and it's
-// exactly the kind of "publish Figma URLs?" call flagged as an open question
-// in the design doc (§7, open question 2), now sharpened by this finding.
-// Making it VISIBLE would require extending extract-reference.mjs (or the
-// docs-app renderer) to parse `elm-cem:docmeta` back out and render
-// something — real UI-design work, held pending Jack's steer on the
-// publication-stance question. This script stops at "generate the file,
-// verify the shape" — the config file it writes is real and immediately
-// useful once (a) the publication question is answered and (b) it's added
-// to GEN_CONFIG_ARGS.
+// This config is now CONSUMED end to end:
+//   * `--config-from=config/figma.generated.json` is in elm-m3e's gen:src /
+//     check:cem / check:families argv (elm-m3e/config is a symlink to
+//     inputs/cem/config, so the relative path resolves).
+//   * elm-cem's docMeta consumer (Generate/Config.elm) renders it via
+//     core/elm-cem/codegen/Docs.elm's docMetaMarker as an HTML-comment marker
+//     (`<!-- elm-cem:docmeta k=v; ... -->`) in each generated module's doc
+//     comment.
+//   * That marker USED to be silently dropped by
+//     brands/m3e/outputs/elm-m3e/docs/scripts/extract-reference.mjs; it now
+//     PARSES it into reference.json's per-component `figma` field, which the
+//     docs app (docs/app/Route/Components/Name_.elm) renders as a
+//     "View in Figma" link.
+//
+// Publication stance: the URLs point at the PUBLIC "Material 3 Design Kit
+// (Community)" Figma file (verified from the emitted URLs — NOT a private kit),
+// so shipping them in the elm-m3e package + docs is safe and useful.
+//
+// The generator is no longer orphaned: elm-m3e's `gen:figma-config` runs this
+// script as the first step of `gen`, and `check:figma-config` (this script's
+// --check mode) gates the committed file against drift.
 //
 // Usage: node tools/gen-figma-config.mjs [--profile <name>]
 
@@ -85,16 +87,34 @@ export function deriveFigmaConfig({ figmaLinks, faceC }) {
 }
 
 function main(argv) {
+  const check = argv.includes("--check");
   const { profile } = parseArgs(argv);
   const profileDir = path.join(cfcDir, "profiles", profile);
   const figmaLinks = readJson(path.join(profileDir, "figma-links.json"));
   const faceC = readJson(path.join(profileDir, "facts", "elm-api-facts.json"));
   const config = deriveFigmaConfig({ figmaLinks, faceC });
   const outPath = path.join(elmM3eConfigDir, "figma.generated.json");
-  fs.writeFileSync(outPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
-  console.log(
-    `gen-figma-config: wrote ${path.relative(repoRoot, outPath)} (${Object.keys(config).length} components) — NOT wired into GEN_CONFIG_ARGS yet, see this file's header.`,
-  );
+  const serialized = `${JSON.stringify(config, null, 2)}\n`;
+  const rel = path.relative(repoRoot, outPath);
+  const n = Object.keys(config).length;
+
+  // --check: regenerate in memory and byte-compare against the committed file,
+  // exit nonzero on drift WITHOUT writing (the drift-gate half — same shape as
+  // docs/scripts/gen-compose-attrs.mjs --check). This is elm-m3e's
+  // `check:figma-config`, keeping the committed config from silently going
+  // stale once cem-figma-connect's figma-links / faceC change.
+  if (check) {
+    const committed = fs.existsSync(outPath) ? fs.readFileSync(outPath, "utf8") : null;
+    if (committed !== serialized) {
+      console.error(`check-figma-config: FAIL — ${rel} is stale (${n} components derived). Regenerate with: node tools/gen-figma-config.mjs`);
+      process.exit(1);
+    }
+    console.log(`check-figma-config: OK — ${rel} matches the generator's current output (${n} components).`);
+    return;
+  }
+
+  fs.writeFileSync(outPath, serialized, "utf8");
+  console.log(`gen-figma-config: wrote ${rel} (${n} components).`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

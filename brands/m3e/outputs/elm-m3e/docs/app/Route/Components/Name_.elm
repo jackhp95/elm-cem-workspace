@@ -158,6 +158,7 @@ header component =
                 [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small, M3e.Attributes.level 1 ]
                 [ M3e.text component.label ]
                 :: categoryChip component.category
+                ++ figmaPill component.figma
             )
             :: summaryBlock component.summary
             ++ [ installCard, Doc.userlandNote ]
@@ -195,6 +196,22 @@ categoryChip cat =
 
     else
         [ M3e.suggestionChip [] [ M3e.text cat ] ]
+
+
+{-| "View in Figma" pill linking to the component's node in the public Material 3
+Design Kit (Community) file. Present only for components with a Figma
+correspondence (`reference.json` `figma`, recovered from the elm-cem docMeta
+marker). Reuses `Doc.anchorPill` (an `M3e.assistChip` with an `href`) — the same
+pill the example-app cross-links use.
+-}
+figmaPill : Maybe Doc.Data.FigmaLink -> List (Element { s | assistChip : M3e.Kind.Brand } adm_ msg)
+figmaPill figma =
+    case figma of
+        Nothing ->
+            []
+
+        Just link ->
+            [ Doc.anchorPill { href = link.url, label = "View in Figma" } ]
 
 
 {-| The one-line summary paragraph, constrained to a comfortable reading measure.

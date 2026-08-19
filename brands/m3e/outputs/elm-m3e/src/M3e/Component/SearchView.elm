@@ -16,6 +16,8 @@ A surface that presents suggestions and results for a search.
 @docs clearLabel, closeLabel, contained, hideSearchIcon, open, onQuery, onClear, onBeforetoggle, onToggle
 @docs clearIcon, closeIcon, closedLeading, closedTrailing, input, openLeading, openTrailing, searchIcon, child
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59178-4992; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

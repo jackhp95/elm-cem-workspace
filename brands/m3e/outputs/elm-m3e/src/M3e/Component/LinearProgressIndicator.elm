@@ -14,6 +14,8 @@ A horizontal bar for indicating progress and activity.
 @docs Mode, mode, Variant, variant
 @docs bufferValue, max, value, defaultValue
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58005-7997; figmaStatus=example-verified -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)

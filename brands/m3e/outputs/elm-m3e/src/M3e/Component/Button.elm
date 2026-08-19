@@ -109,7 +109,7 @@ M3e.Component.Button.component { content = M3e.text "Google", action = M3e.Actio
     ]
 ```
 
-<!-- elm-cem:docmeta category=Actions -->
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-2227; figmaStatus=approved -->
 
 -}
 

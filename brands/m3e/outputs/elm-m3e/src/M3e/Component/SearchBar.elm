@@ -14,6 +14,8 @@ A bar that provides a prominent entry point for search.
 @docs clearLabel, clearable, onClear
 @docs clearIcon, input, leading, trailing
 
+<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=52977-33813; figmaStatus=approved -->
+
 -}
 
 import HtmlIr.Attribute exposing (Attr)
