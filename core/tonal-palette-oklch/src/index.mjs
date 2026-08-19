@@ -7,7 +7,7 @@
 // caller picks its own hues/tones/chroma buckets. What stayed behind in
 // `calibrate-tones.mjs` is genuinely package-specific: the M3-spec chroma
 // buckets ("rich"/"neutral"), the fixed 12-hue/12-tone sample grid, and the
-// `--_m3e-tone-*` CSS variable names in its emitted output.
+// `--_md-tone-*` CSS variable names in its emitted output.
 //
 // This needed its own package rather than tools/lib/ because it has real npm
 // dependencies (@material/material-color-utilities, culori) — every existing

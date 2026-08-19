@@ -42,15 +42,17 @@ import { byKey } from "../lib/order.mjs";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..", "..");
 
-const VENDORED_DIR = path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
+// POST-REORG SPLIT (2026-08-18): seed.css/ref/_tone-table.css moved to
+// core/tailwind-md3 (brand-neutral color science).
+const VENDORED_DIR = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
 const FIXTURE_PATH = path.join(repoRoot, "test", "fixtures", "tailwind-computed-palette.json");
 
-// Version of the workspace tailwind-m3e-web package this fixture was computed
+// Version of the workspace tailwind-md3 package this fixture was computed
 // from (read live, not pinned — see the header note above). Update the
 // fixture (`--write`) whenever that package's src/seed.css, src/ref/*.css
 // change.
 const TAILWIND_M3E_WEB_VERSION = JSON.parse(
-  fs.readFileSync(path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "package.json"), "utf8")
+  fs.readFileSync(path.join(repoRoot, "..", "..", "core", "tailwind-md3", "package.json"), "utf8")
 ).version;
 
 const TONES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100];
@@ -64,14 +66,14 @@ function gamutMappedHex(oklchColor) {
 // -- parsing the vendored CSS (numbers only; no CSS engine involved) --------
 
 // parseToneTable(css) -> { rich: {10: L0..1, ...}, neutral: {...} }
-// Reads `--_m3e-tone-<N>-<profile>: <pct>%;` (src/ref/_tone-table.css).
+// Reads `--_md-tone-<N>-<profile>: <pct>%;` (src/ref/_tone-table.css).
 export function parseToneTable(css) {
   const out = { rich: {}, neutral: {} };
   for (const profile of ["rich", "neutral"]) {
     for (const tone of TONES) {
-      const m = css.match(new RegExp(`--_m3e-tone-${tone}-${profile}:\\s*([\\d.]+)%`));
+      const m = css.match(new RegExp(`--_md-tone-${tone}-${profile}:\\s*([\\d.]+)%`));
       if (!m) {
-        throw new Error(`tone table missing --_m3e-tone-${tone}-${profile}`);
+        throw new Error(`tone table missing --_md-tone-${tone}-${profile}`);
       }
       out[profile][tone] = parseFloat(m[1]) / 100;
     }

@@ -10,7 +10,7 @@
  * The hue/chroma/tone -> OKLCH-L sampling math is brand-agnostic and lives in
  * `tonal-palette-oklch` (promoted per the thermonuclear audit, Theme 6 #3) —
  * this file keeps only what's specific to m3e's calibration: the M3-spec
- * chroma buckets, the 12x12 sample grid, and the `--_m3e-tone-*` output.
+ * chroma buckets, the 12x12 sample grid, and the `--_md-tone-*` output.
  *
  * Output: src/ref/_tone-table.css (deterministic, checked in).
  *
@@ -56,12 +56,12 @@ export function emitCss({ rich, neutral }) {
   lines.push(":where(:root) {");
   lines.push("  /* Chroma-rich profile — primary/secondary/tertiary/error tonal palettes. */");
   for (const tone of TONES) {
-    lines.push(`  --_m3e-tone-${tone}-rich: ${rich[tone]}%;`);
+    lines.push(`  --_md-tone-${tone}-rich: ${rich[tone]}%;`);
   }
   lines.push("");
   lines.push("  /* Neutral profile — neutral and neutral-variant tonal palettes. */");
   for (const tone of TONES) {
-    lines.push(`  --_m3e-tone-${tone}-neutral: ${neutral[tone]}%;`);
+    lines.push(`  --_md-tone-${tone}-neutral: ${neutral[tone]}%;`);
   }
   lines.push("}");
   lines.push("");

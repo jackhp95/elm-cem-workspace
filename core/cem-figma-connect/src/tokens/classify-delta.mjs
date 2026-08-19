@@ -56,12 +56,15 @@ import {
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const repoRoot = path.join(here, "..", "..");
 const twSrc = path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
+// POST-REORG SPLIT (2026-08-18): seed.css/ref/*/theme.css moved to
+// core/tailwind-md3; sys/*.css stayed in tailwind-m3e-web (brand-specific).
+const md3Src = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
 
 export const DEFAULT_PATHS = {
-  seedCssPath: path.join(twSrc, "seed.css"),
-  paletteCssPath: path.join(twSrc, "ref", "palette.css"),
+  seedCssPath: path.join(md3Src, "seed.css"),
+  paletteCssPath: path.join(md3Src, "ref", "palette.css"),
   sysDir: path.join(twSrc, "sys"),
-  themeCssPath: path.join(twSrc, "theme.css"),
+  themeCssPath: path.join(md3Src, "theme.css"),
   cemFactsPath: path.join(repoRoot, "profiles", "m3-kit", "facts", "cem-facts.json"),
 };
 

@@ -5,6 +5,11 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
+// POST-REORG SPLIT (2026-08-18): theme.css/roles-extended.css moved here from
+// tailwind-m3e-web; sys/*.css stayed there (brand-specific). SYS_SRC lets the
+// first describe block below (which cross-checks theme.css against every
+// declared --md-sys-* var) keep reading sys/*.css from its real home.
+const SYS_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
 
 const SPEC_ROLES = [
   "primary", "on-primary", "primary-container", "on-primary-container",
@@ -28,7 +33,7 @@ const EXTENDED_ROLES = ["success", "info", "warning"];
 describe("theme.css references every sys var", () => {
   it("every --md-sys-* declared in sys/*.css appears as a var() reference in theme.css", async () => {
     const themeCss = await readFile(join(SRC, "theme.css"), "utf8");
-    const sysFiles = readdirSync(join(SRC, "sys")).filter((f) => f.endsWith(".css"));
+    const sysFiles = readdirSync(join(SYS_SRC, "sys")).filter((f) => f.endsWith(".css"));
 
     // Vars deliberately not surfaced as theme keys (documented in theme.css):
     const SKIP = new Set([
@@ -43,7 +48,7 @@ describe("theme.css references every sys var", () => {
     ]);
 
     for (const file of sysFiles) {
-      const css = await readFile(join(SRC, "sys", file), "utf8");
+      const css = await readFile(join(SYS_SRC, "sys", file), "utf8");
       // Match left-hand-side declarations: lines like `  --md-sys-color-primary: ...`.
       const declared = [...css.matchAll(/^[ \t]*(--md-sys-[a-z0-9\-]+)\s*:/gm)].map((m) => m[1]);
       for (const v of declared) {

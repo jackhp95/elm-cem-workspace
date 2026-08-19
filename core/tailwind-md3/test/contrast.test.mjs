@@ -28,7 +28,7 @@ const SEED_ERROR = "#b3261e";
 let toneTable;
 async function L(tone, profile = "rich") {
   toneTable ??= await readFile(join(SRC, "ref/_tone-table.css"), "utf8");
-  const m = toneTable.match(new RegExp(`--_m3e-tone-${tone}-${profile}:\\s*([\\d.]+)%`));
+  const m = toneTable.match(new RegExp(`--_md-tone-${tone}-${profile}:\\s*([\\d.]+)%`));
   return parseFloat(m[1]) / 100;
 }
 

@@ -8,13 +8,15 @@ const execFileP = promisify(execFile);
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /*
- * Regression for #7: the `if (import.meta.url === pathToFileURL(process.argv[1]).href)`
+ * Regression for #7 (moved here with calibrate-tones.mjs from
+ * tailwind-m3e-web — see that package's own bin-import-guard.test.mjs): the
+ * `if (import.meta.url === pathToFileURL(process.argv[1]).href)`
  * direct-execution guard threw ERR_INVALID_ARG_TYPE when a bin was imported in a
  * context where process.argv[1] is undefined (e.g. `node --eval`). Importing a
  * module must never throw just because it was loaded, not run.
  */
 describe("bin direct-execution guard", () => {
-  for (const bin of ["check-privates", "generate-component-utilities"]) {
+  for (const bin of ["calibrate-tones"]) {
     it(`bin/${bin}.mjs imports cleanly when process.argv[1] is undefined (node -e)`, async () => {
       // Under `node -e`, process.argv[1] is undefined — the exact crash condition.
       const { stdout } = await execFileP(

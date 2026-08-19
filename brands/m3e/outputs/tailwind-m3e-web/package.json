@@ -44,6 +44,9 @@
     "./utilities": "./generated/utilities.css",
     "./roles-extended": "./src/roles-extended.css"
   },
+  "dependencies": {
+    "tailwind-md3": "workspace:*"
+  },
   "peerDependencies": {
     "@m3e/web": "2.7.6"
   },
@@ -57,7 +60,6 @@
     "@changesets/cli": "^2.31.0",
     "culori": "^4.0.2",
     "tailwindcss": "^4.3.2",
-    "tonal-palette-oklch": "workspace:*",
     "vitest": "^4.1.9"
   },
   "scripts": {

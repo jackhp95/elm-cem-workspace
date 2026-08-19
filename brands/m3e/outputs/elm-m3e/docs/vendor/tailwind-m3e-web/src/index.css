@@ -1,24 +1,20 @@
 /*
- * Default-import barrel — `@import "tailwind-m3e-web"` resolves here.
- *
- * Loads the four-layer cascade in dependency order:
- *   Layer 0 (seed) → Layer 1 (ref palette) → Layer 2 (sys) → Layer 3 (@theme)
- *
- * Consumers wanting the @m3e/web component-utility surface also add:
- *   @import "tailwind-m3e-web/utilities";
- *
- * Consumers wanting success/info/warning add:
- *   @import "tailwind-m3e-web/roles-extended";
+ * Vendored barrel for the standalone published mirror build (see the header
+ * comment in this file's generator, vendor-tailwind-m3e-web.mjs). NOT a byte
+ * copy of the real tailwind-m3e-web/src/index.css -- that one @imports the
+ * bare "tailwind-md3" package specifier, unresolvable here. This inlines the
+ * same import graph via the relative paths the vendoring flattens into.
  */
 
-/* Layer 0 — seed tokens. */
+/* Layer 0 -- seed tokens (from tailwind-md3). */
 @import "./seed.css";
 
-/* Layer 1 — ref palette tonal scales (oklch-derived). */
+/* Layer 1 -- ref palette tonal scales (from tailwind-md3). */
 @import "./ref/palette.css";
 
-/* Layer 2 — M3 sys tokens. color must load before typescale (some
-   typescale tokens reference --md-sys-color-* in their fallbacks). */
+/* Layer 2 -- M3 sys tokens, @m3e/web-specific. color must load before
+   typescale (some typescale tokens reference --md-sys-color-* in their
+   fallbacks). */
 @import "./sys/color.css";
 @import "./sys/typescale.css";
 @import "./sys/motion.css";
@@ -27,9 +23,8 @@
 @import "./sys/state.css";
 @import "./sys/density.css";
 
-/* Layer 3 — Tailwind v4 @theme keys. */
+/* Layer 3 -- Tailwind v4 @theme keys (from tailwind-md3). */
 @import "./theme.css";
 
-/* Layer 3 — density scope utilities (density-0…density-3). Depends only on
-   the sys density tokens above; safe to emit even without @m3e/web present. */
+/* Layer 3 (m3e-specific) -- density scope utilities (density-0...density-3). */
 @import "./density.css";

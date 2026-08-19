@@ -26,7 +26,7 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..", "..");
-const VENDORED = path.join(repoRoot, "..", "..", "brands", "m3e", "outputs", "tailwind-m3e-web", "src");
+const VENDORED = path.join(repoRoot, "..", "..", "core", "tailwind-md3", "src");
 
 const seedCss = fs.readFileSync(path.join(VENDORED, "seed.css"), "utf8");
 const toneTableCss = fs.readFileSync(path.join(VENDORED, "ref", "_tone-table.css"), "utf8");
@@ -46,7 +46,7 @@ test("parseToneTable: 12 tones per profile, tone-100 is exactly 100%", () => {
 });
 
 test("parseToneTable: throws on a missing tone (defensive)", () => {
-  assert.throws(() => parseToneTable(":where(:root) { --_m3e-tone-10-rich: 22.65%; }"));
+  assert.throws(() => parseToneTable(":where(:root) { --_md-tone-10-rich: 22.65%; }"));
 });
 
 test("resolveRefPalette: primary-40 lies in the violet/indigo range (mirrors tailwind-m3e-web's own palette-resolve.test.mjs assertion)", () => {
