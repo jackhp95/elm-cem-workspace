@@ -39,5 +39,5 @@
   "workspace: check-m3e-5pkg (D-037 5-package split shape)",
   "workspace: check-hooks-sync (pre-push hook drift, Theme 3)",
   "workspace: root gate",
-  "workspace: tools/*.test.mjs (9 file(s))"
+  "workspace: tools/*.test.mjs (11 file(s))"
 ]
