@@ -19,6 +19,7 @@
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 /** The config/flags argv shared by every elm-cem invocation against elm-m3e's config. */
@@ -67,29 +68,45 @@ export function runFactsGenerator({ repoRoot, elmM3e, output, factsBundle }) {
 // because nothing in this module process ever calls it with a different
 // pair. A cache hit is always logged (never silent), per this repo's
 // no-silent-skip discipline.
+//
+// IMPORTANT: cached output lives in a directory THIS MODULE owns (a fresh
+// mkdtempSync separate from any caller's `workDir`), never inside a
+// caller-provided `workDir` — every existing caller wraps its own `workDir`
+// in `try { ... } finally { fs.rmSync(workDir, ...) }`, which would delete
+// the FIRST caller's directory (and therefore every later cache hit's
+// backing files) the moment that first caller returned. Cache entries
+// persist for the whole process regardless of what any individual caller
+// does with its own scratch dir.
 const _bundleCache = new Map();
 
 /**
- * Generate a fresh facts bundle (Face B + Face C) into a scratch directory
- * under `workDir`. Throws on nonzero exit (after streaming stdout/stderr).
- * Returns `{ outputDir, bundleDir }`. Memoized per (repoRoot, elmM3e) pair
- * for the lifetime of this process — see the comment above `_bundleCache`.
+ * Generate a fresh facts bundle (Face B + Face C). Throws on nonzero exit
+ * (after streaming stdout/stderr). Returns `{ outputDir, bundleDir }`
+ * pointing into a directory this module owns — NOT `workDir` — so the
+ * result outlives any individual caller's own cleanup (see the comment
+ * above `_bundleCache`). Memoized per (repoRoot, elmM3e) pair for the
+ * lifetime of this process; `workDir` is still accepted (and still created)
+ * for backward compatibility with callers that pass it, but is unused on a
+ * cache hit.
  */
 export function generateBundleToTemp({ repoRoot, elmM3e, workDir, streamOutput = true }) {
     const cacheKey = `${path.resolve(repoRoot)}::${path.resolve(elmM3e)}`;
     const cached = _bundleCache.get(cacheKey);
     if (cached) {
-        if (streamOutput) {
-            console.log(
-                `generateBundleToTemp: CACHE HIT — reusing the facts bundle already generated this run for ` +
-                    `${cacheKey} (bundleDir: ${cached.bundleDir}); not re-invoking the generator.`,
-            );
-        }
+        // Always reported, regardless of `streamOutput` — that flag controls
+        // whether the GENERATOR's own stdout/stderr gets relayed, not
+        // whether a cache-hit decision is visible. A cache hit must never be
+        // quieter than a miss (no-silent-skip discipline).
+        console.log(
+            `generateBundleToTemp: CACHE HIT — reusing the facts bundle already generated this run for ` +
+                `${cacheKey} (bundleDir: ${cached.bundleDir}); not re-invoking the generator.`,
+        );
         return cached;
     }
 
-    const outputDir = path.join(workDir, "out");
-    const bundleDir = path.join(workDir, "bundle");
+    const ownedDir = fs.mkdtempSync(path.join(os.tmpdir(), "regen-bundle-cache-"));
+    const outputDir = path.join(ownedDir, "out");
+    const bundleDir = path.join(ownedDir, "bundle");
     fs.mkdirSync(outputDir, { recursive: true });
     fs.mkdirSync(bundleDir, { recursive: true });
 
