@@ -3,6 +3,10 @@
 // workspace is green.
 //
 // It runs, in this order:
+//   0. a pre-fetch of .cache/snapshots/* (the pinned upstream/pristine
+//      checkouts the A/B + copy-fidelity gates below compare against —
+//      `fetchSnapshotsGate()`, see its own comment) and a pre-generate of
+//      elm-m3e's docs/data/reference.json (`genElmM3eReferenceGate()`);
 //   1. every workspace package's own `check` and `test` script — DISCOVERED
 //      from the pnpm workspace (`pnpm ls -r --depth -1 --json`), never
 //      hardcoded, so a package added in a later milestone is picked up with no
@@ -87,24 +91,57 @@ const results = [];
 // its dependency). A named, reasoned allowlist makes that distinction
 // legible instead of every SKIP looking equally benign in the summary.
 //
-// Entries here are gates KNOWN to be chronic — every one of the three below
-// depends on `.cache/snapshots/<name>`, which only `tools/fetch-snapshots.mjs`
-// populates, and nothing calls that script automatically (see the note above
-// `factsBundleE2E` for why it isn't wired in here yet: it needs network
-// access to clone public GitHub repos, which changes gate-all's reliability
-// profile in a way that deserves its own decision, not a silent addition).
-// If a name below stops appearing in the SKIPPED ITEMS list, remove it here —
-// that means the underlying dependency became available and the gate is
-// running for real again.
+// 2026-08-19 chronic-skip fix: ALL SEVEN gates that used to live in (or be
+// missing from) this list depended on `.cache/snapshots/<name>`, which only
+// `tools/fetch-snapshots.mjs` populated — and nothing ever called that
+// script automatically, so every one of them skipped on every run, on every
+// machine, forever. `fetchSnapshotsGate()` below now calls it once, up
+// front, before the scheduler starts. That fully fixes THREE of the seven
+// for real, unconditionally: `ab-elm-cem`, `ab-elm-m3e-split`, and
+// `check-drift`'s R-010 sub-check all depend only on the `elm-cem` snapshot,
+// which materializes from a git bundle COMMITTED IN THIS REPO (D-046) — pure
+// local disk I/O, no network, so they now run for real on every machine,
+// every time, and are gone from this list entirely (if any of the three
+// starts skipping again, that's a real regression, not something to
+// silently re-add here).
+//
+// The next four are copy-fidelity checks whose snapshot clones from a LIVE
+// GITHUB REMOTE — a genuine, irreducible network dependency (§4 of the
+// parallelization plan forbids skip-if-unchanged heuristics, not "assume the
+// network is always up"). `fetchSnapshotsGate()` still attempts this fetch
+// on every run (so on any machine with network, which is the common case,
+// these run for real too — see `docs/copy-fidelity-notes.md` for the
+// drift-vs-relocation investigation that got them to a clean, evidence-
+// backed GREEN); they land here, conditionally, only for the run where
+// GitHub genuinely could not be reached. If a name below stops appearing in
+// the SKIPPED ITEMS list, that's expected on any well-connected run, not a
+// sign this entry should be removed — remove it only if the underlying
+// package stops needing network fidelity checking at all.
+//
+// The last entry, `check-drift`, is back on this list for a DIFFERENT
+// reason than before (see git history of this file for the old one): fixing
+// R-010's elm-cem sub-check exposed a SECOND, previously-masked sub-check —
+// checkConsumerOutputs()'s m3e-okf regen, which needs a FULL npm-installed,
+// built `matraic/m3e@v2.7.3` checkout at `.../m3e-api-okf/.cache/m3e` (not
+// just a git clone: `cd .cache/m3e/packages/web && npm run cem` to produce
+// `dist/custom-elements.json` — see tools/check-drift.mjs's own comment and
+// brands/m3e/outputs/m3e-api-okf/README.md's "Regenerate" section). That's
+// meaningfully heavier and riskier to auto-provision than this file's other
+// network fetches (a third-party repo's OWN build toolchain, not just a
+// checkout), so it stays a deliberate, reasoned skip rather than a fifth
+// automatic pre-step — same REQUIRE_CLONE_GATES=1 escape hatch as
+// elm-m3e's `check`/`test` below, which check-drift.mjs already implements.
 const CHRONIC_SKIPS = {
-    "workspace: ab-elm-cem (Face A byte-identity)":
-        "requires .cache/snapshots/elm-cem, materialized only by `node tools/fetch-snapshots.mjs`, which nothing calls automatically (deferred — see finding 1.10 follow-up, network dependency).",
-    "workspace: ab-elm-m3e-split (split-step byte-identity)":
-        "requires .cache/snapshots/elm-cem, same as above.",
     "workspace: copy-fidelity elm-m3e":
-        "requires .cache/snapshots/elm-m3e, same as above (also network-fetched).",
+        "requires .cache/snapshots/elm-m3e, cloned from a live GitHub remote (jackhp95/elm-m3e) by the automatic `workspace: fetch-snapshots` pre-step. Genuinely network-dependent (unlike elm-cem's committed-bundle snapshot) — SKIPS only on a run where that clone can't reach GitHub; runs for real whenever network is available.",
+    "workspace: copy-fidelity m3e-okf":
+        "requires .cache/snapshots/m3e-okf, cloned from jackhp95/m3e-okf — same network-dependent pattern as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity tailwind-m3e-web":
+        "requires .cache/snapshots/tailwind-m3e-web, cloned from jackhp95/tailwind-m3e-web — same network-dependent pattern as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity cem-figma-connect":
+        "requires .cache/snapshots/cem-figma-connect, cloned from jackhp95/cem-figma-connect — same network-dependent pattern as copy-fidelity elm-m3e above.",
     "workspace: check-drift (M4.b cross-cutting drift gate)":
-        "one of its internal sub-checks (brand Face A, R-010) shares the same .cache/snapshots/elm-cem dependency as ab-elm-cem above, which makes check-drift.mjs's own aggregate stdout carry a SKIP line.",
+        "its m3e-okf consumer-output sub-check needs brands/m3e/outputs/m3e-api-okf/.cache/m3e — a full npm-installed, built matraic/m3e@v2.7.3 checkout (not just a git clone), a heavier third-party build dependency than this file's other network fetches. Provision it by hand (see the SKIP line's own instructions, or brands/m3e/outputs/m3e-api-okf/README.md's Regenerate section) or set REQUIRE_CLONE_GATES=1 in CI.",
 };
 
 // Same spirit as CHRONIC_SKIPS above, but for a `tools/*.test.mjs` file that
@@ -232,6 +269,81 @@ function discoverToolTests() {
     return found.filter((f) => !KNOWN_BROKEN_TOOL_TESTS.has(f)).sort();
 }
 
+// ── 2.5. pre-fetch .cache/snapshots/* (2026-08-19 chronic-skip fix) ───────
+// Runs OUTSIDE the scheduler, sequentially, before it starts — same pattern
+// as `factsBundleE2E()` below — so every scheduled step that reads
+// `.cache/snapshots/<name>` (ab-elm-cem, ab-elm-m3e-split, check-drift, the
+// four copy-fidelity steps) sees it already materialized instead of racing
+// `tools/fetch-snapshots.mjs`. This is a real dependency ordering
+// requirement, not a mutual-exclusion one, so it deliberately does NOT go
+// through `tools/lib/gate-scheduler.mjs`'s conflict-tag pool (which has no
+// "runs before" primitive, by design — see that file's own header comment)
+// — running it here, synchronously, first, is the correct and simplest way
+// to satisfy the ordering without adding a dependency-DAG concept to a
+// scheduler that was just built and verified this session.
+//
+// `tools/fetch-snapshots.mjs` itself draws the line between failure kinds:
+// a HARD failure (its exit code) means a genuinely local problem (elm-cem's
+// committed git bundle is corrupt or missing — see D-046), which SHOULD
+// carry this step, and therefore the whole sweep, red. A SOFT failure
+// (logged, but exit 0) means one of the four network-fetched snapshots
+// couldn't reach its GitHub remote this run — that must NOT fail this step,
+// because the individual gates that read those snapshots already degrade
+// to their own well-established graceful SKIP (tools/lib/snapshot-gate.sh /
+// copy-fidelity.mjs's requireSourceOrSkip) exactly as they did before this
+// fix existed; see CHRONIC_SKIPS above for how those SKIPs are documented.
+function fetchSnapshotsGate() {
+    const name = "workspace: fetch-snapshots (pre-fetch .cache/snapshots/*)";
+    console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    const result = spawnSync(process.execPath, [path.join(repoRoot, "tools", "fetch-snapshots.mjs")], {
+        cwd: repoRoot,
+        encoding: "utf8",
+    });
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    if (result.status === 0) {
+        const someUnavailable = /network-dependent snapshot\(s\) unavailable/.test(result.stderr || "");
+        record(
+            name,
+            true,
+            someUnavailable
+                ? "elm-cem's committed-bundle snapshot is always available; one or more network-fetched snapshots were not reachable this run (non-blocking — see CHRONIC_SKIPS for the gates this affects)"
+                : "all snapshots materialized (bundle + network)",
+        );
+    } else {
+        record(name, false, `exited ${result.status} — a LOCAL snapshot problem, not a network one (see output above)`);
+    }
+}
+
+// ── 2.6. pre-generate elm-m3e's docs/data/reference.json ──────────────────
+// Follow-on discovery while verifying the chronic-skip fix above: elm-m3e's
+// OWN `check` (check:nav) and `test` (test:browser) scripts both read
+// `docs/data/reference.json` — a generated, gitignored `elm make --docs`
+// dump, absent on any environment that has only run `pnpm install` (every
+// worktree, every fresh clone). Both already degrade gracefully (their own
+// REQUIRE_CLONE_GATES=1-gated SKIP, browser-guard.mjs / check-nav.mjs — the
+// same pattern check-drift.mjs uses), so this was previously just another
+// silent, permanent SKIP nobody had traced. Unlike `.cache/m3e` below
+// (CHRONIC_SKIPS), producing this file needs no network and no third-party
+// build: `elm make --docs` over already-compiled Elm, measured under 1s —
+// squarely "if cheap, do it" (Finding 1.10's own remedy for
+// measure-docs-size.mjs / check-m3e-5pkg.mjs). `docs/data/examples.json`,
+// check-nav's other input, is committed content (not regenerated here) and
+// was already present.
+function genElmM3eReferenceGate() {
+    const name = "workspace: gen elm-m3e docs/data/reference.json (elm make --docs)";
+    console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    const docsDir = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "docs");
+    if (!fs.existsSync(path.join(docsDir, "scripts", "extract-reference.mjs"))) {
+        record(name, true, "brands/m3e/outputs/elm-m3e/docs not present or has no extract-reference.mjs — nothing to generate");
+        return;
+    }
+    const result = spawnSync("node", ["scripts/extract-reference.mjs"], { cwd: docsDir, encoding: "utf8" });
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    record(name, result.status === 0, result.status === 0 ? "" : `extract-reference.mjs exited ${result.status}`);
+}
+
 // ── 3. the end-to-end facts-bundle proof ──────────────────────────────────
 // A gate that passes when nothing was produced is worthless, so this one
 // insists on: the generator exits 0, BOTH faces exist, are non-empty, parse,
@@ -347,6 +459,17 @@ function factsBundleE2E() {
 //                       grep — see the constraint test), but it's tagged
 //                       defensively so a future second writer is forced to
 //                       declare the conflict rather than silently collide.
+//   cfc-generated     — `check-emit-determinism-cfc.mjs` overwrites
+//                       core/cem-figma-connect/generated/m3-kit/** in place
+//                       (its real `gen:emit`, run twice) vs. every step that
+//                       reads that same committed tree (check-cc-elm-refs,
+//                       cem-figma-connect check/test, check-drift's own
+//                       cem-figma-connect consumer-output sub-check,
+//                       copy-fidelity cem-figma-connect). Added 2026-08-19
+//                       after check-cc-elm-refs hit a reproducible ENOENT
+//                       racing this writer — the gate-out-probe comment's
+//                       "future second writer" scenario, for real. See each
+//                       tagged step's own comment for which race it closes.
 // `port-1239` from the spec is NOT used here: elm-m3e/docs/playwright.config.ts
 // derives its port from the worktree path (scripts/worktree-port.mjs) rather
 // than hardcoding :1239, closing that constraint independently of this work
@@ -397,6 +520,23 @@ function buildSteps() {
         // of the ~130s bucket for no additional safety, since reads of an
         // unchanging cache don't race each other.
         if (pkg.name === "elm-review-cem" && script === "check") extra.env = { ELM_HOME: isolatedElmHome(name) };
+        // cem-figma-connect's own `check` (check:drift diffs in-memory
+        // regen against the COMMITTED generated/m3-kit/** tree) and `test`
+        // (smoke/publish-check/emitter-api suites assert that same tree is
+        // undisturbed) both READ core/cem-figma-connect/generated/m3-kit —
+        // the exact tree `check-emit-determinism-cfc.mjs` overwrites IN
+        // PLACE (see the cfc-generated tag below). Discovered as a real,
+        // reproducible race (2026-08-19): check-cc-elm-refs hit an ENOENT
+        // mid-run reading a `.figma.ts` file check-emit-determinism-cfc.mjs
+        // had just deleted to rewrite. Same shared-mutable-state hazard the
+        // docs-dist tag already exists for elm-m3e's docs/dist/, just a
+        // second, previously-undeclared writer this scheduler never knew
+        // about (see the gate-out-probe tag's own comment: "a future second
+        // writer is forced to declare the conflict rather than silently
+        // collide" — this is that future).
+        if (pkg.name === "cem-figma-connect" && (script === "check" || script === "test")) {
+            extra.exclusiveWith = [...(extra.exclusiveWith || []), "cfc-generated"];
+        }
         steps.push(step(name, "pnpm", ["--filter", pkg.name, "run", script], extra));
     }
 
@@ -424,20 +564,46 @@ function buildSteps() {
     // check-bundle-provenance*.mjs scripts are folded into "check-drift"
     // below, via checkConsumerBundleDrift.)
     for (const name of Object.keys(family).filter((n) => family[n].copyFidelity)) {
+        const exclusiveWith = [];
+        if (name === "elm-m3e") exclusiveWith.push("docs-dist");
+        // copy-fidelity's workspaceFiles computation does an fs.existsSync
+        // pass over every tracked path (tools/copy-fidelity.mjs) — reading
+        // core/cem-figma-connect/generated/m3-kit/** while
+        // check-emit-determinism-cfc.mjs is mid-overwrite could report a
+        // spuriously "missing" file. Same cfc-generated hazard as the
+        // per-package check/test loop above; tagged defensively even though
+        // this specific step hasn't been observed to flake yet.
+        if (name === "cem-figma-connect") exclusiveWith.push("cfc-generated");
         steps.push(
             step(`workspace: copy-fidelity ${name}`, process.execPath, [path.join(repoRoot, "tools", "copy-fidelity.mjs"), name], {
-                exclusiveWith: name === "elm-m3e" ? ["docs-dist"] : [],
+                exclusiveWith,
             }),
         );
     }
     steps.push(
-        step("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
-            path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
-        ]),
+        step(
+            "workspace: check-emit-determinism cem-figma-connect",
+            process.execPath,
+            [path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs")],
+            // The writer: runs cem-figma-connect's real `gen:emit` TWICE,
+            // in place, overwriting the committed generated/m3-kit/** tree
+            // each time (see that script's own header comment — this is
+            // deliberate, not a bug). Every step that READS that tree while
+            // this one could be mid-overwrite carries the same tag; see
+            // their own comments for how each was found/confirmed.
+            { exclusiveWith: ["cfc-generated"] },
+        ),
     );
     steps.push(
         step("workspace: check-drift (M4.b cross-cutting drift gate)", process.execPath, [path.join(repoRoot, "tools", "check-drift.mjs")], {
-            exclusiveWith: ["docs-dist"],
+            // docs-dist: reads elm-m3e's docs/dist/ (via its own
+            // consumer-output sub-checks). cfc-generated: its cem-figma-connect
+            // consumer-output sub-check scratch-copies the WHOLE package dir
+            // (including the live generated/m3-kit/** tree) as its "before"
+            // snapshot before regenerating in isolation — that initial copy
+            // reads the same shared mutable tree check-emit-determinism-cfc.mjs
+            // overwrites in place.
+            exclusiveWith: ["docs-dist", "cfc-generated"],
         }),
     );
     steps.push(
@@ -446,10 +612,19 @@ function buildSteps() {
         ]),
     );
     steps.push(
-        step("workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)", process.execPath, [
-            path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
-            "--strict",
-        ]),
+        step(
+            "workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)",
+            process.execPath,
+            [path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"), "--strict"],
+            // Reads core/cem-figma-connect/generated/m3-kit/**/*.figma.ts
+            // directly (tools/check-cc-elm-refs.mjs) — the race that
+            // surfaced this whole cfc-generated tag: an ENOENT reading a
+            // .figma.ts file check-emit-determinism-cfc.mjs had just
+            // deleted mid-rewrite (2026-08-19, first run after the
+            // chronic-skip fix made every step here do real, timing-
+            // sensitive work instead of instant-skipping).
+            { exclusiveWith: ["cfc-generated"] },
+        ),
     );
     steps.push(
         step("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
@@ -461,9 +636,10 @@ function buildSteps() {
     // 5-package split shape check) were both orphaned — real, useful, and
     // cheap to run (no network, pure local elm compile / JSON check) but
     // wired to nothing. Wiring them in is the "if cheap, do it" half of the
-    // finding's remedy; fetch-snapshots.mjs is the other orphan named there
-    // and is deliberately NOT wired in yet (see the CHRONIC_SKIPS comment
-    // above — it needs network access, a bigger decision than this fix).
+    // finding's remedy; fetch-snapshots.mjs was the other orphan named there
+    // — now wired in too, as `fetchSnapshotsGate()` (see main(), and the
+    // CHRONIC_SKIPS comment above for how its network-dependent half is
+    // handled without making a GitHub outage fail the whole sweep).
     steps.push(
         step("workspace: measure-docs-size (registry docs.json size cap)", process.execPath, [
             path.join(repoRoot, "tools", "measure-docs-size.mjs"),
@@ -511,6 +687,9 @@ async function main() {
         console.log(JSON.stringify(steps.map((s) => ({ name: s.name, exclusiveWith: s.exclusiveWith || [] }))));
         return;
     }
+
+    fetchSnapshotsGate();
+    genElmM3eReferenceGate();
 
     // Resolves spec §7 open question #3 with real data instead of a guess:
     // `os.cpus().length` (10 on the measurement machine) was tried first and
