@@ -22,8 +22,26 @@ const correspondencePath = path.join(repoRoot, "profiles", "m3-kit", "correspond
 const correspondence = readCorrespondence(correspondencePath);
 const iconTable = loadIconTable(correspondencePath);
 
-const buttonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
-assert.ok(buttonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
+// The real, checked-in correspondence.json's confirmed m3e-button entry
+// predates SLOT support and carries no slots[] (real m3-kit export has no
+// SLOT-typed props on Button). This test file, however, deliberately drives
+// that same entry against test/fixtures/figma-export.m3-kit.json — which
+// DOES carry two SLOT props on button's bare set (57994:2227): "Trailing
+// slot" (Task 1's original fixture addition, no CEM counterpart) and
+// "Trailing icon" (Task 3's fixture addition, exact-matches m3e-button's
+// real "trailing-icon" CEM slot). Overlay the slots[] a real re-match
+// against that fixture would produce, so drive.mjs's "never silent"
+// coverage gate (task 3) has something to check against — without touching
+// the real correspondence.json, which stays byte-identical on disk.
+const rawButtonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
+assert.ok(rawButtonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
+const buttonEntry = {
+  ...rawButtonEntry,
+  slots: [
+    { figmaSlotName: "Trailing slot", kind: "slot", multi: false, unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'" },
+    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon" },
+  ],
+};
 
 const iconEntry = correspondence.find((e) => e.kind === "iconTable");
 assert.ok(iconEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry the kind:iconTable entry");

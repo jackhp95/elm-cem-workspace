@@ -395,6 +395,36 @@ function proposeProperty(prop, component) {
   };
 }
 
+// SLOT-typed Figma property → CEM slot binding proposal. SLOT is its own
+// first-class dimension (component-property.slots.json), not a `props[]`
+// catch-all case — see the two `match()` call sites below, which filter SLOT
+// out of the non-VARIANT property list before it ever reaches
+// proposeProperty(). Matching is a straight fuzzy value match of the Figma
+// slot name against the bound CEM component's slot names (same
+// bestValueMatch() used for fusion/axis value matching elsewhere in this
+// file — no separate fuzzy-matching scheme).
+function proposeSlot(prop, component) {
+  const cemSlotNames = component.slots.map((s) => s.name);
+  const best = bestValueMatch(prop.name, cemSlotNames);
+  if (!best) {
+    return {
+      property: prop.name,
+      type: prop.type,
+      mapped: false,
+      reason: `no CEM slot matches Figma SLOT property '${prop.name}'`,
+      rationale: `SLOT '${prop.name}' unmapped: no CEM slot counterpart`,
+    };
+  }
+  return {
+    property: prop.name,
+    type: prop.type,
+    mapped: true,
+    target: best.value,
+    method: best.method, // "exact" | "synonym" | "fuzzy" — threaded through for merge.mjs provenance
+    rationale: `SLOT '${prop.name}' → CEM slot '${best.value}' (${best.method} match)`,
+  };
+}
+
 // Bind each fused set's fixed `<value>` to a CEM enum attribute. Every sibling
 // value is fuzzed against every enum; the attribute the majority of siblings
 // agree on is the fusion axis. The bare `<Base>` set (value=null) takes the
@@ -802,15 +832,27 @@ export function match(cem, figma, matcherConfig) {
     if (component && (candidate.kind === "fusion" || candidate.kind === "contains")) {
       result.axisProposals = candidate.group.variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
       result.fusion = proposeFusionValues(candidate.group, component);
-      result.propertyProposals = candidate.group.nonVariantProps.map((p) => proposeProperty(p, component));
+      // SLOT is its own dimension (slots[]/slotProposals), not a props[]
+      // catch-all — split it out before calling proposeProperty().
+      const fusionSlotProps = candidate.group.nonVariantProps.filter((p) => p.type === "SLOT");
+      const fusionOtherProps = candidate.group.nonVariantProps.filter((p) => p.type !== "SLOT");
+      result.propertyProposals = fusionOtherProps.map((p) => proposeProperty(p, component));
+      result.slotProposals = fusionSlotProps.map((p) => proposeSlot(p, component));
     } else if (component && candidate.kind === "set" && candidate.set.properties) {
       const variantAxes = candidate.set.properties
         .filter((p) => p.type === "VARIANT")
         .map((p) => ({ name: p.displayName, options: p.variantOptions ?? [], defaultValue: p.defaultValue }));
       result.axisProposals = variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
-      result.propertyProposals = candidate.set.properties
-        .filter((p) => p.type !== "VARIANT")
-        .map((p) => proposeProperty({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component));
+      // Same SLOT/other split as the fusion branch above.
+      const setNonVariantProps = candidate.set.properties.filter((p) => p.type !== "VARIANT");
+      const setSlotProps = setNonVariantProps.filter((p) => p.type === "SLOT");
+      const setOtherProps = setNonVariantProps.filter((p) => p.type !== "SLOT");
+      result.propertyProposals = setOtherProps.map((p) =>
+        proposeProperty({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component)
+      );
+      result.slotProposals = setSlotProps.map((p) =>
+        proposeSlot({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component)
+      );
     }
 
     if (component && candidate.kind === "icon") {

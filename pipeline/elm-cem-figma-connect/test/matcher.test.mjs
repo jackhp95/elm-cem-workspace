@@ -423,6 +423,40 @@ test("matcher: button non-variant properties propose content / icon-slot binding
 
   // The Figma-only "Show focus indicator" boolean has no CEM counterpart.
   assert.equal(props["Show focus indicator"].mapped, false);
+
+  // SLOT-typed properties (Task 3: matcher — populate the slots dimension)
+  // are relocated OUT of propertyProposals entirely — they must never show
+  // up here, mapped or unmapped, regardless of whether a CEM counterpart
+  // exists. See the sibling slotProposals test below for where they land.
+  assert.equal(props["Trailing slot"], undefined);
+  assert.equal(props["Trailing icon"], undefined);
+});
+
+// -- Task 3: SLOT properties route to slotProposals, not propertyProposals --
+
+test("matcher: SLOT properties are routed to slotProposals, never propertyProposals", () => {
+  const btn = byTag("m3e-button");
+  const slotProps = Object.fromEntries(btn.slotProposals.map((s) => [s.property, s]));
+
+  // "Trailing icon" (fixture SLOT prop) exact-matches m3e-button's real
+  // "trailing-icon" CEM slot.
+  assert.ok(slotProps["Trailing icon"], "Trailing icon slot proposal present");
+  assert.equal(slotProps["Trailing icon"].mapped, true);
+  assert.equal(slotProps["Trailing icon"].target, "trailing-icon");
+  assert.equal(slotProps["Trailing icon"].method, "exact");
+
+  // "Trailing slot" (Task 1's original fixture SLOT prop) has no plausible
+  // counterpart among m3e-button's slots (["", "icon", "selected",
+  // "selected-icon", "trailing-icon"]) — stays unmapped with a reason.
+  assert.ok(slotProps["Trailing slot"], "Trailing slot slot proposal present");
+  assert.equal(slotProps["Trailing slot"].mapped, false);
+  assert.match(slotProps["Trailing slot"].reason, /no CEM slot matches/);
+
+  // Neither SLOT prop ever appears in propertyProposals — the relocation is
+  // total, not additive.
+  const propNames = btn.propertyProposals.map((p) => p.property);
+  assert.ok(!propNames.includes("Trailing slot"));
+  assert.ok(!propNames.includes("Trailing icon"));
 });
 
 // -- RC2: INSTANCE_SWAP icon → DEFAULT (unnamed) slot -----------------------

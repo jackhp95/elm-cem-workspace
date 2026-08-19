@@ -278,6 +278,49 @@ test("buildProposals: button props map TEXT->content, BOOLEAN/INSTANCE_SWAP icon
   assert.match(byProp["Show focus indicator"].unmapped, /no CEM counterpart/);
 });
 
+// -- Task 3: matcher — populate the slots dimension -------------------------
+
+test("buildProposals: button slots[] carries a mapped SLOT (exact match) and an unmapped SLOT (no counterpart)", () => {
+  const btn = byTag("m3e-button");
+  const bySlot = Object.fromEntries(btn.slots.map((s) => [s.figmaSlotName, s]));
+
+  // "Trailing icon" (fixture SLOT prop) exact-matches m3e-button's real
+  // "trailing-icon" CEM slot.
+  const trailingIcon = bySlot["Trailing icon"];
+  assert.ok(trailingIcon, "Trailing icon slot entry present");
+  assert.equal(trailingIcon.kind, "slot");
+  assert.equal(trailingIcon.multi, false);
+  assert.equal(trailingIcon.mappedTo, "trailing-icon");
+  assert.equal(trailingIcon.unmapped, undefined);
+  assert.equal(trailingIcon.provenance, "auto-exact");
+
+  // "Trailing slot" (Task 1's fixture SLOT prop) has no plausible CEM slot
+  // counterpart on m3e-button — unmapped with a readable reason, never
+  // silently dropped.
+  const trailingSlot = bySlot["Trailing slot"];
+  assert.ok(trailingSlot, "Trailing slot slot entry present");
+  assert.equal(trailingSlot.kind, "slot");
+  assert.equal(trailingSlot.multi, false);
+  assert.equal(trailingSlot.mappedTo, undefined);
+  assert.match(trailingSlot.unmapped, /no CEM slot matches/);
+  assert.equal(trailingSlot.provenance, "auto-gap");
+});
+
+test("buildProposals: SLOT properties are relocated out of props[] entirely — no kind:'slot' items leak into props[]", () => {
+  const btn = byTag("m3e-button");
+  // Regression guard for the core design decision this task implements:
+  // SLOT-typed properties must appear ONLY in slots[], never in props[],
+  // for either the mapped or unmapped fixture SLOT property.
+  assert.ok(!btn.props.some((p) => p.figmaProp === "Trailing slot"));
+  assert.ok(!btn.props.some((p) => p.figmaProp === "Trailing icon"));
+  assert.ok(!btn.props.some((p) => p.kind === "slot"));
+});
+
+test("buildProposals: entries with no SLOT-typed Figma properties omit the slots[] key entirely (byte-stability with pre-slots correspondence.json)", () => {
+  const tab = byTag("m3e-tab");
+  assert.equal(tab.slots, undefined);
+});
+
 test("buildProposals: provenance derives from matcher tier (auto-exact/auto-fuzzy/auto-gap)", () => {
   assert.equal(byTag("m3e-button").provenance, "auto-exact");
   const assist = proposed.find((e) => e.rationale.includes("Assistive chip") || e.cemTag === "m3e-assist-chip");
@@ -812,14 +855,71 @@ test("A8 tracer acceptance: real m3-kit correspondence.json has exactly the bank
   // of the real on-disk file (never overwriting the checked-in artifact
   // itself here — that's covered manually/by the CLI, this proves the pure
   // mechanism) must reproduce it byte-for-byte.
+  //
+  // Task 3 (matcher — populate the slots dimension) exception: 8 CONFIRMED
+  // entries in the real m3-kit export carry a real SLOT-typed Figma property
+  // that today lives mislabeled inside `props[]` (kind:"slot", unmapped —
+  // exactly the bug this task fixes). Relocating those into `slotProposals`/
+  // `slots[]` is a genuine, intentional change to the FRESH proposal for
+  // those 8 tags, so re-matching now legitimately produces a new
+  // `proposedUpdate` on them (the confirmed entry itself is untouched —
+  // proposedUpdate is the human-preserving merge's designed-for-this
+  // mechanism, not overwritten data). Every other entry (44 of 52 confirmed
+  // + all non-confirmed) has zero SLOT properties and stays byte-identical.
+  const SLOT_RELOCATION_DRIFT_TAGS = [
+    "m3e-bottom-sheet",
+    "m3e-card",
+    "m3e-dialog",
+    "m3e-list-item",
+    "m3e-menu",
+    "m3e-menu-item",
+    "m3e-tabs",
+    "m3e-toolbar",
+  ];
   const tmp = tmpPath("a8-rerun-correspondence");
   fs.copyFileSync(realCorrespondencePath, tmp);
   const rerun = runMatch({ profileDir, correspondencePath: tmp, loadCem, loadFigmaExport });
-  assert.equal(
-    JSON.stringify(rerun),
-    JSON.stringify(onDisk),
-    "re-running match must reproduce the checked-in correspondence.json byte-for-byte (JSON-value-identical)"
-  );
+  const rerunByTag = Object.fromEntries(rerun.map((e) => [e.cemTag, e]));
+  const onDiskByTag = Object.fromEntries(onDisk.map((e) => [e.cemTag, e]));
+
+  for (const tag of Object.keys(onDiskByTag)) {
+    if (SLOT_RELOCATION_DRIFT_TAGS.includes(tag)) continue;
+    assert.equal(
+      JSON.stringify(rerunByTag[tag]),
+      JSON.stringify(onDiskByTag[tag]),
+      `re-running match must reproduce '${tag}' byte-for-byte (JSON-value-identical) — no SLOT relocation applies to it`
+    );
+  }
+
+  // The 8 SLOT-relocation-affected confirmed entries: the stored (confirmed)
+  // entry itself is byte-identical (still protected — human data is never
+  // silently rewritten); only `proposedUpdate` picks up the new slots[].
+  for (const tag of SLOT_RELOCATION_DRIFT_TAGS) {
+    const before = { ...onDiskByTag[tag] };
+    delete before.proposedUpdate;
+    const after = { ...rerunByTag[tag] };
+    const proposedUpdate = after.proposedUpdate;
+    delete after.proposedUpdate;
+    assert.equal(
+      JSON.stringify(after),
+      JSON.stringify(before),
+      `'${tag}': the stored confirmed entry itself (minus proposedUpdate) must stay byte-identical`
+    );
+    assert.ok(proposedUpdate, `'${tag}': re-matching must surface the SLOT relocation as a proposedUpdate`);
+    assert.ok(proposedUpdate.slots?.length > 0, `'${tag}': proposedUpdate must carry the relocated slots[]`);
+    assert.ok(
+      proposedUpdate.props.every((p) => p.kind !== "slot"),
+      `'${tag}': proposedUpdate.props must no longer contain any kind:"slot" item`
+    );
+  }
+
+  // Card's "Content" SLOT property exact-matches the CEM "content" slot —
+  // the one MAPPED case among the 8 drift tags (the rest are unmapped, no
+  // plausible CEM slot counterpart for names like "Tab group" or "List 1
+  // content").
+  assert.deepEqual(rerunByTag["m3e-card"].proposedUpdate.slots, [
+    { figmaSlotName: "Content", kind: "slot", multi: false, mappedTo: "content", provenance: "auto-exact" },
+  ]);
 
   fs.rmSync(tmp);
 });
@@ -1145,14 +1245,34 @@ test("manual-correspondence A8: m3e-tab on disk is matcherKind:manual, and all 5
     "all confirmed entries must have provenance:human"
   );
 
-  // Byte-stability: re-running match against a copy of the real on-disk file reproduces it byte-for-byte
+  // Byte-stability: re-running match against a copy of the real on-disk file
+  // reproduces it byte-for-byte — EXCEPT the 8 confirmed entries whose real
+  // Figma set carries a SLOT-typed property that used to be mislabeled
+  // inside props[] (see the "A8 tracer acceptance" test above for the full
+  // explanation and the fixed tag list). Those 8 now legitimately pick up a
+  // proposedUpdate reflecting the slots[] relocation; every other tag,
+  // including m3e-tab itself, stays byte-identical.
+  const SLOT_RELOCATION_DRIFT_TAGS = [
+    "m3e-bottom-sheet",
+    "m3e-card",
+    "m3e-dialog",
+    "m3e-list-item",
+    "m3e-menu",
+    "m3e-menu-item",
+    "m3e-tabs",
+    "m3e-toolbar",
+  ];
   const tmp = tmpPath("manual-a8-rerun-correspondence");
   fs.copyFileSync(realCorrespondencePath, tmp);
   const rerun = runMatch({ profileDir, correspondencePath: tmp, loadCem, loadFigmaExport });
-  assert.equal(
-    JSON.stringify(rerun),
-    JSON.stringify(onDisk),
-    "re-running match must reproduce the checked-in correspondence.json byte-for-byte (JSON-value-identical)"
-  );
+  const rerunByTag = Object.fromEntries(rerun.map((e) => [e.cemTag, e]));
+  for (const entry of onDisk) {
+    if (SLOT_RELOCATION_DRIFT_TAGS.includes(entry.cemTag)) continue;
+    assert.equal(
+      JSON.stringify(rerunByTag[entry.cemTag]),
+      JSON.stringify(entry),
+      `re-running match must reproduce '${entry.cemTag}' byte-for-byte (JSON-value-identical)`
+    );
+  }
   fs.rmSync(tmp);
 });
