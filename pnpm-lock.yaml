@@ -27,34 +27,7 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
-  brands/m3e/generated/okf/elm-m3e-okf:
-    devDependencies:
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  brands/m3e/generated/package/elm-m3e:
-    devDependencies:
-      elm:
-        specifier: 0.19.1-6
-        version: 0.19.1-6
-      elm-format:
-        specifier: 0.8.8
-        version: 0.8.8
-      elm-test:
-        specifier: 0.19.1-revision17
-        version: 0.19.1-revision17
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  brands/m3e/generated/package/elm-m3e/docs:
+  brands/m3e/generated/docs/elm-m3e-docs:
     dependencies:
       '@m3e/web':
         specifier: 2.7.6
@@ -114,6 +87,33 @@ importers:
       vite:
         specifier: ^8.2.0
         version: 8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)
+
+  brands/m3e/generated/okf/elm-m3e-okf:
+    devDependencies:
+      jsdom:
+        specifier: ^29.1.1
+        version: 29.1.1
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  brands/m3e/generated/package/elm-m3e:
+    devDependencies:
+      elm:
+        specifier: 0.19.1-6
+        version: 0.19.1-6
+      elm-format:
+        specifier: 0.8.8
+        version: 0.8.8
+      elm-test:
+        specifier: 0.19.1-revision17
+        version: 0.19.1-revision17
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
 
   brands/m3e/generated/style/elm-m3e-tailwind:
     dependencies:

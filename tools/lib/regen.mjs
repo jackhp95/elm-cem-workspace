@@ -24,7 +24,7 @@ import path from "node:path";
 
 /** The config/flags argv shared by every elm-cem invocation against elm-m3e's config. */
 export const GEN_CONFIG_ARGS = [
-    "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
+    "--flags-from=../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json",
     "--config-from=config/slots.json",
     "--config-from=config/native-mdn.json",
     "--config-from=config/examples.generated.json",

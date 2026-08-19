@@ -104,13 +104,14 @@ vendored copies regardless of working directory:
 ignoreGeneratedSubstrate : Rule -> Rule
 ignoreGeneratedSubstrate =
     Rule.ignoreErrorsForDirectories
-        [ "../src/"
-        , "../elm-m3e-families/src/"
-        , "../../../../../../brands/html/generated/package/elm-typed-html/src/"
-        , "../../../../../../packages/elm-virtual-dom-intermediate-representation/src/"
-        , "../../../../../../pipeline/elm-cem/facts/src/"
-        , "../../../../../../pipeline/elm-cem-compose/src/"
-        , "../../../../../../pipeline/elm-cem-compose/tests/src/"
+        [ "../../package/elm-m3e/src/"
+        , "../../package/elm-m3e/elm-m3e-families/src/"
+        , "../../package/elm-m3e/tests/"
+        , "../../../../../brands/html/generated/package/elm-typed-html/src/"
+        , "../../../../../packages/elm-virtual-dom-intermediate-representation/src/"
+        , "../../../../../pipeline/elm-cem/facts/src/"
+        , "../../../../../pipeline/elm-cem-compose/src/"
+        , "../../../../../pipeline/elm-cem-compose/tests/src/"
         , "vendor/elm-foundation/"
         , "../docs/vendor/elm-foundation/"
         ]

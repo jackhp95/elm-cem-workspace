@@ -5,7 +5,7 @@
 //
 // Two hazards, both handled explicitly (see the M4 spec for the write-up):
 //
-//   R-008 — brands/m3e/generated/package/elm-m3e/docs/.elm-pages/Pages.elm is a TRACKED file
+//   R-008 — brands/m3e/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm is a TRACKED file
 //   containing a build timestamp (`builtAt = Time.millisToPosix <epoch-ms>`).
 //   Any docs build rewrites it. This gate normalizes that one field out
 //   before comparing (tools/lib/check-drift-core.mjs), rather than excluding
@@ -173,7 +173,7 @@ function checkConsumerOutputs() {
 // ── 5. R-008: Pages.elm — normalize the build timestamp before comparing ──
 function checkPagesElm() {
     const name = "check-drift: Pages.elm (R-008, timestamp-normalized)";
-    const relPath = "brands/m3e/generated/package/elm-m3e/docs/.elm-pages/Pages.elm";
+    const relPath = "brands/m3e/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm";
     const absPath = path.join(repoRoot, relPath);
     const head = spawnSync("git", ["show", `HEAD:${relPath}`], { cwd: repoRoot, encoding: "utf8" });
     if (head.status !== 0) {

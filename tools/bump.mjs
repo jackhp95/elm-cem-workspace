@@ -32,7 +32,7 @@ const EXACT_VERSION = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/;
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 const REPORT_PATH = path.join(repoRoot, "docs", "facts-bundle", "m4-bump-report.md");
 const ELM_M3E = path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
-const PAGES_ELM_REL = "brands/m3e/generated/package/elm-m3e/docs/.elm-pages/Pages.elm";
+const PAGES_ELM_REL = "brands/m3e/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm";
 
 // Consumers, in a fixed (arbitrary — none depends on another) order, so the
 // fan-out is deterministic run to run.

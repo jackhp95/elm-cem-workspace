@@ -36,7 +36,7 @@ const strict = process.argv.includes("--strict");
 // plain-HTML foundation the snippets use for scaffolding.
 const SRC_ROOTS = [
   path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e", "src"),
-  path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e", "docs", "vendor", "elm-foundation"),
+  path.join(repoRoot, "brands", "m3e", "generated", "docs", "elm-m3e-docs", "vendor", "elm-foundation"),
 ];
 
 // Where the emitted Code Connect Elm snippets live.

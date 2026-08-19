@@ -10,12 +10,12 @@
       "package": "@m3e/web",
       "version": "2.7.6",
       "sha": null,
-      "manifestPath": "docs/node_modules/@m3e/web/dist/custom-elements.json",
+      "manifestPath": "../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json",
       "upstreamRepo": "git+https://github.com/matraic/m3e.git",
       "integrity": null
     },
     "dts": {
-      "dir": "docs/node_modules/@m3e/web/dist",
+      "dir": "../../docs/elm-m3e-docs/node_modules/@m3e/web/dist",
       "fileCount": 463,
       "aliasCount": 89
     }

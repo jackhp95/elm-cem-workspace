@@ -1187,7 +1187,7 @@ to `.md`, and do NOT touch any chapter's content/format (spec decision #9 explic
 > a dedicated sub-agent sweep this session, re-verified for the depth-correction. Re-read each
 > file at execution time; the `build:site` run is the ultimate safety net.
 
-- [ ] **Step 5.1: Move + rename**
+- [x] **Step 5.1: Move + rename**
 
 ```bash
 mkdir -p brands/m3e/generated/docs
@@ -1197,7 +1197,7 @@ In `brands/m3e/generated/docs/elm-m3e-docs/package.json`: `"name": "m3e-builder-
 `"name": "elm-m3e-docs"`. (Note: unrelated to `elm-m3e-okf`'s `pnpmFilterName: "m3e-docs"`,
 which is a different string — leave that alone.)
 
-- [ ] **Step 5.2: Fix `docs/elm.json` `source-directories`** (verified current values)
+- [x] **Step 5.2: Fix `docs/elm.json` `source-directories`** (verified current values)
 
 - `"app"`, `"src"`, `".elm-pages"`, `"vendor/elm-foundation"` — package-local, **keep**.
 - `"../src"` → `"../../package/elm-m3e/src"`.
@@ -1205,7 +1205,7 @@ which is a different string — leave that alone.)
 - `"../../../../../core/elm-cem/facts/src"` → `"../../../../../pipeline/elm-cem/facts/src"` (same `../` count).
 - `"../../../../../core/elm-cem-compose/src"` → `"../../../../../pipeline/elm-cem-compose/src"`.
 
-- [ ] **Step 5.3: Fix `docs/scripts/*.mjs` — `REPO`/`M3E_ROOT` recomputation + node_modules localization**
+- [x] **Step 5.3: Fix `docs/scripts/*.mjs` — `REPO`/`M3E_ROOT` recomputation + node_modules localization**
 
 Each script computes an elm-m3e-root anchor by walking up from its own location; that anchor
 must now split into (a) the **docs package root** (for OUT dirs, `data/`, local `node_modules`,
@@ -1221,7 +1221,7 @@ must now split into (a) the **docs package root** (for OUT dirs, `data/`, local 
 - `scripts/search-index-gen/build-search-index.mjs` — verified all paths are `docs/dist`-local; **no change**.
 - `scripts/vendor-foundation.mjs`, `scripts/vendor-tailwind-m3e-web.mjs` — vendor IR/typed-html/tailwind srcs via `../../../../../core/…`: IR → `packages/elm-virtual-dom-intermediate-representation`, typed-html → `brands/html/generated/package/elm-typed-html`, tailwind → `brands/m3e/generated/style/elm-m3e-tailwind`. Recompute from the docs root (depth 5 → 5 `../` to root). **`vendor-tailwind-m3e-web.mjs` likely also needs the `tailwind-m3e-web`→`elm-m3e-tailwind` rename from Task 2** — grep it.
 
-- [ ] **Step 5.4: Fix `docs/samples/review/elm.json`** (verified current values)
+- [x] **Step 5.4: Fix `docs/samples/review/elm.json`** (verified current values)
 
 - `"src"` — local, keep.
 - `"../../../src"` (→ was `elm-m3e/src`) → `"../../../../package/elm-m3e/src"`. (From `elm-m3e-docs/samples/review`, `../../../` = docs root; need `../../../../package/elm-m3e/src`.)
@@ -1230,7 +1230,7 @@ must now split into (a) the **docs package root** (for OUT dirs, `data/`, local 
 - `"../../../../../../../core/elm-html-intermediate-representation/src"` → `"../../../../../../../packages/elm-virtual-dom-intermediate-representation/src"`.
 - `"../../../../../../../core/elm-typed-html/src"` (if present) → `"../../../../../../../brands/html/generated/package/elm-typed-html/src"` (**re-verify** — typed-html moved to a deeper path; count `../` from `samples/review/` at docs depth 5 + 2 = 7 to root, then descend). **Read the file in full at execution time and recompute each entry.**
 
-- [ ] **Step 5.5: Document the `generated/`/`authored/` correspondence — labeling only, no move**
+- [x] **Step 5.5: Document the `generated/`/`authored/` correspondence — labeling only, no move**
   (resolved live with Jack, 2026-08-19: documentation-only correspondence, neither a physical split
   nor a deferral — see "Decisions log" #5)
 
@@ -1259,7 +1259,7 @@ guide-markdown-migration project — at that point Guide content moves out of `.
 into real `.md` files read via `BackendTask.File`, which aren't URL-routing-constrained the same
 way, making a physical `authored/` directory cheap then instead of risky now.
 
-- [ ] **Step 5.6: Add the `tools/family.json` entry + finalize docs-path refs**
+- [x] **Step 5.6: Add the `tools/family.json` entry + finalize docs-path refs**
 
 - Add an `elm-m3e-docs` entry with `srcDir: "brands/m3e/generated/docs/elm-m3e-docs"`. Model
   its `mirror`/`copyFidelity` fields on how the docs package was tracked under the `elm-m3e`
@@ -1270,7 +1270,7 @@ way, making a physical `authored/` directory cheap then instead of risky now.
   package root (e.g. `dist/`, `vendor/`).
 - **Finalize the interim double-edits**: `check-drift.mjs` L176 → `brands/m3e/generated/docs/elm-m3e-docs/.elm-pages/Pages.elm`; `bump.mjs` L35 → same; `check-cc-elm-refs.mjs` L39 → `brands/m3e/generated/docs/elm-m3e-docs/vendor/elm-foundation`; `check-elm-shape-drift.mjs` L142 → `brands/m3e/generated/docs/elm-m3e-docs/scripts/examples-gen/lib/to-elm.mjs`.
 
-- [ ] **Step 5.7: Reinstall + gate (+ explicit docs build)**
+- [x] **Step 5.7: Reinstall + gate (+ explicit docs build)**
 
 ```bash
 pnpm install && node tools/gate-all.mjs
@@ -1280,7 +1280,7 @@ The docs `build:site` (run inside gate-all) is the sharpest test — it chains `
 anchor throws `ENOENT`/`MODULE_NOT_FOUND` immediately. If `build:site` is memoized/cached in
 gate-all, force a clean docs build to exercise the generators. Patch forward, re-run until green.
 
-- [ ] **Step 5.8: Commit**
+- [x] **Step 5.8: Commit**
 
 ```bash
 git add -A

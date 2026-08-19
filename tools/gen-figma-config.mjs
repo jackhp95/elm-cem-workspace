@@ -20,7 +20,7 @@
 // core/elm-cem/codegen/Docs.elm's docMetaMarker: `docMeta` renders as an
 // INVISIBLE HTML-comment marker (`<!-- elm-cem:docmeta k=v; ... -->`) in the
 // generated module's doc comment — not a visible Markdown line. Worse:
-// brands/m3e/generated/package/elm-m3e/docs/scripts/extract-reference.mjs (the docs-site's own
+// brands/m3e/generated/docs/elm-m3e-docs/scripts/extract-reference.mjs (the docs-site's own
 // reference extractor) explicitly DROPS `elm-cem:docmeta` directives before
 // rendering the public reference pages. So wiring this file into
 // GEN_CONFIG_ARGS today would embed Figma node-ids/URLs (pointing at Jack's
