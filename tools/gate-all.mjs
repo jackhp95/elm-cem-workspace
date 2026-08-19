@@ -21,12 +21,29 @@
 // Every item runs even if an earlier one fails — one run shows the whole
 // picture, not just the first thing to break. Exits nonzero if ANY item fails.
 //
-// Zero dependencies (plain Node ESM).
+// DISPATCH (2026-08-19 gate-all parallelization, see
+// docs/superpowers/specs/2026-08-18-gate-all-parallelization-design.md):
+// every step above is built as a descriptor `{name, command, args, cwd,
+// exclusiveWith, env}` and handed once to `tools/lib/gate-scheduler.mjs`'s
+// `runScheduled()` — a bounded worker-pool that runs steps concurrently
+// EXCEPT when they share an `exclusiveWith` tag (docs-dist, gate-out-probe).
+// This closes the previous flat-sequential design's single biggest cost
+// (elm-m3e's `test` script, which chains a ~230s Playwright suite, used to
+// block every other independent check behind it) without changing which
+// steps run or their pass/fail semantics — step membership and `record()`'s
+// output shape are unchanged; only the concurrency of what calls `record()`
+// changed. `--list-steps-only` / `--list-steps-full` print the step list
+// (bare names / names+tags) without running anything, for the membership
+// and constraint regression tests.
+//
+// Zero runtime dependencies (plain Node ESM).
 //
 // Env:
-//   PRISTINE_ELM_CEM  passed through to tools/ab-elm-cem.sh
-//   ELM_M3E           elm-m3e checkout used by the E2E bundle proof
-//                     (default: the in-workspace brands/m3e/outputs/elm-m3e)
+//   PRISTINE_ELM_CEM     passed through to tools/ab-elm-cem.sh
+//   ELM_M3E              elm-m3e checkout used by the E2E bundle proof
+//                        (default: the in-workspace brands/m3e/outputs/elm-m3e)
+//   GATE_ALL_CONCURRENCY overrides the scheduler's worker-pool width
+//                        (default: os.cpus().length)
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -35,9 +52,18 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { runFactsGenerator } from "./lib/regen.mjs";
+import { runScheduled } from "./lib/gate-scheduler.mjs";
+import { isolatedElmHome } from "./lib/elm-home-isolation.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
+
+// Print the constructed step list (and exit) instead of running anything —
+// used by the step-membership and constraint regression tests so they never
+// have to actually execute the ~130-350s of real work to verify the
+// dispatch plan didn't drop, rename, or mis-tag a step.
+const LIST_STEPS_ONLY = process.argv.includes("--list-steps-only");
+const LIST_STEPS_FULL = process.argv.includes("--list-steps-full");
 
 const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 // tools/family.json — the one manifest of "which packages exist, where, and
@@ -110,24 +136,23 @@ function record(name, status, detail) {
     console.log(`\n${label}  ${name}${detail ? `  — ${detail}` : ""}`);
 }
 
-/** Run a command to completion, streaming its output. Never throws. */
-function runItem(name, command, args, options = {}) {
-    console.log(`\n${"─".repeat(72)}\n▶ ${name}\n$ ${command} ${args.join(" ")}${options.cwd ? `  (cwd: ${options.cwd})` : ""}`);
-    const result = spawnSync(command, args, { stdio: "pipe", encoding: "utf8", cwd: repoRoot, maxBuffer: 256 * 1024 * 1024, ...options });
-    if (result.stdout) process.stdout.write(result.stdout);
-    if (result.stderr) process.stderr.write(result.stderr);
-    if (result.error) {
-        record(name, "fail", `failed to spawn: ${result.error.message}`);
-        return false;
-    }
-    if (result.status === 0 && /(^|\n)SKIP[:\s]/.test(result.stdout || "")) {
-        const reason = (result.stdout.match(/^SKIP.*$/m) || [])[0] || "skipped";
+/**
+ * Turn a `runScheduled` result (the async/buffered shape) into the same
+ * record() call `runItem`'s SKIP-detection has always made — this is the
+ * single bridge point the scheduler-based dispatch and the old
+ * spawnSync-based `runItem` both funnel through, so `record()`'s output
+ * shape genuinely never changed (spec §5).
+ */
+function recordSchedulerResult({ name, status, detail, stdout, stderr }) {
+    console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    if (stdout) process.stdout.write(stdout);
+    if (stderr) process.stderr.write(stderr);
+    if (status === "pass" && /(^|\n)SKIP[:\s]/.test(stdout || "")) {
+        const reason = (stdout.match(/^SKIP.*$/m) || [])[0] || "skipped";
         record(name, "skip", reason);
-        return true;
+        return;
     }
-    const ok = result.status === 0;
-    record(name, ok ? "pass" : "fail", ok ? "" : `exit code ${result.status ?? "signal " + result.signal}`);
-    return ok;
+    record(name, status, detail);
 }
 
 // ── 1. discover workspace packages ────────────────────────────────────────
@@ -310,10 +335,32 @@ function factsBundleE2E() {
     }
 }
 
-// ── main ──────────────────────────────────────────────────────────────────
-function main() {
+// ── step-descriptor construction ────────────────────────────────────────
+// Tags used (spec §3.1, §2):
+//   docs-dist        — elm-m3e's `test` script (chains test:fast then the
+//                       Playwright test:browser suite, which writes into
+//                       packages/elm-m3e/docs/dist) vs. any check that reads
+//                       that same tree (check-drift, copy-fidelity elm-m3e).
+//   gate-out-probe    — `workspace: root gate` (tools/gate.mjs) compiles into
+//                       the shared scratch file .gate-out/probe.js; nothing
+//                       else currently writes there (confirmed by a repo-wide
+//                       grep — see the constraint test), but it's tagged
+//                       defensively so a future second writer is forced to
+//                       declare the conflict rather than silently collide.
+// `port-1239` from the spec is NOT used here: elm-m3e/docs/playwright.config.ts
+// derives its port from the worktree path (scripts/worktree-port.mjs) rather
+// than hardcoding :1239, closing that constraint independently of this work
+// — confirmed by reading the current config before wiring these tags.
+// In `--list-steps-only`/`--list-steps-full` mode, buildSteps()'s own
+// informational logging must go to stderr, not stdout — those flags exist
+// so the constraint/membership regression tests can `execFileSync` this
+// process and JSON.parse its stdout directly; anything else on stdout would
+// corrupt that parse. Normal runs still see this on stdout as before.
+const logInfo = (...args) => (LIST_STEPS_ONLY || LIST_STEPS_FULL ? console.error(...args) : console.log(...args));
+
+function buildSteps() {
     const packages = discoverPackages();
-    console.log(`gate-all: discovered ${packages.length} workspace package(s): ${packages.map((p) => p.name).join(", ")}`);
+    logInfo(`gate-all: discovered ${packages.length} workspace package(s): ${packages.map((p) => p.name).join(", ")}`);
 
     const perPackage = [];
     for (const pkg of packages) {
@@ -326,21 +373,44 @@ function main() {
         console.error("gate-all: no package defines a `check` or `test` script — discovery is broken, refusing to pass.");
         process.exit(1);
     }
-    console.log(`gate-all: ${perPackage.length} package script(s) to run, plus cross-cutting checks and the E2E bundle proof.`);
+    logInfo(`gate-all: ${perPackage.length} package script(s) to run, plus cross-cutting checks and the E2E bundle proof.`);
+
+    const step = (name, command, args, extra = {}) => ({ name, command, args, cwd: repoRoot, exclusiveWith: [], ...extra });
+    const steps = [];
 
     for (const { pkg, script } of perPackage) {
-        runItem(`${pkg.name}: ${script}`, "pnpm", ["--filter", pkg.name, "run", script]);
+        const name = `${pkg.name}: ${script}`;
+        const extra = {};
+        // elm-m3e's `test` chains test:fast then the Playwright
+        // test:browser suite (~230s, the "elephant") — it writes into
+        // packages/elm-m3e/docs/dist, so it carries docs-dist.
+        if (pkg.name === "elm-m3e" && script === "test") extra.exclusiveWith = ["docs-dist"];
+        // elm-review-cem's check:review (one of the run-p "check:*" this
+        // step fans out to) runs stage-facts-elm-home.mjs, which WRITES
+        // into the shared ~/.elm/0.19.1/packages/jackhp95/elm-cem-facts —
+        // the one identified writer into shared ELM_HOME (spec §2
+        // constraint 3, §3.4). Every other package's check/test only READS
+        // from an already-populated (warm-cache) ELM_HOME, so only this
+        // step needs isolation — isolating all ~13 per-package steps was
+        // measured at ~0.8s/step (real ~/.elm: 232M, 3545 files) even with
+        // an APFS clonefile fast path, which would eat a meaningful slice
+        // of the ~130s bucket for no additional safety, since reads of an
+        // unchanging cache don't race each other.
+        if (pkg.name === "elm-review-cem" && script === "check") extra.env = { ELM_HOME: isolatedElmHome(name) };
+        steps.push(step(name, "pnpm", ["--filter", pkg.name, "run", script], extra));
     }
 
-    runItem("workspace: check-coverage-map", process.execPath, [path.join(repoRoot, "tools", "check-coverage-map.mjs")]);
-    runItem("workspace: check-single-cem-facts", process.execPath, [
-        path.join(repoRoot, "tools", "check-single-cem-facts.mjs"),
-    ]);
-    runItem("workspace: check-single-m3e-web-pin", process.execPath, [
-        path.join(repoRoot, "tools", "check-single-m3e-web-pin.mjs"),
-    ]);
-    runItem("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]);
-    runItem("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]);
+    steps.push(step("workspace: check-coverage-map", process.execPath, [path.join(repoRoot, "tools", "check-coverage-map.mjs")]));
+    steps.push(
+        step("workspace: check-single-cem-facts", process.execPath, [path.join(repoRoot, "tools", "check-single-cem-facts.mjs")]),
+    );
+    steps.push(
+        step("workspace: check-single-m3e-web-pin", process.execPath, [path.join(repoRoot, "tools", "check-single-m3e-web-pin.mjs")]),
+    );
+    steps.push(step("workspace: ab-elm-cem (Face A byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-cem.sh")]));
+    steps.push(
+        step("workspace: ab-elm-m3e-split (split-step byte-identity)", "bash", [path.join(repoRoot, "tools", "ab-elm-m3e-split.sh")]),
+    );
 
     // Copy fidelity for every migrated package: proves no git-tracked source
     // file went missing and no untracked file got committed. This exists
@@ -348,30 +418,44 @@ function main() {
     // a tracked file — every other check here would still pass. It belongs in
     // the sweep, not in a human's memory. Driven by tools/family.json's
     // `copyFidelity` blocks (Theme 3 "manifest move") via the one generic
-    // tools/copy-fidelity.mjs engine — this loop, not a per-package runItem()
-    // call, is what makes adding a 5th migrated package a data change. (The
-    // provenance checks that used to live in three standalone
+    // tools/copy-fidelity.mjs engine — this loop, not a hardcoded call per
+    // package, is what makes adding a 5th migrated package a data change.
+    // (The provenance checks that used to live in three standalone
     // check-bundle-provenance*.mjs scripts are folded into "check-drift"
     // below, via checkConsumerBundleDrift.)
     for (const name of Object.keys(family).filter((n) => family[n].copyFidelity)) {
-        runItem(`workspace: copy-fidelity ${name}`, process.execPath, [path.join(repoRoot, "tools", "copy-fidelity.mjs"), name]);
+        steps.push(
+            step(`workspace: copy-fidelity ${name}`, process.execPath, [path.join(repoRoot, "tools", "copy-fidelity.mjs"), name], {
+                exclusiveWith: name === "elm-m3e" ? ["docs-dist"] : [],
+            }),
+        );
     }
-    runItem("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
-        path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
-    ]);
-    runItem("workspace: check-drift (M4.b cross-cutting drift gate)", process.execPath, [
-        path.join(repoRoot, "tools", "check-drift.mjs"),
-    ]);
-    runItem("workspace: check-elm-shape-drift (Phase 1 canonical-engine gate)", process.execPath, [
-        path.join(repoRoot, "tools", "check-elm-shape-drift.mjs"),
-    ]);
-    runItem("workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)", process.execPath, [
-        path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
-        "--strict",
-    ]);
-    runItem("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
-        path.join(repoRoot, "tools", "check-mirror-drift.mjs"),
-    ]);
+    steps.push(
+        step("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
+            path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
+        ]),
+    );
+    steps.push(
+        step("workspace: check-drift (M4.b cross-cutting drift gate)", process.execPath, [path.join(repoRoot, "tools", "check-drift.mjs")], {
+            exclusiveWith: ["docs-dist"],
+        }),
+    );
+    steps.push(
+        step("workspace: check-elm-shape-drift (Phase 1 canonical-engine gate)", process.execPath, [
+            path.join(repoRoot, "tools", "check-elm-shape-drift.mjs"),
+        ]),
+    );
+    steps.push(
+        step("workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)", process.execPath, [
+            path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"),
+            "--strict",
+        ]),
+    );
+    steps.push(
+        step("workspace: check-mirror-drift (standalone jackhp95/* repos vs last publish)", process.execPath, [
+            path.join(repoRoot, "tools", "check-mirror-drift.mjs"),
+        ]),
+    );
     // Finding 1.10: measure-docs-size.mjs (the registry doc-size cap that
     // already bit elm-m3e-icons once) and check-m3e-5pkg.mjs (the D-037
     // 5-package split shape check) were both orphaned — real, useful, and
@@ -380,20 +464,28 @@ function main() {
     // finding's remedy; fetch-snapshots.mjs is the other orphan named there
     // and is deliberately NOT wired in yet (see the CHRONIC_SKIPS comment
     // above — it needs network access, a bigger decision than this fix).
-    runItem("workspace: measure-docs-size (registry docs.json size cap)", process.execPath, [
-        path.join(repoRoot, "tools", "measure-docs-size.mjs"),
-    ]);
-    runItem("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [
-        path.join(repoRoot, "tools", "check-m3e-5pkg.mjs"),
-    ]);
-    runItem("workspace: check-hooks-sync (pre-push hook drift, Theme 3)", process.execPath, [
-        path.join(repoRoot, "tools", "gen-hooks.mjs"),
-        "--check",
-    ]);
-    runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
+    steps.push(
+        step("workspace: measure-docs-size (registry docs.json size cap)", process.execPath, [
+            path.join(repoRoot, "tools", "measure-docs-size.mjs"),
+        ]),
+    );
+    steps.push(
+        step("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [path.join(repoRoot, "tools", "check-m3e-5pkg.mjs")]),
+    );
+    steps.push(
+        step("workspace: check-hooks-sync (pre-push hook drift, Theme 3)", process.execPath, [
+            path.join(repoRoot, "tools", "gen-hooks.mjs"),
+            "--check",
+        ]),
+    );
+    steps.push(
+        step("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")], {
+            exclusiveWith: ["gate-out-probe"],
+        }),
+    );
 
     if (KNOWN_BROKEN_TOOL_TESTS.size > 0) {
-        console.log(
+        logInfo(
             `\ngate-all: excluding ${KNOWN_BROKEN_TOOL_TESTS.size} known-broken tools/*.test.mjs file(s) from the ` +
                 `sweep below (see KNOWN_BROKEN_TOOL_TESTS in this file): ` +
                 `${[...KNOWN_BROKEN_TOOL_TESTS].map((f) => path.relative(repoRoot, f)).join(", ")}`,
@@ -401,12 +493,40 @@ function main() {
     }
     const toolTests = discoverToolTests();
     if (toolTests.length > 0) {
-        runItem(
-            `workspace: tools/*.test.mjs (${toolTests.length} file(s))`,
-            process.execPath,
-            ["--test", ...toolTests],
-        );
+        steps.push(step(`workspace: tools/*.test.mjs (${toolTests.length} file(s))`, process.execPath, ["--test", ...toolTests]));
     }
+
+    return steps;
+}
+
+// ── main ──────────────────────────────────────────────────────────────────
+async function main() {
+    const steps = buildSteps();
+
+    if (LIST_STEPS_ONLY) {
+        console.log(JSON.stringify(steps.map((s) => s.name)));
+        return;
+    }
+    if (LIST_STEPS_FULL) {
+        console.log(JSON.stringify(steps.map((s) => ({ name: s.name, exclusiveWith: s.exclusiveWith || [] }))));
+        return;
+    }
+
+    // Resolves spec §7 open question #3 with real data instead of a guess:
+    // `os.cpus().length` (10 on the measurement machine) was tried first and
+    // measured to be TOO WIDE — running elm-m3e's Playwright suite
+    // concurrently with ~9 other steps (several themselves spawning
+    // elm-test-rs/elm-review/vitest/chromium processes) starved the local
+    // static file server hard enough that it stopped answering
+    // (`net::ERR_CONNECTION_REFUSED` mid-suite, ~110 tests deep, on a
+    // machine with 16GB RAM / 10 cores). The same suite passes cleanly solo
+    // in ~240s. `os.cpus().length / 2` leaves real headroom: the ~130s
+    // "everything else" bucket has so much slack under elm-m3e's own ~230s
+    // that halving the pool width costs nothing against the ≤250s target
+    // while removing the resource-starvation failure mode entirely.
+    const concurrency = Number(process.env.GATE_ALL_CONCURRENCY) || Math.max(2, Math.floor(os.cpus().length / 2));
+    console.log(`gate-all: dispatching ${steps.length} step(s) through a ${concurrency}-wide tag-aware scheduler.`);
+    await runScheduled(steps, { concurrency, onResult: recordSchedulerResult });
 
     factsBundleE2E();
 
@@ -463,4 +583,7 @@ function main() {
     console.log("\nGATE-ALL GREEN");
 }
 
-main();
+main().catch((e) => {
+    console.error(`gate-all: uncaught error: ${e.stack || e.message}`);
+    process.exit(1);
+});

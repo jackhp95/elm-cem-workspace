@@ -89,7 +89,16 @@ export default defineConfig({
     // Measured: the dev-server path times out at 480s locally. The static build
     // is deterministic, serves instantly, and is the artifact we actually ship.
     // `reuseExistingServer` still lets you point at a hand-started server.
-    command: `npm run build:site && PORT=${port} npm run serve`,
+    //
+    // Routed through build-site-cached.mjs (2026-08-19 gate-all
+    // parallelization, Tier 2): a content-hash cache over build:site's
+    // tracked input files. A cache hit restores `dist/` instead of
+    // re-running the ~28s build; a cache MISS always rebuilds — see
+    // tools/lib/build-site-cache.mjs and this script's own header for why
+    // this is never a path/git-diff heuristic. Either way it prints which
+    // happened, so a cache hit is visible in gate-all's buffered per-step
+    // output exactly like an existing SKIP, never a silent no-op.
+    command: `node scripts/build-site-cached.mjs && PORT=${port} npm run serve`,
     // NOT `baseURL` bare: `/` has no prerendered file anymore (it's a
     // Netlify-only 301 to `/getting-started/welcome`, which `netlify.toml`
     // doesn't apply to this raw static server), and `serve-dist.mjs`'s SPA

@@ -19,6 +19,7 @@
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 /** The config/flags argv shared by every elm-cem invocation against elm-m3e's config. */
@@ -53,14 +54,59 @@ export function runFactsGenerator({ repoRoot, elmM3e, output, factsBundle }) {
     });
 }
 
+// Phase 4 memoization (2026-08-18 gate-all parallelization plan): within a
+// single `node` process, `check-drift.mjs`'s checkProducer() and its THREE
+// checkConsumerBundleDrift() calls each independently regenerated an
+// identical facts bundle (same repoRoot + elmM3e, same GEN_CONFIG_ARGS) —
+// 4 regenerations of the same ~1.5-2s output per run, for nothing (every
+// caller here only READS outputDir/bundleDir afterward, never mutates them,
+// so sharing one generation across callers is a strict correctness
+// improvement too: every consumer compares against the SAME bytes instead
+// of separately-generated ones that could in principle diverge on a
+// nondeterministic generator bug with nothing to notice). Cache is
+// process-lifetime, keyed by the resolved (repoRoot, elmM3e) pair — safe
+// because nothing in this module process ever calls it with a different
+// pair. A cache hit is always logged (never silent), per this repo's
+// no-silent-skip discipline.
+//
+// IMPORTANT: cached output lives in a directory THIS MODULE owns (a fresh
+// mkdtempSync separate from any caller's `workDir`), never inside a
+// caller-provided `workDir` — every existing caller wraps its own `workDir`
+// in `try { ... } finally { fs.rmSync(workDir, ...) }`, which would delete
+// the FIRST caller's directory (and therefore every later cache hit's
+// backing files) the moment that first caller returned. Cache entries
+// persist for the whole process regardless of what any individual caller
+// does with its own scratch dir.
+const _bundleCache = new Map();
+
 /**
- * Generate a fresh facts bundle (Face B + Face C) into a scratch directory
- * under `workDir`. Throws on nonzero exit (after streaming stdout/stderr).
- * Returns `{ outputDir, bundleDir }`.
+ * Generate a fresh facts bundle (Face B + Face C). Throws on nonzero exit
+ * (after streaming stdout/stderr). Returns `{ outputDir, bundleDir }`
+ * pointing into a directory this module owns — NOT `workDir` — so the
+ * result outlives any individual caller's own cleanup (see the comment
+ * above `_bundleCache`). Memoized per (repoRoot, elmM3e) pair for the
+ * lifetime of this process; `workDir` is still accepted (and still created)
+ * for backward compatibility with callers that pass it, but is unused on a
+ * cache hit.
  */
 export function generateBundleToTemp({ repoRoot, elmM3e, workDir, streamOutput = true }) {
-    const outputDir = path.join(workDir, "out");
-    const bundleDir = path.join(workDir, "bundle");
+    const cacheKey = `${path.resolve(repoRoot)}::${path.resolve(elmM3e)}`;
+    const cached = _bundleCache.get(cacheKey);
+    if (cached) {
+        // Always reported, regardless of `streamOutput` — that flag controls
+        // whether the GENERATOR's own stdout/stderr gets relayed, not
+        // whether a cache-hit decision is visible. A cache hit must never be
+        // quieter than a miss (no-silent-skip discipline).
+        console.log(
+            `generateBundleToTemp: CACHE HIT — reusing the facts bundle already generated this run for ` +
+                `${cacheKey} (bundleDir: ${cached.bundleDir}); not re-invoking the generator.`,
+        );
+        return cached;
+    }
+
+    const ownedDir = fs.mkdtempSync(path.join(os.tmpdir(), "regen-bundle-cache-"));
+    const outputDir = path.join(ownedDir, "out");
+    const bundleDir = path.join(ownedDir, "bundle");
     fs.mkdirSync(outputDir, { recursive: true });
     fs.mkdirSync(bundleDir, { recursive: true });
 
@@ -72,7 +118,9 @@ export function generateBundleToTemp({ repoRoot, elmM3e, workDir, streamOutput =
     if (result.status !== 0) {
         throw new Error(`elm-cem --facts-bundle exited ${result.status}`);
     }
-    return { outputDir, bundleDir };
+    const value = { outputDir, bundleDir };
+    _bundleCache.set(cacheKey, value);
+    return value;
 }
 
 // ── the opaque-`Name` icon catalog (R-026) ──────────────────────────────────

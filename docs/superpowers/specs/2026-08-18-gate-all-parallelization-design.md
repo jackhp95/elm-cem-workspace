@@ -146,7 +146,13 @@ before or after it:
   `packages/elm-m3e/docs/playwright.config.ts:76`, ≈28.2s) on a content hash of its actual inputs, so
   a push that doesn't touch anything `build:site` reads gets to skip straight to a cached dist. This
   must be a **cache-and-verify**, not a **skip-if-path-unchanged** — see §4's hard constraint on
-  silent skips; a stale-cache false-negative would be worse than the 28s it saves.
+  silent skips; a stale-cache false-negative would be worse than the 28s it saves. Concretely: a
+  cache hit is only ever a byte-for-byte SHA-256 match over the tracked input files' actual content
+  (never mtimes, never a git-diff heuristic), and every cache hit or miss MUST print which happened
+  and why (e.g. `CACHE HIT — hash <n> matched <k> tracked input file(s)`) to the same stdout stream
+  the rest of that step's output already flows through in gate-all's buffered per-step output — so a
+  hit is exactly as visible and attributable in the run log as an existing SKIP line, never a silent
+  no-op the reader has to infer from a suspiciously fast step.
 
 **Tier 3 — bounded pool over the remaining ~130s**, this is the mechanism described in §3.2 applied
 beyond Tier 1's simple "one big thing vs. everything else" split — once Tier 1 is landed and stable,
