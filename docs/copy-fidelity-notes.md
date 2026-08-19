@@ -129,6 +129,27 @@ move"). The gate itself only needs the path lists; this doc is where the
   authorized by prefix rather than a brittle per-file list. Its own
   regen-drift gate (elm-m3e `check:families`) polices its contents;
   copy-fidelity only needs to not treat the subtree as unexplained.
+- `config/ATTRIBUTION.md` / `config/categories.json` / `config/examples.*` /
+  `config/favicon.json` / `config/icons*.json` / `config/native-mdn.json` /
+  `config/slots.json` — moved out of `elm-m3e` to the shared
+  `brands/m3e/inputs/cem/config/` location in 4c0209d5 ("reorg(m3e-inputs):
+  move elm-m3e's config/*.json to brands/m3e/inputs/cem, symlink back for
+  compat"), part of the 2026-08-19 core/brands reorg. A compat symlink
+  (`config` → `../../inputs/cem/config`) keeps every in-repo consumer
+  working, but copy-fidelity does not follow symlinks into a directory it
+  expects to be real — so the symlink itself is `authorizedExtra` and its
+  13 target files are `authorizedAbsent`, both relative to `elm-m3e`'s own
+  `srcDir`.
+- `docs/app/Route/Examples/DetailedView.elm` (+ its `Examples.elm`/`Feed.elm`/
+  `Shared.elm` nav wiring, not separately allowlisted since those files
+  already existed), `docs/plans/2026-08-18-wrapper-div-cleanup.md`,
+  `docs/scripts/kill-stale-server.mjs`, `docs/scripts/worktree-port.mjs` +
+  `.test.mjs` — workspace-ahead-of-upstream: real work landed on this
+  session's `main` (the Detailed-view example, a wrapper-div cleanup plan,
+  and the search-fab/worktree-port fixes from `fix/netlify-deploy-not-picked-up`
+  and `fix/search-fab-mobile-open-mode-race`) that hasn't been pushed to the
+  standalone `jackhp95/elm-m3e` mirror yet. Same pattern as the existing
+  workspace-ahead-of-upstream note under cem-figma-connect below.
 
 ## cem-figma-connect
 
@@ -224,6 +245,12 @@ move"). The gate itself only needs the path lists; this doc is where the
 - The `authorizedAbsentM6` list — superseded plans, handoff notes and
   per-repo `.claude-memory` files that described pre-migration states.
   Full reasoning per path: `docs/facts-bundle/m6-deep-clean.md`.
+- `research/figma-dumps/figma-export.m3-kit-live-test.json` — a scratch
+  research export from a live Figma pull (2026-08-19), not yet decided
+  whether it belongs in the tracked corpus. `test/fixtures/b4-status-throws.mjs`
+  — a new test fixture landing with the publish-gate `statusFn`-throws fix
+  (18beb3f0). Both workspace-ahead-of-upstream, not yet pushed to
+  `jackhp95/cem-figma-connect`.
 - `profiles/m3-kit/facts/cem-facts.json` / `profiles/m3-kit/facts/elm-api-facts.json`
   — the real elm-cem facts bundle (Face B + Face C) this profile now reads,
   generated via `elm-cem --facts-bundle=<dir>` against elm-m3e's own
@@ -268,6 +295,22 @@ move"). The gate itself only needs the path lists; this doc is where the
   `core/cem-figma-connect/profiles/m3-kit/facts/cem-facts.json` is.
 - `.claude-memory/m3e-disclosure-hook-design.md` (M6) — superseded
   pre-migration session memory. Full reasoning: `docs/facts-bundle/m6-deep-clean.md`.
+- `data/knowledge/**` / `knowledge/**` (174 files) / `scripts/check-paraphrase.mjs`
+  / `scripts/lib/validate-okf.mjs` — all split OUT of this package into the
+  new `material-okf` package (`brands/m3e/inputs/material-okf`) in 95afa5dd
+  ("reorg(m3e-okf): split into brands/m3e/inputs/material-okf (knowledge) +
+  brands/m3e/outputs/m3e-api-okf (CEM-verified implementation)"), part of
+  the 2026-08-19 core/brands reorg. `m3e-okf`'s `srcDir` now holds only the
+  CEM-verified implementation half; the knowledge corpus and its paraphrase/
+  validation scripts live in `material-okf` instead, which per its own
+  `$TODO_external_sync` note isn't wired into `copyFidelity` yet (needs Jack
+  to confirm the external sync source first) — so for now these paths are
+  simply absent from `m3e-okf`'s comparison, not tracked anywhere by this
+  gate.
+- `templates/consumer-vendor/{README.md,check-vendor.mjs,revendor-m3e.mjs,
+  revendor-m3e.test.mjs}` — a new consumer-vendor template (verifying how a
+  downstream consumer vendors `@m3e/web`), workspace-ahead-of-upstream, not
+  yet pushed to the standalone `m3e-okf` mirror.
 
 ## tailwind-m3e-web
 
@@ -308,3 +351,16 @@ move"). The gate itself only needs the path lists; this doc is where the
   parsing `node_modules/@m3e/web`'s manifest directly. Policed for
   freshness by the `bundleCopy` provenance check, the same way
   `brands/m3e/outputs/m3e-api-okf/data/cem-facts.json` is.
+- `bin/calibrate-tones.mjs` / `src/ref/_tone-table.css` / `src/ref/palette.css`
+  / `src/seed.css` / `src/theme.css` / `test/calibrate-tones.test.mjs` +
+  its snapshot / `test/contrast.test.mjs` / `test/palette-resolve.test.mjs`
+  / `test/theme-shape.test.mjs` — the generic M3 color-science half split
+  OUT of this package into the new `core/tailwind-md3` package in 0026da38
+  ("reorg(tailwind): split core/tailwind-md3 out of tailwind-m3e-web
+  (generic M3 color science vs @m3e/web-specific sys tokens)"), part of the
+  2026-08-19 core/brands reorg. `tailwind-m3e-web`'s `srcDir` now holds only
+  the `@m3e/web`-specific sys-token utilities; tone/palette calibration
+  lives in `core/tailwind-md3` instead.
+- `test/sys-color-tone.test.mjs` — a new test added after the
+  `core/tailwind-md3` split to cover the sys-token/tone-table seam from this
+  package's side, workspace-ahead-of-upstream.
