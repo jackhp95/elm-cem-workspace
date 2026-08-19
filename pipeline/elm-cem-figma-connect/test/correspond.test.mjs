@@ -110,6 +110,137 @@ test("schema: rejects an entry missing a required field", () => {
   assert.ok(errors.some((e) => e.includes('missing required property "cemTag"')));
 });
 
+test("schema: a correspondence entry with a well-formed slots array (mapped) validates", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        figmaSlotName: "trailing",
+        kind: "slot",
+        multi: false,
+        mappedTo: "trailing-slot"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.deepEqual(errors, []);
+  assert.equal(valid, true);
+});
+
+test("schema: a correspondence entry with a well-formed slots array (unmapped) validates", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        figmaSlotName: "trailing",
+        kind: "slot",
+        multi: false,
+        unmapped: "no CEM counterpart for this slot"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.deepEqual(errors, []);
+  assert.equal(valid, true);
+});
+
+test("schema: rejects a slots entry with an invalid kind", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        figmaSlotName: "trailing",
+        kind: "bogus",
+        multi: false,
+        mappedTo: "trailing-slot"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.equal(valid, false);
+  assert.ok(errors.some((e) => e.includes("enum") || e.includes("bogus")));
+});
+
+test("schema: rejects a slots entry missing a required field (multi)", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        figmaSlotName: "trailing",
+        kind: "slot",
+        mappedTo: "trailing-slot"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.equal(valid, false);
+  assert.ok(errors.some((e) => e.includes('missing required property "multi"')));
+});
+
+test("schema: rejects a slots entry missing a required field (figmaSlotName)", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        kind: "slot",
+        multi: false,
+        mappedTo: "trailing-slot"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.equal(valid, false);
+  assert.ok(errors.some((e) => e.includes('missing required property "figmaSlotName"')));
+});
+
+test("schema: rejects a slots entry with additionalProperties", () => {
+  const entry = {
+    cemTag: "m3e-test-slot",
+    provenance: "auto-exact",
+    status: "proposed",
+    figmaSets: [],
+    axes: [],
+    props: [],
+    slots: [
+      {
+        figmaSlotName: "trailing",
+        kind: "slot",
+        multi: false,
+        mappedTo: "trailing-slot",
+        extraField: "should not be here"
+      }
+    ]
+  };
+  const { valid, errors } = validate(schema, [entry]);
+  assert.equal(valid, false);
+  assert.ok(errors.some((e) => e.includes("additional") || e.includes("extraField")));
+});
+
 // -- buildProposals: mapping fidelity ----------------------------------------
 
 test("buildProposals: button figmaSets carry nodeId/setName/fixedAttrs, sourced from the fusion", () => {
