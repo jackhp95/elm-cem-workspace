@@ -58,6 +58,27 @@
 //     the axis gate has no meaningful state to drive them through (driving a
 //     toggle-button set through the base button's Type×Size grid resolves no
 //     variant). Their base entry's own axis-grid sets sample as usual.
+//   - An entry whose axis-grid figmaSets NONE of which captured
+//     setProperties in this export (e.g. m3e-nav-menu: its one figmaSet
+//     points at a standalone Figma COMPONENT, not a COMPONENT_SET —
+//     extraction (extract/README.md) only calls `get_component_properties`
+//     on COMPONENT_SET node ids, so a correspondence entry whose only
+//     figmaSet(s) resolve to standalone COMPONENTs will NEVER have captured
+//     setProperties, by design, not by data-quality gap) is gate-exempt the
+//     same way — see hasNoCapturedSetProperties below. There is no axis grid
+//     to derive defaults from or drive through, so (like iconTable/code-only
+//     entries) the axis gate has no meaningful state to sample at all. This
+//     is a per-entry structural fact (checked BEFORE calling drive.mjs's
+//     buildDefaultState/definitionsFor, which would otherwise throw), not a
+//     generic error handler — an entry with a MIX of a captured
+//     COMPONENT_SET sibling and an uncaptured standalone-COMPONENT sibling
+//     is NOT exempt; it still drives normally off the captured sibling
+//     (definitionsFor's existing loop-with-continue). Entries whose
+//     matcherKind IS "standalone" are excluded from this check entirely —
+//     drive.mjs's own isStandaloneEntry fast-path already handles those (no
+//     axes/props to derive; the intrinsic-default single state is real and
+//     still gated), so they are never mistaken for this exemption just
+//     because their one figmaSet also happens to lack setProperties.
 //
 // -- Contract with C2's driver -----------------------------------------------
 //
@@ -142,6 +163,33 @@ function hasNoFigmaPresence(entry) {
   return !entry.figmaSets || entry.figmaSets.length === 0;
 }
 
+// isStandaloneMatcherKind(entry) -> true for matcherKind:"standalone" —
+// drive.mjs's own isStandaloneEntry fast-path (a single COMPONENT node, no
+// variant children, no setProperties to read at all — the intrinsic-default
+// render IS the one real state). Never route these through
+// hasNoCapturedSetProperties below — they always lack captured
+// setProperties by design, but that's not this new exemption; it's the
+// pre-existing standalone path, which still produces a real, gated "default"
+// state.
+function isStandaloneMatcherKind(entry) {
+  return entry.matcherKind === "standalone";
+}
+
+// hasNoCapturedSetProperties(entry, figmaExport) -> true when NONE of this
+// entry's axis-grid figmaSets (axisGridSets — representative-example 2nd-sets
+// don't count either way) have a captured setProperties entry in this
+// export. See the module docstring's exclusions list for the full rationale
+// (extraction only captures setProperties for COMPONENT_SET nodes; a
+// figmaSet pointing at a standalone COMPONENT never will). A MIXED entry
+// (some siblings captured, some not) returns false here — it still has a
+// real axis grid to derive defaults from and drive through, via whichever
+// sibling DID capture its properties (drive.mjs's definitionsFor already
+// handles picking that one).
+function hasNoCapturedSetProperties(entry, figmaExport) {
+  const gridSets = axisGridSets(entry);
+  return gridSets.length > 0 && gridSets.every((set) => !figmaExport.data.setProperties[set.nodeId]);
+}
+
 // isRepresentativeExampleSet(set) -> true for an appendSets "2nd-set" (carries
 // an inline `example` and/or a `slugSuffix`): a standalone representative
 // render of a SEPARATE component set, not an axis-grid variant of this entry.
@@ -161,12 +209,15 @@ function axisGridSets(entry) {
 //
 // The default (non-audit) sampling plan: one-factor-at-a-time. See the
 // module docstring for the full reconciliation and the measured button
-// count. Returns [] for iconTable entries (gate-exempt in v1) and for
-// entries with no Figma presence (figmaSets:[], e.g. matcherKind:"code-only"
-// — nothing to visually gate).
+// count. Returns [] for iconTable entries (gate-exempt in v1), for entries
+// with no Figma presence (figmaSets:[], e.g. matcherKind:"code-only" —
+// nothing to visually gate), and for non-standalone entries whose figmaSets
+// have no captured setProperties anywhere (e.g. m3e-nav-menu — see the
+// module docstring's exclusions list and hasNoCapturedSetProperties).
 export function sampleDefault(entry, figmaExport) {
   assertNonGoalExclusions(entry);
   if (isIconTableEntry(entry) || hasNoFigmaPresence(entry)) return [];
+  if (!isStandaloneMatcherKind(entry) && hasNoCapturedSetProperties(entry, figmaExport)) return [];
 
   const gridSets = axisGridSets(entry);
   if (gridSets.length === 0) return [];
@@ -229,6 +280,7 @@ export function sampleDefault(entry, figmaExport) {
 export function sampleAudit(entry, figmaExport) {
   assertNonGoalExclusions(entry);
   if (isIconTableEntry(entry) || hasNoFigmaPresence(entry)) return [];
+  if (!isStandaloneMatcherKind(entry) && hasNoCapturedSetProperties(entry, figmaExport)) return [];
 
   const gridSets = axisGridSets(entry);
   if (gridSets.length === 0) return [];
