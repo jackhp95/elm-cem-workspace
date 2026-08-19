@@ -87,3 +87,5 @@ Non-visual configuration elements.
 
 ---
 _Selection guidance synthesized from m3e component descriptions and Material Design 3 principles; component APIs are verified against the CEM (see each card)._
+
+_See also: [Component substitution](component-substitution.md) — when two components both plausibly fit, or none does exactly._
