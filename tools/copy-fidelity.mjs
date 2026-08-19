@@ -55,6 +55,54 @@ function matchesAnyPrefix(p, prefixes) {
     return (prefixes || []).some((prefix) => p.startsWith(prefix));
 }
 
+// `git ls-files` reports a tracked symlink as ONE blob entry (mode 120000),
+// never following it — so a package that symlinks a subdirectory to a
+// shared location (e.g. elm-m3e's `config` -> `../../inputs/cem/config`,
+// centralizing config that several brand outputs read) collapses every file
+// under that symlink into a single opaque path here. Compared against the
+// SOURCE repo (which has `config/` as a real directory with real tracked
+// files), that looks like N files went MISSING plus one bogus EXTRA (the
+// bare symlink path) — a tooling false-positive, not drift. Expand any
+// tracked-symlink-to-a-directory into the real, git-tracked-or-addable file
+// list at its resolved target, remapped back onto the symlink's logical
+// path, so fidelity is actually checked against real file names instead of
+// silently going blind the moment a package chooses to share a directory.
+function expandTrackedSymlinkDirs(repoRoot, relPaths) {
+    const out = [];
+    for (const rel of relPaths) {
+        const abs = path.join(repoRoot, rel);
+        let lst;
+        try {
+            lst = fs.lstatSync(abs);
+        } catch {
+            out.push(rel);
+            continue;
+        }
+        if (!lst.isSymbolicLink()) {
+            out.push(rel);
+            continue;
+        }
+        let real;
+        try {
+            real = fs.realpathSync(abs);
+        } catch {
+            out.push(rel); // dangling symlink — let the existing "missing" logic catch it as-is
+            continue;
+        }
+        if (!fs.statSync(real).isDirectory()) {
+            out.push(rel); // a symlinked FILE compares fine as one entry, no expansion needed
+            continue;
+        }
+        const realRel = path.relative(repoRoot, real);
+        const targetTracked = gitLsFiles(repoRoot, ["--", realRel]);
+        const targetUntracked = gitLsFiles(repoRoot, ["--others", "--exclude-standard", "--", realRel]);
+        for (const tf of new Set([...targetTracked, ...targetUntracked])) {
+            out.push(path.join(rel, path.relative(realRel, tf)));
+        }
+    }
+    return out;
+}
+
 /** @returns {"ok"|"skip"|null} null means "proceed for real", others mean "stop here, this is the verdict" */
 function requireSourceOrSkip(name, sourceDir, envVar) {
     if (fs.existsSync(sourceDir)) return null;
@@ -104,7 +152,8 @@ function runOne(name) {
 
     const trackedRel = gitLsFiles(repoRoot, ["--", pkgRel]);
     const untrackedRel = gitLsFiles(repoRoot, ["--others", "--exclude-standard", "--", pkgRel]);
-    let workspaceFiles = [...new Set([...trackedRel, ...untrackedRel])]
+    const expandedRel = expandTrackedSymlinkDirs(repoRoot, [...new Set([...trackedRel, ...untrackedRel])]);
+    let workspaceFiles = [...new Set(expandedRel)]
         .filter((p) => fs.existsSync(path.join(repoRoot, p)))
         .map((p) => path.relative(pkgRel, p))
         .sort();
