@@ -70,6 +70,17 @@ test("loadFigmaExport: button main set (57994:2227) exposes its captured propert
   assert.equal(textProps[0].rawName, "Label text#58653:0");
 });
 
+test("loadFigmaExport: button main set (57994:2227) includes SLOT property with correct displayName", () => {
+  const buttonSet = loaded.sets.find((s) => s.id === "57994:2227");
+  assert.ok(buttonSet.properties, "button main set has captured setProperties");
+
+  const slotProps = buttonSet.properties.filter((p) => p.type === "SLOT");
+  assert.equal(slotProps.length, 1, "exactly one SLOT property");
+  assert.equal(slotProps[0].displayName, "Trailing slot", "SLOT displayName has nodeId suffix stripped");
+  assert.equal(slotProps[0].rawName, "Trailing slot#58653:150", "SLOT rawName is the original Figma name");
+  assert.equal(slotProps[0].type, "SLOT", "SLOT type is preserved");
+});
+
 test("displayNameOf: strips the Figma '#nodeId' suffix from non-variant property names", () => {
   assert.equal(displayNameOf("Label text#58653:0"), "Label text");
   assert.equal(displayNameOf("Show icon#58653:51"), "Show icon");
