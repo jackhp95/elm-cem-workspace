@@ -53,6 +53,7 @@
         "authorizedExtra": [
           "docs/scripts/fix-native-bins.mjs",
           "docs/scripts/browser-guard.mjs",
+          "docs/scripts/build-site-cached.mjs",
           "docs/scripts/check-review-guard.mjs",
           "docs/scripts/gen-compose-attrs.mjs",
           "docs/app/Compose/Attrs.elm",
