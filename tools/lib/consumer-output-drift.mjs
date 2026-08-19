@@ -73,7 +73,10 @@ export function consumerOutputDescriptors(repoRoot) {
             // scratch copy needs that sibling present at the same
             // repo-root-relative position.
             externalSymlinks: ["tools/lib"],
-            paths: ["data/components.json", "skills/m3e", "knowledge", "implementations/m3e-web"],
+            // POST-REORG SPLIT (2026-08-18): "knowledge" removed -- it moved to the
+            // sibling brands/m3e/inputs/material-okf package and is no longer
+            // generated or present in m3e-api-okf's own tree.
+            paths: ["data/components.json", "skills/m3e", "implementations/m3e-web"],
             generate: (dest) => {
                 for (const script of [
                     "scripts/extract.mjs",

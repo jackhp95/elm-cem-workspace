@@ -93,7 +93,7 @@
       "mirror": { "auditedExclusions": false }
     },
     "m3e-okf": {
-      "srcDir": "packages/m3e-okf",
+      "srcDir": "brands/m3e/outputs/m3e-api-okf",
       "pnpmFilterName": "m3e-docs",
       "$pnpmFilterNameNote": "packages/m3e-okf/package.json's \"name\" field is \"m3e-docs\" (Theme 6 finding #6 — a known, separate mismatch, not fixed by W5) — pnpm --filter must use that name, not the directory/mirror-repo name used as this table's key.",
       "mirror": { "auditedExclusions": true },
@@ -111,6 +111,11 @@
         "authorizedExtra": ["scripts/gen-facts.mjs", "data/cem-facts.json"],
         "$notes": "docs/copy-fidelity-notes.md#m3e-okf"
       }
+    },
+    "material-okf": {
+      "srcDir": "brands/m3e/inputs/material-okf",
+      "mirror": { "auditedExclusions": false },
+      "$TODO_external_sync": "Per the design spec's 'Sync mechanism' section, this should eventually sync from a separate external OKF repo via copyFidelity (sourceEnvVar + tools/snapshot-refs.json entry), same pattern as m3e-okf. Not wired up in this structure-only pass -- needs Jack to confirm the real external repo's URL + pinned SHA first. For now this package's content is locally-authored (moved from this workspace's own former packages/m3e-okf/data/knowledge/**), not synced from anywhere."
     },
     "tailwind-m3e-web": {
       "srcDir": "brands/m3e/outputs/tailwind-m3e-web",

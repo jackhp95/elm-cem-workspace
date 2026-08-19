@@ -16,11 +16,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseFrontmatter, extractLinks } from "../../../tools/lib/okf-lib.mjs";
+import { parseFrontmatter, extractLinks } from "../../../../../tools/lib/okf-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../..");
 const SKILLS = path.join(ROOT, "skills");
-const KNOW = path.join(ROOT, "knowledge");
+// POST-REORG SPLIT (2026-08-18): knowledge/ moved to the sibling
+// brands/m3e/inputs/material-okf package; /knowledge/-prefixed links in
+// skills/ metadata now resolve there, not locally. /implementations/-prefixed
+// links keep resolving locally (implementations/ stayed in this package).
+const KNOW = path.join(ROOT, "..", "..", "inputs", "material-okf", "knowledge");
 const IMPL = path.join(ROOT, "implementations");
 
 const NAME_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -72,7 +76,7 @@ for (const dir of skillDirs.sort()) {
       if (!target || /^(https?:|mailto:)/.test(target)) continue;
       const rel = path.relative(SKILLS, md);
       if (target.startsWith("/knowledge/") || target === "/knowledge/index.md") {
-        const p = path.join(ROOT, target.replace(/^\//, ""));
+        const p = path.join(KNOW, target.replace(/^\/knowledge\//, ""));
         const asMd = p.endsWith(".md") ? p : p.replace(/\/$/, "") + ".md";
         const asIndex = path.join(p.replace(/\/$/, ""), "index.md");
         if (!fs.existsSync(asMd) && !fs.existsSync(asIndex) && !fs.existsSync(p)) errors.push(`${rel}: unresolved bundle link -> ${href}`);

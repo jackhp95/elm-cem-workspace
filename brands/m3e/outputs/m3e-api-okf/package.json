@@ -16,13 +16,11 @@
     "check:skill": "node scripts/check-skill.mjs",
     "check:skills-meta": "node scripts/check-skills-meta.mjs",
     "check:okf": "node scripts/check-okf.mjs",
-    "check:okf-validity": "node scripts/lib/validate-okf.mjs",
-    "check:paraphrase": "node scripts/check-paraphrase.mjs",
     "check:staleness": "node scripts/check-staleness.mjs",
     "check": "run-p \"check:!(staleness)\"",
-    "test:lib": "node --test scripts/lib/*.test.mjs ../../tools/lib/okf-lib.test.mjs",
+    "test:lib": "node --test scripts/lib/*.test.mjs ../../../../tools/lib/okf-lib.test.mjs",
     "test": "run-p \"test:*\"",
-    "hooks:install": "node ../../tools/hooks-install.mjs",
+    "hooks:install": "node ../../../../tools/hooks-install.mjs",
     "gate": "run-s check test"
   },
   "devDependencies": {

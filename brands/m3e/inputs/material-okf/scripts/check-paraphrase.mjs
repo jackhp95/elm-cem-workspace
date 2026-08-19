@@ -20,7 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseFrontmatter, verbatimRuns } from "../../../tools/lib/okf-lib.mjs";
+import { parseFrontmatter, verbatimRuns } from "../../../../../tools/lib/okf-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../..");
 const SRC = path.join(ROOT, "data/knowledge");

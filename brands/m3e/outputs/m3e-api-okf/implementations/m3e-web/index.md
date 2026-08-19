@@ -1,8 +1,8 @@
-# @m3e/web — verified implementation layer
+# @m3e/web -- verified implementation layer
 
 Technology-specific, **CEM-verified** component API for the `@m3e/web` custom-element
-library (`matraic/m3e`). These cards are tag-level API — real `<m3e-*>` tags,
-attributes, slots, events, and CSS tokens — generated from the library's build-time
+library (`matraic/m3e`). These cards are tag-level API -- real `<m3e-*>` tags,
+attributes, slots, events, and CSS tokens -- generated from the library's build-time
 Custom Elements Manifest. For technology-neutral design guidance (anatomy, usage,
 accessibility), see the [knowledge bundle](/index).
 

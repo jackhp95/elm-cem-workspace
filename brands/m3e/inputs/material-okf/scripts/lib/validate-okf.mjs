@@ -22,8 +22,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseFrontmatter, extractLinks, makesDesignClaim } from "../../../../tools/lib/okf-lib.mjs";
-import { classifyLinks } from "./audit-lib.mjs";
+import { parseFrontmatter, extractLinks, makesDesignClaim } from "../../../../../../tools/lib/okf-lib.mjs";
+// POST-REORG SPLIT (2026-08-18): audit-lib.mjs stayed in the sibling
+// brands/m3e/outputs/m3e-api-okf package (it's primarily audit-guidance.mjs's
+// helper, which audits skills/ — implementation-side). classifyLinks is the
+// one function this (knowledge-side) validator also needs, so this is a real
+// cross-package import, not a same-dir sibling.
+import { classifyLinks } from "../../../../outputs/m3e-api-okf/scripts/lib/audit-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../../..");
 const BUNDLE = path.join(ROOT, "knowledge");
