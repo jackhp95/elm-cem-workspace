@@ -1296,14 +1296,14 @@ git commit -m "reorg(shape-v2): extract docs to brands/m3e/generated/docs/elm-m3
 **Files:** cosmetic comment fixes (finding V); `pnpm-workspace.yaml` (drop dead globs); the
 design spec status line.
 
-- [ ] **Step 6.1: Drop the now-dead `pnpm-workspace.yaml` globs**
+- [x] **Step 6.1: Drop the now-dead `pnpm-workspace.yaml` globs**
 
 Remove `core/*`, `brands/*/outputs/*`, `brands/*/outputs/*/*` (nothing lives under `core/` or
 `brands/*/outputs/` any more — verify with `ls`). Keep `packages/_probe/*`, `packages/*`,
 `pipeline/*`, `brands/*/inputs/*`, `brands/*/inputs/*/*`, `brands/*/generated/*/*`,
 `brands/*/generated/*/*/*`, and the exclusions.
 
-- [ ] **Step 6.2: Sweep cosmetic path mentions in comments (finding V)**
+- [x] **Step 6.2: Sweep cosmetic path mentions in comments (finding V)**
 
 ```bash
 grep -rn "core/elm-cem\b\|core/cem-figma-connect\b\|core/elm-review-cem\b\|core/elm-typed-html\b\|core/elm-html-intermediate-representation\b\|core/tonal-palette-oklch\b\|core/tailwind-md3\b\|brands/m3e/outputs/\|tailwind-m3e-web\b\|m3e-api-okf\b\|m3e-builder-docs\b" tools/ .github/ 2>/dev/null
@@ -1311,13 +1311,13 @@ grep -rn "core/elm-cem\b\|core/cem-figma-connect\b\|core/elm-review-cem\b\|core/
 Update each remaining hit (should be comment-only prose by now) to its new location. Not
 required for gate-all; verify nothing was load-bearing via the final run.
 
-- [ ] **Step 6.3: Flip the design spec status line**
+- [x] **Step 6.3: Flip the design spec status line**
 
 In `docs/superpowers/specs/2026-08-19-repo-shape-v2-design.md`, update the `Status:` line to
 note wave 1 is implemented, citing this plan (`docs/plans/2026-08-19-repo-shape-v2-wave1-plan.md`).
 Leave the deferred items (spec decisions #4, #7, #9-partial, #8-partial) noted as still-pending.
 
-- [ ] **Step 6.4: Final full gate-all run**
+- [x] **Step 6.4: Final full gate-all run**
 
 ```bash
 node tools/gate-all.mjs
@@ -1330,7 +1330,7 @@ package list should show the new names/paths: `pipeline/elm-cem`, `pipeline/elm-
 `brands/m3e/generated/style/elm-m3e-tailwind`, `brands/m3e/generated/okf/elm-m3e-okf`,
 `brands/m3e/generated/docs/elm-m3e-docs`. Zero unexpected skips beyond pre-existing `CHRONIC_SKIPS`.
 
-- [ ] **Step 6.5: Commit**
+- [x] **Step 6.5: Commit**
 
 ```bash
 git add -A

@@ -6,7 +6,7 @@
 // derivation (Theme 3 of docs/reviews/2026-08-17-thermonuclear-workspace-review.md).
 //
 // Regenerates one or more bundle-copy files from the WORKSPACE producer
-// (core/elm-cem) against elm-m3e's own config — the same invocation
+// (pipeline/elm-cem) against elm-m3e's own config — the same invocation
 // tools/gate-all.mjs's E2E proof and tools/ab-elm-cem.sh use (shared
 // definition: tools/lib/regen.mjs) — and writes them into `destDir`. This is
 // the only writer of those files; never hand-edit them.

@@ -1,8 +1,12 @@
 # Repo Shape v2 — target-architecture design
 
 Date: 2026-08-19
-Status: **DESIGN DECIDED — research complete, all decisions confirmed live with Jack
-(2026-08-19). No code, no moves, no renames in this doc.** This document reconciles Jack's
+Status: **WAVE 1 IMPLEMENTED (2026-08-19)** — the directory-reshape slice is executed and
+committed on branch `exec/repo-shape-v2-wave1` per `docs/plans/2026-08-19-repo-shape-v2-wave1-plan.md`
+(all 7 tasks, `node tools/gate-all.mjs` GREEN). Still-pending deferred items (spec decisions #4, #7,
+#9-partial, #8-partial): the 5-package explosion, the `-elements`/`-components` naming inversion, the
+3 docs codegen wins, the guide-markdown migration, and every brand beyond m3e + html. Design below was
+**DESIGN DECIDED — research complete, all decisions confirmed live with Jack (2026-08-19).** This document reconciles Jack's
 `brands/`+`pipeline/`+`packages/` target shape against `elm-cem-workspace`'s CURRENT state
 (the `core/`+`brands/` reorg that landed on `main` earlier today, 2026-08-19), and records the
 decided architecture directly in each section. The wave-1 execution plan is a **separate**

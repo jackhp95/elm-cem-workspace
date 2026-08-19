@@ -3,7 +3,7 @@
 # elm-cem `split` command against the SAME generated elm-m3e src/ tree and the
 # SAME packages.json, and diff the emitted package mirror trees.
 #
-# This exercises core/elm-cem/bin/split.js (the facet-family splitter),
+# This exercises pipeline/elm-cem/bin/split.js (the facet-family splitter),
 # which is what produces the elm-m3e / elm-m3e-components / elm-m3e-builder
 # package trees. The three-way core/components/builder split is retained as-is
 # — this harness only proves the SPLIT STEP is unchanged after the elm-m3e

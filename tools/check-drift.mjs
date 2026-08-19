@@ -32,7 +32,7 @@
 // intake of the facts bundle — they never regenerated a consumer's own
 // GENERATED OUTPUT and diffed it against committed. That was a real hole
 // (verified by hand: appending a line to
-// brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left this gate green).
+// brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.css left this gate green).
 // checkConsumerOutputs() below closes it: each consumer's full pipeline runs
 // in a scratch COPY of the package (tools/lib/consumer-output-drift.mjs,
 // tools/lib/check-drift-core.mjs's regeneratePackageOutput) — never in

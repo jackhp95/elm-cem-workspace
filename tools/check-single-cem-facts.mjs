@@ -2,7 +2,7 @@
 // check-single-cem-facts.mjs — workspace guard: exactly one `Cem.Facts` in any
 // compiled dependency graph.
 //
-// jackhp95/elm-cem-facts (core/elm-cem/facts) is the sole canonical OWNER of
+// jackhp95/elm-cem-facts (pipeline/elm-cem/facts) is the sole canonical OWNER of
 // the `Cem.Facts` module (the `Fact`/`Facet` types). Before the Stage-F cutover,
 // elm-review-cem kept a byte-synced vendored copy so it could compile as an
 // unpublished-dependency-free Elm package; that copy is gone now that
@@ -62,7 +62,7 @@
 //      Anything else FAILS, specifically:
 //        * a file inside ANY package's published source tree other than the
 //          canonical owner's — this is the re-vendored copy the old rule was
-//          built to catch (e.g. core/elm-review-cem/src/Cem/Facts.elm), and
+//          built to catch (e.g. pipeline/elm-review-cem/src/Cem/Facts.elm), and
 //          it still fails here, because a package's `src/` IS the published
 //          graph;
 //        * an ORPHAN file, reachable from no elm.json at all — dead code today

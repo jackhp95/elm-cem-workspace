@@ -107,7 +107,7 @@ test("check-drift core (R-008): a real content change beyond the timestamp still
 //
 // Prior to this, check-drift covered each consumer's facts-bundle COPY but
 // never its downstream generated output — verified by hand: appending a line
-// to brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left check-drift.mjs
+// to brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.css left check-drift.mjs
 // (and gate-all.mjs) fully green. One GREEN + one RED test per consumer,
 // below, proves that hole is closed. Every perturbation happens on a scratch
 // COPY (copyCommittedPathsToScratch) — the real tracked tree is never

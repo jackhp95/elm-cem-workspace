@@ -46,7 +46,7 @@ export function listFilesRecursive(dir) {
 // ── M4.b (round 2): a consumer's committed GENERATED OUTPUT (not just its
 // bundle copy) can drift from what the producer's full pipeline emits today,
 // and nothing previously caught that (verified by hand: appending a line to
-// brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left check-drift green).
+// brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.css left check-drift green).
 // These two helpers close that hole for any consumer, generically:
 //
 //   regeneratePackageOutput — copies a package to a scratch temp dir (so the
@@ -67,7 +67,7 @@ export function listFilesRecursive(dir) {
  * with the scratch copy's root as its argument.
  *
  * The scratch copy preserves `pkgDir`'s real position relative to `repoRoot`
- * (e.g. `brands/m3e/outputs/tailwind-m3e-web`, not just `tailwind-m3e-web`) — a
+ * (e.g. `brands/m3e/generated/style/elm-m3e-tailwind`, not just `tailwind-m3e-web`) — a
  * generation script that imports a REPO-ROOT-relative sibling via a relative
  * specifier (e.g. `../../../tools/lib/x.mjs`, walking up out of `packages/*`
  * to a shared `tools/lib/`) resolves against the running script's own real

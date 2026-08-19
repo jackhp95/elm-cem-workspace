@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // gen-figma-config.mjs — Phase 2.3,
-// core/cem-figma-connect/plans/2026-08-17-figma-elm-config-integration-design.md.
+// pipeline/elm-cem-figma-connect/plans/2026-08-17-figma-elm-config-integration-design.md.
 //
-// Joins core/cem-figma-connect/profiles/<profile>/figma-links.json (a
+// Joins pipeline/elm-cem-figma-connect/profiles/<profile>/figma-links.json (a
 // DERIVED, read-only projection of correspondence.json — see
-// core/cem-figma-connect/src/links/derive.mjs) with elm-cem's Face C
+// pipeline/elm-cem-figma-connect/src/links/derive.mjs) with elm-cem's Face C
 // facts bundle (component -> Elm module name) by cemTag, and writes
 // brands/m3e/generated/package/elm-m3e/config/figma.generated.json: per-component `docMeta`
 // entries (`figmaUrl`, `figmaStatus`) in the shape elm-cem's config decoder
@@ -17,7 +17,7 @@
 // -- WHY THIS IS NOT YET WIRED INTO tools/lib/regen.mjs's GEN_CONFIG_ARGS ---
 //
 // Verified this session (source-read, not assumed) against
-// core/elm-cem/codegen/Docs.elm's docMetaMarker: `docMeta` renders as an
+// pipeline/elm-cem/codegen/Docs.elm's docMetaMarker: `docMeta` renders as an
 // INVISIBLE HTML-comment marker (`<!-- elm-cem:docmeta k=v; ... -->`) in the
 // generated module's doc comment — not a visible Markdown line. Worse:
 // brands/m3e/generated/docs/elm-m3e-docs/scripts/extract-reference.mjs (the docs-site's own
