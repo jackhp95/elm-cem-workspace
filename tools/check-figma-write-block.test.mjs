@@ -10,7 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { checkFigmaCode, explain } from "./check-figma-write-block.mjs";
+import { checkFigmaCode, explain, WRITE_METHODS } from "./check-figma-write-block.mjs";
 
 test("must NOT block: empty / trivial read-only script", () => {
   const result = checkFigmaCode("");
@@ -139,6 +139,41 @@ if (node.name == "x") {}
 `;
   const result = checkFigmaCode(code);
   assert.equal(result.blocked, false, result.reason);
+});
+
+test("denylist does not contain unverified names: setPluginData is not a real typings-file method (only setSharedPluginData is)", () => {
+  assert.ok(!WRITE_METHODS.includes("setPluginData"));
+  assert.ok(WRITE_METHODS.includes("setSharedPluginData"));
+});
+
+test("must block: static bracket-notation method call (computed member access with a literal key)", () => {
+  const doubleQuote = checkFigmaCode('node["remove"]();');
+  assert.equal(doubleQuote.blocked, true, doubleQuote.reason);
+  assert.equal(doubleQuote.matchedPattern, "remove");
+
+  const singleQuote = checkFigmaCode("node['remove']();");
+  assert.equal(singleQuote.blocked, true, singleQuote.reason);
+  assert.equal(singleQuote.matchedPattern, "remove");
+});
+
+test("must block: static bracket-notation property assignment (computed member access with a literal key)", () => {
+  const result = checkFigmaCode('node["name"] = "x";');
+  assert.equal(result.blocked, true, result.reason);
+  assert.equal(result.matchedPattern, "name");
+});
+
+test("must NOT false-positive: bracket-notation comparison against a write-property name", () => {
+  const result = checkFigmaCode('if (node["visible"] === true) {}');
+  assert.equal(result.blocked, false, result.reason);
+});
+
+test("documented limitation: a VARIABLE (non-literal) bracket key is not resolved and does not block", () => {
+  const result = checkFigmaCode('const m = "remove"; node[m]();');
+  assert.equal(
+    result.blocked,
+    false,
+    "variable-key bracket access cannot be statically resolved by a regex scanner — documented gap, not silently accepted",
+  );
 });
 
 test("known limitation: a write call disguised inside a string literal or comment still blocks (documented over-blocking, not silently accepted as a gap)", () => {

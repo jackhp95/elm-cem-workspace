@@ -26,15 +26,19 @@
 // `Variable.setVariableCodeSyntax(platform, value)`, which IS included below.
 //
 // DETECTION STRATEGY (deliberate subset — this is NOT a JS parser):
-//   - Method calls: matched as `.methodName(` — the leading `.` plus an
-//     immediately-following `(` (whitespace allowed) means a bare function
-//     call (`remove()`) or an unrelated identifier that merely CONTAINS the
-//     name (`removeCommentsList()`, `list.set(...)` on a plain `Map`/`Array`)
-//     never matches. Only Figma-specific, spelled-out method names are
-//     denylisted — generic JS built-ins (`Map#set`, `Array#forEach`,
-//     `Array#filter`, …) are never in this list, so `uniqueSets.set(key, …)`
-//     in an otherwise read-only inspection script is not a match.
-//   - Property writes: matched as `.propName` followed by optional
+//   - Method calls: matched as `.methodName(` OR the equivalent computed
+//     member-access call with a STATIC string-literal key —
+//     `["methodName"](`/`['methodName'](`/`` [`methodName`]( ``. The leading
+//     `.` (or bracket) plus an immediately-following `(` (whitespace
+//     allowed) means a bare function call (`remove()`) or an unrelated
+//     identifier that merely CONTAINS the name (`removeCommentsList()`,
+//     `list.set(...)` on a plain `Map`/`Array`) never matches. Only
+//     Figma-specific, spelled-out method names are denylisted — generic JS
+//     built-ins (`Map#set`, `Array#forEach`, `Array#filter`, …) are never in
+//     this list, so `uniqueSets.set(key, …)` in an otherwise read-only
+//     inspection script is not a match.
+//   - Property writes: matched as `.propName` OR the bracket-literal
+//     equivalent (`["propName"]`/`['propName']`), followed by optional
 //     whitespace and a single `=` that is NOT itself followed by another
 //     `=` (so `==` / `===` comparisons never match; `!=`/`<=`/`>=` already
 //     fail because the character immediately after propName+whitespace is
@@ -66,6 +70,22 @@
 //      an `if (false)` branch or dead code still blocks. Given the goal (gate
 //      agent-authored `use_figma` scripts before they run), this is the
 //      correct conservative default.
+//   5. BRACKET NOTATION with a STATIC string-literal key IS detected
+//      (`node["remove"]()`, `node['name'] = "x"`) — see DETECTION STRATEGY
+//      above. What is still a genuine, UNDETECTED gap: a bracket access
+//      whose key is a VARIABLE or computed expression, e.g.
+//      `const m = "remove"; node[m]()`, or a template literal with
+//      interpolation (`` node[`re${"move"}`]() ``). Resolving those requires
+//      at minimum constant-folding/light data-flow analysis, which is out of
+//      scope for a regex-based scanner. Also undetected: whole-object
+//      mutation helpers like `Object.assign(node, { visible: false })` or
+//      `Object.defineProperty(node, "visible", …)` — these never take the
+//      `.propName =` or `["propName"] =` shape this scanner looks for. Both
+//      are accepted gaps for this task; a later hardening pass could add a
+//      lightweight check for `Object.assign(` / `Object.defineProperty(`
+//      calls whose second argument is an object literal or string containing
+//      a denylisted property name, if this proves to be exploited in
+//      practice.
 
 // ---------------------------------------------------------------------------
 // Denylist: Figma Plugin API methods that create, mutate, reparent, restyle,
@@ -155,8 +175,11 @@ const WRITE_METHODS = [
   "deleteComponentProperty",
 
   // Node metadata writes + library imports (imports create local nodes/styles).
+  // NOTE: `setPluginData` (without "Shared") was removed from this list after
+  // a 2026-08-19 review found zero occurrences of that exact name anywhere in
+  // the typings file — only `setSharedPluginData` is real. Do not re-add it
+  // without a fresh grep hit as evidence.
   "setSharedPluginData",
-  "setPluginData",
   "setRelaunchData",
   "importComponentByKeyAsync",
   "importComponentSetByKeyAsync",
@@ -183,18 +206,40 @@ const WRITE_PROPERTIES = [
 // Pattern compilation
 // ---------------------------------------------------------------------------
 
+// A JS string-literal quote character usable inside a `[...]` computed
+// member access: `["name"]`, `['name']`, or a plain (no-interpolation)
+// `` [`name`] `` template literal.
+const QUOTE = `['"\`]`;
+
 function methodPattern(name) {
-  // `.name(` — dot-prefixed so a bare `remove()` call never matches, and the
-  // immediately-following `(` (mod whitespace) so `removeCommentsList(`
-  // never matches `remove`.
-  return { name, kind: "method call", regex: new RegExp(`\\.${name}\\s*\\(`, "g") };
+  // Two call shapes, either is a real Figma write:
+  //   - `.name(`               dot-prefixed so a bare `remove()` call never
+  //                            matches, and the immediately-following `(`
+  //                            (mod whitespace) so `removeCommentsList(`
+  //                            never matches `remove`.
+  //   - `["name"](`/`['name'](` — the equivalent computed-member-access call
+  //                            shape with a STATIC string-literal key. Only
+  //                            a literal key is detected; a *variable* key
+  //                            (`node[m]()`) cannot be resolved by regex and
+  //                            remains a documented limitation (see header).
+  const dot = `\\.${name}\\s*\\(`;
+  const bracket = `\\[\\s*${QUOTE}${name}${QUOTE}\\s*\\]\\s*\\(`;
+  return { name, kind: "method call", regex: new RegExp(`(?:${dot}|${bracket})`, "g") };
 }
 
 function propertyPattern(name) {
-  // `.name =` but not `.name ==`/`.name ===`. `.name !=`/`.name <=`/`.name >=`
-  // never reach the lookahead because the char right after `name`+whitespace
-  // is `!`/`<`/`>`, not `=`.
-  return { name, kind: "property assignment", regex: new RegExp(`\\.${name}\\s*=(?!=)`, "g") };
+  // Two assignment shapes, either is a real Figma write:
+  //   - `.name =`         but not `.name ==`/`.name ===`. `.name !=`/
+  //                       `.name <=`/`.name >=` never reach the lookahead
+  //                       because the char right after `name`+whitespace is
+  //                       `!`/`<`/`>`, not `=`.
+  //   - `["name"] =`/`['name'] =` — the equivalent computed-member-access
+  //                       assignment with a STATIC string-literal key; same
+  //                       `==`/`===` exclusion. A variable key remains a
+  //                       documented limitation.
+  const dot = `\\.${name}\\s*=(?!=)`;
+  const bracket = `\\[\\s*${QUOTE}${name}${QUOTE}\\s*\\]\\s*=(?!=)`;
+  return { name, kind: "property assignment", regex: new RegExp(`(?:${dot}|${bracket})`, "g") };
 }
 
 const DENYLIST = [
