@@ -69,8 +69,10 @@ import M3e.Values as Value exposing (Value)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Ports
+import Process
 import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
+import Task
 import Theme
 import Theme.Fonts
 import Theme.Ports
@@ -114,6 +116,7 @@ type alias Model =
     , theme : Theme.Model
     , dir : TypedHtml.Values.Value TypedHtml.Values.Dir
     , searchOpen : Bool
+    , searchViewOpen : Bool
     , searchQuery : String
     , searchIndex : Maybe (Result Http.Error (List SearchEntry))
 
@@ -333,6 +336,7 @@ type Msg
     | ToggleToc
     | CloseToc
     | OpenSearch
+    | RevealSearch
     | CloseSearch
     | SetSearchQuery String
     | GotSearchIndex (Result Http.Error (List SearchEntry))
@@ -368,6 +372,7 @@ init flags _ =
       , theme = Theme.init
       , dir = TypedHtml.Values.ltr
       , searchOpen = False
+      , searchViewOpen = False
       , searchQuery = ""
       , searchIndex = Nothing
       , activeSurface = Doc.Usage.Top
@@ -481,6 +486,7 @@ update msg model =
                 | treeOpen = treePinsOpen model.viewportWidth
                 , tocOpen = tocPinsOpen model.viewportWidth
                 , searchOpen = False
+                , searchViewOpen = False
                 , searchQuery = ""
               }
             , Effect.none
@@ -521,8 +527,26 @@ update msg model =
             else
                 ( setTocOpen False model, Effect.none )
 
+        -- Mounts `m3e-search-view` (via `searchOpen`) WITHOUT its `open`
+        -- attribute, then flips `open` on a moment later via `RevealSearch`
+        -- -- see that Msg's comment for why the two steps can't collapse into
+        -- one.
         OpenSearch ->
-            ( { model | searchOpen = True }, Effect.none )
+            ( { model | searchOpen = True, searchViewOpen = False }
+            , Effect.fromCmd
+                (Task.perform (\_ -> RevealSearch) (Process.sleep 16))
+            )
+
+        -- The second half of `OpenSearch`, always fired a beat later. Guarded
+        -- on `searchOpen` still being true in case `CloseSearch` (or a route
+        -- change) landed in between and already unmounted the element --
+        -- without the guard this would silently remount it.
+        RevealSearch ->
+            if model.searchOpen then
+                ( { model | searchViewOpen = True }, Effect.none )
+
+            else
+                ( model, Effect.none )
 
         -- Fired by CloseSearch itself, by a result link's click (see
         -- searchResultLink), and by searchToggleDecoder when the search
@@ -531,7 +555,7 @@ update msg model =
         -- needs at all now that it's a native `m3e-bottom-sheet-trigger`
         -- with no Elm-tracked open state (see `settingsButton`).
         CloseSearch ->
-            ( { model | searchOpen = False }, Effect.none )
+            ( { model | searchOpen = False, searchViewOpen = False }, Effect.none )
 
         -- The search view fires `query` both when it opens (term = "") and
         -- on every keystroke -- there's no separate "opened" event to hang
@@ -1067,8 +1091,43 @@ trigger. Conditional rendering sidesteps needing to suppress it via CSS.
 
 The mode is derived from `model.viewportWidth` rather than delegated to the
 element's own `mode="auto"` — see `searchModeFor` for why `auto` is a race
-this overlay always loses below 600px. `open True` is set unconditionally
-here since the element is never mounted in any other state.
+this overlay always loses below 600px. `open` is driven by `searchViewOpen`,
+NOT `searchOpen` itself, and is deliberately false on the very render that
+first mounts the element — see `OpenSearch`/`RevealSearch`.
+
+That split exists because `@m3e/web` 2.7.6 added a SECOND version of the same
+race the `auto`-mode paragraph above describes, this time independent of
+`mode="auto"` entirely. `M3eSearchViewElement.willUpdate` now does this on
+ANY `mode` change, observer or not:
+
+    if (changedProperties.has("mode")) {
+        const previousMode = changedProperties.get("mode");
+        if (previousMode && previousMode !== this.mode && this.open) {
+            this.open = false;                            // no `toggle` event!
+        }
+        ...
+    }
+
+`changedProperties.get("mode")` on an element's OWN FIRST update returns its
+Lit-declared default (`"docked"`), not "no previous value" — so mounting the
+element with `mode="fullscreen"` and `open` TRUE in the same render counts as
+"mode changed while open" and silently flips `open` back off, exactly like
+the `auto` bug, just triggered by our own explicit `mode` attribute instead
+of the observer. Splitting the mount into two Elm renders — create the
+element closed (`searchOpen = True, searchViewOpen = False`), then flip
+`open` on `RevealSearch` once `mode` is no longer changing — means the
+`open`-setting render never touches `mode` at all, so `willUpdate` never
+takes the `changedProperties.has("mode")` branch and the guard can't fire.
+
+`RevealSearch` fires off a `Process.sleep 16` rather than an immediate
+`Task.succeed` because Elm's own renderer batches same-tick model updates
+into ONE `requestAnimationFrame` draw (`elm/browser`'s `_Browser_makeAnimator`)
+-- a same-tick follow-up Msg would very likely get coalesced with `OpenSearch`
+into the exact single first-mount draw this is trying to split in two. A real
+macrotask boundary (`setTimeout`, which `Process.sleep` compiles to) is what
+actually guarantees the mount has been painted, and the custom element's own
+first `willUpdate` has already run with `open` still false, before the second
+render sets it true.
 
 **The classes are load-bearing, not decoration.** `m3e-bottom-sheet` is
 `position: fixed` on its host and positions itself; `m3e-search-view` is
@@ -1099,7 +1158,7 @@ searchOverlay model =
         M3e.searchView
             [ TypedHtml.Attributes.class "fixed inset-x-0 top-2 z-50 mx-auto w-full max-w-2xl"
             , M3e.Component.SearchView.mode (searchModeFor model.viewportWidth)
-            , M3e.Component.SearchView.open True
+            , M3e.Component.SearchView.open model.searchViewOpen
             , M3e.Events.onQueryWith searchQueryDecoder
             , M3e.Events.onToggleWith searchToggleDecoder
             ]
