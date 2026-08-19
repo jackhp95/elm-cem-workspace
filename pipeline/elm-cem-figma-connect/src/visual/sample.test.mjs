@@ -37,6 +37,13 @@ const iconTable = loadIconTable(correspondencePath);
 // mirror exactly what a real `proposeSlot`/`buildSlots` pass over this
 // fixture produces (see test/matcher.test.mjs's "SLOT properties are routed
 // to slotProposals" test), including provenance.
+//
+// Both overlay items are UNMAPPED: a MAPPED slots[] item now fails drive.mjs's
+// SLOT coverage gate (final-review finding #3 — nothing in this harness can
+// actually drive slots[] content yet, so a mapped item throws rather than
+// silently passing coverage; see src/visual/drive.test.mjs's dedicated
+// finding-#3 tests). This file's tests are about sampling policy, not that
+// gap, so both fixture items stay unmapped.
 const rawButtonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
 assert.ok(rawButtonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
 const buttonEntry = {
@@ -49,7 +56,13 @@ const buttonEntry = {
       unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'",
       provenance: "auto-gap",
     },
-    { figmaSlotName: "Trailing icon", kind: "slot", multi: false, mappedTo: "trailing-icon", provenance: "auto-exact" },
+    {
+      figmaSlotName: "Trailing icon",
+      kind: "slot",
+      multi: false,
+      unmapped: "no CEM slot matches Figma SLOT property 'Trailing icon'",
+      provenance: "auto-gap",
+    },
   ],
 };
 

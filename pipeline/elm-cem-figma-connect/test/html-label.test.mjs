@@ -1242,3 +1242,44 @@ test("slots[]: BOTH a text->content prop AND a default-slot-mapped slot on one e
     /"Label text".*"Body".*mappedTo: "\(default\)"/s,
   );
 });
+
+// Final-review finding #1: on real m3-kit data, an entry can carry TWO OR
+// MORE slots[] items that both map to "(default)" (m3e-menu has 3 "List N
+// content" items; m3e-toolbar has 2 "Content (standard/vibrant)" items).
+// Before this fix, `slotContentBlocks.find(...)` silently picked the first
+// for interpolation and `.filter(mappedTo !== "(default)")` silently
+// dropped the rest — getSlot() consts were still emitted for all of them,
+// but their content never appeared anywhere in the template. This test
+// proves no content silently vanishes: the first is interpolated, and the
+// rest are named in a visible note (mirroring the existing >1 TEXT->content
+// prop idiom, additionalTextContentProps, immediately above).
+test("slots[]: 2+ slots mapped to '(default)' emits the first, notes the rest as not emitted (no silent drop)", () => {
+  const entry = {
+    cemTag: "m3e-fake-menu",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake menu", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+    slots: [
+      { figmaSlotName: "List 1 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+      { figmaSlotName: "List 2 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+      { figmaSlotName: "List 3 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+    ],
+  };
+  const [file] = emitEntry(entry, config);
+
+  // getSlot() consts emitted for ALL THREE — none dropped at the const level.
+  assert.match(file.contents, /const list1Content = instance\.getSlot\("List 1 content"\)/);
+  assert.match(file.contents, /const list2Content = instance\.getSlot\("List 2 content"\)/);
+  assert.match(file.contents, /const list3Content = instance\.getSlot\("List 3 content"\)/);
+
+  // Only the FIRST is interpolated as the tag's inner content.
+  assert.match(file.contents, /<m3e-fake-menu>\$\{list1Content\}<\/m3e-fake-menu>/);
+  assert.doesNotMatch(file.contents, /\$\{list2Content\}/);
+  assert.doesNotMatch(file.contents, /\$\{list3Content\}/);
+
+  // The rest are named in a visible note — never a silent drop.
+  assert.match(
+    file.contents,
+    /note: additional default-slot slot\(s\) List 2 content, List 3 content not emitted \(only "List 1 content" is interpolated\)/
+  );
+});

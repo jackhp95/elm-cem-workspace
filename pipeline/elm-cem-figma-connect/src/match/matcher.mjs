@@ -408,7 +408,7 @@ function proposeProperty(prop, component) {
 // TEXT→default-content-slot convention (evidence #10) for the analogous
 // SLOT case, e.g. a Dialog's "Content" SLOT prop has no CEM slot literally
 // named "content" but plainly belongs in the default slot.
-function proposeSlot(prop, component) {
+export function proposeSlot(prop, component) {
   const cemSlotNames = component.slots.map((s) => s.name);
   const namedSlotNames = cemSlotNames.filter((n) => n !== "");
   const best = bestValueMatch(prop.name, namedSlotNames);
@@ -434,7 +434,14 @@ function proposeSlot(prop, component) {
       type: prop.type,
       mapped: true,
       target: "(default)",
-      method: "exact",
+      // "fuzzy", not "exact": this is a regex-based generic-content heuristic
+      // (the Figma prop's name merely READS as generic content), not a
+      // verified name-identity match against a real CEM slot name — merge.mjs
+      // (buildSlots/slotProvenance) turns this into provenance:"auto-fuzzy",
+      // an honest "matched via heuristic" signal for the human reviewer
+      // (final-review finding #2 — 6 of 7 real m3-kit slot matches take this
+      // path and were previously mislabeled "auto-exact").
+      method: "fuzzy",
       rationale: `SLOT '${prop.name}' → CEM default (unnamed) slot (generic-content name, no named slot counterpart)`,
     };
   }

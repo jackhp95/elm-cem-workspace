@@ -221,6 +221,25 @@ function assertFullyMapped(entry, defs) {
   // silent drop (present in neither list).
   for (const slotDef of defs.slots) {
     const foundInSlots = (entry.slots ?? []).find((s) => s.figmaSlotName === slotDef.figmaProp);
+    // Final-review finding #3: a MAPPED slots[] item passes this coverage
+    // check today, but nothing downstream in this file actually DRIVES
+    // content from it (the per-prop loop below only reads entry.props[];
+    // Task 4 wired the html-label EMITTER, not this visual-drive harness).
+    // Letting a mapped slots[] item satisfy "coverage" here would make the
+    // gate lie — content silently never gets driven for the visual check,
+    // exactly the kind of silent gap this "never silent" gate exists to
+    // catch. An UNMAPPED slots[] item is fine as-is (no counterpart, nothing
+    // to drive) — only a MAPPED one is the known, tracked gap, so only that
+    // case throws.
+    if (foundInSlots && foundInSlots.mappedTo !== undefined) {
+      throw new Error(
+        `drive: entry '${entry.cemTag}' slot '${slotDef.figmaProp}' is mapped in correspondence slots[] ` +
+          `(-> '${foundInSlots.mappedTo}') but driving content from slots[] is not yet implemented in the ` +
+          `visual-drive harness (Task 4 wired the html-label emitter only, not this harness) — this is a ` +
+          `known, tracked gap, not a silent no-op; do not treat this slot as covered until drive.mjs can ` +
+          `actually render slots[] content`
+      );
+    }
     const foundLegacyInProps = entry.props.find((p) => p.kind === "slot" && p.figmaProp === slotDef.figmaProp);
     const found = foundInSlots ?? foundLegacyInProps;
     if (!found) {

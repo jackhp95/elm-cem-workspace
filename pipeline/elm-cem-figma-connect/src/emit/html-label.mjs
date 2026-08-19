@@ -606,10 +606,25 @@ export function emitEntry(entry, config) {
   // "content") already claims. Two mapped items claiming that one position is
   // a genuine data conflict; never silently pick one (this file's doctrine,
   // mirrored from the unhandledMappedProp throw below).
-  const defaultSlotContentBlock = slotContentBlocks.find((b) => b.mappedTo === "(default)");
+  //
+  // Real m3-kit data (final-review finding #1): an entry can carry TWO OR
+  // MORE slots[] items that both map to "(default)" (m3e-menu has 3 "List
+  // N content" items; m3e-toolbar has 2 "Content (standard/vibrant)" items).
+  // getSlot() consts for ALL of them are still emitted (nonAxisBlockCodes
+  // below), but only ONE can occupy the tag's single inner-content position.
+  // Follow this file's own precedent for the analogous >1-TEXT->content-prop
+  // case (additionalTextContentProps, below): emit the first, and NEVER let
+  // the rest silently vanish — note them in the file instead of throwing,
+  // since (unlike the text-vs-slot collision below) this isn't a data bug,
+  // just a real shape the tag's HTML can't represent without an example.
+  const defaultSlotItems = mappedSlots
+    .map((slot, i) => ({ slot, block: slotContentBlocks[i] }))
+    .filter(({ block }) => block.mappedTo === "(default)");
+  const defaultSlotContentBlock = defaultSlotItems[0]?.block;
+  const additionalDefaultSlotItems = defaultSlotItems.slice(1);
   const namedSlotContentBlocks = slotContentBlocks.filter((b) => b.mappedTo !== "(default)");
   if (textContentProp && defaultSlotContentBlock) {
-    const conflictingSlot = mappedSlots.find((s) => s.mappedTo === "(default)");
+    const conflictingSlot = defaultSlotItems[0].slot;
     throw new Error(
       `html-label emitter: both prop "${textContentProp.figmaProp}" (kind:"text" -> content) and ` +
         `slot "${conflictingSlot.figmaSlotName}" (mappedTo: "(default)") are mapped to this entry's ` +
@@ -921,11 +936,22 @@ export function emitEntry(entry, config) {
     const importsArr = (config.imports ?? []).map((i) => JSON.stringify(i)).join(", ");
 
     // When non-examples mode has extra text→content props beyond the first,
-    // append a note so they're not silently dropped.
-    const multiContentNote =
-      !exampleChildren && additionalTextContentProps.length > 0
-        ? `\n// note: additional text prop(s) ${additionalTextContentProps.map((p) => p.figmaProp).join(", ")} not emitted — add an examples.json entry\n`
-        : "";
+    // or extra default-slot-mapped slots[] items beyond the first (finding #1
+    // above), append a note so they're not silently dropped.
+    const multiContentNoteLines = [];
+    if (!exampleChildren && additionalTextContentProps.length > 0) {
+      multiContentNoteLines.push(
+        `// note: additional text prop(s) ${additionalTextContentProps.map((p) => p.figmaProp).join(", ")} not emitted — add an examples.json entry`
+      );
+    }
+    if (!exampleChildren && additionalDefaultSlotItems.length > 0) {
+      multiContentNoteLines.push(
+        `// note: additional default-slot slot(s) ${additionalDefaultSlotItems
+          .map(({ slot }) => slot.figmaSlotName)
+          .join(", ")} not emitted (only "${defaultSlotItems[0].slot.figmaSlotName}" is interpolated) — add an examples.json entry`
+      );
+    }
+    const multiContentNote = multiContentNoteLines.length ? `\n${multiContentNoteLines.join("\n")}\n` : "";
 
     const contents =
       `// url=${url}\n` +

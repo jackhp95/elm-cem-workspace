@@ -149,10 +149,13 @@ function buildProps(candidate) {
 // three-way subset of the entry-level provenance enum (see schema.json's
 // slots[].provenance $comment) — "synonym" folds into "auto-exact" since
 // bestValueMatch ranks it alongside exact for tie-breaking purposes.
-// proposeSlot's own default-slot fallback (matcher.mjs) also reports
-// method:"exact" (a deterministic name-heuristic match, not a fuzz), so it
-// folds in here too — every method value proposeSlot can produce is listed;
-// an unrecognized one is a real bug upstream, never silently mis-tiered.
+// proposeSlot's own default-slot fallback (matcher.mjs, generic-content
+// heuristic — "Content"/"Content (standard)" etc. with no named-slot match)
+// reports method:"fuzzy" (final-review finding #2: it's a regex-based name
+// heuristic, not a verified name-identity match, so it must NOT fold into
+// "auto-exact" the way a real name match does) — every method value
+// proposeSlot can produce is listed; an unrecognized one is a real bug
+// upstream, never silently mis-tiered.
 const SLOT_PROVENANCE = { exact: "auto-exact", synonym: "auto-exact", fuzzy: "auto-fuzzy" };
 
 function slotProvenance(method) {
