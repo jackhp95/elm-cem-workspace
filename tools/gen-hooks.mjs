@@ -42,7 +42,7 @@ const PLAIN_TARGETS = [
     "packages/elm-virtual-dom-intermediate-representation/hooks/pre-push",
     "pipeline/elm-review-cem/hooks/pre-push",
     "brands/html/generated/package/elm-typed-html/hooks/pre-push",
-    "brands/m3e/outputs/m3e-api-okf/hooks/pre-push",
+    "brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push",
     "pipeline/elm-cem-figma-connect/hooks/pre-push",
 ];
 const ELM_M3E_TARGET = "brands/m3e/outputs/elm-m3e/hooks/pre-push";

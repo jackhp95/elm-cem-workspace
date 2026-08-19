@@ -28,7 +28,7 @@ import { parseFrontmatter, extractLinks, makesDesignClaim } from "../../../../..
 // helper, which audits skills/ — implementation-side). classifyLinks is the
 // one function this (knowledge-side) validator also needs, so this is a real
 // cross-package import, not a same-dir sibling.
-import { classifyLinks } from "../../../../outputs/m3e-api-okf/scripts/lib/audit-lib.mjs";
+import { classifyLinks } from "../../../../generated/okf/elm-m3e-okf/scripts/lib/audit-lib.mjs";
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), "../../..");
 const BUNDLE = path.join(ROOT, "knowledge");

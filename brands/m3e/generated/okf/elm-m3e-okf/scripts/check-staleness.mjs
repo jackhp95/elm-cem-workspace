@@ -32,7 +32,7 @@ const sh = (cmd) => execSync(cmd, { encoding: "utf8", stdio: ["ignore", "pipe", 
 function checkM3eWebNpmStaleness() {
     let workspacePin;
     try {
-        const pkg = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "packages", "tailwind-m3e-web", "package.json"), "utf8"));
+        const pkg = JSON.parse(fs.readFileSync(path.resolve(ROOT, "..", "..", "style", "elm-m3e-tailwind", "package.json"), "utf8"));
         workspacePin = pkg.devDependencies?.["@m3e/web"] || pkg.dependencies?.["@m3e/web"];
     } catch {
         console.log("ℹ️  family signal: could not read the workspace's @m3e/web pin — skipped.");

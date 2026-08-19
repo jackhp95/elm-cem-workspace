@@ -93,10 +93,9 @@
       "srcDir": "brands/html/generated/package/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
-    "m3e-okf": {
-      "srcDir": "brands/m3e/outputs/m3e-api-okf",
-      "pnpmFilterName": "m3e-docs",
-      "$pnpmFilterNameNote": "packages/m3e-okf/package.json's \"name\" field is \"m3e-docs\" (Theme 6 finding #6 — a known, separate mismatch, not fixed by W5) — pnpm --filter must use that name, not the directory/mirror-repo name used as this table's key.",
+    "elm-m3e-okf": {
+      "srcDir": "brands/m3e/generated/okf/elm-m3e-okf",
+      "pnpmFilterName": "elm-m3e-okf",
       "mirror": { "auditedExclusions": true },
       "bundleCopy": {
         "dir": "data",
@@ -105,7 +104,7 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_M3E_OKF",
-        "sourceDefaultRelToRepoRoot": ".cache/snapshots/m3e-okf",
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/elm-m3e-okf",
         "$sourceDefaultNote": "m3e-okf's copy-fidelity gate must compare against the pinned-SHA fetched snapshot, not a live sibling clone — restores the default this package lost when tools/copy-fidelity-m3e-okf.sh was folded into the generic copy-fidelity.mjs (W5 consolidation).",
         "authorizedAbsent": ["scripts/lib/okf-lib.mjs", "scripts/lib/okf-lib.test.mjs"],
         "authorizedAbsentM6": [".claude-memory/m3e-disclosure-hook-design.md"],

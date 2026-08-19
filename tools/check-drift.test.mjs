@@ -18,7 +18,7 @@ import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consu
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
-const realCommittedCemFacts = path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json");
+const realCommittedCemFacts = path.join(repoRoot, "brands", "m3e", "generated", "okf", "elm-m3e-okf", "data", "cem-facts.json");
 const descriptorsByKey = Object.fromEntries(consumerOutputDescriptors(repoRoot).map((d) => [d.key, d]));
 
 /** Copy just the descriptor's committed `paths` into a scratch dir — never touches the real package. */
@@ -51,7 +51,7 @@ test("check-drift core: GREEN on the real, untouched committed bundle copy", () 
     const { ok, failures } = checkConsumerBundleDrift({
         repoRoot,
         elmM3e,
-        label: "m3e-okf (clean)",
+        label: "elm-m3e-okf (clean)",
         files: [{ committedPath: realCommittedCemFacts, bundleFile: "cem-facts.json" }],
     });
     assert.equal(ok, true, `expected clean tree to be green, got: ${failures.join(" | ")}`);
@@ -73,7 +73,7 @@ test("check-drift core: RED when a COPY of the committed bundle has one field st
         const { ok, failures } = checkConsumerBundleDrift({
             repoRoot,
             elmM3e,
-            label: "m3e-okf (staled copy)",
+            label: "elm-m3e-okf (staled copy)",
             files: [{ committedPath: staleCopyPath, bundleFile: "cem-facts.json" }],
         });
 
@@ -125,7 +125,7 @@ function cacheAbsentSkipReason(descriptor) {
     return false;
 }
 
-for (const key of ["elm-cem-figma-connect", "m3e-okf", "elm-m3e-tailwind"]) {
+for (const key of ["elm-cem-figma-connect", "elm-m3e-okf", "elm-m3e-tailwind"]) {
     const descriptor = descriptorsByKey[key];
     const skip = cacheAbsentSkipReason(descriptor);
 

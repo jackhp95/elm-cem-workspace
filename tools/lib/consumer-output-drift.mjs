@@ -59,9 +59,9 @@ export function consumerOutputDescriptors(repoRoot) {
             generate: (dest) => runNodeScript(dest, "src/cli.mjs", ["emit", "--profile", "m3-kit"]),
         },
         {
-            key: "m3e-okf",
-            label: "check-drift: m3e-okf components.json + skill/OKF outputs (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "m3e-okf"),
+            key: "elm-m3e-okf",
+            label: "check-drift: elm-m3e-okf components.json + skill/OKF outputs (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-m3e-okf"),
             // .cache/m3e is a gitignored upstream checkout (input only, never written by
             // the gen pipeline) — excluded from the copy and symlinked back in read-only.
             exclude: [".cache"],

@@ -45,8 +45,8 @@ const CONSUMERS = [
         ],
     },
     {
-        pkgName: "m3e-okf",
-        committed: [{ path: path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
+        pkgName: "elm-m3e-okf",
+        committed: [{ path: path.join(repoRoot, "brands", "m3e", "generated", "okf", "elm-m3e-okf", "data", "cem-facts.json"), bundleFile: "cem-facts.json" }],
     },
     {
         pkgName: "elm-m3e-tailwind",

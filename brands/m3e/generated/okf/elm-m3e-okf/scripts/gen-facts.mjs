@@ -14,7 +14,7 @@
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { runGenFacts } from "../../../../../tools/lib/gen-facts-runner.mjs";
+import { runGenFacts } from "../../../../../../tools/lib/gen-facts-runner.mjs";
 
 const pkgDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const repoRoot = path.dirname(path.dirname(path.dirname(path.dirname(pkgDir))));

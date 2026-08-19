@@ -996,14 +996,14 @@ Independent of the elm-m3e / docs work; sequenced early for a clean small win.
   `tools/family.json` (L97 srcDir; the `mirror`/`bundleCopy`/`copyFidelity` blocks — see below),
   `tools/gen-hooks.mjs` (L45), `tools/bump.mjs` (L49), `tools/check-drift.test.mjs` (L21).
 
-- [ ] **Step 3.1: Move + rename directory**
+- [x] **Step 3.1: Move + rename directory**
 
 ```bash
 mkdir -p brands/m3e/generated/okf
 git mv brands/m3e/outputs/m3e-api-okf brands/m3e/generated/okf/elm-m3e-okf
 ```
 
-- [ ] **Step 3.2: Rename the package (full local consistency — spec decision #10)**
+- [x] **Step 3.2: Rename the package (full local consistency — spec decision #10)**
 
 In `brands/m3e/generated/okf/elm-m3e-okf/package.json`, set the `name` field to `elm-m3e-okf`.
 (The current on-disk `name` is `m3e-okf` — verified this session; the `family.json`
@@ -1013,14 +1013,14 @@ decision #10 is **full local consistency**: the directory (Step 3.1), the `packa
 `jackhp95/m3e-okf` stays external (a separate, deliberate publishing action, not swept into this
 structural commit).
 
-- [ ] **Step 3.3: Fix the package's internal cross-boundary refs (+1 depth, finding T)**
+- [x] **Step 3.3: Fix the package's internal cross-boundary refs (+1 depth, finding T)**
 
 `scripts/check-skills-meta.mjs` L19 (`okf-lib.mjs`), `scripts/gen-facts.mjs` L17
 (`gen-facts-runner.mjs`), `package.json` `hooks:install`, and any other `../../../../../tools`
 ref — apply +1 (`../../../../../` → `../../../../../../`). Re-grep the package for
 `../../../../../` and fix uniformly.
 
-- [ ] **Step 3.4: Update `tools/family.json` (rename key + fix the stale `pnpmFilterName`)**
+- [x] **Step 3.4: Update `tools/family.json` (rename key + fix the stale `pnpmFilterName`)**
 
 - **Rename the table key** `"m3e-okf"` → `"elm-m3e-okf"` (spec decision #10, full local
   consistency) **and every literal that looks it up — these were separately missed by the earlier
@@ -1050,13 +1050,13 @@ ref — apply +1 (`../../../../../` → `../../../../../../`). Re-grep the packa
 - **Keep** the `mirror`, `bundleCopy`, `copyFidelity` blocks and their repo coordinates
   (`jackhp95/m3e-okf`, the `.cache/snapshots/…` paths) — publishing/mirror config is out of scope.
 
-- [ ] **Step 3.5: Update the other `tools/*` refs**
+- [x] **Step 3.5: Update the other `tools/*` refs**
 
 `gen-hooks.mjs` L45 → `brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push`; `bump.mjs` L49
 → `generated/okf/elm-m3e-okf/data/cem-facts.json`; `check-drift.test.mjs` L21 →
 `generated/okf/elm-m3e-okf/data/cem-facts.json`.
 
-- [ ] **Step 3.6: Reinstall + gate**
+- [x] **Step 3.6: Reinstall + gate**
 
 ```bash
 pnpm install && node tools/gate-all.mjs
@@ -1064,7 +1064,7 @@ pnpm install && node tools/gate-all.mjs
 Watch: `elm-m3e-okf`'s `check`/`test`, `workspace: copy-fidelity` for the okf package (now at
 its new `srcDir`). Patch forward, re-run until green.
 
-- [ ] **Step 3.7: Commit**
+- [x] **Step 3.7: Commit**
 
 ```bash
 git add -A
