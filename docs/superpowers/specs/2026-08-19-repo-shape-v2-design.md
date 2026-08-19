@@ -520,6 +520,89 @@ smallest) as the pluggability proof and shape shakedown → batch the rest.
 
 ---
 
+## 9. Resolved decisions (2026-08-19, live session with Jack)
+
+All 8 open questions from §8 were resolved directly with Jack, plus 3 additional findings surfaced
+during that conversation (not in the original research pass). This section is the authoritative
+decision record — §8 stays as-is for historical trace, but where the two disagree, §9 wins.
+
+1. **Tailwind — split, confirmed.** `pipeline/elm-cem-tailwind/` (agnostic codegen, consolidating
+   `tools/lib/*tailwind*` + `core/tailwind-md3`) + `brands/m3e/generated/style/elm-m3e-tailwind/`
+   (brand-specific, hand-authored `sys/*.css`). The brand half is named `-tailwind` despite being
+   partly hand-authored — accepted as-is.
+
+2. **`elm-m3e-facts` — shared contract, per-brand generated data, confirmed.** `pipeline/elm-cem-facts/`
+   keeps the types + generation logic. `brands/m3e/generated/package/elm-m3e-facts/` is generated
+   *data* built against that contract (same pattern for every brand).
+
+3. **`tonal-palette-oklch` — stays agnostic, confirmed.** Moves to top-level `packages/`, NOT
+   `brands/m3e/inputs/`. Available to any future brand without an m3e dependency.
+
+4. **`-elements`/`-components` naming inversion — confirmed, adopt new meaning.** Lands atomically
+   with the (deferred, see #7) package split — not as its own release. **New finding, not in the
+   original grep sweep:** the existing `brands/m3e/outputs/elm-m3e/packages.json` (the never-executed
+   pre-v2 5-package split plan) uses **`elm-m3e-html`** for the foundational tier, not `elm-m3e-core` —
+   a second naming mismatch beyond the elements/components swap. Full rename map for whenever the
+   explosion lands: `elm-m3e-html`→`elm-m3e-core`, `elm-m3e-components`(tag-grouped)→`elm-m3e-elements`,
+   `elm-m3e-builder`→`elm-m3e-build`, plus a **net-new 6th package** `elm-m3e-components` (family-grouped
+   meaning) built from the already-built-but-inline `elm-m3e-families/` subdir — this package doesn't
+   exist in the pre-v2 plan at all. `packages.json` itself needs a rewrite pass when the explosion is
+   scheduled; not done now.
+
+5. **`core/`→`pipeline/` rename — do it now, same wave as the rest, NOT batched with the deferred
+   explosion.** Superseded §8/#5's "batch with the brand-output explosion" framing — Jack: inconsistent
+   to show renamed generated-package *names* in the target tree while leaving the machinery dir
+   unrenamed; `elm-typed-html` and `elm-m3e` are both codegen outputs, no reason to treat the rename
+   differently. Lands alongside the inputs/tailwind/docs work (see #6, #9) as one reshape wave, ahead of
+   and independent from the (still-deferred) 5-package explosion.
+
+6. **`brands/m3e/inputs/` — keep the 10 separate config files, relocate only, confirmed.** No collapse
+   to a single `elm-cem-config.json`, no committing the live-resolved CEM. Pure relocation, zero
+   behavior change.
+
+7. **Standalone `-build` package / full 5-package explosion — deferred, confirmed out of scope for this
+   wave.** `elm-m3e` and `elm-typed-html` both stay monolithic internally. This wave is the directory
+   reshape (pipeline rename, inputs relocation, tailwind split, docs extraction, `m3e-okf` rename) —
+   the explosion is a separate future project, scoped from `packages.json` (once rewritten per #4) +
+   the equivalent for `elm-typed-html`.
+
+8. **Brand scope — target end-state confirmed; near-term build list is m3e + html only.** `svg`,
+   `shoelace`, `web-awesome`, `calcite`, `fluent-ui`, `warp`, `etc/` are the aspirational full list, not
+   scaffolded now. No empty brand directories created in this wave.
+
+9. **`elm-m3e-docs` extraction — NEW decision, not in §8 at all.** Extract `elm-m3e/docs/` to
+   `brands/m3e/generated/docs/elm-m3e-docs/` **in this wave** (same mechanical class of cost as the
+   `core/brands` reorg and the tailwind split — `git mv` + path fixes, no new engineering). At
+   extraction time, split the package internally into `generated/` (reference/examples/family/token
+   pages, search index, `Compose/Attrs.elm` — all already facts-sourced) vs `authored/` (the 13 guide
+   chapters, 4 already `.md` in `docs/guides/`, 9 still inline Elm string literals) so the
+   "generated/docs" label in the tree stays honest per §5's own recommendation. **Explicitly NOT
+   bundled into this wave:** the 3 real codegen wins from §5 bucket (c) — `Route.Family` from
+   `slots.json`, `Route.Styles/` token tables from the token manifest, `Installation` strings from
+   package metadata — and the guide-markdown migration (moving the remaining 9 chapters to `.md`).
+   Both land later as independently-gated follow-ups, after the physical extraction.
+
+10. **`m3e-okf`→`elm-m3e-okf` package.json rename — confirmed, sequence flexibly but must complete
+    within this overall effort.** Not necessarily this wave's first commit, but not deferred to the
+    explosion either — a standalone small rename, land whenever convenient within the reshape.
+
+11. **Icons tier — confirmed brand-optional, not m3e-exclusive.** `elm-<brand>-icons` is a real deliverable
+    slot for any brand with a glyph/icon-font library (m3e: Material Symbols; a future `web-awesome`
+    brand: Font Awesome, same company). `html`/`svg` simply don't populate that slot — no icon concept
+    there. No tree change, just confirms the tier isn't hardcoded to m3e in spirit.
+
+### Net effect: what's actually in "this wave" (directory reshape, ready to plan)
+
+`core/`→`pipeline/` rename · `elm-cem-tailwind`/`elm-m3e-tailwind` split · `elm-m3e-docs` extraction
+(+ internal `generated/`/`authored/` split) · `m3e-okf`→`elm-m3e-okf` rename · `tonal-palette-oklch`
+confirmed staying under `packages/` (no move needed, already there) · inputs/config relocation
+(already landed in the 2026-08-18 reorg, no further change). **Explicitly deferred to a later,
+separate project:** the 5-package explosion (`elm-m3e-core/elements/components/build`, `packages.json`
+rewrite, same for `elm-typed-html`), the 3 docs codegen wins, the guide-markdown migration, and every
+brand beyond m3e+html.
+
+---
+
 ## Appendix — scope guardrails honored in this research
 
 - **No code, no moves, no renames.** Only these two docs written. Verified `find`/`grep` for every
