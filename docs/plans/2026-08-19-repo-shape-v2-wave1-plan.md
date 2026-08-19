@@ -192,6 +192,45 @@ srcDir/relative-path edits in findings A/S/T:
     cascade. Grep `core/elm-cem` for the alias name at execution time to confirm zero remaining
     consumers before committing.
 
+**A2 addendum — the complete `jackhp95/elm-html-intermediate-representation` published-name dependent set
+(re-verified whole-workspace 2026-08-19; the finding-A2 `grep → zero` gate at Steps 1.7b/4.3b covers all
+of these, but the earlier draft enumerated only the 5 `elm.json` files — the rest are spelled out here so
+the sweep is mechanically complete, not gate-dependent).** All rename the key/string to
+`jackhp95/elm-virtual-dom-intermediate-representation`; none is a mirror/URL (the GitHub-mirror carve-out
+is the `.git` URL + `publish-mirror-state.json` key only — the **Elm published name** renames, decision #1):
+
+- **Already in finding A2 (5 `elm.json`):** IR's own (`…/elm.json:3` name), `elm-typed-html/elm.json:40`
+  (Task 1); `elm-m3e/elm.json:153`, `elm-m3e-families/elm.json:36`, `elm-m3e-icons/elm.json:16` (Task 4).
+- **Already in finding K:** `tools/measure-docs-size.mjs:76` (Task 1).
+- **NEW — `core/elm-cem/bin/*` string-literal special-cases (LOAD-BEARING; move with elm-cem, Task 1):**
+  `bin/family-deps.js:37` (`package: "jackhp95/elm-html-intermediate-representation"`),
+  `bin/registry-check.js:136` (`if (pkg === "jackhp95/elm-html-intermediate-representation")`),
+  `bin/validate.js:89` (`delete externalDeps["jackhp95/elm-html-intermediate-representation"]`),
+  `bin/validate.js:207,212` (vendored-IR `d === "jackhp95/…"` comparisons). These special-case the IR by
+  its published name in registry/validation logic; an un-renamed string silently stops matching → the IR's
+  vendored-dep handling breaks. **Add these to Step 1.7b's edit list.**
+- **NEW — `core/elm-cem/tests/*` assertions (move with elm-cem, Task 1):** `tests/depstamp.test.mjs:31`,
+  `tests/eject.test.mjs:26`, `tests/gates.test.mjs:25`, `tests/registry-check-nested-pkg.test.mjs:37`
+  (each `const IR = "jackhp95/elm-html-intermediate-representation"`).
+- **NEW — `brands/m3e/inputs/cem/config/slots.json:27,44` (LOAD-BEARING config-input TEMPLATE; edit
+  in-place — this dir is NOT moved this wave).** `slots.json` is elm-cem's `_families` brand config, read
+  by `core/elm-cem/bin/gen-family-package.js` (`Reads config _families … dependencies: pkg.deps`) to
+  **generate** the family packages' `elm.json` dependency blocks — i.e. it is the SOURCE of the
+  `elm-m3e-families/elm.json:36` + `elm-m3e-icons/elm.json:16` IR deps above. If `slots.json`'s IR dep key
+  is not renamed, regenerating the family packages (Task 4 / any `regen`) **re-emits the OLD IR name**,
+  silently undoing the finding-A2 `elm.json` edits. Rename both keys with **Task 4** (paired with the
+  elm-m3e family regen it feeds), or at latest before the first post-rename family regen. (Its sibling keys
+  `jackhp95/elm-m3e-core`/`elm-m3e-components` are the deferred 5-package names — out of scope; only the IR
+  key renames.) **This is the one genuinely-mis-placed hit the earlier `grep → zero` caveat ("only Task-4
+  dependents may still carry the old name") did not cleanly cover — it is neither Task-1-moved nor an
+  elm-m3e-internal file. Flagged in the Rename-sweep verification.**
+- **NEW — `brands/m3e/outputs/elm-m3e/packages.json:16,73,91,116` (Task 4):** the deferred 5-package-shape
+  file (finding N moved only its *path* in `check-m3e-5pkg.mjs`; its four IR dep keys rename here too).
+- **NEW — `brands/m3e/outputs/elm-m3e/measure-docs.cjs:96` (Task 4):** IR published name in a name array.
+  Its `L8` hard-coded absolute path (`/Users/jack/.paseo/worktrees/04t0kwkn/elm-html-intermediate-representation/src`)
+  is a **stale dead worktree path** — cosmetic; clean up or delete the file (unreferenced by any gate —
+  verified) in Task 6.
+
 ### A3. Rename-identity: table keys, load-bearing name/step-name assertions, and the mirror carve-out (verified 2026-08-19 — new; supersedes the earlier "keep keys" flag)
 
 Per the resolved rename-all-keys policy (finding A note + Decisions log), these are **every** local
@@ -217,7 +256,8 @@ mis-resolves. Re-grepped from current file contents this session (`grep -rn` acr
 | `tools/check-cc-elm-refs.mjs:46` | `"cem-figma-connect"` (a path segment in the `CC_ELM_DIR` list) | `"elm-cem-figma-connect"` | path built by joining segments; finding H's L45 `core`→`pipeline` swap is **not enough** — this sibling segment renames too |
 | `tools/check-elm-shape-drift.mjs:132` | descriptor `name: "cem-figma-connect (elm emitter)"` | `"elm-cem-figma-connect (elm emitter)"` | descriptor identity label (path L133 already in finding G) |
 | `tools/measure-docs-size.mjs` | (no cfc entry) | — | n/a |
-| `tools/family.json:174` | copy-fidelity exclude `".claude-memory/cem-figma-connect-state.md"` | (renames only if the physical file is renamed) | **cosmetic/deep** — this is an exclude path that must keep matching the actual committed file inside the package; rename the entry only if the file itself is renamed. Left as a Task-6 cosmetic item, not load-bearing for gate-all. |
+| `tools/family.json:174` | `authorizedAbsentM6` `".claude-memory/cem-figma-connect-state.md"` | `".claude-memory/elm-cem-figma-connect-state.md"` | **RENAME (Step 1.7e) — MIRROR-COUPLED.** `authorizedAbsent*` describes an external-cfc-mirror file (`copy-fidelity.mjs:115` compares against the `snapshot-refs.json` mirror snapshot). Gate SKIPs when the snapshot is absent (normal gate-all) → safe to rename now; a materialized-snapshot run flags it `missing` until the mirror's file renames too. Paired-rename flag in Decisions log. |
+| `tools/family.json:171` | `authorizedAbsentPrefixes` `"test/fixtures/tailwind-m3e-web-0.1.0/"` | `"test/fixtures/elm-m3e-tailwind-0.1.0/"` | **RENAME (Step 1.7e) — MIRROR-COUPLED**, same class as L174 (version `0.1.0` unchanged; sibling `"test/fixtures/m3e-web-2.7.0/"` = upstream `@m3e/web`, **unchanged**). |
 
 **`elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation` (Task 1):**
 
@@ -266,14 +306,15 @@ resolution — rename the `family.json` keys.**
 - `tools/family.json` `mirror`/`bundleCopy`/`copyFidelity` blocks — their repo coordinates stay (already
   out of scope per "Out of scope → Publishing/mirror rewiring").
 
-**Flagged, does-not-cleanly-resolve (surfaced to Jack, NOT silently swept):** `tools/check-coverage-map.mjs:36,37`
-carries the consumer identifiers `"cem-figma-connect-matcher"` and `"cem-figma-connect-elm-emitter"`,
-asserted against `docs/facts-bundle/coverage-map.json` (100+ `"consumer": "cem-figma-connect-*"` entries,
-plus the facts-bundle audit docs). These are a **facts-bundle audit naming scheme** (logical face roles),
-not a package dir/key — renaming them is a large, self-contained cascade into a committed data artifact +
-audit prose that belongs with the facts-bundle work, not this structural wave. Left for Jack to confirm
-scope (see Decisions log). Under a strict "no whiff" reading they eventually rename; they are not
-load-bearing for the reshape gates and renaming them now would not affect any `git mv`/path correctness.
+**RESOLVED 2026-08-19 (was "flagged, does-not-cleanly-resolve"):** `tools/check-coverage-map.mjs:33-38`
+`REQUIRED_CONSUMERS` (`"m3e-okf"`, `"tailwind-m3e-web"`, `"cem-figma-connect-matcher"`,
+`"cem-figma-connect-elm-emitter"`) + the 146 matching `"consumer"` values (+ 10 prose spots) in
+`docs/facts-bundle/coverage-map.json` all **rename** — see **Step 1.7d** for the exact array before/after
+and the three-rule substring convention. Correction to the earlier flag: `check-coverage-map.mjs` **is**
+gate-all-wired (`gate-all.mjs:403`), so the array ↔ JSON pair is load-bearing for automated gate-all and
+must rename in lockstep — it is **not** "separate facts-bundle scope." No mirror/URL is involved, so no
+carve-out. The audit *prose* (coverage-audit.md, scorecard, diffs, schema.json descriptions) is
+non-gate-read → batched to Task 6 (finding V), same names.
 
 ### B. `tools/gate-all.mjs` (verified)
 
@@ -473,6 +514,23 @@ Read `tools/lib/` in full. Two files are candidates to pull into `pipeline/elm-c
 `tools/check-drift.test.mjs:110`, `tools/lib/regen.mjs:9,10` — all mention old `core/…` or
 `brands/m3e/outputs/…` paths **in comments only**. Batched to Task 6; anything functional
 would already have failed a gate run.
+
+**Cosmetic-comment spots carrying the renamed *names* (added 2026-08-19 final sweep — comment-only, not in
+the earlier V list):** `tools/check-single-m3e-web-pin.mjs:7` (`// output (cem-figma-connect).`),
+`tools/copy-fidelity.mjs:4` (`// tools/copy-fidelity-{cem-figma-connect,elm-m3e,m3e-okf,tailwind-m3e-web}.sh`),
+`tools/lib/okf-lib.mjs:5` (`// depending on either m3e-okf half.`), `tools/publish-mirror.test.mjs:5`
+(package-list comment incl. `elm-html-intermediate-representation`), `hooks/pre-push:6-9` (consolidated-hook
+header comment listing all package names — this file is **regenerated** by `gen-hooks.mjs`, so it re-emits
+from the renamed targets on the next `gen:hooks`; the checked-in comment is cosmetic), `hooks/pre-push.d/README.md:33`
+(prose). Batched to Task 6.
+
+**Facts-bundle audit *prose* (non-gate-read; Task 6 "no whiff" sweep — same three substring rules as Step
+1.7d):** `docs/facts-bundle/coverage-audit.md` (46), `docs/facts-bundle/m3-consumer-scorecard.md` (35),
+`docs/copy-fidelity-notes.md` (22), `docs/facts-bundle/m6-deep-clean.md` (7), `docs/facts-bundle/schema.json`
+(6, all `"description"` fields — L116/162/194/242/253/401, **not** enum/property keys, so not load-bearing
+for `check-coverage-map.mjs`), `docs/facts-bundle/m3c-generated-diff.md` (5),
+`docs/facts-bundle/m3a-`/`m3b-generated-diff.md` (2 each). (The load-bearing `coverage-map.json` entries
++ `check-coverage-map.mjs` array are **not** here — they are Step 1.7d.)
 
 ### W. Verified NO-CHANGE
 
@@ -677,12 +735,96 @@ row from **finding A3**:
   (per that test's own remediation hint), then diff to confirm only the renamed step-names changed.
 - **DO NOT rename** `tools/publish-mirror-state.json:28` key (mirror identity → `jackhp95/${name}`;
   finding A3 carve-out) — it stays `elm-html-intermediate-representation` until the external mirror is
-  itself renamed. **DO NOT touch** the `tools/check-coverage-map.mjs:36-37` `cem-figma-connect-{matcher,elm-emitter}`
-  identifiers here (flagged in finding A3 + Decisions log for separate scope confirmation).
+  itself renamed. The `tools/check-coverage-map.mjs:33-38` consumer identifiers + the two `family.json`
+  cfc `copyFidelity` entries (L171, L174) are now **resolved renames** — see **Step 1.7d** (coverage-map,
+  gate-all-wired, lockstep) and **Step 1.7e** (the mirror-coupled cfc bookkeeping entries).
 - **Verify:** after these edits, `grep -rn 'cem-figma-connect\|elm-html-intermediate-representation' tools/`
   should return only (a) prose/comments (Task 6 cosmetic) and (b) the two deliberately-preserved mirror
   identities (`publish-mirror-state.json:28` key, `snapshot-refs.json:8` `repo` URL value). Anything else
   is a missed functional hit — fix before committing.
+
+- [ ] **Step 1.7d: Rename the facts-bundle coverage-audit consumer identifiers (finding A3, resolved 2026-08-19 — was an open flag)**
+
+`tools/check-coverage-map.mjs` is a **gate-all step** (`gate-all.mjs:403`, `gate-all-expected-steps.json:24`
+`"workspace: check-coverage-map"`). Its `REQUIRED_CONSUMERS` array (L33–38) is the closed set every
+`"consumer"` value in `docs/facts-bundle/coverage-map.json` must belong to, **and** every listed consumer
+must have ≥1 entry (`check-coverage-map.mjs:219,275`). So the array and the JSON's consumer values
+**must rename in lockstep, in one atomic edit** — rename one without the other and this gate fails
+(`consumer must be one of …` or `consumer "…" has no entries`). Per the full-rename policy (Decisions log
+#6), these logical face-role identifiers rename to match their renamed packages. **No mirror/URL is
+involved** (coverage-map.json carries audit SHAs but no `github.com/jackhp95` URL), so no carve-out — pure
+local rename. Confirmed this session: `check-coverage-map.mjs` is gate-all-wired, so this is load-bearing
+for automated gate-all green, not the "separate facts-bundle scope" the earlier flag assumed.
+
+**(i) `tools/check-coverage-map.mjs` L33–38 — the array (exact before/after):**
+
+```js
+const REQUIRED_CONSUMERS = [        const REQUIRED_CONSUMERS = [
+    "m3e-okf",                          "elm-m3e-okf",
+    "tailwind-m3e-web",         →       "elm-m3e-tailwind",
+    "cem-figma-connect-matcher",        "elm-cem-figma-connect-matcher",
+    "cem-figma-connect-elm-emitter",    "elm-cem-figma-connect-elm-emitter",
+];                                  ];
+```
+
+**(ii) `docs/facts-bundle/coverage-map.json` — the entries. Mechanically executable as ONE whole-file
+substring substitution (three rules; no overlap, no double-prefix risk because the new names appear
+nowhere yet):**
+
+| Old substring | New substring | `"consumer"` occurrences | Non-consumer (prose) occurrences |
+|---|---|---|---|
+| `cem-figma-connect` | `elm-cem-figma-connect` | 81 (`-matcher` 40 + `-elm-emitter` 41) | 2 — `$comment` L3, note L1412 |
+| `m3e-okf` | `elm-m3e-okf` | 53 | 9 lines — `$comment` L3 + notes L121, L208, L218, L387, L427, L437, L466 (2 hits on that line), L835 |
+| `tailwind-m3e-web` | `elm-m3e-tailwind` | 12 | 2 — `$comment` L3, note L387 |
+
+- The `cem-figma-connect` → `elm-cem-figma-connect` rule transparently handles the two suffixed forms
+  (`-matcher`, `-elm-emitter`) because they share the prefix — do **not** write separate rules for them.
+- 146 `"consumer"` values total (81 + 53 + 12) — matches the four `REQUIRED_CONSUMERS` groups exactly.
+- `m3e-okf` never appears as a substring of `m3e-api-okf` (that token is `m3e-`**api**`-okf`), and no
+  `"sourceFile"` path carries any of the three names (they are each consumer's own repo-relative paths),
+  so the blind substring pass touches only consumer values + the enumerated prose spots — verified.
+- **Do NOT edit the facts-bundle files here mechanically as part of this doc-planning task** — this step
+  is the executable spec; the real edit lands when Task 1 runs. Re-run `node tools/check-coverage-map.mjs`
+  after: it prints the per-consumer table under the new names and must exit 0.
+
+**(iii) facts-bundle *prose* carrying the old names (non-load-bearing — `check-coverage-map.mjs` reads
+only coverage-map.json's `consumer` values + schema.json's *structure*, never these strings):**
+`docs/facts-bundle/coverage-audit.md` (46), `docs/facts-bundle/m3-consumer-scorecard.md` (35),
+`docs/copy-fidelity-notes.md` (22), `docs/facts-bundle/m6-deep-clean.md` (7), `docs/facts-bundle/schema.json`
+(6 — all inside `"description"` fields, L116/162/194/242/253/401, not enum values or property keys),
+`docs/facts-bundle/m3c-generated-diff.md` (5), `docs/facts-bundle/m3a-…`/`m3b-generated-diff.md` (2 each).
+Same three substring rules; batched to **Task 6** (cosmetic "no whiff" sweep, finding V) — none are
+gate-read, so they cannot break a gate, but they rename for consistency.
+
+- [ ] **Step 1.7e: Rename the two cfc `copyFidelity` bookkeeping entries in `family.json` (finding A3 — resolved 2026-08-19, MIRROR-COUPLED, flag surfaced)**
+
+Both entries live in `family.json`'s `cem-figma-connect`→`elm-cem-figma-connect` `copyFidelity` block and
+describe **files in the external cfc mirror snapshot** (the source that `copy-fidelity.mjs:115,119`
+compares the local package against — pinned by `snapshot-refs.json:8` → `jackhp95/cem-figma-connect.git`).
+They are `authorizedAbsent*` = source-side (mirror) paths authorized to be absent locally.
+
+- `family.json:174` `authorizedAbsentM6[0]` `".claude-memory/cem-figma-connect-state.md"` →
+  `".claude-memory/elm-cem-figma-connect-state.md"`.
+- `family.json:171` `authorizedAbsentPrefixes[1]` `"test/fixtures/tailwind-m3e-web-0.1.0/"` →
+  `"test/fixtures/elm-m3e-tailwind-0.1.0/"` (version confirmed `0.1.0` — `tailwind-m3e-web/package.json`
+  `"version": "0.1.0"` is unchanged this wave; only the package name renames, Task 2). Leave the sibling
+  `authorizedAbsentPrefixes[0]` `"test/fixtures/m3e-web-2.7.0/"` **unchanged** — `m3e-web` is upstream
+  `@m3e/web`, not a rename target.
+
+**⚠ MIRROR-COUPLING FLAG (surfaced, not silently swept — parallels the IR `publish-mirror-state.json`
+open-flag):** neither file exists in the local workspace (verified — no `.claude-memory/` in the cfc
+package; no `test/fixtures/tailwind-m3e-web-0.1.0/` dir). They exist only in the **external cfc mirror
+repo**, whose files keep the old names until the mirror is itself renamed (Jack's reserved per-mirror
+action). Consequence: in a **normal gate-all run the cfc copy-fidelity gate SKIPs** (the
+`.cache/snapshots/cem-figma-connect` snapshot is absent on any machine that didn't run the migration —
+`copy-fidelity.mjs:59-70`), so **renaming these entries is safe for automated gate-all now**. But a run
+**with the mirror snapshot materialized** (`REQUIRE_SNAPSHOT_GATES=1` or a mirror audit) would, after the
+rename, flag the mirror's still-old-named `.claude-memory/cem-figma-connect-state.md` and
+`test/fixtures/tailwind-m3e-web-0.1.0/*` as unauthorized `missing` files → RED, until the mirror content is
+renamed too. **Whoever renames the external cfc mirror must, in the same action, rename these two paths'
+physical counterparts in the mirror** (same lockstep discipline as the IR `publish-mirror-state.json` key).
+This is the honest resolution of Jack's "rename everything local, no whiff" directive against the standing
+mirror exception: the local family.json string renames now; the coupled external rename is paired.
 
 - [ ] **Step 1.8: Fix `elm-typed-html` internal cross-boundary refs (finding T)**
 
@@ -1232,7 +1374,10 @@ Six decisions were made live that shape this plan; each is now **folded into the
 (this log is the condensed trail + the rationale, so the deliberation isn't lost — it is not a list of
 open items). The two package renames (#1, #2), the okf consistency fix (#3), and the full-rename
 resolution (#6, which extends #1–#3 to every local key/string/symlink) are the highest-leverage and
-most error-prone, so their reasoning is preserved in full.
+most error-prone, so their reasoning is preserved in full. **A later closeout pass (2026-08-19, final
+rename-sweep) resolved the last two formerly-open flags as full renames — #7 (coverage-map/`REQUIRED_CONSUMERS`,
+Step 1.7d) and #8 (the two cfc `copyFidelity` mirror-coupled entries, Step 1.7e) — under Jack's directive
+"rename everything consistently"; see the "Resolved 2026-08-19" block below.**
 
 1. **IR rename — `elm-html-intermediate-representation` → `elm-virtual-dom-intermediate-representation`,
    confirmed.** Done as part of the `packages/` extraction in **Task 1** (not a separate follow-up). It
@@ -1314,18 +1459,38 @@ most error-prone, so their reasoning is preserved in full.
   key rename is safe for all automated gates now; but the **next** `publish-mirror.mjs` run for a renamed
   package will target `jackhp95/<new-name>` — which must coincide with the external mirror rename. Flagged
   so the eventual publisher pairs the two, not a blocker for this wave. See finding A3 coupling note.
-- **`check-coverage-map.mjs:36–37` `cem-figma-connect-{matcher,elm-emitter}` consumer identifiers.** These
-  are a **facts-bundle audit naming scheme** (logical face roles), asserted against
-  `docs/facts-bundle/coverage-map.json` (100+ `"consumer": "cem-figma-connect-*"` entries) + the
-  facts-bundle audit docs. Not a package dir/key and not load-bearing for any reshape gate — renaming them
-  is a large self-contained cascade into a committed data artifact + prose that belongs with the
-  facts-bundle work, not this structural wave. **Left for Jack to confirm scope** (under a strict
-  "no whiff" reading they eventually rename; deliberately NOT swept here to avoid churning a data file
-  unrelated to the directory reshape). See finding A3.
-- **`.claude-memory/cem-figma-connect-state.md`** (a committed file inside the package, referenced as a
-  copy-fidelity exclude at `family.json:174`). The exclude entry must keep matching the physical filename;
-  renaming the *file* (to purge the old name) is optional cosmetic cleanup batched to Task 6, not
-  load-bearing. Flagged, not mandated.
+**Resolved 2026-08-19 (final rename-sweep pass — the last two formerly-open items, both closed as full
+renames per Jack's directive "rename everything consistently"):**
+
+7. **`check-coverage-map.mjs` `REQUIRED_CONSUMERS` + `coverage-map.json` consumer values — RENAME
+   (Step 1.7d).** The earlier flag (kept these as "separate facts-bundle scope") was based on a wrong
+   premise; **corrected this session:** `check-coverage-map.mjs` **is** a `gate-all` step (`gate-all.mjs:403`,
+   `gate-all-expected-steps.json:24`), and its `REQUIRED_CONSUMERS` array (L33–38) is the closed set every
+   `"consumer"` in `coverage-map.json` must belong to — so the array + the 146 consumer values (+ 10 prose
+   spots) **rename in lockstep** (one atomic edit) or the gate fails. It is **load-bearing for automated
+   gate-all**, not deferrable. No mirror/URL inside coverage-map.json → no carve-out. Names:
+   `m3e-okf`→`elm-m3e-okf` (53), `tailwind-m3e-web`→`elm-m3e-tailwind` (12),
+   `cem-figma-connect-{matcher,elm-emitter}`→`elm-cem-figma-connect-{matcher,elm-emitter}` (40+41). Audit
+   *prose* (coverage-audit.md, scorecard, diffs, schema.json descriptions) is non-gate-read → Task 6.
+8. **`family.json` cfc `copyFidelity` entries `.claude-memory/cem-figma-connect-state.md` (L174) +
+   `test/fixtures/tailwind-m3e-web-0.1.0/` (L171) — RENAME (Step 1.7e), MIRROR-COUPLED.** Correction to the
+   earlier "keep matching the physical file inside the package" note: **verified this session** that
+   `authorizedAbsent*` entries are **external-cfc-mirror** paths (`copy-fidelity.mjs:115,119` compares the
+   local package against the `snapshot-refs.json`-pinned mirror snapshot), not local files — neither file
+   exists locally. So: the gate **SKIPs** when the snapshot is absent (normal gate-all) → renaming the local
+   strings is safe for automated gate-all **now**; but a materialized-snapshot run flags the mirror's
+   still-old-named files as `missing` until the mirror content is renamed. **Paired-rename flag (same
+   discipline as item under Open flags above): whoever renames the external cfc mirror must, in the same
+   action, rename `.claude-memory/*-state.md` and the `tailwind-m3e-web-0.1.0/` fixture dir inside the
+   mirror.** Version `0.1.0` is unchanged; upstream `test/fixtures/m3e-web-2.7.0/` stays.
+
+**New load-bearing spots the final sweep surfaced (folded into finding A2 addendum, not previously
+enumerated):** the IR published name `jackhp95/elm-html-intermediate-representation` also lives in
+`core/elm-cem/bin/{family-deps,registry-check,validate}.js` (string-literal special-cases — Task 1),
+`core/elm-cem/tests/*.test.mjs` (Task 1), `brands/m3e/inputs/cem/config/slots.json` (the `_families`
+config template that **generates** the family `elm.json` deps — Task 4, in-place, the one hit the Task-1
+`grep → zero` caveat didn't cleanly place), `brands/m3e/outputs/elm-m3e/packages.json` + `measure-docs.cjs`
+(Task 4). All were covered by finding A2's `grep → zero` gate but are now explicit.
 
 ---
 
@@ -1347,7 +1512,7 @@ grep -rIn 'cem-figma-connect\|elm-html-intermediate-representation' tools/
 | Path refs (`core/`→`pipeline`/`packages` + rename) | `check-emit-determinism-cfc.mjs:39`, `check-elm-shape-drift.mjs:133`, `gen-figma-config.mjs:46`, `measure-docs-size.mjs:77`, `family.json:85,148` (srcDir), `gen-hooks.mjs:42,46`, `bump.mjs:27,28,43,44` | findings A, E, F, G, I, K, L (pre-existing) |
 | Table keys / name-identity / step-name assertions | `family.json:84,147` (keys), `family.json:158` (cache path), `consumer-output-drift.mjs:44,45,46`, `check-drift.test.mjs:128`, `bump.mjs:41` (pkgName), `gate-all.mjs:434` (label), `gate-all-expected-steps.json:10,11,16,17,32,33`, `check-cc-elm-refs.mjs:46`, `check-elm-shape-drift.mjs:132`, `measure-docs-size.mjs:76`, `snapshot-refs.json:8` (**key**) | **finding A3 → Step 1.7c** (+ okf/tailwind siblings in Tasks 2–3) |
 | **Mirror identities — deliberately preserved (carve-out)** | `publish-mirror-state.json:28` (key → `jackhp95/${name}` mirror), `snapshot-refs.json:8` (`repo` URL **value**) | finding A3 carve-out + Decisions log open-flags |
-| **Flagged, separate scope (NOT swept here)** | `check-coverage-map.mjs:36,37` (facts-bundle audit consumer names), `family.json:174` (`.claude-memory/*-state.md` exclude) | Decisions log open-flags |
+| **Formerly flagged — now RESOLVED as renames** | `check-coverage-map.mjs:33-38` (facts-bundle audit consumer names — gate-all-wired), `family.json:171,174` (cfc `copyFidelity` bookkeeping — mirror-coupled) | **Step 1.7d** (coverage-map, lockstep) + **Step 1.7e** (cfc entries, paired-rename flag) — Decisions log #7, #8 |
 
 **Result: zero un-accounted functional hits.** The only `tools/` occurrences that survive execution are
 (1) the two mirror identities above (intended — external mirrors stay until Jack's explicit per-mirror
@@ -1358,6 +1523,48 @@ rename), (2) the two flagged-for-scope items, and (3) prose/comments, which Task
 none introduce a new load-bearing surface beyond what findings A/A2/A3/T already enumerate. At execution
 time, the per-task `grep … → zero hits` gates in Steps 1.7b/1.7c, 4.3b, and each task's re-grep are the
 final machine check that the sweep landed clean.
+
+### Final exhaustive 4-string whole-repo grep (2026-08-19 — third verification pass)
+
+The first two passes scoped to `tools/` and to the IR published name; this pass grepped the **entire repo**
+(excluding `node_modules`, `.git`, `.cache`, and the 3 pending-merge `.claude/worktrees/agent-*` dirs —
+Jack's separate in-flight work) for **all four** old strings, to catch any residue like the
+`coverage-map.json` class the earlier passes missed. Command:
+
+```
+rg -c 'cem-figma-connect|elm-html-intermediate-representation|m3e-okf|tailwind-m3e-web' \
+  --glob='!node_modules/**' --glob='!.git/**' --glob='!.cache/**' \
+  --glob='!.claude/worktrees/agent-a8e48485eed5250b1/**' \
+  --glob='!.claude/worktrees/agent-adf03debc8e3b774c/**' \
+  --glob='!.claude/worktrees/agent-ae099ba76362fbf0d/**'
+```
+
+**Whole-repo matching-line counts:** `cem-figma-connect` **776**, `elm-html-intermediate-representation`
+**247**, `m3e-okf` **380**, `tailwind-m3e-web` **814**. As expected for a doc-only plan (nothing renamed
+yet), the old names still appear everywhere. The point of this pass is that **every hit falls into an
+accounted-for class** — no un-planned load-bearing surface remains. By class:
+
+| Class | Where | Accounting |
+|---|---|---|
+| Functional `tools/` gate scripts | the ~35 lines in the table above | findings A–U + A3 → Steps 1.7/2/3/4 |
+| **Facts-bundle gate data (`coverage-map.json` + `check-coverage-map.mjs`)** | 146 `"consumer"` values + `REQUIRED_CONSUMERS` array + 10 prose | **NEWLY FOLDED IN → Step 1.7d** (gate-all-wired, lockstep) |
+| **cfc `copyFidelity` mirror-coupled bookkeeping** | `family.json:171,174` | **NEWLY FOLDED IN → Step 1.7e** (paired-rename flag) |
+| **IR published name in elm-cem bin/test + slots.json + packages.json/measure-docs.cjs** | 12 functional lines | **NEWLY ENUMERATED → finding A2 addendum** (was gate-covered, now explicit; `slots.json` is the one mis-placed hit) |
+| `elm.json` `name`/dependency cascade | 5 elm.json (finding A2) + the addendum above | Tasks 1 + 4, `grep → zero` gates |
+| Package-owned content that **moves+renames with its package** | `core/cem-figma-connect/**` (incl. 200+ generated `*.figma.ts`), `core/elm-html-intermediate-representation/**`, `core/tailwind-md3/**`, `brands/m3e/outputs/{elm-m3e,m3e-api-okf,tailwind-m3e-web}/**` | git mv in Tasks 1–4; internal content follows the dir (generated `*.figma.ts` regenerate from the renamed cfc profile) |
+| `dist/` build artifacts (`docs/dist/elm*.js`, `*/index.html`) | elm-pages SSG output under elm-m3e docs | regenerated by build, never hand-edited (moves with docs, Task 5) |
+| `pnpm-lock.yaml` | workspace lockfile | regenerated by `pnpm install` after each move (Task 0+) — not hand-edited |
+| Narrative prose / historical docs | `docs/plans/**`, `docs/superpowers/**`, `docs/reviews/**`, `README.md`, `VISION.md`, `GAUNTLET-LEDGER.md`, package READMEs/SKILLs/CHANGELOGs, facts-bundle audit `.md` | Task 6 cosmetic "no whiff" sweep (finding V) — none gate-read; historical handoffs/reviews are immutable records left as-is |
+| Comment-only refs in `tools/**` + `hooks/pre-push` | finding V + the added cosmetic-comment list | Task 6 (pre-push is regenerated) |
+| **Mirror carve-outs — deliberately preserved** | `publish-mirror-state.json:28` key, `snapshot-refs.json:8` `repo` URL value, the two cfc `copyFidelity` entries' *external* counterparts | stay old until Jack's explicit per-mirror rename (Decisions log open-flags + #8) |
+| This plan doc | `docs/plans/2026-08-19-repo-shape-v2-wave1-plan.md` (carries both old **and** new names by design) | n/a — it is the spec |
+
+**Result: every whole-repo hit is accounted for. The only genuinely-new residue this third pass found
+beyond the prior two is the three "NEWLY …" rows above** — the `coverage-map.json`/`check-coverage-map.mjs`
+gate pair (Step 1.7d), the two mirror-coupled cfc `copyFidelity` entries (Step 1.7e), and the
+`jackhp95/…IR…` dependents in elm-cem bin/tests + `slots.json` + `packages.json`/`measure-docs.cjs`
+(finding A2 addendum). All are now folded into concrete steps. No further un-planned load-bearing surface
+exists; the per-task `grep → zero` gates remain the machine check at execution.
 
 ## Self-review notes
 
@@ -1380,10 +1587,14 @@ final machine check that the sweep landed clean.
   "Decisions log." The 6 live decisions (2 package renames, okf consistency, gen-facts-runner comment,
   docs labeling, **and the full-rename resolution #6**) are stated directly where they execute. The two
   formerly-open flags (cfc/IR `family.json` keys; IR symlink alias) are now **resolved as full renames**
-  (decision #6, finding A3 + Step 1.7c). The genuinely-open items are now the **mirror-coupling flags**
-  (IR `publish-mirror-state.json` key must stay old until the external mirror renames; `publish-mirror.mjs`'s
-  `jackhp95/${family-key}` target) and the two scope flags (`check-coverage-map.mjs` audit names;
-  `.claude-memory/*-state.md` filename) — all surfaced in the Decisions log, none blocking this wave.
+  (decision #6, finding A3 + Step 1.7c). The **last two formerly-open flags — `check-coverage-map.mjs`
+  audit names and the two `family.json` cfc `copyFidelity` entries — are now ALSO resolved as renames**
+  (decisions #7/#8, Steps 1.7d/1.7e; the coverage-map pair is gate-all-wired so it renames in lockstep,
+  the cfc entries are mirror-coupled so they carry a paired-rename flag). The only genuinely-open items
+  left are the **mirror-coupling flags**: the IR `publish-mirror-state.json` key stays old until the
+  external mirror renames; `publish-mirror.mjs`'s `jackhp95/${family-key}` target and the two cfc
+  `copyFidelity` external counterparts likewise pair with their mirror rename — all surfaced in the
+  Decisions log, none blocking this wave (local gate-all stays green throughout).
 - **Rename-sweep completeness (2026-08-19 fold-in):** re-grepped `tools/` first-hand; found and folded
   in the load-bearing spots the earlier passes missed — `gate-all-expected-steps.json` step-name
   assertions (all renames), `consumer-output-drift.mjs` descriptor keys + `familySrcDir` args,
