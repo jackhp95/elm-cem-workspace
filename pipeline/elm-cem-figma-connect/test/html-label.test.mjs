@@ -1153,3 +1153,133 @@ test("set-attrs T2: key collision between set-attrs and fixedAttrs throws", () =
     "key collision with fixedAttrs must throw at emit time"
   );
 });
+
+// -- Task 4: slots[] -> instance.getSlot() ------------------------------------
+//
+// slots[] items come from src/correspond/schema.json's `slots` block, populated
+// by Task 3's matcher/merge (src/match/matcher.mjs's proposeSlot, src/correspond/
+// merge.mjs's buildSlots). Synthetic entries here follow this file's existing
+// idiom (plain object literal, cemTag/figmaSets/axes/props, now also slots).
+
+test("slots[]: mapped named slot emits getSlot() and a wrapping <div slot=...>", () => {
+  const entry = {
+    cemTag: "m3e-fake-slotted",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake slotted", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+    slots: [
+      { figmaSlotName: "Header content", kind: "slot", multi: false, mappedTo: "header", provenance: "auto-exact" },
+    ],
+  };
+  const [file] = emitEntry(entry, config);
+  assert.match(file.contents, /const headerContent = instance\.getSlot\("Header content"\)/);
+  assert.match(file.contents, /<div slot="header">\$\{headerContent\}<\/div>/);
+  assert.match(file.contents, / \* slot: Header content -> header/);
+});
+
+test("slots[]: mapped default slot ('(default)') interpolates directly as inner content, no wrapper", () => {
+  const entry = {
+    cemTag: "m3e-fake-default-slotted",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake default slotted", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+    slots: [
+      { figmaSlotName: "Body", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-exact" },
+    ],
+  };
+  const [file] = emitEntry(entry, config);
+  assert.match(file.contents, /const body = instance\.getSlot\("Body"\)/);
+  // Interpolated bare as the tag's inner content, no <div>/slot= wrapper.
+  assert.match(file.contents, /<m3e-fake-default-slotted>\$\{body\}<\/m3e-fake-default-slotted>/);
+  assert.doesNotMatch(file.contents, /<div slot=/);
+});
+
+test("slots[]: unmapped slot is a header-comment note only, never attempted as code", () => {
+  const entry = {
+    cemTag: "m3e-fake-unmapped-slot",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake unmapped slot", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+    slots: [
+      { figmaSlotName: "Overflow menu", kind: "slot", multi: false, unmapped: "no corresponding CEM slot", provenance: "auto-gap" },
+    ],
+  };
+  const [file] = emitEntry(entry, config);
+  assert.doesNotMatch(file.contents, /instance\.getSlot\(/);
+  assert.match(file.contents, / \* slot \(unmapped\): Overflow menu — no corresponding CEM slot/);
+});
+
+test("slots[]: entry with no 'slots' key at all emits exactly as before (regression guard)", () => {
+  // The real m3e-button entry carries no `slots` key — emitting it must be
+  // byte-identical to the pre-Task-4 golden-fixture comparison already
+  // exercised above; this test additionally proves the synthetic-entry path
+  // (no `slots` key at all, not even `undefined`) is equally unaffected.
+  const entry = {
+    cemTag: "m3e-fake-no-slots",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake no slots", fixedAttrs: {} }],
+    axes: [],
+    props: [{ figmaProp: "Label text", kind: "text", binding: "content" }],
+  };
+  const withSlotsKeyOmitted = emitEntry(entry, config)[0].contents;
+  const withExplicitEmptySlots = emitEntry({ ...entry, slots: [] }, config)[0].contents;
+  assert.equal(withSlotsKeyOmitted, withExplicitEmptySlots);
+  assert.doesNotMatch(withSlotsKeyOmitted, /getSlot\(/);
+  assert.doesNotMatch(withSlotsKeyOmitted, / \* slot/);
+});
+
+test("slots[]: BOTH a text->content prop AND a default-slot-mapped slot on one entry throws, naming both", () => {
+  const entry = {
+    cemTag: "m3e-fake-collision",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake collision", fixedAttrs: {} }],
+    axes: [],
+    props: [{ figmaProp: "Label text", kind: "text", binding: "content" }],
+    slots: [
+      { figmaSlotName: "Body", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-exact" },
+    ],
+  };
+  assert.throws(
+    () => emitEntry(entry, config),
+    /"Label text".*"Body".*mappedTo: "\(default\)"/s,
+  );
+});
+
+// Final-review finding #1: on real m3-kit data, an entry can carry TWO OR
+// MORE slots[] items that both map to "(default)" (m3e-menu has 3 "List N
+// content" items; m3e-toolbar has 2 "Content (standard/vibrant)" items).
+// Before this fix, `slotContentBlocks.find(...)` silently picked the first
+// for interpolation and `.filter(mappedTo !== "(default)")` silently
+// dropped the rest — getSlot() consts were still emitted for all of them,
+// but their content never appeared anywhere in the template. This test
+// proves no content silently vanishes: the first is interpolated, and the
+// rest are named in a visible note (mirroring the existing >1 TEXT->content
+// prop idiom, additionalTextContentProps, immediately above).
+test("slots[]: 2+ slots mapped to '(default)' emits the first, notes the rest as not emitted (no silent drop)", () => {
+  const entry = {
+    cemTag: "m3e-fake-menu",
+    figmaSets: [{ nodeId: "1:1", setName: "Fake menu", fixedAttrs: {} }],
+    axes: [],
+    props: [],
+    slots: [
+      { figmaSlotName: "List 1 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+      { figmaSlotName: "List 2 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+      { figmaSlotName: "List 3 content", kind: "slot", multi: false, mappedTo: "(default)", provenance: "auto-fuzzy" },
+    ],
+  };
+  const [file] = emitEntry(entry, config);
+
+  // getSlot() consts emitted for ALL THREE — none dropped at the const level.
+  assert.match(file.contents, /const list1Content = instance\.getSlot\("List 1 content"\)/);
+  assert.match(file.contents, /const list2Content = instance\.getSlot\("List 2 content"\)/);
+  assert.match(file.contents, /const list3Content = instance\.getSlot\("List 3 content"\)/);
+
+  // Only the FIRST is interpolated as the tag's inner content.
+  assert.match(file.contents, /<m3e-fake-menu>\$\{list1Content\}<\/m3e-fake-menu>/);
+  assert.doesNotMatch(file.contents, /\$\{list2Content\}/);
+  assert.doesNotMatch(file.contents, /\$\{list3Content\}/);
+
+  // The rest are named in a visible note — never a silent drop.
+  assert.match(
+    file.contents,
+    /note: additional default-slot slot\(s\) List 2 content, List 3 content not emitted \(only "List 1 content" is interpolated\)/
+  );
+});

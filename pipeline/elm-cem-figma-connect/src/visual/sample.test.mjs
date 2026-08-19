@@ -22,8 +22,49 @@ const correspondencePath = path.join(repoRoot, "profiles", "m3-kit", "correspond
 const correspondence = readCorrespondence(correspondencePath);
 const iconTable = loadIconTable(correspondencePath);
 
-const buttonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
-assert.ok(buttonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
+// The real, checked-in correspondence.json's confirmed m3e-button entry has
+// NO record at all — in either props[] or slots[] — of "Trailing slot"/
+// "Trailing icon", because those two SLOT properties only exist in
+// test/fixtures/figma-export.m3-kit.json (added by Tasks 1 and 3 purely for
+// matcher-level test coverage; the real m3-kit export never had them on
+// Button). This test file deliberately drives the real button entry against
+// that test fixture, so unlike the 8 real confirmed entries that DO carry a
+// legacy `kind:"slot"` props[] item drive.mjs's coverage gate now tolerates
+// (see src/visual/drive.test.mjs's "migration tolerance" test, exercised
+// against real data with NO overlay), there is no legacy shape here to fall
+// back to — the overlay below stands in for a re-match this test
+// intentionally never runs, not for a migration state. Field shapes/values
+// mirror exactly what a real `proposeSlot`/`buildSlots` pass over this
+// fixture produces (see test/matcher.test.mjs's "SLOT properties are routed
+// to slotProposals" test), including provenance.
+//
+// Both overlay items are UNMAPPED: a MAPPED slots[] item now fails drive.mjs's
+// SLOT coverage gate (final-review finding #3 — nothing in this harness can
+// actually drive slots[] content yet, so a mapped item throws rather than
+// silently passing coverage; see src/visual/drive.test.mjs's dedicated
+// finding-#3 tests). This file's tests are about sampling policy, not that
+// gap, so both fixture items stay unmapped.
+const rawButtonEntry = correspondence.find((e) => e.cemTag === "m3e-button");
+assert.ok(rawButtonEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry a confirmed m3e-button entry");
+const buttonEntry = {
+  ...rawButtonEntry,
+  slots: [
+    {
+      figmaSlotName: "Trailing slot",
+      kind: "slot",
+      multi: false,
+      unmapped: "no CEM slot matches Figma SLOT property 'Trailing slot'",
+      provenance: "auto-gap",
+    },
+    {
+      figmaSlotName: "Trailing icon",
+      kind: "slot",
+      multi: false,
+      unmapped: "no CEM slot matches Figma SLOT property 'Trailing icon'",
+      provenance: "auto-gap",
+    },
+  ],
+};
 
 const iconEntry = correspondence.find((e) => e.kind === "iconTable");
 assert.ok(iconEntry, "fixture setup: profiles/m3-kit/correspondence.json must carry the kind:iconTable entry");

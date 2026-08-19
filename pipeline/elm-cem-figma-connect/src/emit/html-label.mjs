@@ -217,6 +217,13 @@ function unmappedNote(kindLabel, item) {
   return ` * ${kindLabel} (unmapped): ${item.figmaProp} — ${item.unmapped}`;
 }
 
+// Sibling of unmappedNote for slots[] items, which key their Figma-side name
+// as `figmaSlotName` (not `figmaProp` — a SLOT component property is a
+// different Figma property type than axes/props, per Task 1's schema).
+function unmappedSlotNote(slot) {
+  return ` * slot (unmapped): ${slot.figmaSlotName} — ${slot.unmapped}`;
+}
+
 // The icon tag placed inside a boolean-bound icon slot. Every m3e-* icon slot
 // (icon / trailing-icon / selected-icon, per ButtonElement.d.ts @slot docs)
 // is filled by an `<m3e-icon>` element carrying the HOST's `slot="…"`
@@ -312,6 +319,23 @@ function buildDefaultSlotIconBlock(prop, config) {
     glyphCode = `const ${glyphVar} = instance.getPropertyValue(${JSON.stringify(prop.figmaProp)})`;
   }
   return { glyphVar, code: glyphCode };
+}
+
+// buildSlotContentBlock(slot) -> { varName, mappedTo, code }
+//
+// A MAPPED slots[] item (mappedTo present — Task 3's matcher/merge output,
+// src/correspond/schema.json's `slots` block) becomes:
+//   const <camel(figmaSlotName)> = instance.getSlot("<figmaSlotName>")
+// per the figma-code-connect skill's getSlot() convention. getSlot() returns
+// a `ResultSection[] | undefined`; the caller interpolates it BARE (no
+// quotes/braces) inside a `figma.code` template — exactly the doc's
+// `figma.code`<Card>${content}</Card>`` example — either directly as the
+// tag's inner content (mappedTo === "(default)") or wrapped in a generic
+// `<div slot="...">` (a real named CEM slot). See emitEntry for placement.
+function buildSlotContentBlock(slot) {
+  const varName = camel(slot.figmaSlotName);
+  const code = `const ${varName} = instance.getSlot(${JSON.stringify(slot.figmaSlotName)})`;
+  return { varName, mappedTo: slot.mappedTo, code };
 }
 
 // axisOptionsOf(axis) -> string[] — ALL Figma option values for a variant axis.
@@ -570,6 +594,44 @@ export function emitEntry(entry, config) {
   );
   const unmappedProps = entry.props.filter((p) => p.unmapped !== undefined);
 
+  // Task 4: slots[] — the SLOT-typed Figma component-property dimension
+  // (src/correspond/schema.json's `slots` block, populated by Task 3's
+  // matcher/merge). `entry.slots` is OMITTED ENTIRELY (not `[]`) on an entry
+  // with zero SLOT-typed Figma properties — never assume the key exists.
+  const mappedSlots = (entry.slots ?? []).filter((s) => s.mappedTo !== undefined);
+  const unmappedSlots = (entry.slots ?? []).filter((s) => s.unmapped !== undefined);
+  const slotContentBlocks = mappedSlots.map(buildSlotContentBlock);
+  // The "(default)" sentinel means the CEM component's unnamed default slot —
+  // the same inner-content position textContentProp (kind:"text" bound to
+  // "content") already claims. Two mapped items claiming that one position is
+  // a genuine data conflict; never silently pick one (this file's doctrine,
+  // mirrored from the unhandledMappedProp throw below).
+  //
+  // Real m3-kit data (final-review finding #1): an entry can carry TWO OR
+  // MORE slots[] items that both map to "(default)" (m3e-menu has 3 "List
+  // N content" items; m3e-toolbar has 2 "Content (standard/vibrant)" items).
+  // getSlot() consts for ALL of them are still emitted (nonAxisBlockCodes
+  // below), but only ONE can occupy the tag's single inner-content position.
+  // Follow this file's own precedent for the analogous >1-TEXT->content-prop
+  // case (additionalTextContentProps, below): emit the first, and NEVER let
+  // the rest silently vanish — note them in the file instead of throwing,
+  // since (unlike the text-vs-slot collision below) this isn't a data bug,
+  // just a real shape the tag's HTML can't represent without an example.
+  const defaultSlotItems = mappedSlots
+    .map((slot, i) => ({ slot, block: slotContentBlocks[i] }))
+    .filter(({ block }) => block.mappedTo === "(default)");
+  const defaultSlotContentBlock = defaultSlotItems[0]?.block;
+  const additionalDefaultSlotItems = defaultSlotItems.slice(1);
+  const namedSlotContentBlocks = slotContentBlocks.filter((b) => b.mappedTo !== "(default)");
+  if (textContentProp && defaultSlotContentBlock) {
+    const conflictingSlot = defaultSlotItems[0].slot;
+    throw new Error(
+      `html-label emitter: both prop "${textContentProp.figmaProp}" (kind:"text" -> content) and ` +
+        `slot "${conflictingSlot.figmaSlotName}" (mappedTo: "(default)") are mapped to this entry's ` +
+        `one default-content position — cannot silently pick one; fix the correspondence entry.`
+    );
+  }
+
   // exampleChildren is now resolved PER-SET inside the figmaSets.map loop
   // (see below) to support per-set inline examples (appendSets mechanism).
   // This line is kept as a pre-loop fallback reference for the consumed-props
@@ -697,6 +759,10 @@ export function emitEntry(entry, config) {
     ...namedInputSlotBlocks.map((b) => b.code),
     // RC5: conditional literalIcon blocks contribute code; unconditional ones do not.
     ...literalIconSlotBlocks.filter((b) => b.kind === "conditional").map((b) => b.code),
+    // Task 4: getSlot() const declarations for every mapped slots[] item
+    // (both the default-slot one and any named ones) — like every other
+    // entry in nonAxisBlockCodes, dropped in examples-mode by the caller.
+    ...slotContentBlocks.map((b) => b.code),
   ];
 
   const headerLines = [
@@ -715,9 +781,19 @@ export function emitEntry(entry, config) {
       .map((p) => ` * prop: ${p.figmaProp} -> ${p.binding} (instanceSwap)`),
     ...literalIconSlotProps.map((p) => ` * prop: ${p.figmaProp} -> ${p.binding} (literalIcon: ${p.iconName})`),
     ...unmappedProps.map((p) => unmappedNote("prop", p)),
+    ...mappedSlots.map((s) => ` * slot: ${s.figmaSlotName} -> ${s.mappedTo}`),
+    ...unmappedSlots.map(unmappedSlotNote),
   ];
 
-  const contentExpr = contentBlock ? "${" + contentBlock.varName + "}" : "";
+  // Task 4: a mapped slots[] item with mappedTo === "(default)" claims the
+  // same inner-content position contentBlock (text->content) uses — the
+  // guard above already throws if both are present on the same entry, so at
+  // most one of contentBlock/defaultSlotContentBlock is set here.
+  const contentExpr = contentBlock
+    ? "${" + contentBlock.varName + "}"
+    : defaultSlotContentBlock
+      ? "${" + defaultSlotContentBlock.varName + "}"
+      : "";
   const slotExprs =
     slotBlocks.map((b) => "${" + b.lineVar + "}").join("") +
     visibilityAxisSlotBlocks.map((b) => "${" + b.lineVar + "}").join("") +
@@ -738,6 +814,14 @@ export function emitEntry(entry, config) {
   // RC5: named-input-slot exprs (e.g. <input slot="input" placeholder="${placeholderText}"></input>).
   const namedInputSlotExprs = namedInputSlotBlocks
     .map((b) => `\n  <${b.slotTag} slot="${b.slotName}" placeholder="\${${b.varName}}"></${b.slotTag}>`)
+    .join("");
+  // Task 4: a mapped slots[] item bound to a real named CEM slot (mappedTo
+  // is any value other than the "(default)" sentinel) wraps its getSlot()
+  // result in a generic slotted element — slot content is arbitrary
+  // structure, not a string, so (unlike namedInputSlotExprs' <input>) this
+  // is a bare, unquoted interpolation.
+  const slotContentExprs = namedSlotContentBlocks
+    .map((b) => `\n  <div slot="${b.mappedTo}">\${${b.varName}}</div>`)
     .join("");
 
   // figmaAxisNames: keys that name a Figma VARIANT axis. fixedAttrs entries
@@ -838,7 +922,7 @@ export function emitEntry(entry, config) {
     // children. Otherwise use the prop-derived exprs (existing behavior).
     const innerContent = exampleChildren
       ? renderChildrenHtml(exampleChildren.children)
-      : `${contentExpr}${slotExprs}${defaultSlotIconExprs}${literalIconUnconditionalExprs}${namedInputSlotExprs}`;
+      : `${contentExpr}${slotExprs}${defaultSlotIconExprs}${literalIconUnconditionalExprs}${namedInputSlotExprs}${slotContentExprs}`;
     const example = `<${entry.cemTag}${attrs ? " " + attrs : ""}>${innerContent}</${entry.cemTag}>`;
 
     // Built directly from the real values (no fragile placeholder-string
@@ -852,11 +936,22 @@ export function emitEntry(entry, config) {
     const importsArr = (config.imports ?? []).map((i) => JSON.stringify(i)).join(", ");
 
     // When non-examples mode has extra text→content props beyond the first,
-    // append a note so they're not silently dropped.
-    const multiContentNote =
-      !exampleChildren && additionalTextContentProps.length > 0
-        ? `\n// note: additional text prop(s) ${additionalTextContentProps.map((p) => p.figmaProp).join(", ")} not emitted — add an examples.json entry\n`
-        : "";
+    // or extra default-slot-mapped slots[] items beyond the first (finding #1
+    // above), append a note so they're not silently dropped.
+    const multiContentNoteLines = [];
+    if (!exampleChildren && additionalTextContentProps.length > 0) {
+      multiContentNoteLines.push(
+        `// note: additional text prop(s) ${additionalTextContentProps.map((p) => p.figmaProp).join(", ")} not emitted — add an examples.json entry`
+      );
+    }
+    if (!exampleChildren && additionalDefaultSlotItems.length > 0) {
+      multiContentNoteLines.push(
+        `// note: additional default-slot slot(s) ${additionalDefaultSlotItems
+          .map(({ slot }) => slot.figmaSlotName)
+          .join(", ")} not emitted (only "${defaultSlotItems[0].slot.figmaSlotName}" is interpolated) — add an examples.json entry`
+      );
+    }
+    const multiContentNote = multiContentNoteLines.length ? `\n${multiContentNoteLines.join("\n")}\n` : "";
 
     const contents =
       `// url=${url}\n` +

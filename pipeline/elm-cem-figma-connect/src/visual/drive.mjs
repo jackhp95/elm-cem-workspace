@@ -134,8 +134,15 @@ function definitionsFor(entry, figmaExport) {
       axes: raw
         .filter((p) => p.type === "VARIANT")
         .map((p) => ({ figmaProp: p.name, defaultValue: p.defaultValue })),
+      // SLOT-typed properties are their own dimension (correspondence
+      // entry.slots[], task 3 "matcher — populate the slots dimension") —
+      // relocated out of props[] at the matcher/merge layer, so they're
+      // split out here too rather than expecting them in entry.props[].
       props: raw
-        .filter((p) => p.type !== "VARIANT")
+        .filter((p) => p.type !== "VARIANT" && p.type !== "SLOT")
+        .map((p) => ({ figmaProp: displayNameOf(p.name), type: p.type, defaultValue: p.defaultValue })),
+      slots: raw
+        .filter((p) => p.type === "SLOT")
         .map((p) => ({ figmaProp: displayNameOf(p.name), type: p.type, defaultValue: p.defaultValue })),
     };
   }
@@ -195,6 +202,57 @@ function assertFullyMapped(entry, defs) {
       throw new Error(
         `drive: literalIcon prop '${propDef.figmaProp}' on entry '${entry.cemTag}' must carry an ` +
           `'iconName' field (the literal Material Symbols ligature name)`
+      );
+    }
+  }
+  // Same "never silent" coverage check, for the SLOT dimension (task 3):
+  // every SLOT-typed Figma property must show up in entry.slots[], mapped
+  // (mappedTo) or unmapped (unmapped reason) — never absent. entry.slots is
+  // omitted (not []) on entries with zero SLOT properties (merge.mjs), so
+  // default to [] here rather than treating a missing array as a bug.
+  //
+  // MIGRATION TOLERANCE: real, already-confirmed correspondence entries
+  // predate the slots[] relocation and were never re-matched (that requires
+  // a human `runReview`/`runConfirm` pass, out of this gate's remit) — their
+  // SLOT properties are still covered the OLD way, as a legacy `kind:"slot"`
+  // item inside props[] (the exact shape proposeProperty's catch-all used to
+  // emit before this task). Accept EITHER shape as coverage so this gate
+  // doesn't strand real mid-migration data while still catching a genuinely
+  // silent drop (present in neither list).
+  for (const slotDef of defs.slots) {
+    const foundInSlots = (entry.slots ?? []).find((s) => s.figmaSlotName === slotDef.figmaProp);
+    // Final-review finding #3: a MAPPED slots[] item passes this coverage
+    // check today, but nothing downstream in this file actually DRIVES
+    // content from it (the per-prop loop below only reads entry.props[];
+    // Task 4 wired the html-label EMITTER, not this visual-drive harness).
+    // Letting a mapped slots[] item satisfy "coverage" here would make the
+    // gate lie — content silently never gets driven for the visual check,
+    // exactly the kind of silent gap this "never silent" gate exists to
+    // catch. An UNMAPPED slots[] item is fine as-is (no counterpart, nothing
+    // to drive) — only a MAPPED one is the known, tracked gap, so only that
+    // case throws.
+    if (foundInSlots && foundInSlots.mappedTo !== undefined) {
+      throw new Error(
+        `drive: entry '${entry.cemTag}' slot '${slotDef.figmaProp}' is mapped in correspondence slots[] ` +
+          `(-> '${foundInSlots.mappedTo}') but driving content from slots[] is not yet implemented in the ` +
+          `visual-drive harness (Task 4 wired the html-label emitter only, not this harness) — this is a ` +
+          `known, tracked gap, not a silent no-op; do not treat this slot as covered until drive.mjs can ` +
+          `actually render slots[] content`
+      );
+    }
+    const foundLegacyInProps = entry.props.find((p) => p.kind === "slot" && p.figmaProp === slotDef.figmaProp);
+    const found = foundInSlots ?? foundLegacyInProps;
+    if (!found) {
+      throw new Error(
+        `drive: figma SLOT property '${slotDef.figmaProp}' on entry '${entry.cemTag}' is not present in ` +
+          `correspondence slots[] (or, pre-migration, props[]) at all (neither mapped nor marked unmapped) — ` +
+          `a silent unmapped SLOT property is exactly the icon-mismatch bug evidence #14 warns about`
+      );
+    }
+    const mapped = foundInSlots ? found.mappedTo : found.binding;
+    if (!found.unmapped && !mapped) {
+      throw new Error(
+        `drive: slot '${slotDef.figmaProp}' on entry '${entry.cemTag}' is malformed — needs mappedTo/binding or unmapped`
       );
     }
   }

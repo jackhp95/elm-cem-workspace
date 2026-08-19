@@ -395,6 +395,66 @@ function proposeProperty(prop, component) {
   };
 }
 
+// SLOT-typed Figma property → CEM slot binding proposal. SLOT is its own
+// first-class dimension (component-property.slots.json), not a `props[]`
+// catch-all case — see the two `match()` call sites below, which filter SLOT
+// out of the non-VARIANT property list before it ever reaches
+// proposeProperty(). Matching is a straight fuzzy value match of the Figma
+// slot name against the bound CEM component's NAMED slots (same
+// bestValueMatch() used for fusion/axis value matching elsewhere in this
+// file — no separate fuzzy-matching scheme), falling back to the CEM
+// component's unnamed DEFAULT slot (name:"") for a generic-content Figma
+// SLOT prop when no named slot matches — mirrors proposeProperty's own
+// TEXT→default-content-slot convention (evidence #10) for the analogous
+// SLOT case, e.g. a Dialog's "Content" SLOT prop has no CEM slot literally
+// named "content" but plainly belongs in the default slot.
+export function proposeSlot(prop, component) {
+  const cemSlotNames = component.slots.map((s) => s.name);
+  const namedSlotNames = cemSlotNames.filter((n) => n !== "");
+  const best = bestValueMatch(prop.name, namedSlotNames);
+  if (best) {
+    return {
+      property: prop.name,
+      type: prop.type,
+      mapped: true,
+      target: best.value,
+      method: best.method, // "exact" | "synonym" | "fuzzy" — threaded through for merge.mjs provenance
+      rationale: `SLOT '${prop.name}' → CEM slot '${best.value}' (${best.method} match)`,
+    };
+  }
+
+  // Generic-content fallback: a Figma SLOT prop whose name reads as
+  // general/default content (e.g. "Content", "Content (standard)") maps to
+  // the CEM component's unnamed default slot, when it has one — never
+  // silently left unmapped just because no NAMED slot happens to share the
+  // word "content".
+  if (/\bcontent\b/i.test(prop.name) && cemSlotNames.includes("")) {
+    return {
+      property: prop.name,
+      type: prop.type,
+      mapped: true,
+      target: "(default)",
+      // "fuzzy", not "exact": this is a regex-based generic-content heuristic
+      // (the Figma prop's name merely READS as generic content), not a
+      // verified name-identity match against a real CEM slot name — merge.mjs
+      // (buildSlots/slotProvenance) turns this into provenance:"auto-fuzzy",
+      // an honest "matched via heuristic" signal for the human reviewer
+      // (final-review finding #2 — 6 of 7 real m3-kit slot matches take this
+      // path and were previously mislabeled "auto-exact").
+      method: "fuzzy",
+      rationale: `SLOT '${prop.name}' → CEM default (unnamed) slot (generic-content name, no named slot counterpart)`,
+    };
+  }
+
+  return {
+    property: prop.name,
+    type: prop.type,
+    mapped: false,
+    reason: `no CEM slot matches Figma SLOT property '${prop.name}'`,
+    rationale: `SLOT '${prop.name}' unmapped: no CEM slot counterpart`,
+  };
+}
+
 // Bind each fused set's fixed `<value>` to a CEM enum attribute. Every sibling
 // value is fuzzed against every enum; the attribute the majority of siblings
 // agree on is the fusion axis. The bare `<Base>` set (value=null) takes the
@@ -802,15 +862,27 @@ export function match(cem, figma, matcherConfig) {
     if (component && (candidate.kind === "fusion" || candidate.kind === "contains")) {
       result.axisProposals = candidate.group.variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
       result.fusion = proposeFusionValues(candidate.group, component);
-      result.propertyProposals = candidate.group.nonVariantProps.map((p) => proposeProperty(p, component));
+      // SLOT is its own dimension (slots[]/slotProposals), not a props[]
+      // catch-all — split it out before calling proposeProperty().
+      const fusionSlotProps = candidate.group.nonVariantProps.filter((p) => p.type === "SLOT");
+      const fusionOtherProps = candidate.group.nonVariantProps.filter((p) => p.type !== "SLOT");
+      result.propertyProposals = fusionOtherProps.map((p) => proposeProperty(p, component));
+      result.slotProposals = fusionSlotProps.map((p) => proposeSlot(p, component));
     } else if (component && candidate.kind === "set" && candidate.set.properties) {
       const variantAxes = candidate.set.properties
         .filter((p) => p.type === "VARIANT")
         .map((p) => ({ name: p.displayName, options: p.variantOptions ?? [], defaultValue: p.defaultValue }));
       result.axisProposals = variantAxes.map((axis) => proposeAxis(axis, component, matcherConfig));
-      result.propertyProposals = candidate.set.properties
-        .filter((p) => p.type !== "VARIANT")
-        .map((p) => proposeProperty({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component));
+      // Same SLOT/other split as the fusion branch above.
+      const setNonVariantProps = candidate.set.properties.filter((p) => p.type !== "VARIANT");
+      const setSlotProps = setNonVariantProps.filter((p) => p.type === "SLOT");
+      const setOtherProps = setNonVariantProps.filter((p) => p.type !== "SLOT");
+      result.propertyProposals = setOtherProps.map((p) =>
+        proposeProperty({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component)
+      );
+      result.slotProposals = setSlotProps.map((p) =>
+        proposeSlot({ name: p.displayName, type: p.type, defaultValue: p.defaultValue }, component)
+      );
     }
 
     if (component && candidate.kind === "icon") {

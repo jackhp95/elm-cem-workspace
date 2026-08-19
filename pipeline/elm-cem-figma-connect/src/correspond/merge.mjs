@@ -145,6 +145,47 @@ function buildProps(candidate) {
   );
 }
 
+// method ("exact"|"synonym"|"fuzzy") -> per-slot provenance tier. Same
+// three-way subset of the entry-level provenance enum (see schema.json's
+// slots[].provenance $comment) — "synonym" folds into "auto-exact" since
+// bestValueMatch ranks it alongside exact for tie-breaking purposes.
+// proposeSlot's own default-slot fallback (matcher.mjs, generic-content
+// heuristic — "Content"/"Content (standard)" etc. with no named-slot match)
+// reports method:"fuzzy" (final-review finding #2: it's a regex-based name
+// heuristic, not a verified name-identity match, so it must NOT fold into
+// "auto-exact" the way a real name match does) — every method value
+// proposeSlot can produce is listed; an unrecognized one is a real bug
+// upstream, never silently mis-tiered.
+const SLOT_PROVENANCE = { exact: "auto-exact", synonym: "auto-exact", fuzzy: "auto-fuzzy" };
+
+function slotProvenance(method) {
+  const provenance = SLOT_PROVENANCE[method];
+  if (!provenance) {
+    throw new Error(
+      `buildSlots: unrecognized slot-match method '${method}' — expected one of ${Object.keys(SLOT_PROVENANCE).join(", ")} (proposeSlot/bestValueMatch contract violation)`
+    );
+  }
+  return provenance;
+}
+
+function buildSlots(candidate) {
+  return (candidate.slotProposals ?? []).map((slot) =>
+    slot.mapped
+      ? {
+          figmaSlotName: slot.property,
+          kind: "slot",
+          // Slot multiplicity is a documented gap, not an oversight: this
+          // package's CEM-facts input carries no slot-multiplicity data, so
+          // every slot is conservatively reported single (multi:false) until
+          // that data exists upstream.
+          multi: false,
+          mappedTo: slot.target,
+          provenance: slotProvenance(slot.method),
+        }
+      : { figmaSlotName: slot.property, kind: "slot", multi: false, unmapped: slot.reason, provenance: "auto-gap" }
+  );
+}
+
 function joinedRationale(candidate) {
   const parts = [...candidate.rationale];
   if (candidate.fusion?.rationale) parts.push(candidate.fusion.rationale);
@@ -152,12 +193,25 @@ function joinedRationale(candidate) {
 }
 
 function buildComponentEntry(candidate, nodeIndex) {
+  const slots = buildSlots(candidate);
   return {
     cemTag: candidate.cemTag,
     matcherKind: candidate.kind,
     figmaSets: buildFigmaSets(candidate, nodeIndex),
     axes: buildAxes(candidate),
     props: buildProps(candidate),
+    // `slots` is omitted entirely (rather than emitted as `[]`) when a
+    // candidate has no SLOT-typed Figma properties at all — unlike
+    // axes/props, which predate this field and are always arrays on every
+    // stored entry. The real m3-kit profile's checked-in correspondence.json
+    // was written before SLOT support existed and has ZERO `slots` fields;
+    // always emitting `slots: []` here would inject a new key into every
+    // confirmed/drifted entry's `proposedUpdate` (and non-protected
+    // entries' own top-level shape), breaking byte-stability against that
+    // committed file for a change that adds no real slot data (see A8
+    // tracer acceptance test). Schema.json's `slots` field is optional for
+    // exactly this reason.
+    ...(slots.length > 0 ? { slots } : {}),
     confidence: candidate.score,
     provenance: provenanceFor(candidate),
     rationale: joinedRationale(candidate),
@@ -265,6 +319,7 @@ const SUBSTANTIVE_FIELDS = [
   "figmaSets",
   "axes",
   "props",
+  "slots",
   "icons",
   "confidence",
   "rationale",

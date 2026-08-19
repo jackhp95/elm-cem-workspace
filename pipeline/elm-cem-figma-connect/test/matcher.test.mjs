@@ -15,7 +15,7 @@ import {
   bestValueMatch,
 } from "../src/match/normalize.mjs";
 import { detectFusionGroups } from "../src/match/fusion.mjs";
-import { match, proposeAxis, loadMatcherConfig } from "../src/match/matcher.mjs";
+import { match, proposeAxis, proposeSlot, loadMatcherConfig } from "../src/match/matcher.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const cem = loadCem(
@@ -423,6 +423,81 @@ test("matcher: button non-variant properties propose content / icon-slot binding
 
   // The Figma-only "Show focus indicator" boolean has no CEM counterpart.
   assert.equal(props["Show focus indicator"].mapped, false);
+
+  // SLOT-typed properties (Task 3: matcher — populate the slots dimension)
+  // are relocated OUT of propertyProposals entirely — they must never show
+  // up here, mapped or unmapped, regardless of whether a CEM counterpart
+  // exists. See the sibling slotProposals test below for where they land.
+  assert.equal(props["Trailing slot"], undefined);
+  assert.equal(props["Trailing icon"], undefined);
+});
+
+// -- Task 3: SLOT properties route to slotProposals, not propertyProposals --
+
+test("matcher: SLOT properties are routed to slotProposals, never propertyProposals", () => {
+  const btn = byTag("m3e-button");
+  const slotProps = Object.fromEntries(btn.slotProposals.map((s) => [s.property, s]));
+
+  // "Trailing icon" (fixture SLOT prop) exact-matches m3e-button's real
+  // "trailing-icon" CEM slot.
+  assert.ok(slotProps["Trailing icon"], "Trailing icon slot proposal present");
+  assert.equal(slotProps["Trailing icon"].mapped, true);
+  assert.equal(slotProps["Trailing icon"].target, "trailing-icon");
+  assert.equal(slotProps["Trailing icon"].method, "exact");
+
+  // "Trailing slot" (Task 1's original fixture SLOT prop) has no plausible
+  // counterpart among m3e-button's slots (["", "icon", "selected",
+  // "selected-icon", "trailing-icon"]) — stays unmapped with a reason.
+  assert.ok(slotProps["Trailing slot"], "Trailing slot slot proposal present");
+  assert.equal(slotProps["Trailing slot"].mapped, false);
+  assert.match(slotProps["Trailing slot"].reason, /no CEM slot matches/);
+
+  // Neither SLOT prop ever appears in propertyProposals — the relocation is
+  // total, not additive.
+  const propNames = btn.propertyProposals.map((p) => p.property);
+  assert.ok(!propNames.includes("Trailing slot"));
+  assert.ok(!propNames.includes("Trailing icon"));
+});
+
+// -- Final-review finding #2: proposeSlot's generic-content fallback must ---
+// -- report method:"fuzzy", not "exact" (an honest heuristic-match signal) --
+//
+// proposeSlot has two ways to land on a CEM slot: (1) a real name match
+// against a NAMED CEM slot (via bestValueMatch — genuinely "exact" when the
+// names are identical), and (2) a fallback for a generic-content-named Figma
+// SLOT prop ("Content", "Content (standard)", ...) with NO named-slot
+// counterpart, which maps to the CEM component's unnamed default slot purely
+// because the prop's name reads as "content" — a regex heuristic, not a
+// verified name-identity match. Before this fix the fallback reported
+// method:"exact", which merge.mjs's buildSlots turned into the same
+// provenance:"auto-exact" tier as a real name match — mislabeling 6 of 7
+// currently-mapped real m3-kit slots (they all take this fallback path).
+
+test("matcher (final-review finding #2): proposeSlot's generic-content default-slot fallback reports method:'fuzzy', not 'exact'", () => {
+  // No named CEM slot matches "Content (standard)" at all — only the fallback
+  // (regex /\bcontent\b/i + a default slot) can bind it.
+  const component = { tag: "m3e-fake-toolbar", slots: [{ name: "" }, { name: "leading" }] };
+  const prop = { name: "Content (standard)", type: "SLOT" };
+
+  const proposal = proposeSlot(prop, component);
+
+  assert.equal(proposal.mapped, true);
+  assert.equal(proposal.target, "(default)");
+  assert.equal(proposal.method, "fuzzy", "generic-content fallback is a heuristic match, not a verified exact name match");
+});
+
+test("matcher (final-review finding #2): a real named-slot exact match (e.g. m3e-card's Content -> content) still reports method:'exact'", () => {
+  // A genuinely name-identical CEM slot must still win via the real
+  // exact-match path above the fallback — the fix must not downgrade this
+  // case too.
+  const component = { tag: "m3e-fake-card", slots: [{ name: "" }, { name: "content" }] };
+  const prop = { name: "Content", type: "SLOT" };
+
+  const proposal = proposeSlot(prop, component);
+
+  assert.equal(proposal.mapped, true);
+  assert.equal(proposal.target, "content");
+  assert.equal(proposal.method, "exact", "a real named-slot name match must stay 'exact', not be downgraded by the fallback fix");
 });
 
 // -- RC2: INSTANCE_SWAP icon → DEFAULT (unnamed) slot -----------------------

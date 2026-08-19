@@ -70,6 +70,25 @@ test("loadFigmaExport: button main set (57994:2227) exposes its captured propert
   assert.equal(textProps[0].rawName, "Label text#58653:0");
 });
 
+test("loadFigmaExport: button main set (57994:2227) includes SLOT properties with correct displayName", () => {
+  const buttonSet = loaded.sets.find((s) => s.id === "57994:2227");
+  assert.ok(buttonSet.properties, "button main set has captured setProperties");
+
+  // Two SLOT properties on this fixture set (task 3, matcher-slot-support):
+  // "Trailing slot" (Task 1's original addition, no plausible CEM slot
+  // counterpart) and "Trailing icon" (Task 3's addition, exact-matches
+  // m3e-button's real "trailing-icon" CEM slot) — together exercising both
+  // the mapped and unmapped slot-matching branches in the matcher tests.
+  const slotProps = buttonSet.properties.filter((p) => p.type === "SLOT");
+  assert.equal(slotProps.length, 2, "exactly two SLOT properties");
+
+  const bySlot = Object.fromEntries(slotProps.map((p) => [p.displayName, p]));
+  assert.equal(bySlot["Trailing slot"].rawName, "Trailing slot#58653:150", "SLOT rawName is the original Figma name");
+  assert.equal(bySlot["Trailing slot"].type, "SLOT", "SLOT type is preserved");
+  assert.equal(bySlot["Trailing icon"].rawName, "Trailing icon#58653:151", "SLOT rawName is the original Figma name");
+  assert.equal(bySlot["Trailing icon"].type, "SLOT", "SLOT type is preserved");
+});
+
 test("displayNameOf: strips the Figma '#nodeId' suffix from non-variant property names", () => {
   assert.equal(displayNameOf("Label text#58653:0"), "Label text");
   assert.equal(displayNameOf("Show icon#58653:51"), "Show icon");

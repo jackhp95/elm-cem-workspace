@@ -46222,6 +46222,16 @@
           "Pressed",
           "Disabled"
         ]
+      },
+      {
+        "name": "Trailing slot#58653:150",
+        "type": "SLOT",
+        "defaultValue": ""
+      },
+      {
+        "name": "Trailing icon#58653:151",
+        "type": "SLOT",
+        "defaultValue": ""
       }
     ],
     "58650:9294": [
