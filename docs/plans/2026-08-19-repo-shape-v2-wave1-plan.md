@@ -618,7 +618,7 @@ and the m3e outputs (Tasks 2–5) do **not** reference these relatively and are 
 - `core/elm-typed-html` → `brands/html/generated/package/elm-typed-html`
 - `core/elm-typed-html/config/config.json` → `brands/html/inputs/config.json`
 
-- [ ] **Step 1.1: Create parents + move machinery to `pipeline/`**
+- [x] **Step 1.1: Create parents + move machinery to `pipeline/`**
 
 ```bash
 mkdir -p pipeline packages
@@ -628,14 +628,14 @@ git mv core/elm-review-cem pipeline/elm-review-cem
 git mv core/cem-figma-connect pipeline/elm-cem-figma-connect   # move + rename (spec decision #2)
 ```
 
-- [ ] **Step 1.2: Extract the two foundational libs to top-level `packages/`**
+- [x] **Step 1.2: Extract the two foundational libs to top-level `packages/`**
 
 ```bash
 git mv core/elm-html-intermediate-representation packages/elm-virtual-dom-intermediate-representation   # move + rename (IR)
 git mv core/tonal-palette-oklch packages/tonal-palette-oklch
 ```
 
-- [ ] **Step 1.3: Rename + retarget the `elm-cem` IR symlink (finding S #1)**
+- [x] **Step 1.3: Rename + retarget the `elm-cem` IR symlink (finding S #1)**
 
 The symlink is **renamed AND retargeted** (resolved 2026-08-19, full local rename — no old name
 survives). Delete the old-named symlink, create the new-named one pointing at the renamed package dir.
@@ -650,7 +650,7 @@ git add pipeline/elm-cem/elm-virtual-dom-intermediate-representation
 grep -rn "elm-html-intermediate-representation" pipeline/elm-cem --include=elm.json && echo "FIX these" || echo "clean"
 ```
 
-- [ ] **Step 1.4: Relocate the html brand**
+- [x] **Step 1.4: Relocate the html brand**
 
 ```bash
 mkdir -p brands/html/generated/package brands/html/inputs
@@ -665,7 +665,7 @@ Note per spec decision #8 and the research spec §3: `elm-typed-html`'s CEM mani
 to place under `brands/html/inputs/`; do not invent one. `brands/html/inputs/` holds only
 `config.json`.
 
-- [ ] **Step 1.5: `core/` should now be empty except `tailwind-md3`**
+- [x] **Step 1.5: `core/` should now be empty except `tailwind-md3`**
 
 ```bash
 ls core/   # expect only: tailwind-md3
@@ -673,7 +673,7 @@ ls core/   # expect only: tailwind-md3
 
 Leave `tailwind-md3` in `core/` — Task 2 renames+moves it and removes the empty `core/`.
 
-- [ ] **Step 1.6: `pnpm-workspace.yaml` — flip the IR-exclusion glob**
+- [x] **Step 1.6: `pnpm-workspace.yaml` — flip the IR-exclusion glob**
 
 Change `!core/*/elm-html-intermediate-representation` → `!pipeline/*/elm-virtual-dom-intermediate-representation`
 (both segments change: `core`→`pipeline` **and** the alias name, since the symlink is renamed in Step 1.3).
@@ -681,7 +681,7 @@ The glob must match the **renamed symlink alias**, not the renamed package dir. 
 `brands/*/outputs/*` globs still stand — `tailwind-md3` + the m3e outputs still live under them until
 Tasks 2–5.)
 
-- [ ] **Step 1.7: Fix all `tools/*` files with `core/`→`pipeline/`/`packages/` refs**
+- [x] **Step 1.7: Fix all `tools/*` files with `core/`→`pipeline/`/`packages/` refs**
 
 Apply every **Task 1** entry from findings A–R above (and **finding A2** below, for the rename-identity
 edits), file by file, using the exact current strings cited: `family.json` (elm-cem, elm-cem-compose,
@@ -693,7 +693,7 @@ L268), `check-drift.mjs` (L90), `bump.mjs` (L27–28, L43–44), `gen-hooks.mjs`
 `check-emit-determinism-cfc.mjs` (L39), `check-single-cem-facts.mjs` (L86–88), `lib/regen.mjs` (L34),
 `install-toolchains.mjs` (L54).
 
-- [ ] **Step 1.7b: Apply the rename-identity edits (finding A2)**
+- [x] **Step 1.7b: Apply the rename-identity edits (finding A2)**
 
 The two renames change package *identity*, not just paths:
 - `core/cem-figma-connect/package.json` `"name": "cem-figma-connect"` → `"elm-cem-figma-connect"`
@@ -706,7 +706,7 @@ The two renames change package *identity*, not just paths:
   hits** should remain (the symlink alias is now renamed too, Step 1.3; only Task-4 dependents may still
   carry the old published name until Task 4).
 
-- [ ] **Step 1.7c: Apply the rename-identity table-key + step-name edits (finding A3)**
+- [x] **Step 1.7c: Apply the rename-identity table-key + step-name edits (finding A3)**
 
 Full-rename policy (resolved 2026-08-19 — no old name survives locally). Apply every **cfc** and **IR**
 row from **finding A3**:
@@ -743,7 +743,7 @@ row from **finding A3**:
   identities (`publish-mirror-state.json:28` key, `snapshot-refs.json:8` `repo` URL value). Anything else
   is a missed functional hit — fix before committing.
 
-- [ ] **Step 1.7d: Rename the facts-bundle coverage-audit consumer identifiers (finding A3, resolved 2026-08-19 — was an open flag)**
+- [x] **Step 1.7d: Rename the facts-bundle coverage-audit consumer identifiers (finding A3, resolved 2026-08-19 — was an open flag)**
 
 `tools/check-coverage-map.mjs` is a **gate-all step** (`gate-all.mjs:403`, `gate-all-expected-steps.json:24`
 `"workspace: check-coverage-map"`). Its `REQUIRED_CONSUMERS` array (L33–38) is the closed set every
@@ -796,7 +796,7 @@ only coverage-map.json's `consumer` values + schema.json's *structure*, never th
 Same three substring rules; batched to **Task 6** (cosmetic "no whiff" sweep, finding V) — none are
 gate-read, so they cannot break a gate, but they rename for consistency.
 
-- [ ] **Step 1.7e: Rename the two cfc `copyFidelity` bookkeeping entries in `family.json` (finding A3 — resolved 2026-08-19, MIRROR-COUPLED, flag surfaced)**
+- [x] **Step 1.7e: Rename the two cfc `copyFidelity` bookkeeping entries in `family.json` (finding A3 — resolved 2026-08-19, MIRROR-COUPLED, flag surfaced)**
 
 Both entries live in `family.json`'s `cem-figma-connect`→`elm-cem-figma-connect` `copyFidelity` block and
 describe **files in the external cfc mirror snapshot** (the source that `copy-fidelity.mjs:115,119`
@@ -826,7 +826,7 @@ physical counterparts in the mirror** (same lockstep discipline as the IR `publi
 This is the honest resolution of Jack's "rename everything local, no whiff" directive against the standing
 mirror exception: the local family.json string renames now; the coupled external rename is paired.
 
-- [ ] **Step 1.8: Fix `elm-typed-html` internal cross-boundary refs (finding T)**
+- [x] **Step 1.8: Fix `elm-typed-html` internal cross-boundary refs (finding T)**
 
 `brands/html/generated/package/elm-typed-html/scripts/regen.sh` (L7 `ELM_CEM_BIN` default +
 the `--config-from` arg now pointing at `brands/html/inputs/config.json`), `scripts/validate.mjs`
@@ -835,13 +835,13 @@ the `--config-from` arg now pointing at `brands/html/inputs/config.json`), `scri
 from the package root the arg becomes `--config-from="$REPO_ROOT/../../../inputs/config.json"`
 (3 up from `brands/html/generated/package/elm-typed-html` to `brands/html`, then `inputs/config.json`).
 
-- [ ] **Step 1.9: Fix `elm-cem`'s test `elm.json` IR refs (finding T)**
+- [x] **Step 1.9: Fix `elm-cem`'s test `elm.json` IR refs (finding T)**
 
 `pipeline/elm-cem/tests/phantom/native/acid/elm.json` L7 (+1 `../` → `packages/`),
 `pipeline/elm-cem/tests/phantom/acid/elm.json` L7 (+1 `../` → `packages/`). Re-grep
 `pipeline/elm-cem` for any other `elm-html-intermediate-representation` relative ref and fix.
 
-- [ ] **Step 1.10: Reinstall + run the gate; iterate on failures**
+- [x] **Step 1.10: Reinstall + run the gate; iterate on failures**
 
 ```bash
 pnpm install && node tools/gate-all.mjs
@@ -852,7 +852,7 @@ load-bearing comment). A wrong relative path throws `MODULE_NOT_FOUND`/`ENOENT` 
 Read `FAILED ITEMS`, patch forward, re-run until `GATE-ALL GREEN` (modulo the pre-existing
 known-unrelated failure from Task 0's baseline).
 
-- [ ] **Step 1.11: Commit**
+- [x] **Step 1.11: Commit**
 
 ```bash
 git add -A

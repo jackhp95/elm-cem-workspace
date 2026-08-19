@@ -39,7 +39,7 @@ SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
 # elm-cem's reference advanced to latest main (D-041) — see .cache/snapshots via
 # tools/fetch-snapshots.mjs.
 PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$REPO_ROOT/.cache/snapshots/elm-cem}"
-WORKSPACE_ELM_CEM="$REPO_ROOT/core/elm-cem"
+WORKSPACE_ELM_CEM="$REPO_ROOT/pipeline/elm-cem"
 ELM_M3E="${ELM_M3E:-$REPO_ROOT/brands/m3e/outputs/elm-m3e}"
 
 require_snapshot_or_skip "ab-elm-m3e-split" "$PRISTINE_ELM_CEM" "PRISTINE_ELM_CEM"

@@ -5,5 +5,5 @@
   "elm-m3e": { "repo": "https://github.com/jackhp95/elm-m3e.git", "sha": "e1bde0340e9d82360fd4f2fc7a7d5fc65b0a2947" },
   "m3e-okf": { "repo": "https://github.com/jackhp95/m3e-okf.git", "sha": "8275e261912065ebfdb6083c19e6859b72c9e8f2" },
   "tailwind-m3e-web": { "repo": "https://github.com/jackhp95/tailwind-m3e-web.git", "sha": "a3414c3ecbfeaaa0df214228f5ac9888bb5af187" },
-  "cem-figma-connect": { "repo": "https://github.com/jackhp95/cem-figma-connect.git", "sha": "6294992051b1d90bfedddb6fd633007a89ce7e5e" }
+  "elm-cem-figma-connect": { "repo": "https://github.com/jackhp95/cem-figma-connect.git", "sha": "6294992051b1d90bfedddb6fd633007a89ce7e5e" }
 }

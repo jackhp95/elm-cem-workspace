@@ -84,9 +84,9 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const SEARCH_ROOTS = [
-    join(repoRoot, "core"),
+    join(repoRoot, "pipeline"),
     join(repoRoot, "brands"),
-    join(repoRoot, "packages", "_probe"),
+    join(repoRoot, "packages"),
 ];
 const SKIP_DIRS = new Set(["node_modules", "elm-stuff", ".git"]);
 const MODULE_PATH = join("Cem", "Facts.elm");

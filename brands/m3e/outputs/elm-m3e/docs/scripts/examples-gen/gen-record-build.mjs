@@ -83,7 +83,7 @@ function runRule(items, { imports, ruleExpr, key }) {
   writeReviewConfig(cfgDir, {
     reviewSrcDir: `${REPO}/review/src`,
     reviewElm,
-    extraSourceDirs: [`${REPO}/src`, `${REPO}/../../../../core/elm-review-cem/src`],
+    extraSourceDirs: [`${REPO}/src`, `${REPO}/../../../../pipeline/elm-review-cem/src`],
     reviewConfigElm: `module ReviewConfig exposing (config)
 
 ${imports.join("\n")}

@@ -73,9 +73,9 @@ const ELM = resolveElm();
 
 // ---- family-internal deps get vendored from source, not fetched --------------
 const FAMILY_SRC = {
-  "jackhp95/elm-html-intermediate-representation":
-    process.env.IR_SRC || path.join(ROOT, "core/elm-html-intermediate-representation/src"),
-  "jackhp95/elm-cem-facts": process.env.FACTS_SRC || path.join(ROOT, "core/elm-cem/facts/src"),
+  "jackhp95/elm-virtual-dom-intermediate-representation":
+    process.env.IR_SRC || path.join(ROOT, "packages/elm-virtual-dom-intermediate-representation/src"),
+  "jackhp95/elm-cem-facts": process.env.FACTS_SRC || path.join(ROOT, "pipeline/elm-cem/facts/src"),
 };
 
 const DEFAULT_TARGETS = ["brands/m3e/outputs/elm-m3e/elm-m3e-icons"];

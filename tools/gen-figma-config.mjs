@@ -43,7 +43,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const cfcDir = path.join(repoRoot, "core", "cem-figma-connect");
+const cfcDir = path.join(repoRoot, "pipeline", "elm-cem-figma-connect");
 const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "inputs", "cem", "config");
 
 function readJson(p) {

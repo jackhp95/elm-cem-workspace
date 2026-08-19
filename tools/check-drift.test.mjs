@@ -125,7 +125,7 @@ function cacheAbsentSkipReason(descriptor) {
     return false;
 }
 
-for (const key of ["cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
+for (const key of ["elm-cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
     const descriptor = descriptorsByKey[key];
     const skip = cacheAbsentSkipReason(descriptor);
 

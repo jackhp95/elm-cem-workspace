@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "$comment": "Machine-readable coverage map for the facts-bundle audit (docs/facts-bundle/coverage-audit.md). One entry per field a consumer reads today, cited to file:line in the consumer's own repo. `bundleField` uses dotted paths into docs/facts-bundle/schema.json, where `[]` steps into an array's items and `{}` steps into an object map's additionalProperties. Verified by tools/check-coverage-map.mjs. Repo states audited: m3e-okf 8275e26, tailwind-m3e-web e4f9767, cem-figma-connect 6294992, elm-cem in-workspace at packages/elm-cem.",
+  "$comment": "Machine-readable coverage map for the facts-bundle audit (docs/facts-bundle/coverage-audit.md). One entry per field a consumer reads today, cited to file:line in the consumer's own repo. `bundleField` uses dotted paths into docs/facts-bundle/schema.json, where `[]` steps into an array's items and `{}` steps into an object map's additionalProperties. Verified by tools/check-coverage-map.mjs. Repo states audited: elm-m3e-okf 8275e26, elm-m3e-tailwind e4f9767, elm-cem-figma-connect 6294992, elm-cem in-workspace at packages/elm-cem.",
   "entries": [
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 29,
       "field": "JSON.parse(fs.readFileSync(CEM)) \u2014 the whole @m3e/web dist/custom-elements.json",
@@ -13,7 +13,7 @@
       "note": "The parse itself is what Face B replaces: extract.mjs reads the bundle's component array instead of a manifest cloned into .cache/m3e."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 67,
       "field": "modules[].exports[].kind === 'custom-element-definition'",
@@ -23,7 +23,7 @@
       "note": "Registration-export scan (the hand-ported reconcileTagNames). Face B is emitted post-reconciliation, so the scan is deleted; the count is published for reporting."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 68,
       "field": "exports[].name \u2014 the authoritative registration tag",
@@ -33,7 +33,7 @@
       "note": "faceB.components[].tag IS the registration tag; `authoritativeTag()` disappears."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 70,
       "field": "exports[].declaration.name / .module (findDeclaration)",
@@ -43,7 +43,7 @@
       "note": "Also faceB.tagReconciliation.mismatches[].declarationModule. Only needed to REPORT a mismatch now \u2014 the resolution has already happened in the producer."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 73,
       "field": "decl.tagName (compared against the registration tag)",
@@ -53,7 +53,7 @@
       "note": "The wrong jsdoc tag is published so the CEM-TAG-MISMATCH row survives without re-reading the CEM."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 76,
       "field": "findings kind 'CEM-TAG-MISMATCH' (dir/attr/detail)",
@@ -63,7 +63,7 @@
       "note": "1 occurrence at okf's pinned SHA (data/report.md). The finding is rendered from the published mismatch list; the detection code is deleted."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 92,
       "field": "modules[].path",
@@ -72,7 +72,7 @@
       "bundleField": "faceB.components[].modulePath"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 95,
       "field": "module path segment [1] \u2014 the component directory used as the card key",
@@ -81,7 +81,7 @@
       "bundleField": "faceB.components[].componentDir"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 99,
       "field": "decl.customElement",
@@ -91,7 +91,7 @@
       "note": "Face B contains only custom-element class declarations, so the predicate is implicit in membership; declarationName preserves the class identity the filter was applied to."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 123,
       "field": "node.parsedType.text || node.type.text (typeOf)",
@@ -101,7 +101,7 @@
       "note": "faceB.components[].attributes[].type.parsed keeps the analyzer's own parsedType separately, so the 'prefer parsedType' preference is already applied in `resolved` but still inspectable."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 132,
       "field": "isOpaqueAlias(type) \u2014 detecting an un-inlined imported alias",
@@ -111,17 +111,17 @@
       "note": "With type.aliasName + type.source, 'was this an alias and did it resolve?' is read, not regex-inferred."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 136,
       "field": "isLiteralUnion(readmeType) \u2014 README literal-union fallback for an unresolved alias",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "The fallback's INPUT is a README table, not the CEM, so it cannot be a bundle fact. Measured to be dead at the pinned SHA: data/components.json has typeSource cem=525, ts=19, readme=0. It stays in m3e-okf's README layer as a last-resort, and the bundle's type.source lets okf assert it never fires."
+      "note": "The fallback's INPUT is a README table, not the CEM, so it cannot be a bundle fact. Measured to be dead at the pinned SHA: data/components.json has typeSource cem=525, ts=19, readme=0. It stays in elm-m3e-okf's README layer as a last-resort, and the bundle's type.source lets okf assert it never fires."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 150,
       "field": "buildAliasMap \u2014 `export type X = \"a\" | \"b\";` scanned across packages/web/src/**/*.ts",
@@ -131,7 +131,7 @@
       "note": "The producer resolves the same aliases from the package's shipped .d.ts tree and publishes them. Verified equivalent for the cases okf actually uses: on the 2.7.0 fixture the .d.ts scan yields 87 aliases including FormSubmitterType = \"button\" | \"submit\" | \"reset\", which is exactly the alias behind okf's 8 `type` attributes. See the audit's \u00a7Risk 2 for the LinkTarget difference."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 155,
       "field": "`(string & {})` \u2192 `string` normalisation inside the alias body",
@@ -141,7 +141,7 @@
       "note": "The FACT okf needs is 'this union admits values outside the listed members' \u2014 published as enum.open (and aliases[].closed). The textual substitution stays okf-side presentation."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 474,
       "field": "decl.attributes[]",
@@ -150,7 +150,7 @@
       "bundleField": "faceB.components[].attributes"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 491,
       "field": "attributes[].name",
@@ -159,7 +159,7 @@
       "bundleField": "faceB.components[].attributes[].name"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 491,
       "field": "attributes[].default",
@@ -169,7 +169,7 @@
       "note": "Published VERBATIM including the CEM's surrounding quotes, which is what verify()'s norm()/blank() comparison expects."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 491,
       "field": "attributes[].description",
@@ -178,7 +178,7 @@
       "bundleField": "faceB.components[].attributes[].description"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 491,
       "field": "typeSource ('cem' | 'ts' | 'readme') \u2014 the emitted provenance of the type",
@@ -188,7 +188,7 @@
       "note": "Bundle vocabulary is cem | cem-parsedType | dts-alias | ts-source | config; okf's three-value field is a projection of it."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 495,
       "field": "navigable \u2014 derived from the presence of an `href` attribute",
@@ -198,27 +198,27 @@
       "note": "A one-line predicate over the bundle's attribute list; 13 elements at the pinned SHA. Stays okf-side as a derived catalog field."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 498,
       "field": "display \u2014 the resting `display` parsed from each element's `:host { }` block in the upstream TypeScript sources",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "NOT a CEM fact and NOT a .d.ts fact: hostDisplayFrom() (lines 219-234) reads `css` template literals in packages/web/src/**/*.ts, chasing relative style barrels and same-dir base classes (relatedTsFiles, lines 197-210). elm-cem never reads element CSS, so the producer cannot know it. 116/116 elements in data/components.json carry a display value, so this is load-bearing: m3e-okf keeps a TypeScript-source layer for it. This is the single largest honest gap in the audit \u2014 see the audit's \u00a75.3. It does NOT block dropping the CEM parser."
+      "note": "NOT a CEM fact and NOT a .d.ts fact: hostDisplayFrom() (lines 219-234) reads `css` template literals in packages/web/src/**/*.ts, chasing relative style barrels and same-dir base classes (relatedTsFiles, lines 197-210). elm-cem never reads element CSS, so the producer cannot know it. 116/116 elements in data/components.json carry a display value, so this is load-bearing: elm-m3e-okf keeps a TypeScript-source layer for it. This is the single largest honest gap in the audit \u2014 see the audit's \u00a75.3. It does NOT block dropping the CEM parser."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 238,
       "field": "DISPLAY_OVERLAY (data/display-overlay.json) \u2014 hand-authored display for elements whose :host lives behind a non-relative base class",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "Hand-authored m3e-okf data with no upstream machine source at all. Stays a repo-local overlay; the bundle has nothing to say about it."
+      "note": "Hand-authored elm-m3e-okf data with no upstream machine source at all. Stays a repo-local overlay; the bundle has nothing to say about it."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 501,
       "field": "decl.description (first line \u2192 element summary)",
@@ -228,7 +228,7 @@
       "note": "faceB.components[].description carries the full text; summary is the precomputed first line."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 493,
       "field": "sourceFile = `packages/web/${modulePath}`",
@@ -237,7 +237,7 @@
       "bundleField": "faceB.components[].sourceFile"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 292,
       "field": "decl.attributes[].fieldName || .name \u2014 the attribute-backed field set used to exclude reflected props",
@@ -246,7 +246,7 @@
       "bundleField": "faceB.components[].attributes[].fieldName"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 295,
       "field": "decl.members[].kind === 'field'",
@@ -255,7 +255,7 @@
       "bundleField": "faceB.components[].properties[].kind"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 296,
       "field": "decl.members[].privacy",
@@ -264,7 +264,7 @@
       "bundleField": "faceB.components[].properties[].privacy"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 297,
       "field": "decl.members[].name (and the leading-underscore filter)",
@@ -273,7 +273,7 @@
       "bundleField": "faceB.components[].properties[].name"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 300,
       "field": "decl.members[].attribute \u2014 whether the field reflects a content attribute",
@@ -282,7 +282,7 @@
       "bundleField": "faceB.components[].properties[].attribute"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 301,
       "field": "decl.members[].description (required, to drop internal noise)",
@@ -291,7 +291,7 @@
       "bundleField": "faceB.components[].properties[].description"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 306,
       "field": "typeOf(member) \u2014 the member's resolved type",
@@ -301,7 +301,7 @@
       "note": "331 properties emitted at the pinned SHA, so the members surface is real, not theoretical. Alias inlining applies to member types too (the producer's visit() rewrites every `type.text` in the tree)."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 307,
       "field": "decl.members[].default",
@@ -310,7 +310,7 @@
       "bundleField": "faceB.components[].properties[].default"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 308,
       "field": "decl.members[].readonly",
@@ -319,7 +319,7 @@
       "bundleField": "faceB.components[].properties[].readonly"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 507,
       "field": "decl.slots[].name (rendered as '(default)' when empty)",
@@ -329,7 +329,7 @@
       "note": "Face B publishes the slot name verbatim (empty string for the default slot); the '(default)' label is okf-side presentation."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 507,
       "field": "decl.slots[].description",
@@ -338,7 +338,7 @@
       "bundleField": "faceB.components[].slots[].description"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 511,
       "field": "decl.events[] filtered to those with a resolvable name",
@@ -348,7 +348,7 @@
       "note": "The producer drops nameless analyzer artefacts, so the consumer-side filter goes away (schema: faceBEvent requires `name`)."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 513,
       "field": "decl.events[].type (via typeOf) and .description",
@@ -358,7 +358,7 @@
       "note": "Description is faceB.components[].events[].description."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 514,
       "field": "decl.cssProperties[]",
@@ -367,7 +367,7 @@
       "bundleField": "faceB.components[].cssProperties"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 333,
       "field": "cssProperties[].name / .description (inside summarizeCssProps)",
@@ -377,17 +377,17 @@
       "note": "Description is faceB.components[].cssProperties[].description."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 317,
       "field": "summarizeCssProps \u2014 collapsing var names into [size]/[variant] families",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "A presentation summariser over bundle data (its inputs \u2014 name and description \u2014 are mapped above). The SIZE/VARIANT token sets and the 'text is ambiguous' exclusion are m3e-okf editorial choices about card rendering, not facts about @m3e/web, and tailwind-m3e-web deliberately groups the same vars differently. Keeping it out of the bundle avoids freezing one consumer's taxonomy into the shared artifact."
+      "note": "A presentation summariser over bundle data (its inputs \u2014 name and description \u2014 are mapped above). The SIZE/VARIANT token sets and the 'text is ambiguous' exclusion are elm-m3e-okf editorial choices about card rendering, not facts about @m3e/web, and elm-m3e-tailwind deliberately groups the same vars differently. Keeping it out of the bundle avoids freezing one consumer's taxonomy into the shared artifact."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 515,
       "field": "decl.cssParts[].name / .description",
@@ -397,7 +397,7 @@
       "note": "Description is faceB.components[].cssParts[].description. Zero cssParts at the pinned SHA (measured over data/components.json), so this is a schema-completeness mapping rather than a live dependency \u2014 the field must still exist or the parser cannot be deleted."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 111,
       "field": "PINNED_SHA \u2014 matraic/m3e HEAD read out of .cache/m3e/.git/HEAD",
@@ -407,7 +407,7 @@
       "note": "Replaces both the .git/HEAD read and data/sources.json's `sha` (a2844143\u2026 today). The stamp carries the npm version alongside it so a SHA pin and a semver pin become comparable."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 548,
       "field": "sources.json sourceFiles \u2014 every module path for a component dir",
@@ -417,27 +417,27 @@
       "note": "Grouped by faceB.components[].componentDir, this reproduces the per-dir file list exactly."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 547,
       "field": "sources.json readme \u2014 `packages/web/src/<dir>/README.md` when it exists",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "README existence/paths are facts about the upstream CLONE, not about the manifest. m3e-okf keeps its upstream-clone layer for README prose; the bundle deliberately says nothing about non-published source files."
+      "note": "README existence/paths are facts about the upstream CLONE, not about the manifest. elm-m3e-okf keeps its upstream-clone layer for README prose; the bundle deliberately says nothing about non-published source files."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 470,
       "field": "src/<dir>/README.md \u2014 description, import snippet, html examples, element list, pipe tables",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "README prose is upstream documentation, not manifest data, and the fidelity rule (extract.mjs lines 3-6) exists precisely because it is NOT ground truth. It stays m3e-okf's own layer; 78 examples and every card description come from it."
+      "note": "README prose is upstream documentation, not manifest data, and the fidelity rule (extract.mjs lines 3-6) exists precisely because it is NOT ground truth. It stays elm-m3e-okf's own layer; 78 examples and every card description come from it."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 432,
       "field": "verify(): cemAttrs.get(name).default \u2014 the CEM default a README default is checked against",
@@ -447,7 +447,7 @@
       "note": "The CEM half of the drift check is a bundle read; only the README half stays local."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 449,
       "field": "verify(): the CEM attribute NAME set (for 'in CEM, not in README')",
@@ -456,17 +456,17 @@
       "bundleField": "faceB.components[].attributes[].name"
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 407,
       "field": "README-vs-code drift PROVENANCE \u2014 the report.md finding kinds DEFAULT-MISMATCH, DEFAULT-UNDOCUMENTED, UNDOCUMENTED, README-only, EXAMPLE-DRIFT",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "Stays a THIN LAYER OVER the bundle, deliberately. Every input on the CEM side is a mapped bundle field (attributes[].name, attributes[].default, tag, slots[].name); the other input is README markdown, which is m3e-okf-specific and not a bundle fact. Putting the findings IN the bundle would force the producer to parse an upstream README it does not otherwise read, and would make one consumer's editorial policy (which mismatches are soft vs hard, blank-vs-em-dash handling, which tables count as Attribute tables) a shared fact. Measured at okf's pinned SHA: DEFAULT-UNDOCUMENTED 41, UNDOCUMENTED 44, DEFAULT-MISMATCH 11, CEM-TAG-MISMATCH 1 (data/report.md) \u2014 all still computable post-migration."
+      "note": "Stays a THIN LAYER OVER the bundle, deliberately. Every input on the CEM side is a mapped bundle field (attributes[].name, attributes[].default, tag, slots[].name); the other input is README markdown, which is elm-m3e-okf-specific and not a bundle fact. Putting the findings IN the bundle would force the producer to parse an upstream README it does not otherwise read, and would make one consumer's editorial policy (which mismatches are soft vs hard, blank-vs-em-dash handling, which tables count as Attribute tables) a shared fact. Measured at okf's pinned SHA: DEFAULT-UNDOCUMENTED 41, UNDOCUMENTED 44, DEFAULT-MISMATCH 11, CEM-TAG-MISMATCH 1 (data/report.md) \u2014 all still computable post-migration."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 566,
       "field": "buildGroundTruth(components) \u2014 the tag/attribute/slot ground truth README examples are validated against",
@@ -476,7 +476,7 @@
       "note": "Ground truth is built from okf's own already-bundle-derived component records (tags, attributes[].name, slots[].name), so validate-markup.mjs needs no CEM access of its own."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 571,
       "field": "EXAMPLE-DRIFT findings for README markup that contradicts ground truth",
@@ -486,7 +486,7 @@
       "note": "Same reasoning as the provenance layer above: the ground truth is bundle-derived, but the examples being validated are README markup, so the finding can only be produced by the consumer that reads the README."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 527,
       "field": "primaryTag \u2014 `m3e-${dir}` if present, else the first element of the dir",
@@ -496,7 +496,7 @@
       "note": "Computed from componentDir + tag over the bundle's component list."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 530,
       "field": "import fallback `import \"@m3e/web/<dir>\";`",
@@ -506,7 +506,7 @@
       "note": "The package name comes from the stamp instead of being hardcoded; the subpath is componentDir."
     },
     {
-      "consumer": "m3e-okf",
+      "consumer": "elm-m3e-okf",
       "sourceFile": "scripts/extract.mjs",
       "sourceLine": 268,
       "field": "HOST_CONTRACT_OVERLAY (data/host-contract-overlay.json) \u2014 hand-authored composition contracts",
@@ -516,7 +516,7 @@
       "note": "Hand-authored editorial content with no upstream machine source (2 components at the pinned SHA). Stays a repo-local overlay."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 32,
       "field": "MANIFEST_PATH \u2014 node_modules/@m3e/web/dist/custom-elements.json",
@@ -526,7 +526,7 @@
       "note": "The stale-install problem disappears with the manifest read: package.json declares ^2.5.14 but the installed tree measured here is 2.5.11, and 2.5.11's dist ships NO .d.ts at all (0 files) \u2014 so the version actually generated from becomes an asserted stamp field instead of an implicit property of whatever pnpm resolved."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 129,
       "field": "manifest.modules[] / mod.declarations[]",
@@ -535,7 +535,7 @@
       "bundleField": "faceB.components"
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 131,
       "field": "decl.kind === 'class' && decl.cssProperties?.length",
@@ -545,7 +545,7 @@
       "note": "Face B contains only custom-element class declarations, so the kind test is implicit; the emptiness test becomes `cssProperties.length`."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 132,
       "field": "decl.tagName || decl.name \u2014 the grouping key for the per-component doc",
@@ -555,7 +555,7 @@
       "note": "This is a RAW, unreconciled tagName: today the doc mislabels the two declarations whose jsdoc tag collides with a sibling's. faceB.components[].tag is the registration tag, and faceB.components[].declarationName covers the `|| decl.name` fallback (inert in practice \u2014 0 class declarations with cssProperties lack a tagName in the 2.7.0 manifest)."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 133,
       "field": "decl.description \u2014 the per-component section blurb",
@@ -564,7 +564,7 @@
       "bundleField": "faceB.components[].description"
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 136,
       "field": "cssProperties[].name",
@@ -574,7 +574,7 @@
       "note": "2877 rows across the 2.7.0 manifest (2781 `--m3e-*`, 96 `--md-*`) \u2014 the whole utilities.css surface."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 137,
       "field": "cssProperties[].description",
@@ -584,7 +584,7 @@
       "note": "Passed to inferType(name, description) and rendered in the doc table."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 148,
       "field": "flatUnique \u2014 one entry per var name, with the list of components declaring it",
@@ -594,7 +594,7 @@
       "note": "A fold over the bundle's per-component cssProperties; no extra bundle field needed."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 157,
       "field": "merge of declarations split across modules that share a tag",
@@ -604,7 +604,7 @@
       "note": "Face B is already deduped to one entry per authoritative tag, and publishes what was dropped, so the merge branch is deleted rather than reimplemented."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/generate-component-utilities.mjs",
       "sourceLine": 105,
       "field": "inferType() \u2014 suffix-driven Tailwind v4 --value() type + theme namespace, plus the OVERRIDES map",
@@ -614,7 +614,7 @@
       "note": "A Tailwind-specific projection (`color`/`length`/`time`/`number`/`*` and theme namespaces like --radius-*), not a fact about @m3e/web. The manifest states no syntax for these vars \u2014 measured: zero cssProperties entries in the 2.7.0 manifest carry a `default` or a syntax field \u2014 so there is nothing upstream to publish. faceB.components[].cssProperties[].syntax exists for a future manifest that does declare `@property` syntax; until then the inference is correctly tailwind's own."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "src/density.css",
       "sourceLine": 1,
       "field": "density tokens \u2014 `--md-sys-density-scale` scope utilities and the per-component clamp behaviour",
@@ -624,7 +624,7 @@
       "note": "Hand-authored CSS, NOT generated and NOT CEM-derived: the file's own header documents that the behaviour was read out of @m3e/web's `dist/core.js` DensityToken runtime (calc(max(minScale, scale) * size)). No script in the repo reads density from the manifest (rg over the repo finds custom-elements.json referenced only by generate-component-utilities.mjs and check-privates' test). The design spec's 'cssProperties + density tokens' phrasing overstates this: density is a runtime contract in compiled JS, outside both the CEM and the .d.ts surface, so it cannot be a bundle fact without the producer parsing dist/core.js \u2014 explicitly out of scope for Phase 0."
     },
     {
-      "consumer": "tailwind-m3e-web",
+      "consumer": "elm-m3e-tailwind",
       "sourceFile": "bin/check-privates.mjs",
       "sourceLine": 30,
       "field": "@m3e/web `dist/` source scan for `--_*` private custom properties",
@@ -634,7 +634,7 @@
       "note": "Private vars are by definition absent from the manifest's cssProperties (which lists the PUBLIC surface); the check greps compiled dist sources. It is a separate binary from the generator and is not part of the parser being deleted."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 17,
       "field": "readJson(manifestPath) \u2014 the whole custom-elements.json",
@@ -644,7 +644,7 @@
       "note": "loadCem() is replaced by a bundle read; the checked-in test/fixtures/m3e-web-* CEM copies go away with it."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 52,
       "field": "attr.type / attr.type.text presence (the `none` bucket)",
@@ -654,7 +654,7 @@
       "note": "`type.raw: null` reproduces the 'no type at all' case (33 attributes in the 2.7.0 manifest) that classifies as kind `none`."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 57,
       "field": "classifyAttribute() \u2014 the boolean|enum|string|number|none|other taxonomy",
@@ -664,7 +664,7 @@
       "note": "Measured on the 2.7.0 fixture: boolean 194, enum 109, string 193, number 41, none 33, other 7. The bundle's `kind` enum carries the same vocabulary plus `enumNumeric` for numeric literal unions, which this classifier folds into `enum`; folding is a one-line consumer read, un-folding is not, so the finer value is the correct one to publish."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 65,
       "field": "enum value set \u2014 the unquoted/parsed literals in .d.ts declaration order",
@@ -674,7 +674,7 @@
       "note": "Order is load-bearing (the matcher's value-overlap scoring and gap-report's cartesian both walk it), so the schema fixes it as declaration order."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 83,
       "field": "decl.customElement && decl.tagName \u2014 the tagged-declaration filter",
@@ -684,7 +684,7 @@
       "note": "BEHAVIOUR CHANGE, in the consumer's favour: this reads the RAW jsdoc tagName with no registration reconciliation, so today loadCem() on the 2.7.0 fixture yields 128 tags in which `m3e-stepper-next` is ABSENT and `m3e-stepper-previous` appears twice (one copy dropped as a dupe) \u2014 verified by running the loader. The manifest has 130 custom-element-definition exports. Reading Face B's reconciled tags recovers the lost element and changes the matcher's tag set, so the migration must expect a correspondence/gap-report diff here."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 86,
       "field": "mod.path (kept as the component's `module`)",
@@ -693,7 +693,7 @@
       "bundleField": "faceB.components[].modulePath"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 93,
       "field": "attr.name",
@@ -702,7 +702,7 @@
       "bundleField": "faceB.components[].attributes[].name"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 94,
       "field": "attr.fieldName",
@@ -711,7 +711,7 @@
       "bundleField": "faceB.components[].attributes[].fieldName"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 95,
       "field": "attr.description",
@@ -720,7 +720,7 @@
       "bundleField": "faceB.components[].attributes[].description"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 96,
       "field": "attr.default",
@@ -729,7 +729,7 @@
       "bundleField": "faceB.components[].attributes[].default"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 98,
       "field": "attr.type.text (post-inline, kept verbatim on the component record)",
@@ -738,7 +738,7 @@
       "bundleField": "faceB.components[].attributes[].type.resolved"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 107,
       "field": "decl.description",
@@ -748,7 +748,7 @@
       "note": "Used for fuzzy matching (description-token jaccard + doc-URL overlap), so the FULL text is required, not the summary line."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 110,
       "field": "decl.slots (passed through verbatim: name + description)",
@@ -758,7 +758,7 @@
       "note": "The verbatim pass-through relies on the default slot's name being the empty string, which faceBSlot preserves."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 111,
       "field": "decl.events (passed through verbatim)",
@@ -767,7 +767,7 @@
       "bundleField": "faceB.components[].events"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 112,
       "field": "decl.cssProperties (passed through verbatim)",
@@ -776,7 +776,7 @@
       "bundleField": "faceB.components[].cssProperties"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 163,
       "field": "inlineTypeAliases(raw, dtsDir) \u2014 the .d.ts inlining pass",
@@ -786,7 +786,7 @@
       "note": "This is the pass the design spec moves INTO the producer. Its output is representable: the resolved text lands in attributes[].type.resolved, the alias name in type.aliasName, the alias table itself in faceB.aliases."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 175,
       "field": "stats.fullyInlined \u2014 rows that were named/complex before inlining and became a pure literal union after",
@@ -796,7 +796,7 @@
       "note": "109 on the 2.7.0 fixture. Publishing it makes 'the .d.ts tree went missing' detectable by the drift gate instead of silently degrading every enum to String."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 169,
       "field": "stats.totalDeclarations / totalAttributesRaw / totalAttributes / uniqueTags",
@@ -806,7 +806,7 @@
       "note": "Also faceB.stats.components and faceB.stats.attributes. The pre-dedupe RAW attribute count is recoverable as the deduped count plus the attributes of faceB.duplicates' dropped declarations."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/cem.mjs",
       "sourceLine": 187,
       "field": "dupes \u2014 tagNames dropped by the keep-first dedupe",
@@ -815,7 +815,7 @@
       "bundleField": "faceB.duplicates"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/dts-inline.mjs",
       "sourceLine": 46,
       "field": "collectLiteralAliases(rootDir) \u2014 every pure literal-union type alias under the .d.ts tree",
@@ -825,17 +825,17 @@
       "note": "87 aliases on the 2.7.0 fixture (458 .d.ts files). The producer already implements the same scan plus the const-object (FAST/Fluent) shape, which this port lacks; publishing the table means the port is deleted rather than kept in sync."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/dts-inline.mjs",
       "sourceLine": 50,
       "field": "the literal-member regex that REFUSES to inline `LinkTarget` because its union ends in `(string & {})`",
       "status": "mapped",
       "face": "B",
       "bundleField": "faceB.components[].attributes[].enum.open",
-      "note": "The deliberate refusal is preserved as data rather than as an absence: `kind: \"string\"` with `enum.open: true` and `enum.values: [\"_self\",\"_blank\",\"_parent\",\"_top\"]`. That is what lets this consumer keep classifying `target` as String while m3e-okf (which wants the member list, extract.mjs line 155) reads the same entry \u2014 the one field where the two consumers genuinely disagreed."
+      "note": "The deliberate refusal is preserved as data rather than as an absence: `kind: \"string\"` with `enum.open: true` and `enum.values: [\"_self\",\"_blank\",\"_parent\",\"_top\"]`. That is what lets this consumer keep classifying `target` as String while elm-m3e-okf (which wants the member list, extract.mjs line 155) reads the same entry \u2014 the one field where the two consumers genuinely disagreed."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/dts-inline.mjs",
       "sourceLine": 78,
       "field": "resolveAlias(text, aliases) \u2014 expanding a bare or nullable alias reference",
@@ -844,7 +844,7 @@
       "bundleField": "faceB.components[].attributes[].type.resolved"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/ingest/dts-inline.mjs",
       "sourceLine": 102,
       "field": "visit() \u2014 rewriting `node.type.text` anywhere in the manifest tree, not just on attributes",
@@ -854,7 +854,7 @@
       "note": "The generic walk also touched members and event payloads; Face B applies resolution on every type-bearing node (attributes, properties, events) so nothing regresses to the raw alias."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 79,
       "field": "component.tag (slugged for name-distance scoring)",
@@ -863,7 +863,7 @@
       "bundleField": "faceB.components[].tag"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 91,
       "field": "attributes filtered to kind === 'enum' with an array of values (the variant-axis candidates)",
@@ -872,7 +872,7 @@
       "bundleField": "faceB.components[].attributes[].enum.values"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 95,
       "field": "attributes filtered to kind === 'boolean' (2-option boolean axes)",
@@ -881,7 +881,7 @@
       "bundleField": "faceB.components[].attributes[].kind"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 316,
       "field": "component.slots[].name (Figma property \u2192 slot proposals)",
@@ -890,7 +890,7 @@
       "bundleField": "faceB.components[].slots[].name"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 438,
       "field": "the enum attribute's declared default (quotes stripped) as the fusion fallback value",
@@ -900,7 +900,7 @@
       "note": "Depends on the default being stored WITH the CEM's surrounding quotes, which the schema mandates."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 471,
       "field": "component.description \u2192 description tokens for the fuzzy jaccard signal",
@@ -910,7 +910,7 @@
       "note": "This is the 'keyword/synonym descriptions used for fuzzy matching' the design spec lists. There is no separate synonym field in the CEM: the synonym table (foldIdentity/DESCRIPTION_UNTRUSTED) is matcher-local heuristic data, and the only upstream input is the description text."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/match/matcher.mjs",
       "sourceLine": 474,
       "field": "doc URLs extracted from component.description (shared-URL signal)",
@@ -919,7 +919,7 @@
       "bundleField": "faceB.components[].description"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/correspond/gap-report.mjs",
       "sourceLine": 96,
       "field": "cem.components filtered to unmatched \u2192 { tag, description } code-only rows",
@@ -929,7 +929,7 @@
       "note": "Description is faceB.components[].description."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/correspond/gap-report.mjs",
       "sourceLine": 135,
       "field": "attrByName(component, name) \u2014 attribute lookup by name",
@@ -938,7 +938,7 @@
       "bundleField": "faceB.components[].attributes[].name"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/correspond/gap-report.mjs",
       "sourceLine": 151,
       "field": "attr.values \u2014 the full enum value list forming the valid-but-undrawn cartesian spine",
@@ -947,7 +947,7 @@
       "bundleField": "faceB.components[].attributes[].enum.values"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/correspond/gap-report.mjs",
       "sourceLine": 299,
       "field": "cem.components.length (cemTagsTotal in the report counts)",
@@ -956,7 +956,7 @@
       "bundleField": "faceB.stats.components"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/emit/emitter-api.mjs",
       "sourceLine": 170,
       "field": "cem.components.find(c => c.tag === cemTag) \u2014 the per-entry component lookup handed to every emitter",
@@ -965,7 +965,7 @@
       "bundleField": "faceB.components[].tag"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/correspond/merge.mjs",
       "sourceLine": 417,
       "field": "the set of known tags (correspondence validation)",
@@ -974,7 +974,7 @@
       "bundleField": "faceB.components[].tag"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/emit/example-content.mjs",
       "sourceLine": 40,
       "field": "cem.attrsByTag \u2014 the attribute-name set per tag (set-attrs validation)",
@@ -983,7 +983,7 @@
       "bundleField": "faceB.components[].attributes[].name"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/emit/example-content.mjs",
       "sourceLine": 57,
       "field": "cem.slotsByTag \u2014 the slot-name set per tag (examples validation)",
@@ -992,7 +992,7 @@
       "bundleField": "faceB.components[].slots[].name"
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "profiles/m3-kit/profile.json",
       "sourceLine": 9,
       "field": "cem.package / cem.version / cem.manifestPath / cem.dtsDir \u2014 the profile's pin of the CEM input",
@@ -1002,7 +1002,7 @@
       "note": "Also faceB.provenance.source.version, faceB.provenance.source.manifestPath and faceB.provenance.dts.dir. The profile stops naming a vendored fixture and instead asserts the stamp it expects; the fixture copies are deleted."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 664,
       "field": "read + parse elm-m3e's generated src/M3e/Review/Facts.elm (`facts : List Fact`)",
@@ -1012,7 +1012,7 @@
       "note": "The whole re-parse premise. elm-cem EMITS that value (Emit.factsModule, codegen/Generate/Phantom/Emit.elm:4989) from Generate.Phantom.Model.Brand, so Face C is a projection of the same model rather than a re-read of its output."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 682,
       "field": "fact.module_ \u2192 the component's top module, and its leading segments \u2192 rootNamespace",
@@ -1022,7 +1022,7 @@
       "note": "Also faceC.components{}.rootNamespace and faceC.lib. elm-cem computes this as `lib ++ \".\" ++ (memberRef brand comp).module_` (Emit.elm:5061); for a home-grouped component memberRef returns the HOME module plus a member prefix (Emit.elm:4605-4623), which is why the module cannot be derived from the tag \u2014 hence faceC.components{}.memberPrefix."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 684,
       "field": "cemTag = `${camelToKebab(rootNs)}-${camelToKebab(fact.component)}`",
@@ -1032,7 +1032,7 @@
       "note": "A DERIVATION, not a measurement, and the join key for the entire emitter (elm.mjs:466, :561). It is wrong by construction for group members (the builder has to re-derive those from delegate calls, line 572) and for any component whose Elm noun is not the kebab tag. elm-cem holds the real tag on Comp.tag, so Face C keys components BY the CEM tag."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 672,
       "field": "discoverTokenModule() \u2014 scanning every M3e/*.elm exposing list to find the module covering the most enum tokens",
@@ -1042,7 +1042,7 @@
       "note": "elm-cem emits that module itself (`valuesModule`, Emit.elm:4182, file [lib, \"Values\"] at :4348) and omits it entirely when the brand mints no unions (:89-94) \u2014 which is exactly the case the heuristic cannot distinguish from 'I failed to find it'. Hence the schema's nullable tokenModule."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 674,
       "field": "exposedTokens \u2014 the token module's exposing list \u222a Facts.elm's reExposedValueTokens",
@@ -1052,7 +1052,7 @@
       "note": "The verification exists only because the consumer did not emit the module. The producer knows its own exposing list, so a token is either published fully qualified or published as null."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 744,
       "field": "fact.enums setter names, verified present in the component module's exposing list",
@@ -1062,7 +1062,7 @@
       "note": "elm-cem builds the exposing list from the same EnumSpec list it writes into Facts.elm (Emit.elm:2528 exposeGroups, :5079 enumPairs), so 'exposed' is a producer fact. 0 null setters in the committed elm-facts.json \u2014 the check has never fired, which is precisely why re-measuring it is pure risk."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 753,
       "field": "enums[setter].values[] = { elm, key: canon(elm), token }",
@@ -1072,7 +1072,7 @@
       "note": "faceC.components{}.enums{}.values[].elm / .key / .token, plus `.raw` \u2014 the HTML value the token renders to. `raw` is a fact ONLY the producer has: elm-cem's Brand.tokenValues (Model.elm:445) can make the rendered string differ from the identifier via a config attrTypes MAP override, and no amount of reading generated Elm recovers that mapping."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 792,
       "field": "fact.attrRewrites \u2192 primitive (non-enum) attribute setters, excluding `on<Event>` handlers and slot names",
@@ -1082,7 +1082,7 @@
       "note": "The exclusions are a reconstruction of information the producer has directly: attrRewrites is emitted as attrs \u222a default* companions \u222a _variants \u222a event handlers (Emit.elm:5063-5071), so events and slot setters need no filtering out \u2014 Face C publishes setters, slotSetters and event handlers as separate fields."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 805,
       "field": "parseSetterSignature() \u2192 setterArgTypes (float | bool | string | opaque, from the Elm type annotation's first argument)",
@@ -1092,7 +1092,7 @@
       "note": "Regex-parsing an Elm type annotation to recover something elm-cem holds as data: Attr.AttrType = ABool | ANumber | AInt | AEnum | AEnumNum | AEnumMap | AString | ASkip (codegen/Attr.elm:80-88). All four values observed in the committed facts (bool, string, float, opaque) are a lossy projection of it \u2014 `opaque` in particular is 'the regex did not recognise this', not a fact."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 816,
       "field": "per-surface FILE PATH derivation \u2014 `src/M3e/<Facet>/<Comp>.elm` (`M3e/<Comp>.elm` for Standard)",
@@ -1102,7 +1102,7 @@
       "note": "THE most load-bearing finding of the Face-C audit. This path convention does not exist in elm-cem's output: the emitted layout is one per-component module (compModule, Emit.elm:2363) plus ONE per-brand `M3e.Html` holding every loose constructor (htmlModule, :3445) and `M3e.Build` (:2314) \u2014 there is no M3e/Html/Button.elm or M3e/Record/Button.elm. Consequence, measured over the committed profiles/m3-kit/elm-facts.json: all 129 components have exactly ONE surface (`top`); every other facet was silently skipped-with-concern. Face C publishes the module per facet, so the convention is deleted, not fixed."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 830,
       "field": "entry constructor \u2014 `head.exposed.has(fact.component) ? component : 'view'`",
@@ -1112,7 +1112,7 @@
       "note": "The two-candidate guess misses the Record entry entirely: elm-cem exposes `view` (Standard), `el` (Record \u2014 emitted only when the component has required slots, action caps or required attrs: Emit.elm:2386, :2531), `build` (Build seed) and, in `M3e.Html`, the component constructor `comp.resolvedCtor` (:3466). Face C publishes the entry name per facet."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 839,
       "field": "finalizer \u2014 `head.exposed.has('build') ? 'build' : null`",
@@ -1122,7 +1122,7 @@
       "note": "MEASURED WRONG in the committed facts: all 129 components record `finalizer: \"build\"`, but `build` is the pipeline SEED and `toElement` is what closes it (Emit.elm:2351, re-exported per component at :2536). A consumer emitting `... |> M3e.Button.build` as a finalizer would produce non-compiling Elm. This is the concrete failure mode of re-measuring instead of being told."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 439,
       "field": "CTOR_FORM \u2014 the hardcoded facet \u2192 call-shape table (double-list / record-double-list / pipeline)",
@@ -1132,7 +1132,7 @@
       "note": "Also faceC.components{}.surfaces{}.form. Hardcoded in the consumer today with a comment saying it was measured by hand from entry signatures; published as data because the shape is a property of what the generator emitted."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 324,
       "field": "fact.facets \u2014 which of Raw/Html/Standard/Record/Build the component emits at (plus the unknown-token sanity count at line 691)",
@@ -1142,7 +1142,7 @@
       "note": "The set of surface keys present IS the facet list, so nothing needs re-deriving. Note the current emitter claims only Standard(, Record), Build (Emit.elm:5048-5056 facetsOf) \u2014 Raw/Html exist as Cem.Facts constructors but are not claimed, which is why a re-measuring consumer cannot tell 'not emitted' from 'file not found at my guessed path'."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 708,
       "field": "actionModule \u2014 `${rootNs}.Action`, verified to expose `none`",
@@ -1152,7 +1152,7 @@
       "note": "elm-cem emits the module and its exposing list (`actionModule`, Emit.elm:5271, exposing Action/LinkSpec/link/linkWith/none/onClick/remove/toAttrs/wrapContent at :1057), and knows per component whether an action shape exists at all (Comp.actionCaps) \u2014 published alongside as faceC.components{}.usesAction."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 859,
       "field": "slotSetters \u2014 fact.slotRewrites' setter side",
@@ -1162,7 +1162,7 @@
       "note": "faceC.components{}.slotSetterMap additionally publishes the raw-slot-name \u2192 setter pairing, which is what lets a consumer go from a Face B slot to its Elm setter without re-casing (elm-cem emits it as `Naming.camel s.name`, Emit.elm:5083)."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 860,
       "field": "slotUpgrades \u2014 fact.slotUpgrades' setter side",
@@ -1172,7 +1172,7 @@
       "note": "Empty for all 129 components in the committed facts (the current emitter hardcodes `slotUpgrades = []`, Emit.elm:5085), but the field is part of the Cem.Facts contract and must exist for the re-parser to be deletable."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 548,
       "field": "measureGroupAliases: fact.groupConstructors \u2192 per-variant alias facts",
@@ -1182,7 +1182,7 @@
       "note": "Also faceC.components{}.group. Zero group components in the committed facts today (the emitter hardcodes groupConstructors = [], Emit.elm:5086), so this entire ~85-line measurement path is currently dead \u2014 but it must be representable, since the Cem.Facts contract carries the field."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 565,
       "field": "group variant CEM tag, derived from the qualified delegate call inside each constructor body and cross-checked against its doc comment",
@@ -1192,7 +1192,7 @@
       "note": "Parsing a constructor BODY (and then a doc comment) to recover which CEM tag a variant renders. The producer knows the tag directly (Comp.tag), so group members appear in Face C keyed by their real tags with `group: { module, constructor }` set."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 585,
       "field": "which setters a group constructor supports, from `M3e.Token.Supported` keys in its phantom attr record",
@@ -1202,7 +1202,7 @@
       "note": "Reading phantom-row capability keys out of a type annotation. elm-cem constructs those rows from Comp.attrs/AttrSpec.capName (Emit.elm:4630-4653), so per-variant setter sets are emitted, not inferred."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 933,
       "field": "surfaceKeys / defaultSurface \u2014 the top-level surface vocabulary",
@@ -1212,7 +1212,7 @@
       "note": "Also faceC.defaultSurface. Read by the emitter at elm.mjs:565 and :969 to validate the configured elmSurface."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 911,
       "field": "elmM3eCommit \u2014 `git -C <elm-m3e> rev-parse --short HEAD`",
@@ -1221,7 +1221,7 @@
       "bundleField": "faceC.provenance.brand.commit"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 932,
       "field": "elmM3eSentinel \u2014 the `import M3e.Token` fixed-string staleness sentinel and its occurrence count",
@@ -1231,7 +1231,7 @@
       "note": "The sentinel exists because a re-measuring consumer cannot otherwise tell a pre-rename checkout from a post-rename one. With the producer stamping its own version/commit (and the brand commit alongside), staleness is a stamp comparison plus the drift gate \u2014 the design spec's \u00a79 supersession, made concrete."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 375,
       "field": "textSeam \u2014 `Kit.text`, corroborated against elm-m3e's docs/DESIGN.md + config/examples.generated.json + docs/kit/Kit.elm",
@@ -1241,7 +1241,7 @@
       "note": "A config-declared USERLAND convention, not a library export \u2014 there is no exposing list that could confirm it, and a consuming project supplies its own Kit-shaped module. It is already profile config (profiles/m3-kit/profile.json `elm.textSeam`) and must NOT become a bundle fact; modelling it as one would assert that the generated library exports something it deliberately does not. The corroboration grep goes away with the rest of the re-parser; the profile key remains."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/profile.json",
       "sourceLine": 25,
       "field": "htmlSeam = `TypedHtml`, attrSeam = `Native` \u2014 userland seams for plain HTML scaffolding",
@@ -1251,7 +1251,7 @@
       "note": "Same class as textSeam and already correctly outside elm-facts.json: userland modules named by convention in elm-m3e's own examples, never measured from the CEM or from a library exposing list. They stay profile config."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 66,
       "field": "FACTS = JSON.parse(profiles/m3-kit/elm-facts.json) \u2014 the committed re-measured facts",
@@ -1261,7 +1261,7 @@
       "note": "The file this part exists to delete: it is pinned to elm-m3e commit 336e7242 with no mechanism (beyond the sentinel) to notice divergence."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 466,
       "field": "FACTS.components[spec.tag] \u2014 component lookup by CEM tag (also line 561 for the emitted entry)",
@@ -1271,7 +1271,7 @@
       "note": "Confirms the tag-keyed map shape: faceC.components is keyed by the same tag as faceB.components[].tag, so the two faces join with no derivation."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 486,
       "field": "comp.module \u2014 the import emitted for a nested child component",
@@ -1280,7 +1280,7 @@
       "bundleField": "faceC.components{}.module"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 138,
       "field": "comp.enums[setter] \u2192 resolveToken (throws rather than guessing)",
@@ -1289,7 +1289,7 @@
       "bundleField": "faceC.components{}.enums"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 156,
       "field": "the token's `token` field, refused when null",
@@ -1298,7 +1298,7 @@
       "bundleField": "faceC.components{}.enums{}.values[].token"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 147,
       "field": "the token's Elm identifier, including the digit-leading prefix convention",
@@ -1308,7 +1308,7 @@
       "note": "The identifier is produced by elm-cem's Naming.tokenIdent (codegen/Naming.elm:199), including the leading-underscore\u2192trailing-underscore K1 rule, so the emitter never re-derives it."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 176,
       "field": "comp.setters[attr] \u2014 the setter name for a mapped attribute (null means refuse)",
@@ -1317,7 +1317,7 @@
       "bundleField": "faceC.components{}.setters"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 203,
       "field": "comp.setterArgTypes[setter] \u2014 literal formatting (float bare, bool True/False, else quoted)",
@@ -1327,7 +1327,7 @@
       "note": "Also read at line 426 to coerce an empty boolean axis value to `True`."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 263,
       "field": "comp.actionModule \u2192 `${actionModule}.none`, and the import at line 369",
@@ -1336,7 +1336,7 @@
       "bundleField": "faceC.components{}.actionModule"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 360,
       "field": "comp.tokenModule \u2014 the token import, and the `is this expression a token?` prefix test at line 401",
@@ -1345,7 +1345,7 @@
       "bundleField": "faceC.components{}.tokenModule"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 284,
       "field": "surfaceDef.module / surfaceDef.entry \u2014 the call head `<module>.<entry>`",
@@ -1355,7 +1355,7 @@
       "note": "Entry is faceC.components{}.surfaces{}.entry."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 300,
       "field": "surfaceDef.form \u2014 switch over double-list / record-double-list / pipeline",
@@ -1364,7 +1364,7 @@
       "bundleField": "faceC.components{}.surfaces{}.form"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 337,
       "field": "surfaceDef.finalizer \u2014 the `|> <module>.<finalizer>` tail of a pipeline",
@@ -1373,7 +1373,7 @@
       "bundleField": "faceC.components{}.surfaces{}.finalizer"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 408,
       "field": "parentComp.slotSetters \u2014 validating a child's slot setter before emitting it",
@@ -1382,7 +1382,7 @@
       "bundleField": "faceC.components{}.slotSetters"
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm.mjs",
       "sourceLine": 565,
       "field": "FACTS.surfaceKeys / FACTS.defaultSurface \u2014 validating the configured elmSurface",
@@ -1392,7 +1392,7 @@
       "note": "defaultSurface is faceC.defaultSurface (read at line 969)."
     },
     {
-      "consumer": "cem-figma-connect-elm-emitter",
+      "consumer": "elm-cem-figma-connect-elm-emitter",
       "sourceFile": "profiles/m3-kit/emitters/elm-facts.build.mjs",
       "sourceLine": 862,
       "field": "the surrounding record: requiredSlots / multiSlots / slotKinds / requiredAttrs / actionMap / usesAction from Cem.Facts.Fact that the builder reads but does not currently record",
@@ -1402,14 +1402,14 @@
       "note": "Also faceC.components{}.requiredSlots, faceC.components{}.multiSlots, faceC.components{}.slotKinds, faceC.components{}.actionMap, faceC.components{}.usesAction. Recorded because the Record/Build forms cannot be emitted without them (required slots and required attributes are MANDATORY record fields \u2014 Emit.elm:2375-2386), which is part of why only the `top` surface is usable today."
     },
     {
-      "consumer": "cem-figma-connect-matcher",
+      "consumer": "elm-cem-figma-connect-matcher",
       "sourceFile": "src/tokens/derive.mjs",
       "sourceLine": 290,
       "field": "parseFallbacks() \u2014 regex-scans the raw manifest TEXT for var(--md-sys-*, \u2026) fallbacks (380 occurrences, 190 distinct names)",
       "status": "exception",
       "face": null,
       "bundleField": null,
-      "note": "R-004 (M1.c): an unlisted sixth CEM reader, found during the M1.c build. The tokens live entirely in five NON-custom-element kind:\"variable\" declarations (ColorToken/ElevationToken/ShapeToken/StateToken/TypescaleToken under src/core/shared/tokens/), which Face B excludes by construction (Face B's components[] is keyed by custom-element tag). Decision: derive.mjs keeps its own manifest read as a documented, honest exception rather than growing Face B a token-declarations section for one narrow, non-custom-element reader \u2014 see coverage-audit.md \u00a711 for the full reasoning. cem-figma-connect's check:tokens gate is unaffected: it still reads the manifest directly, same as today."
+      "note": "R-004 (M1.c): an unlisted sixth CEM reader, found during the M1.c build. The tokens live entirely in five NON-custom-element kind:\"variable\" declarations (ColorToken/ElevationToken/ShapeToken/StateToken/TypescaleToken under src/core/shared/tokens/), which Face B excludes by construction (Face B's components[] is keyed by custom-element tag). Decision: derive.mjs keeps its own manifest read as a documented, honest exception rather than growing Face B a token-declarations section for one narrow, non-custom-element reader \u2014 see coverage-audit.md \u00a711 for the full reasoning. elm-cem-figma-connect's check:tokens gate is unaffected: it still reads the manifest directly, same as today."
     }
   ]
 }

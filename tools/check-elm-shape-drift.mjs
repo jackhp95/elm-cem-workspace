@@ -45,7 +45,7 @@ import {
   actionNoneOf,
   entryOf,
   iconNameExpr,
-} from "../core/elm-cem/src/elm-shape.mjs";
+} from "../pipeline/elm-cem/src/elm-shape.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -129,8 +129,8 @@ if (nestedGolden !== nestedExpected) {
 // composition, which no delegating wrapper contains.
 const consumers = [
   {
-    name: "cem-figma-connect (elm emitter)",
-    file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
+    name: "elm-cem-figma-connect (elm emitter)",
+    file: "pipeline/elm-cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
     migrated: true,
   },
   {

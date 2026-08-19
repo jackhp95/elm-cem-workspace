@@ -24,8 +24,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateBundleToTemp } from "./lib/regen.mjs";
 import { comparePagesElmIgnoringTimestamp } from "./lib/check-drift-core.mjs";
-import { classifyDelta, readBaseSources } from "../core/cem-figma-connect/src/tokens/classify-delta.mjs";
-import { changesFromVerdict, runGate } from "../core/cem-figma-connect/src/tokens/token-change-report.mjs";
+import { classifyDelta, readBaseSources } from "../pipeline/elm-cem-figma-connect/src/tokens/classify-delta.mjs";
+import { changesFromVerdict, runGate } from "../pipeline/elm-cem-figma-connect/src/tokens/token-change-report.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const EXACT_VERSION = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/;
@@ -38,10 +38,10 @@ const PAGES_ELM_REL = "brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm";
 // fan-out is deterministic run to run.
 const CONSUMERS = [
     {
-        pkgName: "cem-figma-connect",
+        pkgName: "elm-cem-figma-connect",
         committed: [
-            { path: path.join(repoRoot, "core", "cem-figma-connect", "profiles", "m3-kit", "facts", "cem-facts.json"), bundleFile: "cem-facts.json" },
-            { path: path.join(repoRoot, "core", "cem-figma-connect", "profiles", "m3-kit", "facts", "elm-api-facts.json"), bundleFile: "elm-api-facts.json" },
+            { path: path.join(repoRoot, "pipeline", "elm-cem-figma-connect", "profiles", "m3-kit", "facts", "cem-facts.json"), bundleFile: "cem-facts.json" },
+            { path: path.join(repoRoot, "pipeline", "elm-cem-figma-connect", "profiles", "m3-kit", "facts", "elm-api-facts.json"), bundleFile: "elm-api-facts.json" },
         ],
     },
     {

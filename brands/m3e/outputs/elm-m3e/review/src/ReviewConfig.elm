@@ -106,11 +106,11 @@ ignoreGeneratedSubstrate =
     Rule.ignoreErrorsForDirectories
         [ "../src/"
         , "../elm-m3e-families/src/"
-        , "../../../../../core/elm-typed-html/src/"
-        , "../../../../../core/elm-html-intermediate-representation/src/"
-        , "../../../../../core/elm-cem/facts/src/"
-        , "../../../../../core/elm-cem-compose/src/"
-        , "../../../../../core/elm-cem-compose/tests/src/"
+        , "../../../../../brands/html/generated/package/elm-typed-html/src/"
+        , "../../../../../packages/elm-virtual-dom-intermediate-representation/src/"
+        , "../../../../../pipeline/elm-cem/facts/src/"
+        , "../../../../../pipeline/elm-cem-compose/src/"
+        , "../../../../../pipeline/elm-cem-compose/tests/src/"
         , "vendor/elm-foundation/"
         , "../docs/vendor/elm-foundation/"
         ]

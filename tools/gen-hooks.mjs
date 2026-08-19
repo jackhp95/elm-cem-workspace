@@ -37,13 +37,13 @@ const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const hooksDir = path.join(repoRoot, "tools", "hooks");
 
 const PLAIN_TARGETS = [
-    "core/elm-cem/hooks/pre-push",
-    "core/elm-cem/templates/pre-push",
-    "core/elm-html-intermediate-representation/hooks/pre-push",
-    "core/elm-review-cem/hooks/pre-push",
-    "core/elm-typed-html/hooks/pre-push",
+    "pipeline/elm-cem/hooks/pre-push",
+    "pipeline/elm-cem/templates/pre-push",
+    "packages/elm-virtual-dom-intermediate-representation/hooks/pre-push",
+    "pipeline/elm-review-cem/hooks/pre-push",
+    "brands/html/generated/package/elm-typed-html/hooks/pre-push",
     "brands/m3e/outputs/m3e-api-okf/hooks/pre-push",
-    "core/cem-figma-connect/hooks/pre-push",
+    "pipeline/elm-cem-figma-connect/hooks/pre-push",
 ];
 const ELM_M3E_TARGET = "brands/m3e/outputs/elm-m3e/hooks/pre-push";
 

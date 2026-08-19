@@ -41,9 +41,9 @@ function runNodeScript(cwd, relScriptPath, args = []) {
 export function consumerOutputDescriptors(repoRoot) {
     return [
         {
-            key: "cem-figma-connect",
-            label: "check-drift: cem-figma-connect generated/m3-kit (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "cem-figma-connect"),
+            key: "elm-cem-figma-connect",
+            label: "check-drift: elm-cem-figma-connect generated/m3-kit (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-cem-figma-connect"),
             // gen:emit is proven byte-deterministic (tools/check-emit-determinism-cfc.mjs);
             // these excludes just skip large, irrelevant subtrees to keep the scratch copy
             // fast — research/ is NOT excluded: figma.mjs reads its figma-export dump as input.

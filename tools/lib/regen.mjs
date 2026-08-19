@@ -31,7 +31,7 @@ export const GEN_CONFIG_ARGS = [
 ];
 
 export function elmCemCli(repoRoot) {
-    return path.join(repoRoot, "core", "elm-cem", "bin", "elm-cem.js");
+    return path.join(repoRoot, "pipeline", "elm-cem", "bin", "elm-cem.js");
 }
 
 export function defaultElmM3e(repoRoot) {

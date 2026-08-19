@@ -2,7 +2,7 @@
   "$comment": "The single source of truth for 'which packages exist, where, and what mirrors/bundle-copies/copy-fidelity gates apply to them'. Consumed by tools/publish-mirror.mjs, tools/lib/check-drift-core.mjs (provenance/bundle-copy drift), tools/copy-fidelity.mjs, and tools/gate-all.mjs. Adding a 4th (or Nth) consumer package to any of these mechanisms is a DATA change here, not a code change in four places. Fixes Theme 3's 'manifest move' finding (docs/reviews/2026-08-17-thermonuclear-workspace-review.md, Theme 3 table + 'The manifest move (code judo)' paragraph) — publish-mirror.mjs's FAMILY (lines 56-70) and tools/lib/consumer-output-drift.mjs's independently-invented second one are both retired in favor of this file.",
   "packages": {
     "elm-cem": {
-      "srcDir": "core/elm-cem",
+      "srcDir": "pipeline/elm-cem",
       "mirror": { "auditedExclusions": false }
     },
     "elm-m3e": {
@@ -78,19 +78,19 @@
       }
     },
     "elm-cem-compose": {
-      "srcDir": "core/elm-cem-compose",
+      "srcDir": "pipeline/elm-cem-compose",
       "mirror": { "auditedExclusions": false }
     },
-    "elm-html-intermediate-representation": {
-      "srcDir": "core/elm-html-intermediate-representation",
+    "elm-virtual-dom-intermediate-representation": {
+      "srcDir": "packages/elm-virtual-dom-intermediate-representation",
       "mirror": { "auditedExclusions": false }
     },
     "elm-review-cem": {
-      "srcDir": "core/elm-review-cem",
+      "srcDir": "pipeline/elm-review-cem",
       "mirror": { "auditedExclusions": false }
     },
     "elm-typed-html": {
-      "srcDir": "core/elm-typed-html",
+      "srcDir": "brands/html/generated/package/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
     "m3e-okf": {
@@ -141,11 +141,11 @@
       }
     },
     "elm-cem-facts": {
-      "srcDir": "core/elm-cem/facts",
+      "srcDir": "pipeline/elm-cem/facts",
       "mirror": { "auditedExclusions": false }
     },
-    "cem-figma-connect": {
-      "srcDir": "core/cem-figma-connect",
+    "elm-cem-figma-connect": {
+      "srcDir": "pipeline/elm-cem-figma-connect",
       "mirror": { "auditedExclusions": true },
       "bundleCopy": {
         "dir": "profiles/m3-kit/facts",
@@ -155,7 +155,7 @@
       },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_CFC",
-        "sourceDefaultRelToRepoRoot": ".cache/snapshots/cem-figma-connect",
+        "sourceDefaultRelToRepoRoot": ".cache/snapshots/elm-cem-figma-connect",
         "$sourceDefaultNote": "tools/snapshot-refs.json pins cem-figma-connect to its real upstream repo+sha, materialized by tools/fetch-snapshots.mjs, rather than defaulting to a $SNAPSHOT_ROOT/cem-figma-connect sibling clone that may not exist on every machine.",
         "authorizedAbsent": [
           "pnpm-lock.yaml",
@@ -168,10 +168,10 @@
         ],
         "authorizedAbsentPrefixes": [
           "test/fixtures/m3e-web-2.7.0/",
-          "test/fixtures/tailwind-m3e-web-0.1.0/"
+          "test/fixtures/elm-m3e-tailwind-0.1.0/"
         ],
         "authorizedAbsentM6": [
-          ".claude-memory/cem-figma-connect-state.md",
+          ".claude-memory/elm-cem-figma-connect-state.md",
           "plans/2026-07-15-comprehensive-figma-capture-plan.md",
           "plans/2026-07-18-qualifier-aware-matcher-plan.md",
           "plans/2026-07-18-representative-example-emission-plan.md",

@@ -24,7 +24,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // docs/scripts/examples-gen/lib/facts.mjs -> elm-m3e root is four levels up.
 const M3E_ROOT = resolve(HERE, "..", "..", "..", "..");
 const ELM_CEM_CLI =
-  process.env.ELM_CEM_BIN || resolve(M3E_ROOT, "..", "..", "..", "..", "core", "elm-cem", "bin", "elm-cem.js");
+  process.env.ELM_CEM_BIN || resolve(M3E_ROOT, "..", "..", "..", "..", "pipeline", "elm-cem", "bin", "elm-cem.js");
 
 // The config/flags argv for an elm-cem run against elm-m3e's own config — the
 // same set tools/lib/regen.mjs's GEN_CONFIG_ARGS uses (kept in step by hand; a

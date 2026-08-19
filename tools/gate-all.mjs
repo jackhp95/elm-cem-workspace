@@ -103,6 +103,16 @@ const CHRONIC_SKIPS = {
         "requires .cache/snapshots/elm-cem, same as above.",
     "workspace: copy-fidelity elm-m3e":
         "requires .cache/snapshots/elm-m3e, same as above (also network-fetched).",
+    "workspace: copy-fidelity elm-m3e-okf":
+        "requires .cache/snapshots/elm-m3e-okf, materialized only by `node tools/fetch-snapshots.mjs` (network); nothing auto-creates it in a fresh worktree — same root cause as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity m3e-okf":
+        "pre-rename alias of copy-fidelity elm-m3e-okf (the family.json key renames to elm-m3e-okf in repo-shape-v2 Task 3); same .cache/snapshots network-materialization root cause.",
+    "workspace: copy-fidelity elm-m3e-tailwind":
+        "requires .cache/snapshots/elm-m3e-tailwind (pinned in tools/snapshot-refs.json), network-materialized only; same root cause as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity tailwind-m3e-web":
+        "pre-rename alias of copy-fidelity elm-m3e-tailwind (the family.json key renames to elm-m3e-tailwind in repo-shape-v2 Task 2); same .cache/snapshots network-materialization root cause.",
+    "workspace: copy-fidelity elm-cem-figma-connect":
+        "requires .cache/snapshots/elm-cem-figma-connect (pinned in tools/snapshot-refs.json), network-materialized only; same root cause as copy-fidelity elm-m3e above.",
     "workspace: check-drift (M4.b cross-cutting drift gate)":
         "one of its internal sub-checks (brand Face A, R-010) shares the same .cache/snapshots/elm-cem dependency as ab-elm-cem above, which makes check-drift.mjs's own aggregate stdout carry a SKIP line.",
 };
@@ -192,9 +202,9 @@ function discoverPackages() {
             walk(full);
         }
     };
-    walk(path.join(repoRoot, "core"));
+    walk(path.join(repoRoot, "pipeline"));
     walk(path.join(repoRoot, "brands"));
-    walk(path.join(repoRoot, "packages", "_probe"));
+    walk(path.join(repoRoot, "packages"));
     return found;
 }
 
@@ -265,7 +275,7 @@ function factsBundleE2E() {
             return false;
         }
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
-        const { validate } = require(path.join(repoRoot, "core", "elm-cem", "bin", "validate-facts-bundle.js"));
+        const { validate } = require(path.join(repoRoot, "pipeline", "elm-cem", "bin", "validate-facts-bundle.js"));
 
         const faces = [
             { file: "cem-facts.json", definition: "faceB", label: "Face B" },
@@ -431,7 +441,7 @@ function buildSteps() {
         );
     }
     steps.push(
-        step("workspace: check-emit-determinism cem-figma-connect", process.execPath, [
+        step("workspace: check-emit-determinism elm-cem-figma-connect", process.execPath, [
             path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs"),
         ]),
     );

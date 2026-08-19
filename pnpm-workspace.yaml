@@ -11,7 +11,7 @@ packages:
   - "brands/*/generated/*/*/*"
   - "!**/node_modules"
   - "!**/elm-stuff"
-  - "!core/*/elm-html-intermediate-representation"
+  - "!pipeline/*/elm-virtual-dom-intermediate-representation"
 
 allowBuilds:
   '@parcel/watcher': true

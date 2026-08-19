@@ -150,7 +150,7 @@
         "elm/html": "1.0.0 <= v < 2.0.0",
         "elm/json": "1.0.0 <= v < 2.0.0",
         "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-html-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0"
     },
     "test-dependencies": {}

@@ -42,8 +42,8 @@ const SRC_ROOTS = [
 // Where the emitted Code Connect Elm snippets live.
 const CC_ELM_DIR = path.join(
   repoRoot,
-  "core",
-  "cem-figma-connect",
+  "pipeline",
+  "elm-cem-figma-connect",
   "generated",
   "m3-kit",
   "elm",

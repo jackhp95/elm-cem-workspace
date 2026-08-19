@@ -15,6 +15,18 @@ importers:
         specifier: ^1.15.1
         version: 1.20.0
 
+  brands/html/generated/package/elm-typed-html:
+    devDependencies:
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
   brands/m3e/inputs/material-okf:
     devDependencies:
       npm-run-all2:
@@ -137,7 +149,68 @@ importers:
         specifier: ^4.1.9
         version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
 
-  core/cem-figma-connect:
+  core/tailwind-md3:
+    devDependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
+      tonal-palette-oklch:
+        specifier: workspace:*
+        version: link:../../packages/tonal-palette-oklch
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
+
+  packages/elm-virtual-dom-intermediate-representation:
+    devDependencies:
+      elm-format:
+        specifier: 0.8.7
+        version: 0.8.7
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  packages/tonal-palette-oklch:
+    dependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
+
+  pipeline/elm-cem:
+    dependencies:
+      elm-codegen:
+        specifier: ^0.6.3
+        version: 0.6.3
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^8.0.4
+        version: 8.0.4
+
+  pipeline/elm-cem-compose:
+    devDependencies:
+      elm-tooling:
+        specifier: ^1.20.0
+        version: 1.20.0
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
+
+  pipeline/elm-cem-figma-connect:
     dependencies:
       '@figma/code-connect':
         specifier: ^1.4.9
@@ -174,44 +247,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
 
-  core/elm-cem:
-    dependencies:
-      elm-codegen:
-        specifier: ^0.6.3
-        version: 0.6.3
-    devDependencies:
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^8.0.4
-        version: 8.0.4
-
-  core/elm-cem-compose:
-    devDependencies:
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  core/elm-html-intermediate-representation:
-    devDependencies:
-      elm-format:
-        specifier: 0.8.7
-        version: 0.8.7
-      elm-review:
-        specifier: ^2.13.5
-        version: 2.13.5
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  core/elm-review-cem:
+  pipeline/elm-review-cem:
     devDependencies:
       elm-review:
         specifier: ^2.13.5
@@ -222,42 +258,6 @@ importers:
       npm-run-all2:
         specifier: ^9.0.3
         version: 9.0.3
-
-  core/elm-typed-html:
-    devDependencies:
-      elm-review:
-        specifier: ^2.13.5
-        version: 2.13.5
-      elm-tooling:
-        specifier: ^1.20.0
-        version: 1.20.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
-
-  core/tailwind-md3:
-    devDependencies:
-      '@material/material-color-utilities':
-        specifier: ^0.3.0
-        version: 0.3.0
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
-      tonal-palette-oklch:
-        specifier: workspace:*
-        version: link:../tonal-palette-oklch
-      vitest:
-        specifier: ^4.1.9
-        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0))
-
-  core/tonal-palette-oklch:
-    dependencies:
-      '@material/material-color-utilities':
-        specifier: ^0.3.0
-        version: 0.3.0
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
 
 packages:
 

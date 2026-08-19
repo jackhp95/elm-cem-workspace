@@ -87,7 +87,7 @@ function checkProducer() {
         }
         const schemaPath = path.join(repoRoot, "docs", "facts-bundle", "schema.json");
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
-        const { validate } = require(path.join(repoRoot, "core", "elm-cem", "bin", "validate-facts-bundle.js"));
+        const { validate } = require(path.join(repoRoot, "pipeline", "elm-cem", "bin", "validate-facts-bundle.js"));
 
         const problems = [];
         for (const { file, definition } of [
