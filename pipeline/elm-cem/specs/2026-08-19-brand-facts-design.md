@@ -81,8 +81,9 @@ INPUTS (many, heterogeneous, optional except the structural spine)
 - A **generated** `M3e.Review.Facts` Elm module already emits `facts : List Fact`
   (with `slotKinds`, `enums`, `requiredSlots`, `facets`).
 - Face C already carries a **`facets`** table (`top/Standard`, `build/Build`,
-  `record/Record`, `html/Html`) — the codebase's own word for the API-surface
-  projections this design calls facets.
+  `record/Record`, `html/Html`) — construction-form projections. These form keys
+  are **vestigial**; this design keys bindings by destination *package* (§3.4) and
+  retires them.
 - **ADR-15** is *"the decision to move the library's composition guarantees off
   the M3e phantom types and onto facts-driven review rules"*
   (`core/elm-review-cem/docs/decisions.md:92-109`). Facts-as-authoritative-
@@ -144,26 +145,42 @@ Established by four parallel investigations; every claim carries a `path:line`.
 - Drift = **regenerate-to-temp + byte-compare**, data-driven by `tools/family.json`
   `bundleCopy` blocks (`tools/lib/check-drift-core.mjs:checkConsumerBundleDrift`).
 
-### 3.4 The generated API is one package with several facets, each with its own contract
+### 3.4 The generated API splits into a family of published packages — the axis bindings key on
 
-`elm-m3e` is **one** published Elm package (not a `core/elements/components/
-builders` package split). The **facets** are the construction *forms* the
-codebase already emits — keys taken verbatim from
-`Generate/Phantom/Emit/FactsBundle.elm:73-76`, not invented:
+`elm-cem split` partitions the generated `elm-m3e` source into a **facet-family of
+published packages** (`brands/m3e/outputs/elm-m3e/packages.json`,
+`core/elm-cem/bin/split.js`). This — not a single package — is what a consumer
+depends on and imports, so it is the axis Brand Facts keys its `targets.elm`
+bindings by.
 
-| Facet key | Form | Hosting module(s) | Composition enforcement |
-|---|---|---|---|
-| `top` | Standard `[attrs][children]` (double-list) | `M3e.Component.<X>` (strict) and the `M3e` barrel | **compiler** via closed rows when a child is routed through a slot-setter; **elm-review** (`ValidSlotKind`/`ValidEnumValue`) for a raw child sitting in the content list |
-| `build` | pipeline builder (finalizer `toElement`) | `M3e.Build.<X>` | **compiler** — `Available`/`Used` capability rows |
-| `record` | required-fields-record-first ctor | `M3e.Component.<X>` | **compiler** — as `top`, with a required-fields record |
-| `html` | loose double-list (free rows) | `M3e.Html` (*internalized, not exposed*) | **none** |
+**In-flight rework (target taxonomy — key bindings by the *right* column):** the
+package family is mid-rename. Brand Facts targets the destination names, treating
+the partition itself (which tags/modules land in which package, the families
+folding) as a **coordination dependency it consumes, not defines** — the
+families-generation infra owns that.
 
-Plus one non-facet escape surface — `M3e.Unsafe` — free rows, enforcement
-**none** (only redundancy-linted by `NoRedundantElementEscape`) — and the shared
-vocab/core (`M3e.Internal.*`, `M3e.Attributes`/`Values`/`Events`/`Action`/`Kind`).
-Note the *enforcement contract is (form × module × placement mechanism)*, not a
-property of the facet key alone — the `top` form is compiler-checked in
-`M3e.Component` but elm-review-checked for raw children in the `M3e` barrel.
+| Destination package | Was | Holds (per rework) |
+|---|---|---|
+| `elm-m3e-html` | `elm-m3e` | the elm/html-like loose API — **incl. the `M3e` barrel** (moves here), `M3e.Html`, shared vocab, `Unsafe`, Forge engine |
+| `elm-m3e-elements` | `elm-m3e-components` | one typed module **per tag** (every element) |
+| `elm-m3e-components` | `elm-m3e-families` | **composed families** — child-only tags folded under their parent tag's module |
+| `elm-m3e-builder` | `elm-m3e-builder` | builder pattern over `components` |
+| `elm-m3e-icons` | (retained) | `M3e.Icon` |
+| `elm-m3e-facts` | (retained) | `M3e.Review.Facts` — the `List Fact` module elm-review-cem reads |
+
+Enforcement contract, per destination package: `html` — none (loose/escape;
+elm-review backstops raw children); `elements`/`components` — compiler (closed
+rows + slot-setters); `builder` — compiler (`Available`/`Used` capability rows).
+(Exact per-package contract to be confirmed with the rework.)
+
+Two terms of caution: (1) the child-only-tag folding in `components` is the
+**slot-acceptance graph** Facts already stores — Facts *exposes* that data for the
+families infra to consume, but does **not** own the partition. (2) "facet" is
+overloaded in the codebase — `split.js` calls the **packages** facets;
+`FactsBundle.elm:73-76` calls the **construction forms** (`top`/Standard,
+`build`/Build, `record`/Record, `html`/Html) facets. Those form keys are
+**vestigial**; Brand Facts subsumes Face C and drops/renames them rather than
+carrying them forward (see §7).
 
 One `admits` fact, projected three ways: a phantom **row type**
 (`Internal/Types/ListItem.elm` `LeadingSlot`), **elm-review data**
@@ -202,12 +219,13 @@ no cross-file join.
       // ── target bindings (Elm-aware consumers) ──
       "targets": {
         "elm": {
-          // keys are the codebase's own facet forms (top/build/record/html)
-          "facets": {
-            "top":   { "module": "M3e.Component.ListItem", "ctor": "component",
-                       "slotSetters": { "leading": "leading", "trailing": "trailing" } },
-            "build": { "module": "M3e.Build.ListItem", "seed": "build", "finalizer": "toElement" }
-          }
+          // keyed by destination PACKAGE (§3.4). Module/ctor identifiers are READ
+          // from the generated packages, not authored here — illustrative below.
+          "html":       { "module": "M3e.Html", "fn": "listItem", "barrel": "listItem" },
+          "elements":   { "module": "M3e.Element.ListItem", "ctor": "listItem",
+                          "slotSetters": { "leading": "leading", "trailing": "trailing" } },
+          "components": { "family": "List", "placer": "listItem" },   // folded under parent (families infra)
+          "builder":    { "module": "M3e.Build.ListItem", "seed": "build", "finalizer": "toElement" }
         }
       }
     }
@@ -268,26 +286,32 @@ function validPlacement(childKind, containerTag, slot, facts) {
 
 Two levels, distinct:
 
-- **Per-component bindings** live under `components[tag].targets.elm.facets.<facet>`
-  — the module/setter/token identifiers for *that* component in *that* facet
+- **Per-component bindings** live under `components[tag].targets.elm.<package>`
+  — the module/ctor/setter identifiers for *that* component in *that* package
   (§4.1).
-- **Facet contracts** live **once**, at a top-level `targets.elm.contracts`
-  (sibling to `components`, not repeated per component) — each facet's
-  composition/attribute enforcement (`compiler` / `elm-review` / `none`), so a
-  consumer/emitter knows whether *it* is responsible for validity or the compiler
-  is. This is the fact Face C erased.
+- **Package-level facts** live **once**, at a top-level `targets.elm.packages`
+  (sibling to `components`, not repeated per component) — each package's name,
+  sibling deps, and enforcement contract (`compiler` / `elm-review` / `none`), so
+  a consumer knows which package to import and whether *it* or the compiler owns
+  validity. This is the fact Face C erased.
 
 ```jsonc
 {
-  "components": { "m3e-list-item": { "targets": { "elm": { "facets": { /* bindings */ } } } } },
+  "components": { "m3e-list-item": { "targets": { "elm": { "components": { /* bindings */ } } } } },
   "targets": {
     "elm": {
-      // illustrative; precise contract axis is (form × module × placement), locked in phase 1
-      "contracts": {
-        "top":    { "slotSetterChild": "compiler", "rawContentChild": "elm-review" },
-        "build":  { "composition": "compiler" },
-        "html":   { "composition": "none" },
-        "unsafe": { "composition": "none" }
+      // destination package family (§3.4); deps/contract illustrative, confirmed with the rework
+      "packages": {
+        "html":       { "package": "jackhp95/elm-m3e-html", "deps": [],
+                        "contract": { "composition": "none" } },
+        "elements":   { "package": "jackhp95/elm-m3e-elements", "deps": ["html"],
+                        "contract": { "slotSetterChild": "compiler", "rawContentChild": "elm-review" } },
+        "components": { "package": "jackhp95/elm-m3e-components", "deps": ["elements", "html"],
+                        "contract": { "composition": "compiler" } },
+        "builder":    { "package": "jackhp95/elm-m3e-builder", "deps": ["components", "html"],
+                        "contract": { "composition": "compiler" } },
+        "icons":      { "package": "jackhp95/elm-m3e-icons" },
+        "facts":      { "package": "jackhp95/elm-m3e-facts" }
       }
     }
   }
@@ -346,11 +370,11 @@ superset rather than joining two producers at encode time:
   (`"shared:icon"`, `"avatar"`) as-is (mirror the truth), and let the Elm binding
   layer carry the field-name mapping (`sharedIcon`). Confirm during planning.
 - **Naming to lock:** the file (`brand-facts.json`), the top key (`components`),
-  `targets`, `contracts`. **Facet keys are not invented** — use the codebase's own
-  emitted facet forms `top` / `build` / `record` / `html`
-  (`Generate/Phantom/Emit/FactsBundle.elm:73-76`), plus `M3e.Unsafe` as a separate
-  escape surface; phase 1 reconciles these against the generated modules. (The
-  earlier `strict`/`loose`/`general`/`escape` labels were mine and are dropped.)
+  `targets`, `contracts`. **Package keys are the destination package family**
+  (§3.4): `html` / `elements` / `components` / `builder` / `icons` / `facts` —
+  what a consumer imports. The barrel binds under `html`. **Not** the vestigial
+  construction forms (`top`/`build`/`record`/`html` in `FactsBundle.elm`) and not
+  the earlier invented `strict`/`loose`/`general`/`escape` — both dropped.
 - **`schemaVersion` bump** to `2` and whether the hand-rolled validator
   (`validate-facts-bundle.js`) is extended or replaced.
 
@@ -359,10 +383,11 @@ superset rather than joining two producers at encode time:
 Each phase becomes its own plan (`superpowers:writing-plans`) with its own review.
 
 1. **Canonical schema + validator (design → schema.json).** Define the one shape
-   (canonical core + `targets` + `contracts` + `provenance`), pick the single
-   slot representation, bump `schemaVersion`, rewrite/extend
-   `docs/facts-bundle/schema.json` + `validate-facts-bundle.js`. *No behavior
-   change yet.*
+   (canonical core + `targets` keyed by destination package + `contracts` +
+   `provenance`), pick the single slot representation, **retire the vestigial
+   `top/build/record/html` construction-form vocabulary** as Face C is subsumed,
+   bump `schemaVersion`, rewrite/extend `docs/facts-bundle/schema.json` +
+   `validate-facts-bundle.js`. *No behavior change yet.*
 2. **Enrich the model + unified producer.** `Comp` retains `source :
    Cem.Declaration`; comprehensive Elm encoder; fold Face B's JS value-adds in;
    emit one `brand-facts.json`. Ship it **alongside** the existing bundles.
@@ -387,6 +412,14 @@ Touched: `core/elm-cem/bin/facts-bundle.js` + `core/elm-cem/codegen/**` (produce
 (`cem-figma-connect`, `m3e-api-okf`, `tailwind-m3e-web`, `examples-gen`). Staging
 phases 2 (additive) before 5 (removal) keeps each step reviewable and the drift
 gate green between phases.
+
+**Coordination dependency (not owned here):** the elm-m3e package rework
+(`elm-m3e`→`-html` incl. barrel; `-components`→`-elements`; `-families`→
+`-components`; per §3.4) is concurrent. Brand Facts keys `targets.elm` by the
+**destination** package names and **consumes** the partition (contents, families
+folding) rather than defining it — the families-generation infra owns that. Facts
+exposes the slot-acceptance graph that infra reads; it does not drive the split.
+Phase 4 (consumer migration) sequences after the rework's package names settle.
 
 Consistent with the workspace stance: prefer the correct shape over a small blast
 radius; blast radius is a cost, not a blocker.
