@@ -83,7 +83,11 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const packagesDir = join(repoRoot, "packages");
+const SEARCH_ROOTS = [
+    join(repoRoot, "core"),
+    join(repoRoot, "brands"),
+    join(repoRoot, "packages", "_probe"),
+];
 const SKIP_DIRS = new Set(["node_modules", "elm-stuff", ".git"]);
 const MODULE_PATH = join("Cem", "Facts.elm");
 
@@ -107,9 +111,11 @@ function walk(dir, onFile) {
 /** Every elm.json under packages/, parsed, with its compile roots resolved. */
 function readProjects() {
     const paths = [];
-    walk(packagesDir, (file) => {
-        if (file.endsWith("elm.json")) paths.push(file);
-    });
+    for (const root of SEARCH_ROOTS) {
+        walk(root, (file) => {
+            if (file.endsWith("elm.json")) paths.push(file);
+        });
+    }
     paths.sort();
 
     const projects = [];
@@ -142,9 +148,11 @@ function readProjects() {
 /** Every Cem/Facts.elm file under packages/, as a real (symlink-free) path. */
 function findFactsFiles() {
     const files = [];
-    walk(packagesDir, (file) => {
-        if (file.replace(/\\/g, "/").endsWith("/Cem/Facts.elm")) files.push(file);
-    });
+    for (const root of SEARCH_ROOTS) {
+        walk(root, (file) => {
+            if (file.replace(/\\/g, "/").endsWith("/Cem/Facts.elm")) files.push(file);
+        });
+    }
     return files.sort();
 }
 
@@ -167,7 +175,7 @@ function main() {
     const { projects, parseErrors } = readProjects();
     for (const e of parseErrors) failures.push(`cannot parse ${e}`);
 
-    console.log(`check-single-cem-facts: scanned ${projects.length} elm.json file(s) under packages/.`);
+    console.log(`check-single-cem-facts: scanned ${projects.length} elm.json file(s) under core/+brands/.`);
 
     // ── 1. ownership ─────────────────────────────────────────────────────────
     const exposers = projects.filter((p) => p.type === "package" && p.exposed.includes("Cem.Facts"));
@@ -187,7 +195,7 @@ function main() {
 
     // ── 2. per-graph ambiguity ───────────────────────────────────────────────
     const factsFiles = findFactsFiles();
-    console.log(`check-single-cem-facts: ${factsFiles.length} Cem/Facts.elm file(s) present under packages/:`);
+    console.log(`check-single-cem-facts: ${factsFiles.length} Cem/Facts.elm file(s) present under core/+brands/:`);
     for (const f of factsFiles) console.log(`  - ${rel(f)}`);
 
     if (factsFiles.length === 0) {

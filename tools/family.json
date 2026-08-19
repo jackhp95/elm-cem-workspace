@@ -2,11 +2,11 @@
   "$comment": "The single source of truth for 'which packages exist, where, and what mirrors/bundle-copies/copy-fidelity gates apply to them'. Consumed by tools/publish-mirror.mjs, tools/lib/check-drift-core.mjs (provenance/bundle-copy drift), tools/copy-fidelity.mjs, and tools/gate-all.mjs. Adding a 4th (or Nth) consumer package to any of these mechanisms is a DATA change here, not a code change in four places. Fixes Theme 3's 'manifest move' finding (docs/reviews/2026-08-17-thermonuclear-workspace-review.md, Theme 3 table + 'The manifest move (code judo)' paragraph) — publish-mirror.mjs's FAMILY (lines 56-70) and tools/lib/consumer-output-drift.mjs's independently-invented second one are both retired in favor of this file.",
   "packages": {
     "elm-cem": {
-      "srcDir": "packages/elm-cem",
+      "srcDir": "core/elm-cem",
       "mirror": { "auditedExclusions": false }
     },
     "elm-m3e": {
-      "srcDir": "packages/elm-m3e",
+      "srcDir": "brands/m3e/outputs/elm-m3e",
       "mirror": { "auditedExclusions": true },
       "copyFidelity": {
         "sourceEnvVar": "SOURCE_ELM_M3E",
@@ -77,19 +77,19 @@
       }
     },
     "elm-cem-compose": {
-      "srcDir": "packages/elm-cem-compose",
+      "srcDir": "core/elm-cem-compose",
       "mirror": { "auditedExclusions": false }
     },
     "elm-html-intermediate-representation": {
-      "srcDir": "packages/elm-html-intermediate-representation",
+      "srcDir": "core/elm-html-intermediate-representation",
       "mirror": { "auditedExclusions": false }
     },
     "elm-review-cem": {
-      "srcDir": "packages/elm-review-cem",
+      "srcDir": "core/elm-review-cem",
       "mirror": { "auditedExclusions": false }
     },
     "elm-typed-html": {
-      "srcDir": "packages/elm-typed-html",
+      "srcDir": "core/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
     "m3e-okf": {
@@ -113,7 +113,7 @@
       }
     },
     "tailwind-m3e-web": {
-      "srcDir": "packages/tailwind-m3e-web",
+      "srcDir": "brands/m3e/outputs/tailwind-m3e-web",
       "mirror": { "auditedExclusions": true },
       "bundleCopy": {
         "dir": "data",
@@ -135,11 +135,11 @@
       }
     },
     "elm-cem-facts": {
-      "srcDir": "packages/elm-cem/facts",
+      "srcDir": "core/elm-cem/facts",
       "mirror": { "auditedExclusions": false }
     },
     "cem-figma-connect": {
-      "srcDir": "packages/cem-figma-connect",
+      "srcDir": "core/cem-figma-connect",
       "mirror": { "auditedExclusions": true },
       "bundleCopy": {
         "dir": "profiles/m3-kit/facts",

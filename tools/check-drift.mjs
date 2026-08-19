@@ -52,7 +52,7 @@ import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consu
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
-const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 const family = JSON.parse(fs.readFileSync(path.join(repoRoot, "tools", "family.json"), "utf8")).packages;
 
 const results = [];
@@ -87,7 +87,7 @@ function checkProducer() {
         }
         const schemaPath = path.join(repoRoot, "docs", "facts-bundle", "schema.json");
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
-        const { validate } = require(path.join(repoRoot, "packages", "elm-cem", "bin", "validate-facts-bundle.js"));
+        const { validate } = require(path.join(repoRoot, "core", "elm-cem", "bin", "validate-facts-bundle.js"));
 
         const problems = [];
         for (const { file, definition } of [
@@ -173,7 +173,7 @@ function checkConsumerOutputs() {
 // ── 5. R-008: Pages.elm — normalize the build timestamp before comparing ──
 function checkPagesElm() {
     const name = "check-drift: Pages.elm (R-008, timestamp-normalized)";
-    const relPath = "packages/elm-m3e/docs/.elm-pages/Pages.elm";
+    const relPath = "brands/m3e/outputs/elm-m3e/docs/.elm-pages/Pages.elm";
     const absPath = path.join(repoRoot, relPath);
     const head = spawnSync("git", ["show", `HEAD:${relPath}`], { cwd: repoRoot, encoding: "utf8" });
     if (head.status !== 0) {

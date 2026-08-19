@@ -45,7 +45,7 @@ import {
   actionNoneOf,
   entryOf,
   iconNameExpr,
-} from "../packages/elm-cem/src/elm-shape.mjs";
+} from "../core/elm-cem/src/elm-shape.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -130,7 +130,7 @@ if (nestedGolden !== nestedExpected) {
 const consumers = [
   {
     name: "cem-figma-connect (elm emitter)",
-    file: "packages/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
+    file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
     migrated: true,
   },
   {
@@ -139,7 +139,7 @@ const consumers = [
     // tests). See docs/plans/2026-08-17-phase1-L4-facec-coverage-audit.md. Flip
     // `migrated` to true when L5 lands; the import is then ENFORCED below.
     name: "elm-m3e docs (to-elm)",
-    file: "packages/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",
+    file: "brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",
     migrated: false,
   },
 ];

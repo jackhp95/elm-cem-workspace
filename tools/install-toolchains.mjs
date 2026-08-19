@@ -40,13 +40,20 @@ function selfInstalls(dir) {
 }
 
 const dirs = [repoRoot];
-const pkgsDir = path.join(repoRoot, "packages");
-if (existsSync(pkgsDir)) {
-    for (const name of readdirSync(pkgsDir)) {
-        const dir = path.join(pkgsDir, name);
+function scanFor(baseDir, depth) {
+    if (!existsSync(baseDir)) return;
+    for (const name of readdirSync(baseDir)) {
+        const dir = path.join(baseDir, name);
+        if (depth > 1) {
+            scanFor(dir, depth - 1);
+            continue;
+        }
         if (existsSync(path.join(dir, "elm-tooling.json")) && !selfInstalls(dir)) dirs.push(dir);
     }
 }
+scanFor(path.join(repoRoot, "core"), 1);
+scanFor(path.join(repoRoot, "brands"), 3); // brands/<brand>/{inputs,outputs}/<name>
+scanFor(path.join(repoRoot, "packages", "_probe"), 1);
 
 function elmToolingBin(dir) {
     // Prefer the location's own pinned elm-tooling, then the root's.

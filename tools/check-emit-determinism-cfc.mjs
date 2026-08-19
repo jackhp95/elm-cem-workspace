@@ -36,7 +36,7 @@ import { fileURLToPath } from "node:url";
 import { listFilesRecursive } from "./lib/check-drift-core.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const pkgDir = path.join(repoRoot, "packages", "cem-figma-connect");
+const pkgDir = path.join(repoRoot, "core", "cem-figma-connect");
 const cli = path.join(pkgDir, "src", "cli.mjs");
 const generatedDir = path.join(pkgDir, "generated", "m3-kit");
 

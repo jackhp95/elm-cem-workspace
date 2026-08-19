@@ -17,7 +17,7 @@ import { checkConsumerBundleDrift, comparePagesElmIgnoringTimestamp } from "./li
 import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consumer-output-drift.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "packages", "elm-m3e");
+const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
 const realCommittedCemFacts = path.join(repoRoot, "packages", "m3e-okf", "data", "cem-facts.json");
 const descriptorsByKey = Object.fromEntries(consumerOutputDescriptors(repoRoot).map((d) => [d.key, d]));
 
