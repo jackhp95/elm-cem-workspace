@@ -81,6 +81,7 @@ examples =
     , ( "list-detail", "List-detail", "The canonical adaptive list-detail pattern — a contacts list beside a detail pane on desktop that reflows to a single column on mobile, with nav-rail↔nav-bar switching." )
     , ( "supporting-pane", "Supporting pane", "The adaptive supporting-pane pattern — a wide primary region with a narrower supporting pane that sits beside it on expanded windows and reflows beneath on compact." )
     , ( "feed", "Feed", "The adaptive feed pattern — a responsive card grid whose column count grows with the window size class, driven by a filter-chip toolbar." )
+    , ( "detailed-view", "Detailed view", "A mobile detailed-view screen — a media item's full detail page with a header, body copy, a section of list items, and a compact media player, reconstructing the Figma M3 Community Kit's \"Examples/Detailed view-Mobile\" frame." )
     ]
 
 

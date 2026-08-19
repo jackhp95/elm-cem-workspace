@@ -202,7 +202,7 @@ exampleFooter =
             , ( "filterchip", "FilterChip" )
             ]
         , prev = Just ( "/examples/supporting-pane", "Supporting pane" )
-        , next = Nothing
+        , next = Just ( "/examples/detailed-view", "Detailed view" )
         }
 
 

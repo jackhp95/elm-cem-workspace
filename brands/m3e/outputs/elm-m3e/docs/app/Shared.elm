@@ -1340,6 +1340,7 @@ navSections =
             , ( "/examples/list-detail", "List-detail" )
             , ( "/examples/supporting-pane", "Supporting pane" )
             , ( "/examples/feed", "Feed" )
+            , ( "/examples/detailed-view", "Detailed view" )
             ]
       }
     ]
