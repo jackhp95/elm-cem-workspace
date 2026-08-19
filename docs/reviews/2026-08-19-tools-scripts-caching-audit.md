@@ -183,6 +183,19 @@ Track A's explicit scope (§4).
   the shape Track A already shipped in `tools/lib/build-site-cache.mjs`. A drift check that hashes
   its inputs can skip the scratch regen when inputs are unchanged, and the reference build can be
   memoized across the three consumers.
+- **REVISED after 2026-08-19 remediation (do NOT cache — redesign instead):** on closer inspection
+  the cache is a band-aid on a questionable design. The whole-repo scratch copy exists only because
+  the generators (`extract-reference.mjs` etc.) write to **fixed paths** (`docs/data/reference.json`)
+  with no `--output=<dir>` flag, so sandboxing them means copying the repo and running them in the
+  copy — and gate-all runs steps in parallel, so an in-place "regenerate + `git checkout`" would race.
+  That scratch copy is precisely what forces the **cold** elm-stuff recompile (slow) and the
+  documented cold-vs-warm nondeterminism (`check-data-drift.mjs` header: a cold regen once "silently
+  lost 661 surfaces"). A naive input-hash cache would risk masking that nondeterminism → a false green
+  on a correctness gate. **The right fix is to remove the need for the scratch copy: give the
+  generators an output-dir flag (write to a temp dir, warm compile, byte-compare — no repo copy) OR
+  do in-place + `git diff --exit-code` + restore with proper serialization.** Either warms the compile
+  (fast, no cold/warm divergence) AND is cache-friendly afterward. This is a redesign in Track A's
+  gate-perf / ELM_HOME territory — **deferred to Track A**, not implemented here.
 
 ### 2.2 — `elm-cem` codegen re-run against the identical elm-m3e config
 - **What:** the elm-cem generator (against elm-m3e's `--flags-from/--config-from` set — the shared
