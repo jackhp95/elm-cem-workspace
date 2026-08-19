@@ -224,9 +224,11 @@ jobs:
       - name: Install Playwright Chromium
         run: cd docs && pnpm exec playwright install --with-deps chromium
 
-      # The harness's webServer boots `npm start` on :1239 itself, then asserts
-      # the runtime contract (shadow DOM / DOM properties / a11y / interaction)
-      # that Test.Html structurally cannot — see tests/README.md.
+      # The harness's webServer boots its own static server itself (port
+      # derived per-checkout, see docs/scripts/worktree-port.mjs — CI runs on
+      # an isolated single-use runner so the exact port doesn't matter here),
+      # then asserts the runtime contract (shadow DOM / DOM properties / a11y
+      # / interaction) that Test.Html structurally cannot — see tests/README.md.
       - name: Run contract harness
         run: cd docs && pnpm run test:browser
 

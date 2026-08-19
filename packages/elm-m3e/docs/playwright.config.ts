@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolveWorktreePort } from "./scripts/worktree-port.mjs";
 
 /**
  * Runtime contract harness for the M3e.* library.
@@ -12,13 +13,28 @@ import { defineConfig, devices } from "@playwright/test";
  * actual `Ui.*` modules) in Chromium and assert the runtime contract.
  *
  * Run: `npm run test:browser`. A `pretest:browser` hook kills anything
- * already listening on :1239 first, so this always rebuilds and serves
- * fresh rather than risking a pass against stale content — load-bearing for
- * the pre-push gate, since Netlify deploys from whatever `main` says passed.
- * Override the target with `BASE_URL=...` (skips the local server and the
- * port-kill hook has nothing to affect).
+ * already listening on THIS worktree's port first, so this always rebuilds
+ * and serves fresh rather than risking a pass against stale content —
+ * load-bearing for the pre-push gate, since Netlify deploys from whatever
+ * `main` says passed. Override the target with `BASE_URL=...` (skips the
+ * local server and the port-kill hook has nothing to affect).
+ *
+ * Port is DERIVED, not hardcoded — see scripts/worktree-port.mjs. This repo
+ * runs many git worktrees of the same monorepo concurrently (one per agent),
+ * and more than one can contain a copy of elm-m3e/docs. A hardcoded port
+ * (this used to be :1239) plus `reuseExistingServer` below meant that
+ * whichever worktree's `npm run serve` bound the port FIRST silently "won"
+ * it — every other worktree's Playwright suite then reused that process and
+ * ran assertions against a DIFFERENT worktree's rendered markup, producing
+ * broad, non-deterministic, escalating-with-more-agents failures that looked
+ * like flaky regressions but weren't. Hashing the worktree's absolute path
+ * into the port keeps one worktree's runs on a STABLE port (so
+ * `reuseExistingServer` still speeds up solo local iteration) while making
+ * two different worktrees collide only in the astronomically unlikely case
+ * of a hash collision (escape hatch: WORKTREE_PORT_SALT, see that module).
  */
-const baseURL = process.env.BASE_URL ?? "http://localhost:1239";
+const port = resolveWorktreePort();
+const baseURL = process.env.BASE_URL ?? `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: "./tests-browser",
@@ -65,15 +81,15 @@ export default defineConfig({
     // instantly, is deterministic, and is the artifact we actually ship — the
     // right target for a runtime-contract harness. Its stdout is piped so a
     // boot failure is visible in the CI log instead of a bare timeout.
-    // Locally: reuse a dev server already on :1239 for fast iteration, else
-    // start `elm-pages dev`.
+    // Locally: reuse a dev server already on this worktree's derived port
+    // for fast iteration, else start `elm-pages dev`.
     // Build once, serve statically — in CI AND locally. `elm-pages dev`
     // cold-compiles all routes on first request and holds a `/stream` SSE
     // connection open, so it blows the boot timeout and breaks `networkidle`.
     // Measured: the dev-server path times out at 480s locally. The static build
     // is deterministic, serves instantly, and is the artifact we actually ship.
     // `reuseExistingServer` still lets you point at a hand-started server.
-    command: "npm run build:site && PORT=1239 npm run serve",
+    command: `npm run build:site && PORT=${port} npm run serve`,
     // NOT `baseURL` bare: `/` has no prerendered file anymore (it's a
     // Netlify-only 301 to `/getting-started/welcome`, which `netlify.toml`
     // doesn't apply to this raw static server), and `serve-dist.mjs`'s SPA
