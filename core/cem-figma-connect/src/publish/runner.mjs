@@ -455,13 +455,45 @@ export async function publish({
     } else {
       for (const tag of cemTags) {
         const entry = byTag.get(tag);
-        const entryStatus = entry ? statusFn(entry) : "pending";
+        // Fix (publish, live-test finding): `statusFn` is dynamically
+        // resolved from the profile's status module and can throw for a
+        // SINGLE entry (e.g. src/visual/status.mjs -> sample.mjs ->
+        // drive.mjs's definitionsFor throwing on a data-shape it can't
+        // derive axis defaults from). Before this fix, that one throw was
+        // uncaught and killed the ENTIRE publish run for every cemTag in
+        // every label — never acceptable for a per-binding gate. Treat a
+        // throwing entry as "failed" (the existing status that already
+        // means "don't publish, show diagnostics") and keep going so every
+        // other entry is still classified and published normally.
+        let entryStatus;
+        let statusError;
+        if (!entry) {
+          entryStatus = "pending";
+        } else {
+          try {
+            entryStatus = statusFn(entry);
+          } catch (err) {
+            entryStatus = "failed";
+            statusError = err.message;
+          }
+        }
         if (PUBLISHABLE_STATUSES.has(entryStatus)) {
           publishableTags.push(tag);
         } else {
           const diffs =
-            entryStatus === "failed" ? diffPathsForBlockedEntry(visualModule, entry, resultsDir) : [];
-          blocked.push({ cemTag: tag, status: entryStatus, diffs });
+            !statusError && entryStatus === "failed"
+              ? diffPathsForBlockedEntry(visualModule, entry, resultsDir)
+              : [];
+          blocked.push({
+            cemTag: tag,
+            status: entryStatus,
+            diffs,
+            // Only present when `statusFn` itself threw — the error message,
+            // so a run summary reader can see WHY this entry was blocked
+            // (a genuine "gate could not be evaluated" failure), not just
+            // that it was.
+            ...(statusError ? { reason: statusError } : {}),
+          });
         }
       }
     }

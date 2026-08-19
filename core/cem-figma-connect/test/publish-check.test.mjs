@@ -786,6 +786,53 @@ test("publish: ONE passing + ONE failing binding -> publish set is EXACTLY the p
   }
 });
 
+// -- publish(): statusFn THROWING for one entry must not kill the whole run --
+//
+// Live-test finding (publish, first-ever real exercise of this path): if
+// `statusFn(entry)` throws for a single cemTag (e.g. the real
+// src/visual/status.mjs -> sample.mjs -> drive.mjs's definitionsFor
+// throwing on a data shape it can't derive axis defaults from), the
+// exception used to be uncaught and abort classification of every OTHER
+// cemTag too. It must instead be caught per-entry, treated as "failed"
+// (blocked, with the error message captured), and every other entry must
+// still classify and publish normally.
+test("publish: statusFn THROWING for one entry (of two) still publishes the other; the throwing one is blocked as 'failed' with its error message captured", async () => {
+  cleanB4Generated();
+  const scratch = mkScratchDir();
+  try {
+    await runEmit({ profileDir: b4ProfileDir, profileName: b4ProfileName });
+    const execFn = makeFakeExec();
+    const result = await publish({
+      profileDir: b4ProfileDir,
+      profileName: b4ProfileName,
+      fileKey: THROWAWAY_FILE_KEY,
+      dryRun: true,
+      env: { FIGMA_ACCESS_TOKEN: "fake-token" },
+      execFn,
+      publishedJsonPath: path.join(scratch, "published.json"),
+      stagingRoot: path.join(scratch, "staging"),
+      statusModulePath: path.join(here, "fixtures", "b4-status-throws.mjs"),
+    });
+
+    assert.equal(result.warnAndPass, false);
+    const [r] = result.results;
+    // Exactly the non-throwing entry is staged/published — the throwing
+    // m3e-badge's file never makes it into staging at all.
+    assert.deepEqual(r.files, ["m3e-bottom-sheet-bottom-sheet.figma.ts"]);
+    assert.deepEqual(r.gate.published, ["m3e-bottom-sheet"]);
+    assert.equal(r.gate.forced, false);
+    assert.equal(r.gate.blocked.length, 1);
+    assert.equal(r.gate.blocked[0].cemTag, "m3e-badge");
+    assert.equal(r.gate.blocked[0].status, "failed");
+    assert.deepEqual(r.gate.blocked[0].diffs, []);
+    assert.match(r.gate.blocked[0].reason, /simulated statusFn throw for m3e-badge/);
+    assert.equal(execFn.calls.length, 1, "the publishable half still calls `figma connect publish`");
+  } finally {
+    fs.rmSync(scratch, { recursive: true, force: true });
+    cleanB4Generated();
+  }
+});
+
 test("publish --force-gate: BOTH the passing and the failing binding publish; the run + published.json record are flagged forced:true", async () => {
   cleanB4Generated();
   const scratch = mkScratchDir();

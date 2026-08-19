@@ -101,6 +101,31 @@ test("status: a code-only entry (figmaSets: []) is gate-exempt — always 'pass'
   }
 });
 
+// Live-test finding (publish, real m3e-nav-menu shape): an entry whose
+// figmaSets ALL lack captured setProperties (a standalone Figma COMPONENT
+// bound via a non-"standalone" matcherKind — extraction only captures
+// setProperties for COMPONENT_SET nodes) must be gate-exempt too, not throw
+// all the way up through sampleDefault(). See sample.mjs's
+// hasNoCapturedSetProperties for the structural check this relies on.
+test("status: an entry whose figmaSets ALL lack captured setProperties (e.g. the real m3e-nav-menu shape) is gate-exempt — always 'pass', never throws", () => {
+  const scratch = mkScratchDir();
+  try {
+    const navMenuLikeEntry = {
+      ...buttonEntry,
+      cemTag: "m3e-fake-nav-menu",
+      matcherKind: "manual",
+      figmaSets: [{ nodeId: "99999:9999", setName: "Fake Standalone Component", fixedAttrs: {} }],
+      axes: [],
+      props: [],
+    };
+    const resultsDir = path.join(scratch, "results"); // deliberately never created
+    const overridesPath = path.join(scratch, "overrides.json"); // deliberately never created
+    assert.equal(status(navMenuLikeEntry, { resultsDir, overridesPath, figmaExport }), "pass");
+  } finally {
+    fs.rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
 // -- missing renders -> pending ------------------------------------------------
 
 test("status: no results directory at all -> pending (missing renders)", () => {
