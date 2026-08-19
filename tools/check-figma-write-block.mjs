@@ -3,6 +3,50 @@
 // classifier for `use_figma` MCP tool calls: decides whether a JS `code`
 // string is read-only inspection or performs a Figma Plugin API WRITE.
 //
+// MODES (mirrors tools/check-layout-only-classes.mjs's file shape: one file
+// holds both the pure classifier AND the CLI/hook entry point; the test file
+// imports the pure exports directly, never through the CLI):
+//   node tools/check-figma-write-block.mjs --hook   Claude Code PreToolUse:
+//       reads the hook JSON on stdin (tool_name + tool_input), and:
+//         - `create_new_file` / `generate_figma_design` (any matched
+//           wire-format spelling — see WIRE-NAME MATCHING below): ALWAYS
+//           denied (D6 ruling: no code-driven Figma content authoring).
+//         - `use_figma`: runs checkFigmaCode(tool_input.code); denies with
+//           explain(result) if blocked, allows otherwise.
+//         - any other tool_name: passes through immediately, unaffected.
+//       Blocking is signalled via the PreToolUse JSON contract (stdout JSON
+//       body `{ hookSpecificOutput: { hookEventName, permissionDecision:
+//       "deny", permissionDecisionReason } }`, exit 0), NOT via a nonzero
+//       exit code — this is DIFFERENT from check-layout-only-classes.mjs's
+//       PostToolUse contract (blocks via exit 2 + stderr text). Confirmed
+//       against the working PreToolUse example already live in this harness,
+//       ~/.claude/hooks/block-external-pr.sh (wired in ~/.claude/settings.json
+//       under PreToolUse/Bash), which uses this exact JSON+exit-0 shape.
+//
+// WIRE-NAME MATCHING (judgment call, flagged — see task-2-report.md):
+//   `mcp__claude_ai_Figma__use_figma` and `mcp__claude_ai_Figma__create_new_file`
+//   are CONFIRMED live wire-format tool names in this session's MCP surface
+//   (prefix `mcp__claude_ai_Figma__` + snake_case tool name). `generate_figma_design`
+//   is NOT currently invocable in this session's MCP surface (only documented
+//   by name in shipped skill docs), so its exact wire name could not be
+//   empirically confirmed. Ruling: match `mcp__claude_ai_Figma__generate_figma_design`
+//   (same confirmed convention) AND ALSO match the bare name
+//   `generate_figma_design` as defense-in-depth in case it ships under a
+//   different prefix. This hook matches by taking the tool_name's suffix
+//   after the last `__` (or the whole name if there is no `__`), so both the
+//   prefixed and bare spellings of all three tool names are covered
+//   uniformly without an explicit allowlist of full names.
+//
+// ERROR-SAFETY: an internal error reading/parsing THIS hook's own stdin JSON
+// (bad JSON, missing fields, etc.) must NEVER accidentally block an
+// unrelated tool call — it fails safe by NOT blocking (mirroring
+// check-layout-only-classes.mjs's "never block an edit because THIS script
+// broke" policy), but DOES log to stderr so the failure is visible. This is
+// intentionally DIFFERENT from the "default to block on ambiguity" principle
+// that governs classifying `use_figma` CODE content (checkFigmaCode's job,
+// above) — that principle is about content classification, not
+// hook-infrastructure errors.
+//
 // WHY THIS EXISTS (see docs/plans/2026-08-19-block-figma-content-authoring.md):
 // on 2026-08-19 an agent used the `use_figma` tool to author Figma content
 // directly via arbitrary JS (creating ~56 component instances with
@@ -301,3 +345,110 @@ export function explain(result) {
 }
 
 export { DENYLIST, WRITE_METHODS, WRITE_PROPERTIES };
+
+// ---------------------------------------------------------------------------
+// CLI / PreToolUse hook entry point.
+// ---------------------------------------------------------------------------
+
+import { fileURLToPath } from "node:url";
+
+// Tool names that are ALWAYS denied, regardless of their argument content —
+// these are pure code-driven content-authoring entry points with no
+// read-only mode (D6 ruling). Matched against the tool_name SUFFIX (see
+// bareToolName below), so both `mcp__claude_ai_Figma__create_new_file` and a
+// bare `create_new_file` match.
+const ALWAYS_DENY_TOOLS = ["create_new_file", "generate_figma_design"];
+
+// Claude Code MCP tool names arrive wire-formatted as
+// `mcp__<server>__<tool>` (confirmed live: `mcp__claude_ai_Figma__use_figma`,
+// `mcp__claude_ai_Figma__create_new_file`). Taking the suffix after the last
+// `__` recovers the bare tool name uniformly for both prefixed and
+// (possible, unconfirmed for generate_figma_design) bare spellings.
+function bareToolName(toolName) {
+  if (typeof toolName !== "string") return "";
+  const parts = toolName.split("__");
+  return parts[parts.length - 1];
+}
+
+function denyAndExit(reason) {
+  process.stdout.write(
+    JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        permissionDecision: "deny",
+        permissionDecisionReason: reason,
+      },
+    }) + "\n",
+  );
+  process.exit(0);
+}
+
+function runHookMode() {
+  let input = "";
+  process.stdin.on("data", (chunk) => (input += chunk));
+  process.stdin.on("end", () => {
+    let payload;
+    try {
+      payload = JSON.parse(input || "{}");
+    } catch (err) {
+      // Never block an unrelated tool call because THIS hook's own stdin
+      // was malformed — but log it so the failure is visible.
+      console.error(
+        `check-figma-write-block: hook-mode internal error parsing stdin (not blocking): ${err.message}`,
+      );
+      process.exit(0);
+      return;
+    }
+
+    try {
+      const toolName = payload?.tool_name;
+      const bareName = bareToolName(toolName);
+
+      if (ALWAYS_DENY_TOOLS.includes(bareName)) {
+        denyAndExit(
+          [
+            `Blocked by design: \`${toolName}\` performs code-driven Figma content authoring,`,
+            "which is never permitted regardless of arguments (D6 ruling — no code-driven",
+            "Figma content authoring). Content authoring must go through the reviewed",
+            "`figma-generate-design` / `figma-code-connect` skill workflows, not this tool.",
+            "  - See: docs/plans/2026-08-19-block-figma-content-authoring.md",
+          ].join("\n"),
+        );
+        return;
+      }
+
+      if (bareName === "use_figma") {
+        const code = payload?.tool_input?.code;
+        const result = checkFigmaCode(typeof code === "string" ? code : "");
+        if (result.blocked) {
+          denyAndExit(explain(result));
+          return;
+        }
+        process.exit(0);
+        return;
+      }
+
+      // Any other tool_name: pass through immediately, unaffected.
+      process.exit(0);
+    } catch (err) {
+      console.error(
+        `check-figma-write-block: hook-mode internal error (not blocking): ${err.message}`,
+      );
+      process.exit(0);
+    }
+  });
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args[0] === "--hook") {
+    runHookMode();
+    return;
+  }
+  console.error("usage: check-figma-write-block.mjs --hook");
+  process.exit(64);
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}

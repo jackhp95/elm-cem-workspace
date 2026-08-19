@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__claude_ai_Figma__use_figma|mcp__claude_ai_Figma__create_new_file|mcp__claude_ai_Figma__generate_figma_design|generate_figma_design",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/tools/check-figma-write-block.mjs\" --hook"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
