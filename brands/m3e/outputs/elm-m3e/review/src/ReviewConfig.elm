@@ -278,7 +278,19 @@ common =
     -- `import M3e exposing (..)` (the single-import goal of facade epic #52).
     , NoImportingEverything.rule [ "M3e" ] |> ignoreVendor
     , NoMissingTypeAnnotation.rule |> ignoreVendor
-    , NoMissingTypeAnnotationInLetIn.rule |> ignoreVendor
+
+    -- `Shared.elm`'s `navMenu.renderGroup` (and its inner `leaves`/`body` lets)
+    -- deliberately stay unannotated: the value flows into three different m3e
+    -- component call sites (`M3e.divider`, `M3e.Component.NavMenuItemGroup`,
+    -- `M3e.navMenu`) each demanding a different stacked extensible-record
+    -- phantom row (`Is s` widens `s` per-component). Hand-writing a concrete
+    -- annotation either under- or over-constrains that row and breaks
+    -- compilation (verified) — only Elm's own let-generalized inference can
+    -- find the row that unifies all three. Two path forms per entry cover
+    -- root- vs `docs/`-relative review runs.
+    , NoMissingTypeAnnotationInLetIn.rule
+        |> ignoreVendor
+        |> Rule.ignoreErrorsForFiles [ "app/Shared.elm", "docs/app/Shared.elm" ]
     , NoMissingTypeExpose.rule |> ignoreVendor |> ignorePublicApi |> ignoreRouteModules
     , NoConfusingPrefixOperator.rule
     , NoPrematureLetComputation.rule

@@ -192,6 +192,16 @@ src/Cem.elm::Under the builder package, this also covers all `M3e.<Component>.Bu
 src/Cem.elm::++ [ Cem.noMergedPipeAndSetter { allowedModules = [ "M3e", "Sl", "Wa" ] } ]
 src/Cem.elm::`M3e.<Component>.Build`, setters in `M3e.<Component>`).
 src/Cem.elm::[ Cem.noMergedPipeAndSetter { allowedModules = [ "M3e", "Sl", "Wa" ] }
+src/Cem.elm::e.g. `M3e.Family.Chip`) and the family CONFIG it was generated from: a
+src/Cem.elm::flattened family list into an Elm module the same way `M3eUtilityNames` is
+src/Cem.elm::{ componentNamespace = [ "M3e", "Component" ]
+src/Cem.elm::, familyNamespace = [ "M3e", "Family" ]
+src/Cem.elm::, families = M3e.Review.Families.families
+src/NoFamilyMemberDrift.elm::(`<familyNamespace>.<F>`, e.g. `M3e.Family.Chip`) is a flat re-export of every
+src/NoFamilyMemberDrift.elm::same "JSON can't be read at review time" pattern `M3eUtilityNames` uses).
+src/NoFamilyMemberDrift.elm::{ componentNamespace = [ "M3e", "Component" ]
+src/NoFamilyMemberDrift.elm::, familyNamespace = [ "M3e", "Family" ]
+src/NoFamilyMemberDrift.elm::, families = M3e.Review.Families.families
 src/Cem/Internal/Facts.elm::`M3e.Component.Button` → namespace `["M3e", "Component"]`), the barrel functions
 src/Cem/Internal/Facts.elm::(`M3e.toHtml`, `M3e.iconButton`, `M3e.Unsafe.*`) live at the root (`["M3e"]`).
 src/Cem/Internal/Facts.elm::as the barrel root namespace. `["M3e", "Component"]` → `Just ["M3e"]`.

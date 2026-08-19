@@ -1399,7 +1399,7 @@ navSections =
                 , ( "/guide/how-we-prove-it", "How we prove it" )
                 ]
               )
-            , ( Just "Reference"
+            , ( Nothing
               , [ ( "/guide/cheat-sheet", "Cheat sheet" )
                 , ( "/guide/glossary", "Glossary" )
                 , ( "/guide/reference", "Full API reference" )
@@ -1621,6 +1621,20 @@ searchOverlayId =
     "search-overlay"
 
 
+{-| The DOM id shared by both `searchFab` mounts (rail + bottom bar -- only
+one is ever visible at a time via CSS breakpoint, but both exist in the DOM
+simultaneously). `outsideSearchClickDecoder` treats a click landing on/inside
+either one as "not outside": without this, the SAME click that opens the
+overlay (dispatching `OpenSearch`, which arms the outside-click subscription
+via `subscriptions`) would still be mid-bubble toward `document` when that
+subscription attaches, so it would catch the tail of its own opening click
+and immediately re-close the overlay it just opened.
+-}
+searchFabId : String
+searchFabId =
+    "search-fab-trigger"
+
+
 {-| Click-outside-to-close for the search overlay.
 
 `m3e-search-view` is mounted with `popover="manual"` (set imperatively by the
@@ -1636,43 +1650,47 @@ after an outside click. So this subscription reimplements light-dismiss on
 the Elm side instead of switching the vendored component to `"auto"`.
 
 Only armed while `model.searchOpen` (see `subscriptions`), so it can't fire
-before the overlay exists or race the FAB's own `OpenSearch` click. A closed
-overlay's own internal escape/close-icon paths still go through
-`searchToggleDecoder` exactly as before -- this only adds the "click
-elsewhere on the page" case nothing else covers.
+before the overlay exists. It CAN still race the FAB's own `OpenSearch`
+click, though -- that same click is mid-bubble toward `document` at the
+moment this subscription attaches, so without excluding the FAB's own id
+(`searchFabId`) too, it would catch the tail of its own opening click and
+immediately re-close the overlay it just opened. A closed overlay's own
+internal escape/close-icon paths still go through `searchToggleDecoder`
+exactly as before -- this only adds the "click elsewhere on the page" case
+nothing else covers.
 
 -}
 outsideSearchClickDecoder : Decode.Decoder Msg
 outsideSearchClickDecoder =
-    Decode.field "target" (isOutsideElement searchOverlayId)
+    Decode.field "target" (isOutsideElements [ searchOverlayId, searchFabId ])
         |> Decode.andThen
             (\isOutside ->
                 if isOutside then
                     Decode.succeed CloseSearch
 
                 else
-                    Decode.fail "click landed inside the search overlay"
+                    Decode.fail "click landed inside the search overlay or on its own trigger"
             )
 
 
 {-| True once we've walked all the way up a clicked node's `parentNode` chain
-without finding an element whose `id` is `targetId`. Recurses via
+without finding an element whose `id` is any of `targetIds`. Recurses via
 `Decode.lazy` since DOM ancestry decoders can't be written as a plain
 non-recursive value.
 -}
-isOutsideElement : String -> Decode.Decoder Bool
-isOutsideElement targetId =
+isOutsideElements : List String -> Decode.Decoder Bool
+isOutsideElements targetIds =
     Decode.oneOf
         [ Decode.field "id" Decode.string
             |> Decode.andThen
                 (\id ->
-                    if id == targetId then
+                    if List.member id targetIds then
                         Decode.succeed False
 
                     else
                         Decode.fail "keep climbing"
                 )
-        , Decode.field "parentNode" (Decode.lazy (\_ -> isOutsideElement targetId))
+        , Decode.field "parentNode" (Decode.lazy (\_ -> isOutsideElements targetIds))
         , Decode.succeed True
         ]
 
@@ -1939,6 +1957,7 @@ searchFab extraClasses openMsg =
         , M3e.Component.Fab.extended True
         , M3e.Component.Fab.variant Value.secondary
         , M3e.Attributes.class extraClasses
+        , M3e.Attributes.id searchFabId
         , Aria.label "Search"
         , M3e.Events.onClick openMsg
         ]
