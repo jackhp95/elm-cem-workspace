@@ -1665,10 +1665,10 @@ componentCategories =
 -- TOP-LEVEL NAV RAIL / NAV BAR
 
 
-{-| One of the 5 top-level sections the rail/bar switch between. `href` is
+{-| One of the top-level sections the rail/bar switch between. `href` is
 where clicking the section navigates to — the section's real landing page
-(Guide, Examples) or, for the 3 sections with no landing page yet, its first
-real child (see `specs/2026-08-06-nav-rail-migration-design.md`, "Decided
+(Guide, Examples, Family) or, for the sections with no landing page yet, its
+first real child (see `specs/2026-08-06-nav-rail-migration-design.md`, "Decided
 information architecture"). `prefix` is the first URL path segment that
 belongs to this section, used only for highlighting which rail/bar item is
 current — it is independent of `href` (e.g. Components' `href` is
@@ -1689,6 +1689,7 @@ sections =
     , { label = "Styles", icon = "palette", href = "/styles/color", prefix = "styles" }
     , { label = "Examples", icon = "auto_awesome", href = "/examples", prefix = "examples" }
     , { label = "Components", icon = "widgets", href = "/components/button", prefix = "components" }
+    , { label = "Family", icon = "workspaces", href = "/family", prefix = "family" }
     ]
 
 
@@ -1729,8 +1730,9 @@ was stripped from every route when this was added). The `Head.Seo` title
 each route ALSO sets is a separate, deliberately untouched concern
 (search-result/social-preview copy, not what shows in the tab).
 
-Every route belongs to one of the 5 top-level sections now (`Route/`'s only
-directories are Components, Examples, GettingStarted, Guide, Styles), so
+Every route belongs to one of the top-level sections now (`Route/`'s only
+directories/files are Components, Examples, Family, GettingStarted, Guide,
+Styles), so
 `currentSectionLabel` always resolves to `Just` in practice; the `Nothing`
 arm is kept for the same reason `currentSectionLabel` keeps its own -- a
 plain exhaustive `case`, not a live special case. (The homepage used to be
