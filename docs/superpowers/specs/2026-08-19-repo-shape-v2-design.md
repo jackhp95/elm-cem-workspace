@@ -493,10 +493,8 @@ Headline as it bears on v2:
   scratch), `elm-events` (demo shell), `matraic-m3e-wt` (dangling worktree), `provcore-worktrees` (empty),
   `animal-spirits-eyg-spike` (orphaned spike).
 - **No duplicates of workspace content** among the spot-check repos — consolidation was clean.
-- **`elm-dom-decode`** — useful standalone Elm util with no current workspace home; needs Jack's call
-  (adopt into `packages/`/`pipeline/`, or leave standalone). *(The one placement question here that was
-  **not** part of the repo-shape-v2 live Q&A and remains genuinely open — a small, separate call, not
-  blocking wave 1.)*
+- **`elm-dom-decode`** — **excluded from this effort** (confirmed with Jack, 2026-08-19): not part of
+  the repo-shape-v2 scope. Stays standalone; no placement decision made here.
 
 **Bearing on the v2 shape:** the existence of 5 real brand repos strongly validates the `brands/<name>/`
 generalization — and the decided sequencing reflects it: settle the spec (done) → the `-elements`/
