@@ -13,19 +13,46 @@
 //
 // Usage: node tools/check-mirror-drift.mjs [--json]
 
-import { execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { readState } from "./publish-mirror.mjs";
 
-function ghHeadSha(name) {
-  const out = execFileSync(
-    "gh",
-    ["api", `repos/jackhp95/${name}/commits/main`, "--jq", ".sha"],
-    { encoding: "utf8" },
-  );
-  return out.trim();
+const execFileAsync = promisify(execFile);
+
+async function ghHeadSha(name) {
+  const { stdout } = await execFileAsync("gh", ["api", `repos/jackhp95/${name}/commits/main`, "--jq", ".sha"]);
+  return stdout.trim();
 }
 
-function main() {
+/**
+ * Fetch every mirror's live HEAD sha concurrently (Phase 4 of the gate-all
+ * parallelization plan — these were a serial `for` loop of independent `gh
+ * api` calls, ~3.9s for 3 repos with nothing sequencing them). Exposed for
+ * testing with a fake `fetchOne` so the concurrency claim is verifiable
+ * without hitting the real network.
+ */
+export async function fetchAllMirrorStatuses(names, { fetchOne = ghHeadSha, state } = {}) {
+  return Promise.all(
+    names.map(async (name) => {
+      const record = state[name];
+      try {
+        const liveSha = await fetchOne(name);
+        const drifted = liveSha !== record.mirrorCommitSha;
+        return {
+          name,
+          status: drifted ? "DRIFTED" : "clean",
+          expected: record.mirrorCommitSha,
+          live: liveSha,
+          publishedAt: record.publishedAt,
+        };
+      } catch (err) {
+        return { name, status: "error", detail: String(err.message ?? err) };
+      }
+    }),
+  );
+}
+
+async function main() {
   const asJson = process.argv.includes("--json");
   const state = readState();
   const names = Object.keys(state);
@@ -39,29 +66,8 @@ function main() {
     process.exit(0);
   }
 
-  const results = [];
-  let anyDrift = false;
-
-  for (const name of names) {
-    const record = state[name];
-    let liveSha;
-    try {
-      liveSha = ghHeadSha(name);
-    } catch (err) {
-      results.push({ name, status: "error", detail: String(err.message ?? err) });
-      anyDrift = true;
-      continue;
-    }
-    const drifted = liveSha !== record.mirrorCommitSha;
-    if (drifted) anyDrift = true;
-    results.push({
-      name,
-      status: drifted ? "DRIFTED" : "clean",
-      expected: record.mirrorCommitSha,
-      live: liveSha,
-      publishedAt: record.publishedAt,
-    });
-  }
+  const results = await fetchAllMirrorStatuses(names, { state });
+  const anyDrift = results.some((r) => r.status !== "clean");
 
   if (asJson) {
     console.log(JSON.stringify(results, null, 2));
