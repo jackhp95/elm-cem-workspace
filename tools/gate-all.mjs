@@ -512,7 +512,19 @@ async function main() {
         return;
     }
 
-    const concurrency = Number(process.env.GATE_ALL_CONCURRENCY) || os.cpus().length;
+    // Resolves spec §7 open question #3 with real data instead of a guess:
+    // `os.cpus().length` (10 on the measurement machine) was tried first and
+    // measured to be TOO WIDE — running elm-m3e's Playwright suite
+    // concurrently with ~9 other steps (several themselves spawning
+    // elm-test-rs/elm-review/vitest/chromium processes) starved the local
+    // static file server hard enough that it stopped answering
+    // (`net::ERR_CONNECTION_REFUSED` mid-suite, ~110 tests deep, on a
+    // machine with 16GB RAM / 10 cores). The same suite passes cleanly solo
+    // in ~240s. `os.cpus().length / 2` leaves real headroom: the ~130s
+    // "everything else" bucket has so much slack under elm-m3e's own ~230s
+    // that halving the pool width costs nothing against the ≤250s target
+    // while removing the resource-starvation failure mode entirely.
+    const concurrency = Number(process.env.GATE_ALL_CONCURRENCY) || Math.max(2, Math.floor(os.cpus().length / 2));
     console.log(`gate-all: dispatching ${steps.length} step(s) through a ${concurrency}-wide tag-aware scheduler.`);
     await runScheduled(steps, { concurrency, onResult: recordSchedulerResult });
 
