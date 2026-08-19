@@ -31,13 +31,103 @@ import path from "node:path";
 const REPO_ROOT = path.resolve(new URL(".", import.meta.url).pathname, "..");
 const STATE_PATH = path.join(REPO_ROOT, "tools", "publish-mirror-state.json");
 
-export function readState() {
-  if (!existsSync(STATE_PATH)) return {};
-  return JSON.parse(readFileSync(STATE_PATH, "utf8"));
+export function readState(statePath = STATE_PATH) {
+  if (!existsSync(statePath)) return {};
+  return JSON.parse(readFileSync(statePath, "utf8"));
 }
 
-function writeState(state) {
-  writeFileSync(STATE_PATH, JSON.stringify(state, null, 2) + "\n");
+function writeState(state, statePath = STATE_PATH) {
+  writeFileSync(statePath, JSON.stringify(state, null, 2) + "\n");
+}
+
+// Root cause (2026-08-18, elm-typed-html + elm-html-intermediate-representation
+// + elm-m3e all needed manual "Backfilled" notes): writeState() above only
+// ever mutated the LOCAL file. Nothing in this script ever committed or
+// pushed it back to elm-cem-workspace's own origin — every prior record
+// reached origin only via a separate, manual, after-the-fact commit
+// (confirmed: `git log --diff-filter=M -- tools/publish-mirror-state.json`
+// shows exactly 3 commits, all hand-written "chore: record/backfill publish
+// state", never authored by this script). Per repo convention every
+// mutating subagent works in an ephemeral git worktree, so an uncommitted
+// local write is one process-kill, permission-interrupt, or forgotten
+// follow-up away from vanishing without a trace — exactly what happened
+// each time. This makes the record durable in the SAME run, synchronously,
+// so there is no separate step for a human/agent to forget.
+function commitAndPushStateFile({ repoRoot, statePath, message }) {
+  const branch = sh("git", ["-C", repoRoot, "rev-parse", "--abbrev-ref", "HEAD"]).trim();
+  if (branch === "HEAD") {
+    throw new Error(
+      `${repoRoot} is in detached HEAD — refusing to auto-commit/push ` +
+        `${path.relative(repoRoot, statePath)} from a detached checkout. Commit it manually.`,
+    );
+  }
+
+  // Only stage the state file itself — never sweep up unrelated in-flight
+  // changes that might exist elsewhere in this worktree.
+  sh("git", ["-C", repoRoot, "add", "--", statePath]);
+  const staged = sh("git", ["-C", repoRoot, "diff", "--cached", "--name-only"]).trim();
+  if (staged) {
+    sh("git", ["-C", repoRoot, "commit", "-m", message]);
+  }
+
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const push = spawnSync("git", ["-C", repoRoot, "push", "origin", `HEAD:${branch}`], {
+      encoding: "utf8",
+    });
+    if (push.status === 0) return;
+    if (attempt === 2) {
+      throw new Error(
+        `git push of ${path.relative(repoRoot, statePath)} to origin/${branch} failed: ` +
+          (push.stderr || push.stdout || `exit ${push.status}`),
+      );
+    }
+    // origin/<branch> moved since we started (a concurrent publish of a
+    // different package, or unrelated work landing on this branch) — merge
+    // it in and retry exactly once. A merge, never a rebase: this process
+    // must not rewrite commits it didn't create.
+    sh("git", ["-C", repoRoot, "fetch", "origin", branch]);
+    const merge = spawnSync("git", ["-C", repoRoot, "merge", "--no-edit", `origin/${branch}`], {
+      encoding: "utf8",
+    });
+    if (merge.status !== 0) {
+      spawnSync("git", ["-C", repoRoot, "merge", "--abort"], { encoding: "utf8" });
+      throw new Error(
+        `origin/${branch} moved and merging it in to push ${path.relative(repoRoot, statePath)} ` +
+          `conflicted — resolve manually (the record is still committed locally): ` +
+          (merge.stderr || merge.stdout),
+      );
+    }
+  }
+}
+
+export function recordPublish({
+  repoRoot = REPO_ROOT,
+  statePath = STATE_PATH,
+  name,
+  workspaceSha,
+  mirrorSha,
+  publishedAt = new Date().toISOString(),
+}) {
+  const state = readState(statePath);
+  state[name] = { publishedWorkspaceSha: workspaceSha, mirrorCommitSha: mirrorSha, publishedAt };
+  writeState(state, statePath);
+  commitAndPushStateFile({
+    repoRoot,
+    statePath,
+    message: `chore(publish-mirror-state): record ${name}@${mirrorSha.slice(0, 8)} sync`,
+  });
+}
+
+// Ground truth check: trusting the just-pushed clone's local `rev-parse
+// HEAD` is *usually* right, but the only thing check-mirror-drift.mjs (and
+// any future publish) actually cares about is what GitHub thinks
+// jackhp95/<name>'s main is — so confirm that directly instead of assuming
+// the local clone's post-push HEAD matches what landed. Cheap, and removes
+// a whole class of "recorded the wrong SHA" drift.
+function remoteHeadSha(remote, branch) {
+  const out = sh("git", ["ls-remote", remote, `refs/heads/${branch}`]);
+  const line = out.trim().split("\n")[0] ?? "";
+  return line.split(/\s+/)[0] ?? "";
 }
 
 // Common baseline: files this workspace's root owns on behalf of every
@@ -232,17 +322,45 @@ function main() {
   sh("git", ["-C", cloneDir, "commit", "-m", commitMsg]);
   sh("git", ["-C", cloneDir, "push", "origin", "HEAD:main"]);
   const mirrorSha = sh("git", ["-C", cloneDir, "rev-parse", "HEAD"]).trim();
-  console.log(`Pushed to jackhp95/${name}: ${commitMsg} (${mirrorSha})`);
 
-  const state = readState();
-  state[name] = {
-    publishedWorkspaceSha: sh("git", ["-C", REPO_ROOT, "rev-parse", "HEAD"]).trim(),
-    mirrorCommitSha: mirrorSha,
-    publishedAt: new Date().toISOString(),
-  };
-  writeState(state);
-  console.log(`Recorded publish state in tools/publish-mirror-state.json — this is what` +
-    ` tools/check-mirror-drift.mjs compares the live repo against.`);
+  // Confirm what GitHub actually has, not just what our local clone thinks
+  // it just pushed.
+  const liveSha = remoteHeadSha(remote, "main");
+  if (liveSha !== mirrorSha) {
+    console.error(
+      `FATAL: push to jackhp95/${name} reported success, but \`git ls-remote\` shows main ` +
+        `is at ${liveSha || "(nothing)"}, not the pushed ${mirrorSha}. Refusing to record a ` +
+        `state entry that doesn't match reality — investigate the mirror directly before retrying.`,
+    );
+    process.exit(1);
+  }
+  console.log(`Pushed to jackhp95/${name}: ${commitMsg} (${mirrorSha}) — verified via ls-remote.`);
+
+  const workspaceShaFull = sh("git", ["-C", REPO_ROOT, "rev-parse", "HEAD"]).trim();
+  const publishedAt = new Date().toISOString();
+  try {
+    recordPublish({ name, workspaceSha: workspaceShaFull, mirrorSha, publishedAt });
+  } catch (err) {
+    console.error(
+      `\nFATAL: mirror push for ${name} SUCCEEDED and is verified live at jackhp95/${name}@` +
+        `${mirrorSha} — but recording + pushing that fact to tools/publish-mirror-state.json ` +
+        `failed, so it is NOT yet durable:\n  ${err.message}\n\n` +
+        `Do NOT re-run --push (that republishes, harmlessly, but won't fix this). Instead, ` +
+        `manually add this record, then commit + push tools/publish-mirror-state.json yourself:\n` +
+        `  "${name}": {\n` +
+        `    "publishedWorkspaceSha": "${workspaceShaFull}",\n` +
+        `    "mirrorCommitSha": "${mirrorSha}",\n` +
+        `    "publishedAt": "${publishedAt}",\n` +
+        `    "note": "Backfilled — mirror push succeeded but publish-mirror.mjs's own state-commit failed: ${err.message}"\n` +
+        `  }`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    `Recorded + pushed publish state for ${name} to origin — tools/publish-mirror-state.json ` +
+      `now durably reflects this publish (this is what tools/check-mirror-drift.mjs compares ` +
+      `the live repo against). No manual follow-up needed.`,
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
