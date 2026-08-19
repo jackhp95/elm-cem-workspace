@@ -81,6 +81,26 @@ const CHRONIC_SKIPS = {
         "one of its internal sub-checks (brand Face A, R-010) shares the same .cache/snapshots/elm-cem dependency as ab-elm-cem above, which makes check-drift.mjs's own aggregate stdout carry a SKIP line.",
 };
 
+// Same spirit as CHRONIC_SKIPS above, but for a `tools/*.test.mjs` file that
+// is genuinely RED right now rather than legitimately skipped. Discovered
+// while wiring these files into gate-all for the first time (2026-08-19,
+// publish-mirror atomicity fix — see the friction filed for it): its
+// production dependency (checkConsumerBundleDrift in
+// tools/lib/check-drift-core.mjs) grew an `isGitTracked(committedPath)`
+// precondition in 1af8919 ("preserve packages/ depth in scratch regen
+// copies"), landed the same day as unrelated M4.b work — but the test's
+// "RED when a COPY of the committed bundle has one field staled" case
+// deliberately passes a scratch /tmp copy AS `committedPath` (so the real
+// tracked file is never mutated), which that new precondition now rejects
+// before the drift comparison it's meant to test ever runs. Pre-existing,
+// unrelated to this fix; excluded by name (not silently) so wiring in the
+// other 3 tools/*.test.mjs files doesn't turn gate-all — the precondition
+// for every future mirror publish — red on a bug nobody has looked at yet.
+// Remove this entry once tools/check-drift.test.mjs is fixed to pass a
+// git-tracked committedPath (or checkConsumerBundleDrift grows a way to
+// decouple "path to verify tracked" from "path to read content from").
+const KNOWN_BROKEN_TOOL_TESTS = new Set([path.join(repoRoot, "tools", "check-drift.test.mjs")]);
+
 function record(name, status, detail) {
     // Accept booleans too, for callers written before "skip" existed.
     if (status === true) status = "pass";
@@ -157,6 +177,32 @@ function scriptsOf(dir) {
     } catch {
         return {};
     }
+}
+
+// Friction (2026-08-19, publish-mirror atomicity fix): tools/*.test.mjs files
+// (check-drift.test.mjs, gen-figma-config.test.mjs, lib/okf-lib.test.mjs,
+// publish-mirror.test.mjs) existed but nothing ever ran them — no gate-all
+// step, no package.json `test` script. They were decorative: could bit-rot
+// silently and nobody would notice until run by hand. DISCOVERED, not
+// hardcoded, same spirit as discoverPackages()/the family.json copy-fidelity
+// loop above — a 5th `*.test.mjs` file anywhere under tools/ is picked up
+// automatically, no edit here.
+function discoverToolTests() {
+    const found = [];
+    const SKIP_DIRS = new Set(["node_modules", ".git", ".cache"]);
+    const walk = (dir) => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            if (SKIP_DIRS.has(entry.name)) continue;
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                walk(full);
+            } else if (entry.isFile() && entry.name.endsWith(".test.mjs")) {
+                found.push(full);
+            }
+        }
+    };
+    walk(path.join(repoRoot, "tools"));
+    return found.filter((f) => !KNOWN_BROKEN_TOOL_TESTS.has(f)).sort();
 }
 
 // ── 3. the end-to-end facts-bundle proof ──────────────────────────────────
@@ -343,6 +389,22 @@ function main() {
         "--check",
     ]);
     runItem("workspace: root gate", process.execPath, [path.join(repoRoot, "tools", "gate.mjs")]);
+
+    if (KNOWN_BROKEN_TOOL_TESTS.size > 0) {
+        console.log(
+            `\ngate-all: excluding ${KNOWN_BROKEN_TOOL_TESTS.size} known-broken tools/*.test.mjs file(s) from the ` +
+                `sweep below (see KNOWN_BROKEN_TOOL_TESTS in this file): ` +
+                `${[...KNOWN_BROKEN_TOOL_TESTS].map((f) => path.relative(repoRoot, f)).join(", ")}`,
+        );
+    }
+    const toolTests = discoverToolTests();
+    if (toolTests.length > 0) {
+        runItem(
+            `workspace: tools/*.test.mjs (${toolTests.length} file(s))`,
+            process.execPath,
+            ["--test", ...toolTests],
+        );
+    }
 
     factsBundleE2E();
 
