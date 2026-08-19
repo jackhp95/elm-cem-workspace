@@ -15,6 +15,7 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import M3e exposing (Element)
 import M3e.Attributes
+import M3e.Component.Card
 import M3e.Component.Heading
 import M3e.Events
 import M3e.Kind
@@ -196,7 +197,11 @@ surfaces (optionally `M3e`, then the required-record `component` / `build`
 surfaces, and always `HTML`). The site-wide `activeSurface` is used when this
 example offers it; otherwise it falls back to `defaultSurfaceFor ex` (the
 example's own first-offered surface). Grouped as one `space-y-3` block so
-title/preview/tabs/code stay tight while sections stay apart.
+title/preview/tabs/code stay tight while sections stay apart. The tab strip and the
+code it switches share one card (`Card.header` for the tabs, `Card.content` for the
+panel track) — the same header/content anatomy `/components/card/` documents — so the
+tabs read as controlling that card rather than floating between it and the preview
+above.
 -}
 exampleBlock : Surface -> UsageExample -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
 exampleBlock activeSurface ex =
@@ -216,10 +221,14 @@ exampleBlock activeSurface ex =
     TypedHtml.div [ TA.class "space-y-3" ]
         [ TypedHtml.p [ TA.class "max-w-2xl" ] [ M3e.text ex.title ]
         , Doc.showcase (Doc.rawPreview ex.html)
-        , surfaceTabs surface ex
-        , Doc.Slider.slidingPanels
-            (activeIndexFor surface ex)
-            (List.map (\( _, l ) -> codeFor l ex) (surfacesFor ex))
+        , M3e.card []
+            [ M3e.Component.Card.header (surfaceTabs surface ex)
+            , M3e.Component.Card.content
+                (Doc.Slider.slidingPanels
+                    (activeIndexFor surface ex)
+                    (List.map (\( _, l ) -> codeFor l ex) (surfacesFor ex))
+                )
+            ]
         ]
 
 
@@ -329,10 +338,10 @@ surface is identical to `M3e` by design, so we show a short rationale instead of
 hollow duplicate.
 
 -}
-codeFor : Surface -> UsageExample -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+codeFor : Surface -> UsageExample -> Element (M3e.Component.Card.Is s) admittedBy msg
 codeFor surface ex =
     let
-        elmOrHtml : Maybe String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+        elmOrHtml : Maybe String -> Element (M3e.Component.Card.Is s) admittedBy msg
         elmOrHtml field =
             case field of
                 Just code ->
@@ -341,7 +350,7 @@ codeFor surface ex =
                 Nothing ->
                     Doc.codeBlock Doc.Xml ex.html
 
-        recordBuildCode : Maybe String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+        recordBuildCode : Maybe String -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
         recordBuildCode field surfaceName =
             case field of
                 Just code ->
@@ -371,34 +380,31 @@ We surface that fact rather than hiding the tab (a hidden tab reads as "this
 surface doesn't apply", which is the wrong lesson — it applies, it's just a no-op
 here).
 
-Wrapped with the same `overflow-x-auto p-4` treatment as `Doc.codeBlock` so that
-the paragraph does not overflow on mobile when this panel is the inactive (inert)
-panel in a `Doc.Slider.slidingPanels` stack.
+Same `Card.content`-slot treatment as `Doc.codeBlock`: padding comes free from the
+card's own tokens instead of a hand-painted `p-4`, and `overflow-x-auto` is scoped to
+an inner div (containment for when this panel is the inactive/inert panel in a
+`Doc.Slider.slidingPanels` stack, so it can't force horizontal page overflow) rather
+than the whole card.
 
 -}
-identicalSurfaceNote : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+identicalSurfaceNote : String -> Element (M3e.Component.Card.Is s) admittedBy msg
 identicalSurfaceNote surface =
-    -- The outer `<div>` stays a plain div — this is one arm of the `case` in
-    -- `codeFor`, whose other arms are `Doc.codeBlock` (also `DivIs`), and
-    -- `overflow-x-auto` is kept here as the visible scroll affordance. The
-    -- former surface/foreground pair (`bg-surface-container` + `text-on-surface`
-    -- + `rounded-md-corner-medium`) becomes an `m3e-card` (`filled`) in the
-    -- default (unpadded) slot, with `p-4` kept as the inner paragraph's own
-    -- layout padding so the card isn't double-padded.
-    TypedHtml.div [ TA.class "overflow-x-auto" ]
-        [ M3e.card
-            [ M3e.Attributes.variant Value.filled ]
-            [ TypedHtml.p [ TA.class "p-4" ]
-                [ M3e.text
-                    (surface
-                        ++ " is identical to the M3e tab for this example — its content has no required slots or attributes for the "
-                        ++ surface
-                        ++ " surface to enforce, so it would be a hollow duplicate of M3e. Reach for "
-                        ++ surface
-                        ++ " on an example whose composition it can hold a guarantee over."
-                    )
+    M3e.card
+        [ M3e.Attributes.variant Value.filled ]
+        [ M3e.Component.Card.content
+            (TypedHtml.div [ TA.class "overflow-x-auto" ]
+                [ TypedHtml.p []
+                    [ M3e.text
+                        (surface
+                            ++ " is identical to the M3e tab for this example — its content has no required slots or attributes for the "
+                            ++ surface
+                            ++ " surface to enforce, so it would be a hollow duplicate of M3e. Reach for "
+                            ++ surface
+                            ++ " on an example whose composition it can hold a guarantee over."
+                        )
+                    ]
                 ]
-            ]
+            )
         ]
 
 
