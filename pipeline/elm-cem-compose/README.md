@@ -1,7 +1,7 @@
 # jackhp95/elm-cem-compose
 
 A headless, type-directed editor for building a valid tree of custom elements
-from a machine-readable component manifest ([`jackhp95/elm-cem-facts`](../elm-cem/facts)).
+from a machine-readable component manifest ([`jackhp95/elm-cem-facts`](../elm-cem-facts)).
 
 ## Dependencies
 

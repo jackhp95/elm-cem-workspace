@@ -6,7 +6,7 @@
         ".elm-pages",
         "../../package/elm-m3e/src",
         "../../package/elm-m3e/elm-m3e-families/src",
-        "../../../../../pipeline/elm-cem/facts/src",
+        "../../../../../pipeline/elm-cem-facts/src",
         "../../../../../pipeline/elm-cem-compose/src",
         "vendor/elm-foundation"
     ],

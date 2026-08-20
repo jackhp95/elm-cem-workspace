@@ -703,7 +703,7 @@ function syncExposedModules(output, publishShape) {
     // dependency on `jackhp95/elm-cem-facts`, so that `elm make --docs` can
     // resolve `Cem.Facts`; that dep-stamping is the Stage-F cutover (issue #48).
     // Until then, regenerated brands compile `Review.Facts` via an application
-    // whose source-directories reach the canonical `elm-cem/facts/src`. Any
+    // whose source-directories reach the canonical `elm-cem-facts/src`. Any
     // OTHER `<Lib>.Review.*` module stays unexposed, mirroring `Internal`.
     .filter((m) => /(^|\.)Review\.Facts$/.test(m) || !/(^|\.)Review(\.|$)/.test(m))
     .sort();

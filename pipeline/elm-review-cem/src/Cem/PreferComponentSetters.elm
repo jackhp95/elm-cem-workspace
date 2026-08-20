@@ -64,39 +64,13 @@ initContext facts =
         |> Rule.withModuleNameLookupTable
 
 
-{-| Collect a declaration's top-level `let` bindings so a content list bound to a
-name (`let content = [ … ] in <root>.listItem [] content`) is still traceable.
--}
 declarationEnterVisitor : Node Declaration.Declaration -> Context -> ( List (Error {}), Context )
 declarationEnterVisitor node context =
-    case Node.value node of
-        Declaration.FunctionDeclaration { declaration } ->
-            case Node.value (Node.value declaration).expression of
-                Expression.LetExpression { declarations } ->
-                    let
-                        scope =
-                            List.foldl
-                                (\dec acc ->
-                                    case Node.value dec of
-                                        Expression.LetFunction fn ->
-                                            let
-                                                fnDecl =
-                                                    Node.value fn.declaration
-                                            in
-                                            Dict.insert (Node.value fnDecl.name) fnDecl.expression acc
+    case Facts.collectLetScope node of
+        Just scope ->
+            ( [], { context | scope = scope } )
 
-                                        _ ->
-                                            acc
-                                )
-                                Dict.empty
-                                declarations
-                    in
-                    ( [], { context | scope = scope } )
-
-                _ ->
-                    ( [], { context | scope = Dict.empty } )
-
-        _ ->
+        Nothing ->
             ( [], context )
 
 

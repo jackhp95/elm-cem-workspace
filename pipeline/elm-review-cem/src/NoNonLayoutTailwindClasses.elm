@@ -6,6 +6,7 @@ module NoNonLayoutTailwindClasses exposing (rule, TokenUtilityBridge)
 
 -}
 
+import Cem.Internal.Gate as Gate
 import Elm.Syntax.Expression as Expression exposing (Expression)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Review.ModuleNameLookupTable as ModuleNameLookupTable exposing (ModuleNameLookupTable)
@@ -250,25 +251,12 @@ initialContext config =
     Rule.initContextCreator
         (\lookupTable moduleName () ->
             { lookupTable = lookupTable
-            , gated = not (isAllowedModule config.allowedModules (String.join "." moduleName))
+            , gated = not (Gate.isAllowed config.allowedModules (String.join "." moduleName))
             , config = resolved
             }
         )
         |> Rule.withModuleNameLookupTable
         |> Rule.withModuleName
-
-
-{-| A module is allowed when its name equals, or is nested under (at a dot
-boundary), one of the allow-list prefixes — so `"Seam"` covers `Seam` and
-`Seam.Surface`. Same matching as `NoSeamOutsideAllowedModules.isAllowed`, on
-purpose: the two fences share a destination and should agree on what "inside it"
-means.
--}
-isAllowedModule : List String -> String -> Bool
-isAllowedModule allowed currentModule =
-    List.any
-        (\prefix -> currentModule == prefix || String.startsWith (prefix ++ ".") currentModule)
-        allowed
 
 
 expressionVisitor : Node Expression -> Context -> ( List (Error {}), Context )

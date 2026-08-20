@@ -72,7 +72,7 @@ if (!fs.existsSync(irSrc)) {
 const factsArg = argVal("--facts=");
 const factsSrc = factsArg
   ? path.resolve(repoRoot, factsArg)
-  : path.resolve(repoRoot, "../../../../../pipeline/elm-cem/facts/src");
+  : path.resolve(repoRoot, "../../../../../pipeline/elm-cem-facts/src");
 
 if (!fs.existsSync(factsSrc)) {
   console.error(`validate: cannot find elm-cem-facts/src at ${factsSrc}`);

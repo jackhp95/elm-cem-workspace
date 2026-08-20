@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Seeds the local Elm package cache with `jackhp95/elm-cem-facts` (M1.d, Stage-F
 // cutover). elm-review-cem now declares a real `dependencies` entry on the
-// unpublished `jackhp95/elm-cem-facts` package (packages/elm-cem/facts), whose
-// canonical source lives at `../elm-cem/facts/src/Cem/Facts.elm`. `elm` and
+// unpublished `jackhp95/elm-cem-facts` package (pipeline/elm-cem-facts), whose
+// canonical source lives at `../elm-cem-facts/src/Cem/Facts.elm`. `elm` and
 // `elm-review` resolve declared dependencies from the ELM_HOME package cache
 // (~/.elm/0.19.1/packages/<author>/<pkg>/<version>/{elm.json,docs.json}), not
 // from source-directories — packages can't declare source-directories at all.
@@ -26,7 +26,7 @@
 // irreversible), but it does have its own `jackhp95/elm-cem-facts` GitHub
 // mirror, published by `tools/publish-mirror.mjs` the same way this repo is.
 // Outside the monorepo (a plain `git clone` of this repo on its own), the
-// `packages/elm-cem/facts` relative path doesn't exist — this script falls
+// `pipeline/elm-cem-facts` relative path doesn't exist — this script falls
 // back to a shallow clone of that mirror instead, cached and refreshed like
 // any other dependency fetch. Override the mirror URL with
 // `ELM_CEM_FACTS_GIT_URL` if you need to point at a fork or a local path.
@@ -42,7 +42,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const workspaceRoot = path.resolve(repoRoot, "..", "..");
 
 function resolveFactsDir() {
-  const monorepoFactsDir = path.resolve(workspaceRoot, "packages", "elm-cem", "facts");
+  const monorepoFactsDir = path.resolve(workspaceRoot, "pipeline", "elm-cem-facts");
   if (fs.existsSync(path.join(monorepoFactsDir, "elm.json"))) {
     return monorepoFactsDir;
   }
@@ -55,7 +55,7 @@ function resolveFactsDir() {
     spawnSync("git", ["-C", mirrorCacheDir, "fetch", "--depth", "1", "origin", "main"], { stdio: "inherit" });
     spawnSync("git", ["-C", mirrorCacheDir, "reset", "--hard", "origin/main"], { stdio: "inherit" });
   } else {
-    console.log(`stage-facts-elm-home: no in-monorepo packages/elm-cem/facts — cloning ${gitUrl} as a fallback (standalone checkout)`);
+    console.log(`stage-facts-elm-home: no in-monorepo pipeline/elm-cem-facts — cloning ${gitUrl} as a fallback (standalone checkout)`);
     fs.rmSync(mirrorCacheDir, { recursive: true, force: true });
     const clone = spawnSync("git", ["clone", "--depth", "1", gitUrl, mirrorCacheDir], { stdio: "inherit" });
     if (clone.status !== 0) {

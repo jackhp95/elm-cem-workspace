@@ -27,6 +27,7 @@ the same exposing list.
 
 -}
 
+import Cem.Internal.Gate as Gate
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Module as Module
 import Elm.Syntax.Node as Node
@@ -55,7 +56,7 @@ moduleDefinitionVisitor node allowedModules =
         moduleName =
             mod |> Module.moduleName |> String.join "."
     in
-    if isAllowed allowedModules moduleName then
+    if Gate.isAllowed allowedModules moduleName then
         ( [], allowedModules )
 
     else
@@ -68,13 +69,6 @@ moduleDefinitionVisitor node allowedModules =
                 findMergedInExposing exposingNode
         in
         ( errors, allowedModules )
-
-
-isAllowed : List String -> String -> Bool
-isAllowed allowed moduleName =
-    List.any
-        (\prefix -> moduleName == prefix || String.startsWith (prefix ++ ".") moduleName)
-        allowed
 
 
 findMergedInExposing : Exposing -> ( List (Error {}), Set String )

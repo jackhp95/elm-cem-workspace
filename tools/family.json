@@ -177,7 +177,7 @@
       }
     },
     "elm-cem-facts": {
-      "srcDir": "pipeline/elm-cem/facts",
+      "srcDir": "pipeline/elm-cem-facts",
       "mirror": { "auditedExclusions": false }
     },
     "elm-cem-figma-connect": {

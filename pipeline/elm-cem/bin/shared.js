@@ -51,12 +51,12 @@ function resolveIrSrc() {
   return candidates.find((c) => c && fs.existsSync(c)) || null;
 }
 
-// Local src/ for the unpublished elm-cem-facts package (bundled inside elm-cem).
+// Local src/ for the unpublished elm-cem-facts package (top-level sibling of elm-cem).
 function resolveFactsSrc() {
   const candidates = [];
   if (process.env.FACTS_SRC) candidates.push(process.env.FACTS_SRC);
-  candidates.push(path.resolve(__dirname, "..", "facts", "src"));
-  candidates.push(path.resolve(process.cwd(), "..", "elm-cem", "facts", "src"));
+  candidates.push(path.resolve(__dirname, "..", "..", "elm-cem-facts", "src"));
+  candidates.push(path.resolve(process.cwd(), "..", "elm-cem-facts", "src"));
   return candidates.find((c) => c && fs.existsSync(c)) || null;
 }
 

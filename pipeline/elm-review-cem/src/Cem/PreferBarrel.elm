@@ -49,6 +49,7 @@ genuine `<root>.<Comp>.*` / `<root>.Token.*` facets are touched — never
 -}
 
 import Cem.Facts exposing (Fact)
+import Cem.Internal.BarrelMapping as Mapping
 import Cem.Internal.Facts as Facts
 import Dict exposing (Dict)
 import Elm.Syntax.Expression as Expression exposing (Expression)
@@ -331,12 +332,12 @@ barrelReplacement fact name =
         Just ( Facts.barrelRoot fact ++ "." ++ name, "constructor" )
 
     else
-        case attrBarrelName fact name of
+        case Mapping.attrToBarrel fact name of
             Just barrelName ->
                 Just ( Facts.barrelRoot fact ++ "." ++ barrelName, "attribute setter" )
 
             Nothing ->
-                case slotBarrelName fact name of
+                case Mapping.slotToBarrel fact name of
                     Just generic ->
                         Just ( Facts.barrelRoot fact ++ "." ++ generic, "slot setter" )
 
@@ -350,7 +351,7 @@ barrelReplacement fact name =
                         -- setter without an explicit `attrRewrites` entry on the
                         -- per-component facet. The generator maps the ones that DO
                         -- have a safe barrel form (`Slider.value` → `attrValueFloat`)
-                        -- via `attrRewrites`, handled by `attrBarrelName` above.
+                        -- via `attrRewrites`, handled by `Mapping.attrToBarrel` above.
                         Nothing
 
 
@@ -374,39 +375,6 @@ ariaUniversalBarrel name =
 
         _ ->
             Nothing
-
-
-{-| `attrRewrites` maps barrel name → per-component name; read it right-to-left.
-
-IDENTITY entries (barrel name == per-component name) are skipped. The barrel's
-disambiguation scheme RENAMES every interchangeable setter (a scalar `disabled`
-becomes `attrDisabled`), so a setter the barrel kept under its own name is NOT
-the same function — it is a generic re-export with a different signature
-(events: the per-component `onClick : msg -> …` convenience vs the barrel
-`onClick : Decoder msg -> …`). Rewriting those changes the required argument
-type and breaks compilation, so they must stay on the per-component facet.
-
--}
-attrBarrelName : Fact -> String -> Maybe String
-attrBarrelName fact name =
-    fact.attrRewrites
-        |> List.filter (\( barrel, perComp ) -> perComp == name && barrel /= perComp)
-        |> List.head
-        |> Maybe.map Tuple.first
-
-
-{-| `slotRewrites` (slotName → per-component setter) and `slotUpgrades`
-(generic barrel setter → specific barrel setter) are emitted as parallel
-lists, so zipping them maps a per-component setter to its generic barrel form.
--}
-slotBarrelName : Fact -> String -> Maybe String
-slotBarrelName fact name =
-    List.map2 (\( _, perComp ) ( generic, _ ) -> ( perComp, generic ))
-        fact.slotRewrites
-        fact.slotUpgrades
-        |> List.filter (\( perComp, _ ) -> perComp == name)
-        |> List.head
-        |> Maybe.map Tuple.second
 
 
 barrelError : Context -> List String -> Node Expression -> String -> String -> String -> Error {}
