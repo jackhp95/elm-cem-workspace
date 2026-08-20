@@ -2,7 +2,7 @@
 // check-elm-shape-drift.mjs — Phase 1 (L6): the canonical-engine drift gate.
 //
 // Phase 1 collapsed the duplicated html→elm shape grammar into ONE engine,
-// core/elm-cem/src/elm-shape.mjs. This gate keeps it one engine:
+// pipeline/elm-cem/src/elm-shape.mjs. This gate keeps it one engine:
 //
 //   1. The engine still exports its full canonical API (Layer 1 resolvers +
 //      Layer 2 renderers). Deleting/renaming one is caught here.
@@ -45,7 +45,7 @@ import {
   actionNoneOf,
   entryOf,
   iconNameExpr,
-} from "../core/elm-cem/src/elm-shape.mjs";
+} from "../pipeline/elm-cem/src/elm-shape.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -129,8 +129,8 @@ if (nestedGolden !== nestedExpected) {
 // composition, which no delegating wrapper contains.
 const consumers = [
   {
-    name: "cem-figma-connect (elm emitter)",
-    file: "core/cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
+    name: "elm-cem-figma-connect (elm emitter)",
+    file: "pipeline/elm-cem-figma-connect/profiles/m3-kit/emitters/elm.mjs",
     migrated: true,
   },
   {
@@ -139,7 +139,7 @@ const consumers = [
     // tests). See docs/plans/2026-08-17-phase1-L4-facec-coverage-audit.md. Flip
     // `migrated` to true when L5 lands; the import is then ENFORCED below.
     name: "elm-m3e docs (to-elm)",
-    file: "brands/m3e/outputs/elm-m3e/docs/scripts/examples-gen/lib/to-elm.mjs",
+    file: "brands/m3e/generated/docs/elm-m3e-docs/scripts/examples-gen/lib/to-elm.mjs",
     migrated: false,
   },
 ];

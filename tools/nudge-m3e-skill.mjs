@@ -44,8 +44,8 @@
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-// Calibrated against real usage under brands/m3e/outputs/elm-m3e/docs/app/Route/Components/
-// and brands/m3e/outputs/elm-m3e/src: `import M3e exposing (...)`, `import M3e.Attributes`,
+// Calibrated against real usage under brands/m3e/generated/docs/elm-m3e-docs/app/Route/Components/
+// and brands/m3e/generated/package/elm-m3e/src: `import M3e exposing (...)`, `import M3e.Attributes`,
 // `import M3e.Component.Badge` etc. (module-qualified Elm imports), plus raw
 // custom-element tags (`<m3e-icon>`, `<m3e-theme>`) that show up in embedded
 // HTML/doc comments, and the npm package name itself.
@@ -60,7 +60,7 @@ const M3E_PATTERNS = [
 const NUDGE_TEXT =
   "This file touches m3e (@m3e/web) components or the M3e Elm package — " +
   "invoke the `m3e` skill before continuing. It is backed by " +
-  "brands/m3e/outputs/m3e-api-okf (component API ground truth: " +
+  "brands/m3e/generated/okf/elm-m3e-okf (component API ground truth: " +
   "skills/m3e/components/<name>.md) and brands/m3e/inputs/material-okf " +
   "(type roles: knowledge/styles/typography.md; anti-patterns: " +
   "knowledge/anti-patterns/). " +

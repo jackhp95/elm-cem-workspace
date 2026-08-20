@@ -1,13 +1,14 @@
 packages:
   - "packages/_probe/*"
-  - "core/*"
+  - "packages/*"
+  - "pipeline/*"
   - "brands/*/inputs/*"
   - "brands/*/inputs/*/*"
-  - "brands/*/outputs/*"
-  - "brands/*/outputs/*/*"
+  - "brands/*/generated/*/*"
+  - "brands/*/generated/*/*/*"
   - "!**/node_modules"
   - "!**/elm-stuff"
-  - "!core/*/elm-html-intermediate-representation"
+  - "!pipeline/*/elm-virtual-dom-intermediate-representation"
 
 allowBuilds:
   '@parcel/watcher': true

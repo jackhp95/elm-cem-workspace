@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // tools/check-layout-only-classes.mjs — fast, dependency-free, AGENT-TIME
 // subset of the authoritative elm-review rule
-// brands/m3e/outputs/elm-m3e/review/src/NoProprietaryDsClasses.elm.
+// brands/m3e/generated/package/elm-m3e/review/src/NoProprietaryDsClasses.elm.
 //
 // WHY THIS EXISTS (see docs/plans/2026-08-19-durable-m3e-convention-enforcement.md):
 // the AST rule already enforces "Tailwind is LAYOUT only" and the m3e-utility
@@ -17,7 +17,7 @@
 // four lists (layoutKeywords, layoutPrefixes, stylingKeywords,
 // stylingPrefixes) are parsed at runtime from the Elm rule's own source, and
 // the m3e utility names come from the same committed manifest the rule uses
-// (brands/m3e/outputs/tailwind-m3e-web/generated/utilities.json). Only the tiny, stable
+// (brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.json). Only the tiny, stable
 // classifier scaffolding (ds-/t- proprietary prefixes, the [--m3e- arbitrary
 // bridge, the inset-shadow-/inset-ring- shadowed-styling pair, classification
 // order) is mirrored in code — each mirrors a named function in the rule.
@@ -45,18 +45,18 @@ const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 const RULE_SOURCE = path.join(
   repoRoot,
-  "brands/m3e/outputs/elm-m3e/review/src/NoProprietaryDsClasses.elm",
+  "brands/m3e/generated/package/elm-m3e/review/src/NoProprietaryDsClasses.elm",
 );
 const UTILITIES_MANIFEST = path.join(
   repoRoot,
-  "brands/m3e/outputs/tailwind-m3e-web/generated/utilities.json",
+  "brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.json",
 );
 // The rule's wiring — carries the documented specimen exemptions
 // (Rule.ignoreErrorsForDirectories/Files on Route/Styles/ etc.), which this
 // script parses rather than duplicates.
 const REVIEW_CONFIG = path.join(
   repoRoot,
-  "brands/m3e/outputs/elm-m3e/review/src/ReviewConfig.elm",
+  "brands/m3e/generated/package/elm-m3e/review/src/ReviewConfig.elm",
 );
 
 // Mirrors CodegenReviewConfig.elm: NoProprietaryDsClasses.rule [ "Seam" ].
@@ -78,10 +78,10 @@ const SKIP_PATH_FRAGMENTS = [
 // The directories the docs review config actually reviews (docs/elm.json
 // source-directories, minus generated/vendored ones), used by --all.
 const ALL_DIRS = [
-  "brands/m3e/outputs/elm-m3e/docs/app",
-  "brands/m3e/outputs/elm-m3e/docs/src",
-  "brands/m3e/outputs/elm-m3e/src",
-  "core/elm-cem-compose/src",
+  "brands/m3e/generated/docs/elm-m3e-docs/app",
+  "brands/m3e/generated/docs/elm-m3e-docs/src",
+  "brands/m3e/generated/package/elm-m3e/src",
+  "pipeline/elm-cem-compose/src",
 ];
 
 // ---------------------------------------------------------------------------
@@ -404,8 +404,8 @@ function explain(violations) {
     "radius, elevation and TYPOGRAPHY must come from an m3e component or an",
     "m3e-* token utility — never a text-*/font-*/bg-*/… class.",
     "  - Type roles:  brands/m3e/inputs/material-okf/knowledge/styles/typography.md",
-    "  - Component API ground truth: brands/m3e/outputs/m3e-api-okf/skills/m3e/components/",
-    "  - Authoritative rule: brands/m3e/outputs/elm-m3e/review/src/NoProprietaryDsClasses.elm",
+    "  - Component API ground truth: brands/m3e/generated/okf/elm-m3e-okf/skills/m3e/components/",
+    "  - Authoritative rule: brands/m3e/generated/package/elm-m3e/review/src/NoProprietaryDsClasses.elm",
     "    (run: pnpm --filter elm-m3e run check:review)",
     "  - A genuine, reviewed escape belongs in a `Seam` module, nowhere else.",
   ].join("\n");

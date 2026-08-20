@@ -1,0 +1,130 @@
+{
+  "family": "elm-m3e",
+  "devRepo": "jackhp95/elm-m3e",
+  "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2026 Jack Peterson\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its contributors\n   may be used to endorse or promote products derived from this software\n   without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+  "packages": [
+    {
+      "name": "jackhp95/elm-m3e-html",
+      "summary": "elm-m3e shared foundation: kinds, attrs, values, events, builder forge.",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0"
+      },
+      "exposeInternal": [
+        "M3e.Forge.Internal"
+      ],
+      "buckets": [
+        {
+          "exact": "M3e.Action"
+        },
+        {
+          "exact": "M3e.Attributes"
+        },
+        {
+          "exact": "M3e.Events"
+        },
+        {
+          "exact": "M3e.Forge.Internal"
+        },
+        {
+          "exact": "M3e.Html"
+        },
+        {
+          "exact": "M3e.Kind"
+        },
+        {
+          "prefix": "M3e.Unsafe"
+        },
+        {
+          "exact": "M3e.Values"
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-facts",
+      "summary": "elm-m3e facts contract module for elm-review-cem rules.",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-cem-facts": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.Review.Facts"
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-icons",
+      "summary": "elm-m3e type-safe Material Symbols icon element helpers.",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.Icon"
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-components",
+      "summary": "elm-m3e components: M3e barrel, per-component surfaces, builder API.",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-html": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e"
+        },
+        {
+          "prefix": "M3e.Component."
+        },
+        {
+          "prefix": "M3e.Internal.Types."
+        }
+      ]
+    },
+    {
+      "name": "jackhp95/elm-m3e-builder",
+      "summary": "elm-m3e per-component phantom builder API (M3e.Build.*).",
+      "version": "1.0.0",
+      "elmVersion": "0.19.0 <= v < 0.20.0",
+      "deps": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-html": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-m3e-components": "1.0.0 <= v < 2.0.0"
+      },
+      "buckets": [
+        {
+          "exact": "M3e.Build"
+        },
+        {
+          "prefix": "M3e.Build."
+        }
+      ]
+    }
+  ]
+}

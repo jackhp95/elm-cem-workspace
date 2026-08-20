@@ -1,0 +1,5 @@
+/* Re-exported from tailwind-md3 -- see core/tailwind-md3/src/roles-extended.css
+   for the actual success/info/warning role-extended palette definitions.
+   This shim keeps `@import "tailwind-m3e-web/roles-extended"` working for
+   existing consumers through the brand package's barrel. */
+@import "elm-cem-tailwind/roles-extended";

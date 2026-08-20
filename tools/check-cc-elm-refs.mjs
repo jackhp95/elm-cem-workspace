@@ -3,7 +3,7 @@
 //
 // Stream 2 (see docs/plans/2026-08-17-stream2-cc-elm-naming-reconciliation.md):
 // cem-figma-connect emits Code Connect Elm snippets
-// (core/cem-figma-connect/generated/m3-kit/elm/*.figma.ts). Every module a
+// (pipeline/elm-cem-figma-connect/generated/m3-kit/elm/*.figma.ts). Every module a
 // snippet imports or calls into MUST exist in the real elm-m3e API, or a
 // consumer who pastes the snippet cannot compile it. This gate proves that by
 // checking every module reference in each emitted snippet against the ACTUAL
@@ -35,15 +35,15 @@ const strict = process.argv.includes("--strict");
 // `M3e.Values`, `M3e.Action`, …); the docs vendor carries the `TypedHtml.*`
 // plain-HTML foundation the snippets use for scaffolding.
 const SRC_ROOTS = [
-  path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "src"),
-  path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "docs", "vendor", "elm-foundation"),
+  path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e", "src"),
+  path.join(repoRoot, "brands", "m3e", "generated", "docs", "elm-m3e-docs", "vendor", "elm-foundation"),
 ];
 
 // Where the emitted Code Connect Elm snippets live.
 const CC_ELM_DIR = path.join(
   repoRoot,
-  "core",
-  "cem-figma-connect",
+  "pipeline",
+  "elm-cem-figma-connect",
   "generated",
   "m3-kit",
   "elm",

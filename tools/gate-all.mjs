@@ -45,7 +45,7 @@
 // Env:
 //   PRISTINE_ELM_CEM     passed through to tools/ab-elm-cem.sh
 //   ELM_M3E              elm-m3e checkout used by the E2E bundle proof
-//                        (default: the in-workspace brands/m3e/outputs/elm-m3e)
+//                        (default: the in-workspace brands/m3e/generated/package/elm-m3e)
 //   GATE_ALL_CONCURRENCY overrides the scheduler's worker-pool width
 //                        (default: os.cpus().length)
 
@@ -69,7 +69,7 @@ const require = createRequire(import.meta.url);
 const LIST_STEPS_ONLY = process.argv.includes("--list-steps-only");
 const LIST_STEPS_FULL = process.argv.includes("--list-steps-full");
 
-const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+const ELM_M3E = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
 // tools/family.json — the one manifest of "which packages exist, where, and
 // what mirror/bundle-copy/copy-fidelity gates apply to them" (Theme 3 of the
 // 2026-08-17 audit, "the manifest move"). The copy-fidelity sweep below is
@@ -133,15 +133,15 @@ const results = [];
 // elm-m3e's `check`/`test` below, which check-drift.mjs already implements.
 const CHRONIC_SKIPS = {
     "workspace: copy-fidelity elm-m3e":
-        "requires .cache/snapshots/elm-m3e, cloned from a live GitHub remote (jackhp95/elm-m3e) by the automatic `workspace: fetch-snapshots` pre-step. Genuinely network-dependent (unlike elm-cem's committed-bundle snapshot) — SKIPS only on a run where that clone can't reach GitHub; runs for real whenever network is available.",
-    "workspace: copy-fidelity m3e-okf":
-        "requires .cache/snapshots/m3e-okf, cloned from jackhp95/m3e-okf — same network-dependent pattern as copy-fidelity elm-m3e above.",
-    "workspace: copy-fidelity tailwind-m3e-web":
-        "requires .cache/snapshots/tailwind-m3e-web, cloned from jackhp95/tailwind-m3e-web — same network-dependent pattern as copy-fidelity elm-m3e above.",
-    "workspace: copy-fidelity cem-figma-connect":
-        "requires .cache/snapshots/cem-figma-connect, cloned from jackhp95/cem-figma-connect — same network-dependent pattern as copy-fidelity elm-m3e above.",
+        "requires .cache/snapshots/elm-m3e, cloned from a live GitHub remote by the automatic `workspace: fetch-snapshots` pre-step. Genuinely network-dependent (unlike elm-cem's committed-bundle snapshot) — SKIPS only on a run where that clone can't reach GitHub; runs for real whenever network is available.",
+    "workspace: copy-fidelity elm-m3e-okf":
+        "requires .cache/snapshots/elm-m3e-okf (pinned in tools/snapshot-refs.json), cloned from a live GitHub remote by the automatic `workspace: fetch-snapshots` pre-step — same network-dependent pattern as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity elm-m3e-tailwind":
+        "requires .cache/snapshots/elm-m3e-tailwind (pinned in tools/snapshot-refs.json), cloned from a live GitHub remote by the automatic `workspace: fetch-snapshots` pre-step — same network-dependent pattern as copy-fidelity elm-m3e above.",
+    "workspace: copy-fidelity elm-cem-figma-connect":
+        "requires .cache/snapshots/elm-cem-figma-connect (pinned in tools/snapshot-refs.json), cloned from a live GitHub remote by the automatic `workspace: fetch-snapshots` pre-step — same network-dependent pattern as copy-fidelity elm-m3e above.",
     "workspace: check-drift (M4.b cross-cutting drift gate)":
-        "its m3e-okf consumer-output sub-check needs brands/m3e/outputs/m3e-api-okf/.cache/m3e — a full npm-installed, built matraic/m3e@v2.7.3 checkout (not just a git clone), a heavier third-party build dependency than this file's other network fetches. Provision it by hand (see the SKIP line's own instructions, or brands/m3e/outputs/m3e-api-okf/README.md's Regenerate section) or set REQUIRE_CLONE_GATES=1 in CI.",
+        "its m3e-okf consumer-output sub-check needs the okf consumer's .cache/m3e — a full npm-installed, built matraic/m3e@v2.7.3 checkout (not just a git clone), a heavier third-party build dependency than this file's other network fetches. Provision it by hand (see the SKIP line's own instructions, or the okf package README's Regenerate section) or set REQUIRE_CLONE_GATES=1 in CI.",
 };
 
 // Same spirit as CHRONIC_SKIPS above, but for a `tools/*.test.mjs` file that
@@ -229,9 +229,9 @@ function discoverPackages() {
             walk(full);
         }
     };
-    walk(path.join(repoRoot, "core"));
+    walk(path.join(repoRoot, "pipeline"));
     walk(path.join(repoRoot, "brands"));
-    walk(path.join(repoRoot, "packages", "_probe"));
+    walk(path.join(repoRoot, "packages"));
     return found;
 }
 
@@ -333,9 +333,9 @@ function fetchSnapshotsGate() {
 function genElmM3eReferenceGate() {
     const name = "workspace: gen elm-m3e docs/data/reference.json (elm make --docs)";
     console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
-    const docsDir = path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e", "docs");
+    const docsDir = path.join(repoRoot, "brands", "m3e", "generated", "docs", "elm-m3e-docs");
     if (!fs.existsSync(path.join(docsDir, "scripts", "extract-reference.mjs"))) {
-        record(name, true, "brands/m3e/outputs/elm-m3e/docs not present or has no extract-reference.mjs — nothing to generate");
+        record(name, true, "brands/m3e/generated/docs/elm-m3e-docs not present or has no extract-reference.mjs — nothing to generate");
         return;
     }
     const result = spawnSync("node", ["scripts/extract-reference.mjs"], { cwd: docsDir, encoding: "utf8" });
@@ -377,7 +377,7 @@ function factsBundleE2E() {
             return false;
         }
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
-        const { validate } = require(path.join(repoRoot, "core", "elm-cem", "bin", "validate-facts-bundle.js"));
+        const { validate } = require(path.join(repoRoot, "pipeline", "elm-cem", "bin", "validate-facts-bundle.js"));
 
         const faces = [
             { file: "cem-facts.json", definition: "faceB", label: "Face B" },
@@ -460,7 +460,7 @@ function factsBundleE2E() {
 //                       defensively so a future second writer is forced to
 //                       declare the conflict rather than silently collide.
 //   cfc-generated     — `check-emit-determinism-cfc.mjs` overwrites
-//                       core/cem-figma-connect/generated/m3-kit/** in place
+//                       pipeline/elm-cem-figma-connect/generated/m3-kit/** in place
 //                       (its real `gen:emit`, run twice) vs. every step that
 //                       reads that same committed tree (check-cc-elm-refs,
 //                       cem-figma-connect check/test, check-drift's own
@@ -523,7 +523,7 @@ function buildSteps() {
         // cem-figma-connect's own `check` (check:drift diffs in-memory
         // regen against the COMMITTED generated/m3-kit/** tree) and `test`
         // (smoke/publish-check/emitter-api suites assert that same tree is
-        // undisturbed) both READ core/cem-figma-connect/generated/m3-kit —
+        // undisturbed) both READ pipeline/elm-cem-figma-connect/generated/m3-kit —
         // the exact tree `check-emit-determinism-cfc.mjs` overwrites IN
         // PLACE (see the cfc-generated tag below). Discovered as a real,
         // reproducible race (2026-08-19): check-cc-elm-refs hit an ENOENT
@@ -534,7 +534,7 @@ function buildSteps() {
         // about (see the gate-out-probe tag's own comment: "a future second
         // writer is forced to declare the conflict rather than silently
         // collide" — this is that future).
-        if (pkg.name === "cem-figma-connect" && (script === "check" || script === "test")) {
+        if (pkg.name === "elm-cem-figma-connect" && (script === "check" || script === "test")) {
             extra.exclusiveWith = [...(extra.exclusiveWith || []), "cfc-generated"];
         }
         steps.push(step(name, "pnpm", ["--filter", pkg.name, "run", script], extra));
@@ -568,12 +568,12 @@ function buildSteps() {
         if (name === "elm-m3e") exclusiveWith.push("docs-dist");
         // copy-fidelity's workspaceFiles computation does an fs.existsSync
         // pass over every tracked path (tools/copy-fidelity.mjs) — reading
-        // core/cem-figma-connect/generated/m3-kit/** while
+        // pipeline/elm-cem-figma-connect/generated/m3-kit/** while
         // check-emit-determinism-cfc.mjs is mid-overwrite could report a
         // spuriously "missing" file. Same cfc-generated hazard as the
         // per-package check/test loop above; tagged defensively even though
         // this specific step hasn't been observed to flake yet.
-        if (name === "cem-figma-connect") exclusiveWith.push("cfc-generated");
+        if (name === "elm-cem-figma-connect") exclusiveWith.push("cfc-generated");
         steps.push(
             step(`workspace: copy-fidelity ${name}`, process.execPath, [path.join(repoRoot, "tools", "copy-fidelity.mjs"), name], {
                 exclusiveWith,
@@ -582,10 +582,10 @@ function buildSteps() {
     }
     steps.push(
         step(
-            "workspace: check-emit-determinism cem-figma-connect",
+            "workspace: check-emit-determinism elm-cem-figma-connect",
             process.execPath,
             [path.join(repoRoot, "tools", "check-emit-determinism-cfc.mjs")],
-            // The writer: runs cem-figma-connect's real `gen:emit` TWICE,
+            // The writer: runs elm-cem-figma-connect's real `gen:emit` TWICE,
             // in place, overwriting the committed generated/m3-kit/** tree
             // each time (see that script's own header comment — this is
             // deliberate, not a bug). Every step that READS that tree while
@@ -616,7 +616,7 @@ function buildSteps() {
             "workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)",
             process.execPath,
             [path.join(repoRoot, "tools", "check-cc-elm-refs.mjs"), "--strict"],
-            // Reads core/cem-figma-connect/generated/m3-kit/**/*.figma.ts
+            // Reads pipeline/elm-cem-figma-connect/generated/m3-kit/**/*.figma.ts
             // directly (tools/check-cc-elm-refs.mjs) — the race that
             // surfaced this whole cfc-generated tag: an ENOENT reading a
             // .figma.ts file check-emit-determinism-cfc.mjs had just

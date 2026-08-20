@@ -5,7 +5,7 @@
 // own `node_modules/.bin`. Two packages — `elm-cem` and `elm-review-cem` —
 // deliberately OMIT a `postinstall: elm-tooling install` of their own, because
 // they are published to npm and must not force a ~50 MB toolchain download on
-// their consumers (see core/elm-cem/RELEASE-CHECKLIST.md). In a source
+// their consumers (see pipeline/elm-cem/RELEASE-CHECKLIST.md). In a source
 // checkout those two got their binaries from a prior standalone
 // `elm-tooling install`; in a FRESH clone of this workspace they would have
 // none, so `elm-cem: test` and `elm-review-cem: check`/`test` fail on a cold
@@ -17,7 +17,7 @@
 // hard-fails the install: a genuinely broken toolchain is caught by the gates,
 // and aborting `pnpm install` here would be worse than a warning.
 
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,6 +44,7 @@ function scanFor(baseDir, depth) {
     if (!existsSync(baseDir)) return;
     for (const name of readdirSync(baseDir)) {
         const dir = path.join(baseDir, name);
+        if (!statSync(dir).isDirectory()) continue; // skip files (e.g. brands/*/inputs/config.json)
         if (depth > 1) {
             scanFor(dir, depth - 1);
             continue;
@@ -51,8 +52,10 @@ function scanFor(baseDir, depth) {
         if (existsSync(path.join(dir, "elm-tooling.json")) && !selfInstalls(dir)) dirs.push(dir);
     }
 }
-scanFor(path.join(repoRoot, "core"), 1);
+scanFor(path.join(repoRoot, "pipeline"), 1);
 scanFor(path.join(repoRoot, "brands"), 3); // brands/<brand>/{inputs,outputs}/<name>
+scanFor(path.join(repoRoot, "brands"), 4); // brands/<brand>/generated/<phase>/<name>
+scanFor(path.join(repoRoot, "packages"), 1);
 scanFor(path.join(repoRoot, "packages", "_probe"), 1);
 
 function elmToolingBin(dir) {

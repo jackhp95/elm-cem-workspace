@@ -1,9 +1,9 @@
-// tools/check-m3e-5pkg.mjs — assert brands/m3e/outputs/elm-m3e/packages.json is the D-037
+// tools/check-m3e-5pkg.mjs — assert brands/m3e/generated/package/elm-m3e/packages.json is the D-037
 // 5-package concern-separated split (html / components / builder / icons / facts),
 // with M3e.Build.* split OUT of components into elm-m3e-builder. Exit 0 iff so.
 // Used as the M8.b loop's discriminating verify-check.
 import { readFileSync } from "node:fs";
-const p = JSON.parse(readFileSync(new URL("../brands/m3e/outputs/elm-m3e/packages.json", import.meta.url))).packages;
+const p = JSON.parse(readFileSync(new URL("../brands/m3e/generated/package/elm-m3e/packages.json", import.meta.url))).packages;
 const names = p.map((x) => x.name);
 const need = ["jackhp95/elm-m3e-html", "jackhp95/elm-m3e-components", "jackhp95/elm-m3e-builder", "jackhp95/elm-m3e-icons", "jackhp95/elm-m3e-facts"];
 const builder = p.find((x) => x.name === "jackhp95/elm-m3e-builder");

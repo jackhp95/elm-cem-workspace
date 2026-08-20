@@ -24,18 +24,18 @@ import path from "node:path";
 
 /** The config/flags argv shared by every elm-cem invocation against elm-m3e's config. */
 export const GEN_CONFIG_ARGS = [
-    "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
+    "--flags-from=../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json",
     "--config-from=config/slots.json",
     "--config-from=config/native-mdn.json",
     "--config-from=config/examples.generated.json",
 ];
 
 export function elmCemCli(repoRoot) {
-    return path.join(repoRoot, "core", "elm-cem", "bin", "elm-cem.js");
+    return path.join(repoRoot, "pipeline", "elm-cem", "bin", "elm-cem.js");
 }
 
 export function defaultElmM3e(repoRoot) {
-    return process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+    return process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
 }
 
 /**

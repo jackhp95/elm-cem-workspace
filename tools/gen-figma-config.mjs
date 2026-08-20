@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // gen-figma-config.mjs — Phase 2.3,
-// core/cem-figma-connect/plans/2026-08-17-figma-elm-config-integration-design.md.
+// pipeline/elm-cem-figma-connect/plans/2026-08-17-figma-elm-config-integration-design.md.
 //
-// Joins core/cem-figma-connect/profiles/<profile>/figma-links.json (a
+// Joins pipeline/elm-cem-figma-connect/profiles/<profile>/figma-links.json (a
 // DERIVED, read-only projection of correspondence.json — see
-// core/cem-figma-connect/src/links/derive.mjs) with elm-cem's Face C
+// pipeline/elm-cem-figma-connect/src/links/derive.mjs) with elm-cem's Face C
 // facts bundle (component -> Elm module name) by cemTag, and writes
-// brands/m3e/outputs/elm-m3e/config/figma.generated.json: per-component `docMeta`
+// brands/m3e/generated/package/elm-m3e/config/figma.generated.json: per-component `docMeta`
 // entries (`figmaUrl`, `figmaStatus`) in the shape elm-cem's config decoder
 // expects (`Generate/Config.elm`: `opt "docMeta" (keyValuePairs string) []`,
 // keyed by CONSTRUCTOR NAME — the module's last dotted segment, e.g.
@@ -21,13 +21,13 @@
 //     check:cem / check:families argv (elm-m3e/config is a symlink to
 //     inputs/cem/config, so the relative path resolves).
 //   * elm-cem's docMeta consumer (Generate/Config.elm) renders it via
-//     core/elm-cem/codegen/Docs.elm's docMetaMarker as an HTML-comment marker
+//     pipeline/elm-cem/codegen/Docs.elm's docMetaMarker as an HTML-comment marker
 //     (`<!-- elm-cem:docmeta k=v; ... -->`) in each generated module's doc
 //     comment.
 //   * That marker USED to be silently dropped by
-//     brands/m3e/outputs/elm-m3e/docs/scripts/extract-reference.mjs; it now
+//     brands/m3e/generated/docs/elm-m3e-docs/scripts/extract-reference.mjs; it now
 //     PARSES it into reference.json's per-component `figma` field, which the
-//     docs app (docs/app/Route/Components/Name_.elm) renders as a
+//     docs app (brands/m3e/generated/docs/elm-m3e-docs/app/Route/Components/Name_.elm) renders as a
 //     "View in Figma" link.
 //
 // Publication stance: the URLs point at the PUBLIC "Material 3 Design Kit
@@ -45,7 +45,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const cfcDir = path.join(repoRoot, "core", "cem-figma-connect");
+const cfcDir = path.join(repoRoot, "pipeline", "elm-cem-figma-connect");
 const elmM3eConfigDir = path.join(repoRoot, "brands", "m3e", "inputs", "cem", "config");
 
 function readJson(p) {

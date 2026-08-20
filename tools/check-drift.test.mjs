@@ -17,8 +17,8 @@ import { checkConsumerBundleDrift, comparePagesElmIgnoringTimestamp } from "./li
 import { checkConsumerOutputDrift, consumerOutputDescriptors } from "./lib/consumer-output-drift.mjs";
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
-const realCommittedCemFacts = path.join(repoRoot, "brands", "m3e", "outputs", "m3e-api-okf", "data", "cem-facts.json");
+const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
+const realCommittedCemFacts = path.join(repoRoot, "brands", "m3e", "generated", "okf", "elm-m3e-okf", "data", "cem-facts.json");
 const descriptorsByKey = Object.fromEntries(consumerOutputDescriptors(repoRoot).map((d) => [d.key, d]));
 
 /** Copy just the descriptor's committed `paths` into a scratch dir — never touches the real package. */
@@ -51,7 +51,7 @@ test("check-drift core: GREEN on the real, untouched committed bundle copy", () 
     const { ok, failures } = checkConsumerBundleDrift({
         repoRoot,
         elmM3e,
-        label: "m3e-okf (clean)",
+        label: "elm-m3e-okf (clean)",
         files: [{ committedPath: realCommittedCemFacts, bundleFile: "cem-facts.json" }],
     });
     assert.equal(ok, true, `expected clean tree to be green, got: ${failures.join(" | ")}`);
@@ -73,7 +73,7 @@ test("check-drift core: RED when a COPY of the committed bundle has one field st
         const { ok, failures } = checkConsumerBundleDrift({
             repoRoot,
             elmM3e,
-            label: "m3e-okf (staled copy)",
+            label: "elm-m3e-okf (staled copy)",
             files: [{ committedPath: staleCopyPath, bundleFile: "cem-facts.json" }],
         });
 
@@ -107,7 +107,7 @@ test("check-drift core (R-008): a real content change beyond the timestamp still
 //
 // Prior to this, check-drift covered each consumer's facts-bundle COPY but
 // never its downstream generated output — verified by hand: appending a line
-// to brands/m3e/outputs/tailwind-m3e-web/generated/utilities.css left check-drift.mjs
+// to brands/m3e/generated/style/elm-m3e-tailwind/generated/utilities.css left check-drift.mjs
 // (and gate-all.mjs) fully green. One GREEN + one RED test per consumer,
 // below, proves that hole is closed. Every perturbation happens on a scratch
 // COPY (copyCommittedPathsToScratch) — the real tracked tree is never
@@ -125,7 +125,7 @@ function cacheAbsentSkipReason(descriptor) {
     return false;
 }
 
-for (const key of ["cem-figma-connect", "m3e-okf", "tailwind-m3e-web"]) {
+for (const key of ["elm-cem-figma-connect", "elm-m3e-okf", "elm-m3e-tailwind"]) {
     const descriptor = descriptorsByKey[key];
     const skip = cacheAbsentSkipReason(descriptor);
 

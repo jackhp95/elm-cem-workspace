@@ -41,9 +41,9 @@ function runNodeScript(cwd, relScriptPath, args = []) {
 export function consumerOutputDescriptors(repoRoot) {
     return [
         {
-            key: "cem-figma-connect",
-            label: "check-drift: cem-figma-connect generated/m3-kit (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "cem-figma-connect"),
+            key: "elm-cem-figma-connect",
+            label: "check-drift: elm-cem-figma-connect generated/m3-kit (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-cem-figma-connect"),
             // gen:emit is proven byte-deterministic (tools/check-emit-determinism-cfc.mjs);
             // these excludes just skip large, irrelevant subtrees to keep the scratch copy
             // fast — research/ is NOT excluded: figma.mjs reads its figma-export dump as input.
@@ -59,9 +59,9 @@ export function consumerOutputDescriptors(repoRoot) {
             generate: (dest) => runNodeScript(dest, "src/cli.mjs", ["emit", "--profile", "m3-kit"]),
         },
         {
-            key: "m3e-okf",
-            label: "check-drift: m3e-okf components.json + skill/OKF outputs (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "m3e-okf"),
+            key: "elm-m3e-okf",
+            label: "check-drift: elm-m3e-okf components.json + skill/OKF outputs (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-m3e-okf"),
             // .cache/m3e is a gitignored upstream checkout (input only, never written by
             // the gen pipeline) — excluded from the copy and symlinked back in read-only.
             exclude: [".cache"],
@@ -69,7 +69,7 @@ export function consumerOutputDescriptors(repoRoot) {
             // W6 promoted scripts/lib/okf-lib.mjs's generic core to the shared
             // workspace tools/lib/okf-lib.mjs (same pattern as tailwind-m3e-web
             // below) — build-okf.mjs imports it via a relative specifier that
-            // walks out of brands/m3e/outputs/m3e-api-okf/scripts/ into tools/lib/, so the
+            // walks out of brands/m3e/generated/okf/elm-m3e-okf/scripts/ into tools/lib/, so the
             // scratch copy needs that sibling present at the same
             // repo-root-relative position.
             externalSymlinks: ["tools/lib"],
@@ -90,17 +90,18 @@ export function consumerOutputDescriptors(repoRoot) {
             },
         },
         {
-            key: "tailwind-m3e-web",
-            label: "check-drift: tailwind-m3e-web generated utilities (regenerate + byte-compare)",
-            pkgDir: familySrcDir(repoRoot, "tailwind-m3e-web"),
+            key: "elm-m3e-tailwind",
+            label: "check-drift: elm-m3e-tailwind generated utilities (regenerate + byte-compare)",
+            pkgDir: familySrcDir(repoRoot, "elm-m3e-tailwind"),
             exclude: [],
             symlinks: [],
-            // Theme 6 (thermonuclear audit) promoted this script's generic core to
-            // tools/lib/component-css-utilities.mjs, imported via a relative
-            // specifier that walks out of packages/tailwind-m3e-web/bin/ into the
-            // shared workspace tools/lib/ — needs the scratch copy to have that
-            // sibling present at the same repo-root-relative position.
-            externalSymlinks: ["tools/lib"],
+            // repo-shape-v2 (2026-08-19): the generic component-css-utilities.mjs
+            // generator moved into pipeline/elm-cem-tailwind/src/ (single-consumer
+            // absorb), imported by bin/generate-component-utilities.mjs via a
+            // relative specifier that walks out of the package into
+            // pipeline/elm-cem-tailwind/ — the scratch copy needs that sibling
+            // present at the same repo-root-relative position.
+            externalSymlinks: ["pipeline/elm-cem-tailwind"],
             paths: ["generated/utilities.css", "generated/CSS_CUSTOM_PROPERTIES.md"],
             generate: (dest) => runNodeScript(dest, "bin/generate-component-utilities.mjs"),
         },

@@ -5,7 +5,7 @@
 // 7 byte-identical hand-duplicated copies (packages/{elm-cem,
 // elm-html-intermediate-representation, elm-review-cem, elm-typed-html,
 // m3e-okf, cem-figma-connect}/hooks/pre-push +
-// core/elm-cem/templates/pre-push) plus a silently-diverged 176-line
+// pipeline/elm-cem/templates/pre-push) plus a silently-diverged 176-line
 // elm-m3e variant with Netlify auto-deploy logic interleaved and no marker
 // separating the shared base from the brand-specific part — so a fix to the
 // shared 66-line gate-running logic could never mechanically reach elm-m3e's
@@ -37,15 +37,15 @@ const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const hooksDir = path.join(repoRoot, "tools", "hooks");
 
 const PLAIN_TARGETS = [
-    "core/elm-cem/hooks/pre-push",
-    "core/elm-cem/templates/pre-push",
-    "core/elm-html-intermediate-representation/hooks/pre-push",
-    "core/elm-review-cem/hooks/pre-push",
-    "core/elm-typed-html/hooks/pre-push",
-    "brands/m3e/outputs/m3e-api-okf/hooks/pre-push",
-    "core/cem-figma-connect/hooks/pre-push",
+    "pipeline/elm-cem/hooks/pre-push",
+    "pipeline/elm-cem/templates/pre-push",
+    "packages/elm-virtual-dom-intermediate-representation/hooks/pre-push",
+    "pipeline/elm-review-cem/hooks/pre-push",
+    "brands/html/generated/package/elm-typed-html/hooks/pre-push",
+    "brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push",
+    "pipeline/elm-cem-figma-connect/hooks/pre-push",
 ];
-const ELM_M3E_TARGET = "brands/m3e/outputs/elm-m3e/hooks/pre-push";
+const ELM_M3E_TARGET = "brands/m3e/generated/package/elm-m3e/hooks/pre-push";
 
 function extractBody(baseSrc) {
     const start = baseSrc.indexOf("# --- BODY START");

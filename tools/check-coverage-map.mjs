@@ -31,10 +31,10 @@ const MAP_PATH = join(repoRoot, "docs", "facts-bundle", "coverage-map.json");
 const SCHEMA_PATH = join(repoRoot, "docs", "facts-bundle", "schema.json");
 
 const REQUIRED_CONSUMERS = [
-    "m3e-okf",
-    "tailwind-m3e-web",
-    "cem-figma-connect-matcher",
-    "cem-figma-connect-elm-emitter",
+    "elm-m3e-okf",
+    "elm-m3e-tailwind",
+    "elm-cem-figma-connect-matcher",
+    "elm-cem-figma-connect-elm-emitter",
 ];
 
 const VALID_FACES = ["B", "C"];

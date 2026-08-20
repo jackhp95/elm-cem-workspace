@@ -9,7 +9,7 @@
 #   SNAPSHOT_ROOT       parent directory of the inert pre-migration snapshot
 #                       checkouts (default: the workspace's parent directory)
 #   ELM_M3E             elm-m3e config/checkout to generate against
-#                       (default: the in-workspace brands/m3e/outputs/elm-m3e)
+#                       (default: the in-workspace brands/m3e/generated/package/elm-m3e)
 #   REQUIRE_SNAPSHOT_GATES=1  make a missing PRISTINE_ELM_CEM a hard failure
 #                       instead of a SKIP
 set -euo pipefail
@@ -22,8 +22,8 @@ SNAPSHOT_ROOT="${SNAPSHOT_ROOT:-$REPO_ROOT/..}"
 # (D-041). tools/fetch-snapshots.mjs materializes the pinned SHA into
 # .cache/snapshots/elm-cem; the frozen sibling under SNAPSHOT_ROOT is no longer it.
 PRISTINE_ELM_CEM="${PRISTINE_ELM_CEM:-$REPO_ROOT/.cache/snapshots/elm-cem}"
-WORKSPACE_ELM_CEM="$REPO_ROOT/core/elm-cem"
-ELM_M3E="${ELM_M3E:-$REPO_ROOT/brands/m3e/outputs/elm-m3e}"
+WORKSPACE_ELM_CEM="$REPO_ROOT/pipeline/elm-cem"
+ELM_M3E="${ELM_M3E:-$REPO_ROOT/brands/m3e/generated/package/elm-m3e}"
 
 require_snapshot_or_skip "ab-elm-cem" "$PRISTINE_ELM_CEM" "PRISTINE_ELM_CEM"
 

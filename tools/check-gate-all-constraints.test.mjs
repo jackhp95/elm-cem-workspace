@@ -36,7 +36,7 @@ test("gate-out-probe tag is held only by the root gate step", () => {
 });
 
 // Added 2026-08-19 (chronic-skip fix): check-cc-elm-refs hit a reproducible
-// ENOENT reading core/cem-figma-connect/generated/m3-kit/**/*.figma.ts
+// ENOENT reading pipeline/elm-cem-figma-connect/generated/m3-kit/**/*.figma.ts
 // while check-emit-determinism-cfc.mjs was mid-overwrite of that same
 // committed tree — a real race, not a flake, since nothing declared the
 // conflict before. See tools/gate-all.mjs's "Tags used" comment for why

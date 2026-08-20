@@ -6,10 +6,18 @@
 // derivation (Theme 3 of docs/reviews/2026-08-17-thermonuclear-workspace-review.md).
 //
 // Regenerates one or more bundle-copy files from the WORKSPACE producer
-// (core/elm-cem) against elm-m3e's own config — the same invocation
+// (pipeline/elm-cem) against elm-m3e's own config — the same invocation
 // tools/gate-all.mjs's E2E proof and tools/ab-elm-cem.sh use (shared
 // definition: tools/lib/regen.mjs) — and writes them into `destDir`. This is
 // the only writer of those files; never hand-edit them.
+//
+// DEPRECATION (repo-shape-v2, 2026-08-19): this runner stays in tools/lib only
+// because there is no real `elm-m3e-facts` package yet — its 3 consumers
+// (elm-cem-figma-connect, m3e-okf/elm-m3e-okf, tailwind-m3e-web/elm-m3e-tailwind)
+// each keep a redundant private copy of the same facts bundle, fanned out through
+// this shared runner. When the deferred 5-package explosion (spec decision #7)
+// creates a real `elm-m3e-facts` package, delete/gut this runner and switch the 3
+// consumers to a `workspace:*` dependency on `elm-m3e-facts` instead of a private copy.
 //
 // Zero dependencies (plain Node ESM).
 
@@ -32,7 +40,7 @@ import { generateBundleToTemp } from "./regen.mjs";
  *   short-circuits regeneration.
  */
 export function runGenFacts({ repoRoot, pkgDir, destDir, files, tmpPrefix, writeExtra }) {
-    const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "outputs", "elm-m3e");
+    const elmM3e = process.env.ELM_M3E || path.join(repoRoot, "brands", "m3e", "generated", "package", "elm-m3e");
 
     // PREGENERATED_BUNDLE_DIR: skip regeneration and copy from this directory
     // instead (used by tools/bump.mjs so the whole workspace bump regenerates
