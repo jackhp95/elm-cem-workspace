@@ -57,7 +57,7 @@ M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [ M3e.Component.Ta
 M3e.Component.Tabs.component [ M3e.Attributes.class "density-3" ] [ M3e.Component.Tab.component [ M3e.Component.Tab.selected True ] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "videocam" ] []), M3e.text "Video" ], M3e.Component.Tab.component [] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "photo" ] []), M3e.text "Photos" ], M3e.Component.Tab.component [] [ M3e.Component.Tab.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "music_note" ] []), M3e.text "Audio" ] ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40023; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Navigation; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54563-40023; figmaStatus=example-verified -->
 
 -}
 

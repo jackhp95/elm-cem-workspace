@@ -39,7 +39,7 @@ A dialog that provides important prompts in a user flow.
 M3e.Component.Button.component { content = M3e.Component.DialogAction.component [ M3e.Component.DialogAction.returnValue "ok" ] [ M3e.text "Close" ], action = M3e.Action.none } [] []
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=50723-10929; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Containment; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=50723-10929; figmaStatus=approved -->
 
 -}
 

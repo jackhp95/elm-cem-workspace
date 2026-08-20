@@ -140,7 +140,7 @@ M3e.Component.SelectionList.component [ M3e.Component.SelectionList.variant M3e.
 M3e.Component.SelectionList.component [ M3e.Attributes.class "density-3", M3e.Component.SelectionList.variant M3e.Values.segmented, M3e.Component.SelectionList.multi True ] [ M3e.Component.ListOption.component [] [ M3e.text "Option 1" ], M3e.Component.ListOption.component [] [ M3e.text "Option 2" ], M3e.Component.ListOption.component [] [ M3e.text "Option 3" ] ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13028; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Layout & style; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=59106-13028; figmaStatus=example-verified -->
 
 -}
 

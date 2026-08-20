@@ -60,7 +60,7 @@ M3e.Component.Switch.component [ M3e.Component.Switch.checked True ] []
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54446-25289; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Selection; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54446-25289; figmaStatus=approved -->
 
 -}
 

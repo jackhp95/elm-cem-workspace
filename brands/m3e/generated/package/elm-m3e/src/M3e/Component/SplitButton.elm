@@ -55,7 +55,7 @@ A button used to show an action with a menu of related actions.
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-15751; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Actions; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57994-15751; figmaStatus=example-verified -->
 
 -}
 

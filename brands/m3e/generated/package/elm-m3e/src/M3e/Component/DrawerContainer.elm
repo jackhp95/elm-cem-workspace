@@ -59,7 +59,7 @@ M3e.Component.DrawerContainer.component [ M3e.Component.DrawerContainer.endMode 
 M3e.Component.DrawerContainer.component [] [ M3e.Component.DrawerContainer.start (TypedHtml.nav [] []), TypedHtml.main_ [] [], M3e.Component.DrawerContainer.end (TypedHtml.aside [] []) ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53198-27851; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Navigation; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53198-27851; figmaStatus=example-verified -->
 
 -}
 

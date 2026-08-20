@@ -27,7 +27,7 @@ A menu, opened from a floating action button (FAB), used to display multiple rel
 M3e.Component.FabMenuItem.component [] [ M3e.Component.FabMenuItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "email", M3e.Component.Icon.filled True ] []), M3e.text "Email" ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-42986; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Actions; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-42986; figmaStatus=example-verified -->
 
 -}
 

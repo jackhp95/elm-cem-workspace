@@ -35,7 +35,7 @@ M3e.Component.Button.component { content = M3e.text "Delete file", action = M3e.
 M3e.Component.Button.component { content = M3e.text "Delete file", action = M3e.Action.none } [ M3e.Attributes.id "example3" ] []
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53977-33575; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Communication; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53977-33575; figmaStatus=approved -->
 
 -}
 

@@ -98,7 +98,7 @@ M3e.Component.Fab.component { content = M3e.Component.Icon.component [ M3e.Compo
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-43426; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Actions; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=57998-43426; figmaStatus=approved -->
 
 -}
 

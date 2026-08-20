@@ -65,7 +65,7 @@ M3e.Component.SegmentedButton.component { content = M3e.Component.ButtonSegment.
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-36615; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Actions; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=53923-36615; figmaStatus=example-verified -->
 
 -}
 

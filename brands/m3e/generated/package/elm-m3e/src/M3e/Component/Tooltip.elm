@@ -43,7 +43,7 @@ Adds additional context to a button or other UI element.
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54061-33881; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Communication; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54061-33881; figmaStatus=example-verified -->
 
 -}
 

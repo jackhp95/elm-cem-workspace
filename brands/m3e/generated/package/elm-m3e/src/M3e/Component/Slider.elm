@@ -75,7 +75,7 @@ M3e.Component.Slider.component { content = M3e.Component.SliderThumb.component [
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58008-10356; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Selection; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58008-10356; figmaStatus=approved -->
 
 -}
 

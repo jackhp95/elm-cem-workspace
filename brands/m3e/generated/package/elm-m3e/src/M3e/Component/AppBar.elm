@@ -47,7 +47,7 @@ M3e.Component.AppBar.component [ M3e.Component.AppBar.centered True ] [ M3e.Comp
 TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "id" "scrollContainer" ] [ M3e.Component.AppBar.component [ M3e.Component.AppBar.for "scrollContainer" ] [ M3e.Component.AppBar.leading (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Back", action = M3e.Action.none } [] []), M3e.Component.AppBar.title (M3e.text "Top 10 hiking trails"), M3e.Component.AppBar.subtitle (M3e.text "Discover popular trails"), M3e.Component.AppBar.trailing (M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "bookmark", M3e.Component.Icon.filled True ] [], ariaLabel = "Bookmark", action = M3e.Action.none } [ M3e.Component.IconButton.variant M3e.Values.tonal ] []) ], TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "class" "scroll-item" ] [ M3e.text "Scroll down to see the elevation effect" ] ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58114-20565; figmaStatus=example-verified -->
+<!-- elm-cem:docmeta category=Navigation; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58114-20565; figmaStatus=example-verified -->
 
 -}
 

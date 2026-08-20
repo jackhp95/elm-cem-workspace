@@ -56,7 +56,7 @@ TypedHtml.form [] [ M3e.Unsafe.customElement "label" [] [ M3e.Component.Checkbox
     ]
 ```
 
-<!-- elm-cem:docmeta figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51859-5628; figmaStatus=approved -->
+<!-- elm-cem:docmeta category=Selection; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=51859-5628; figmaStatus=approved -->
 
 -}
 
