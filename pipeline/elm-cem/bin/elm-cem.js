@@ -164,6 +164,14 @@ const publishShape = readPublishShape(process.argv.slice(2));
 // Only `.elm` files are removed — any other files in the dir are left alone.
 if (outputDir) {
   removeElmFiles(path.resolve(process.cwd(), outputDir));
+  // G3 (generator-consolidation): Generate.Phantom.Emit.FamilyPackage emits
+  // <lib>.<namespace>.<Family> modules directly from the Elm pass, but Elm
+  // has no filesystem access to clean up a family that's no longer in
+  // config — gen-family-package.js used to own this cleanup itself
+  // (gen-family-package.js:413-423's fs.rmSync of its src/ subtree) before
+  // every run. Mirror that here so a family removed from `_families.families`
+  // doesn't leave an orphan module behind forever.
+  cleanStaleFamilyModules(args, outputDir);
 }
 
 try {
@@ -222,10 +230,11 @@ function resolveElmCodegen() {
   return null;
 }
 
-// Icon-module + family-package generation — see bin/post-generate.js.
-if (outputDir) {
-  require("./post-generate").runPostGenerate(process.argv.slice(2), outputDir);
-}
+// Icon-module + family-package generation now happens inside the Elm codegen
+// pass itself (Generate.Phantom.Emit.IconModule / .FamilyPackage — G2/G3,
+// 2026-08-19 generator-consolidation). bin/post-generate.js's call is
+// removed here; the file itself (and bin/gen-family-package.js) are deleted
+// once this task's golden test is proven green (see the plan's Task 7b).
 
 // The generator knows exactly which modules it wrote, so it owns the package's
 // `exposed-modules` — consumers don't hand-maintain it or ship a helper script.
@@ -462,6 +471,30 @@ function injectIconCatalog(argv) {
   if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
   else out[flagIdx + 1] = tmp;
   return out;
+}
+
+// Clean the standalone family package's OWNED src/ subtree before
+// regeneration (G3, generator-consolidation) — see the call site's comment.
+// Reads `_families` from the same merged flags file the icon-catalog
+// injection reads `_iconModule` from; a no-op if `_families`/`.package` is
+// absent (nothing to clean) or the directory doesn't exist yet.
+function cleanStaleFamilyModules(argv, outputDir) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  if (flagIdx === -1) return;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return;
+  }
+  const fam = cem._config && cem._config._families;
+  if (!fam || !fam.package || !fam.package.dir || !fam.lib || !fam.namespace) return;
+  const repoRoot = path.dirname(path.resolve(process.cwd(), outputDir));
+  const genSrcRoot = path.join(repoRoot, fam.package.dir, "src", ...fam.lib.split("."), fam.namespace);
+  fs.rmSync(genSrcRoot, { recursive: true, force: true });
 }
 
 // Deep-merge config objects: top-level component keys (or `_`-prefixed meta
