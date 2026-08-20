@@ -7,8 +7,11 @@ their exact source. Written in the one-import barrel, options-list form
 (`M3e.<name> [ attributes ] [ children ]`).
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
+import Dict exposing (Dict)
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
@@ -42,7 +45,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    Dict String String
 
 
 type alias ActionData =
@@ -51,8 +54,15 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.rawFile "content/guides/FirstComponent.md"
+        |> BackendTask.map Doc.sections
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -84,7 +94,24 @@ settingsCard =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
+    let
+        d : Dict String String
+        d =
+            app.data
+
+        intro : String
+        intro =
+            Doc.section "intro" d
+
+        body : String
+        body =
+            Doc.section "body" d
+
+        recap : String
+        recap =
+            Doc.section "recap" d
+    in
     View.fromElement "Your first component"
         (Doc.pane
             [ TypedHtml.div [ TA.class "space-y-12" ]
@@ -104,20 +131,6 @@ view _ _ =
         )
 
 
-intro : String
-intro =
-    """This guide builds one real thing — an account settings panel — a small step at a time, and every step teaches the idea behind it. Start here: get a single component on screen. Everything after this builds on it."""
-
-
-body : String
-body =
-    """Every component is a typed Elm value. Import the one-import `M3e` barrel, build a value in the shape `M3e.<name> [ attributes ] [ children ]`, and hand it to `M3e.toNode` at your app's root. Here is the start of our panel: an outlined card, a title, and a **Save** button.
-
-Look at the shape. Attributes like `M3e.Attributes.variant Value.filled` go in the first list; content goes in the second. That is the whole API — one import, one shape, every component.
-
-(One thing to notice: a component with no required pieces is a loose producer on the barrel (`M3e.card`), but a component whose constructor takes required fields — the heading's `content`, the button's `content` and `action` — is written through its record-form smart constructor `M3e.Component.<name>.component` on its own module, not the barrel. A component's **slot setters** live on that module too — `M3e.Component.Card.header`, not `M3e.header` — because each one is typed to the kinds that slot admits. That is why the `M3e.Component.*` modules are imported alongside the barrel here.)"""
-
-
 source : String
 source =
     """import M3e
@@ -135,10 +148,3 @@ settingsCard =
         , M3e.Component.Card.content
             (M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Attributes.variant Value.filled ] [])
         ]"""
-
-
-recap : String
-recap =
-    """- Every component is `M3e.<name> [ attributes ] [ children ]`, from the one-import `M3e` barrel.
-- `M3e.toNode` renders your composed value at your app's root.
-- **Next: [Invalid states don't compile](/guide/invalid-states) →** we compose the *wrong* thing on purpose — and watch the compiler refuse it."""

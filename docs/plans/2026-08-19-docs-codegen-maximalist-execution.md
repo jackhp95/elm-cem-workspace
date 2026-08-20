@@ -133,14 +133,39 @@ inaccurate. Truth:
 - **Data-driven (3, not candidates)**: `HowWeProveIt`, `Reference`, `Roundtrip` (load JSON).
 
 **Migration mechanism (faithful, render-identical):** move only PROSE strings (rendered via
-`Doc.markdown`/`Doc.recapBox`/`Doc.message`) to a per-chapter `content/guides/<Chapter>.md` with section
-delimiters; leave CODE strings (`Doc.codeBlock` args — several are `@sample`-annotated and extracted by
-samples-gen for compilation testing) and all structure/showcases in Elm. The route reads the `.md` via
-`rawFile`, splits into a `Dict String String`, and a `let` block re-binds the prose names from that dict —
-so the `view` body is unchanged. Prose content is copied byte-identically, so `Doc.markdown` receives the
-same input → identical render (verified by string-equality of extracted sections vs the original literals).
+`Doc.markdown`/`Doc.recapBox`/`Doc.message`, or a chapter's own prose helper like Troubleshooting's
+`entry`) to a per-chapter `content/guides/<Chapter>.md` with `@@@ <name>` section delimiters; leave CODE
+strings (`Doc.codeBlock` args — several are `@sample`-annotated and extracted by samples-gen for
+compilation testing) and all structure/showcases in Elm. New `Doc.sections : String -> Dict String String`
+(+ `Doc.section`) splits the file. The route reads the `.md` via `BackendTask.File.rawFile`, maps
+`Doc.sections`, and a `let` block re-binds the prose names from that dict via `Doc.section "<name>" d` — so
+the `view` body is entirely unchanged. Prose content is copied byte-identically.
 
-<status + which chapters migrated recorded at commit>
+**What landed (ALL 15 prose-bearing chapters, not just the 6 pure-prose):**
+- Pure-prose (6): CheatSheet, Glossary, Motion, Theming, ToolingRefactors, Troubleshooting.
+- Mixed (9): Accessibility, AccessibleByConstruction, CompositionTextField, FirstComponent,
+  GeneratedAndInspectable, InvalidStates, Seams, Strictness, TheLayers. (The same mechanism works — the
+  live `Doc.showcase`/`Doc.codeBlock` bindings are separate top-level defs, untouched; only prose moves.)
+- The 3 data-driven chapters (HowWeProveIt, Reference, Roundtrip) are correctly left alone.
+
+**Verification (evidence):**
+- All 15 chapters + `Doc.elm` compile clean (`elm make` → Success); `elm-format` applied.
+- Round-trip byte-identity: every extracted `.md` section equals its original Elm literal (checked in JS
+  by re-parsing the `.md` with the same split logic and comparing to the literal — all identical).
+- **Rendered-HTML identity: PROVEN.** Captured the Phase-1 (HEAD) `dist/guide/<x>/index.html` for 10
+  chapters (both pure + mixed), rebuilt with `build:site`, and diffed. Every one is byte-identical to the
+  inline-string version EXCEPT (a) the shared content-hashed Elm bundle filename (`elm.<hash>.js`, which
+  changes on any route edit and appears identically in every page's `<head>`), and (b) the
+  `__ELM_PAGES_BYTES_DATA__` hydration payload (which legitimately grew because the page `Data` went from
+  `{}` to the sections dict). With those two expected changes normalised out: **10 identical, 0 differing**
+  — and the sanity check confirms the prose IS embedded in the pre-rendered HTML, so the diff is
+  meaningful. Zero prose changed.
+- Completeness: verified every prose sink (`Doc.markdown`/`recapBox`/`message`/`entry` bareword arg) across
+  all 15 chapters is now a migrated `Doc.section` let-binding (the lone flag was a false positive —
+  Troubleshooting's `entry` helper has a *parameter* named `prose`).
+
+**Note on the spec's "4 existing `.md`":** those `guides/*.md` remain untouched (they are dev-docs). The
+migrated site prose lives in the NEW `content/guides/` dir — no collision.
 
 ---
 
