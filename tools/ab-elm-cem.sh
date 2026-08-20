@@ -52,7 +52,7 @@ run_generator() {
     (
         cd "$ELM_M3E"
         PATH="$ELM_M3E/node_modules/.bin:$PATH" node "$generator_dir/bin/elm-cem.js" \
-            --flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json \
+            --flags-from=../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json \
             --config-from=config/slots.json \
             --config-from=config/native-mdn.json \
             --config-from=config/examples.generated.json \

@@ -41,19 +41,19 @@ test("gate-out-probe tag is held only by the root gate step", () => {
 // committed tree — a real race, not a flake, since nothing declared the
 // conflict before. See tools/gate-all.mjs's "Tags used" comment for why
 // each of these six specifically needs it.
-test("exactly the steps that touch cem-figma-connect's generated/m3-kit carry the cfc-generated tag", () => {
+test("exactly the steps that touch elm-cem-figma-connect's generated/m3-kit carry the cfc-generated tag", () => {
     const steps = listStepsFull();
     const cfcTagged = steps
         .filter((s) => s.exclusiveWith.includes("cfc-generated"))
         .map((s) => s.name)
         .sort();
     assert.deepEqual(cfcTagged, [
-        "cem-figma-connect: check",
-        "cem-figma-connect: test",
+        "elm-cem-figma-connect: check",
+        "elm-cem-figma-connect: test",
         "workspace: check-cc-elm-refs (Stream 2 CC->Elm module-reference gate)",
         "workspace: check-drift (M4.b cross-cutting drift gate)",
-        "workspace: check-emit-determinism cem-figma-connect",
-        "workspace: copy-fidelity cem-figma-connect",
+        "workspace: check-emit-determinism elm-cem-figma-connect",
+        "workspace: copy-fidelity elm-cem-figma-connect",
     ]);
 });
 

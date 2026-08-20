@@ -36,7 +36,10 @@ const SRC_M3E = path.resolve(REPO, "src/M3e");
 // component modules (#187).
 const SRC_M3E_BARREL = path.resolve(REPO, "src/M3e.elm");
 const OUT = path.resolve(here, "../data/reference.json");
-const ELM_BIN = path.resolve(REPO, "docs/node_modules/.bin/elm");
+// The docs package's own pinned elm binary. Post repo-shape-v2 the docs package
+// is a sibling of elm-m3e (brands/m3e/generated/docs/elm-m3e-docs), no longer
+// under it, so this resolves relative to this script's own package root, not REPO.
+const ELM_BIN = path.resolve(here, "..", "node_modules", ".bin", "elm");
 
 // The editorial nav override (`config/categories.json`): the single source that
 // decides which components appear in the drawer and under which category/label.

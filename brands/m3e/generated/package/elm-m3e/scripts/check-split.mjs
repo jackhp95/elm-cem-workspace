@@ -21,7 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const CEM = process.env.ELM_CEM_BIN || path.resolve(repo, "..", "..", "..", "..", "core", "elm-cem", "bin", "elm-cem.js");
+const CEM = process.env.ELM_CEM_BIN || path.resolve(repo, "..", "..", "..", "..", "..", "pipeline", "elm-cem", "bin", "elm-cem.js");
 const packagesPath = path.join(repo, "packages.json");
 const outDir = path.join(repo, "dist-packages");
 

@@ -82,7 +82,7 @@ test("--hook emits additionalContext for a matching file, exit 0", () => {
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.hookSpecificOutput.hookEventName, "PostToolUse");
   assert.match(payload.hookSpecificOutput.additionalContext, /m3e/i);
-  assert.match(payload.hookSpecificOutput.additionalContext, /m3e-api-okf/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /elm-m3e-okf/);
 });
 
 test("--hook stays silent (no stdout) for a non-matching file, exit 0", () => {
