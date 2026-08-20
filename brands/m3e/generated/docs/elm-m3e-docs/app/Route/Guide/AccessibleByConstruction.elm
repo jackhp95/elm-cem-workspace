@@ -9,8 +9,11 @@ The running example gains an icon-only help button (labeled, live); the nameless
 version is shown as code beside the rule's real output.
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
+import Dict exposing (Dict)
 import Doc
+import FatalError exposing (FatalError)
 import Guide.Samples as Samples
 import Head
 import Head.Seo as Seo
@@ -41,7 +44,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    Dict String String
 
 
 type alias ActionData =
@@ -50,8 +53,15 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.rawFile "content/guides/AccessibleByConstruction.md"
+        |> BackendTask.map Doc.sections
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -83,7 +93,32 @@ helpButton =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
+    let
+        d : Dict String String
+        d =
+            app.data
+
+        intro : String
+        intro =
+            Doc.section "intro" d
+
+        labeled : String
+        labeled =
+            Doc.section "labeled" d
+
+        nameless : String
+        nameless =
+            Doc.section "nameless" d
+
+        wiring : String
+        wiring =
+            Doc.section "wiring" d
+
+        recap : String
+        recap =
+            Doc.section "recap" d
+    in
     View.fromElement "Accessibility you can't forget"
         (Doc.pane
             [ TypedHtml.div [ TA.class "space-y-12" ]
@@ -106,21 +141,6 @@ view _ _ =
                 ]
             ]
         )
-
-
-intro : String
-intro =
-    """Accessibility here is built into the shape of the components, not bolted on as a checklist at the end. The clearest case: a control with no visible text. Our settings panel needs a small **help** button that's just an icon. A sighted user sees a "?"; a screen-reader user needs a name to read. So that name is **required** — and the accessible-name attributes (`Aria.label`, `labelledby`, `describedby`) are first-class setters on every component, right where you'd reach for them."""
-
-
-labeled : String
-labeled =
-    """Add the help button *with* its accessible name and it's fine — this renders, and it announces itself as "Help":"""
-
-
-nameless : String
-nameless =
-    """Now drop the name. Since the `el`-unification, an icon button's accessible name isn't a linter-checked attribute anymore — `ariaLabel` is a **required record field** on `IconButton.component` itself, the same required-record mechanism that makes forgetting a Button's `action` impossible (see [the strictness dial](/guide/strictness)). Try to omit it and the build stops — the message below is the compiler's real output:"""
 
 
 
@@ -169,16 +189,3 @@ But `component` needs the 1st argument to be:
     }
 
 Hint: Looks like the ariaLabel field is missing."""
-
-
-wiring : String
-wiring =
-    """This is "accessible by construction" in practice: the requirement lives in the component's own required-record shape, so `elm make` refuses the unlabeled control instead of a human having to remember. It is a **compiler** guarantee now — no elm-review run required, no CI step to forget to wire up. And when a control has a visible label — like the text fields we build next — the label and input are wired from one shared id, so you never hand-type a matching `for`/`id` pair."""
-
-
-recap : String
-recap =
-    """- An icon-only control has no visible text, so its **accessible name is required**.
-- `ariaLabel` is a **required record field** on `IconButton.component` — omitting it is a **compile error**, not a lint finding, so there's no CI step to forget.
-- Visible labels are **wired to their input for you** from one shared id — no hand-typed `for`/`id`.
-- **Next: [Composition, not injection](/guide/composition-text-field) →** build a text field that doesn't exist as a component — by composition."""

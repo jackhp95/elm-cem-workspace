@@ -1,0 +1,207 @@
+{
+  "typography": [
+    {
+      "class": "text-display-lg",
+      "metrics": "3.5625rem / 4rem · 400"
+    },
+    {
+      "class": "text-display-md",
+      "metrics": "2.8125rem / 3.25rem · 400"
+    },
+    {
+      "class": "text-display-sm",
+      "metrics": "2.25rem / 2.75rem · 400"
+    },
+    {
+      "class": "text-headline-lg",
+      "metrics": "2rem / 2.5rem · 400"
+    },
+    {
+      "class": "text-headline-md",
+      "metrics": "1.75rem / 2.25rem · 400"
+    },
+    {
+      "class": "text-headline-sm",
+      "metrics": "1.5rem / 2rem · 400"
+    },
+    {
+      "class": "text-title-lg",
+      "metrics": "1.375rem / 1.75rem · 400"
+    },
+    {
+      "class": "text-title-md",
+      "metrics": "1rem / 1.5rem · 500"
+    },
+    {
+      "class": "text-title-sm",
+      "metrics": "0.875rem / 1.25rem · 500"
+    },
+    {
+      "class": "text-body-lg",
+      "metrics": "1rem / 1.5rem · 400"
+    },
+    {
+      "class": "text-body-md",
+      "metrics": "0.875rem / 1.25rem · 400"
+    },
+    {
+      "class": "text-body-sm",
+      "metrics": "0.75rem / 1rem · 400"
+    },
+    {
+      "class": "text-label-lg",
+      "metrics": "0.875rem / 1.25rem · 500"
+    },
+    {
+      "class": "text-label-md",
+      "metrics": "0.75rem / 1rem · 500"
+    },
+    {
+      "class": "text-label-sm",
+      "metrics": "0.6875rem / 1rem · 500"
+    }
+  ],
+  "shapeCorners": [
+    {
+      "utility": "rounded-md-corner-none",
+      "label": "None",
+      "value": "0"
+    },
+    {
+      "utility": "rounded-md-corner-extra-small",
+      "label": "Extra small",
+      "value": "0.25rem"
+    },
+    {
+      "utility": "rounded-md-corner-small",
+      "label": "Small",
+      "value": "0.5rem"
+    },
+    {
+      "utility": "rounded-md-corner-medium",
+      "label": "Medium",
+      "value": "0.75rem"
+    },
+    {
+      "utility": "rounded-md-corner-large",
+      "label": "Large",
+      "value": "1rem"
+    },
+    {
+      "utility": "rounded-md-corner-large-increased",
+      "label": "Large increased",
+      "value": "1.25rem"
+    },
+    {
+      "utility": "rounded-md-corner-extra-large",
+      "label": "Extra large",
+      "value": "1.75rem"
+    },
+    {
+      "utility": "rounded-md-corner-extra-large-increased",
+      "label": "Extra large increased",
+      "value": "2rem"
+    },
+    {
+      "utility": "rounded-md-corner-extra-extra-large",
+      "label": "Extra extra large",
+      "value": "3rem"
+    },
+    {
+      "utility": "rounded-md-corner-full",
+      "label": "Full",
+      "value": "624.9375rem"
+    }
+  ],
+  "colorAccents": [
+    {
+      "name": "Primary",
+      "base": "bg-primary text-on-primary",
+      "baseBg": "bg-primary",
+      "container": "bg-primary-container text-on-primary-container",
+      "containerBg": "bg-primary-container"
+    },
+    {
+      "name": "Secondary",
+      "base": "bg-secondary text-on-secondary",
+      "baseBg": "bg-secondary",
+      "container": "bg-secondary-container text-on-secondary-container",
+      "containerBg": "bg-secondary-container"
+    },
+    {
+      "name": "Tertiary",
+      "base": "bg-tertiary text-on-tertiary",
+      "baseBg": "bg-tertiary",
+      "container": "bg-tertiary-container text-on-tertiary-container",
+      "containerBg": "bg-tertiary-container"
+    },
+    {
+      "name": "Error",
+      "base": "bg-error text-on-error",
+      "baseBg": "bg-error",
+      "container": "bg-error-container text-on-error-container",
+      "containerBg": "bg-error-container"
+    }
+  ],
+  "colorSurfaces": [
+    {
+      "label": "Surface",
+      "bg": "bg-surface",
+      "role": "bg-surface text-on-surface"
+    },
+    {
+      "label": "Surface Container",
+      "bg": "bg-surface-container",
+      "role": "bg-surface-container text-on-surface"
+    },
+    {
+      "label": "Surface Container High",
+      "bg": "bg-surface-container-high",
+      "role": "bg-surface-container-high text-on-surface"
+    },
+    {
+      "label": "Inverse Surface",
+      "bg": "bg-inverse-surface",
+      "role": "bg-inverse-surface text-inverse-on-surface"
+    }
+  ],
+  "colorRoleInventory": [
+    "background",
+    "error",
+    "error-container",
+    "inverse-on-surface",
+    "inverse-primary",
+    "inverse-surface",
+    "on-background",
+    "on-error",
+    "on-error-container",
+    "on-primary",
+    "on-primary-container",
+    "on-secondary",
+    "on-secondary-container",
+    "on-surface",
+    "on-surface-variant",
+    "on-tertiary",
+    "on-tertiary-container",
+    "outline",
+    "outline-variant",
+    "primary",
+    "primary-container",
+    "scrim",
+    "secondary",
+    "secondary-container",
+    "shadow",
+    "surface",
+    "surface-bright",
+    "surface-container",
+    "surface-container-high",
+    "surface-container-highest",
+    "surface-container-low",
+    "surface-container-lowest",
+    "surface-dim",
+    "surface-tint",
+    "surface-variant",
+    "tertiary",
+    "tertiary-container"
+  ]
+}

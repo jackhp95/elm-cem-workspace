@@ -1,9 +1,12 @@
 module Route.GettingStarted.Installation exposing (ActionData, Data, Model, Msg, route)
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
 import Doc exposing (Lang(..), codeBlock, message)
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Kind
@@ -32,7 +35,13 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    { elmPackage : String
+    , webPackage : String
+    , webVersion : String
+    , tailwindPackage : String
+    , tailwindRepoUrl : String
+    , tailwindRepoDir : String
+    }
 
 
 type alias ActionData =
@@ -41,8 +50,29 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+{-| Package identities (names, the pinned `@m3e/web` version, the Tailwind bridge
+repo) derived at build time from the real `elm.json` / `package.json` metadata by
+`scripts/gen-install-facts.mjs` (-> `data/install-facts.json`), so the install
+steps follow a package rename automatically instead of going stale (as they did
+when repo-shape-v2 renamed `tailwind-m3e-web` -> `elm-m3e-tailwind`).
+-}
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.jsonFile
+        (Decode.map6 Data
+            (Decode.field "elmPackage" Decode.string)
+            (Decode.field "webPackage" Decode.string)
+            (Decode.field "webVersion" Decode.string)
+            (Decode.field "tailwindPackage" Decode.string)
+            (Decode.field "tailwindRepoUrl" Decode.string)
+            (Decode.field "tailwindRepoDir" Decode.string)
+        )
+        "data/install-facts.json"
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -78,22 +108,25 @@ stepHeading label =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
+    let
+        f : Data
+        f =
+            app.data
+    in
     View.fromElement "Installation"
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
                 [ pageHeading
                 , TypedHtml.p []
-                    [ M3e.text "elm-m3e ships in two parts. The brand primitives — the shared vocabulary and escape hatches (M3e.Attributes, M3e.Values, M3e.Events, M3e.Html, and friends) — publish to the Elm package registry as jackhp95/elm-m3e. The 128 typed components (M3e.Button, M3e.Card, M3e.Theme, … and the M3e barrel) are NOT published; you generate them into your project with elm-cem's eject command. Follow the four steps below and you will have a themed button rendering in the browser." ]
+                    [ M3e.text ("elm-m3e ships in two parts. The brand primitives — the shared vocabulary and escape hatches (M3e.Attributes, M3e.Values, M3e.Events, M3e.Html, and friends) — publish to the Elm package registry as " ++ f.elmPackage ++ ". The 128 typed components (M3e.Button, M3e.Card, M3e.Theme, … and the M3e barrel) are NOT published; you generate them into your project with elm-cem's eject command. Follow the four steps below and you will have a themed button rendering in the browser.") ]
                 , message "Prerequisites: Elm 0.19.1, Node 18+ (eject runs via npx/pnpm dlx), and a bundler that can serve ES modules (Vite, esbuild, Parcel, or Webpack). The steps below assume Vite, but any bundler that runs npm packages and lets you inject a <script> tag will work."
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "1. Install the primitives and eject the components"
                 , TypedHtml.p []
                     [ M3e.text "Install the published primitives from the Elm registry. This gives you the primitive modules — M3e.Attributes, M3e.Values, M3e.Events, the escape hatches, and M3e.Html (the loose, open-rowed component producers):" ]
-                , codeBlock Shell """
-elm install jackhp95/elm-m3e
-"""
+                , codeBlock Shell ("\nelm install " ++ f.elmPackage ++ "\n")
                 , TypedHtml.p []
                     [ M3e.text "To get the full typed component surface (M3e.Button, M3e.Card, M3e.Theme, … and the M3e barrel), run elm-cem's eject command. It pulls the pre-generated M3e.* modules into a vendor folder, adds that folder to source-directories in your elm.json, and promotes the dependencies the generated code imports. eject also removes the jackhp95/elm-m3e registry dependency — the vendored superset already contains those primitive modules, so there is no collision:" ]
                 , codeBlock Shell """
@@ -106,33 +139,19 @@ npx elm-cem eject m3e --elm-json=elm.json --write
                 [ stepHeading "2. Register the web components"
                 , TypedHtml.p []
                     [ M3e.text "The Elm modules emit <m3e-*> custom elements; they only render once the @m3e/web element definitions are registered. Install the package and import it once, before your Elm app boots:" ]
-                , codeBlock Shell """
-npm i @m3e/web
-"""
-                , codeBlock NoLang """
-// m3e-entry.js — import once, before Elm.Main.init runs
-import "@m3e/web/all";
-"""
+                , codeBlock Shell ("\nnpm i " ++ f.webPackage ++ "@" ++ f.webVersion ++ "\n")
+                , codeBlock NoLang ("\n// m3e-entry.js — import once, before Elm.Main.init runs\nimport \"" ++ f.webPackage ++ "/all\";\n")
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "3. Add the token + utility CSS bridge"
                 , TypedHtml.p []
-                    [ M3e.text "tailwind-m3e-web maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, …). It is NOT published to npm — it is a private repository. There is no @import from a package name outside its own workspace; you must vendor the CSS files into your project first." ]
+                    [ M3e.text (f.tailwindPackage ++ " maps the M3 design tokens to Tailwind v4 utilities (bg-surface, text-body-lg, rounded-md-corner-large, …). It is NOT published to npm — it is a private repository. There is no @import from a package name outside its own workspace; you must vendor the CSS files into your project first.") ]
                 , TypedHtml.p []
                     [ M3e.text "If you have access to the private repo, clone it and copy its CSS into your project:" ]
-                , codeBlock Shell """
-git clone https://github.com/jackhp95/tailwind-m3e-web.git
-cp -R tailwind-m3e-web/src        your-project/vendor/tailwind-m3e-web/src
-cp -R tailwind-m3e-web/generated  your-project/vendor/tailwind-m3e-web/generated
-"""
+                , codeBlock Shell ("\ngit clone " ++ f.tailwindRepoUrl ++ "\ncp -R " ++ f.tailwindRepoDir ++ "/src        your-project/vendor/" ++ f.tailwindPackage ++ "/src\ncp -R " ++ f.tailwindRepoDir ++ "/generated  your-project/vendor/" ++ f.tailwindPackage ++ "/generated\n")
                 , TypedHtml.p []
                     [ M3e.text "Then reference the vendored files by relative path from your stylesheet:" ]
-                , codeBlock NoLang """
-/* style.css — paths are relative to your vendored copy */
-@import "tailwindcss";
-@import "./vendor/tailwind-m3e-web/src/index.css";
-@import "./vendor/tailwind-m3e-web/generated/utilities.css";
-"""
+                , codeBlock NoLang ("\n/* style.css — paths are relative to your vendored copy */\n@import \"tailwindcss\";\n@import \"./vendor/" ++ f.tailwindPackage ++ "/src/index.css\";\n@import \"./vendor/" ++ f.tailwindPackage ++ "/generated/utilities.css\";\n")
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ stepHeading "4. Wrap your app in a theme and render"

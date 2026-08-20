@@ -1,0 +1,14 @@
+{
+  "name": "docs-gen",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Brand-agnostic docs generator (WIP skeleton) — peer of elm-cem-compose. Emits the *generated* docs data surface (family table, token galleries, ...) from a brand's facts bundle + config. See DESIGN.md.",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --test test/*.test.mjs"
+  }
+}

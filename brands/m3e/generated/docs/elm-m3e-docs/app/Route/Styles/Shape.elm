@@ -10,10 +10,13 @@ interaction — is the signature of M3 Expressive. Rendered live in the content-
 
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Shape as Shape
@@ -44,7 +47,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    List ( String, String, String )
 
 
 type alias ActionData =
@@ -53,8 +56,29 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+{-| The corner-radius scale — `(rounded utility, label, rem value)` per size —
+derived at build time from `--md-sys-shape-corner-*` by
+`scripts/gen-style-tokens.mjs` (-> `data/style-tokens.json`), so the rem values
+cannot drift from the tokens the surfaces actually clip to.
+-}
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.jsonFile
+        (Decode.field "shapeCorners"
+            (Decode.list
+                (Decode.map3 (\u l v -> ( u, l, v ))
+                    (Decode.field "utility" Decode.string)
+                    (Decode.field "label" Decode.string)
+                    (Decode.field "value" Decode.string)
+                )
+            )
+        )
+        "data/style-tokens.json"
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -73,26 +97,6 @@ head _ =
         , title = "Shape · elm-m3e"
         }
         |> Seo.website
-
-
-{-| The canonical M3 corner-radius scale: `(rounded utility, label, rem value)`.
-The rounded-md-corner-\* utilities resolve `--radius-md-corner-*` → the
-`--md-sys-shape-corner-value-*` tokens (see `sys/shape.css`). Values are the token
-literals — do not edit here without editing the token.
--}
-cornerScale : List ( String, String, String )
-cornerScale =
-    [ ( "rounded-md-corner-none", "None", "0" )
-    , ( "rounded-md-corner-extra-small", "Extra small", "0.25rem" )
-    , ( "rounded-md-corner-small", "Small", "0.5rem" )
-    , ( "rounded-md-corner-medium", "Medium", "0.75rem" )
-    , ( "rounded-md-corner-large", "Large", "1rem" )
-    , ( "rounded-md-corner-large-increased", "Large increased", "1.25rem" )
-    , ( "rounded-md-corner-extra-large", "Extra large", "1.75rem" )
-    , ( "rounded-md-corner-extra-large-increased", "Extra large increased", "2rem" )
-    , ( "rounded-md-corner-extra-extra-large", "Extra extra large", "3rem" )
-    , ( "rounded-md-corner-full", "Full", "624.9375rem" )
-    ]
 
 
 cornerSwatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
@@ -150,7 +154,7 @@ pageHeading =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
     View.fromElement "Shape"
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
@@ -168,7 +172,7 @@ view _ _ =
                     ]
                 , Doc.showcase
                     (TypedHtml.div [ TA.class "grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5" ]
-                        (List.map cornerSwatch cornerScale)
+                        (List.map cornerSwatch app.data)
                     )
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]

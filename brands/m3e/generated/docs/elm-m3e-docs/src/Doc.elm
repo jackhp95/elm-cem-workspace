@@ -1,6 +1,7 @@
 module Doc exposing
     ( Lang(..), anchorPill, codeBlock, elmSignature, markdown, message, pageHeading, pane, preBlock, rawPreview, recapBox, sectionHeadingWithId, sectionLabel, sectionLabelCaps, showcase, userlandNote
     , slugify
+    , section, sections
     )
 
 {-| Shared documentation-rendering helpers, lifted from the Styles/GettingStarted
@@ -19,9 +20,11 @@ into any slot, and no caller has to name a kind row to receive one.
 
 @docs Lang, anchorPill, codeBlock, elmSignature, markdown, message, pageHeading, pane, preBlock, rawPreview, recapBox, sectionHeadingWithId, sectionLabel, sectionLabelCaps, showcase, userlandNote
 @docs slugify
+@docs section, sections
 
 -}
 
+import Dict exposing (Dict)
 import Doc.Fold as Fold
 import Html exposing (Html, p, text)
 import M3e exposing (Element)
@@ -151,6 +154,39 @@ highlightLine lang line =
 
         Err _ ->
             text line
+
+
+{-| Split a hand-authored guide-markdown file (loaded via
+`BackendTask.File.rawFile`) into its named sections. A section begins at a line
+of the form `@@@ <name>` and runs (trimmed) until the next such delimiter. This
+lets a guide chapter keep its PROSE in a `.md` file — diffable without Elm
+tooling — while the route keeps its STRUCTURE in Elm (interleaved code samples,
+live showcases, recap boxes): each `Doc.markdown`/`Doc.recapBox` call reads its
+section by name. See `content/guides/*.md`.
+-}
+sections : String -> Dict String String
+sections raw =
+    ("\n" ++ raw)
+        |> String.split "\n@@@ "
+        |> List.drop 1
+        |> List.filterMap
+            (\chunk ->
+                case String.split "\n" chunk of
+                    name :: rest ->
+                        Just ( String.trim name, String.trim (String.join "\n" rest) )
+
+                    [] ->
+                        Nothing
+            )
+        |> Dict.fromList
+
+
+{-| Look up one section from a `sections` dict — the empty string if absent
+(a missing section renders nothing rather than crashing the page).
+-}
+section : String -> Dict String String -> String
+section name dict =
+    Dict.get name dict |> Maybe.withDefault ""
 
 
 {-| Render a Markdown string (component overviews, member docs) as live DOM.

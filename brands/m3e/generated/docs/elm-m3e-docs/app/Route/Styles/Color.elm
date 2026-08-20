@@ -1,9 +1,12 @@
 module Route.Styles.Color exposing (ActionData, Data, Model, Msg, route)
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Card
@@ -34,7 +37,9 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    { accents : List Accent
+    , surfaces : List ( String, String, String )
+    }
 
 
 type alias ActionData =
@@ -43,8 +48,46 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+{-| The accent-pairing and neutral-surface role lists, derived at build time from
+the `--md-sys-color-*` inventory by `scripts/gen-style-tokens.mjs`
+(-> `data/style-tokens.json`). The swatch color itself is resolved from the token
+by the browser; deriving the LISTS means every role name the page references is
+validated to exist in the manifest at build time — a renamed/removed role fails
+the generator instead of shipping a dead utility. (The surface list is the page's
+curated selection, not the exhaustive ladder; the full inventory lives in the
+data file's `colorRoleInventory`.)
+-}
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.jsonFile
+        (Decode.map2 Data
+            (Decode.field "colorAccents" (Decode.list accentDecoder))
+            (Decode.field "colorSurfaces" (Decode.list surfaceDecoder))
+        )
+        "data/style-tokens.json"
+        |> BackendTask.allowFatal
+
+
+accentDecoder : Decode.Decoder Accent
+accentDecoder =
+    Decode.map5 Accent
+        (Decode.field "name" Decode.string)
+        (Decode.field "base" Decode.string)
+        (Decode.field "baseBg" Decode.string)
+        (Decode.field "container" Decode.string)
+        (Decode.field "containerBg" Decode.string)
+
+
+surfaceDecoder : Decode.Decoder ( String, String, String )
+surfaceDecoder =
+    Decode.map3 (\label bg role -> ( label, bg, role ))
+        (Decode.field "label" Decode.string)
+        (Decode.field "bg" Decode.string)
+        (Decode.field "role" Decode.string)
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -72,26 +115,6 @@ type alias Accent =
     , container : String
     , containerBg : String
     }
-
-
-accents : List Accent
-accents =
-    [ Accent "Primary" "bg-primary text-on-primary" "bg-primary" "bg-primary-container text-on-primary-container" "bg-primary-container"
-    , Accent "Secondary" "bg-secondary text-on-secondary" "bg-secondary" "bg-secondary-container text-on-secondary-container" "bg-secondary-container"
-    , Accent "Tertiary" "bg-tertiary text-on-tertiary" "bg-tertiary" "bg-tertiary-container text-on-tertiary-container" "bg-tertiary-container"
-    , Accent "Error" "bg-error text-on-error" "bg-error" "bg-error-container text-on-error-container" "bg-error-container"
-    ]
-
-
-{-| Neutral surface roles — the app backgrounds, no accent pairing.
--}
-surfaces : List ( String, String, String )
-surfaces =
-    [ ( "Surface", "bg-surface", "bg-surface text-on-surface" )
-    , ( "Surface Container", "bg-surface-container", "bg-surface-container text-on-surface" )
-    , ( "Surface Container High", "bg-surface-container-high", "bg-surface-container-high text-on-surface" )
-    , ( "Inverse Surface", "bg-inverse-surface", "bg-inverse-surface text-inverse-on-surface" )
-    ]
 
 
 {-| A container/on-container pairing row: the bold role beside its container, so the
@@ -123,7 +146,7 @@ pageHeading =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
     View.fromElement "Color"
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
@@ -141,14 +164,14 @@ view _ _ =
                     ]
                 , Doc.showcase
                     (TypedHtml.div [ TA.class "grid grid-cols-1 gap-3 lg:grid-cols-2" ]
-                        (List.map accentRow accents)
+                        (List.map accentRow app.data.accents)
                     )
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]
                 [ Doc.sectionHeadingWithId (Doc.slugify "Surface roles") "Surface roles"
                 , Doc.showcase
                     (TypedHtml.div [ TA.class "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" ]
-                        (List.map swatch surfaces)
+                        (List.map swatch app.data.surfaces)
                     )
                 ]
             , TypedHtml.section [ TA.class "space-y-3" ]

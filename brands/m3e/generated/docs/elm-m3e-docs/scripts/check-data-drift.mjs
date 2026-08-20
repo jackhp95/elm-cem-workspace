@@ -33,6 +33,11 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DOCS = path.resolve(here, "..");
 const REPO = path.resolve(DOCS, "..", "..", "package", "elm-m3e");
+// The brand's Tailwind bridge — sibling package holding the `--md-sys-*` token
+// manifest (sys/*.css) and its package.json — read by gen:style-tokens and
+// gen:install-facts. Copied into the scratch so those generators can re-derive
+// their data files there, same as REPO/DOCS.
+const TAILWIND = path.resolve(DOCS, "..", "..", "style", "elm-m3e-tailwind");
 
 // Portability guard (R-023): data/reference.json is a GENERATED, gitignored
 // artifact absent from a fresh `pnpm install` clone. This gate regenerates it
@@ -55,6 +60,15 @@ if (!fs.existsSync(path.join(DOCS, "data", "reference.json"))) {
 // changes, and this list is the contract.
 const ARTIFACTS = [
   "data/reference.json",
+  // gen:family — the /family page's family/member table, derived from
+  // config/slots.json. Pure JSON building, byte-reproducible.
+  "data/families.json",
+  // gen:style-tokens — the /styles/* token tables, derived from the elm-m3e-tailwind
+  // sys/*.css `--md-sys-*` manifest. Pure text parsing, byte-reproducible.
+  "data/style-tokens.json",
+  // gen:install-facts — the install page's package identities, derived from
+  // elm.json / package.json metadata. Byte-reproducible.
+  "data/install-facts.json",
   // gen:brand-images — the bare material-symbols:palette glyph. Text, and the
   // generator is pure string building, so it is byte-reproducible everywhere.
   // See the note below for why its sibling RASTER is deliberately absent.
@@ -75,7 +89,7 @@ const ARTIFACTS = [
 // guide page gains or loses a code block.
 const ARTIFACT_DIRS = ["samples/good", "samples/bad"];
 
-const GEN_STEPS = ["gen:reference", "gen:samples", "gen:brand-images"];
+const GEN_STEPS = ["gen:reference", "gen:family", "gen:style-tokens", "gen:install-facts", "gen:samples", "gen:brand-images"];
 
 // DELIBERATELY NOT GATED: public/og-card.png.
 //
@@ -133,6 +147,7 @@ process.on("exit", () => fs.rmSync(scratch, { recursive: true, force: true }));
 const REPO_ROOT = path.resolve(REPO, "..", "..", "..", "..", "..");
 const scratchDocs = path.join(scratch, path.relative(REPO_ROOT, DOCS));
 const scratchRepo = path.join(scratch, path.relative(REPO_ROOT, REPO));
+const scratchTailwind = path.join(scratch, path.relative(REPO_ROOT, TAILWIND));
 
 try {
   // Copy both trees minus the heavy, regenerable directories. node_modules is
@@ -163,8 +178,13 @@ try {
   };
   fs.mkdirSync(path.dirname(scratchRepo), { recursive: true });
   fs.mkdirSync(path.dirname(scratchDocs), { recursive: true });
+  fs.mkdirSync(path.dirname(scratchTailwind), { recursive: true });
   fs.cpSync(REPO, scratchRepo, { recursive: true, filter: heavyDirFilter(REPO) });
   fs.cpSync(DOCS, scratchDocs, { recursive: true, filter: heavyDirFilter(DOCS) });
+  // gen:style-tokens / gen:install-facts read the token manifest + package.json
+  // here. Only its committed source is needed (no node_modules — these
+  // generators use node builtins only), so it is not symlinked below.
+  fs.cpSync(TAILWIND, scratchTailwind, { recursive: true, filter: heavyDirFilter(TAILWIND) });
 
   for (const [scratchPkgDir, target] of [
     [scratchRepo, path.join(REPO, "node_modules")],

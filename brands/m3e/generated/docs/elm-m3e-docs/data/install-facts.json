@@ -1,0 +1,8 @@
+{
+  "elmPackage": "jackhp95/elm-m3e",
+  "webPackage": "@m3e/web",
+  "webVersion": "2.7.6",
+  "tailwindPackage": "elm-m3e-tailwind",
+  "tailwindRepoUrl": "https://github.com/jackhp95/tailwind-m3e-web.git",
+  "tailwindRepoDir": "tailwind-m3e-web"
+}

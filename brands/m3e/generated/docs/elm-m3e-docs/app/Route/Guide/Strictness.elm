@@ -10,8 +10,11 @@ compile guarantee. The live demo stays the barrel Save button; the alternative
 shapes are shown as code with their real compiler output.
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
+import Dict exposing (Dict)
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
@@ -42,7 +45,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    Dict String String
 
 
 type alias ActionData =
@@ -51,8 +54,15 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.rawFile "content/guides/Strictness.md"
+        |> BackendTask.map Doc.sections
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -81,7 +91,32 @@ saveButton =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
+    let
+        d : Dict String String
+        d =
+            app.data
+
+        intro : String
+        intro =
+            Doc.section "intro" d
+
+        linter : String
+        linter =
+            Doc.section "linter" d
+
+        shapes : String
+        shapes =
+            Doc.section "shapes" d
+
+        recordAha : String
+        recordAha =
+            Doc.section "recordAha" d
+
+        recap : String
+        recap =
+            Doc.section "recap" d
+    in
     View.fromElement "The strictness dial"
         (Doc.pane
             [ TypedHtml.div [ TA.class "space-y-12" ]
@@ -106,23 +141,6 @@ view _ _ =
         )
 
 
-intro : String
-intro =
-    """The compiler holds a lot for you — kinds line up, and only real tokens exist. But it *deliberately* stays quiet about softer questions like "did you fill the slot this component needs?" on the standard surface, because forcing that on every call site would tax the easy path. Strictness here isn't all-or-nothing: **you start easy and turn it up where it's worth it** — project-wide with the linter, or per call site with a stricter surface.
-
-A quick word on vocabulary, since it shows up below: a **surface** is one of a component's interchangeable call-shapes you'll map in full at [the surface map](/guide/the-layers), the **barrel** is the one-import `M3e` API, and a **component module** is a per-component import (`import M3e.Button`) with tighter, component-scoped types."""
-
-
-linter : String
-linter =
-    """A linter that knows your components reads the same component list the API was generated from, so it can flag things the types leave loose: an enum token that type-checked through the shared `M3e.Attributes.*` vocabulary but isn't valid for *this* component, a required content slot you left empty, or a child placed in a slot the container doesn't declare (`Cem.ValidSlotKind`). These are **linter-guaranteed, not compiler-guaranteed** — the linter is a separate pass, so it only protects you if you **run elm-review in CI**. Run there, it catches the soft misses the compiler waves through on purpose. (One caveat worth naming: `Cem.ValidSlotKind` is `Lenient` by default and can't resolve a child's kind through a `List.map` or a let-binding, so it's a strong net, not an absolute one.)"""
-
-
-shapes : String
-shapes =
-    """Stricter call-shapes, chosen per component. A component isn't one function shape; each ships several **surfaces**, and they all render the *same* button. They differ only in what you're allowed to leave out — they are **peers, not a ranking**, and you pick per call site:"""
-
-
 shapesCode : String
 shapesCode =
     """-- the standard form — everything optional; the tersest, easiest form
@@ -140,11 +158,6 @@ M3e.Build.Button.build
     |> M3e.Build.Button.toElement"""
 
 
-recordAha : String
-recordAha =
-    """The standard-form Save button lets you forget its action — that's the easy path's cost. Switch the same button to the **required-record** form (`component`) and forgetting the action is no longer possible: leave it out and the build stops, because the record spells out the parts a button can't render without."""
-
-
 recordError : String
 recordError =
     """The 1st argument to `component` is not what I expect:
@@ -158,11 +171,3 @@ This argument is a record of type:
 But `component` needs the 1st argument to be:
 
     { action : Action { … } msg, content : … }"""
-
-
-recap : String
-recap =
-    """- The compiler enforces **kinds and valid tokens**; it leaves softer checks loose on the standard surface on purpose.
-- **Project-wide:** a linter that knows your components (invalid token for *this* component, empty required slot, foreign slot child) — **linter-guaranteed, so run elm-review in CI**.
-- **Per call site:** three call-shapes — the standard form, required record, pipeline — **peers**, each promoting one check to a compile guarantee.
-- **Next: [Accessibility you can't forget](/guide/accessible-by-construction) →** the one place strictness is not optional — an accessible name you cannot forget."""

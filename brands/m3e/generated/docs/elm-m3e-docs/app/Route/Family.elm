@@ -9,16 +9,21 @@ five separate `M3e.Component.*` imports.
 The grouping itself is DATA (`config/slots.json`'s `_families.families`, the
 same config `elm-cem`'s `gen-family-package.js` reads to emit the family
 package, and `review/scripts/gen-m3e-family-config.mjs` flattens for
-`NoFamilyMemberDrift`'s drift check) — this page mirrors that data rather than
-re-deriving it, so it can only go stale the same way the generated modules
-themselves would.
+`NoFamilyMemberDrift`'s drift check) — this page RE-DERIVES that data at build
+time (`scripts/gen-family-data.mjs` -> `data/families.json`, loaded via
+`BackendTask.File`), applying the same root-first / `lowerFirst(path)` member
+labelling `gen-family-package.js` uses, so it cannot drift from the real
+`M3e.Family.*` constructors.
 
 -}
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Card
@@ -49,7 +54,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    List Family
 
 
 type alias ActionData =
@@ -58,8 +63,33 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+{-| The family/member table, derived at build time from `config/slots.json`'s
+`_families.families` by `scripts/gen-family-data.mjs` (the same source the
+`elm-m3e-families` package is generated from), so this page cannot drift from the
+real `M3e.Family.*` constructors. See that script for the derivation.
+-}
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.jsonFile (Decode.list familyDecoder) "data/families.json"
+        |> BackendTask.allowFatal
+
+
+memberDecoder : Decode.Decoder Member
+memberDecoder =
+    Decode.map2 Member
+        (Decode.field "component" Decode.string)
+        (Decode.field "label" Decode.string)
+
+
+familyDecoder : Decode.Decoder Family
+familyDecoder =
+    Decode.map2 Family
+        (Decode.field "family" Decode.string)
+        (Decode.field "members" (Decode.list memberDecoder))
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -100,32 +130,6 @@ Mirrors `config/slots.json`'s `_families.families`, flattened the same way
 -}
 type alias Family =
     { family : String, members : List Member }
-
-
-families : List Family
-families =
-    [ { family = "Accordion", members = [ Member "Accordion" "accordion", Member "ExpansionPanel" "panel" ] }
-    , { family = "BottomSheet", members = [ Member "BottomSheet" "bottomSheet", Member "BottomSheetAction" "action", Member "BottomSheetTrigger" "trigger" ] }
-    , { family = "Breadcrumb", members = [ Member "Breadcrumb" "breadcrumb", Member "BreadcrumbItem" "item" ] }
-    , { family = "Calendar", members = [ Member "Calendar" "calendar", Member "MonthView" "monthView", Member "YearView" "yearView", Member "MultiYearView" "multiYearView" ] }
-    , { family = "Chip", members = [ Member "Chip" "chip", Member "AssistChip" "assist", Member "FilterChip" "filter", Member "InputChip" "input", Member "SuggestionChip" "suggestion", Member "ChipSet" "set", Member "FilterChipSet" "filterSet", Member "InputChipSet" "inputSet" ] }
-    , { family = "Datepicker", members = [ Member "Datepicker" "datepicker", Member "DatepickerToggle" "toggle" ] }
-    , { family = "Dialog", members = [ Member "Dialog" "dialog", Member "DialogAction" "action", Member "DialogTrigger" "trigger" ] }
-    , { family = "DrawerContainer", members = [ Member "DrawerContainer" "drawerContainer", Member "DrawerToggle" "toggle" ] }
-    , { family = "FabMenu", members = [ Member "FabMenu" "fabMenu", Member "FabMenuItem" "item", Member "FabMenuTrigger" "trigger" ] }
-    , { family = "List", members = [ Member "List" "list", Member "ListItem" "item", Member "ListAction" "action", Member "ListOption" "option" ] }
-    , { family = "Menu", members = [ Member "Menu" "menu", Member "MenuItem" "item", Member "MenuItemCheckbox" "itemCheckbox", Member "MenuItemGroup" "itemGroup", Member "MenuItemRadio" "itemRadio", Member "MenuTrigger" "trigger" ] }
-    , { family = "NavMenu", members = [ Member "NavMenu" "navMenu", Member "NavMenuItem" "item", Member "NavMenuItemGroup" "itemGroup" ] }
-    , { family = "NavRail", members = [ Member "NavRail" "navRail", Member "NavRailToggle" "toggle" ] }
-    , { family = "Progress", members = [ Member "CircularProgressIndicator" "circular", Member "LinearProgressIndicator" "linear", Member "LoadingIndicator" "loading" ] }
-    , { family = "RichTooltip", members = [ Member "RichTooltip" "richTooltip", Member "RichTooltipAction" "action" ] }
-    , { family = "SegmentedButton", members = [ Member "SegmentedButton" "segmentedButton", Member "ButtonSegment" "segment", Member "ButtonGroup" "group" ] }
-    , { family = "Stepper", members = [ Member "Stepper" "stepper", Member "Step" "step", Member "StepPanel" "panel", Member "StepperNext" "next", Member "StepperPrevious" "previous", Member "StepperReset" "reset" ] }
-    , { family = "Tabs", members = [ Member "Tabs" "tabs", Member "Tab" "tab", Member "TabPanel" "panel" ] }
-    , { family = "Timepicker", members = [ Member "Timepicker" "timepicker", Member "TimepickerToggle" "toggle", Member "TimepickerDial" "dial", Member "TimepickerInput" "input", Member "TimepickerInputPeriodToggle" "inputPeriodToggle" ] }
-    , { family = "Toc", members = [ Member "Toc" "toc", Member "TocItem" "item" ] }
-    , { family = "Tree", members = [ Member "Tree" "tree", Member "TreeItem" "item" ] }
-    ]
 
 
 pageHeading : Element { s | heading : M3e.Kind.Brand } admittedBy msg
@@ -183,7 +187,7 @@ familyCard family =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
     View.fromElement "Family"
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
@@ -201,6 +205,6 @@ view _ _ =
                     ]
                 ]
             , TypedHtml.section [ TA.class "grid gap-4 sm:grid-cols-2" ]
-                (List.map familyCard families)
+                (List.map familyCard app.data)
             ]
         )
