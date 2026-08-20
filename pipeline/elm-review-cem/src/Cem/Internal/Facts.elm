@@ -9,7 +9,7 @@ module Cem.Internal.Facts exposing
     , namedSlotSetters, fillsDefaultSlot
     , attrBarrelName, ariaBarrelName, barrelSlotSetter
     , resolveRecordFields
-    , decapitalize
+    , collectLetScope, decapitalize
     )
 
 {-| Shared helpers for the codegen-aware rules that consume `Cem.Facts`.
@@ -28,11 +28,13 @@ hardcoded. Rules pass the derived `rootParts` into `callSite` / `isTopLayerModul
 @docs namedSlotSetters, fillsDefaultSlot
 @docs attrBarrelName, ariaBarrelName, barrelSlotSetter
 @docs resolveRecordFields
+@docs collectLetScope, decapitalize
 
 -}
 
 import Cem.Facts exposing (Facet(..), Fact)
 import Dict exposing (Dict)
+import Elm.Syntax.Declaration as Declaration
 import Elm.Syntax.Expression as Expression exposing (Expression)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node)
@@ -781,6 +783,54 @@ concatTraced a b =
     { known = a.known ++ b.known
     , unresolved = a.unresolved || b.unresolved
     }
+
+
+{-| Collect a declaration's top-level `let` bindings into a
+`name -> boundExpression` scope, for rules that track a `scope` field in their
+`declarationEnterVisitor` so a name bound in a `let` (e.g.
+`let content = [ … ] in <root>.listItem [] content`) is still traceable via
+`tracedList`/`resolveRecordFields`.
+
+Returns `Nothing` for a declaration that isn't a `FunctionDeclaration` (the
+caller should leave its existing `scope` untouched); `Just Dict.empty` for a
+`FunctionDeclaration` whose body isn't a `let` (the caller should reset
+`scope`, since the previous declaration's bindings are out of scope now);
+`Just scope` otherwise.
+
+This was previously copy-pasted (byte-identical, modulo a `let`-bound `name`
+alias in a few copies) across ten rules' own `declarationEnterVisitor`
+functions — hoisted here per the `DEFER` note that originally flagged it.
+
+-}
+collectLetScope : Node Declaration.Declaration -> Maybe (Dict String (Node Expression))
+collectLetScope node =
+    case Node.value node of
+        Declaration.FunctionDeclaration { declaration } ->
+            case Node.value (Node.value declaration).expression of
+                Expression.LetExpression { declarations } ->
+                    Just
+                        (List.foldl
+                            (\dec acc ->
+                                case Node.value dec of
+                                    Expression.LetFunction fn ->
+                                        let
+                                            fnDecl =
+                                                Node.value fn.declaration
+                                        in
+                                        Dict.insert (Node.value fnDecl.name) fnDecl.expression acc
+
+                                    _ ->
+                                        acc
+                            )
+                            Dict.empty
+                            declarations
+                        )
+
+                _ ->
+                    Just Dict.empty
+
+        _ ->
+            Nothing
 
 
 {-| Convert a hyphenated string to camelCase (e.g. `"aria-label"` → `"ariaLabel"`).

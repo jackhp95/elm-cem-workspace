@@ -32,6 +32,7 @@ so `import M3e.Unsafe` and `import TypedHtml.Unsafe.Attributes` are gated, but
 
 -}
 
+import Cem.Internal.Gate as Gate
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
@@ -74,7 +75,7 @@ moduleDefinitionVisitor node context =
                 |> Module.moduleName
                 |> String.join "."
     in
-    ( [], { context | gated = not (isAllowed context.allowed currentModule) } )
+    ( [], { context | gated = not (Gate.isAllowed context.allowed currentModule) } )
 
 
 importVisitor : Node Import -> Context -> ( List (Error {}), Context )
@@ -106,16 +107,6 @@ isUnsafeModule moduleName =
 
         [] ->
             False
-
-
-{-| A module is allowed when its name equals or is nested under (dot-boundary)
-one of the allow-list prefixes.
--}
-isAllowed : List String -> String -> Bool
-isAllowed allowed currentModule =
-    List.any
-        (\prefix -> currentModule == prefix || String.startsWith (prefix ++ ".") currentModule)
-        allowed
 
 
 error : ModuleName -> { start : { row : Int, column : Int }, end : { row : Int, column : Int } } -> Error {}

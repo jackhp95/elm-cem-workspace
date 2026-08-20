@@ -31,6 +31,7 @@ is a type error — the mirror of `PreferBarrel`'s record-form skip.
 -}
 
 import Cem.Facts exposing (Facet(..), Fact)
+import Cem.Internal.BarrelMapping as Mapping
 import Cem.Internal.Facts as Facts
 import Dict exposing (Dict)
 import Elm.Syntax.Declaration as Declaration
@@ -116,37 +117,11 @@ importVisitor node context =
 
 declarationEnterVisitor : Node Declaration.Declaration -> Context -> ( List (Error {}), Context )
 declarationEnterVisitor node context =
-    case Node.value node of
-        Declaration.FunctionDeclaration { declaration } ->
-            case Node.value (Node.value declaration).expression of
-                Expression.LetExpression { declarations } ->
-                    let
-                        scope =
-                            List.foldl
-                                (\dec acc ->
-                                    case Node.value dec of
-                                        Expression.LetFunction fn ->
-                                            let
-                                                fnDecl =
-                                                    Node.value fn.declaration
+    case Facts.collectLetScope node of
+        Just scope ->
+            ( [], { context | scope = scope } )
 
-                                                name =
-                                                    Node.value fnDecl.name
-                                            in
-                                            Dict.insert name fnDecl.expression acc
-
-                                        _ ->
-                                            acc
-                                )
-                                Dict.empty
-                                declarations
-                    in
-                    ( [], { context | scope = scope } )
-
-                _ ->
-                    ( [], { context | scope = Dict.empty } )
-
-        _ ->
+        Nothing ->
             ( [], context )
 
 
@@ -331,11 +306,9 @@ attrErrorFor context fact element =
         Expression.Application (setterNode :: _) ->
             case ( Node.value setterNode, Maybe.andThen (Facts.dropPrefix (Facts.barrelRootParts fact)) (Lookup.moduleNameFor context.lookup setterNode) ) of
                 ( Expression.FunctionOrValue _ name, Just [] ) ->
-                    fact.attrRewrites
-                        |> List.filter (\( barrelName, _ ) -> barrelName == name)
-                        |> List.head
+                    Mapping.attrToPerComponent fact name
                         |> Maybe.map
-                            (\( _, perCompName ) ->
+                            (\perCompName ->
                                 let
                                     compModule =
                                         Facts.factNamespace fact ++ "." ++ Facts.capitalize fact.component
@@ -557,11 +530,9 @@ slotErrorFor context fact element =
                         firstArg :: bodyNode :: _ ->
                             case Node.value firstArg of
                                 Expression.Literal slotName ->
-                                    fact.slotRewrites
-                                        |> List.filter (\( k, _ ) -> k == slotName)
-                                        |> List.head
+                                    Mapping.slotToPerComponent fact slotName
                                         |> Maybe.map
-                                            (\( _, perCompSetter ) ->
+                                            (\perCompSetter ->
                                                 let
                                                     compModule =
                                                         Facts.factNamespace fact ++ "." ++ Facts.capitalize fact.component

@@ -75,6 +75,7 @@ contained with `NoUnsafeImportOutsideAllowed` / `NoSeamOutsideAllowedModules`.
 -}
 
 import Cem.Internal.Facts as Facts
+import Cem.Internal.Gate as Gate
 import Dict exposing (Dict)
 import Elm.Syntax.Declaration as Declaration exposing (Declaration)
 import Elm.Syntax.Exposing as Exposing exposing (Exposing)
@@ -267,7 +268,7 @@ fromProjectToModule recastModuleName escapeIndex escapeModuleNames allowed =
             , escapeIndex = escapeIndex
             , escapeModuleNames = escapeModuleNames
             , isRecastModule = isRecast
-            , gated = not isRecast && not (isAllowed allowed (String.join "." moduleName))
+            , gated = not isRecast && not (Gate.isAllowed allowed (String.join "." moduleName))
             , escapes = []
             , bareRefs = []
             , coveredHeads = Set.empty
@@ -345,15 +346,6 @@ foldProjectContexts new previous =
     , bareRefs = new.bareRefs ++ previous.bareRefs
     , moduleImports = new.moduleImports ++ previous.moduleImports
     }
-
-
-{-| Allow-list check: dot-boundary prefix match.
--}
-isAllowed : List String -> String -> Bool
-isAllowed allowed currentModule =
-    List.any
-        (\prefix -> currentModule == prefix || String.startsWith (prefix ++ ".") currentModule)
-        allowed
 
 
 

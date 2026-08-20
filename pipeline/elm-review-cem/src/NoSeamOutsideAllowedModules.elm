@@ -63,6 +63,7 @@ narrower, ungated escape hatch alongside `recast` for no real benefit.)
 
 -}
 
+import Cem.Internal.Gate as Gate
 import Elm.Syntax.Expression as Expression exposing (Expression)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node)
@@ -104,22 +105,12 @@ initContext seamModules allowed =
     Rule.initContextCreator
         (\lookup moduleName () ->
             { lookup = lookup
-            , gated = not (isAllowed allowed (String.join "." moduleName))
+            , gated = not (Gate.isAllowed allowed (String.join "." moduleName))
             , seamModules = seamModules
             }
         )
         |> Rule.withModuleNameLookupTable
         |> Rule.withModuleName
-
-
-{-| A module is allowed when its name equals or is nested under (dot-boundary) one
-of the allow-list prefixes — so `"Kit"` covers `Kit` and `Kit.Surface`.
--}
-isAllowed : List String -> String -> Bool
-isAllowed allowed currentModule =
-    List.any
-        (\prefix -> currentModule == prefix || String.startsWith (prefix ++ ".") currentModule)
-        allowed
 
 
 expressionVisitor : Node Expression -> Context -> ( List (Error {}), Context )
