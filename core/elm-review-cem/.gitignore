@@ -1,8 +1,0 @@
-elm-stuff/
-node_modules/
-
-# Generated docs preview (the `elm make --docs` publish-gate artifact).
-docs.json
-
-# elm-review's suppression store (kept empty; the dogfood config is clean).
-review/suppressed/

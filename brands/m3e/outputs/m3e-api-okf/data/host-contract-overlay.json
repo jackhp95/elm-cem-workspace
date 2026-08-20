@@ -1,9 +1,0 @@
-{
-  "form-field": {
-    "expects": "renders its floating label from a `<label slot=\"label\">` and its control (an `input`/`textarea` or an m3e form control) from the default slot; associate them yourself with `for`=<control id> — the component does NO id-wiring. (A default-slot `<label for=id>` sibling also works.) Prefix/suffix/hint/error use their named slots.",
-    "knownControlTags": ["m3e-input-chip-set", "m3e-select", "input", "textarea", "select"]
-  },
-  "select": {
-    "expects": "admits `m3e-option` children in its default slot, and groups them under `m3e-optgroup` (each group takes a `<span slot=\"label\">` group label); a custom dropdown arrow goes in `slot=\"arrow\"`."
-  }
-}

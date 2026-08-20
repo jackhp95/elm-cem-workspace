@@ -1,4 +1,0 @@
-{
-  "glyph": "material-symbols:palette",
-  "note": "Resolved for the brand rasters only. Deliberately NOT in config/icons.json: that file drives registerIcon, and registering a Material glyph overrides the ligature font for it, which silently disables the weight/grade/opticalSize attributes. The font stays authoritative for in-app icons."
-}

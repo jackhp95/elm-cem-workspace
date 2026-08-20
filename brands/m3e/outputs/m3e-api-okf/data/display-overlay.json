@@ -1,9 +1,0 @@
-{
-  "_note": "Display fallback for elements whose `:host { display }` lives in a non-relative base class (e.g. `@m3e/web/core` ActionElementBase). extract.mjs derives `display` from TS `:host` first and only consults this overlay for the residual. Keyed by tag name. Verified against the base-class source at the pinned SHA.",
-  "m3e-bottom-sheet-action": { "value": "contents" },
-  "m3e-dialog-action": { "value": "contents" },
-  "m3e-rich-tooltip-action": { "value": "contents" },
-  "m3e-stepper-next": { "value": "contents" },
-  "m3e-stepper-previous": { "value": "contents" },
-  "m3e-stepper-reset": { "value": "contents" }
-}

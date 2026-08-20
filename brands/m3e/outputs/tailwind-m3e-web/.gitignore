@@ -1,6 +1,0 @@
-node_modules/
-.DS_Store
-*.log
-.changeset/.config.json.bak
-/coverage/
-/dist/
