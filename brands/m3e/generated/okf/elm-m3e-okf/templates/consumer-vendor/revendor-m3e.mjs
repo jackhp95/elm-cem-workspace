@@ -83,8 +83,21 @@ export const DEFAULT_TREES = [
 
 const MAX_BUFFER = 1 << 30; // 1 GiB — the elm-m3e src tree is ~138 modules.
 
+// Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: `-C dir` changes cwd
+// for path resolution but does NOT override an inherited GIT_DIR, so when
+// this template runs from inside a git hook of the CONSUMER repo that
+// vendored it (git sets GIT_DIR for every hook invocation), every `git -C
+// <workspaceDir|cacheDir>` call below would silently operate on the
+// consumer's OUTER repo instead of the referenced elm-cem-workspace checkout
+// or mirror cache — same class of bug fixed in fetch-snapshots.mjs /
+// copy-fidelity.mjs (see those files' comments); fixed the same way.
+const gitEnv = { ...process.env };
+delete gitEnv.GIT_DIR;
+delete gitEnv.GIT_WORK_TREE;
+delete gitEnv.GIT_INDEX_FILE;
+
 function run(cmd, args, opts = {}) {
-  return spawnSync(cmd, args, { maxBuffer: MAX_BUFFER, encoding: "buffer", ...opts });
+  return spawnSync(cmd, args, { maxBuffer: MAX_BUFFER, encoding: "buffer", env: gitEnv, ...opts });
 }
 
 function isGitRepo(dir) {

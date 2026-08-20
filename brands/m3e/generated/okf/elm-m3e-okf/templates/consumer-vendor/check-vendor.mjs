@@ -144,7 +144,17 @@ function main() {
   // --- optional: is a newer canonical available? (non-fatal) ---
   let staleNote = "";
   if (args.checkStale && kind === "local") {
-    const head = spawnSync("git", ["-C", workspaceDir, "rev-parse", "HEAD"], { encoding: "utf8" });
+    // Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: this runs in a
+    // consumer's pre-push hook (per this file's header comment), where git
+    // sets GIT_DIR for the OUTER consumer repo — `-C workspaceDir` alone does
+    // not override that, so without scrubbing this would silently read the
+    // consumer's own HEAD instead of the referenced workspace's. Same class
+    // of bug fixed in fetch-snapshots.mjs / copy-fidelity.mjs.
+    const gitEnv = { ...process.env };
+    delete gitEnv.GIT_DIR;
+    delete gitEnv.GIT_WORK_TREE;
+    delete gitEnv.GIT_INDEX_FILE;
+    const head = spawnSync("git", ["-C", workspaceDir, "rev-parse", "HEAD"], { encoding: "utf8", env: gitEnv });
     const headSha = head.stdout?.trim();
     if (headSha && headSha !== commit) {
       staleNote =

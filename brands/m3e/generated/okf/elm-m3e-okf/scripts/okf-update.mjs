@@ -28,7 +28,17 @@ const repoArg = (argv[argv.indexOf("--repo") + 1] && !argv[argv.indexOf("--repo"
 const noFetch = argv.includes("--no-fetch");
 const REPO = repoArg || path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const git = (...a) => execFileSync("git", ["-C", REPO, ...a], { encoding: "utf8" }).trim();
+// Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: this is a consumer
+// self-update script — REPO is the m3e-okf checkout, a DIFFERENT repo from
+// whatever outer repo/hook this runs under. `-C REPO` alone does not clear an
+// inherited GIT_DIR, so run from a git hook this would silently operate on
+// the outer repo instead. Same class of bug fixed in fetch-snapshots.mjs /
+// copy-fidelity.mjs (see those files' comments); fixed the same way.
+const gitEnv = { ...process.env };
+delete gitEnv.GIT_DIR;
+delete gitEnv.GIT_WORK_TREE;
+delete gitEnv.GIT_INDEX_FILE;
+const git = (...a) => execFileSync("git", ["-C", REPO, ...a], { encoding: "utf8", env: gitEnv }).trim();
 const out = (o) => { process.stdout.write(JSON.stringify(o, null, 2) + "\n"); process.exit(o.state === "error" ? 1 : 0); };
 
 let branch, local, remote, dirty, ahead, behind;
