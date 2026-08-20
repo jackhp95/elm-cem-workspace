@@ -259,6 +259,80 @@ function validBrandFacts() {
   check(!result.valid, "faceB attribute with an invalid `kind` enum value is rejected");
 }
 
+// --- schemaVersion 2: malformed brand-facts.json shapes are rejected ---
+
+function invalidSlotWrongKeyBrandFacts() {
+  const bf = validBrandFacts();
+  // "kinds" is not a real key on a slot — the field is `admits` (spec §4.2).
+  // additionalProperties: false on brandFactsSlot must catch this.
+  bf.components["m3e-list-item"].slots.leading = { kinds: ["avatar", "icon", "text"] };
+  return bf;
+}
+
+function invalidAdmitsWrongTypeBrandFacts() {
+  const bf = validBrandFacts();
+  // `admits` must be an array (the listed-kinds case); an object is never valid.
+  bf.components["m3e-list-item"].slots.leading.admits = { any: true };
+  return bf;
+}
+
+function invalidMissingDeclarationNameBrandFacts() {
+  const bf = validBrandFacts();
+  delete bf.components["m3e-list-item"].declarationName;
+  return bf;
+}
+
+function invalidSmearedElmIdBrandFacts() {
+  const bf = validBrandFacts();
+  // An Elm module name leaked directly onto the canonical core instead of
+  // living under targets.elm.elements.module (spec §5.8: language-neutral core).
+  bf.components["m3e-list-item"].module = "M3e.Element.ListItem";
+  return bf;
+}
+
+function invalidSchemaVersionBrandFacts() {
+  const bf = validBrandFacts();
+  bf.schemaVersion = 1; // this shape is schemaVersion 2, not the faceB/faceC bundle's 1
+  return bf;
+}
+
+function invalidMissingPackageKeyBrandFacts() {
+  const bf = validBrandFacts();
+  // targets.elm.packages must enumerate all six destination packages (spec §3.4).
+  delete bf.targets.elm.packages.icons;
+  return bf;
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSlotWrongKeyBrandFacts());
+  check(!result.valid, "slot with `kinds` instead of `admits` is rejected (additionalProperties: false)");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidAdmitsWrongTypeBrandFacts());
+  check(!result.valid, "`admits` as an object instead of an array is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidMissingDeclarationNameBrandFacts());
+  check(!result.valid, "component missing required `declarationName` is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSmearedElmIdBrandFacts());
+  check(!result.valid, "an Elm module name smeared onto the canonical core (outside targets.elm) is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSchemaVersionBrandFacts());
+  check(!result.valid, "brand-facts.json with schemaVersion 1 (not 2) is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidMissingPackageKeyBrandFacts());
+  check(!result.valid, "targets.elm.packages missing a required package key (`icons`) is rejected");
+}
+
 if (failureCount() > 0) {
   console.error(`facts-bundle-schema: ${failureCount()} check(s) failed`);
   process.exit(1);
