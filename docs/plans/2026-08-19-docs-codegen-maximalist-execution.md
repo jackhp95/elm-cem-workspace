@@ -204,8 +204,13 @@ therefore unaffected by it.
 
 ## Gate status (honest, for all three phases)
 
-`node tools/gate-all.mjs` (serial) is green **except two pre-existing, environmental browser-test failures**
-that are NOT caused by this work:
+**Final authoritative run (after all 3 phases committed, machine idle): `GATE-ALL GREEN` — fully green,
+zero failures, including the browser suite.** This confirms the earlier `/guide/reference` timeouts were
+purely environmental (they did not recur on an unloaded machine). The narrative below is retained because
+the timeouts DO recur under load and future runs on slower hosts will hit them.
+
+`node tools/gate-all.mjs` (serial) is green; the only intermittent reds are two pre-existing, environmental
+browser-test failures that are NOT caused by this work:
 - `mobile-shell.spec.ts:27` and `shell-breakpoints.spec.ts:162`, both navigating to `/guide/reference`.
 - Root cause (proven): `/guide/reference` is the heaviest page (5000+ `m3e-card` custom elements). On this
   machine it loads in **94.0s** (measured with a 180s Playwright probe; the app-bar renders — the page
