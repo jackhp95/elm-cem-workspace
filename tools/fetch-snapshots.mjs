@@ -32,7 +32,19 @@ const cacheRoot = path.join(repoRoot, ".cache", "snapshots");
 mkdirSync(cacheRoot, { recursive: true });
 
 const REQUIRE = process.env.REQUIRE_SNAPSHOT_GATES === "1";
-const git = (args, cwd) => spawnSync("git", args, { cwd, encoding: "utf8" });
+// Strip GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: when this runs from inside a
+// git hook (e.g. pre-push), git sets these on the hook's own environment so
+// bare `git` invocations "just work" against the OUTER repo. Every git call
+// below targets a nested snapshot clone under .cache/snapshots/<name> via
+// `cwd`/explicit args — an inherited GIT_DIR silently overrides that and
+// redirects checkout/rev-parse/clone at the outer repo instead, causing a
+// spurious HARD FAIL here (and cascading into copy-fidelity gates that read
+// these snapshots) that never reproduces outside a hook context.
+const childEnv = { ...process.env };
+delete childEnv.GIT_DIR;
+delete childEnv.GIT_WORK_TREE;
+delete childEnv.GIT_INDEX_FILE;
+const git = (args, cwd) => spawnSync("git", args, { cwd, encoding: "utf8", env: childEnv });
 const rmrf = (dir) => spawnSync("rm", ["-rf", dir]);
 let hardFailures = 0;
 let softFailures = 0;
