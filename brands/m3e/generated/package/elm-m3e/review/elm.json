@@ -4,7 +4,7 @@
         "src",
         "../src",
         "../../../../../../pipeline/elm-review-cem/src",
-        "../../../../../../pipeline/elm-cem/facts/src",
+        "../../../../../../pipeline/elm-cem-facts/src",
         "../../../../../../packages/elm-virtual-dom-intermediate-representation/src",
         "../../../../../../brands/html/generated/package/elm-typed-html/src"
     ],

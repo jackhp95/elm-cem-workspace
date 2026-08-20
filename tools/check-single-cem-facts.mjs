@@ -2,7 +2,7 @@
 // check-single-cem-facts.mjs — workspace guard: exactly one `Cem.Facts` in any
 // compiled dependency graph.
 //
-// jackhp95/elm-cem-facts (pipeline/elm-cem/facts) is the sole canonical OWNER of
+// jackhp95/elm-cem-facts (pipeline/elm-cem-facts) is the sole canonical OWNER of
 // the `Cem.Facts` module (the `Fact`/`Facet` types). Before the Stage-F cutover,
 // elm-review-cem kept a byte-synced vendored copy so it could compile as an
 // unpublished-dependency-free Elm package; that copy is gone now that

@@ -16,7 +16,7 @@
 //   2. compiles a PACKAGE-SHAPED build whose resolvable module set is derived
 //      STRICTLY from the committed elm.json `dependencies`: the brand's own src
 //      plus a staged source tree for each DECLARED unpublished family dep (IR at
-//      the sibling repo, facts at elm-cem/facts/src). Because staging is gated by
+//      the sibling repo, facts at elm-cem-facts/src). Because staging is gated by
 //      the declared deps, an `import HtmlIr.*` with the IR dep MISSING is
 //      unresolvable and the compile FAILS — catching NB1 at compile level, the
 //      thing the old app-shaped gates could not.
@@ -145,8 +145,8 @@ function resolveFamilySrc(pkg, depSrcs) {
     candidates.push(path.resolve(process.cwd(), "..", "elm-html-intermediate-representation", "src"));
   } else if (pkg === "jackhp95/elm-cem-facts") {
     if (process.env.FACTS_SRC) candidates.push(process.env.FACTS_SRC);
-    candidates.push(path.resolve(__dirname, "..", "facts", "src"));
-    candidates.push(path.resolve(process.cwd(), "..", "elm-cem", "facts", "src"));
+    candidates.push(path.resolve(__dirname, "..", "..", "elm-cem-facts", "src"));
+    candidates.push(path.resolve(process.cwd(), "..", "elm-cem-facts", "src"));
   }
   return candidates.find((c) => c && fs.existsSync(c)) || null;
 }

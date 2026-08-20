@@ -109,7 +109,7 @@ ignoreGeneratedSubstrate =
         , "../../package/elm-m3e/tests/"
         , "../../../../../brands/html/generated/package/elm-typed-html/src/"
         , "../../../../../packages/elm-virtual-dom-intermediate-representation/src/"
-        , "../../../../../pipeline/elm-cem/facts/src/"
+        , "../../../../../pipeline/elm-cem-facts/src/"
         , "../../../../../pipeline/elm-cem-compose/src/"
         , "../../../../../pipeline/elm-cem-compose/tests/src/"
         , "vendor/elm-foundation/"

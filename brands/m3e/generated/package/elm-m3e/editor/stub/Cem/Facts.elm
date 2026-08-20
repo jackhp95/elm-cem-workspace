@@ -4,7 +4,7 @@ module Cem.Facts exposing (Facet(..), Fact)
 
 This is an EDITOR-ONLY stub: it lets Elm LSP / VS Code type-check `src/`
 (specifically the generated `M3e.Review.Facts`, which `import Cem.Facts`)
-without requiring `packages/elm-cem/facts/` (published as `jackhp95/elm-cem-facts`)
+without requiring `pipeline/elm-cem-facts/` (published as `jackhp95/elm-cem-facts`)
 in `editor/elm.json`'s `source-directories`, which carries the canonical
 `Cem.Facts`.
 
@@ -14,7 +14,7 @@ It is deliberately NOT under `src/`:
     whole `src/` tree against a fresh regen, which emits neither this stub nor a
     `src/elm.json`. Keeping the stub here (out of `src/`) keeps that gate green.
   - The `elm-review` config's `source-directories` include `../src` alongside
-    `../../elm-cem/facts/src`, which ALSO defines `Cem.Facts`; a copy under
+    `../../elm-cem-facts/src`, which ALSO defines `Cem.Facts`; a copy under
     `src/` would make `Cem.Facts` an AMBIGUOUS IMPORT on the review path.
 
 This mirrors the canonical `Cem.Facts` (five facets: Raw, Html, Standard,
