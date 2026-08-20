@@ -3,7 +3,7 @@ module Generate.Config exposing (decodeConfigResult, extractComponents, extractL
 import Cem
 import Dict
 import Generate.Normalize exposing (dropNamelessMembers, mergeComponentsByTagName, normalizeAttrTypes)
-import Generate.Types exposing (Config, ConfigResult, LibraryInfo, SyntheticAttr)
+import Generate.Types exposing (Config, ConfigResult, FamiliesConfig, FamilySpec, IconModuleConfig, IconPackageConfig, LibraryInfo, SyntheticAttr)
 import Json.Decode
 import Naming
 
@@ -142,6 +142,73 @@ decodeConfigResult flags =
                 (\attrTypes syntheticAttrs -> { attrTypes = attrTypes, syntheticAttrs = syntheticAttrs })
                 (optStrict "attrTypes" (Json.Decode.keyValuePairs attrOverrideDecoder) [])
                 (optStrict "syntheticAttrs" syntheticAttrsDecoder [])
+
+        -- G1: `_iconModule`/`_families` decoders (Generate.Types.IconModuleConfig /
+        -- FamiliesConfig). Mirror the field lists `bin/gen-icon-module.js:429-449`
+        -- and `bin/gen-family-package.js:504-518` read today.
+        depPairsDecoder : Json.Decode.Decoder (List ( String, String ))
+        depPairsDecoder =
+            Json.Decode.keyValuePairs Json.Decode.string
+
+        iconPackageDecoder : Json.Decode.Decoder IconPackageConfig
+        iconPackageDecoder =
+            Json.Decode.map5
+                (\dir nm summary version deps -> { dir = dir, name = nm, summary = summary, version = version, deps = deps })
+                (Json.Decode.field "dir" Json.Decode.string)
+                (Json.Decode.field "name" Json.Decode.string)
+                (Json.Decode.field "summary" Json.Decode.string)
+                (Json.Decode.field "version" Json.Decode.string)
+                (opt "deps" depPairsDecoder [])
+
+        iconModuleDecoder : Json.Decode.Decoder IconModuleConfig
+        iconModuleDecoder =
+            Json.Decode.map8
+                (\lib iconComp catalogFrom shape tag iconFamily attribution pkg ->
+                    { lib = lib
+                    , iconComp = iconComp
+                    , catalogFrom = catalogFrom
+                    , shape = shape
+                    , tag = tag
+                    , iconFamily = iconFamily
+                    , attribution = attribution
+                    , package = pkg
+                    , names = Nothing
+                    }
+                )
+                (Json.Decode.field "lib" Json.Decode.string)
+                (Json.Decode.field "iconComp" Json.Decode.string)
+                (Json.Decode.field "catalogFrom" Json.Decode.string)
+                (opt "shape" Json.Decode.string "names")
+                (Json.Decode.field "tag" Json.Decode.string)
+                (Json.Decode.field "iconFamily" Json.Decode.string)
+                (Json.Decode.maybe (Json.Decode.field "attribution" Json.Decode.string))
+                (Json.Decode.maybe (Json.Decode.field "package" iconPackageDecoder))
+                |> Json.Decode.andThen
+                    (\im ->
+                        Json.Decode.maybe (Json.Decode.field "names" (Json.Decode.list Json.Decode.string))
+                            |> Json.Decode.map (\names -> { im | names = names })
+                    )
+
+        familyMemberDecoder =
+            Json.Decode.map2 (\c p -> { component = c, path = p })
+                (Json.Decode.field "component" Json.Decode.string)
+                (Json.Decode.field "path" Json.Decode.string)
+
+        familySpecDecoder : Json.Decode.Decoder FamilySpec
+        familySpecDecoder =
+            Json.Decode.map2 (\root members -> { root = root, members = members })
+                (Json.Decode.maybe (Json.Decode.field "root" Json.Decode.string))
+                (opt "members" (Json.Decode.list familyMemberDecoder) [])
+
+        familiesDecoder : Json.Decode.Decoder FamiliesConfig
+        familiesDecoder =
+            Json.Decode.map5
+                (\lib ns componentsFrom pkg fams -> { lib = lib, namespace = ns, componentsFrom = componentsFrom, package = pkg, families = fams })
+                (Json.Decode.field "lib" Json.Decode.string)
+                (Json.Decode.field "namespace" Json.Decode.string)
+                (Json.Decode.maybe (Json.Decode.field "componentsFrom" Json.Decode.string))
+                (Json.Decode.field "package" iconPackageDecoder)
+                (Json.Decode.field "families" (Json.Decode.keyValuePairs familySpecDecoder))
     in
     -- Absent `_config` ⇒ empty config (the manifest-agnostic path). A PRESENT
     -- but malformed `_config` must fail LOUD rather than silently collapse to
@@ -152,7 +219,7 @@ decodeConfigResult flags =
             flags
     of
         Ok Nothing ->
-            Ok { components = Dict.empty, exclude = [] }
+            Ok { components = Dict.empty, exclude = [], iconModule = Nothing, families = Nothing }
 
         Ok (Just configValue) ->
             let
@@ -170,8 +237,21 @@ decodeConfigResult flags =
                         (optStrict excludeKey (Json.Decode.list Json.Decode.string) [])
                         configValue
                         |> Result.mapError Json.Decode.errorToString
+
+                iconModuleResult =
+                    Json.Decode.decodeValue (Json.Decode.maybe (Json.Decode.field "_iconModule" iconModuleDecoder)) configValue
+                        |> Result.mapError Json.Decode.errorToString
+
+                familiesResult =
+                    Json.Decode.decodeValue (Json.Decode.maybe (Json.Decode.field "_families" familiesDecoder)) configValue
+                        |> Result.mapError Json.Decode.errorToString
             in
-            Result.map2 (\comps excl -> { components = comps, exclude = excl }) compsResult exclResult
+            Result.map4
+                (\comps excl im fams -> { components = comps, exclude = excl, iconModule = im, families = fams })
+                compsResult
+                exclResult
+                iconModuleResult
+                familiesResult
 
         Err e ->
             Err (Json.Decode.errorToString e)

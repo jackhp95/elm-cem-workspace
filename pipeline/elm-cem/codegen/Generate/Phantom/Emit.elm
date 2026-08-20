@@ -52,6 +52,7 @@ import Generate.Phantom.Emit.SubstrateReExports exposing (..)
 import Generate.Phantom.Emit.Unsafe exposing (..)
 import Generate.Phantom.Emit.Values exposing (..)
 import Generate.Phantom.Model as M exposing (Brand, Comp, EnumSpec, KindField, Marker(..), ResolvedSlot, SlotContent(..))
+import Generate.Types
 import Json.Encode as Encode
 import Naming
 
@@ -64,8 +65,8 @@ row has unique fields. On residual collision, returns `Err` with messages naming
 the module, identifier, raw CEM sources, and a ready-to-paste `_renames` snippet.
 
 -}
-files : Brand -> Result (List String) (List Elm.File)
-files brand =
+files : Brand -> Maybe Generate.Types.IconModuleConfig -> Maybe Generate.Types.FamiliesConfig -> Result (List String) (List Elm.File)
+files brand _ _ =
     let
         own =
             brand.comps |> List.filter (\c -> homeOf c == Nothing)
