@@ -328,6 +328,18 @@ move"). The gate itself only needs the path lists; this doc is where the
   names must stay authorized-absent through the transition. Remove the two old
   entries once that mirror is republished post-reshape.
 
+### 2026-08-19 — Figma-SLOT structural-fidelity plan/research docs
+
+- `plans/2026-08-19-example-tree-slot-validation.md`,
+  `plans/2026-08-19-matcher-slot-support.md`,
+  `research/2026-08-19-structural-fidelity-ideation.md` — added 2026-08-19 by
+  the Figma-SLOT work (commit "docs: structural-fidelity ideation doc + four
+  derived implementation plans"): the ideation research and its two derived
+  matcher/emitter implementation plans for routing SLOT-typed Figma
+  properties into their own slots dimension. Workspace-authored, ahead of the
+  published jackhp95/cem-figma-connect mirror — authorized-extra until the
+  mirror is republished with them.
+
 ## m3e-okf
 
 - `scripts/lib/okf-lib.mjs` / `scripts/lib/okf-lib.test.mjs` — promoted to
@@ -378,6 +390,14 @@ move"). The gate itself only needs the path lists; this doc is where the
   `CssVariables.elm` in the elm-m3e section, this gate SKIPPED
   unconditionally until 2026-08-19 (chronic-skip fix) — nobody had ever run
   it with a snapshot provisioned to see them flagged.
+- `skills/m3e/concepts/component-substitution.md` — added 2026-08-19 by the
+  Figma-SLOT structural-fidelity work (commit "docs(m3e-okf): add
+  component-substitution concept page, cross-linked from
+  choosing-components"): a new m3e-okf KB concept page explaining when to
+  substitute one M3E component for another, cross-linked from the existing
+  `choosing-components.md`. Workspace-authored, ahead of the published
+  jackhp95/m3e-okf mirror — authorized-extra until the mirror is
+  republished with it.
 
 ## tailwind-m3e-web
 

@@ -138,7 +138,8 @@
           "templates/consumer-vendor/README.md",
           "templates/consumer-vendor/check-vendor.mjs",
           "templates/consumer-vendor/revendor-m3e.mjs",
-          "templates/consumer-vendor/revendor-m3e.test.mjs"
+          "templates/consumer-vendor/revendor-m3e.test.mjs",
+          "skills/m3e/concepts/component-substitution.md"
         ],
         "$notes": "docs/copy-fidelity-notes.md#m3e-okf"
       }
@@ -303,7 +304,10 @@
           "test/fixtures/b4-profile/matcher.json",
           "test/fixtures/evil-profile/matcher.json",
           "test/fixtures/toy-profile/matcher.json",
-          "test/links.test.mjs"
+          "test/links.test.mjs",
+          "plans/2026-08-19-example-tree-slot-validation.md",
+          "plans/2026-08-19-matcher-slot-support.md",
+          "research/2026-08-19-structural-fidelity-ideation.md"
         ],
         "$notes": "docs/copy-fidelity-notes.md#cem-figma-connect — includes the 'DELIBERATELY NOT in this list' investigation note about test/fixtures/m3e-web-2.5.14/ (kept, not deleted, despite being on an earlier authorized-deletion list — derive.mjs needs the raw manifest bytes). Also includes the phase4 token-graph/links feature work note (workspace-ahead-of-upstream, not yet pushed to jackhp95/cem-figma-connect)."
       }
