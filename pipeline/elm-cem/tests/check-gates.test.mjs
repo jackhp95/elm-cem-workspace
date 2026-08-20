@@ -31,6 +31,38 @@ const cli = path.join(repo, "bin", "elm-cem.js");
 
 const { check, finish } = makeCheck("check-gates-test");
 
+// CRITICAL isolation: this test creates throwaway git repos + worktrees under
+// os.tmpdir() and drives them with `git init/commit/worktree add` and an
+// `elm-cem check-gates` run. Git honours the GIT_DIR / GIT_WORK_TREE family of
+// env vars OVER cwd-based repo discovery — and a git hook (pre-push) sets
+// GIT_DIR to the REAL repo's .git for everything it spawns. Running this test
+// under gate-all-under-pre-push therefore inherited GIT_DIR and made every
+// "temp repo" git command operate on the real workspace repo instead — which
+// once reset the working branch to a seed commit and got it pushed. Strip the
+// whole GIT_* location family so these spawns always resolve the temp repo from
+// cwd, no matter what the parent environment set.
+const ISOLATED_GIT_ENV = (() => {
+  const e = { ...process.env };
+  for (const k of [
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_COMMON_DIR",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_NAMESPACE",
+    "GIT_PREFIX",
+    "GIT_CONFIG",
+    "GIT_CONFIG_GLOBAL",
+  ]) {
+    delete e[k];
+  }
+  // Belt-and-suspenders: forbid upward repo discovery past the temp root, so a
+  // temp dir that somehow lands under a real checkout still can't reach it.
+  e.GIT_CEILING_DIRECTORIES = os.tmpdir();
+  return e;
+})();
+
 // A minimal package.json that is already clean under rules 1–3: `check:x` is
 // the only check:*/test:* script, and `gate` reaches it. Without this, rule 1
 // would fire on every fixture and drown out the rule-4 assertions this file
@@ -58,11 +90,12 @@ function writeHooks(dir) {
 }
 
 function git(args, cwd) {
-  return spawnSync("git", args, { cwd, encoding: "utf8" });
+  return spawnSync("git", args, { cwd, encoding: "utf8", env: ISOLATED_GIT_ENV });
 }
 
 function runCheckGates(cwd) {
-  return spawnSync("node", [cli, "check-gates"], { cwd, encoding: "utf8" });
+  // check-gates itself shells out to git, so it needs the same isolation.
+  return spawnSync("node", [cli, "check-gates"], { cwd, encoding: "utf8", env: ISOLATED_GIT_ENV });
 }
 
 try {

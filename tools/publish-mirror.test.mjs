@@ -13,6 +13,32 @@ import path from "node:path";
 import test from "node:test";
 import { readState, recordPublish } from "./publish-mirror.mjs";
 
+// CRITICAL isolation: this test builds throwaway git repos (a bare "origin",
+// seed/work clones) under os.tmpdir() and drives recordPublish() — which
+// commits AND pushes — against them. Git honours the GIT_DIR / GIT_WORK_TREE
+// family OVER cwd, and a git hook (pre-push) exports GIT_DIR=<the real repo>
+// to everything it spawns. Run under gate-all-under-pre-push, every git op
+// here — including recordPublish()'s own IN-PROCESS commit/push — would target
+// the real workspace repo instead of the temp repos (that is how a "seed"
+// commit once reached origin/main). recordPublish runs in-process, so per-call
+// env is not enough: strip the whole GIT_* location family from process.env up
+// front, so all git (spawned or in-process) resolves the temp repos from cwd.
+for (const k of [
+  "GIT_DIR",
+  "GIT_WORK_TREE",
+  "GIT_INDEX_FILE",
+  "GIT_COMMON_DIR",
+  "GIT_OBJECT_DIRECTORY",
+  "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+  "GIT_NAMESPACE",
+  "GIT_PREFIX",
+  "GIT_CONFIG",
+  "GIT_CONFIG_GLOBAL",
+]) {
+  delete process.env[k];
+}
+process.env.GIT_CEILING_DIRECTORIES = os.tmpdir();
+
 function sh(cwd, cmd, args) {
   return execFileSync(cmd, args, { cwd, encoding: "utf8" });
 }

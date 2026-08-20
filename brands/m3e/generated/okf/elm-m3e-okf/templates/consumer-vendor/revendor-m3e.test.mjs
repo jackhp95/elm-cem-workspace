@@ -22,6 +22,31 @@ import { fileURLToPath } from "node:url";
 
 import { expandCommit, DEFAULT_TREES } from "./revendor-m3e.mjs";
 
+// CRITICAL isolation: this test builds throwaway git workspaces under tmpdir()
+// and commits into them ("seed trees") + runs the revendor script (which shells
+// out to git) + calls expandCommit() in-process (git rev-parse). Git honours
+// the GIT_DIR / GIT_WORK_TREE family OVER `-C cwd`, and a git hook (pre-push)
+// exports GIT_DIR=<the real repo>. Run under gate-all-under-pre-push, every git
+// op here would target the real workspace repo instead (that is how a
+// "seed trees" commit once landed on the working branch). Strip the whole GIT_*
+// location family from process.env up front — covering the spawned git, the
+// spawned revendor script, and in-process expandCommit alike.
+for (const k of [
+  "GIT_DIR",
+  "GIT_WORK_TREE",
+  "GIT_INDEX_FILE",
+  "GIT_COMMON_DIR",
+  "GIT_OBJECT_DIRECTORY",
+  "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+  "GIT_NAMESPACE",
+  "GIT_PREFIX",
+  "GIT_CONFIG",
+  "GIT_CONFIG_GLOBAL",
+]) {
+  delete process.env[k];
+}
+process.env.GIT_CEILING_DIRECTORIES = tmpdir();
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SCRIPT = join(HERE, "revendor-m3e.mjs");
 const FULL_SHA = /^[0-9a-f]{40}$/;
