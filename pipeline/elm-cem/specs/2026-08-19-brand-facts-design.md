@@ -4,7 +4,8 @@
 **Date:** 2026-08-19
 **Owner:** elm-cem (the fold engine) + every facts consumer
 **Supersedes framing of:** `Face A / Face B / Face C` (the "faces" vocabulary)
-**Related:** `core/elm-review-cem/docs/decisions.md` ADR-15; `core/cem-figma-connect/plans/2026-08-19-example-tree-slot-validation.md`; `core/elm-cem/specs/2026-08-19-facts-bundle-slot-admission-data.md` (halted predecessor)
+**Related:** `core/elm-review-cem/docs/decisions.md` ADR-15; `core/cem-figma-connect/plans/2026-08-19-example-tree-slot-validation.md`; `core/elm-cem/specs/2026-08-19-facts-bundle-slot-admission-data.md` (halted predecessor);
+`core/elm-cem/research/2026-08-19-generator-consolidation.md` (companion — one Elm generator + JS-script census)
 
 ---
 
