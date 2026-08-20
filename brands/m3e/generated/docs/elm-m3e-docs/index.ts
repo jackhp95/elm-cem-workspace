@@ -23,9 +23,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 if (import.meta.env.DEV) await import("@m3e/web/all");
 import "./gen/icons.js";
-import "../js/avt-snackbar.js";
-import "../js/raw-html.js";
-import "../js/slide-panels.js";
+import "../../package/elm-m3e/js/avt-snackbar.js";
+import "../../package/elm-m3e/js/raw-html.js";
+import "../../package/elm-m3e/js/slide-panels.js";
 import "./style.css";
 
 // ─── Material Symbols Rounded + Sharp (for the theme reel's icon-variant switch) ─
