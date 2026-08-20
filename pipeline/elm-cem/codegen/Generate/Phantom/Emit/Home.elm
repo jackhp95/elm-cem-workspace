@@ -295,7 +295,7 @@ homeModule brand ( home, members ) =
                   , "    -> " ++ childrenType
                   , "    -> Element " ++ producedType ++ " " ++ returnAdm ++ " msg"
                   , comp.ctor ++ " attrs children ="
-                  , "    Ir.fromNode (Ir.node \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
+                  , "    Ir.fromNode (" ++ nodeHead brand ++ " \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
                   ]
                 ]
 

@@ -1,11 +1,11 @@
 module HtmlIr.Internal exposing
     ( Element, Node, Attr, Value
     , fromNode, element
-    , attribute, property, styles, on, fromHtmlAttribute, fromHtmlAttributes
+    , attribute, attributeNS, property, styles, on, fromHtmlAttribute, fromHtmlAttributes
     , none, recast
     , token
     , fromHtml
-    , node, keyedNode, text, addAttribute, toHtml
+    , node, nodeNS, keyedNode, keyedNodeNS, text, addAttribute, toHtml
     , isKeyed, toKeyedPair, key
     , lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
     , addClass, attrIf, when, testId
@@ -93,7 +93,7 @@ order. Merge is exact for generated setters, best-effort across the escape.
 
 # Attribute forge
 
-@docs attribute, property, styles, on, fromHtmlAttribute, fromHtmlAttributes
+@docs attribute, attributeNS, property, styles, on, fromHtmlAttribute, fromHtmlAttributes
 @docs none, recast
 
 
@@ -112,7 +112,7 @@ order. Merge is exact for generated setters, best-effort across the escape.
 These are re-exported by the public modules; they live here only because the
 opaque representations do. None of them mint a row.
 
-@docs node, keyedNode, text, addAttribute, toHtml
+@docs node, nodeNS, keyedNode, keyedNodeNS, text, addAttribute, toHtml
 @docs isKeyed, toKeyedPair, key
 @docs lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8
 
@@ -176,8 +176,10 @@ type Element accepts admittedBy msg
 
 
 {-| The untyped intermediate tree every `Element` wraps: a tag node (name,
-facts, children), a keyed tag node, a **keyed marker** wrapping a single node (a
-child that has declared a diff key via [`key`](#key), lifted into a
+facts, children), a **namespaced** tag node (`TagNS`/`KeyedTagNS`, carrying an
+XML namespace URI ahead of the tag — how SVG/MathML elements render through
+`VirtualDom.nodeNS`), a keyed tag node, a **keyed marker** wrapping a single
+node (a child that has declared a diff key via [`key`](#key), lifted into a
 `KeyedTag` by the parent's [`node`](#node) auto-upgrade), a text leaf, or a
 raw-`Html` escape. Construction stays
 structural — not pre-rendered `VirtualDom` — so the typed layers above can
@@ -191,7 +193,9 @@ merge instead of appending a second, clobbering copy. Merging happens once, in
 -}
 type Node msg
     = Tag String (List (Fact msg)) (List (Node msg))
+    | TagNS String String (List (Fact msg)) (List (Node msg))
     | KeyedTag String (List (Fact msg)) (List ( String, Node msg ))
+    | KeyedTagNS String String (List (Fact msg)) (List ( String, Node msg ))
     | Keyed String (Node msg)
     | Text String
     | Raw (Html msg)
@@ -289,6 +293,22 @@ attribute name value =
 
     else
         Attr [ FReady (Html.Attributes.attribute name value) ]
+
+
+{-| Mint a **namespaced** `name="value"` attribute (`VirtualDom.attributeNS`),
+inventing its capability row — the SVG/XML companion to [`attribute`](#attribute).
+The namespace URI is the first argument (`"http://www.w3.org/1999/xlink"` for
+`xlink:href`, `"http://www.w3.org/XML/1998/namespace"` for `xml:lang`/`xml:space`).
+
+The wrapped attribute is opaque like any `FReady` fact, so it does not
+participate in the `class` / `style` merge; namespaced attributes never need to.
+`"class"` is NOT special-cased here — a namespaced class is not the HTML `class`
+the merge accumulates.
+
+-}
+attributeNS : String -> String -> String -> Attr capability msg
+attributeNS namespace name value =
+    Attr [ FReady (VirtualDom.attributeNS namespace name value) ]
 
 
 {-| Mint an `Attr` that sets a JavaScript **property** (not a content
@@ -435,6 +455,27 @@ node tag attrs children =
         Tag tag (factsOf attrs) children
 
 
+{-| Build a **namespaced** tag node (`VirtualDom.nodeNS`) — the general
+constructor behind every SVG/MathML element, whose DOM node must be created with
+`document.createElementNS` rather than `createElement` or it does not render. The
+namespace URI is the first argument (`"http://www.w3.org/2000/svg"` for SVG); the
+tag is the second.
+
+Same keyed auto-upgrade as [`node`](#node): a keyed child promotes the whole
+child list to a `KeyedTagNS`, preserving the namespace. Safe for the same
+reason as `node` — the result is an untyped `Node`; only [`fromNode`](#fromNode)
+promotes it to a typed `Element`.
+
+-}
+nodeNS : String -> String -> List (Attr capability msg) -> List (Node msg) -> Node msg
+nodeNS namespace tag attrs children =
+    if List.any isKeyed children then
+        KeyedTagNS namespace tag (factsOf attrs) (List.indexedMap toKeyedPair children)
+
+    else
+        TagNS namespace tag (factsOf attrs) children
+
+
 {-| Whether a node carries an explicit diff key (a [`Keyed`](#Node) marker) —
 the predicate that triggers [`node`](#node)'s keyed auto-upgrade.
 -}
@@ -469,6 +510,15 @@ and state retention. Safe for the same reason as [`node`](#node).
 keyedNode : String -> List (Attr capability msg) -> List ( String, Node msg ) -> Node msg
 keyedNode tag attrs children =
     KeyedTag tag (factsOf attrs) children
+
+
+{-| Build a **namespaced** keyed tag node (`VirtualDom.keyedNodeNS`) — the
+SVG/XML companion to [`keyedNode`](#keyedNode), for namespaced lists that
+reorder/insert/remove. Safe for the same reason as [`node`](#node).
+-}
+keyedNodeNS : String -> String -> List (Attr capability msg) -> List ( String, Node msg ) -> Node msg
+keyedNodeNS namespace tag attrs children =
+    KeyedTagNS namespace tag (factsOf attrs) children
 
 
 {-| Attach a diff key to a child `Element` — the child-level keying primitive
@@ -653,8 +703,14 @@ addAttribute (Attr facts) n =
                 Tag tag existing children ->
                     Tag tag (facts ++ existing) children
 
+                TagNS namespace tag existing children ->
+                    TagNS namespace tag (facts ++ existing) children
+
                 KeyedTag tag existing children ->
                     KeyedTag tag (facts ++ existing) children
+
+                KeyedTagNS namespace tag existing children ->
+                    KeyedTagNS namespace tag (facts ++ existing) children
 
                 Keyed k inner ->
                     Keyed k (addAttribute (Attr facts) inner)
@@ -675,8 +731,14 @@ toHtml n =
         Tag tag facts children ->
             VirtualDom.node tag (mergeFacts facts) (List.map toHtml children)
 
+        TagNS namespace tag facts children ->
+            VirtualDom.nodeNS namespace tag (mergeFacts facts) (List.map toHtml children)
+
         KeyedTag tag facts children ->
             VirtualDom.keyedNode tag (mergeFacts facts) (List.map (Tuple.mapSecond toHtml) children)
+
+        KeyedTagNS namespace tag facts children ->
+            VirtualDom.keyedNodeNS namespace tag (mergeFacts facts) (List.map (Tuple.mapSecond toHtml) children)
 
         Keyed _ inner ->
             toHtml inner
@@ -714,8 +776,14 @@ mapNode f n =
         Tag tag facts children ->
             Tag tag (List.map (mapFact f) facts) (List.map (mapNode f) children)
 
+        TagNS namespace tag facts children ->
+            TagNS namespace tag (List.map (mapFact f) facts) (List.map (mapNode f) children)
+
         KeyedTag tag facts children ->
             KeyedTag tag (List.map (mapFact f) facts) (List.map (Tuple.mapSecond (mapNode f)) children)
+
+        KeyedTagNS namespace tag facts children ->
+            KeyedTagNS namespace tag (List.map (mapFact f) facts) (List.map (Tuple.mapSecond (mapNode f)) children)
 
         Keyed k inner ->
             Keyed k (mapNode f inner)
@@ -817,7 +885,13 @@ tagOf n =
         Tag tag _ _ ->
             Just tag
 
+        TagNS _ tag _ _ ->
+            Just tag
+
         KeyedTag tag _ _ ->
+            Just tag
+
+        KeyedTagNS _ tag _ _ ->
             Just tag
 
         Keyed _ inner ->
@@ -840,6 +914,9 @@ keysOf n =
         KeyedTag _ _ children ->
             List.map Tuple.first children
 
+        KeyedTagNS _ _ _ children ->
+            List.map Tuple.first children
+
         Keyed _ inner ->
             keysOf inner
 
@@ -856,7 +933,13 @@ childrenOf n =
         Tag _ _ children ->
             children
 
+        TagNS _ _ _ children ->
+            children
+
         KeyedTag _ _ children ->
+            List.map Tuple.second children
+
+        KeyedTagNS _ _ _ children ->
             List.map Tuple.second children
 
         Keyed _ inner ->
@@ -879,7 +962,13 @@ classesOf n =
         Tag _ facts _ ->
             classNamesOf facts
 
+        TagNS _ _ facts _ ->
+            classNamesOf facts
+
         KeyedTag _ facts _ ->
+            classNamesOf facts
+
+        KeyedTagNS _ _ facts _ ->
             classNamesOf facts
 
         Keyed _ inner ->

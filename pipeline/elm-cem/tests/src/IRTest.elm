@@ -56,7 +56,7 @@ spec : Attr.AttrForm -> Maybe String -> String -> Attr.AttrSpec
 spec form fieldName name =
     let
         base =
-            Attr.fromCem
+            Attr.fromCem False
                 { name = name
                 , description = Nothing
                 , type_ = Just { text = "string", aliasName = Nothing }
@@ -311,6 +311,20 @@ suite =
                 \_ -> Naming.camel "arrow-padding" |> Expect.equal "arrowPadding"
             , test "single word lowercased" <|
                 \_ -> Naming.camel "Variant" |> Expect.equal "variant"
+            ]
+        , describe "Naming.camelKeepCase (preserves an already-lowerCamel SVG name)"
+            [ test "preserves a camelCase SVG attribute (viewBox)" <|
+                \_ -> Naming.camelKeepCase "viewBox" |> Expect.equal "viewBox"
+            , test "preserves an internal-capital name with a digit (refX)" <|
+                \_ -> Naming.camelKeepCase "refX" |> Expect.equal "refX"
+            , test "preserves a multi-hump name (preserveAspectRatio)" <|
+                \_ -> Naming.camelKeepCase "gradientUnits" |> Expect.equal "gradientUnits"
+            , test "kebab still camel-cased (stroke-width -> strokeWidth)" <|
+                \_ -> Naming.camelKeepCase "stroke-width" |> Expect.equal "strokeWidth"
+            , test "all-lowercase is identity, same as camel (href)" <|
+                \_ -> Naming.camelKeepCase "href" |> Expect.equal "href"
+            , test "a lowercase name with a trailing digit is not 'camel' (x1 stays x1)" <|
+                \_ -> Naming.camelKeepCase "x1" |> Expect.equal "x1"
             ]
         , describe "Naming.pascal"
             [ test "kebab to pascal" <|

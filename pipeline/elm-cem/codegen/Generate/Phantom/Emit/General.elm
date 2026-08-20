@@ -171,7 +171,7 @@ generalModule brand =
                 -- but keeping this component's own narrowed types.
                 looseBody =
                     [ rCtor ++ " attrs children ="
-                    , "    Ir.fromNode (Ir.node \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
+                    , "    Ir.fromNode (" ++ nodeHead brand ++ " \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
                     ]
 
                 bodyLines =

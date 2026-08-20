@@ -210,11 +210,23 @@ must be backward-compatible (additive minor releases). Before proposing an
 addition, check the deferred items list below. The `verify/` oracle harness must
 pass before any PR merges.
 
+## Namespaced (SVG/MathML) nodes and attributes — added in 1.1.0
+
+`nodeNS` / `keyedNodeNS` (`HtmlIr.Node`, minted in `HtmlIr.Internal`) build tag
+nodes through `VirtualDom.nodeNS` / `keyedNodeNS`, so an SVG `<circle>` is
+created with `document.createElementNS("http://www.w3.org/2000/svg", …)` and
+actually renders — a plain `node`-created SVG element does not. `attributeNS`
+(`HtmlIr.Internal`) mints namespaced attributes (`xlink:href`, `xml:lang`) via
+`VirtualDom.attributeNS`. Purely additive: the existing `Tag`/`KeyedTag`
+representation and every HTML brand are byte-for-byte unchanged; the new
+`TagNS`/`KeyedTagNS` node variants are separate constructors that only the
+`nodeNS` path mints. This unblocks the `svg` brand (`elm-typed-svg`).
+
 ## Deliberately deferred (additive minor releases if ever needed)
 
-Namespaced (SVG) nodes/attributes, node deconstruction levers. Exposing new
-functions is a minor version bump; nothing here blocks them. (`keyedNode` is
-already in — keyed diffing is load-bearing for animated lists.)
+Node deconstruction levers. Exposing new functions is a minor version bump;
+nothing here blocks them. (`keyedNode` is already in — keyed diffing is
+load-bearing for animated lists.)
 
 ## License
 

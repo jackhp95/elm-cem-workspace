@@ -20,6 +20,29 @@ doc text =
     "{-| " ++ text ++ "\n-}"
 
 
+{-| The `Ir.node` constructor head for this brand's element ctors. For an
+ordinary (HTML-namespace) brand it is `Ir.node`; for a namespaced brand
+(`_namespace` set — SVG/MathML) it is `Ir.nodeNS "<uri>"`, so every generated
+element renders through `VirtualDom.nodeNS` / `createElementNS` and actually
+paints. The trailing tag argument (a `"literal"` or a runtime `b.tag`) is
+appended by the caller, so both forms compose the same way:
+
+    nodeHead brand ++ " \"" ++ comp.tag ++ "\""
+
+Purely additive: with `namespace == Nothing` the output is byte-identical to the
+pre-1.1 emitter, so every existing HTML brand regenerates unchanged.
+
+-}
+nodeHead : Brand -> String
+nodeHead brand =
+    case brand.namespace of
+        Nothing ->
+            "Ir.node"
+
+        Just uri ->
+            "Ir.nodeNS \"" ++ uri ++ "\""
+
+
 handlerName : Brand -> Cem.Event -> String
 handlerName brand event =
     case event.setter of

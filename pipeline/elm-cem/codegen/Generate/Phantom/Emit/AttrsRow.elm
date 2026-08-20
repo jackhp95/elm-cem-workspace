@@ -1179,7 +1179,7 @@ buildInternalModule brand =
             , "-}"
             , "toElement : Builder row attrCaps slotCaps accepts msg -> Element accepts admittedBy msg"
             , "toElement (Builder b) ="
-            , "    Ir.fromNode (Ir.node b.tag (List.reverse b.attrs) (List.reverse b.children))"
+            , "    Ir.fromNode (" ++ nodeHead brand ++ " b.tag (List.reverse b.attrs) (List.reverse b.children))"
             , ""
             ]
         )

@@ -3,7 +3,7 @@
     "name": "jackhp95/elm-virtual-dom-intermediate-representation",
     "summary": "Phantom-typed HTML IR: the shared substrate for elm-cem generated UI libraries",
     "license": "BSD-3-Clause",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "exposed-modules": [
         "HtmlIr.Element",
         "HtmlIr.Node",

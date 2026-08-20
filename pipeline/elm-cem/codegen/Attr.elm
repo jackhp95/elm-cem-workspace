@@ -216,20 +216,32 @@ boolean/number attributes were silent no-ops (issue #33). We follow what the
 manifest declares instead of guessing.
 
 -}
-fromCem : Cem.Attribute -> AttrSpec
-fromCem attribute =
+fromCem : Bool -> Cem.Attribute -> AttrSpec
+fromCem keepCase attribute =
     let
         -- The Elm-facing name (setter + phantom-capability). Defaults to the
         -- camel-cased HTML name; a config-injected synthetic attribute may override
         -- it (e.g. `m3e-toc-ignore` → `tocIgnore`) so the setter reads well while the
         -- HTML `htmlName` stays faithful.
+        --
+        -- `keepCase` (true only for a namespaced brand — SVG/MathML) preserves an
+        -- already-lowerCamel attribute name (`viewBox`, `refX`, `gradientUnits`) via
+        -- `camelKeepCase` instead of flattening it with `camel`. It MUST default off
+        -- for every existing brand: an HTML-family manifest can legitimately carry a
+        -- camelCase name (`@m3e/web`'s `validationMessages`), and the published
+        -- setter for it is the flattened `camel` form — preserving its case there
+        -- would be a breaking API change, so case-preservation is opt-in per brand.
         elmName_ =
             case attribute.elmNameOverride of
                 Just override ->
                     override
 
                 Nothing ->
-                    Naming.camel attribute.name
+                    if keepCase then
+                        Naming.camelKeepCase attribute.name
+
+                    else
+                        Naming.camel attribute.name
     in
     { htmlName = attribute.name
     , elmName = elmName_
@@ -593,7 +605,10 @@ emittableSpecs component =
         |> Util.deduplicateBy .name
         |> List.filter (\a -> not (String.startsWith "_" a.name))
         |> List.filter (\a -> String.contains "-" a.name || String.all Char.isLower a.name)
-        |> List.map fromCem
+        -- `keepCase` is moot here: the filter above already excludes every
+        -- camelCase name (neither hyphenated nor all-lowercase), so this path only
+        -- ever sees names `camel` and `camelKeepCase` treat identically.
+        |> List.map (fromCem False)
         |> List.filter isEmittable
         |> List.filter (not << kernelBlocked)
 
