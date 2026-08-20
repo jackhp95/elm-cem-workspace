@@ -39,8 +39,21 @@ import { fileURLToPath } from "node:url";
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const family = JSON.parse(fs.readFileSync(path.join(repoRoot, "tools", "family.json"), "utf8")).packages;
 
+// Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: `-C dir` changes cwd
+// for path resolution but does NOT override an inherited GIT_DIR, so when
+// this runs from inside a git hook (git sets GIT_DIR for every hook
+// invocation), `git -C dir ls-files` silently reads the OUTER repo's index
+// instead of `dir`'s — producing a wrong, much-larger tracked-file count
+// (observed: three different packages all reporting the SAME outer-repo file
+// count) and a flood of spurious "extra" diffs. Same class of bug as the one
+// fixed in fetch-snapshots.mjs (see that file's comment); fixed the same way.
+const gitEnv = { ...process.env };
+delete gitEnv.GIT_DIR;
+delete gitEnv.GIT_WORK_TREE;
+delete gitEnv.GIT_INDEX_FILE;
+
 function gitLsFiles(dir, args = []) {
-    return execFileSync("git", ["-C", dir, "ls-files", ...args], { encoding: "utf8" })
+    return execFileSync("git", ["-C", dir, "ls-files", ...args], { encoding: "utf8", env: gitEnv })
         .trim()
         .split("\n")
         .filter(Boolean);
