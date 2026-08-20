@@ -6,6 +6,7 @@ const path = require("path");
 const { execFileSync } = require("child_process");
 const familyDeps = require("./family-deps");
 const factsBundle = require("./facts-bundle");
+const { deepMergeConfigs } = require("./config-merge");
 
 const generateElm = path.resolve(__dirname, "..", "codegen", "Generate.elm");
 
@@ -422,9 +423,14 @@ function injectConfig(argv) {
   return out;
 }
 
-// Deep-merge config objects two levels deep: top-level component keys, then each
-// component's field object. Later objects add/override individual fields on a
-// component without replacing the whole entry.
+// Deep-merge config objects: top-level component keys (or `_`-prefixed meta
+// keys like `_iconModule`/`_families`/`_exclude`), recursing into nested plain
+// objects at every depth rather than stopping after one level. Later files
+// add/override individual fields without replacing a whole nested object on
+// collision — see `config-merge.js` for the full rationale (this used to be a
+// ONE-level merge, which silently dropped sibling nested keys — e.g.
+// `_iconModule.package.dir` — when a second file only touched
+// `_iconModule.package.summary`).
 //
 // Only PLAIN-OBJECT values are field-merged. Array- and scalar-valued top-level
 // keys (`_exclude` is a `List String`; `_htmlNamespace`/`_rawNamespace` are
@@ -432,22 +438,10 @@ function injectConfig(argv) {
 // `["A","B"]` into `{ "0": "A", "1": "B" }`, which the Elm decoder then fails to
 // read as `List String` and silently drops to `[]` — the bug that left `_exclude`
 // inert and the leaked base-class components emitting.
-function isPlainObject(v) {
-  return v !== null && typeof v === "object" && !Array.isArray(v);
-}
-function deepMergeConfigs(objs) {
-  const out = {};
-  for (const o of objs) {
-    for (const [comp, fields] of Object.entries(o || {})) {
-      if (isPlainObject(fields) && isPlainObject(out[comp])) {
-        out[comp] = { ...out[comp], ...fields };
-      } else {
-        out[comp] = fields;
-      }
-    }
-  }
-  return out;
-}
+//
+// (`deepMergeConfigs` is imported from `./config-merge` at the top of this
+// file, so it's directly unit-testable without racing this CLI's
+// on-`exit` temp-file cleanup — see `tests/config-icon-families-flags.test.mjs`.)
 
 function removeElmFiles(dir) {
   if (!fs.existsSync(dir)) return;

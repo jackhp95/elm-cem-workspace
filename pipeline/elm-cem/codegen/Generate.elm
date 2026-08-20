@@ -104,6 +104,8 @@ generatePhantom flags manifest =
                                 |> applyTypeOverrides libraryInfo legacyConfig.components
                                 |> applySyntheticAttrs libraryInfo legacyConfig.components
                                 |> List.map rename
+                        , iconModule = legacyConfig.iconModule
+                        , families = legacyConfig.families
                         }
                     )
     in
@@ -111,10 +113,10 @@ generatePhantom flags manifest =
         Err configError ->
             Err [ { title = "config decode error", description = configError } ]
 
-        Ok { libraryInfo, declarations } ->
+        Ok { libraryInfo, declarations, iconModule, families } ->
             case Generate.Phantom.Model.resolve libraryInfo.moduleName libraryInfo.eventPrefix flags declarations of
                 Ok brand ->
-                    case Generate.Phantom.Emit.files brand of
+                    case Generate.Phantom.Emit.files brand iconModule families of
                         Ok emittedFiles ->
                             -- Thread K2/K3 collapse notes through the info channel (stdout).
                             -- Notes are deterministic (stable order from Model.resolve).
