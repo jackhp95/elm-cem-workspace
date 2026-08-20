@@ -1,9 +1,13 @@
 module Route.Styles.Typography exposing (ActionData, Data, Model, Msg, route)
 
-import BackendTask
+import BackendTask exposing (BackendTask)
+import BackendTask.File
+import Dict exposing (Dict)
 import Doc
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
 import M3e.Component.Card
@@ -36,7 +40,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    {}
+    Dict String String
 
 
 type alias ActionData =
@@ -45,8 +49,30 @@ type alias ActionData =
 
 route : StatelessRoute RouteParams Data ActionData
 route =
-    RouteBuilder.single { head = head, data = BackendTask.succeed {} }
+    RouteBuilder.single { head = head, data = data }
         |> RouteBuilder.buildNoState { view = view }
+
+
+{-| The per-role metrics string (`font-size / line-height · weight`), keyed by
+Tailwind class, derived at build time from `--md-sys-typescale-*` by
+`scripts/gen-style-tokens.mjs` (-> `data/style-tokens.json`). The live exhibits
+and their classes stay structural in `scale`; only the drift-prone metric
+literals are sourced from the token manifest.
+-}
+data : BackendTask FatalError Data
+data =
+    BackendTask.File.jsonFile
+        (Decode.field "typography"
+            (Decode.list
+                (Decode.map2 Tuple.pair
+                    (Decode.field "class" Decode.string)
+                    (Decode.field "metrics" Decode.string)
+                )
+                |> Decode.map Dict.fromList
+            )
+        )
+        "data/style-tokens.json"
+        |> BackendTask.allowFatal
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -68,33 +94,39 @@ head _ =
 
 
 {-| The 15 M3 type-scale roles, each a live exhibit (the matching typed
-producer), the Tailwind class it maps to, and the role's concrete
-font-size / line-height / weight from `--md-sys-typescale-*` (see
-`sys/typescale.css`). The demo dogfoods the producers: the exhibit _is_
-`M3e.heading` (display/headline/title/label) / `TypedHtml.span` (body).
+producer) and the Tailwind class it maps to. The role's concrete
+font-size / line-height / weight is NOT hand-typed here — it is looked up per
+class from `data/style-tokens.json` (derived from `--md-sys-typescale-*`, see
+`scripts/gen-style-tokens.mjs`). The demo dogfoods the producers: the exhibit
+_is_ `M3e.heading` (display/headline/title/label) / `TypedHtml.span` (body).
 -}
-scale : List ( Element (M3e.Component.Heading.Is { a | sharedPhrasing : TypedHtml.Kind.Shared }) admittedBy msg, String, String )
+scale : List ( Element (M3e.Component.Heading.Is { a | sharedPhrasing : TypedHtml.Kind.Shared }) admittedBy msg, String )
 scale =
-    [ ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Display Large" ], "text-display-lg", "3.5625rem / 4rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Display Medium" ], "text-display-md", "2.8125rem / 3.25rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Display Small" ], "text-display-sm", "2.25rem / 2.75rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Headline Large" ], "text-headline-lg", "2rem / 2.5rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Headline Medium" ], "text-headline-md", "1.75rem / 2.25rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Headline Small" ], "text-headline-sm", "1.5rem / 2rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Title Large" ], "text-title-lg", "1.375rem / 1.75rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Title Medium" ], "text-title-md", "1rem / 1.5rem · 500" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Title Small" ], "text-title-sm", "0.875rem / 1.25rem · 500" )
-    , ( TypedHtml.span [ TA.class "text-body-lg text-on-surface" ] [ M3e.text "Body Large" ], "text-body-lg", "1rem / 1.5rem · 400" )
-    , ( TypedHtml.span [ TA.class "text-body-md text-on-surface" ] [ M3e.text "Body Medium" ], "text-body-md", "0.875rem / 1.25rem · 400" )
-    , ( TypedHtml.span [ TA.class "text-body-sm text-on-surface" ] [ M3e.text "Body Small" ], "text-body-sm", "0.75rem / 1rem · 400" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Label Large" ], "text-label-lg", "0.875rem / 1.25rem · 500" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Label Medium" ], "text-label-md", "0.75rem / 1rem · 500" )
-    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Label Small" ], "text-label-sm", "0.6875rem / 1rem · 500" )
+    [ ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Display Large" ], "text-display-lg" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Display Medium" ], "text-display-md" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Display Small" ], "text-display-sm" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Headline Large" ], "text-headline-lg" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Headline Medium" ], "text-headline-md" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Headline Small" ], "text-headline-sm" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Title Large" ], "text-title-lg" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Title Medium" ], "text-title-md" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Title Small" ], "text-title-sm" )
+    , ( TypedHtml.span [ TA.class "text-body-lg text-on-surface" ] [ M3e.text "Body Large" ], "text-body-lg" )
+    , ( TypedHtml.span [ TA.class "text-body-md text-on-surface" ] [ M3e.text "Body Medium" ], "text-body-md" )
+    , ( TypedHtml.span [ TA.class "text-body-sm text-on-surface" ] [ M3e.text "Body Small" ], "text-body-sm" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Label Large" ], "text-label-lg" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Label Medium" ], "text-label-md" )
+    , ( M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small, TA.class "text-on-surface" ] [ M3e.text "Label Small" ], "text-label-sm" )
     ]
 
 
-row : ( Element (TypedHtml.Component.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
-row ( exhibit, cls, metrics ) =
+row : Dict String String -> ( Element (TypedHtml.Component.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+row metricsByClass ( exhibit, cls ) =
+    let
+        metrics : String
+        metrics =
+            Dict.get cls metricsByClass |> Maybe.withDefault ""
+    in
     TypedHtml.div [ TA.class "flex flex-wrap items-baseline justify-between gap-2 py-3" ]
         [ exhibit
         , TypedHtml.div [ TA.class "flex flex-col items-end" ]
@@ -112,7 +144,7 @@ pageHeading =
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
-view _ _ =
+view app _ =
     View.fromElement "Typography"
         (Doc.pane
             [ TypedHtml.section [ TA.class "space-y-3" ]
@@ -128,7 +160,7 @@ view _ _ =
                     [ M3e.Attributes.variant Value.outlined ]
                     [ M3e.Component.Card.content
                         (TypedHtml.div [ TA.class "flex flex-col px-2" ]
-                            (List.intersperse (M3e.divider [] []) (List.map row scale))
+                            (List.intersperse (M3e.divider [] []) (List.map (row app.data) scale))
                         )
                     ]
                 ]

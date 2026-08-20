@@ -4,7 +4,10 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "postinstall": "node scripts/fix-native-bins.mjs",
-    "gen": "run-s gen:vendor gen:icons gen:brand-images gen:reference gen:examples-config gen:examples-surfaces gen:examples-barrel gen:examples gen:samples",
+    "gen": "run-s gen:vendor gen:icons gen:brand-images gen:reference gen:family gen:style-tokens gen:install-facts gen:examples-config gen:examples-surfaces gen:examples-barrel gen:examples gen:samples",
+    "gen:family": "node scripts/gen-family-data.mjs",
+    "gen:style-tokens": "node scripts/gen-style-tokens.mjs",
+    "gen:install-facts": "node scripts/gen-install-facts.mjs",
     "gen:vendor": "run-s gen:vendor-foundation gen:vendor-tailwind",
     "gen:vendor-foundation": "node scripts/vendor-foundation.mjs",
     "gen:vendor-tailwind": "node scripts/vendor-tailwind-m3e-web.mjs",
