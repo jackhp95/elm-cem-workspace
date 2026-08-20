@@ -8,6 +8,7 @@
   "elm-m3e-tailwind: test",
   "material-okf: check",
   "material-okf: test",
+  "elm-shoelace: check",
   "elm-virtual-dom-intermediate-representation: check",
   "elm-virtual-dom-intermediate-representation: test",
   "tonal-palette-oklch: test",
