@@ -9,6 +9,10 @@ packages:
   - "!**/node_modules"
   - "!**/elm-stuff"
   - "!pipeline/*/elm-virtual-dom-intermediate-representation"
+  # docs-gen is a Phase-N skeleton (brand-agnostic docs generator, WIP): excluded
+  # from the workspace/gate graph until its route-generation layer lands and a
+  # brand actually consumes it. Its parity tests run standalone (node --test).
+  - "!pipeline/docs-gen"
 
 allowBuilds:
   '@parcel/watcher': true

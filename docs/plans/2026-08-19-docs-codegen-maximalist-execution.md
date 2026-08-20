@@ -169,4 +169,54 @@ migrated site prose lives in the NEW `content/guides/` dir — no collision.
 
 ---
 
-## Phase 3 — generic `docs-gen` package (design + skeleton; see Phase-3 section at commit)
+## Phase 3 — generic `docs-gen` package (design doc + tested skeleton; deliberately partial)
+
+Delivered as a **design doc + working, parity-tested skeleton, clearly marked incomplete** — the honest
+scope for the biggest/most-open-ended phase (per the task's own guidance). Lives at `pipeline/docs-gen/`
+(peer of `elm-cem-compose`).
+
+**Shape chosen:** follows the JS `elm-cem-figma-connect` template (agnostic core + brand config), NOT the
+Elm `elm-cem-compose` template — because the docs generators are already `.mjs` emitting JSON for
+elm-pages `BackendTask`s, so the unit of reuse is a data-derivation function, not an Elm module. Full
+rationale + the three-part contract diagram in `pipeline/docs-gen/DESIGN.md`.
+
+**What's real + tested (the seam is genuine, not vapor):**
+- `deriveFamilies(familiesConfig)` — the family-table derivation, lifted from Phase 1, faithful to
+  `gen-family-package.js`.
+- `deriveTypescale` / `deriveShapeCorners` / `deriveColorRoleInventory` + a generic `customProps` CSS
+  parser — lifted from Phase 1's token derivation.
+- `splitSections`/`joinSections` — the `@@@`-delimited guide-md format shared with Phase 2's `Doc.sections`.
+- **5 parity tests** run the core against the REAL m3e inputs and assert byte-equality with the committed
+  `data/families.json` and `data/style-tokens.json` — proving a brand's `gen-*` script could delegate to
+  docs-gen with zero output change. `cd pipeline/docs-gen && npm test` → 5 pass, no deps.
+
+**What's deliberately NOT built (documented in DESIGN.md §5):** the route-generation layer (the bulk — emitting
+the per-component reference/gallery/family Elm pages from a facts bundle), lifting `extract-reference` +
+`examples-gen`, a facts-bundle-typed input, workspace/gate integration, and a brand actually consuming it.
+The Phase-1 generators are deliberately NOT refactored to depend on docs-gen (would couple gate-green code
+to a not-yet-integrated package; the parity tests show the delegation would be byte-identical when adopted).
+
+**Non-destabilizing:** the package is excluded from the workspace/gate graph (`pnpm-workspace.yaml`
+`!pipeline/docs-gen`, matching the existing IR exclusion), verified via `pnpm ls -r`. The final full gate is
+therefore unaffected by it.
+
+---
+
+## Gate status (honest, for all three phases)
+
+`node tools/gate-all.mjs` (serial) is green **except two pre-existing, environmental browser-test failures**
+that are NOT caused by this work:
+- `mobile-shell.spec.ts:27` and `shell-breakpoints.spec.ts:162`, both navigating to `/guide/reference`.
+- Root cause (proven): `/guide/reference` is the heaviest page (5000+ `m3e-card` custom elements). On this
+  machine it loads in **94.0s** (measured with a 180s Playwright probe; the app-bar renders — the page
+  WORKS), exceeding the tests' hardcoded 60s budget. Failure mode varies run-to-run (goto-timeout vs
+  toBeVisible) — the signature of a perf/hydration limit, not a code defect. The reshape's gate passed
+  green on a faster machine where this page loaded in <60s.
+- **Not mine:** the diff touches only the 5 Phase-1 routes + generators + the 15 guide chapters + Doc.elm;
+  nothing touches `/guide/reference`, the mobile shell, the nav bar, or CSS/layout. `/guide/reference`'s
+  built output is byte-identical with or without this work.
+- Per-phase verification used instead of a fully-green gate (unattainable on this machine): Phase 1 —
+  full gate ran, only the 2 timeouts red; Phase 2 — `elm-review` clean + `build:site` renders all routes +
+  proven HTML render-identity; Phase 3 — excluded from the gate.
+- **Recommendation for Jack:** either run the gate on a faster host, or bump those two tests' 60s budget
+  (the page is correct, just slow to hydrate) — a pre-existing docs-infra decision, out of this task's scope.
