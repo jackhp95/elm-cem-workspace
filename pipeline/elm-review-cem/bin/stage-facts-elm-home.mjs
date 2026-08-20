@@ -50,14 +50,25 @@ function resolveFactsDir() {
   const gitUrl = process.env.ELM_CEM_FACTS_GIT_URL || "https://github.com/jackhp95/elm-cem-facts.git";
   const mirrorCacheDir = path.join(os.tmpdir(), "elm-cem-facts-mirror-cache");
 
+  // Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: mirrorCacheDir is a
+  // separate scratch clone under os.tmpdir(), targeted via `-C` — an
+  // inherited GIT_DIR (set by git for every hook invocation) is not cleared
+  // by `-C` and would silently redirect these calls at the OUTER repo
+  // instead. Same class of bug fixed in fetch-snapshots.mjs / copy-fidelity.mjs
+  // (see those files' comments); fixed the same way.
+  const gitEnv = { ...process.env };
+  delete gitEnv.GIT_DIR;
+  delete gitEnv.GIT_WORK_TREE;
+  delete gitEnv.GIT_INDEX_FILE;
+
   if (fs.existsSync(path.join(mirrorCacheDir, ".git"))) {
     console.log(`stage-facts-elm-home: refreshing standalone-checkout fallback clone at ${mirrorCacheDir}`);
-    spawnSync("git", ["-C", mirrorCacheDir, "fetch", "--depth", "1", "origin", "main"], { stdio: "inherit" });
-    spawnSync("git", ["-C", mirrorCacheDir, "reset", "--hard", "origin/main"], { stdio: "inherit" });
+    spawnSync("git", ["-C", mirrorCacheDir, "fetch", "--depth", "1", "origin", "main"], { stdio: "inherit", env: gitEnv });
+    spawnSync("git", ["-C", mirrorCacheDir, "reset", "--hard", "origin/main"], { stdio: "inherit", env: gitEnv });
   } else {
     console.log(`stage-facts-elm-home: no in-monorepo pipeline/elm-cem-facts — cloning ${gitUrl} as a fallback (standalone checkout)`);
     fs.rmSync(mirrorCacheDir, { recursive: true, force: true });
-    const clone = spawnSync("git", ["clone", "--depth", "1", gitUrl, mirrorCacheDir], { stdio: "inherit" });
+    const clone = spawnSync("git", ["clone", "--depth", "1", gitUrl, mirrorCacheDir], { stdio: "inherit", env: gitEnv });
     if (clone.status !== 0) {
       fail(`could not clone ${gitUrl} — set ELM_CEM_FACTS_GIT_URL to override, or run this from inside elm-cem-workspace`);
     }
