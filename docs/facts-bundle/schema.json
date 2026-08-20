@@ -578,6 +578,258 @@
         "form": { "type": "string", "enum": ["double-list", "record-double-list", "pipeline"] },
         "finalizer": { "type": ["string", "null"], "description": "The function that closes the pipeline form. For the current emitter this is `toElement` (re-exported per component from `M3e.Build`) — NOT `build`, which is the seed." }
       }
+    },
+
+    "brandFacts": {
+      "type": "object",
+      "title": "brand-facts.json — the single canonical facts interface (schemaVersion 2)",
+      "description": "The one comprehensive, language-neutral facts interface (Brand Facts design, core/elm-cem/specs/2026-08-19-brand-facts-design.md §4). Supersedes the Face B / Face C split for every NEW consumer once a producer exists (phase 2); faceB/faceC (schemaVersion 1) remain valid and unchanged for the current bundle in the meantime.",
+      "required": ["schemaVersion", "provenance", "lib", "components", "targets"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "type": "integer", "const": 2 },
+        "provenance": { "$ref": "#/definitions/brandFactsProvenance" },
+        "lib": { "type": "string", "description": "The brand's root Elm namespace (`M3e`)." },
+        "components": {
+          "type": "object",
+          "description": "Keyed by the authoritative CEM tag (e.g. `m3e-list-item`).",
+          "additionalProperties": { "$ref": "#/definitions/brandFactsComponent" }
+        },
+        "targets": { "$ref": "#/definitions/brandFactsTargets" }
+      }
+    },
+
+    "brandFactsProvenance": {
+      "type": "object",
+      "description": "Which inputs fed this build (spec §4.5): the CEM package/version/sha, the dts dir, each --config-from file + hash, generator version/commit. Subsumes faceBProvenance + faceCProvenance's two ad-hoc stamps into one block.",
+      "required": ["generator", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "generator": {
+          "type": "object",
+          "required": ["name", "version"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "description": "e.g. `elm-cem`." },
+            "version": { "type": "string" },
+            "commit": { "type": ["string", "null"] }
+          }
+        },
+        "source": {
+          "type": "object",
+          "required": ["package", "version", "sha"],
+          "additionalProperties": false,
+          "properties": {
+            "package": { "type": "string", "description": "e.g. `@m3e/web`." },
+            "version": { "type": "string", "description": "The RESOLVED installed version, never a range." },
+            "sha": { "type": ["string", "null"] },
+            "manifestPath": { "type": ["string", "null"] }
+          }
+        },
+        "dts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dir": { "type": ["string", "null"] },
+            "fileCount": { "type": "integer" },
+            "aliasCount": { "type": "integer" }
+          }
+        },
+        "configFiles": {
+          "type": "array",
+          "description": "Every --config-from input, in merge order, with a content hash — so a Facts consumer can tell which config shaped a fact without re-reading it.",
+          "items": {
+            "type": "object",
+            "required": ["path", "hash"],
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string" },
+              "hash": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "brandFactsSlot": {
+      "type": "object",
+      "description": "Presence/absence encoding (spec §4.2): `admits` absent -> open (any kind), `[]` -> sealed, `[...]` -> exactly those kinds. `multi`/`required` absent -> false. All three keys are optional; `{}` is a valid, fully-open, single-occupancy, optional slot.",
+      "additionalProperties": false,
+      "properties": {
+        "admits": { "type": "array", "items": { "type": "string" } },
+        "multi": { "type": "boolean" },
+        "required": { "type": "boolean" }
+      }
+    },
+
+    "brandFactsAttribute": {
+      "type": "object",
+      "required": ["kind", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["boolean", "enum", "enumNumeric", "number", "string", "none", "other"]
+        },
+        "type": { "type": "string", "description": "The resolved type name, e.g. `ListItemVariant` or `boolean`." },
+        "enum": {
+          "type": "array",
+          "items": { "type": ["string", "number"] },
+          "description": "Present only when `kind` is `enum`/`enumNumeric` (or an open string union with known members). Absent means no enumerable member list."
+        },
+        "default": { "type": ["string", "null"] },
+        "deprecated": { "type": ["boolean", "string", "null"] }
+      }
+    },
+
+    "brandFactsCssProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "syntax": { "type": ["string", "null"] },
+        "default": { "type": ["string", "null"] }
+      }
+    },
+
+    "brandFactsEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+
+    "brandFactsElmComponentTargets": {
+      "type": "object",
+      "description": "Per-component Elm bindings, keyed by DESTINATION PACKAGE (spec §3.4, §4.1) — not the retired top/build/record/html construction forms. Every key is optional: a component need not have a binding in every package (e.g. `facts`/`icons` normally carry no per-component entry).",
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["barrel"],
+          "additionalProperties": false,
+          "properties": { "barrel": { "type": "string" } }
+        },
+        "elements": {
+          "type": "object",
+          "required": ["module", "ctor"],
+          "additionalProperties": false,
+          "properties": {
+            "module": { "type": "string" },
+            "ctor": { "type": "string" },
+            "slotSetters": { "type": "object", "additionalProperties": { "type": "string" } }
+          }
+        },
+        "build": {
+          "type": "object",
+          "required": ["module", "seed", "finalizer"],
+          "additionalProperties": false,
+          "properties": {
+            "module": { "type": "string" },
+            "seed": { "type": "string" },
+            "finalizer": { "type": "string" }
+          }
+        },
+        "components": {
+          "type": "object",
+          "required": ["module", "member"],
+          "additionalProperties": false,
+          "properties": {
+            "module": { "type": "string" },
+            "member": { "type": "string" }
+          }
+        },
+        "facts": { "type": "object", "additionalProperties": false, "properties": {} },
+        "icons": { "type": "object", "additionalProperties": false, "properties": {} }
+      }
+    },
+
+    "brandFactsComponent": {
+      "type": "object",
+      "title": "the canonical, language-neutral per-component core, plus its Elm target bindings",
+      "required": ["declarationName", "attributes", "cssProperties", "events", "slots"],
+      "additionalProperties": false,
+      "properties": {
+        "declarationName": { "type": "string", "description": "The class declaration name, e.g. `M3eListItemElement`." },
+        "attributes": {
+          "type": "object",
+          "description": "Keyed by content-attribute name.",
+          "additionalProperties": { "$ref": "#/definitions/brandFactsAttribute" }
+        },
+        "cssProperties": {
+          "type": "object",
+          "description": "Keyed by custom-property name including the leading `--`.",
+          "additionalProperties": { "$ref": "#/definitions/brandFactsCssProperty" }
+        },
+        "events": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/brandFactsEvent" }
+        },
+        "slots": {
+          "type": "object",
+          "description": "Keyed by slot name (empty string for the default/unnamed slot). The KEY SET is CEM-closed (spec §4.3 table): a slot absent from this object does not exist on the component, full stop — that is a different absence than `admits` being absent on a slot that IS present.",
+          "additionalProperties": { "$ref": "#/definitions/brandFactsSlot" }
+        },
+        "admittedBy": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which parent tags this component may be placed under (spec §4.3, the P4 `parents` primitive). ABSENT means open (any parent). A separate authored fact from `admits` — not derivable from it."
+        },
+        "targets": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "elm": { "$ref": "#/definitions/brandFactsElmComponentTargets" }
+          }
+        }
+      }
+    },
+
+    "brandFactsElmPackage": {
+      "type": "object",
+      "description": "One entry in targets.elm.packages (spec §4.4): package identity + enforcement contract, once per package (not repeated per component).",
+      "required": ["package", "generator"],
+      "additionalProperties": false,
+      "properties": {
+        "package": { "type": "string", "description": "e.g. `jackhp95/elm-m3e-core`." },
+        "generator": { "type": "string", "enum": ["split", "gen-family-package", "gen-icon-module"] },
+        "deps": { "type": "array", "items": { "type": "string" }, "description": "Sibling package keys this package depends on." },
+        "contract": {
+          "type": "object",
+          "description": "Enforcement contract, e.g. `{\"composition\": \"compiler\"}` or `{\"slotSetterChild\": \"compiler\", \"rawContentChild\": \"elm-review\"}`. Keys vary per package; each value names WHO enforces validity for that concern.",
+          "additionalProperties": { "type": "string", "enum": ["compiler", "elm-review", "none"] }
+        }
+      }
+    },
+
+    "brandFactsTargets": {
+      "type": "object",
+      "required": ["elm"],
+      "additionalProperties": false,
+      "properties": {
+        "elm": {
+          "type": "object",
+          "required": ["packages"],
+          "additionalProperties": false,
+          "properties": {
+            "packages": {
+              "type": "object",
+              "description": "Exactly the six destination-package keys (spec §3.4). Not the retired top/build/record/html construction forms.",
+              "required": ["core", "elements", "build", "components", "icons", "facts"],
+              "additionalProperties": false,
+              "properties": {
+                "core": { "$ref": "#/definitions/brandFactsElmPackage" },
+                "elements": { "$ref": "#/definitions/brandFactsElmPackage" },
+                "build": { "$ref": "#/definitions/brandFactsElmPackage" },
+                "components": { "$ref": "#/definitions/brandFactsElmPackage" },
+                "icons": { "$ref": "#/definitions/brandFactsElmPackage" },
+                "facts": { "$ref": "#/definitions/brandFactsElmPackage" }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
