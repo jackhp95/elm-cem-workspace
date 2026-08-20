@@ -99,4 +99,15 @@ function validate(schema, data, definition) {
   return { valid: errors.length === 0, errors };
 }
 
-module.exports = { validate };
+/**
+ * Validate a `brand-facts.json` document (schemaVersion 2) against
+ * `#/definitions/brandFacts`. Sugar for `validate(schema, data,
+ * "brandFacts")` — the spelling every schemaVersion-2 caller (the future
+ * producer, check-drift, gate-all) should use instead of repeating the
+ * definition-name string.
+ */
+function validateBrandFacts(schema, data) {
+  return validate(schema, data, "brandFacts");
+}
+
+module.exports = { validate, validateBrandFacts };

@@ -11,7 +11,7 @@ import { repo, makePlainCheck } from "./lib/harness.mjs";
 
 const workspaceRoot = path.resolve(repo, "..", "..");
 const require = createRequire(import.meta.url);
-const { validate } = require(path.join(repo, "bin", "validate-facts-bundle.js"));
+const { validate, validateBrandFacts } = require(path.join(repo, "bin", "validate-facts-bundle.js"));
 
 const schemaPath = path.join(workspaceRoot, "docs", "facts-bundle", "schema.json");
 const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
@@ -82,6 +82,95 @@ function validFaceC() {
   };
 }
 
+// --- schemaVersion 2: brand-facts.json (canonical core + targets.elm) ---
+// No producer exists yet (phase 1 of the Brand Facts design is schema-only),
+// so this fixture — not a generated file — is the spec for the shape.
+
+function validBrandFacts() {
+  return {
+    schemaVersion: 2,
+    provenance: {
+      generator: { name: "elm-cem", version: "0.3.1", commit: null },
+      source: {
+        package: "@m3e/web",
+        version: "2.7.3",
+        sha: null,
+        manifestPath: "docs/node_modules/@m3e/web/dist/custom-elements.json",
+      },
+      dts: { dir: "docs/node_modules/@m3e/web/dist", fileCount: 42, aliasCount: 17 },
+      configFiles: [
+        { path: "brands/m3e/inputs/cem/config/slots.json", hash: "sha256-abc123" },
+      ],
+    },
+    lib: "M3e",
+    components: {
+      "m3e-list-item": {
+        declarationName: "M3eListItemElement",
+        attributes: {
+          disabled: { kind: "boolean", type: "boolean" },
+          variant: {
+            kind: "enum",
+            type: "ListItemVariant",
+            enum: ["one-line", "two-line", "three-line"],
+            default: "\"one-line\"",
+          },
+        },
+        cssProperties: {
+          "--m3e-list-item-container-color": { syntax: "<color>", default: null },
+        },
+        events: {
+          "m3e-list-item-click": { type: "CustomEvent<void>", description: "Fired on activation." },
+        },
+        slots: {
+          leading: { admits: ["avatar", "icon", "text"] },
+          trailing: { admits: ["avatar", "icon", "switch"], multi: true },
+          overline: {},
+        },
+        admittedBy: ["m3e-list"],
+        targets: {
+          elm: {
+            core: { barrel: "listItem" },
+            elements: {
+              module: "M3e.Element.ListItem",
+              ctor: "listItem",
+              slotSetters: { leading: "leading", trailing: "trailing" },
+            },
+            build: { module: "M3e.Build.ListItem", seed: "build", finalizer: "toElement" },
+            components: { module: "M3e.Component.List", member: "listItem" },
+          },
+        },
+      },
+    },
+    targets: {
+      elm: {
+        packages: {
+          core: { package: "jackhp95/elm-m3e-core", generator: "split", deps: [], contract: { composition: "none" } },
+          elements: {
+            package: "jackhp95/elm-m3e-elements",
+            generator: "split",
+            deps: ["core"],
+            contract: { slotSetterChild: "compiler", rawContentChild: "elm-review" },
+          },
+          build: {
+            package: "jackhp95/elm-m3e-build",
+            generator: "split",
+            deps: ["elements", "core"],
+            contract: { composition: "compiler" },
+          },
+          components: {
+            package: "jackhp95/elm-m3e-components",
+            generator: "gen-family-package",
+            deps: ["elements", "core"],
+            contract: { composition: "compiler" },
+          },
+          icons: { package: "jackhp95/elm-m3e-icons", generator: "gen-icon-module", deps: [], contract: {} },
+          facts: { package: "jackhp95/elm-m3e-facts", generator: "split", deps: [], contract: {} },
+        },
+      },
+    },
+  };
+}
+
 // --- valid bundle: accepted ---
 
 {
@@ -98,6 +187,21 @@ function validFaceC() {
 {
   const result = validate(schema, validFaceC(), "faceC");
   check(result.valid, `valid faceC alone accepted (errors: ${JSON.stringify(result.errors)})`);
+}
+
+// --- schemaVersion 2: valid brand-facts.json accepted ---
+
+{
+  const result = validate(schema, validBrandFacts(), "brandFacts");
+  check(result.valid, `valid brand-facts.json accepted (errors: ${JSON.stringify(result.errors)})`);
+}
+
+{
+  // validateBrandFacts is sugar for validate(schema, data, "brandFacts") —
+  // must agree with it exactly.
+  const direct = validate(schema, validBrandFacts(), "brandFacts");
+  const sugar = validateBrandFacts(schema, validBrandFacts());
+  check(sugar.valid === direct.valid, "validateBrandFacts agrees with validate(..., \"brandFacts\") on a valid bundle");
 }
 
 // --- malformed bundles: rejected ---
@@ -153,6 +257,80 @@ function validFaceC() {
   faceB.components[0].attributes[0].kind = "not-a-real-kind";
   const result = validate(schema, faceB, "faceB");
   check(!result.valid, "faceB attribute with an invalid `kind` enum value is rejected");
+}
+
+// --- schemaVersion 2: malformed brand-facts.json shapes are rejected ---
+
+function invalidSlotWrongKeyBrandFacts() {
+  const bf = validBrandFacts();
+  // "kinds" is not a real key on a slot — the field is `admits` (spec §4.2).
+  // additionalProperties: false on brandFactsSlot must catch this.
+  bf.components["m3e-list-item"].slots.leading = { kinds: ["avatar", "icon", "text"] };
+  return bf;
+}
+
+function invalidAdmitsWrongTypeBrandFacts() {
+  const bf = validBrandFacts();
+  // `admits` must be an array (the listed-kinds case); an object is never valid.
+  bf.components["m3e-list-item"].slots.leading.admits = { any: true };
+  return bf;
+}
+
+function invalidMissingDeclarationNameBrandFacts() {
+  const bf = validBrandFacts();
+  delete bf.components["m3e-list-item"].declarationName;
+  return bf;
+}
+
+function invalidSmearedElmIdBrandFacts() {
+  const bf = validBrandFacts();
+  // An Elm module name leaked directly onto the canonical core instead of
+  // living under targets.elm.elements.module (spec §5.8: language-neutral core).
+  bf.components["m3e-list-item"].module = "M3e.Element.ListItem";
+  return bf;
+}
+
+function invalidSchemaVersionBrandFacts() {
+  const bf = validBrandFacts();
+  bf.schemaVersion = 1; // this shape is schemaVersion 2, not the faceB/faceC bundle's 1
+  return bf;
+}
+
+function invalidMissingPackageKeyBrandFacts() {
+  const bf = validBrandFacts();
+  // targets.elm.packages must enumerate all six destination packages (spec §3.4).
+  delete bf.targets.elm.packages.icons;
+  return bf;
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSlotWrongKeyBrandFacts());
+  check(!result.valid, "slot with `kinds` instead of `admits` is rejected (additionalProperties: false)");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidAdmitsWrongTypeBrandFacts());
+  check(!result.valid, "`admits` as an object instead of an array is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidMissingDeclarationNameBrandFacts());
+  check(!result.valid, "component missing required `declarationName` is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSmearedElmIdBrandFacts());
+  check(!result.valid, "an Elm module name smeared onto the canonical core (outside targets.elm) is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidSchemaVersionBrandFacts());
+  check(!result.valid, "brand-facts.json with schemaVersion 1 (not 2) is rejected");
+}
+
+{
+  const result = validateBrandFacts(schema, invalidMissingPackageKeyBrandFacts());
+  check(!result.valid, "targets.elm.packages missing a required package key (`icons`) is rejected");
 }
 
 if (failureCount() > 0) {
