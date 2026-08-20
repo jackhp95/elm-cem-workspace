@@ -179,6 +179,21 @@ move"). The gate itself only needs the path lists; this doc is where the
   fix (`tools/gate-all.mjs`'s `CHRONIC_SKIPS` history) — nobody had ever
   run it with a snapshot provisioned to see them flagged.
 
+### 2026-08-19 — `docs/` excluded from the comparison (repo-shape-v2 docs extraction)
+
+- `copyFidelity.sourceFilterExcludePrefixes` for elm-m3e is now `["docs/"]`
+  (was `["docs/dist/", "docs/vendor/"]`). repo-shape-v2 wave-1 (spec decision
+  #9) extracted the docs site out of the elm-m3e package into its own sibling
+  package `brands/m3e/generated/docs/elm-m3e-docs` (no independent mirror).
+  The pinned `jackhp95/elm-m3e` snapshot still carries the whole in-package
+  `docs/` tree until it is republished post-reshape, so without this exclusion
+  all ~195 relocated `docs/**` files flag as spuriously "missing". Every one
+  was verified relocated (present at the new docs-package path), not dropped.
+  This completes plan Step 5.6 for the materialized-snapshot case — that step
+  moved only the docs-specific `docs/dist/`/`docs/vendor/` exclusions, but the
+  entire subtree left the package. Narrow back to a package-internal path only
+  if docs ever returns to the elm-m3e package.
+
 ## cem-figma-connect
 
 - **Phase 4 token-graph/links feature work** (workspace-ahead-of-upstream,
@@ -299,6 +314,19 @@ move"). The gate itself only needs the path lists; this doc is where the
   regenerates `profiles/m3-kit/facts/{cem-facts,elm-api-facts}.json` from
   the workspace producer (`core/elm-cem`) against elm-m3e's own config,
   via `pnpm --filter cem-figma-connect run gen:facts`.
+
+### 2026-08-19 — transitional mirror-lag entries (repo-shape-v2 renames)
+
+- `authorizedAbsentPrefixes` now carries BOTH `test/fixtures/elm-m3e-tailwind-0.1.0/`
+  (workspace name) and `test/fixtures/tailwind-m3e-web-0.1.0/` (mirror name);
+  `authorizedAbsentM6` carries both `.claude-memory/elm-cem-figma-connect-state.md`
+  and `.claude-memory/cem-figma-connect-state.md`. repo-shape-v2 wave-1 renamed
+  these in the workspace ahead of the mirror (plan Step 1.7e flagged them
+  MIRROR-COUPLED: "safe to rename now; a materialized-snapshot run flags it
+  missing until the mirror's file renames too"). The pinned
+  `jackhp95/cem-figma-connect` snapshot still uses the old names, so the old
+  names must stay authorized-absent through the transition. Remove the two old
+  entries once that mirror is republished post-reshape.
 
 ## m3e-okf
 

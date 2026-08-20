@@ -12,8 +12,8 @@
         "sourceEnvVar": "SOURCE_ELM_M3E",
         "sourceDefaultRelToRepoRoot": ".cache/snapshots/elm-m3e",
         "$sourceDefaultNote": "elm-m3e's reference advanced to latest main (D-041) via tools/fetch-snapshots.mjs into .cache/snapshots/elm-m3e, unlike every other package here which defaults to a $SNAPSHOT_ROOT/<name> sibling checkout.",
-        "sourceFilterExcludePrefixes": ["docs/dist/", "docs/vendor/"],
-        "$sourceFilterNote": "docs/dist/** is BUILT output (vite content-hashed) the source repo commits for deploy but the workspace rebuilds with different hashes (D-041) — excluded from both sides, not compared.",
+        "sourceFilterExcludePrefixes": ["docs/"],
+        "$sourceFilterNote": "docs/** is excluded from the elm-m3e fidelity comparison entirely: repo-shape-v2 wave-1 (spec decision #9) EXTRACTED the docs site out of the elm-m3e package into its own sibling package (brands/m3e/generated/docs/elm-m3e-docs, no independent mirror), so the pinned jackhp95/elm-m3e mirror snapshot — which still carries the whole in-package docs/ tree until it is republished post-reshape — would otherwise flag all ~195 relocated docs/** files as spuriously 'missing'. This is the materialized-snapshot completion of plan Step 5.6 (the plan moved the docs-specific docs/dist/ + docs/vendor/ exclusions, but the whole subtree left the package). Subsumes the prior docs/dist/ (vite content-hashed build output) + docs/vendor/ exclusions. Narrow this back to a package-internal docs/ path only if docs ever returns to the elm-m3e package.",
         "authorizedAbsent": [
           "package-lock.json",
           "pnpm-lock.yaml",
@@ -204,10 +204,13 @@
         ],
         "authorizedAbsentPrefixes": [
           "test/fixtures/m3e-web-2.7.0/",
-          "test/fixtures/elm-m3e-tailwind-0.1.0/"
+          "test/fixtures/elm-m3e-tailwind-0.1.0/",
+          "test/fixtures/tailwind-m3e-web-0.1.0/"
         ],
+        "$mirrorLagNote": "test/fixtures/tailwind-m3e-web-0.1.0/ and .claude-memory/cem-figma-connect-state.md are the PRE-repo-shape-v2 names still carried by the pinned jackhp95/cem-figma-connect mirror snapshot. The workspace renamed them (elm-m3e-tailwind-0.1.0/, elm-cem-figma-connect-state.md) ahead of the mirror — plan Step 1.7e flagged this as MIRROR-COUPLED ('safe to rename now; a materialized-snapshot run flags it missing until the mirror's file renames too'). Both old + new names are authorized-absent through the transition; remove the old ones once jackhp95/cem-figma-connect is republished post-reshape.",
         "authorizedAbsentM6": [
           ".claude-memory/elm-cem-figma-connect-state.md",
+          ".claude-memory/cem-figma-connect-state.md",
           "plans/2026-07-15-comprehensive-figma-capture-plan.md",
           "plans/2026-07-18-qualifier-aware-matcher-plan.md",
           "plans/2026-07-18-representative-example-emission-plan.md",
