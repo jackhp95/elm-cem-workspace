@@ -56,7 +56,7 @@ htmlModule brand =
             , "    -> List (Element children childAdmittedBy msg)"
             , "    -> Element produced admittedBy msg"
             , comp.resolvedCtor ++ " attrs children ="
-            , "    Ir.fromNode (Ir.node \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
+            , "    Ir.fromNode (" ++ nodeHead brand ++ " \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
             ]
     in
     if List.isEmpty own then

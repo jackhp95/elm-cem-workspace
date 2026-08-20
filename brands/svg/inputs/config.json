@@ -1,0 +1,133 @@
+{
+  "_comment_brand": [
+    "The TypedSvg brand config — the phantom-typing layer elm-cem lays over the SVG CEM",
+    "manifest (../generated/package/elm-typed-svg/manifest/svg.cem.json). Same role and shape as the",
+    "html brand's config (../../html/inputs/config.json); read that first for the primitive vocabulary.",
+    "",
+    "The ONE thing that makes this a distinct kind of brand: `_namespace`. SVG elements are not HTML",
+    "elements — a `<circle>` created with `document.createElement` (HTML namespace) does not render; it",
+    "must be `document.createElementNS(\"http://www.w3.org/2000/svg\", \"circle\")`. `_namespace` tells the",
+    "elm-cem emitter to build every element ctor with `Ir.nodeNS \"<uri>\"` instead of `Ir.node`, which",
+    "routes through `VirtualDom.nodeNS` / `createElementNS`. This is the additive that the IR gained in",
+    "elm-virtual-dom-intermediate-representation 1.1.0 (HtmlIr.Node.nodeNS); without it SVG cannot be",
+    "represented and this brand could not exist. Everything else here is ordinary phantom config."
+  ],
+  "_phantom": true,
+  "_brand": "TypedSvg",
+  "_namespace": "http://www.w3.org/2000/svg",
+  "_atoms": {
+    "text": {}
+  },
+
+  "_comment_renames": [
+    "The `<text>` element's natural ctor name `text` collides with the shared text-content atom",
+    "`text` (both land at the top level of the `TypedSvg` barrel). elm/svg resolves the identical",
+    "clash the same way: the content function is `Svg.text` and the element is `Svg.text_`. So the",
+    "`<text>` element ctor is renamed to `text_`; the atom keeps the unsuffixed `text`."
+  ],
+  "_renames": {
+    "_elements": {
+      "text": "text_"
+    }
+  },
+
+  "_comment_globals": [
+    "SVG presentation + core attributes. Unlike html — where most globals are CLOSED (in every",
+    "element's Attrs record) — nearly all SVG presentation attributes genuinely apply to every rendered",
+    "element (fill/stroke/opacity/transform are universal), so they are declared `\"row\": \"open\"`: an",
+    "open setter needs no per-element row membership to compose, so `TypedSvg.Attributes.fill` drops onto",
+    "any element by structural unification. This is the faithful model for SVG's global presentation",
+    "properties, and it is exactly the shape html uses for its five open globals (dir/lang/tabindex/...).",
+    "",
+    "id/class/style are kept CLOSED (the default row), matching html: they reach every element via the",
+    "closed Attrs row and class/style carry the emitter's bespoke merging setters (classList/style p v).",
+    "",
+    "A handful of small, closed-vocabulary presentation attributes are typed as enums (stroke-linecap,",
+    "stroke-linejoin, fill-rule, clip-rule, visibility, text-anchor) so a wrong token is a compile error;",
+    "the open lengths/colours/paints stay free strings (an SVG length is `10`, `50%`, or `10px`, and a",
+    "paint is a colour, `url(#id)`, `currentColor`, `none`, ... — no finite token set)."
+  ],
+  "_globals": [
+    "id",
+    "class",
+    "style",
+    { "name": "fill", "row": "open" },
+    { "name": "fill-opacity", "row": "open" },
+    { "name": "fill-rule", "type": ["nonzero", "evenodd"], "row": "open" },
+    { "name": "stroke", "row": "open" },
+    { "name": "stroke-width", "row": "open" },
+    { "name": "stroke-linecap", "type": ["butt", "round", "square"], "row": "open" },
+    { "name": "stroke-linejoin", "type": ["miter", "round", "bevel"], "row": "open" },
+    { "name": "stroke-dasharray", "row": "open" },
+    { "name": "stroke-dashoffset", "row": "open" },
+    { "name": "stroke-opacity", "row": "open" },
+    { "name": "stroke-miterlimit", "row": "open" },
+    { "name": "opacity", "row": "open" },
+    { "name": "color", "row": "open" },
+    { "name": "transform", "row": "open" },
+    { "name": "transform-origin", "row": "open" },
+    { "name": "display", "row": "open" },
+    { "name": "visibility", "type": ["visible", "hidden", "collapse"], "row": "open" },
+    { "name": "pointer-events", "row": "open" },
+    { "name": "paint-order", "row": "open" },
+    { "name": "vector-effect", "row": "open" },
+    { "name": "shape-rendering", "row": "open" },
+    { "name": "clip-path", "row": "open" },
+    { "name": "clip-rule", "type": ["nonzero", "evenodd"], "row": "open" },
+    { "name": "mask", "row": "open" },
+    { "name": "filter", "row": "open" },
+    { "name": "cursor", "row": "open" },
+    { "name": "text-anchor", "type": ["start", "middle", "end"], "row": "open" },
+    { "name": "dominant-baseline", "row": "open" },
+    { "name": "font-family", "row": "open" },
+    { "name": "font-size", "row": "open" },
+    { "name": "font-weight", "row": "open" },
+    { "name": "font-style", "row": "open" },
+    { "name": "letter-spacing", "row": "open" },
+    { "name": "word-spacing", "row": "open" },
+    { "name": "text-decoration", "row": "open" }
+  ],
+
+  "_comment_nesting": [
+    "SVG's content model is deliberately permissive: container elements (svg, g, defs, symbol, a, switch,",
+    "pattern, mask, clipPath, marker) accept essentially any SVG content, so they admit `any`. Leaf shapes",
+    "admit only the accessibility descriptors title/desc. Gradients admit their `stop` children. Text",
+    "admits tspan/textPath runs plus the shared `text` content atom. Produced kinds default to the tag",
+    "name (a `stop` produces kind `stop`, admitted by a gradient's `[\"stop\"]` slot), so most elements need",
+    "no explicit `kind` — only their `home` module grouping and `admits`."
+  ],
+
+  "Svg": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "G": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Defs": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Symbol": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "A": { "home": "Structure", "transparent": true, "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Switch": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Use": { "home": "Structure", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+
+  "Title": { "home": "Descriptive", "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } } },
+  "Desc": { "home": "Descriptive", "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } } },
+
+  "Rect": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Circle": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Ellipse": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Line": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Polyline": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Polygon": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "Path": { "home": "Shape", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+
+  "Text": { "home": "Text", "admits": { "unnamed": { "kinds": ["tspan", "textPath", "shared:text"], "multi": true } } },
+  "Tspan": { "home": "Text", "admits": { "unnamed": { "kinds": ["tspan", "shared:text"], "multi": true } } },
+  "TextPath": { "home": "Text", "admits": { "unnamed": { "kinds": ["tspan", "shared:text"], "multi": true } } },
+
+  "LinearGradient": { "home": "Paint", "admits": { "unnamed": { "kinds": ["stop", "title", "desc"], "multi": true } } },
+  "RadialGradient": { "home": "Paint", "admits": { "unnamed": { "kinds": ["stop", "title", "desc"], "multi": true } } },
+  "Stop": { "home": "Paint" },
+  "Pattern": { "home": "Paint", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+
+  "ClipPath": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Mask": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Marker": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+
+  "Image": { "home": "Image", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } }
+}

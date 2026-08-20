@@ -1,6 +1,6 @@
 module Naming exposing
     ( capitalize, decapitalize
-    , camel, pascal, constructor
+    , camel, camelKeepCase, pascal, constructor
     , safeField, safeValue
     , tokenIdent
     )
@@ -11,7 +11,7 @@ attribute names, quoted union values, etc.) into safe Elm identifiers.
 This module is pure and exposed so it can be unit-tested directly.
 
 @docs capitalize, decapitalize
-@docs camel, pascal, constructor
+@docs camel, camelKeepCase, pascal, constructor
 @docs safeField, safeValue
 @docs tokenIdent
 
@@ -96,6 +96,41 @@ camel raw =
             )
         |> String.concat
         |> ensureLeadingAlpha "value"
+
+
+{-| Like [`camel`](#camel), but PRESERVES a name that is already a valid
+lowerCamel identifier carrying an internal capital — SVG's `viewBox`, `refX`,
+`gradientUnits`, `preserveAspectRatio`. Plain `camel` word-splits only on
+separators (never on case boundaries) and lowercases word 0, so it would flatten
+`viewBox` to `viewbox`; but for SVG the mixed case is the ergonomic API name the
+ecosystem expects (`elm/svg` exposes `Svg.Attributes.viewBox`). The DOM name is
+unaffected either way — it is written verbatim from `htmlName`.
+
+A name with any separator (`stroke-width`) or no internal capital (`href`, `d`,
+`x1`, and every lowercase/kebab attribute name a hand-authored HTML-family
+manifest carries) falls through to `camel` unchanged, so this is byte-identical
+for every pre-namespaced brand.
+
+-}
+camelKeepCase : String -> String
+camelKeepCase raw =
+    if isAlreadyLowerCamel raw then
+        raw
+
+    else
+        camel raw
+
+
+isAlreadyLowerCamel : String -> Bool
+isAlreadyLowerCamel raw =
+    case String.uncons raw of
+        Just ( first, rest ) ->
+            Char.isLower first
+                && String.all Char.isAlphaNum raw
+                && String.any Char.isUpper rest
+
+        Nothing ->
+            False
 
 
 {-| kebab/snake → PascalCase identifier suitable for a module or type name.

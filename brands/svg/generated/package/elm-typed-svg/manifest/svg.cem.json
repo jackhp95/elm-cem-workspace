@@ -1,0 +1,419 @@
+{
+  "schemaVersion": "1.0.0",
+  "_comment": "Hand-authored Custom Elements Manifest for the native SVG element vocabulary, the flags input to elm-cem's phantom generator. Same role native.cem.json plays for the html brand, authored the same way: from the W3C SVG spec + MDN SVG element/attribute reference, cross-checked against elm/svg's curated element+attribute set. Only ELEMENT-SPECIFIC (geometry / structural) attributes live here; the universal presentation attributes (fill, stroke, transform, opacity, ...) are declared once as open-row _globals in ../../../inputs/config.json, exactly as the WHATWG global attributes are for html. Every attribute type is `string`: SVG length/coordinate/number values are all strings at the DOM boundary (\"10\", \"50%\", \"0 0 100 100\"), and the case-sensitive camelCase names (viewBox, gradientUnits, preserveAspectRatio) are preserved verbatim as the DOM attribute name by elm-cem (Attr.htmlName).",
+  "package": {
+    "name": "jackhp95/elm-typed-svg",
+    "version": "1.0.0"
+  },
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "svg.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "Svg",
+          "tagName": "svg",
+          "customElement": true,
+          "description": "The root SVG element and a nested viewport. Establishes a new coordinate system and viewport.",
+          "members": [],
+          "events": [],
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "viewBox", "type": { "text": "string" }, "description": "The position and dimension of the SVG viewport, `min-x min-y width height`." },
+            { "name": "width", "type": { "text": "string" }, "description": "Horizontal length of the viewport." },
+            { "name": "height", "type": { "text": "string" }, "description": "Vertical length of the viewport." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of a nested SVG viewport." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of a nested SVG viewport." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the viewBox to fit the viewport." },
+            { "name": "xmlns", "type": { "text": "string" }, "description": "The SVG XML namespace declaration (`http://www.w3.org/2000/svg`)." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "G",
+          "tagName": "g",
+          "customElement": true,
+          "description": "A container that groups other SVG elements. Transforms and presentation attributes on a group apply to all its children.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Defs",
+          "tagName": "defs",
+          "customElement": true,
+          "description": "A container for reusable graphical objects (gradients, patterns, symbols) that are not rendered directly but referenced elsewhere.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Symbol",
+          "tagName": "symbol",
+          "customElement": true,
+          "description": "A template graphical object that is instantiated by a `use` element. Not rendered on its own.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "viewBox", "type": { "text": "string" }, "description": "The viewBox for the symbol's contents." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the viewBox when instantiated." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the symbol's viewport when instantiated." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the symbol's viewport when instantiated." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the symbol's viewport when instantiated." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the symbol's viewport when instantiated." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Use",
+          "tagName": "use",
+          "customElement": true,
+          "description": "Instantiates (clones) another element or symbol identified by `href`.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to the element to instantiate (a URL fragment, e.g. `#id`)." },
+            { "name": "x", "type": { "text": "string" }, "description": "X offset of the instantiated element." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y offset of the instantiated element." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width override for the instantiated symbol/svg." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height override for the instantiated symbol/svg." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "A",
+          "tagName": "a",
+          "customElement": true,
+          "description": "An SVG hyperlink. Wraps graphical content in a link.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "href", "type": { "text": "string" }, "description": "The URL the hyperlink points to." },
+            { "name": "target", "type": { "text": "string" }, "description": "Where to display the linked resource." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Switch",
+          "tagName": "switch",
+          "customElement": true,
+          "description": "Renders the first of its direct children whose feature/requirement test attributes evaluate true.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Title",
+          "tagName": "title",
+          "customElement": true,
+          "description": "An accessible short-text description of its parent element. Not rendered as graphics.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Desc",
+          "tagName": "desc",
+          "customElement": true,
+          "description": "An accessible long-text description of its parent element. Not rendered as graphics.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": []
+        },
+        {
+          "kind": "class",
+          "name": "Rect",
+          "tagName": "rect",
+          "customElement": true,
+          "description": "A rectangle, optionally with rounded corners.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the top-left corner." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the top-left corner." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the rectangle." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the rectangle." },
+            { "name": "rx", "type": { "text": "string" }, "description": "Horizontal corner radius." },
+            { "name": "ry", "type": { "text": "string" }, "description": "Vertical corner radius." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Circle",
+          "tagName": "circle",
+          "customElement": true,
+          "description": "A circle centred at (cx, cy) with radius r.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "cx", "type": { "text": "string" }, "description": "X coordinate of the centre." },
+            { "name": "cy", "type": { "text": "string" }, "description": "Y coordinate of the centre." },
+            { "name": "r", "type": { "text": "string" }, "description": "Radius." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Ellipse",
+          "tagName": "ellipse",
+          "customElement": true,
+          "description": "An ellipse centred at (cx, cy) with radii rx and ry.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "cx", "type": { "text": "string" }, "description": "X coordinate of the centre." },
+            { "name": "cy", "type": { "text": "string" }, "description": "Y coordinate of the centre." },
+            { "name": "rx", "type": { "text": "string" }, "description": "Horizontal radius." },
+            { "name": "ry", "type": { "text": "string" }, "description": "Vertical radius." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Line",
+          "tagName": "line",
+          "customElement": true,
+          "description": "A straight line from (x1, y1) to (x2, y2).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x1", "type": { "text": "string" }, "description": "X coordinate of the start point." },
+            { "name": "y1", "type": { "text": "string" }, "description": "Y coordinate of the start point." },
+            { "name": "x2", "type": { "text": "string" }, "description": "X coordinate of the end point." },
+            { "name": "y2", "type": { "text": "string" }, "description": "Y coordinate of the end point." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Polyline",
+          "tagName": "polyline",
+          "customElement": true,
+          "description": "An open shape connecting a series of points with straight lines.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "points", "type": { "text": "string" }, "description": "The list of points, `x1,y1 x2,y2 ...`." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Polygon",
+          "tagName": "polygon",
+          "customElement": true,
+          "description": "A closed shape connecting a series of points with straight lines.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "points", "type": { "text": "string" }, "description": "The list of points, `x1,y1 x2,y2 ...`." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Path",
+          "tagName": "path",
+          "customElement": true,
+          "description": "A shape defined by a path-data string of move/line/curve/arc commands.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "d", "type": { "text": "string" }, "description": "The path-data command string." },
+            { "name": "pathLength", "type": { "text": "string" }, "description": "The author's computed total length of the path." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Text",
+          "tagName": "text",
+          "customElement": true,
+          "description": "A graphics element consisting of text.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the starting text position." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the starting text baseline." },
+            { "name": "dx", "type": { "text": "string" }, "description": "Horizontal shift from the current text position." },
+            { "name": "dy", "type": { "text": "string" }, "description": "Vertical shift from the current text position." },
+            { "name": "rotate", "type": { "text": "string" }, "description": "Per-glyph rotation, in degrees." },
+            { "name": "textLength", "type": { "text": "string" }, "description": "Target rendered length of the text." },
+            { "name": "lengthAdjust", "type": { "text": "string" }, "description": "How to fit the text to textLength (`spacing` or `spacingAndGlyphs`)." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Tspan",
+          "tagName": "tspan",
+          "customElement": true,
+          "description": "A run of text inside a `text` element with its own position/styling.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "Absolute X coordinate for this run." },
+            { "name": "y", "type": { "text": "string" }, "description": "Absolute Y coordinate for this run." },
+            { "name": "dx", "type": { "text": "string" }, "description": "Horizontal shift from the current position." },
+            { "name": "dy", "type": { "text": "string" }, "description": "Vertical shift from the current position." },
+            { "name": "rotate", "type": { "text": "string" }, "description": "Per-glyph rotation, in degrees." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "TextPath",
+          "tagName": "textPath",
+          "customElement": true,
+          "description": "Text laid out along the shape of a referenced `path`.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to the path the text is laid out along." },
+            { "name": "startOffset", "type": { "text": "string" }, "description": "Offset from the start of the path where the text begins." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "LinearGradient",
+          "tagName": "linearGradient",
+          "customElement": true,
+          "description": "A linear colour gradient defined by `stop` children, referenced as a paint value.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x1", "type": { "text": "string" }, "description": "X coordinate of the gradient vector start." },
+            { "name": "y1", "type": { "text": "string" }, "description": "Y coordinate of the gradient vector start." },
+            { "name": "x2", "type": { "text": "string" }, "description": "X coordinate of the gradient vector end." },
+            { "name": "y2", "type": { "text": "string" }, "description": "Y coordinate of the gradient vector end." },
+            { "name": "gradientUnits", "type": { "text": "string" }, "description": "Coordinate system for the gradient (`userSpaceOnUse` or `objectBoundingBox`)." },
+            { "name": "gradientTransform", "type": { "text": "string" }, "description": "An additional transform applied to the gradient." },
+            { "name": "spreadMethod", "type": { "text": "string" }, "description": "How the gradient repeats beyond its bounds (`pad`, `reflect`, `repeat`)." },
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to another gradient whose attributes/stops are inherited." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "RadialGradient",
+          "tagName": "radialGradient",
+          "customElement": true,
+          "description": "A radial colour gradient defined by `stop` children, referenced as a paint value.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "cx", "type": { "text": "string" }, "description": "X coordinate of the gradient's outermost circle centre." },
+            { "name": "cy", "type": { "text": "string" }, "description": "Y coordinate of the gradient's outermost circle centre." },
+            { "name": "r", "type": { "text": "string" }, "description": "Radius of the outermost circle." },
+            { "name": "fx", "type": { "text": "string" }, "description": "X coordinate of the focal point." },
+            { "name": "fy", "type": { "text": "string" }, "description": "Y coordinate of the focal point." },
+            { "name": "fr", "type": { "text": "string" }, "description": "Radius of the focal circle." },
+            { "name": "gradientUnits", "type": { "text": "string" }, "description": "Coordinate system for the gradient." },
+            { "name": "gradientTransform", "type": { "text": "string" }, "description": "An additional transform applied to the gradient." },
+            { "name": "spreadMethod", "type": { "text": "string" }, "description": "How the gradient repeats beyond its bounds." },
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to another gradient whose attributes/stops are inherited." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Stop",
+          "tagName": "stop",
+          "customElement": true,
+          "description": "A single colour stop in a gradient.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "offset", "type": { "text": "string" }, "description": "Position of the stop along the gradient (0 to 1, or a percentage)." },
+            { "name": "stop-color", "type": { "text": "string" }, "description": "The colour of this stop." },
+            { "name": "stop-opacity", "type": { "text": "string" }, "description": "The opacity of this stop." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Pattern",
+          "tagName": "pattern",
+          "customElement": true,
+          "description": "A tiling pattern of its child content, referenced as a paint value.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the pattern tile." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the pattern tile." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the pattern tile." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the pattern tile." },
+            { "name": "patternUnits", "type": { "text": "string" }, "description": "Coordinate system for the tile geometry." },
+            { "name": "patternContentUnits", "type": { "text": "string" }, "description": "Coordinate system for the tile's contents." },
+            { "name": "patternTransform", "type": { "text": "string" }, "description": "An additional transform applied to the pattern." },
+            { "name": "viewBox", "type": { "text": "string" }, "description": "A viewBox for the pattern's contents." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the pattern viewBox." },
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to another pattern whose attributes/content are inherited." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "ClipPath",
+          "tagName": "clipPath",
+          "customElement": true,
+          "description": "Defines a clipping region from its child shapes, referenced via the clip-path property.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "clipPathUnits", "type": { "text": "string" }, "description": "Coordinate system for the clip path contents." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Mask",
+          "tagName": "mask",
+          "customElement": true,
+          "description": "Defines an alpha/luminance mask from its child content, referenced via the mask property.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the mask region." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the mask region." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the mask region." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the mask region." },
+            { "name": "maskUnits", "type": { "text": "string" }, "description": "Coordinate system for the mask region geometry." },
+            { "name": "maskContentUnits", "type": { "text": "string" }, "description": "Coordinate system for the mask's contents." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Marker",
+          "tagName": "marker",
+          "customElement": true,
+          "description": "A graphic (arrowhead, dot) drawn at vertices of a path/line/polyline/polygon.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "markerWidth", "type": { "text": "string" }, "description": "Width of the marker viewport." },
+            { "name": "markerHeight", "type": { "text": "string" }, "description": "Height of the marker viewport." },
+            { "name": "refX", "type": { "text": "string" }, "description": "X coordinate of the marker's reference point (aligned to the vertex)." },
+            { "name": "refY", "type": { "text": "string" }, "description": "Y coordinate of the marker's reference point." },
+            { "name": "orient", "type": { "text": "string" }, "description": "Marker orientation (`auto`, `auto-start-reverse`, or an angle)." },
+            { "name": "markerUnits", "type": { "text": "string" }, "description": "Coordinate system for markerWidth/markerHeight (`strokeWidth` or `userSpaceOnUse`)." },
+            { "name": "viewBox", "type": { "text": "string" }, "description": "A viewBox for the marker's contents." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the marker viewBox." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Image",
+          "tagName": "image",
+          "customElement": true,
+          "description": "A raster or SVG image referenced by `href` and drawn into a rectangle.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to the image resource." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the image rectangle." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the image rectangle." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the image rectangle." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the image rectangle." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the image to fit its rectangle." }
+          ]
+        }
+      ]
+    }
+  ]
+}

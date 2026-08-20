@@ -419,6 +419,15 @@ type alias Brand =
     , aria : Maybe AriaConfig
     , actions : Maybe ActionsRoster
     , legacyHtml : Bool
+
+    -- The XML namespace URI (`_namespace` config key) every element ctor is
+    -- created under. `Nothing` = the ordinary HTML-namespace brand (emit
+    -- `Ir.node`); `Just uri` = a namespaced brand (emit `Ir.nodeNS "<uri>"`) —
+    -- the SVG/MathML case, whose DOM nodes must be `createElementNS` or they do
+    -- not render. Read only by `Emit.Shared.nodeHead`; every other projection is
+    -- namespace-agnostic (a namespaced brand's attributes, kinds, events, docs
+    -- are all identical in shape to an HTML brand's).
+    , namespace : Maybe String
     , collapseNotes : List String
     , tokenRenames : Dict String String
 
@@ -609,6 +618,7 @@ type alias RawConfig =
     , kinds : List String
     , actions : Maybe ActionsRoster
     , legacyHtml : Bool
+    , namespace : Maybe String
     , components : Dict String RawComp
     , renames : RawRenames
     }
@@ -1336,14 +1346,24 @@ merge notes).
 -}
 globalSpec : String -> Attr.AttrType -> Attr.AttrSpec
 globalSpec name type_ =
+    let
+        -- The DOM attribute name is written verbatim (`htmlName`); the Elm setter
+        -- + capability identifier is camel-cased, so a hyphenated global like
+        -- `stroke-width` becomes the setter `strokeWidth` writing `stroke-width`.
+        -- For every single-word global (all of html's — class/dir/tabindex/…)
+        -- `camel` is the identity, so this is byte-identical for existing brands;
+        -- it only bites the hyphenated presentation globals SVG introduced.
+        ident =
+            Naming.camel name
+    in
     { htmlName = name
-    , elmName = name
+    , elmName = ident
     , reactiveProp = Nothing
     , type_ = type_
     , attrForm = Attr.AsAttribute
     , description = Nothing
     , default = Nothing
-    , capName = name
+    , capName = ident
     }
 
 
@@ -1413,7 +1433,7 @@ rawConfigDecoder =
                     D.map7
                         (\phantom brandName sets atoms globals exclude aria ->
                             \kinds actions legacyHtml cs renames controlled ->
-                                \variants ->
+                                \variants namespace ->
                                     { phantom = phantom
                                     , brand = brandName
                                     , sets = Dict.fromList sets
@@ -1426,6 +1446,7 @@ rawConfigDecoder =
                                     , kinds = kinds
                                     , actions = actions
                                     , legacyHtml = legacyHtml
+                                    , namespace = namespace
                                     , components = Dict.fromList cs
                                     , renames = renames
                                     }
@@ -1450,8 +1471,15 @@ rawConfigDecoder =
                                     (get "_controlled" controlledDecoder defaultControlled)
                             )
                         -- A third stage: `D.map8`/`D.map6` are the widest maps Elm's
-                        -- Json.Decode ships, and the raw config now has 14 fields.
-                        |> D.andThen (\f -> D.map f (get "_variants" variantsDecoder []))
+                        -- Json.Decode ships, and the raw config now has 15 fields.
+                        -- `_namespace` (Just uri = a namespaced brand, e.g. SVG) rides
+                        -- this final stage alongside `_variants`.
+                        |> D.andThen
+                            (\f ->
+                                D.map2 f
+                                    (get "_variants" variantsDecoder [])
+                                    (get "_namespace" (D.map Just D.string) Nothing)
+                            )
                 )
         )
 
@@ -1772,10 +1800,16 @@ buildComp ctx d =
         compRenames =
             Dict.get d.name raw.renames.components |> Maybe.withDefault Dict.empty
 
+        -- Preserve an already-camelCase attribute name (`viewBox`) ONLY for a
+        -- namespaced brand; a plain HTML-family manifest keeps the historic
+        -- `camel`-flattened setter names (byte-identical output). See `Attr.fromCem`.
+        keepAttrCase =
+            raw.namespace /= Nothing
+
         classifiedAttrs =
             d.attributes
                 |> List.filter (\a -> not (String.startsWith "_" a.name))
-                |> List.map Attr.fromCem
+                |> List.map (Attr.fromCem keepAttrCase)
                 |> List.map (\a -> { a | elmName = Naming.safeField a.elmName, capName = Naming.safeField a.capName })
                 |> List.map
                     (\a ->
@@ -1985,7 +2019,7 @@ buildComp ctx d =
 
         provenanceOf elmName =
             d.attributes
-                |> List.filter (\raw_ -> Attr.fromCem raw_ |> .elmName |> (==) elmName)
+                |> List.filter (\raw_ -> Attr.fromCem keepAttrCase raw_ |> .elmName |> (==) elmName)
                 |> List.head
                 |> Maybe.andThen .type_
                 |> Maybe.andThen .aliasName
@@ -2922,6 +2956,7 @@ resolveWith detectedLib eventPrefix raw declarations =
                             , aria = raw.aria
                             , actions = raw.actions
                             , legacyHtml = raw.legacyHtml
+                            , namespace = raw.namespace
                             , collapseNotes = buildNotes ++ conflictNotes ++ formNotes ++ ctx.globalBlockedNotes
                             , tokenRenames = raw.renames.tokens
                             , tokenValues = tokenValues

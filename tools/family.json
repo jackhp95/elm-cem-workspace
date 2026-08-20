@@ -102,6 +102,10 @@
       "srcDir": "brands/html/generated/package/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
+    "elm-typed-svg": {
+      "srcDir": "brands/svg/generated/package/elm-typed-svg",
+      "mirror": { "auditedExclusions": false }
+    },
     "elm-m3e-okf": {
       "srcDir": "brands/m3e/generated/okf/elm-m3e-okf",
       "pnpmFilterName": "elm-m3e-okf",

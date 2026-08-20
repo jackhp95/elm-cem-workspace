@@ -1,6 +1,6 @@
 module HtmlIr.Node exposing
     ( Node
-    , node, keyedNode, text
+    , node, nodeNS, keyedNode, keyedNodeNS, text
     , isKeyed, toKeyedPair
     , addAttribute, map
     , toHtml
@@ -18,7 +18,7 @@ typed slot — only the fenced `HtmlIr.Internal.fromNode` can promote one to an
 `Element`.
 
 @docs Node
-@docs node, keyedNode, text
+@docs node, nodeNS, keyedNode, keyedNodeNS, text
 @docs isKeyed, toKeyedPair
 @docs addAttribute, map
 @docs toHtml
@@ -52,6 +52,20 @@ node =
     I.node
 
 
+{-| Build a **namespaced** tag node (`VirtualDom.nodeNS`) — the constructor
+behind every SVG/MathML element, whose DOM node must be created via
+`document.createElementNS` or it will not render. The namespace URI is the first
+argument (`"http://www.w3.org/2000/svg"` for SVG), the tag the second.
+
+Same keyed auto-upgrade as [`node`](#node). See
+[`HtmlIr.Internal.nodeNS`](HtmlIr-Internal#nodeNS).
+
+-}
+nodeNS : String -> String -> List (Attr capability msg) -> List (Node msg) -> Node msg
+nodeNS =
+    I.nodeNS
+
+
 {-| Build a tag node whose children carry diff keys (`VirtualDom.keyedNode`) —
 the low-level keyed primitive for lists that reorder/insert/remove, where
 unkeyed diffing breaks animation and state retention. Prefer
@@ -61,6 +75,15 @@ auto-upgrade) when you want to keep a typed container's child-kind constraint.
 keyedNode : String -> List (Attr capability msg) -> List ( String, Node msg ) -> Node msg
 keyedNode =
     I.keyedNode
+
+
+{-| Build a **namespaced** keyed tag node (`VirtualDom.keyedNodeNS`) — the
+SVG/XML companion to [`keyedNode`](#keyedNode). The namespace URI is the first
+argument, the tag the second.
+-}
+keyedNodeNS : String -> String -> List (Attr capability msg) -> List ( String, Node msg ) -> Node msg
+keyedNodeNS =
+    I.keyedNodeNS
 
 
 {-| A text leaf.
