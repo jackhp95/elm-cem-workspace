@@ -159,6 +159,20 @@ function sh(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { encoding: "utf8", ...opts });
 }
 
+// Scrub inherited GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: every `git -C
+// cloneDir` call below targets the separate mirror clone under
+// .cache/publish-mirror/<name> — a DIFFERENT repo from REPO_ROOT. `-C dir`
+// does not clear an inherited GIT_DIR (set by git for every hook
+// invocation), so run from inside a git hook this would silently operate on
+// the OUTER (REPO_ROOT) repo instead. Same class of bug fixed in
+// fetch-snapshots.mjs / copy-fidelity.mjs (see those files' comments); fixed
+// the same way. (`sh`/`spawnSync` calls targeting REPO_ROOT itself are fine
+// as-is — GIT_DIR pointing at the repo it actually is doesn't hurt.)
+const gitEnv = { ...process.env };
+delete gitEnv.GIT_DIR;
+delete gitEnv.GIT_WORK_TREE;
+delete gitEnv.GIT_INDEX_FILE;
+
 // Finding 1.5 (docs/reviews/2026-08-17-thermonuclear-workspace-review.md):
 // this script had no gate precondition at all — nothing stopped publishing a
 // red/stale tree, and check-mirror-drift.mjs only ever catches that AFTER the
@@ -241,12 +255,12 @@ function main() {
 
   if (existsSync(cloneDir)) {
     console.log(`Refreshing existing clone at ${cloneDir}...`);
-    sh("git", ["-C", cloneDir, "fetch", "origin", "main"]);
-    sh("git", ["-C", cloneDir, "reset", "--hard", "origin/main"]);
-    sh("git", ["-C", cloneDir, "clean", "-fdx"]);
+    sh("git", ["-C", cloneDir, "fetch", "origin", "main"], { env: gitEnv });
+    sh("git", ["-C", cloneDir, "reset", "--hard", "origin/main"], { env: gitEnv });
+    sh("git", ["-C", cloneDir, "clean", "-fdx"], { env: gitEnv });
   } else {
     console.log(`Cloning ${remote} into ${cloneDir}...`);
-    sh("git", ["clone", "--depth", "1", remote, cloneDir]);
+    sh("git", ["clone", "--depth", "1", remote, cloneDir], { env: gitEnv });
   }
 
   // Tracked files only, per the same "compared as GIT-TRACKED SETS, not
@@ -288,8 +302,8 @@ function main() {
     writeFileSync(path.join(cloneDir, ".gitignore"), "elm-stuff/\nnode_modules/\n");
   }
 
-  sh("git", ["-C", cloneDir, "add", "-A"]);
-  const diffStat = sh("git", ["-C", cloneDir, "diff", "--cached", "--stat"]).trim();
+  sh("git", ["-C", cloneDir, "add", "-A"], { env: gitEnv });
+  const diffStat = sh("git", ["-C", cloneDir, "diff", "--cached", "--stat"], { env: gitEnv }).trim();
 
   if (!diffStat) {
     console.log(`Mirror for ${name} already matches the workspace. Nothing to publish.`);
@@ -319,9 +333,9 @@ function main() {
     process.exit(1);
   }
 
-  sh("git", ["-C", cloneDir, "commit", "-m", commitMsg]);
-  sh("git", ["-C", cloneDir, "push", "origin", "HEAD:main"]);
-  const mirrorSha = sh("git", ["-C", cloneDir, "rev-parse", "HEAD"]).trim();
+  sh("git", ["-C", cloneDir, "commit", "-m", commitMsg], { env: gitEnv });
+  sh("git", ["-C", cloneDir, "push", "origin", "HEAD:main"], { env: gitEnv });
+  const mirrorSha = sh("git", ["-C", cloneDir, "rev-parse", "HEAD"], { env: gitEnv }).trim();
 
   // Confirm what GitHub actually has, not just what our local clone thinks
   // it just pushed.
