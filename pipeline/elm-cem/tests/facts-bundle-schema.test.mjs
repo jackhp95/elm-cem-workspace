@@ -11,7 +11,7 @@ import { repo, makePlainCheck } from "./lib/harness.mjs";
 
 const workspaceRoot = path.resolve(repo, "..", "..");
 const require = createRequire(import.meta.url);
-const { validate } = require(path.join(repo, "bin", "validate-facts-bundle.js"));
+const { validate, validateBrandFacts } = require(path.join(repo, "bin", "validate-facts-bundle.js"));
 
 const schemaPath = path.join(workspaceRoot, "docs", "facts-bundle", "schema.json");
 const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
@@ -194,6 +194,14 @@ function validBrandFacts() {
 {
   const result = validate(schema, validBrandFacts(), "brandFacts");
   check(result.valid, `valid brand-facts.json accepted (errors: ${JSON.stringify(result.errors)})`);
+}
+
+{
+  // validateBrandFacts is sugar for validate(schema, data, "brandFacts") —
+  // must agree with it exactly.
+  const direct = validate(schema, validBrandFacts(), "brandFacts");
+  const sugar = validateBrandFacts(schema, validBrandFacts());
+  check(sugar.valid === direct.valid, "validateBrandFacts agrees with validate(..., \"brandFacts\") on a valid bundle");
 }
 
 // --- malformed bundles: rejected ---
