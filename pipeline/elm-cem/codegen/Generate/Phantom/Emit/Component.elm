@@ -18,8 +18,60 @@ import Generate.Phantom.Emit.Shared exposing (..)
 -- PER-COMPONENT MODULE
 
 
-compModule : Brand -> Comp -> Elm.File
-compModule brand comp =
+{-| A component module's re-exportable surface — see `compSurface`'s doc
+comment for the field-by-field meaning.
+-}
+type alias ComponentSurface =
+    { exposing_ : List String
+    , types : Dict.Dict String String
+    , valueAnnotations : Dict.Dict String String
+    }
+
+
+{-| Everything `compModule` needs to assemble `<Lib>.Component.<Name>`'s
+source text, AND everything `compSurface` (G3, generator-consolidation)
+needs to describe that same module's re-exportable surface — computed ONCE
+by `componentCore` and consumed by both, so they can never independently
+drift (`compSurface` is not a re-derivation from rendered text; it reads the
+exact same values `compModule` renders from). Fields ending in `Annotations`
+pair each exposed VALUE name with its rendered type-signature text — the
+data `Generate.Phantom.Emit.FamilyPackage` needs to copy an element's
+annotation (with type refs re-prefixed) into a flat family module, ported
+from gen-family-package.js's now-removed `parseModuleSurface` regex parser
+(which had to re-derive this by reading the rendered `.elm` file back off
+disk; here it is captured at the point of construction instead).
+-}
+type alias ComponentCore =
+    { lib : String
+    , unnamed : Maybe ResolvedSlot
+    , namedSlots : List ResolvedSlot
+    , contentAliases : List { alias_ : String, slotName : String, row : String }
+    , exposeGroups : List (List String)
+    , exposing_ : String
+    , docs_ : String
+    , imports : List String
+    , aliasDecls : List String
+    , elDecl : List String
+    , componentAnnotation : String
+    , hasEl : Bool
+    , enumSetters : List String
+    , enumSetterAnnotations : List ( String, String )
+    , attrReExportNames : List String
+    , attrReExports : List String
+    , attrReExportNeedsValues : Bool
+    , attrReExportAnnotations : List ( String, String )
+    , eventReExports : List String
+    , eventAnnotations : List ( String, String )
+    , slotSetters : List String
+    , slotSetterAnnotations : List ( String, String )
+    , defaultChildSetter : List String
+    , defaultChildAnnotation : Maybe ( String, String )
+    , exampleDocLines : List String
+    }
+
+
+componentCore : Brand -> Comp -> ComponentCore
+componentCore brand comp =
     let
         lib =
             brand.lib
@@ -387,6 +439,44 @@ compModule brand comp =
                 _ ->
                     "Standard constructor: `[attributes] [children]`."
 
+        -- Hoisted OUT of `elDecl`'s own else-branch (still used only there for
+        -- rendering) so `componentAnnotation` below can share the identical
+        -- `reqRecord` value rather than re-deriving it — computed unconditionally
+        -- (cheap; unused when `hasEl == False`).
+        reqField s =
+            ( if s.name == "unnamed" then
+                "content"
+
+              else
+                Naming.camel s.name
+            , "Element " ++ contentTypeOf s ++ " (ChildAdmittedBy childAdm) msg"
+            )
+
+        reqFields =
+            (requiredSlots |> List.map reqField)
+                ++ (reqAttrFields |> List.map (\( f, _ ) -> ( f, "String" )))
+                ++ (case comp.actionCaps of
+                        Just _ ->
+                            [ ( "action", "Ac.Action ActionCaps msg" ) ]
+
+                        Nothing ->
+                            []
+                   )
+
+        reqRecord =
+            "{ "
+                ++ (reqFields |> List.map (\( n, t ) -> n ++ " : " ++ t) |> String.join "\n    , ")
+                ++ " }"
+
+        -- The exact annotation text `component` gets, shared verbatim between
+        -- `elDecl`'s rendering and `compSurface`'s `valueAnnotations`.
+        componentAnnotation =
+            if hasEl then
+                "    " ++ reqRecord ++ "\n    -> List (Attr Attrs msg)\n    -> " ++ childrenSig ++ "\n    -> " ++ returnType
+
+            else
+                "    List (Attr Attrs msg)\n    -> " ++ childrenSig ++ "\n    -> " ++ returnType
+
         -- The single per-component constructor, `component`. TWO ARITIES:
         --   * zero required fields  -> bare `component : attrs -> children -> Element`
         --     (formerly the `view` function),
@@ -395,42 +485,12 @@ compModule brand comp =
         -- Exactly one public function name per component either way.
         elDecl =
             if not hasEl then
-                [ doc viewDocText
-                , "component :"
-                , "    List (Attr Attrs msg)"
-                , "    -> " ++ childrenSig
-                , "    -> " ++ returnType
-                , "component ="
-                , "    H." ++ comp.resolvedCtor
-                ]
+                [ doc viewDocText, "component :" ]
+                    ++ String.split "\n" componentAnnotation
+                    ++ [ "component =", "    H." ++ comp.resolvedCtor ]
 
             else
                 let
-                    reqField s =
-                        ( if s.name == "unnamed" then
-                            "content"
-
-                          else
-                            Naming.camel s.name
-                        , "Element " ++ contentTypeOf s ++ " (ChildAdmittedBy childAdm) msg"
-                        )
-
-                    reqFields =
-                        (requiredSlots |> List.map reqField)
-                            ++ (reqAttrFields |> List.map (\( f, _ ) -> ( f, "String" )))
-                            ++ (case comp.actionCaps of
-                                    Just _ ->
-                                        [ ( "action", "Ac.Action ActionCaps msg" ) ]
-
-                                    Nothing ->
-                                        []
-                               )
-
-                    reqRecord =
-                        "{ "
-                            ++ (reqFields |> List.map (\( n, t ) -> n ++ " : " ++ t) |> String.join "\n    , ")
-                            ++ " }"
-
                     place s =
                         if s.name == "unnamed" then
                             case comp.actionCaps of
@@ -487,18 +547,16 @@ compModule brand comp =
                                     ++ ")"
                                 ]
                 in
-                [ doc "Required-content (and action) constructor — omissions are unwritable."
-                , "component :"
-                , "    " ++ reqRecord
-                , "    -> List (Attr Attrs msg)"
-                , "    -> " ++ childrenSig
-                , "    -> " ++ returnType
-                ]
+                ([ doc "Required-content (and action) constructor — omissions are unwritable."
+                 , "component :"
+                 ]
+                    ++ String.split "\n" componentAnnotation
+                )
                     ++ body
 
-        enumSetters =
+        enumSetterItems =
             comp.enums
-                |> List.concatMap
+                |> List.map
                     (\e ->
                         let
                             matchingAttr =
@@ -515,17 +573,30 @@ compModule brand comp =
                                 matchingAttr
                                     |> Maybe.map Attr.docString
                                     |> Maybe.withDefault ("Set the `" ++ e.elmName ++ "` value.")
+
+                            ann =
+                                "Value " ++ e.aliasName ++ " -> Attr { c | " ++ e.elmName ++ " : Supported } msg"
                         in
-                        [ ""
-                        , ""
-                        , doc docText
-                        , e.elmName ++ " : Value " ++ e.aliasName ++ " -> Attr { c | " ++ e.elmName ++ " : Supported } msg"
-                        , e.elmName ++ " value_ ="
-                        , "    Ir.attribute \"" ++ htmlName ++ "\" (Val.toString value_)"
-                        ]
+                        { name = e.elmName
+                        , ann = ann
+                        , textLines =
+                            [ ""
+                            , ""
+                            , doc docText
+                            , e.elmName ++ " : " ++ ann
+                            , e.elmName ++ " value_ ="
+                            , "    Ir.attribute \"" ++ htmlName ++ "\" (Val.toString value_)"
+                            ]
+                        }
                     )
 
-        ( attrReExportNames, attrReExports, attrReExportNeedsValues ) =
+        enumSetters =
+            enumSetterItems |> List.concatMap .textLines
+
+        enumSetterAnnotations =
+            enumSetterItems |> List.map (\i -> ( i.name, "    " ++ i.ann ))
+
+        attrReExportResult =
             reExportBlock brand
                 "A"
                 (comp.ctor
@@ -535,12 +606,24 @@ compModule brand comp =
                 comp.propertyOnly
                 comp.attrs
 
+        attrReExportNames =
+            attrReExportResult.names
+
+        attrReExports =
+            attrReExportResult.lines
+
+        attrReExportNeedsValues =
+            attrReExportResult.needsValues
+
+        attrReExportAnnotations =
+            attrReExportResult.annotations
+
         overrideFor evName =
             comp.eventOverrides |> List.filter (\o -> o.name == evName) |> List.head
 
-        eventReExports =
+        eventReExportItems =
             comp.events
-                |> List.concatMap
+                |> List.map
                     (\ev ->
                         let
                             n =
@@ -554,14 +637,21 @@ compModule brand comp =
 
                                     pathExpr =
                                         "[ " ++ (o.path |> List.map (\s -> "\"" ++ s ++ "\"") |> String.join ", ") ++ " ]"
+
+                                    ann =
+                                        "(" ++ elmTy ++ " -> msg) -> Attr { c | " ++ n ++ " : Supported } msg"
                                 in
-                                [ ""
-                                , ""
-                                , doc ("Typed `" ++ ev.name ++ "` event: decodes `" ++ String.join "." o.path ++ "` as " ++ elmTy ++ ".")
-                                , n ++ " : (" ++ elmTy ++ " -> msg) -> Attr { c | " ++ n ++ " : Supported } msg"
-                                , n ++ " toMsg ="
-                                , "    Ir.on \"" ++ ev.name ++ "\" (Json.Decode.map toMsg (Json.Decode.at " ++ pathExpr ++ " " ++ dec ++ "))"
-                                ]
+                                { name = n
+                                , ann = ann
+                                , textLines =
+                                    [ ""
+                                    , ""
+                                    , doc ("Typed `" ++ ev.name ++ "` event: decodes `" ++ String.join "." o.path ++ "` as " ++ elmTy ++ ".")
+                                    , n ++ " : " ++ ann
+                                    , n ++ " toMsg ="
+                                    , "    Ir.on \"" ++ ev.name ++ "\" (Json.Decode.map toMsg (Json.Decode.at " ++ pathExpr ++ " " ++ dec ++ "))"
+                                    ]
+                                }
 
                             Nothing ->
                                 case ev.payload of
@@ -572,59 +662,109 @@ compModule brand comp =
                                         let
                                             ( elmTy, _ ) =
                                                 payloadTypeAndDecoder payload
+
+                                            ann =
+                                                "(" ++ elmTy ++ " -> msg) -> Attr { c | " ++ n ++ " : Supported } msg"
                                         in
-                                        [ ""
-                                        , ""
-                                        , doc ("See `" ++ lib ++ ".Events." ++ n ++ "`.")
-                                        , n ++ " : (" ++ elmTy ++ " -> msg) -> Attr { c | " ++ n ++ " : Supported } msg"
-                                        , n ++ " ="
-                                        , "    Ev." ++ n
-                                        ]
+                                        { name = n
+                                        , ann = ann
+                                        , textLines =
+                                            [ ""
+                                            , ""
+                                            , doc ("See `" ++ lib ++ ".Events." ++ n ++ "`.")
+                                            , n ++ " : " ++ ann
+                                            , n ++ " ="
+                                            , "    Ev." ++ n
+                                            ]
+                                        }
 
                                     Nothing ->
-                                        [ ""
-                                        , ""
-                                        , doc ("See `" ++ lib ++ ".Events." ++ n ++ "`.")
-                                        , n ++ " : msg -> Attr { c | " ++ n ++ " : Supported } msg"
-                                        , n ++ " ="
-                                        , "    Ev." ++ n
-                                        ]
+                                        let
+                                            ann =
+                                                "msg -> Attr { c | " ++ n ++ " : Supported } msg"
+                                        in
+                                        { name = n
+                                        , ann = ann
+                                        , textLines =
+                                            [ ""
+                                            , ""
+                                            , doc ("See `" ++ lib ++ ".Events." ++ n ++ "`.")
+                                            , n ++ " : " ++ ann
+                                            , n ++ " ="
+                                            , "    Ev." ++ n
+                                            ]
+                                        }
+                    )
+
+        eventReExports =
+            eventReExportItems |> List.concatMap .textLines
+
+        eventAnnotations =
+            eventReExportItems |> List.map (\i -> ( i.name, "    " ++ i.ann ))
+
+        slotSetterItems =
+            namedSlots
+                |> List.map
+                    (\s ->
+                        let
+                            ann =
+                                "Element " ++ contentTypeOf s ++ " admittedBy msg -> Element free freeAdmittedBy msg"
+                        in
+                        { name = Naming.camel s.name
+                        , ann = ann
+                        , textLines =
+                            [ ""
+                            , ""
+                            , doc
+                                ("Place an element into the named `"
+                                    ++ s.name
+                                    ++ "` slot (input constrained to the\nslot's kinds; output row free so it composes into the child list)."
+                                )
+                            , Naming.camel s.name ++ " : " ++ ann
+                            , Naming.camel s.name ++ " element ="
+                            , "    Ir.fromNode (Ir.addAttribute (Ir.attribute \"slot\" \"" ++ s.name ++ "\") (El.toNode element))"
+                            ]
+                        }
                     )
 
         slotSetters =
-            namedSlots
-                |> List.concatMap
-                    (\s ->
-                        [ ""
-                        , ""
-                        , doc
-                            ("Place an element into the named `"
-                                ++ s.name
-                                ++ "` slot (input constrained to the\nslot's kinds; output row free so it composes into the child list)."
-                            )
-                        , Naming.camel s.name ++ " : Element " ++ contentTypeOf s ++ " admittedBy msg -> Element free freeAdmittedBy msg"
-                        , Naming.camel s.name ++ " element ="
-                        , "    Ir.fromNode (Ir.addAttribute (Ir.attribute \"slot\" \"" ++ s.name ++ "\") (El.toNode element))"
-                        ]
-                    )
+            slotSetterItems |> List.concatMap .textLines
+
+        slotSetterAnnotations =
+            slotSetterItems |> List.map (\i -> ( i.name, "    " ++ i.ann ))
 
         -- Default-slot wrapper: the list-form sibling of the builder's `withChild`.
         -- Mirrors the named-slot wrappers' shape (input constrained to the default
         -- slot's kinds; output row freed so it composes into the child list), but
         -- adds no `slot` attribute — the default slot is the absence of one.
-        defaultChildSetter =
+        defaultChildSetterItem =
             case unnamed of
                 Just s ->
-                    [ ""
-                    , ""
-                    , doc "Place a pre-built element into the default (unnamed) slot (input\nconstrained to the slot's kinds; output row free so it composes into the\nchild list). The list-form sibling of the builder's `withChild`."
-                    , "child : Element " ++ contentTypeOf s ++ " admittedBy msg -> Element free freeAdmittedBy msg"
-                    , "child element ="
-                    , "    Ir.fromNode (El.toNode element)"
-                    ]
+                    let
+                        ann =
+                            "Element " ++ contentTypeOf s ++ " admittedBy msg -> Element free freeAdmittedBy msg"
+                    in
+                    Just
+                        { name = "child"
+                        , ann = ann
+                        , textLines =
+                            [ ""
+                            , ""
+                            , doc "Place a pre-built element into the default (unnamed) slot (input\nconstrained to the slot's kinds; output row free so it composes into the\nchild list). The list-form sibling of the builder's `withChild`."
+                            , "child : " ++ ann
+                            , "child element ="
+                            , "    Ir.fromNode (El.toNode element)"
+                            ]
+                        }
 
                 Nothing ->
-                    []
+                    Nothing
+
+        defaultChildSetter =
+            defaultChildSetterItem |> Maybe.map .textLines |> Maybe.withDefault []
+
+        defaultChildAnnotation =
+            defaultChildSetterItem |> Maybe.map (\i -> ( i.name, "    " ++ i.ann ))
 
         -- Config-supplied `## Examples` section + opaque doc-metadata marker
         -- (`examples`/`docMeta` config keys — see `Docs.examplesSection`/
@@ -641,39 +781,147 @@ compModule brand comp =
 
             else
                 [ exampleDoc ]
-
     in
-    file [ lib, "Component", comp.name ]
+    { lib = lib
+    , unnamed = unnamed
+    , namedSlots = namedSlots
+    , contentAliases = contentAliases
+    , exposeGroups = exposeGroups
+    , exposing_ = exposing_
+    , docs_ = docs_
+    , imports = imports
+    , aliasDecls = aliasDecls
+    , elDecl = elDecl
+    , componentAnnotation = componentAnnotation
+    , hasEl = hasEl
+    , enumSetters = enumSetters
+    , enumSetterAnnotations = enumSetterAnnotations
+    , attrReExportNames = attrReExportNames
+    , attrReExports = attrReExports
+    , attrReExportNeedsValues = attrReExportNeedsValues
+    , attrReExportAnnotations = attrReExportAnnotations
+    , eventReExports = eventReExports
+    , eventAnnotations = eventAnnotations
+    , slotSetters = slotSetters
+    , slotSetterAnnotations = slotSetterAnnotations
+    , defaultChildSetter = defaultChildSetter
+    , defaultChildAnnotation = defaultChildAnnotation
+    , exampleDocLines = exampleDocLines
+    }
+
+
+{-| Render `<Lib>.Component.<Name>` — thin assembly over `componentCore`'s
+shared computation; every field referenced below is EXACTLY what the
+pre-refactor `compModule` computed inline (see `componentCore`), so this is
+a pure relocation, not a behavior change.
+-}
+compModule : Brand -> Comp -> Elm.File
+compModule brand comp =
+    let
+        core =
+            componentCore brand comp
+    in
+    file [ core.lib, "Component", comp.name ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ lib ++ ".Component." ++ comp.name ++ " exposing"
-                  , exposing_
+                [ [ "module " ++ core.lib ++ ".Component." ++ comp.name ++ " exposing"
+                  , core.exposing_
                   , ""
                   , "{-| The `" ++ comp.tag ++ "` component — strict per-component surface."
                   , ""
                   , comp.description
                   , ""
-                  , docs_
+                  , core.docs_
                   ]
-                , exampleDocLines
+                , core.exampleDocLines
                 , [ ""
                   , "-}"
                   , ""
                   ]
-                , imports
+                , core.imports
                 , [ "", "" ]
-                , aliasDecls
+                , core.aliasDecls
                 , [ "", "" ]
-                , elDecl
-                , enumSetters
-                , attrReExports
-                , eventReExports
-                , slotSetters
-                , defaultChildSetter
+                , core.elDecl
+                , core.enumSetters
+                , core.attrReExports
+                , core.eventReExports
+                , core.slotSetters
+                , core.defaultChildSetter
                 , [ "" ]
                 ]
             )
         )
+
+
+{-| The re-exportable surface of `<Lib>.Component.<Name>`, for
+`Generate.Phantom.Emit.FamilyPackage`'s flat family modules (G3,
+generator-consolidation) to re-export ADDITIVELY without ever reading
+`compModule`'s rendered text back — derived from the SAME `componentCore`
+computation `compModule` renders from, so the two can never drift.
+
+  - `exposing_` — every name this component module exposes, in module-header
+    order (types and values interleaved exactly as `compModule` declares
+    them).
+  - `types` — each exposed Capitalized name's type-alias parameter string
+    (`""` when the alias takes none, e.g. `"s"` for `Is s`, `"childAdm"` for
+    `ChildAdmittedBy childAdm`, `"attrCaps slotCaps msg kind"` for
+    `Builder ...`) — the SAME literal parameter lists `componentCore`'s
+    `aliasDecls` renders, restated here as data rather than parsed back out
+    of that rendered text.
+  - `valueAnnotations` — each exposed lowercase name's exact rendered type
+    signature (multi-line for `component`'s required-record arity; single
+    -line, `"    "`-indented for everything else — matching the shape
+    `gen-family-package.js`'s `parseModuleSurface` used to extract from
+    rendered text via regex, now captured directly at construction).
+
+-}
+compSurface : Brand -> Comp -> ComponentSurface
+compSurface brand comp =
+    let
+        core =
+            componentCore brand comp
+
+        types =
+            ([ ( "Is", "s" )
+             , ( "Attrs", "" )
+             , ( "Builder", "attrCaps slotCaps msg kind" )
+             , ( "AttrCaps", "" )
+             , ( "SlotCaps", "" )
+             , ( "ChildAdmittedBy", "childAdm" )
+             ]
+                ++ (core.contentAliases |> List.map (\a -> ( a.alias_, "" )))
+                ++ (case comp.admittedBy of
+                        Just _ ->
+                            [ ( "AdmittedBy", "" ) ]
+
+                        Nothing ->
+                            []
+                   )
+                ++ (case comp.actionCaps of
+                        Just _ ->
+                            [ ( "ActionCaps", "" ) ]
+
+                        Nothing ->
+                            []
+                   )
+                ++ (comp.enums |> List.map (\e -> ( e.aliasName, "" )))
+            )
+                |> Dict.fromList
+
+        valueAnnotations =
+            ( "component", core.componentAnnotation )
+                :: core.enumSetterAnnotations
+                ++ core.attrReExportAnnotations
+                ++ core.eventAnnotations
+                ++ core.slotSetterAnnotations
+                ++ (core.defaultChildAnnotation |> Maybe.map List.singleton |> Maybe.withDefault [])
+                |> Dict.fromList
+    in
+    { exposing_ = List.concat core.exposeGroups
+    , types = types
+    , valueAnnotations = valueAnnotations
+    }
 
 
 {-| Emit the unexposed internal-types module (`M3e.Internal.Types.<Component>`).

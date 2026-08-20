@@ -234,7 +234,11 @@ tests/golden-family-package.test.mjs
 tests/fixtures/golden-icon-module/M3e/Icon.elm
 tests/fixtures/golden-icon-module/elm-m3e-icons/elm.json
 tests/fixtures/golden-icon-module/elm-m3e-icons/src/M3e/Icon.elm
+tests/fixtures/golden-icon-module/elm-m3e-icons/README.md
+tests/fixtures/golden-icon-module/elm-m3e-icons/LICENSE
 tests/fixtures/golden-family-package/elm.json
+tests/fixtures/golden-family-package/README.md
+tests/fixtures/golden-family-package/LICENSE
 tests/fixtures/golden-family-package/src/M3e/Family/Accordion.elm
 tests/fixtures/golden-family-package/src/M3e/Family/BottomSheet.elm
 tests/fixtures/golden-family-package/src/M3e/Family/Breadcrumb.elm

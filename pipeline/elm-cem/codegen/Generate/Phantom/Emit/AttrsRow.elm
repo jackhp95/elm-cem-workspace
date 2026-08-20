@@ -956,7 +956,7 @@ setterExpr a =
 annotated exactly like) the `<Lib>.Attributes` canonical — union-typed when
 the attr is an enum anywhere in the brand. Names colliding with the module's
 own declarations are skipped (the canonical in `<Lib>.Attributes` remains).
-Returns ( exposedNames, sourceLines, needsValuesImport ).
+Returns ( exposedNames, sourceLines, needsValuesImport, annotations ).
 
 `attrsRef` is the module reference used to reach the `<Lib>.Attributes`
 canonical in the emitting module's import scope — the alias `"A"` in the
@@ -966,8 +966,17 @@ per-component modules (R4), or the full `<Lib>.Attributes` in the home modules.
 controlled attribute whose `default*` companion must NOT appear here because on those
 elements the live property has no backing content attribute.
 
+`annotations` is `( name, annotationText )` for every entry in `exposedNames`,
+same order — the SAME `setterInputType`/`variantInputType`-derived formula
+already embedded in each entry's `sourceLines` above, captured as data
+instead of re-derived from rendered text. Divergent vs. delegating members
+use the identical signature formula (only the BODY differs — delegate vs.
+local implementation — see the branches below), so this needs no branching
+of its own. Added for `Generate.Phantom.Emit.FamilyPackage`'s `compSurface`
+(G3, generator-consolidation) — a family module re-exporting one of these
+names needs its exact annotation text to copy (with type refs prefixed).
 -}
-reExportBlock : Brand -> String -> List String -> List String -> List Attr.AttrSpec -> ( List String, List String, Bool )
+reExportBlock : Brand -> String -> List String -> List String -> List Attr.AttrSpec -> { names : List String, lines : List String, needsValues : Bool, annotations : List ( String, String ) }
 reExportBlock brand attrsRef excludeNames suppressed memberSpecs =
     let
         unionOf elmName =
@@ -1080,13 +1089,27 @@ reExportBlock brand attrsRef excludeNames suppressed memberSpecs =
 
         needsValues =
             False
+
+        -- Prefixed with the same "    " indent gen-family-package.js's
+        -- single-line-annotation fallback used (`"    " + m[2].trim()`) —
+        -- these values are always single-line, unlike `component`'s.
+        canonAnnotations =
+            canon |> List.map (\a -> ( a.elmName, "    " ++ setterInputType a ++ " -> Attr { c | " ++ a.capName ++ " : Supported } msg" ))
+
+        companionAnnotations =
+            companions |> List.map (\( _, n, a ) -> ( n, "    " ++ setterInputType a ++ " -> Attr { c | " ++ a.capName ++ " : Supported } msg" ))
+
+        variantAnnotations =
+            variants |> List.map (\( v, a ) -> ( v.name, "    " ++ variantInputType v.input ++ " -> Attr { c | " ++ a.capName ++ " : Supported } msg" ))
     in
-    ( (canon |> List.map .elmName)
-        ++ (companions |> List.map (\( _, n, _ ) -> n))
-        ++ (variants |> List.map (\( v, _ ) -> v.name))
-    , lines ++ companionLines ++ variantLines
-    , needsValues
-    )
+    { names =
+        (canon |> List.map .elmName)
+            ++ (companions |> List.map (\( _, n, _ ) -> n))
+            ++ (variants |> List.map (\( v, _ ) -> v.name))
+    , lines = lines ++ companionLines ++ variantLines
+    , needsValues = needsValues
+    , annotations = canonAnnotations ++ companionAnnotations ++ variantAnnotations
+    }
 
 
 

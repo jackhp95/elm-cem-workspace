@@ -5,31 +5,17 @@ research). Emits `<lib>.<namespace>.<Family>` flat family modules that
 re-export each member element's flat `<lib>.Component.*` surface,
 additively.
 
-DESIGN DEVIATION from the plan's own Task 7 design note, documented here
-because it matters: the plan's note called for extending
-`Generate.Phantom.Emit.Component` with a shared `compSurface` function so
-this module never independently re-derives (and risks drifting from) the
-per-component exposing/type/annotation surface `compModule` already builds.
-That would require restructuring ~15 different construction paths inside
-`compModule` (the `component` ctor's two arities, enum setters, attr
-re-exports, event re-exports, slot setters, the default-child setter) into a
-second, parallel "surface" builder — a large refactor with its own
-correctness risk.
-
-Instead, this module calls `Generate.Phantom.Emit.Component.compModule`
-itself (the SAME function, same `Brand`/`Comp` inputs, called a second time
-for the same component within the same generation run — deterministic, byte
--for-byte identical both times) and parses the resulting `Elm.File.contents`
-STRING IN MEMORY with an Elm port of `gen-family-package.js`'s own
-`parseModuleSurface` regex parser. This still satisfies every HARD
-constraint from the research doc (no filesystem read — the string never
-touches disk; Elm/elm-codegen only; no new JS logic) and cannot drift from
-the actual emitted surface, because it IS the actual emitted surface: there is
-no way for the parsed surface to disagree with what `compModule` wrote, since
-they are the same string. It trades the plan's preferred "structured avoids
-regex" elegance for a much smaller, lower-risk diff — the byte-equality
-golden test is this port's real acceptance bar, and this path reaches it
-without touching `Component.elm` at all.
+Per the plan's own Task 7 design note: this module never independently
+re-derives (and so can never drift from) the per-component
+exposing/type/annotation surface `compModule` already builds — it consumes
+`Generate.Phantom.Emit.Component.compSurface`, which is computed by the SAME
+shared `componentCore` function `compModule` renders from (see
+`Component.elm`'s doc comments). There is no regex, no re-parsing of
+rendered `.elm` text anywhere in this path — the surface is read directly
+off `Brand.comps`/`Comp` records via `compSurface`, exactly as the plan
+asked for, replacing gen-family-package.js's fragile
+`parseModuleSurface` (which had to re-derive this by reading the rendered
+`.elm` file back off disk) with data captured at construction time instead.
 
 `README.md`/`LICENSE` generation (`gen-family-package.js:450-500`) IS
 emitted (`familyReadmeFile`/`familyLicenseFile`) — matching the icon
@@ -55,10 +41,9 @@ who might have relied on it.
 
 import Dict exposing (Dict)
 import Elm
-import Generate.Phantom.Emit.Component as Component
+import Generate.Phantom.Emit.Component as Component exposing (ComponentSurface)
 import Generate.Phantom.Model exposing (Brand, Comp)
 import Generate.Types exposing (FamiliesConfig, FamilyPackageConfig, FamilySpec)
-import Regex
 import Set exposing (Set)
 
 
@@ -107,165 +92,40 @@ isLowerFirst s =
 
 
 
--- ── parse the public surface of an in-memory-rendered component module ────
--- Port of gen-family-package.js:101-153's `parseModuleSurface`. `filePath` in
--- the JS version was only used for error messages; here the caller's
--- `origModuleName` plays that role.
+-- ── small char-boundary helpers (regex-free word-boundary matching) ───────
+-- `Generate.Phantom.Emit.Component.compSurface` supplies exposing/type/
+-- annotation data directly (no filesystem, no rendered-text re-parse); the
+-- ONLY text-processing left in this module is `prefixTypeRefs`'s rewrite of
+-- a copied annotation's type references and `tokenMatches`'s "does this
+-- external token appear" test, both ported from gen-family-package.js's own
+-- word-boundary regexes (`(^|[^.\w])name\b`, `\bT\b` / `T\.U\b`) using plain
+-- `String` splitting instead of `elm/regex` — this module has no dependency
+-- on that package.
 
 
-type alias Surface =
-    { moduleName : String
-    , exposing_ : List String
-    , types : Dict String String
-    , valueAnnotations : Dict String String
-    }
+isWordChar : Char -> Bool
+isWordChar c =
+    Char.isAlphaNum c || c == '_'
 
 
-moduleHeaderRegex : Regex.Regex
-moduleHeaderRegex =
-    Regex.fromStringWith { caseInsensitive = False, multiline = True }
-        "^module\\s+([\\w.]+)\\s+exposing\\s*\\(([\\s\\S]*?)\\)"
-        |> Maybe.withDefault Regex.never
+lastChar : String -> Maybe Char
+lastChar s =
+    s |> String.reverse |> String.uncons |> Maybe.map Tuple.first
 
 
-typeAliasRegex : Regex.Regex
-typeAliasRegex =
-    Regex.fromStringWith { caseInsensitive = False, multiline = True }
-        "^type alias\\s+([A-Z]\\w*)((?:\\s+\\w+)*)\\s*="
-        |> Maybe.withDefault Regex.never
-
-
-opaqueTypeRegex : Regex.Regex
-opaqueTypeRegex =
-    -- Port of gen-family-package.js:123-133. The JS defensively excludes
-    -- matches that are actually `type alias ...` via a `startsWith` check,
-    -- but `^type\s+([A-Z]\w*)` can never match a `type alias` line in the
-    -- first place — the character right after "type " in "type alias X" is
-    -- the lowercase `a` of "alias", which `[A-Z]` rejects — so that guard is
-    -- unreachable and is not ported.
-    Regex.fromStringWith { caseInsensitive = False, multiline = True }
-        "^type\\s+([A-Z]\\w*)"
-        |> Maybe.withDefault Regex.never
-
-
-multilineAnnotationRegex : Regex.Regex
-multilineAnnotationRegex =
-    Regex.fromStringWith { caseInsensitive = False, multiline = True }
-        "^([a-z]\\w*)\\s*:\\n([\\s\\S]*?)\\n\\1(?:\\s|=)"
-        |> Maybe.withDefault Regex.never
-
-
-singleLineAnnotationRegex : Regex.Regex
-singleLineAnnotationRegex =
-    Regex.fromStringWith { caseInsensitive = False, multiline = True }
-        "^([a-z]\\w*)\\s*:\\s+([^\\n]+)\\n\\1(?:\\s|=)"
-        |> Maybe.withDefault Regex.never
-
-
-trailingWhitespaceRegex : Regex.Regex
-trailingWhitespaceRegex =
-    Regex.fromString "\\s+$" |> Maybe.withDefault Regex.never
-
-
-rstrip : String -> String
-rstrip s =
-    Regex.replace trailingWhitespaceRegex (\_ -> "") s
-
-
-submatchAt : Int -> Regex.Match -> Maybe String
-submatchAt i m =
-    m.submatches |> List.drop i |> List.head |> Maybe.andThen identity
-
-
-stripVariantSuffix : String -> String
-stripVariantSuffix s =
-    if String.endsWith "(..)" s then
-        String.dropRight 4 s |> String.trimRight
-
-    else
-        s
-
-
-parseModuleSurface : String -> String -> Result String Surface
-parseModuleSurface src origModuleName =
-    case List.head (Regex.find moduleHeaderRegex src) of
-        Nothing ->
-            Err ("gen-family-package: cannot parse module header in " ++ origModuleName)
-
-        Just m ->
-            let
-                moduleName =
-                    Maybe.withDefault "" (submatchAt 0 m)
-
-                exposingRaw =
-                    Maybe.withDefault "" (submatchAt 1 m)
-
-                exposingNames =
-                    exposingRaw
-                        |> String.split ","
-                        |> List.map (String.trim >> stripVariantSuffix >> String.trim)
-                        |> List.filter (\s -> not (String.isEmpty s))
-
-                types =
-                    Regex.find typeAliasRegex src
-                        |> List.foldl
-                            (\mm acc ->
-                                case submatchAt 0 mm of
-                                    Just name ->
-                                        Dict.insert name (String.trim (Maybe.withDefault "" (submatchAt 1 mm))) acc
-
-                                    Nothing ->
-                                        acc
-                            )
-                            Dict.empty
-
-                opaqueOffenders =
-                    Regex.find opaqueTypeRegex src
-            in
-            if not (List.isEmpty opaqueOffenders) then
-                Err
-                    (moduleName
-                        ++ " exposes/declares an opaque `type` — transparent re-aliasing is not possible. The family package assumes every exposed type is a `type alias`; fix the codegen or exclude this component."
-                    )
-
-            else
-                let
-                    multiAnns =
-                        Regex.find multilineAnnotationRegex src
-                            |> List.foldl
-                                (\mm acc ->
-                                    case ( submatchAt 0 mm, submatchAt 1 mm ) of
-                                        ( Just name, Just body ) ->
-                                            Dict.insert name (rstrip body) acc
-
-                                        _ ->
-                                            acc
-                                )
-                                Dict.empty
-
-                    valueAnnotations =
-                        Regex.find singleLineAnnotationRegex src
-                            |> List.foldl
-                                (\mm acc ->
-                                    case ( submatchAt 0 mm, submatchAt 1 mm ) of
-                                        ( Just name, Just body ) ->
-                                            if Dict.member name acc then
-                                                acc
-
-                                            else
-                                                Dict.insert name ("    " ++ String.trim body) acc
-
-                                        _ ->
-                                            acc
-                                )
-                                multiAnns
-                in
-                Ok { moduleName = moduleName, exposing_ = exposingNames, types = types, valueAnnotations = valueAnnotations }
+firstChar : String -> Maybe Char
+firstChar s =
+    s |> String.uncons |> Maybe.map Tuple.first
 
 
 
 -- ── rewrite a member's annotation to reference prefixed local type names ──
--- Port of gen-family-package.js:164-176.
+-- Port of gen-family-package.js:164-176's `prefixTypeRefs` (regex
+-- `(^|[^.\w])name\b`, global): every whole-word occurrence of one of the
+-- member's OWN exposed types becomes the element-prefixed local alias,
+-- EXCLUDING occurrences immediately preceded by a `.` (a qualified
+-- reference) or another word character (a longer identifier this name is a
+-- substring of).
 
 
 prefixTypeRefs : String -> Set String -> String -> String
@@ -275,26 +135,100 @@ prefixTypeRefs annotationText exposedTypeNames elementPascal =
             exposedTypeNames
                 |> Set.toList
                 |> List.sortBy (\s -> -(String.length s))
-    in
-    List.foldl
-        (\t acc ->
-            case Regex.fromString ("(^|[^.\\w])" ++ t ++ "\\b") of
-                Nothing ->
-                    acc
 
-                Just re ->
-                    Regex.replace re
-                        (\match ->
+        replaceOne target text =
+            case String.split target text of
+                [] ->
+                    text
+
+                [ _ ] ->
+                    text
+
+                first :: rest ->
+                    List.foldl
+                        (\part acc ->
                             let
-                                pre =
-                                    submatchAt 0 match |> Maybe.withDefault ""
+                                precededOk =
+                                    case lastChar acc of
+                                        Nothing ->
+                                            True
+
+                                        Just c ->
+                                            not (isWordChar c) && c /= '.'
+
+                                followedOk =
+                                    case firstChar part of
+                                        Nothing ->
+                                            True
+
+                                        Just c ->
+                                            not (isWordChar c)
                             in
-                            pre ++ elementPascal ++ t
+                            if precededOk && followedOk then
+                                acc ++ elementPascal ++ target ++ part
+
+                            else
+                                acc ++ target ++ part
                         )
-                        acc
-        )
-        annotationText
-        namesLongestFirst
+                        first
+                        rest
+    in
+    List.foldl replaceOne annotationText namesLongestFirst
+
+
+{-| Port of gen-family-package.js:262-268's external-import token test
+(`\bT\b` for a bare token, `T\.U\b` — no LEADING boundary — for a dotted
+one, e.g. `"Ac.Action"`).
+-}
+tokenMatches : String -> String -> Bool
+tokenMatches token annBlob =
+    let
+        requireLeadingBoundary =
+            not (String.contains "." token)
+    in
+    case String.split token annBlob of
+        [] ->
+            False
+
+        [ _ ] ->
+            False
+
+        first :: rest ->
+            let
+                go acc parts =
+                    case parts of
+                        [] ->
+                            False
+
+                        part :: restParts ->
+                            let
+                                precededOk =
+                                    if requireLeadingBoundary then
+                                        case lastChar acc of
+                                            Nothing ->
+                                                True
+
+                                            Just c ->
+                                                not (isWordChar c)
+
+                                    else
+                                        True
+
+                                followedOk =
+                                    case firstChar part of
+                                        Nothing ->
+                                            True
+
+                                        Just c ->
+                                            not (isWordChar c)
+                            in
+                            if precededOk && followedOk then
+                                True
+
+                            else
+                                go (acc ++ token ++ part) restParts
+            in
+            go first rest
 
 
 
@@ -308,7 +242,7 @@ type alias Member =
     , elementCamel : String
     , alias_ : String
     , origModuleName : String
-    , surface : Surface
+    , surface : ComponentSurface
     }
 
 
@@ -342,24 +276,6 @@ externalImports =
     , ( "import Json.Encode", [ "Json.Encode" ] )
     , ( "import Json.Decode", [ "Json.Decode" ] )
     ]
-
-
-tokenMatches : String -> String -> Bool
-tokenMatches token annBlob =
-    let
-        pattern =
-            if String.contains "." token then
-                String.replace "." "\\." token ++ "\\b"
-
-            else
-                "\\b" ++ token ++ "\\b"
-    in
-    case Regex.fromString pattern of
-        Nothing ->
-            False
-
-        Just re ->
-            Regex.contains re annBlob
 
 
 buildDecl : Emitted -> Result String String
@@ -699,20 +615,17 @@ resolveMember lib brand pm =
 
         Just comp ->
             let
-                rendered =
-                    Component.compModule brand comp
+                surface =
+                    Component.compSurface brand comp
             in
-            parseModuleSurface rendered.contents origModuleName
-                |> Result.map
-                    (\surface ->
-                        { component = pm.component
-                        , elementPascal = pm.elementPascal
-                        , elementCamel = pm.elementCamel
-                        , alias_ = pm.alias_
-                        , origModuleName = origModuleName
-                        , surface = surface
-                        }
-                    )
+            Ok
+                { component = pm.component
+                , elementPascal = pm.elementPascal
+                , elementCamel = pm.elementCamel
+                , alias_ = pm.alias_
+                , origModuleName = origModuleName
+                , surface = surface
+                }
 
 
 {-| The family module tree lives ONLY inside the standalone package (there is
