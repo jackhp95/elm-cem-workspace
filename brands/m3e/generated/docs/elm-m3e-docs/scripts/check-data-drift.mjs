@@ -120,10 +120,22 @@ function fail(msg) {
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), "m3e-drift-"));
 process.on("exit", () => fs.rmSync(scratch, { recursive: true, force: true }));
 
-const scratchDocs = path.join(scratch, "docs");
+// Post repo-shape-v2 the docs package is a SIBLING of the elm-m3e package
+// (brands/m3e/generated/{docs/elm-m3e-docs, package/elm-m3e}), no longer a
+// `docs/` subdir of it. Both trees are copied, AT THEIR REAL REPO-RELATIVE
+// DEPTH inside the scratch (scratch/brands/m3e/generated/{docs/elm-m3e-docs,
+// package/elm-m3e}) — not flattened. Depth matters: generators like
+// samples-gen compute source-directories with `path.relative` that reach OUT
+// of the package (to pipeline/, packages/, brands/html/), so a scratch at a
+// different depth than the real tree would make those relative strings drift
+// spuriously. Mirroring the full repo-relative depth keeps every computed
+// path byte-identical to a real-tree regen.
+const REPO_ROOT = path.resolve(REPO, "..", "..", "..", "..", "..");
+const scratchDocs = path.join(scratch, path.relative(REPO_ROOT, DOCS));
+const scratchRepo = path.join(scratch, path.relative(REPO_ROOT, REPO));
 
 try {
-  // Copy the repo minus the heavy, regenerable directories. node_modules is
+  // Copy both trees minus the heavy, regenerable directories. node_modules is
   // symlinked back so the generators keep their toolchain without a reinstall.
   //
   // test-results/ (Playwright's own run-artifact directory: traces,
@@ -137,28 +149,28 @@ try {
   // at its root (nothing here should ever read Playwright's own scratch
   // output) rather than papering over it with a scheduler mutual-exclusion
   // tag for two steps that have no actual reason to conflict.
-  fs.cpSync(REPO, scratch, {
-    recursive: true,
-    filter: (src) => {
-      const rel = path.relative(REPO, src);
-      if (!rel) return true;
-      const top = rel.split(path.sep);
-      if (top.includes("node_modules")) return false;
-      if (top.includes(".git")) return false;
-      if (top.includes("elm-stuff")) return false;
-      if (top.includes(".elm-pages")) return false;
-      if (top.includes("dist")) return false;
-      if (top.includes("test-results")) return false;
-      return true;
-    },
-  });
+  const heavyDirFilter = (root) => (src) => {
+    const rel = path.relative(root, src);
+    if (!rel) return true;
+    const top = rel.split(path.sep);
+    if (top.includes("node_modules")) return false;
+    if (top.includes(".git")) return false;
+    if (top.includes("elm-stuff")) return false;
+    if (top.includes(".elm-pages")) return false;
+    if (top.includes("dist")) return false;
+    if (top.includes("test-results")) return false;
+    return true;
+  };
+  fs.mkdirSync(path.dirname(scratchRepo), { recursive: true });
+  fs.mkdirSync(path.dirname(scratchDocs), { recursive: true });
+  fs.cpSync(REPO, scratchRepo, { recursive: true, filter: heavyDirFilter(REPO) });
+  fs.cpSync(DOCS, scratchDocs, { recursive: true, filter: heavyDirFilter(DOCS) });
 
-  for (const nm of [
-    ["node_modules", path.join(REPO, "node_modules")],
-    [path.join("docs", "node_modules"), path.join(DOCS, "node_modules")],
+  for (const [scratchPkgDir, target] of [
+    [scratchRepo, path.join(REPO, "node_modules")],
+    [scratchDocs, path.join(DOCS, "node_modules")],
   ]) {
-    const [rel, target] = nm;
-    if (fs.existsSync(target)) fs.symlinkSync(target, path.join(scratch, rel), "dir");
+    if (fs.existsSync(target)) fs.symlinkSync(target, path.join(scratchPkgDir, "node_modules"), "dir");
   }
 
   for (const step of GEN_STEPS) {

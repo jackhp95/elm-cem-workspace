@@ -286,11 +286,20 @@ write(
     {
       type: "application",
       // `src` is this project's own ReviewConfig; the rest mirror
-      // review/elm.json's entries, re-rooted from docs/samples/review/.
+      // review/elm.json's entries, re-rooted from the samples/review/ dir.
+      // Computed by resolving each entry against the source review/ dir and
+      // relativising against the samples review/ dir — layout-independent, so
+      // it stays correct across repo reshapes (the old hardcoded "../../.."
+      // prefix baked in the pre-repo-shape-v2 depth and silently drifted).
       "source-directories": ["src"].concat(
         reviewElm["source-directories"]
           .filter((d) => d !== "src")
-          .map((d) => path.posix.join("../../..", d.replace(/^\.\.\//, ""))),
+          .map((d) =>
+            path
+              .relative(path.join(SAMPLES, "review"), path.resolve(REPO, "review", d))
+              .split(path.sep)
+              .join("/"),
+          ),
       ),
       "elm-version": reviewElm["elm-version"],
       dependencies: reviewElm.dependencies,

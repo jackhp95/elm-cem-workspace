@@ -28,7 +28,7 @@ Marked at the source with `-- @sample-source <name>`.
 -}
 
 
-{-| `emailField`, from `docs/app/Route/Guide/CompositionTextField.elm`.
+{-| `emailField`, from `../../docs/elm-m3e-docs/app/Route/Guide/CompositionTextField.elm`.
 -}
 guideEmailField : String
 guideEmailField =
@@ -47,14 +47,14 @@ guideEmailField =
         ]"""
 
 
-{-| `helpButton`, from `docs/app/Route/Guide/AccessibleByConstruction.elm`.
+{-| `helpButton`, from `../../docs/elm-m3e-docs/app/Route/Guide/AccessibleByConstruction.elm`.
 -}
 guideHelpButton : String
 guideHelpButton =
     """M3e.Component.IconButton.component { content = M3e.icon [ TA.name "help" ] [], ariaLabel = "Help", action = M3e.Action.none } [] []"""
 
 
-{-| `savedButton`, from `docs/app/Route/Guide/InvalidStates.elm`.
+{-| `savedButton`, from `../../docs/elm-m3e-docs/app/Route/Guide/InvalidStates.elm`.
 -}
 guideSavedButton : String
 guideSavedButton =
@@ -64,7 +64,7 @@ guideSavedButton =
     ]"""
 
 
-{-| `htmlInSlot`, from `docs/app/Route/Guide/Seams.elm`.
+{-| `htmlInSlot`, from `../../docs/elm-m3e-docs/app/Route/Guide/Seams.elm`.
 -}
 seamsHtmlInSlot : String
 seamsHtmlInSlot =
@@ -83,7 +83,7 @@ seamsHtmlInSlot =
         ]"""
 
 
-{-| `linkNav`, from `docs/app/Route/Guide/Seams.elm`.
+{-| `linkNav`, from `../../docs/elm-m3e-docs/app/Route/Guide/Seams.elm`.
 -}
 seamsLinkNav : String
 seamsLinkNav =
@@ -97,7 +97,7 @@ seamsLinkNav =
         ]"""
 
 
-{-| `modelViewer`, from `docs/app/Route/Guide/Seams.elm`.
+{-| `modelViewer`, from `../../docs/elm-m3e-docs/app/Route/Guide/Seams.elm`.
 -}
 seamsModelViewer : String
 seamsModelViewer =
@@ -120,7 +120,7 @@ seamsModelViewer =
         ]"""
 
 
-{-| `twoColumn`, from `docs/app/Route/Guide/Seams.elm`.
+{-| `twoColumn`, from `../../docs/elm-m3e-docs/app/Route/Guide/Seams.elm`.
 -}
 seamsTwoColumn : String
 seamsTwoColumn =
