@@ -153,7 +153,9 @@ const { argv: rawArgvNoFactsFlag, factsBundleDir } = extractFactsBundleDir(proce
 const afterReconcile = reconcileTagNames(rawArgvNoFactsFlag);
 const afterAliases = recordTypeAliases(afterReconcile);
 const afterConfig = injectConfig(afterAliases);
-const afterNativeAttrs = injectNativeAttrs(afterConfig);
+const afterIconCatalog = injectIconCatalog(afterConfig);
+const afterPackageLicense = injectPackageLicense(afterIconCatalog);
+const afterNativeAttrs = injectNativeAttrs(afterPackageLicense);
 const args = injectFactsBundleFlag(afterNativeAttrs, Boolean(factsBundleDir));
 const outputDir = parseOutput(args);
 const publishShape = readPublishShape(process.argv.slice(2));
@@ -163,6 +165,14 @@ const publishShape = readPublishShape(process.argv.slice(2));
 // Only `.elm` files are removed — any other files in the dir are left alone.
 if (outputDir) {
   removeElmFiles(path.resolve(process.cwd(), outputDir));
+  // G3 (generator-consolidation): Generate.Phantom.Emit.FamilyPackage emits
+  // <lib>.<namespace>.<Family> modules directly from the Elm pass, but Elm
+  // has no filesystem access to clean up a family that's no longer in
+  // config — gen-family-package.js used to own this cleanup itself
+  // (gen-family-package.js:413-423's fs.rmSync of its src/ subtree) before
+  // every run. Mirror that here so a family removed from `_families.families`
+  // doesn't leave an orphan module behind forever.
+  cleanStaleFamilyModules(args, outputDir);
 }
 
 try {
@@ -221,10 +231,11 @@ function resolveElmCodegen() {
   return null;
 }
 
-// Icon-module + family-package generation — see bin/post-generate.js.
-if (outputDir) {
-  require("./post-generate").runPostGenerate(process.argv.slice(2), outputDir);
-}
+// Icon-module + family-package generation now happens inside the Elm codegen
+// pass itself (Generate.Phantom.Emit.IconModule / .FamilyPackage — G2/G3,
+// 2026-08-19 generator-consolidation). bin/post-generate.js's call is
+// removed here; the file itself (and bin/gen-family-package.js) are deleted
+// once this task's golden test is proven green (see the plan's Task 7b).
 
 // The generator knows exactly which modules it wrote, so it owns the package's
 // `exposed-modules` — consumers don't hand-maintain it or ship a helper script.
@@ -421,6 +432,120 @@ function injectConfig(argv) {
   if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
   else out[flagIdx + 1] = tmp;
   return out;
+}
+
+// Icon catalog names must reach Elm as data, not a filesystem path — Elm's
+// single-shot main has no fs access (research §3). Ported from
+// gen-icon-module.js:472-484's catalog read; runs AFTER injectConfig so
+// _config._iconModule (if any) is already merged into the flags file. G2
+// (generator-consolidation): Generate.Phantom.Emit.IconModule reads
+// `_iconModule.names` from flags instead of reading `catalogFrom` itself.
+function injectIconCatalog(argv) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  if (flagIdx === -1) return argv;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return argv;
+  }
+  const im = cem._config && cem._config._iconModule;
+  if (!im || !im.catalogFrom || im.names) return argv;
+  let names;
+  try {
+    const cat = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), im.catalogFrom), "utf8"));
+    names = cat.names;
+  } catch (e) {
+    console.error(`elm-cem: could not read icon catalog at ${im.catalogFrom}: ${e.message}`);
+    process.exit(1);
+  }
+  if (!Array.isArray(names) || names.length === 0) {
+    console.error(`elm-cem: icon catalog at ${im.catalogFrom} has no "names" array`);
+    process.exit(1);
+  }
+  cem._config._iconModule.names = names;
+  const tmp = writeTemp("elm-cem-icon-catalog", JSON.stringify(cem));
+  const out = argv.slice();
+  if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
+  else out[flagIdx + 1] = tmp;
+  return out;
+}
+
+// Inject the elm-m3e workspace root's LICENSE text into
+// `_iconModule.package.licenseText` / `_families.package.licenseText` — Elm
+// has no filesystem access to read `<repoRoot>/LICENSE` itself (research
+// §3), so the CLI shell reads it once and hands it to both package emitters
+// as data. Mirrors injectIconCatalog's pattern. Ported from
+// gen-icon-module.js:403-412 / gen-family-package.js:488-500's LICENSE-copy
+// step, minus the "only if destination absent" check (Elm has no way to
+// probe that; elm-codegen's writer overwrites every run regardless — same
+// behavior narrowing already made for README.md, documented at each
+// emitter's `licenseFile`/`readmeFile`). A no-op if neither `_iconModule`
+// nor `_families` declares a `package` block, or if no root LICENSE exists
+// (matching the JS's own graceful "no root LICENSE found, skipping" warning).
+function injectPackageLicense(argv) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  const outputVal = parseOutput(argv);
+  if (flagIdx === -1 || !outputVal) return argv;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return argv;
+  }
+  const cfg = cem._config;
+  if (!cfg) return argv;
+  const im = cfg._iconModule;
+  const fam = cfg._families;
+  const needsIm = Boolean(im && im.package && !im.package.licenseText);
+  const needsFam = Boolean(fam && fam.package && !fam.package.licenseText);
+  if (!needsIm && !needsFam) return argv;
+
+  const repoRoot = path.dirname(path.resolve(process.cwd(), outputVal));
+  let licenseText;
+  try {
+    licenseText = fs.readFileSync(path.join(repoRoot, "LICENSE"), "utf8");
+  } catch {
+    return argv;
+  }
+  if (needsIm) im.package.licenseText = licenseText;
+  if (needsFam) fam.package.licenseText = licenseText;
+
+  const tmp = writeTemp("elm-cem-package-license", JSON.stringify(cem));
+  const out = argv.slice();
+  if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
+  else out[flagIdx + 1] = tmp;
+  return out;
+}
+
+// Clean the standalone family package's OWNED src/ subtree before
+// regeneration (G3, generator-consolidation) — see the call site's comment.
+// Reads `_families` from the same merged flags file the icon-catalog
+// injection reads `_iconModule` from; a no-op if `_families`/`.package` is
+// absent (nothing to clean) or the directory doesn't exist yet.
+function cleanStaleFamilyModules(argv, outputDir) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  if (flagIdx === -1) return;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return;
+  }
+  const fam = cem._config && cem._config._families;
+  if (!fam || !fam.package || !fam.package.dir || !fam.lib || !fam.namespace) return;
+  const repoRoot = path.dirname(path.resolve(process.cwd(), outputDir));
+  const genSrcRoot = path.join(repoRoot, fam.package.dir, "src", ...fam.lib.split("."), fam.namespace);
+  fs.rmSync(genSrcRoot, { recursive: true, force: true });
 }
 
 // Deep-merge config objects: top-level component keys (or `_`-prefixed meta

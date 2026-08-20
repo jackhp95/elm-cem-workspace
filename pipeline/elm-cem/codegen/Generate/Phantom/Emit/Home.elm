@@ -100,7 +100,7 @@ homeModule brand ( home, members ) =
                                )
                     )
 
-        ( reExportNames, reExportDecls, reExportNeedsValues ) =
+        reExportResult =
             reExportBlock brand
                 (lib ++ ".Attributes")
                 (members |> List.map .ctor)
@@ -127,6 +127,15 @@ homeModule brand ( home, members ) =
                     )
                 )
                 (members |> List.concatMap .attrs |> deduplicateBy .elmName)
+
+        reExportNames =
+            reExportResult.names
+
+        reExportDecls =
+            reExportResult.lines
+
+        reExportNeedsValues =
+            reExportResult.needsValues
 
         memberAliasNames comp =
             let

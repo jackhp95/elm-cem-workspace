@@ -42,10 +42,12 @@ import Generate.Phantom.Emit.Component exposing (..)
 import Generate.Phantom.Emit.Events exposing (..)
 import Generate.Phantom.Emit.Facts exposing (..)
 import Generate.Phantom.Emit.FactsBundle as FactsBundle
+import Generate.Phantom.Emit.FamilyPackage
 import Generate.Phantom.Emit.General exposing (..)
 import Generate.Phantom.Emit.Guard exposing (..)
 import Generate.Phantom.Emit.Home exposing (..)
 import Generate.Phantom.Emit.Html exposing (..)
+import Generate.Phantom.Emit.IconModule
 import Generate.Phantom.Emit.Kind exposing (..)
 import Generate.Phantom.Emit.Shared exposing (..)
 import Generate.Phantom.Emit.SubstrateReExports exposing (..)
@@ -66,7 +68,7 @@ the module, identifier, raw CEM sources, and a ready-to-paste `_renames` snippet
 
 -}
 files : Brand -> Maybe Generate.Types.IconModuleConfig -> Maybe Generate.Types.FamiliesConfig -> Result (List String) (List Elm.File)
-files brand _ _ =
+files brand iconModule families =
     let
         own =
             brand.comps |> List.filter (\c -> homeOf c == Nothing)
@@ -130,12 +132,26 @@ files brand _ _ =
 
         guardErrors =
             runGuard brand
-    in
-    if List.isEmpty guardErrors then
-        Ok allFiles
 
-    else
-        Err guardErrors
+        iconResult =
+            Generate.Phantom.Emit.IconModule.files iconModule
+
+        familyResult =
+            Generate.Phantom.Emit.FamilyPackage.files brand families
+    in
+    case ( iconResult, familyResult ) of
+        ( Err e, _ ) ->
+            Err [ e ]
+
+        ( _, Err e ) ->
+            Err [ e ]
+
+        ( Ok iconFiles, Ok familyFiles ) ->
+            if List.isEmpty guardErrors then
+                Ok (allFiles ++ iconFiles ++ familyFiles)
+
+            else
+                Err guardErrors
 
 
 {-| The M1.c facts-bundle Face C emitter. Delegates to
