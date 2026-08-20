@@ -145,51 +145,53 @@ Established by four parallel investigations; every claim carries a `path:line`.
 - Drift = **regenerate-to-temp + byte-compare**, data-driven by `tools/family.json`
   `bundleCopy` blocks (`tools/lib/check-drift-core.mjs:checkConsumerBundleDrift`).
 
-### 3.4 The generated API splits into a family of published packages — the axis bindings key on
+### 3.4 The generated API splits into six published packages per brand — the axis bindings key on
 
-`elm-cem split` partitions the generated `elm-m3e` source into a **facet-family of
-published packages** (`brands/m3e/outputs/elm-m3e/packages.json`,
-`core/elm-cem/bin/split.js`). This — not a single package — is what a consumer
-depends on and imports, so it is the axis Brand Facts keys its `targets.elm`
-bindings by.
+Three governed generators split each brand's flat **staging root** (`elm-m3e` —
+its own publish identity retired) into **six published packages**. This is what a
+consumer imports, so it is the axis Brand Facts keys `targets.elm` by. The taxonomy
+is **brand-parameterized** — the `html` brand mirrors it as `elm-typed-html-*`
+(`TypedHtml.*`) — which is exactly why Facts' canonical core stays brand-neutral and
+only `targets` carries brand-specific module names.
 
-**In-flight rework (target taxonomy — key bindings by the *right* column):** the
-package family is mid-rename. Brand Facts targets the destination names, treating
-the partition itself (which tags/modules land in which package, the families
-folding) as a **coordination dependency it consumes, not defines** — the
-families-generation infra owns that.
+| Package key | Package (m3e) | Generator | Modules |
+|---|---|---|---|
+| `core` | `elm-m3e-core` | `split` | the `M3e` **barrel** · `M3e.Action`/`Attributes`/`Events`/`Forge.Internal`/`Html`/`Kind`/`Unsafe`/`Values` (foundation; loose `Html` + `Unsafe` live here) |
+| `elements` | `elm-m3e-elements` | `split` | `M3e.Element.*` (one per tag; **was** `M3e.Component.*`) · `M3e.Internal.Types.*` |
+| `build` | `elm-m3e-build` | `split` | `M3e.Build.*` |
+| `facts` | `elm-m3e-facts` | `split` | `M3e.Review.Facts` |
+| `components` | `elm-m3e-components` | `gen-family-package` (`_families`) | `M3e.Component.*` composed families (**was** `M3e.Family.*`) |
+| `icons` | `elm-m3e-icons` | `gen-icon-module` (`_iconModule`) | `M3e.Icon` |
 
-| Destination package | Was | Holds (per rework) |
-|---|---|---|
-| `elm-m3e-html` | `elm-m3e` | the elm/html-like loose API — **incl. the `M3e` barrel** (moves here), `M3e.Html`, shared vocab, `Unsafe`, Forge engine |
-| `elm-m3e-elements` | `elm-m3e-components` | one typed module **per tag** (every element) |
-| `elm-m3e-components` | `elm-m3e-families` | **composed families** — child-only tags folded under their parent tag's module |
-| `elm-m3e-builder` | `elm-m3e-builder` | builder pattern over `components` |
-| `elm-m3e-icons` | (retained) | `M3e.Icon` |
-| `elm-m3e-facts` | (retained) | `M3e.Review.Facts` — the `List Fact` module elm-review-cem reads |
+**Module rename to watch:** old `M3e.Component.*` (per-element) → `M3e.Element.*`
+in `elements`; old `M3e.Family.*` (families) → `M3e.Component.*` in `components`.
+Every binding-derivation reference below is to the **new** names.
 
-Enforcement contract, per destination package: `html` — none (loose/escape;
-elm-review backstops raw children); `elements`/`components` — compiler (closed
-rows + slot-setters); `builder` — compiler (`Available`/`Used` capability rows).
-(Exact per-package contract to be confirmed with the rework.)
+Enforcement contract per package: `core` — loose `Html`/`Unsafe` unenforced, and
+the `M3e` **barrel**'s raw children are **elm-review**-backstopped; `elements` —
+compiler (closed rows + slot-setters); `build` — compiler (`Available`/`Used`
+rows); `components` — compiler (composed families); `icons`/`facts` — n/a.
 
-Two terms of caution: (1) the `components` family folding is driven by the
-**`home`** config primitive (P10 — `homeOf`, `Generate/Phantom/Emit/Shared.elm:182-193`),
-and child-only *validity* by the **independent** **`parents`** primitive (P4 —
-`Comp.admittedBy`, `Model.elm:1724-1749`). **Neither is derived from the slot-`admits`
-graph** (`config-primitives.md:218-222`: a tag can sit in ten slots yet keep open
-`parents`). Facts carries all three (`admits`, `parents`, `home`) as independent
-facts; the partition infra consumes them and Facts does **not** own the partition.
-Note the partition currently has *two* ungoverned mechanisms —
-`split.js`/`packages.json` buckets and a separate `gen-family-package.js`/`_families`
-generator emitting `M3e.Family.*` with zero bucket coverage — which the rework
-reconciles; Facts treats `packages.json` as a **versioned input** and fails loud on
-any generated module no bucket covers (mirroring `split.js`'s totality gate). (2)
-"facet" is overloaded in the codebase — `split.js` calls the **packages** facets;
-`FactsBundle.elm:73-76` calls the **construction forms** (`top`/Standard,
-`build`/Build, `record`/Record, `html`/Html) facets. Those form keys are
-**vestigial**; Brand Facts subsumes Face C and drops/renames them rather than
-carrying them forward (see §7).
+The three generators (`split` + `gen-family-package` + `gen-icon-module`) own the
+partition; Facts **consumes** it and does **not** define it. The earlier "two
+ungoverned generators" *overlap* is removed **by construction** — each generator
+owns a disjoint `M3e.*` namespace — but a **joint** totality+disjointness gate
+*across* the three is **not yet in place**: `split.js`'s totality (`split.js:126,133-139`)
+is total only over its own input subset, and `tools/check-m3e-5pkg.mjs` is **stale**
+(asserts the old 5-package shape: names `elm-m3e-{html,components,builder,icons,facts}`,
+`p.length===5`). Facts' §4.7 totality check is a **defensive backstop** over this
+gap, not the authority.
+
+Two notes: (1) child-only *validity* is the **`parents`** primitive (P4 →
+`Comp.admittedBy`, `Model.elm:1724-1749`), **independent** of the `admits` graph
+(`config-primitives.md:218-222`: a tag can sit in ten slots yet keep open `parents`)
+**and** of the `_families` grouping that feeds the `components` generator. Facts
+carries `admits`, `parents`, and family grouping as separate facts, treats the
+generator configs (`packages.json` buckets, `_families`, `_iconModule`) as
+**versioned inputs**, and fails loud on any generated module no generator covers
+(mirrors `split.js` totality). (2) `FactsBundle.elm:73-76`'s construction forms
+(`top/build/record/html`) are **vestigial**; Brand Facts subsumes Face C and drops
+them (§7).
 
 One `admits` fact, projected three ways: a phantom **row type**
 (`Internal/Types/ListItem.elm` `LeadingSlot`), **elm-review data**
@@ -230,11 +232,11 @@ no cross-file join.
         "elm": {
           // keyed by destination PACKAGE (§3.4). Module/ctor identifiers are READ
           // from the generated packages, not authored here — illustrative below.
-          "html":       { "module": "M3e.Html", "fn": "listItem", "barrel": "listItem" },
+          "core":       { "barrel": "listItem" },        // the M3e barrel lives in `core`
           "elements":   { "module": "M3e.Element.ListItem", "ctor": "listItem",
                           "slotSetters": { "leading": "leading", "trailing": "trailing" } },
-          "components": { "family": "List", "placer": "listItem" },   // folded under parent (families infra)
-          "builder":    { "module": "M3e.Build.ListItem", "seed": "build", "finalizer": "toElement" }
+          "build":      { "module": "M3e.Build.ListItem", "seed": "build", "finalizer": "toElement" },
+          "components": { "module": "M3e.Component.List", "member": "listItem" }  // family (gen-family-package, _families)
         }
       }
     }
@@ -300,7 +302,7 @@ function validPlacement(child, containerTag, slot, facts) {
 }
 ```
 
-### 4.4 Facets are first-class, and carry their contract
+### 4.4 Packages are first-class, and carry their contract
 
 Two levels, distinct:
 
@@ -320,16 +322,16 @@ Two levels, distinct:
     "elm": {
       // destination package family (§3.4); deps/contract illustrative, confirmed with the rework
       "packages": {
-        "html":       { "package": "jackhp95/elm-m3e-html", "deps": [],
+        "core":       { "package": "jackhp95/elm-m3e-core", "generator": "split", "deps": [],
                         "contract": { "composition": "none" } },
-        "elements":   { "package": "jackhp95/elm-m3e-elements", "deps": ["html"],
+        "elements":   { "package": "jackhp95/elm-m3e-elements", "generator": "split", "deps": ["core"],
                         "contract": { "slotSetterChild": "compiler", "rawContentChild": "elm-review" } },
-        "components": { "package": "jackhp95/elm-m3e-components", "deps": ["elements", "html"],
+        "build":      { "package": "jackhp95/elm-m3e-build", "generator": "split", "deps": ["elements", "core"],
                         "contract": { "composition": "compiler" } },
-        "builder":    { "package": "jackhp95/elm-m3e-builder", "deps": ["components", "html"],
+        "components": { "package": "jackhp95/elm-m3e-components", "generator": "gen-family-package", "deps": ["elements", "core"],
                         "contract": { "composition": "compiler" } },
-        "icons":      { "package": "jackhp95/elm-m3e-icons" },
-        "facts":      { "package": "jackhp95/elm-m3e-facts" }
+        "icons":      { "package": "jackhp95/elm-m3e-icons", "generator": "gen-icon-module" },
+        "facts":      { "package": "jackhp95/elm-m3e-facts", "generator": "split" }
       }
     }
   }
@@ -364,25 +366,27 @@ The bindings are **computed**, from the same resolved model + the `packages.json
 bucket config — largely a re-projection of Face C's existing derivation onto the
 destination-package axis, plus a bucket join. Not new naming logic.
 
-1. **Module names per surface** — reuse `componentModuleName` (`SharedAttrs.elm:62`,
-   already stamped onto `comp.name`) + `homeOf`/`memberRef` (`Shared.elm:182-234`):
-   no `home` ⇒ `M3e.Component.<name>` / `M3e.Build.<name>` / `M3e.Internal.Types.<name>`;
-   `home = h` ⇒ shared `M3e.Component.<h>` (multiple tags → **same** module — record
-   the N:1); the barrel `M3e` re-exports every ctor.
+1. **Module names per package** — reuse `componentModuleName` (`SharedAttrs.elm:62`,
+   already stamped onto `comp.name`): `core` ⇒ the `M3e` barrel re-exports every
+   ctor; `elements` ⇒ `M3e.Element.<name>` / `build` ⇒ `M3e.Build.<name>` / `M3e.Internal.Types.<name>`;
+   `components` ⇒ `M3e.Component.<family>` from the `_families` grouping (multiple
+   tags → **same** family module — record the N:1); `core`/`icons`/`facts` are not
+   per-component. (Names are the **post-rename** ones, §3.4.)
 2. **Per-component identifiers** — reuse Face C's `encodeComponent`
    (`FactsBundle.elm:262`): `setters`/`setterArgTypes`, `enums`, `slotSetters`/
    `slotSetterMap`, `pipeSetters`, `eventHandlers`, `requiredSlots`/`multiSlots`,
-   `slotKinds`, `group`. **Ignore** the dead `groupConstructors`/`slotUpgrades = []`
-   placeholders (`FactsBundle.elm:372,378`); reconstruct family membership by
-   **bucketing on `group.module`**.
-3. **Module → package** — match each module name against `packages.json` buckets,
-   **iterating packages in file order, buckets in file order, first `prefix`/`exact`
-   hit wins** (replicate `split.js:110-124` exactly — declared order is the
-   semantics, not longest-prefix). Emit `{package, module}` per surface.
-4. **Totality** — run the matcher over the *full* generated module list; any module
-   no bucket covers is a **hard error** (mirror `split.js:125-128`), never a silent
-   omission — that is the lossy-projection failure mode this design closes, and it
-   surfaces the current `gen-family-package.js`/`M3e.Family.*` coverage gap.
+   `slotKinds`. **Ignore** the dead `groupConstructors`/`slotUpgrades = []`
+   placeholders (`FactsBundle.elm:372,378`); take family membership from the
+   `_families` config, not the vestigial `group` field.
+3. **Module → package**, per generator: for `split`-produced packages
+   (`core`/`elements`/`build`/`facts`), match module names against `packages.json`
+   buckets **iterating packages then buckets in file order, first `prefix`/`exact`
+   hit wins** (replicate `split.js:110-124` — declared order is the semantics); for
+   `components`, membership is the `_families` config (`gen-family-package`); for
+   `icons`, the `_iconModule` config (`gen-icon-module`).
+4. **Totality** — run the derivation over the *full* generated module list; any
+   module no generator claims is a **hard error** (mirror `split.js:125-128`), never
+   a silent omission — the lossy-projection failure mode this design closes.
 
 ## 5. Decisions (locked)
 
@@ -395,13 +399,13 @@ destination-package axis, plus a bucket join. Not new naming logic.
 4. **Store acceptance, derive placement.** One container-keyed slots table.
 5. **Slot inventory is CEM-closed; kind-constraint is open-when-absent.**
 6. **Provenance is a separate block**, not per-field.
-7. **Facets carry their enforcement contract** as first-class data.
+7. **Packages carry their enforcement contract** as first-class data.
 8. **Facts is language-neutral**; Elm identifiers are namespaced under
    `targets.elm`, never smeared into canonical fields.
 9. **Three independent composition primitives, all carried:** `admits` (slot
    acceptance, per container), `parents`→`admittedBy` (child placement restriction,
-   per component), `home` (module grouping). None derives from another; placement =
-   acceptance ∩ parents.
+   per component), `_families` (family grouping → the `components` package). None
+   derives from another; placement = acceptance ∩ parents.
 10. **Bindings are derived, not authored** — reuse the resolved model's naming +
     Face C's identifier derivation, join to packages via `packages.json` buckets in
     file order (first-match), and **fail loud** on any generated module no bucket
@@ -422,18 +426,29 @@ destination-package axis, plus a bucket join. Not new naming logic.
   (`"shared:icon"`, `"avatar"`) as-is (mirror the truth), and let the Elm binding
   layer carry the field-name mapping (`sharedIcon`). Confirm during planning.
 - **Naming to lock:** the file (`brand-facts.json`), the top key (`components`),
-  `targets`, `contracts`. **Package keys are the destination package family**
-  (§3.4): `html` / `elements` / `components` / `builder` / `icons` / `facts` —
-  what a consumer imports. The barrel binds under `html`. **Not** the vestigial
-  construction forms (`top`/`build`/`record`/`html` in `FactsBundle.elm`) and not
-  the earlier invented `strict`/`loose`/`general`/`escape` — both dropped.
+  `targets`, `contracts`. **Package keys are the delivered package family** (§3.4):
+  `core` / `elements` / `build` / `facts` / `components` / `icons` — what a consumer
+  imports. The barrel binds under `core`. **Not** the vestigial construction
+  forms (`top`/`build`/`record`/`html` in `FactsBundle.elm`) and not the earlier
+  invented `strict`/`loose`/`general`/`escape` — both dropped.
 - **`schemaVersion` bump** to `2` and whether the hand-rolled validator
   (`validate-facts-bundle.js`) is extended or replaced.
-- **Two ungoverned partition generators to reconcile** (with the rework):
-  `split.js`/`packages.json` buckets vs `gen-family-package.js`/`_families`
-  (emits `M3e.Family.*`, currently zero bucket coverage). And Face C's
-  `groupConstructors`/`slotUpgrades` are dead `[]` placeholders — populate or drop
-  when subsuming Face C.
+- **Partition generators — overlap removed, joint gate still open** (§3.4): three
+  config-fed generators (`split` → core/elements/build/facts; `gen-family-package`
+  → components; `gen-icon-module` → icons) own disjoint `M3e.*` namespaces, so the
+  old zero-coverage overlap is gone *by construction*. But **no joint
+  totality+disjointness gate spans all three** — `split.js` totality covers only
+  its subset, and `tools/check-m3e-5pkg.mjs` is stale (old 5-package shape). Open
+  item for the rework: a cross-generator coverage gate + rewrite of
+  `check-m3e-5pkg` to the 6-package shape. Facts' §4.7 check is the defensive
+  backstop meanwhile. Face C's `groupConstructors`/`slotUpgrades` remain dead `[]`
+  placeholders — drop when subsuming Face C.
+- **Incoming repo reorg (delivered by the other repo):** `core/`→`pipeline/`,
+  `brands/m3e/outputs/*`→`brands/m3e/generated/{package,okf,style,docs}/`, `elm-m3e`
+  becomes a retired-identity **staging root**, and an emerging brand-agnostic
+  `pipeline/docs-gen/` (likely absorbs `oracle.mjs`'s reach-arounds — phase 4).
+  This spec's `file:line` refs are valid against the *current* tree; re-resolve to
+  the new layout when the reorg lands. The design is path-agnostic.
 
 ## 7. Phase decomposition
 
@@ -448,8 +463,8 @@ Each phase becomes its own plan (`superpowers:writing-plans`) with its own revie
 2. **Enrich the model + unified producer.** `Comp` retains `source :
    Cem.Declaration`; comprehensive Elm encoder; fold Face B's JS value-adds in;
    derive `targets.elm` bindings by reusing Face C's identifier derivation + the
-   `packages.json` bucket join (§4.7, fail-loud on coverage gap); carry `admits`/
-   `parents`/`home`. Emit one `brand-facts.json` **alongside** the existing bundles.
+   per-generator join (§4.7, fail-loud on coverage gap); carry `admits`/`parents`/
+   `_families`. Emit one `brand-facts.json` **alongside** the existing bundles.
 3. **Slot-default flip + dead-input cleanup** *(separable; see §6).* Flip codegen
    absent→open + consult CEM-declared slots; drop `_native`/`_nativeAttrTable`.
 4. **Migrate consumers.** Point cem-figma-connect / okf / `oracle.mjs` / tailwind
@@ -474,13 +489,17 @@ gate green between phases.
 
 **Coordination dependency (not owned here):** the elm-m3e package rework
 (`elm-m3e`→`-html` incl. barrel; `-components`→`-elements`; `-families`→
-`-components`; per §3.4) is concurrent, and it reconciles the two current partition
-mechanisms (`split.js`/`packages.json` buckets vs `gen-family-package.js`/`_families`).
-Brand Facts keys `targets.elm` by the **destination** package names, **consumes**
-the partition via the `packages.json` bucket join (§4.7), and **carries** the
-`admits`/`parents`/`home` config primitives the partition infra reads — but does
-**not** define the split. Phase 4 (consumer migration) sequences after the rework's
-package names settle.
+`-components`; per §3.4) is concurrent, and its delivered shape splits the
+partition across three config-fed generators (`split` + `gen-family-package` +
+`gen-icon-module`) with disjoint namespaces (overlap gone by construction; a
+*joint* cross-generator totality gate remains an open rework item, §6). Brand
+Facts keys `targets.elm` by the **destination** package
+names (`core`/`elements`/`build`/`facts`/`components`/`icons`), **consumes** the
+partition via those generators' configs (§4.7), and **carries** the `admits`/
+`parents`/`_families` primitives — but does **not** define the split. The taxonomy
+is **brand-parameterized** (m3e + html share it), which is why the canonical core
+stays brand-neutral. Phase 4 (consumer migration) sequences after the rework's
+package names + repo reorg land.
 
 Consistent with the workspace stance: prefer the correct shape over a small blast
 radius; blast radius is a cost, not a blocker.
