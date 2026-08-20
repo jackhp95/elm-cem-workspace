@@ -30,7 +30,7 @@ export const goldenIconModuleDir = path.join(fixturesDir, "golden-icon-module");
 export const goldenFamilyPackageDir = path.join(fixturesDir, "golden-family-package");
 
 const cli = path.join(repo, "bin", "elm-cem.js");
-const elmM3e = path.join(repo, "..", "..", "brands", "m3e", "outputs", "elm-m3e");
+const elmM3e = path.join(repo, "..", "..", "brands", "m3e", "generated", "package", "elm-m3e");
 
 /** Run elm-cem against brands/m3e's real config, writing Face A into `outputDir`. */
 export function runGoldenGenerate(outputDir) {
@@ -38,7 +38,7 @@ export function runGoldenGenerate(outputDir) {
     process.execPath,
     [
       cli,
-      "--flags-from=docs/node_modules/@m3e/web/dist/custom-elements.json",
+      "--flags-from=../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json",
       "--config-from=config/slots.json",
       "--config-from=config/native-mdn.json",
       "--config-from=config/examples.generated.json",
