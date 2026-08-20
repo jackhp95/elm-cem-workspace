@@ -369,13 +369,14 @@ relative to the SAME `--output` root — `Elm.File.path` is unconstrained
 with no traversal guard (research §5 Risk 2), so `"../<pkg.dir>/..."`-shaped
 paths land one level above `--output`, exactly like
 gen-icon-module.js:502-505's `repoRoot = path.dirname(outDir)`. Port of
-gen-icon-module.js:318-416's `writePackageTree`. README/LICENSE
-("write-only-if-absent" in the JS) are DELIBERATELY DROPPED here — Elm has no
-filesystem access to check "already exists", and (per the same behavior
-simplification Task 7 makes for family packages) elm-codegen's writer always
-overwrites on every run anyway, so an Elm port emitting them unconditionally
-is a strict behavior narrowing with no byte-equality impact on `elm.json`,
-the one package-tree file this module's golden test governs.
+gen-icon-module.js:318-416's `writePackageTree`, INCLUDING README.md and
+LICENSE (`iconPackageReadmeFile`/`iconPackageLicenseFile` below) — the one
+behavior narrowing that survives the port is dropping the "write only if
+destination absent" check on README.md (Elm has no filesystem access to
+probe that, and elm-codegen's writer overwrites unconditionally every run
+regardless, so this is a no-op for byte-equality); LICENSE keeps its
+conditional shape by being `Maybe Elm.File`, mirroring the JS's own graceful
+skip when no root `LICENSE` file exists to copy.
 -}
 iconPackageTreeFiles : IconPackageConfig -> String -> String -> Elm.File
 iconPackageTreeFiles pkg lib src =
@@ -423,6 +424,80 @@ iconPackageElmJsonFile pkg lib =
     { path = "../" ++ pkg.dir ++ "/elm.json", contents = contents, warnings = [] }
 
 
+{-| Port of gen-icon-module.js:350-401's README template (both shape
+branches). Always emitted — see `iconPackageTreeFiles`'s doc comment for why
+dropping the "only if absent" check is a no-op here.
+-}
+iconPackageReadmeFile : IconPackageConfig -> String -> String -> Elm.File
+iconPackageReadmeFile pkg lib shape =
+    let
+        usageLines =
+            if shape == "names" then
+                [ "-- A named icon"
+                , lib ++ ".Icon.icon " ++ lib ++ ".Icon.menu [] []"
+                , ""
+                , "-- A custom / app-specific icon"
+                , lib ++ ".Icon.icon (" ++ lib ++ ".Icon.custom \"my_custom_icon\") [] []"
+                , ""
+                , "-- `Name` is an ordinary value, so icons can be stored and passed around"
+                , "favourites : List " ++ lib ++ ".Icon.Name"
+                , "favourites ="
+                , "    [ " ++ lib ++ ".Icon.menu, " ++ lib ++ ".Icon.search, " ++ lib ++ ".Icon.settings ]"
+                ]
+
+            else
+                [ "-- A named icon"
+                , lib ++ ".Icon.menu [] []"
+                , ""
+                , "-- A custom / app-specific icon"
+                , lib ++ ".Icon.custom \"my_custom_icon\" [] []"
+                ]
+
+        contents =
+            String.join "\n"
+                ([ "# " ++ pkg.name
+                 , ""
+                 , pkg.summary
+                 , ""
+                 , "This package is a standalone sub-package of [elm-m3e](https://github.com/jackhp95/elm-m3e)."
+                 , "It depends ONLY on `elm/html` and `jackhp95/elm-html-intermediate-representation`"
+                 , "— no `elm-m3e-components` dependency. Suitable for projects that need only icons"
+                 , "without the full component library."
+                 , ""
+                 , "**Generated file.** Do not edit `src/` by hand — run `npm run gen:src` in the"
+                 , "elm-m3e repo to regenerate from the icon catalog (`config/icons-catalog.json`)."
+                 , ""
+                 , "## Usage"
+                 , ""
+                 , "```elm"
+                 , "import " ++ lib ++ ".Icon"
+                 , ""
+                 ]
+                    ++ usageLines
+                    ++ [ "```"
+                       , ""
+                       , "## License"
+                       , ""
+                       , "BSD-3-Clause — see [LICENSE](LICENSE)."
+                       ]
+                )
+                ++ "\n"
+    in
+    { path = "../" ++ pkg.dir ++ "/README.md", contents = contents, warnings = [] }
+
+
+{-| Port of gen-icon-module.js:403-412's LICENSE copy — `pkg.licenseText` is
+the elm-m3e workspace root's `LICENSE` file, injected into flags by
+`bin/elm-cem.js`'s `injectPackageLicense` (Elm has no filesystem access to
+read it itself). `Nothing` when no root `LICENSE` exists, mirroring the JS's
+own graceful "no root LICENSE found, skipping" warning.
+-}
+iconPackageLicenseFile : IconPackageConfig -> Maybe Elm.File
+iconPackageLicenseFile pkg =
+    pkg.licenseText
+        |> Maybe.map (\text -> { path = "../" ++ pkg.dir ++ "/LICENSE", contents = text, warnings = [] })
+
+
 {-| Emit `<lib>.Icon` plus, when `package` is configured, the standalone
 package tree (module + elm.json), as `Elm.File`s. `Nothing` config is a
 silent no-op, mirroring gen-icon-module.js's own opt-in behavior when
@@ -458,7 +533,9 @@ files maybeConfig =
                                             Just pkg ->
                                                 [ iconPackageTreeFiles pkg cfg.lib src
                                                 , iconPackageElmJsonFile pkg cfg.lib
+                                                , iconPackageReadmeFile pkg cfg.lib cfg.shape
                                                 ]
+                                                    ++ (iconPackageLicenseFile pkg |> Maybe.map List.singleton |> Maybe.withDefault [])
                                 in
                                 mainFile :: packageFiles
                             )

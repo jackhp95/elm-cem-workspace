@@ -52,6 +52,24 @@ export function runGoldenGenerate(outputDir) {
   );
 }
 
+/** Path to the real elm-m3e workspace root's LICENSE file. */
+export const elmM3eLicensePath = path.join(elmM3e, "LICENSE");
+
+/**
+ * Copy the real elm-m3e workspace root's LICENSE into a throwaway `workDir`
+ * (the directory ONE level above the test's `--output` tmp dir), so
+ * `bin/elm-cem.js`'s `injectPackageLicense` — which reads
+ * `<repoRoot>/LICENSE`, where `repoRoot` is computed as `dirname(--output)` —
+ * finds one at the tmp `repoRoot` a test actually generates against. Without
+ * this, a fresh mkdtempSync work dir has no LICENSE at that location and the
+ * icon/family package emitters correctly (per their own designed behavior)
+ * skip emitting LICENSE — which would make the golden tests pass trivially
+ * without ever exercising the LICENSE emission path at all.
+ */
+export function seedWorkRootLicense(workDir) {
+  fs.copyFileSync(elmM3eLicensePath, path.join(workDir, "LICENSE"));
+}
+
 /** Byte-compare `freshPath` against `goldenPath`; returns { ok, detail }. */
 export function byteEqual(goldenPath, freshPath) {
   if (!fs.existsSync(goldenPath)) return { ok: false, detail: `golden file missing: ${goldenPath}` };

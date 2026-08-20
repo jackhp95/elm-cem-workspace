@@ -13,13 +13,14 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { makeCheck } from "./lib/harness.mjs";
-import { goldenIconModuleDir, runGoldenGenerate, byteEqual } from "./lib/golden.mjs";
+import { goldenIconModuleDir, runGoldenGenerate, byteEqual, seedWorkRootLicense } from "./lib/golden.mjs";
 
 const { check, finish } = makeCheck("golden-icon-module");
 
 const work = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-golden-icon-"));
 const outDir = path.join(work, "out");
 fs.mkdirSync(outDir, { recursive: true });
+seedWorkRootLicense(work);
 
 const gen = runGoldenGenerate(outDir);
 check(gen.status === 0, "elm-cem generation exits 0 against brands/m3e's real config", gen.stdout + gen.stderr);
@@ -42,6 +43,18 @@ if (gen.status === 0) {
     path.join(repoRootFresh, "elm-m3e-icons", "elm.json")
   );
   check(pkgElmJson.ok, "fresh elm-m3e-icons/elm.json is byte-identical to the golden fixture", pkgElmJson.detail);
+
+  const pkgReadme = byteEqual(
+    path.join(goldenIconModuleDir, "elm-m3e-icons", "README.md"),
+    path.join(repoRootFresh, "elm-m3e-icons", "README.md")
+  );
+  check(pkgReadme.ok, "fresh elm-m3e-icons/README.md is byte-identical to the golden fixture", pkgReadme.detail);
+
+  const pkgLicense = byteEqual(
+    path.join(goldenIconModuleDir, "elm-m3e-icons", "LICENSE"),
+    path.join(repoRootFresh, "elm-m3e-icons", "LICENSE")
+  );
+  check(pkgLicense.ok, "fresh elm-m3e-icons/LICENSE is byte-identical to the golden fixture", pkgLicense.detail);
 }
 
 fs.rmSync(work, { recursive: true, force: true });

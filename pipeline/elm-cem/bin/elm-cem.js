@@ -154,7 +154,8 @@ const afterReconcile = reconcileTagNames(rawArgvNoFactsFlag);
 const afterAliases = recordTypeAliases(afterReconcile);
 const afterConfig = injectConfig(afterAliases);
 const afterIconCatalog = injectIconCatalog(afterConfig);
-const afterNativeAttrs = injectNativeAttrs(afterIconCatalog);
+const afterPackageLicense = injectPackageLicense(afterIconCatalog);
+const afterNativeAttrs = injectNativeAttrs(afterPackageLicense);
 const args = injectFactsBundleFlag(afterNativeAttrs, Boolean(factsBundleDir));
 const outputDir = parseOutput(args);
 const publishShape = readPublishShape(process.argv.slice(2));
@@ -467,6 +468,56 @@ function injectIconCatalog(argv) {
   }
   cem._config._iconModule.names = names;
   const tmp = writeTemp("elm-cem-icon-catalog", JSON.stringify(cem));
+  const out = argv.slice();
+  if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
+  else out[flagIdx + 1] = tmp;
+  return out;
+}
+
+// Inject the elm-m3e workspace root's LICENSE text into
+// `_iconModule.package.licenseText` / `_families.package.licenseText` — Elm
+// has no filesystem access to read `<repoRoot>/LICENSE` itself (research
+// §3), so the CLI shell reads it once and hands it to both package emitters
+// as data. Mirrors injectIconCatalog's pattern. Ported from
+// gen-icon-module.js:403-412 / gen-family-package.js:488-500's LICENSE-copy
+// step, minus the "only if destination absent" check (Elm has no way to
+// probe that; elm-codegen's writer overwrites every run regardless — same
+// behavior narrowing already made for README.md, documented at each
+// emitter's `licenseFile`/`readmeFile`). A no-op if neither `_iconModule`
+// nor `_families` declares a `package` block, or if no root LICENSE exists
+// (matching the JS's own graceful "no root LICENSE found, skipping" warning).
+function injectPackageLicense(argv) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  const outputVal = parseOutput(argv);
+  if (flagIdx === -1 || !outputVal) return argv;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return argv;
+  }
+  const cfg = cem._config;
+  if (!cfg) return argv;
+  const im = cfg._iconModule;
+  const fam = cfg._families;
+  const needsIm = Boolean(im && im.package && !im.package.licenseText);
+  const needsFam = Boolean(fam && fam.package && !fam.package.licenseText);
+  if (!needsIm && !needsFam) return argv;
+
+  const repoRoot = path.dirname(path.resolve(process.cwd(), outputVal));
+  let licenseText;
+  try {
+    licenseText = fs.readFileSync(path.join(repoRoot, "LICENSE"), "utf8");
+  } catch {
+    return argv;
+  }
+  if (needsIm) im.package.licenseText = licenseText;
+  if (needsFam) fam.package.licenseText = licenseText;
+
+  const tmp = writeTemp("elm-cem-package-license", JSON.stringify(cem));
   const out = argv.slice();
   if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
   else out[flagIdx + 1] = tmp;

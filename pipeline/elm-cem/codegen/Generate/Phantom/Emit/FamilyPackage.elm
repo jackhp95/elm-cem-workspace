@@ -31,12 +31,14 @@ regex" elegance for a much smaller, lower-risk diff — the byte-equality
 golden test is this port's real acceptance bar, and this path reaches it
 without touching `Component.elm` at all.
 
-Also DELIBERATELY DROPPED, matching the icon module's port
-(`Generate.Phantom.Emit.IconModule`) and Task 7's own design note that
-"only if absent" semantics don't survive the move to a single-pass, no-
-filesystem-access generator: `README.md`/`LICENSE` generation
-(`gen-family-package.js:450-500`). `elm.json` — the one package-tree file
-this module's golden test governs — is still emitted.
+`README.md`/`LICENSE` generation (`gen-family-package.js:450-500`) IS
+emitted (`familyReadmeFile`/`familyLicenseFile`) — matching the icon
+module's port. The only narrowing, per Task 7's own design note, is dropping
+README's "only if destination absent" check (Elm has no filesystem access to
+probe that, and elm-codegen's writer overwrites unconditionally every run
+regardless, so this is a no-op for byte-equality); LICENSE keeps its
+conditional shape via `Maybe Elm.File`, sourced from `licenseText` injected
+into flags by `bin/elm-cem.js`'s `injectPackageLicense`.
 
 Also DROPPED: `_families.componentsFrom` (an override letting the JS
 generator read a member's flat surface from some OTHER pre-built src/ tree
@@ -784,10 +786,65 @@ familyElmJsonFile pkg exposedModules =
     { path = "../" ++ pkg.dir ++ "/elm.json", contents = contents, warnings = [] }
 
 
+{-| Port of gen-family-package.js:453-482's README template — a fixed,
+non-family-parameterized usage example (the JS hardcodes `M3e.Family.Chip`
+literally rather than deriving it from any emitted family; preserved
+verbatim per the plan's "port line-for-line" rule). Always emitted — same
+"only if absent is a no-op here" reasoning as
+`Generate.Phantom.Emit.IconModule.iconPackageReadmeFile`.
+-}
+familyReadmeFile : FamilyPackageConfig -> Elm.File
+familyReadmeFile pkg =
+    let
+        contents =
+            String.join "\n"
+                [ "# " ++ pkg.name
+                , ""
+                , pkg.summary
+                , ""
+                , "This package is a standalone sub-package of [elm-m3e](https://github.com/jackhp95/elm-m3e)."
+                , "It is a **purely additive** re-organization: each module here is a **flat**"
+                , "family module that re-exports the member elements of one family from the flat"
+                , "`M3e.Component.*` surface — element-named constructors (`M3e.Family.Chip.assist`"
+                , "delegates to `M3e.Component.AssistChip.component`) plus element-prefixed types"
+                , "(`AssistIs`, `AssistAttrs`) and element-prefixed helpers (`assistVariant`) —"
+                , "so nothing built against the flat surface regresses. Depends on"
+                , "`jackhp95/elm-m3e-components` — it adds no logic of its own."
+                , ""
+                , "**Generated file.** Do not edit `src/` by hand — run `npm run gen:src` in the"
+                , "elm-m3e repo to regenerate from the `_families` config (`config/slots.json`)."
+                , ""
+                , "## Usage"
+                , ""
+                , "```elm"
+                , "import M3e.Family.Chip as Chip"
+                , ""
+                , "Chip.set [] [ Chip.child (Chip.assist [] [ Chip.assistChild ... ]) ]"
+                , "```"
+                , ""
+                , "## License"
+                , ""
+                , "BSD-3-Clause — see [LICENSE](LICENSE)."
+                ]
+                ++ "\n"
+    in
+    { path = "../" ++ pkg.dir ++ "/README.md", contents = contents, warnings = [] }
+
+
+{-| Port of gen-family-package.js:488-500's LICENSE copy — see
+`Generate.Phantom.Emit.IconModule.iconPackageLicenseFile`'s doc comment for
+the identical `licenseText`/`injectPackageLicense` mechanism.
+-}
+familyLicenseFile : FamilyPackageConfig -> Maybe Elm.File
+familyLicenseFile pkg =
+    pkg.licenseText
+        |> Maybe.map (\text -> { path = "../" ++ pkg.dir ++ "/LICENSE", contents = text, warnings = [] })
+
+
 {-| Emit every `<lib>.<namespace>.<Family>` flat family module plus the
-standalone package's `elm.json`. `Nothing` config is a silent no-op,
-mirroring gen-family-package.js's own opt-in behavior when `_families` is
-absent.
+standalone package's `elm.json`/`README.md`/`LICENSE`. `Nothing` config is a
+silent no-op, mirroring gen-family-package.js's own opt-in behavior when
+`_families` is absent.
 -}
 files : Brand -> Maybe FamiliesConfig -> Result String (List Elm.File)
 files brand maybeConfig =
@@ -812,6 +869,12 @@ files brand maybeConfig =
 
                             srcFiles =
                                 rendered |> List.map .elmFile
+
+                            packageFiles =
+                                [ familyElmJsonFile cfg.package exposedModules
+                                , familyReadmeFile cfg.package
+                                ]
+                                    ++ (familyLicenseFile cfg.package |> Maybe.map List.singleton |> Maybe.withDefault [])
                         in
-                        srcFiles ++ [ familyElmJsonFile cfg.package exposedModules ]
+                        srcFiles ++ packageFiles
                     )

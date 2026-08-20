@@ -74,7 +74,11 @@ type alias IconModuleConfig =
 
 {-| The standalone-package half of `_iconModule`/`_families` config: mirrors
 the JS generators' `package: { dir, name, summary, version, deps }` shape
-(`bin/gen-icon-module.js`, `bin/gen-family-package.js`).
+(`bin/gen-icon-module.js`, `bin/gen-family-package.js`). `licenseText` is NOT
+part of the hand-authored JSON shape — like `IconModuleConfig.names`, it is
+injected into flags by the CLI shell (`bin/elm-cem.js`'s
+`injectPackageLicense`) from the elm-m3e workspace root's `LICENSE` file,
+since Elm's single-shot `main` has no filesystem access to read it itself.
 -}
 type alias IconPackageConfig =
     { dir : String
@@ -82,6 +86,7 @@ type alias IconPackageConfig =
     , summary : String
     , version : String
     , deps : List ( String, String )
+    , licenseText : Maybe String
     }
 
 

@@ -12,7 +12,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { makeCheck } from "./lib/harness.mjs";
-import { goldenFamilyPackageDir, runGoldenGenerate, byteEqual } from "./lib/golden.mjs";
+import { goldenFamilyPackageDir, runGoldenGenerate, byteEqual, seedWorkRootLicense } from "./lib/golden.mjs";
 
 const { check, finish } = makeCheck("golden-family-package");
 
@@ -23,6 +23,7 @@ check(familyFiles.length > 0, "golden elm-m3e-families fixture tree is non-empty
 const work = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-golden-family-"));
 const outDir = path.join(work, "out");
 fs.mkdirSync(outDir, { recursive: true });
+seedWorkRootLicense(work);
 
 const gen = runGoldenGenerate(outDir);
 check(gen.status === 0, "elm-cem generation exits 0 against brands/m3e's real config", gen.stdout + gen.stderr);
@@ -41,6 +42,18 @@ if (gen.status === 0) {
     path.join(repoRootFresh, "elm-m3e-families", "elm.json")
   );
   check(elmJson.ok, "fresh elm-m3e-families/elm.json is byte-identical to the golden fixture", elmJson.detail);
+
+  const readme = byteEqual(
+    path.join(goldenFamilyPackageDir, "README.md"),
+    path.join(repoRootFresh, "elm-m3e-families", "README.md")
+  );
+  check(readme.ok, "fresh elm-m3e-families/README.md is byte-identical to the golden fixture", readme.detail);
+
+  const license = byteEqual(
+    path.join(goldenFamilyPackageDir, "LICENSE"),
+    path.join(repoRootFresh, "elm-m3e-families", "LICENSE")
+  );
+  check(license.ok, "fresh elm-m3e-families/LICENSE is byte-identical to the golden fixture", license.detail);
 
   // No file must exist in the fresh tree that isn't in the golden set (proves
   // the port's clean-then-write behavior, ported from

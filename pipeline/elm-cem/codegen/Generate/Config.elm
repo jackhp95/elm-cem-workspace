@@ -152,13 +152,14 @@ decodeConfigResult flags =
 
         iconPackageDecoder : Json.Decode.Decoder IconPackageConfig
         iconPackageDecoder =
-            Json.Decode.map5
-                (\dir nm summary version deps -> { dir = dir, name = nm, summary = summary, version = version, deps = deps })
+            Json.Decode.map6
+                (\dir nm summary version deps licenseText -> { dir = dir, name = nm, summary = summary, version = version, deps = deps, licenseText = licenseText })
                 (Json.Decode.field "dir" Json.Decode.string)
                 (Json.Decode.field "name" Json.Decode.string)
                 (Json.Decode.field "summary" Json.Decode.string)
                 (Json.Decode.field "version" Json.Decode.string)
                 (opt "deps" depPairsDecoder [])
+                (Json.Decode.maybe (Json.Decode.field "licenseText" Json.Decode.string))
 
         iconModuleDecoder : Json.Decode.Decoder IconModuleConfig
         iconModuleDecoder =
