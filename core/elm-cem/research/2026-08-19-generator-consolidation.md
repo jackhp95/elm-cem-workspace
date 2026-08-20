@@ -74,25 +74,47 @@ Everything else in `elm-cem.js` (`injectConfig` deep-merge, `parseOutput`,
 `readPublishShape`) is JSON-shuffling that exists only because flags arrive from N
 `--config-from` files; elm-codegen's directory-flags mode can absorb most of it.
 
-## 5. Migration risks (ranked)
+## 5. Migration risks — de-risked
 
-1. **DAG-check fidelity (hardest).** Today's gate regexes the *literal bytes*
-   written to disk, including hand-authored raw-string `import`s in each
-   `Generate/Phantom/Emit/*` module (`Emit.elm:5` — raw strings, not
-   elm-codegen's auto-import-tracked API). Moving it into Elm requires each
-   emitter to also **declare its imports as data** so the check stays byte-faithful
-   — a refactor across every emitter, else the gate silently weakens.
-2. **Undocumented writer reliance.** Multi-package emission via `path: "../other-pkg/src/X.elm"`
-   works only because `path.join` resolves `..` (`run.js:161`); nothing in
-   elm-codegen's contract promises this. A future sandboxed writer would break it.
-   Flag to elm-codegen or design a first-class multi-output mechanism.
-3. **`_families`/`_iconModule` not in flags** — plumbing, but touches
-   `Generate.Config`'s decoder and the `_config` deep-merge (`elm-cem.js:425-450`),
-   whose two-level merge assumption doesn't fit these nested-object keys.
-4. **Idempotency state must be pre-staged** into flags (README/LICENSE preserve).
-5. **Easy:** `reconcileTagNames` (`elm-cem.js:265-324`) is a pure CEM-JSON transform
-   already shaped like `Generate.Normalize` — mechanical to port. `gen-icon-module`
-   ports with the lowest risk once its config reaches flags.
+The two risks first raised were artifacts of one framing (move *everything* —
+partition, DAG check, emission via `..` — into Elm). Under a small reframe they
+dissolve; verified against the real code (2026-08-19 spike).
+
+**Risk 1 — DAG-check fidelity: RESOLVED (it's a gate, not generation).** The
+dep-DAG check (`split.js:153-191`) needs only `modToPkg` (the module→package map)
+and the emitted files' bytes — both available *after* emission (`split.js:170-171`
+reads each module's source and scans `import` lines). It never has to move into
+the Elm pass; it stays a thin JS **gate** over the emitted tree, reading real
+bytes exactly as today. No "every emitter declares its imports as data" refactor.
+Only the *partition decision* (module→package) and emission location could move to
+Elm — and the gate re-derives the map from `packages.json` (or reads a map the Elm
+pass emits).
+
+**Risk 2 — undocumented writer `..`-traversal: RESOLVED (don't use `..`).**
+elm-codegen writes `fullpath = path.join(output_dir, file.path)` with recursive
+`mkdir` and **no path validation** (`elm-codegen@0.6.3/dist/run.js:161-163`). Set
+`output_dir` to the **packages root** and give each file a nested path
+`<pkg>/src/<Module>.elm` — ordinary nested emission, no `..`. **Already proven in
+production:** today's codegen emits nested paths like `M3e/Component/ListItem.elm`
+via `file [ lib, "Component", comp.name ]` (`Emit/Component.elm:646`); adding a
+`<pkg>/src` prefix is the identical mechanism. The undocumented `..`-escape is
+simply never used. (Residual, flag-only: if a future elm-codegen sandboxes
+`output_dir`, even nested paths could be affected — low, since nested paths are its
+normal behavior, how every multi-file generator including this one already works.)
+
+**Conservative fallback (independent of both):** keep `split.js` as a thin JS
+**packager** (Elm emits flat as today; split partitions + gates + writes elm.json
++ copies). Then folding `gen-icon-module` + `gen-family-package` into the Elm pass
+— the high-value wins — carries **neither** risk; only an optional later move of
+the partition into Elm touches them, de-risked above.
+
+Remaining (ordinary, not risks):
+- **`_families`/`_iconModule` not in flags** — plumbing; touches `Generate.Config`'s
+  decoder and the `_config` deep-merge (`elm-cem.js:425-450`), whose two-level merge
+  doesn't fit these nested-object keys (needs its own merge rule).
+- **Idempotency state pre-staged** into flags (README/LICENSE preserve).
+- **`reconcileTagNames`** (`elm-cem.js:265-324`) is a pure CEM-JSON transform shaped
+  like `Generate.Normalize` — mechanical to port.
 
 ## 6. Holistic JS script census
 
@@ -166,10 +188,11 @@ spec's phases:
 - **G2 — port `gen-icon-module` into the Elm pass** (lowest risk, zero CEM dep).
 - **G3 — port `gen-family-package` into the Elm pass** (kills the fragile
   text-reparse; uses `Brand.comps` natively).
-- **G4 — move `split`'s partition + DAG check into the Elm pass**, emitting
-  directly into per-package `src/` — **gated on** resolving risk #1 (emitters
-  declare their imports as data) and a decision on risk #2 (writer `..`-traversal
-  vs a first-class multi-output mechanism / raising it with elm-codegen).
+- **G4 — (optional) move `split`'s partition into the Elm pass**, emitting directly
+  into per-package `<pkg>/src/` under a packages-root output (nested paths, no
+  `..`; §5). The **DAG check stays a thin JS gate** reading the emitted bytes — not
+  moved. No longer gated on any hard risk. Skippable entirely by keeping `split.js`
+  as a JS packager (fallback, §5).
 - **Parallel cleanups** (independent, low-risk): route `examples-gen/lib/facts.mjs`
   + `gen-figma-config.mjs` through `regen.mjs`; run the `_native` dead-surface
   removal; extend Brand Facts to close the `oracle.mjs`/`extract.mjs` bypasses

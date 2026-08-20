@@ -478,6 +478,30 @@ Each phase becomes its own plan (`superpowers:writing-plans`) with its own revie
 The original `admits`-for-Task-1 goal is a slice of phases 2+4; it stops being a
 special case.
 
+### Companion track — generator consolidation (G1–G4)
+
+Collapse the three generators into the one Elm codegen pass (full rationale +
+feasibility + de-risking in `core/elm-cem/research/2026-08-19-generator-consolidation.md`).
+Shares the "make the Elm model authoritative" move with the facts work; both
+**risks are de-risked** (research §5), so this can proceed with confidence.
+
+- **G1 — plumb `_families`/`_iconModule` into Elm flags** (touches
+  `Generate.Config` + `_config` deep-merge). Unblocks G2/G3.
+- **G2 — port `gen-icon-module` into the Elm pass** (lowest risk; zero CEM dep).
+- **G3 — port `gen-family-package` into the Elm pass** (kills the fragile
+  text-reparse; uses `Brand.comps` natively).
+- **G4 — (optional) move `split`'s partition into the Elm pass**, emitting nested
+  `<pkg>/src/…` under a packages-root output; the **DAG check stays a JS gate**
+  reading emitted bytes. Skippable — `split.js` can remain a thin JS packager.
+- **Parallel cleanups:** route `examples-gen/lib/facts.mjs` + `gen-figma-config.mjs`
+  through `regen.mjs`; run the `_native` dead-surface removal (folds into phase 3);
+  close the `oracle.mjs`/`extract.mjs` facts-bypasses via the phase-2 superset +
+  a `restingDisplay` fact (folds into phases 2/4).
+
+Sequencing: G1→G2→G3 are independent of the facts phases and of the package
+rename/reorg, and carry neither risk — safe to run early. G4 and the bypass
+closures interleave with facts phases 2/4.
+
 ## 8. Blast radius / migration cost
 
 Touched: `core/elm-cem/bin/facts-bundle.js` + `core/elm-cem/codegen/**` (producer),
