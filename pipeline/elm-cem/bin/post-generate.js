@@ -31,10 +31,13 @@ function extractConfigFromPaths(argv) {
 // would misclassify this file as a subcommand and fail that test's
 // silent-no-op check when invoked with no args.
 
-/** Run the icon-module and family-package generators against `outputDir`. */
+/** Run the family-package generator against `outputDir`. */
 function runPostGenerate(argv, outputDir) {
   const configFromPaths = extractConfigFromPaths(argv);
-  require("./gen-icon-module").run(argv, configFromPaths, outputDir);
+  // gen-icon-module removed (G2, 2026-08-19 generator-consolidation): ported
+  // into Generate.Phantom.Emit.IconModule — the Elm codegen pass now emits
+  // <Lib>.Icon (and its standalone package tree) directly.
+  //
   // Runs AFTER the flat gen so it re-exports the current surface; purely
   // additive (a separate package tree), never touches the flat src just written.
   require("./gen-family-package").run(argv, configFromPaths, outputDir);

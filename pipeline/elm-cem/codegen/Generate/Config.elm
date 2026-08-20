@@ -163,26 +163,53 @@ decodeConfigResult flags =
         iconModuleDecoder : Json.Decode.Decoder IconModuleConfig
         iconModuleDecoder =
             Json.Decode.map8
-                (\lib iconComp catalogFrom shape tag iconFamily attribution pkg ->
+                (\lib iconComp catalogFrom shape maybeTag maybeIconFamily attribution pkg ->
                     { lib = lib
                     , iconComp = iconComp
                     , catalogFrom = catalogFrom
                     , shape = shape
-                    , tag = tag
-                    , iconFamily = iconFamily
+                    , maybeTag = maybeTag
+                    , maybeIconFamily = maybeIconFamily
                     , attribution = attribution
                     , package = pkg
-                    , names = Nothing
                     }
                 )
                 (Json.Decode.field "lib" Json.Decode.string)
                 (Json.Decode.field "iconComp" Json.Decode.string)
                 (Json.Decode.field "catalogFrom" Json.Decode.string)
                 (opt "shape" Json.Decode.string "names")
-                (Json.Decode.field "tag" Json.Decode.string)
-                (Json.Decode.field "iconFamily" Json.Decode.string)
+                (Json.Decode.maybe (Json.Decode.field "tag" Json.Decode.string))
+                (Json.Decode.maybe (Json.Decode.field "iconFamily" Json.Decode.string))
                 (Json.Decode.maybe (Json.Decode.field "attribution" Json.Decode.string))
                 (Json.Decode.maybe (Json.Decode.field "package" iconPackageDecoder))
+                |> Json.Decode.andThen
+                    (\partial ->
+                        -- finding 2.1 (2026-08-17 thermonuclear review): a brand
+                        -- opting into `_iconModule` without supplying its own
+                        -- tag/iconFamily used to silently get M3E's "m3e-icon"/
+                        -- "Material Symbols" baked in. Fail loud instead, with a
+                        -- message naming the exact config keys (matching
+                        -- gen-icon-module.js's own error text) — a generic
+                        -- "missing field" decode error wouldn't name
+                        -- `_iconModule.tag` specifically.
+                        case ( partial.maybeTag, partial.maybeIconFamily ) of
+                            ( Just tag, Just iconFamily ) ->
+                                Json.Decode.succeed
+                                    { lib = partial.lib
+                                    , iconComp = partial.iconComp
+                                    , catalogFrom = partial.catalogFrom
+                                    , shape = partial.shape
+                                    , tag = tag
+                                    , iconFamily = iconFamily
+                                    , attribution = partial.attribution
+                                    , package = partial.package
+                                    , names = Nothing
+                                    }
+
+                            _ ->
+                                Json.Decode.fail
+                                    "_iconModule.tag and _iconModule.iconFamily are both required (without them the generator has no brand-neutral way to name the emitted element or the icon set in doc prose)."
+                    )
                 |> Json.Decode.andThen
                     (\im ->
                         Json.Decode.maybe (Json.Decode.field "names" (Json.Decode.list Json.Decode.string))
@@ -238,12 +265,35 @@ decodeConfigResult flags =
                         configValue
                         |> Result.mapError Json.Decode.errorToString
 
+                -- Presence-aware, like `optStrict`: an ABSENT `_iconModule`/
+                -- `_families` key decodes to `Nothing` (both are opt-in), but a
+                -- PRESENT-but-malformed one (e.g. missing the required `tag`/
+                -- `iconFamily` fields) must fail LOUD, not silently collapse to
+                -- `Nothing` — that silent collapse is exactly the finding 2.1
+                -- bug class (a brand without its own tag/iconFamily quietly
+                -- getting no icon module at all instead of a loud error).
+                -- `Json.Decode.maybe` on the WHOLE field+decoder pair (the
+                -- naive form) cannot distinguish "absent" from "present but
+                -- fails to decode" — both collapse to `Nothing` — so presence
+                -- is checked separately first.
+                presenceAwareMaybe fieldName dec =
+                    Json.Decode.maybe (Json.Decode.field fieldName Json.Decode.value)
+                        |> Json.Decode.andThen
+                            (\present ->
+                                case present of
+                                    Nothing ->
+                                        Json.Decode.succeed Nothing
+
+                                    Just _ ->
+                                        Json.Decode.field fieldName dec |> Json.Decode.map Just
+                            )
+
                 iconModuleResult =
-                    Json.Decode.decodeValue (Json.Decode.maybe (Json.Decode.field "_iconModule" iconModuleDecoder)) configValue
+                    Json.Decode.decodeValue (presenceAwareMaybe "_iconModule" iconModuleDecoder) configValue
                         |> Result.mapError Json.Decode.errorToString
 
                 familiesResult =
-                    Json.Decode.decodeValue (Json.Decode.maybe (Json.Decode.field "_families" familiesDecoder)) configValue
+                    Json.Decode.decodeValue (presenceAwareMaybe "_families" familiesDecoder) configValue
                         |> Result.mapError Json.Decode.errorToString
             in
             Result.map4

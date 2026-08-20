@@ -85,7 +85,7 @@ emitErrors f =
             List.map (\e -> "RESOLVE: " ++ e) es
 
         Ok brand ->
-            case Emit.files (f brand) of
+            case Emit.files (f brand) Nothing Nothing of
                 Ok _ ->
                     []
 

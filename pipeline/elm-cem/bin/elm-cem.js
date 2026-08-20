@@ -153,7 +153,8 @@ const { argv: rawArgvNoFactsFlag, factsBundleDir } = extractFactsBundleDir(proce
 const afterReconcile = reconcileTagNames(rawArgvNoFactsFlag);
 const afterAliases = recordTypeAliases(afterReconcile);
 const afterConfig = injectConfig(afterAliases);
-const afterNativeAttrs = injectNativeAttrs(afterConfig);
+const afterIconCatalog = injectIconCatalog(afterConfig);
+const afterNativeAttrs = injectNativeAttrs(afterIconCatalog);
 const args = injectFactsBundleFlag(afterNativeAttrs, Boolean(factsBundleDir));
 const outputDir = parseOutput(args);
 const publishShape = readPublishShape(process.argv.slice(2));
@@ -418,6 +419,46 @@ function injectConfig(argv) {
   cem._config = deepMergeConfigs(parsedList);
   const tmp = writeTemp("elm-cem-cfg", JSON.stringify(cem));
   console.log("elm-cem: merged --config-from");
+  if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
+  else out[flagIdx + 1] = tmp;
+  return out;
+}
+
+// Icon catalog names must reach Elm as data, not a filesystem path — Elm's
+// single-shot main has no fs access (research §3). Ported from
+// gen-icon-module.js:472-484's catalog read; runs AFTER injectConfig so
+// _config._iconModule (if any) is already merged into the flags file. G2
+// (generator-consolidation): Generate.Phantom.Emit.IconModule reads
+// `_iconModule.names` from flags instead of reading `catalogFrom` itself.
+function injectIconCatalog(argv) {
+  const flagIdx = argv.findIndex((a) => a === "--flags-from" || a.startsWith("--flags-from="));
+  if (flagIdx === -1) return argv;
+  const cemArg = argv[flagIdx].startsWith("--flags-from=")
+    ? argv[flagIdx].slice("--flags-from=".length)
+    : argv[flagIdx + 1];
+  let cem;
+  try {
+    cem = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), cemArg), "utf8"));
+  } catch {
+    return argv;
+  }
+  const im = cem._config && cem._config._iconModule;
+  if (!im || !im.catalogFrom || im.names) return argv;
+  let names;
+  try {
+    const cat = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), im.catalogFrom), "utf8"));
+    names = cat.names;
+  } catch (e) {
+    console.error(`elm-cem: could not read icon catalog at ${im.catalogFrom}: ${e.message}`);
+    process.exit(1);
+  }
+  if (!Array.isArray(names) || names.length === 0) {
+    console.error(`elm-cem: icon catalog at ${im.catalogFrom} has no "names" array`);
+    process.exit(1);
+  }
+  cem._config._iconModule.names = names;
+  const tmp = writeTemp("elm-cem-icon-catalog", JSON.stringify(cem));
+  const out = argv.slice();
   if (out[flagIdx].startsWith("--flags-from=")) out[flagIdx] = `--flags-from=${tmp}`;
   else out[flagIdx + 1] = tmp;
   return out;
