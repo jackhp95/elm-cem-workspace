@@ -42,6 +42,7 @@ const PLAIN_TARGETS = [
     "packages/elm-virtual-dom-intermediate-representation/hooks/pre-push",
     "pipeline/elm-review-cem/hooks/pre-push",
     "brands/html/generated/package/elm-typed-html/hooks/pre-push",
+    "brands/shoelace/generated/package/elm-shoelace/hooks/pre-push",
     "brands/m3e/generated/okf/elm-m3e-okf/hooks/pre-push",
     "pipeline/elm-cem-figma-connect/hooks/pre-push",
 ];

@@ -1,0 +1,68 @@
+module Sl.Internal.Types.CopyButton exposing (..)
+
+{-| Internal type definitions for CopyButton — unexposed so docs.json
+shows short qualified references instead of expanded record rows.
+-}
+
+import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Value as Val exposing (Value)
+import Sl.Forge.Internal as B
+import Sl.Kind exposing (Available, Brand, Ctx, Used)
+
+
+type alias Is s =
+    { s | copyButton : Brand }
+
+
+type alias Attrs =
+    { class : Supported
+    , copyLabel : Supported
+    , disabled : Supported
+    , errorLabel : Supported
+    , feedbackDuration : Supported
+    , from : Supported
+    , hoist : Supported
+    , id : Supported
+    , onCopy : Supported
+    , onError : Supported
+    , slot : Supported
+    , style : Supported
+    , successLabel : Supported
+    , tooltipPlacement : Supported
+    , value : Supported
+    }
+
+
+type alias ChildAdmittedBy childAdm =
+    { childAdm | copyButton : Ctx }
+
+
+type alias TooltipPlacement =
+    { bottom : Supported
+    , left : Supported
+    , right : Supported
+    , top : Supported
+    }
+
+
+type alias Builder attrCaps slotCaps msg s =
+    B.Builder Attrs attrCaps slotCaps (Is s) msg
+
+
+type alias AttrCaps =
+    { class : Available
+    , copyLabel : Available
+    , disabled : Available
+    , errorLabel : Available
+    , feedbackDuration : Available
+    , from : Available
+    , hoist : Available
+    , id : Available
+    , onCopy : Available
+    , onError : Available
+    , slot : Available
+    , style : Available
+    , successLabel : Available
+    , tooltipPlacement : Available
+    , value : Available
+    }
