@@ -19,16 +19,19 @@ import { test, expect } from "@playwright/test";
  */
 
 const MOBILE = { width: 411, height: 761 };
-// A guaranteed-tall route so the inner-scroll assertion is meaningful.
-const LONG_ROUTE = "/guide/reference";
+// A guaranteed-tall route so the inner-scroll assertion is meaningful. Height
+// only needs to exceed the 761px viewport — NOT the whole catalog. A single
+// component page (Usage + live preview + code + API surfaces) is reliably tall
+// (measured 2026-08-21: /components/button yields a ~10,000px inner scroller)
+// while hydrating in ~2s. `/guide/reference` also works but upgrades 6600+
+// m3e-* custom elements (~40s cold, and the flakiest test in the suite when the
+// hydrate exceeds the per-test timeout under load) purely to be tall — a cost
+// the inner-scroll assertion does not need.
+const LONG_ROUTE = "/components/button";
 
 test.use({ viewport: MOBILE });
 
 test("mobile shell: content scrolls in a bounded inner region (nothing clipped)", async ({ page }) => {
-  // `/guide/reference` renders every component's full API in one page (5000+
-  // `m3e-card` custom elements to upgrade) -- a cold context can take longer
-  // than the default 30s timeout just to load and hydrate it.
-  test.setTimeout(60_000);
   await page.goto(LONG_ROUTE);
   await expect(page.locator("#docs-app-bar")).toBeVisible();
 

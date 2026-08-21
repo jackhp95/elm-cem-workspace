@@ -162,12 +162,13 @@ for (const width of [960, 1024, 1280, 1440]) {
 test("the mobile bottom nav bar does not occlude the end of the page content", async ({
   page,
 }) => {
-  // `/guide/reference` renders every component's full API in one page (5000+
-  // `m3e-card` custom elements to upgrade) -- a cold context can take longer
-  // than the default 30s timeout just to load and hydrate it.
-  test.setTimeout(60_000);
+  // A cheap tall page: the occlusion check needs content that extends past the
+  // viewport with the mobile bottom nav present — NOT the whole catalog. Use
+  // /components/button (measured 2026-08-21: ~10,000px inner scroll, ~2s
+  // hydrate) instead of /guide/reference (6600+ m3e-* upgrades, ~40s cold).
+  // Same app shell, same `m3e-content-pane` `.scroll-container`, far cheaper.
   await page.setViewportSize({ width: 411, height: 761 });
-  await page.goto("/guide/reference");
+  await page.goto("/components/button");
 
   const bar = page.locator("m3e-nav-bar");
   await expect(bar).toBeVisible();

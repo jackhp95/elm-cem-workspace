@@ -11,7 +11,12 @@ import { test, expect } from "@playwright/test";
  * and `all-components.spec.ts`; here we only confirm the gate reveals and the
  * stacked page mounts cleanly with its anchors.
  */
-test("/components/all reveals and renders many components", async ({ page }) => {
+// Tagged @heavy: this stacks ~2200 custom-element upgrades on one page (~30s+
+// render) and is a BROAD smoke test — its per-component depth is already covered
+// by all-components.spec.ts + usage.spec.ts. The fast local `gate-all` browser
+// step excludes @heavy (browser-guard.mjs); CI (REQUIRE_CLONE_GATES=1) and
+// RUN_HEAVY=1 still run it, so full-scale-mount coverage is never lost.
+test("/components/all reveals and renders many components", { tag: "@heavy" }, async ({ page }) => {
   // The kitchen sink stacks all 329 examples on one page (every component's
   // Usage section at once), so first paint + hydration genuinely takes longer
   // than the default 30s Playwright test timeout — this is real render cost,

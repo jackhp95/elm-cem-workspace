@@ -36,7 +36,20 @@ if (missing.length > 0 && require) {
     process.exit(1);
 }
 
-const res = spawnSync(resolve(DOCS, "node_modules/.bin/playwright"), ["test", ...process.argv.slice(2)], {
+// The @heavy tests (full-catalog kitchen-sink renders — e.g. /components/all's
+// ~2200-upgrade page) are broad smoke nets whose per-component depth is already
+// covered by all-components.spec.ts + usage.spec.ts. They dominate local
+// `gate-all` wall time, so the fast local gate excludes them; CI
+// (REQUIRE_CLONE_GATES=1) and an explicit RUN_HEAVY=1 run the full suite so
+// full-scale-mount coverage is never lost. `--grep-invert` is prepended so a
+// caller-supplied grep still composes (Playwright ANDs the two).
+const runHeavy = require || process.env.RUN_HEAVY === "1";
+const heavyFilter = runHeavy ? [] : ["--grep-invert", "@heavy"];
+if (!runHeavy) {
+    console.log("test:browser: excluding @heavy full-catalog tests (fast local gate) — set RUN_HEAVY=1 or REQUIRE_CLONE_GATES=1 to include them");
+}
+
+const res = spawnSync(resolve(DOCS, "node_modules/.bin/playwright"), ["test", ...heavyFilter, ...process.argv.slice(2)], {
     cwd: DOCS,
     stdio: "inherit",
 });
