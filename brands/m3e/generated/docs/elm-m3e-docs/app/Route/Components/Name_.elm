@@ -18,8 +18,8 @@ import FatalError exposing (FatalError)
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.ListItem
+import M3e.Element.Card
+import M3e.Element.ListItem
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
@@ -28,7 +28,7 @@ import Shared
 import Theme.Ports
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -150,7 +150,7 @@ a display heading (with its category chip alongside), the cleaned one-line CEM
 summary, and a barrel-first install card. Events and slots are documented by the
 colocated API section below, not repeated here.
 -}
-header : Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+header : Component -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 header component =
     TypedHtml.div [ TA.class "space-y-4" ]
         (TypedHtml.div [ TA.class "flex flex-wrap items-center gap-3" ]
@@ -169,7 +169,7 @@ header component =
 component, from `data/example-usage.json`. Rendered only when non-empty, so a
 component absent from every example app shows no section at all.
 -}
-exampleAppsSection : List ExampleUsage -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
+exampleAppsSection : List ExampleUsage -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg)
 exampleAppsSection usages =
     if List.isEmpty usages then
         []
@@ -217,7 +217,7 @@ figmaPill figma =
 {-| The one-line summary paragraph, constrained to a comfortable reading measure.
 Empty ⇒ nothing.
 -}
-summaryBlock : String -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
+summaryBlock : String -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg)
 summaryBlock summary =
     if summary == "" then
         []
@@ -234,14 +234,14 @@ same filled, rounded code block the Usage section uses (matraic's install card i
 a bare `<pre>`); wrapping it in an outlined Card would nest a surface-container
 fill inside a card border — a box-in-box that fights the M3 surface roles.
 -}
-installCard : Element (M3e.Component.Card.Is s) adm_ msg
+installCard : Element (M3e.Element.Card.Is s) adm_ msg
 installCard =
     Doc.codeBlock Doc.Elm "import M3e\nimport M3e.Values"
 
 
 {-| The four API layers, in tab order, each mapping a `Surface` to its label and
 the member list to render: `Top → the M3e barrel's per-component slice`,
-`Record → M3e.Component.<Name>`, `Build → M3e.Build.<Name>`, `Raw → the underlying
+`Record → M3e.Element.<Name>`, `Build → M3e.Build.<Name>`, `Raw → the underlying
 custom element's CEM attributes/events/slots`. These reuse `Doc.Usage.Surface`, so
 a Usage-tab click and an API-tab click move the SAME site-wide `activeSurface`.
 -}
@@ -263,7 +263,7 @@ overline-labelled outlined card — same header/content anatomy as `Doc.Usage.ex
 so the tabs read as controlling the group cards below rather than floating above them.
 Members keep their `@docs` order within a group. Empty groups drop out.
 -}
-apiSection : Usage.Surface -> Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg
+apiSection : Usage.Surface -> Component -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Usage.Msg
 apiSection activeSurface component =
     let
         activeLayer : List Doc.Data.Member
@@ -280,8 +280,8 @@ apiSection activeSurface component =
         (Doc.sectionHeadingWithId (Doc.slugify "API") "API"
             :: typesBlock component.types
             ++ [ M3e.card []
-                    [ M3e.Component.Card.header (apiTabStrip activeSurface component)
-                    , M3e.Component.Card.content
+                    [ M3e.Element.Card.header (apiTabStrip activeSurface component)
+                    , M3e.Element.Card.content
                         (TypedHtml.div [ TA.class "space-y-3" ]
                             (List.filterMap (apiGroup activeLayer) apiGroups)
                         )
@@ -295,7 +295,7 @@ layers (the barrel re-exports the same types verbatim). Rendered once, above the
 tab strip — NOT inside any tab — since they aren't layer-specific. Empty ⇒
 nothing.
 -}
-typesBlock : List Doc.Data.Member -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg)
+typesBlock : List Doc.Data.Member -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ Usage.Msg)
 typesBlock types =
     case types of
         [] ->
@@ -305,7 +305,7 @@ typesBlock types =
             [ TypedHtml.div [ TA.class "space-y-3" ]
                 [ Doc.sectionLabel "Types"
                 , M3e.card [ M3e.Attributes.variant Value.outlined ]
-                    [ M3e.Component.Card.content (M3e.list [] (List.map memberRow types)) ]
+                    [ M3e.Element.Card.content (M3e.list [] (List.map memberRow types)) ]
                 ]
             ]
 
@@ -339,7 +339,7 @@ apiGroups =
 {-| One API group: an overline label over an outlined card listing its members.
 `Nothing` when the group has no members, so it drops out of the section rhythm.
 -}
-apiGroup : List Doc.Data.Member -> ( String, List String ) -> Maybe (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
+apiGroup : List Doc.Data.Member -> ( String, List String ) -> Maybe (Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg)
 apiGroup members ( label, roles ) =
     case List.filter (\m -> List.member m.role roles) members of
         [] ->
@@ -350,7 +350,7 @@ apiGroup members ( label, roles ) =
                 (TypedHtml.div [ TA.class "space-y-3" ]
                     [ Doc.sectionLabel label
                     , M3e.card [ M3e.Attributes.variant Value.outlined ]
-                        [ M3e.Component.Card.content (M3e.list [] (List.map memberRow group)) ]
+                        [ M3e.Element.Card.content (M3e.list [] (List.map memberRow group)) ]
                     ]
                 )
 
@@ -379,6 +379,6 @@ memberRow m =
                     []
 
                 else
-                    [ M3e.Component.ListItem.supportingText (Doc.markdown m.doc) ]
+                    [ M3e.Element.ListItem.supportingText (Doc.markdown m.doc) ]
                )
         )

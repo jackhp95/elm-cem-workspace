@@ -1,10 +1,10 @@
 module Route.Family exposing (ActionData, Data, Model, Msg, route)
 
 {-| Landing page for the Family area (`/family`) — every sibling-variant
-component group `elm-m3e-families` bundles into one flat `M3e.Family.<F>`
+component group `elm-m3e-families` bundles into one flat `M3e.Component.<F>`
 module (e.g. the Chip family's assist/filter/input/suggestion chips into
-`M3e.Family.Chip`), so a consumer can `import M3e.Family.Chip` once instead of
-five separate `M3e.Component.*` imports.
+`M3e.Component.Chip`), so a consumer can `import M3e.Component.Chip` once instead of
+five separate `M3e.Element.*` imports.
 
 The grouping itself is DATA (`config/slots.json`'s `_families.families`, the
 same config `elm-cem`'s `gen-family-package.js` reads to emit the family
@@ -13,7 +13,7 @@ package, and `review/scripts/gen-m3e-family-config.mjs` flattens for
 time (`scripts/gen-family-data.mjs` -> `data/families.json`, loaded via
 `BackendTask.File`), applying the same root-first / `lowerFirst(path)` member
 labelling `gen-family-package.js` uses, so it cannot drift from the real
-`M3e.Family.*` constructors.
+`M3e.Component.*` constructors.
 
 -}
 
@@ -26,8 +26,8 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.Heading
+import M3e.Element.Card
+import M3e.Element.Heading
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -70,7 +70,7 @@ route =
 {-| The family/member table, derived at build time from `config/slots.json`'s
 `_families.families` by `scripts/gen-family-data.mjs` (the same source the
 `elm-m3e-families` package is generated from), so this page cannot drift from the
-real `M3e.Family.*` constructors. See that script for the derivation.
+real `M3e.Component.*` constructors. See that script for the derivation.
 -}
 data : BackendTask FatalError Data
 data =
@@ -110,16 +110,16 @@ head _ =
         |> Seo.website
 
 
-{-| One member element of a family — its `M3e.Component.<component>` module
+{-| One member element of a family — its `M3e.Element.<component>` module
 name and the element-named constructor its family module re-exports it as
-(e.g. `AssistChip` -> `assist`, so `M3e.Family.Chip.assist` delegates to
-`M3e.Component.AssistChip.component`).
+(e.g. `AssistChip` -> `assist`, so `M3e.Component.Chip.assist` delegates to
+`M3e.Element.AssistChip.component`).
 -}
 type alias Member =
     { component : String, label : String }
 
 
-{-| One family — its name (`M3e.Family.<name>`) and every member element,
+{-| One family — its name (`M3e.Component.<name>`) and every member element,
 root included as the first entry when the family has one (e.g. `Chip` itself
 is the Chip family's root member, exposed as `chip`).
 
@@ -135,8 +135,8 @@ type alias Family =
 pageHeading : Element { s | heading : M3e.Kind.Brand } admittedBy msg
 pageHeading =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.display
-        , M3e.Component.Heading.size Value.small
+        [ M3e.Element.Heading.variant Value.display
+        , M3e.Element.Heading.size Value.small
         , M3e.Attributes.level 1
         ]
         [ M3e.text "Family" ]
@@ -144,20 +144,20 @@ pageHeading =
 
 memberRowText : String -> Member -> String
 memberRowText family member =
-    "M3e.Family." ++ family ++ "." ++ member.label ++ " — " ++ member.component
+    "M3e.Component." ++ family ++ "." ++ member.label ++ " — " ++ member.component
 
 
 familyCard : Family -> Element { s | card : M3e.Kind.Brand } admittedBy msg
 familyCard family =
     M3e.card
-        [ M3e.Component.Card.variant Value.elevated
+        [ M3e.Element.Card.variant Value.elevated
         , M3e.Attributes.class "min-w-0"
         ]
-        [ M3e.Component.Card.header
-            (M3e.heading [ M3e.Component.Heading.variant Value.title ]
+        [ M3e.Element.Card.header
+            (M3e.heading [ M3e.Element.Heading.variant Value.title ]
                 [ M3e.text family.family ]
             )
-        , M3e.Component.Card.content
+        , M3e.Element.Card.content
             (TypedHtml.div [ TA.class "space-y-2" ]
                 [ TypedHtml.p []
                     [ M3e.text
@@ -169,7 +169,7 @@ familyCard family =
                                 else
                                     "s"
                                )
-                            ++ " · import M3e.Family."
+                            ++ " · import M3e.Component."
                             ++ family.family
                         )
                     ]
@@ -195,11 +195,11 @@ view app _ =
                 , TypedHtml.div [ TA.class "max-w-2xl" ]
                     [ TypedHtml.p []
                         [ M3e.text "A family groups sibling-variant components that only ever appear together — assist/filter/input/suggestion chips, a nav-rail and its toggle, a dialog and its trigger — into one flat module, "
-                        , TypedHtml.code [] [ M3e.text "M3e.Family.<Name>" ]
+                        , TypedHtml.code [] [ M3e.text "M3e.Component.<Name>" ]
                         , M3e.text ", re-exporting every member as an element-named constructor. Importing "
-                        , TypedHtml.code [] [ M3e.text "M3e.Family.Chip" ]
-                        , M3e.text " reads the same as importing "
                         , TypedHtml.code [] [ M3e.text "M3e.Component.Chip" ]
+                        , M3e.text " reads the same as importing "
+                        , TypedHtml.code [] [ M3e.text "M3e.Element.Chip" ]
                         , M3e.text " plus every sibling chip module, one import instead of many — the components and types are identical either way."
                         ]
                     ]

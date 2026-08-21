@@ -244,7 +244,49 @@
     "confidence": 1,
     "provenance": "human",
     "rationale": "exact tier: normalized name 'bottom-sheet' == CEM tag slug",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-bottom-sheet",
+      "matcherKind": "set",
+      "figmaSets": [
+        {
+          "nodeId": "51827:5859",
+          "setName": "Bottom sheet",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Modal",
+          "attr": "modal",
+          "kind": "boolean",
+          "valueMap": {
+            "False": "false",
+            "True": "true"
+          }
+        }
+      ],
+      "props": [
+        {
+          "figmaProp": "Show drag handle",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        }
+      ],
+      "slots": [
+        {
+          "figmaSlotName": "Content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        }
+      ],
+      "confidence": 1,
+      "provenance": "auto-exact",
+      "rationale": "exact tier: normalized name 'bottom-sheet' == CEM tag slug",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-button",
@@ -866,7 +908,195 @@
     "confidence": 0.95,
     "provenance": "human",
     "rationale": "contains tier: set(s) [52346:27573, 52350:27876] contain-match CEM tag 'm3e-card' (mode attr); qualifier bound as fixed value(s) | fused sets bind attr 'orientation'; bare 'm3e-card' → 'vertical' (leftover)",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-card",
+      "matcherKind": "contains",
+      "figmaSets": [
+        {
+          "nodeId": "52346:27573",
+          "setName": "Stacked card",
+          "fixedAttrs": {
+            "orientation": "vertical"
+          },
+          "example": {
+            "children": [
+              {
+                "tag": "m3e-avatar",
+                "slot": "header"
+              },
+              {
+                "tag": "m3e-icon-button",
+                "slot": "header",
+                "children": [
+                  {
+                    "tag": "m3e-icon",
+                    "attrs": {
+                      "name": "more_vert"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "img",
+                "attrs": {
+                  "src": "data:image/png;base64,iVBORw0KGgo=",
+                  "alt": "Media"
+                }
+              },
+              {
+                "tag": "div",
+                "slot": "content",
+                "text": "Title"
+              },
+              {
+                "tag": "div",
+                "slot": "content",
+                "text": "Subtitle"
+              },
+              {
+                "tag": "div",
+                "slot": "content",
+                "text": "Supporting text, lorem ipsum dolor sit amet."
+              },
+              {
+                "tag": "m3e-button",
+                "slot": "actions",
+                "attrs": {
+                  "variant": "text"
+                },
+                "children": [
+                  {
+                    "tag": "span",
+                    "text": "Secondary"
+                  }
+                ]
+              },
+              {
+                "tag": "m3e-button",
+                "slot": "actions",
+                "attrs": {
+                  "variant": "text"
+                },
+                "children": [
+                  {
+                    "tag": "span",
+                    "text": "Primary"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "nodeId": "52350:27876",
+          "setName": "Horizontal card",
+          "fixedAttrs": {
+            "orientation": "horizontal"
+          },
+          "example": {
+            "children": [
+              {
+                "tag": "img",
+                "slot": "header",
+                "attrs": {
+                  "src": "data:image/png;base64,iVBORw0KGgo=",
+                  "alt": "Media"
+                }
+              },
+              {
+                "tag": "div",
+                "slot": "content",
+                "text": "Headline"
+              },
+              {
+                "tag": "div",
+                "slot": "content",
+                "text": "Supporting text, lorem ipsum dolor sit amet."
+              },
+              {
+                "tag": "m3e-button",
+                "slot": "actions",
+                "attrs": {
+                  "variant": "text"
+                },
+                "children": [
+                  {
+                    "tag": "span",
+                    "text": "Action"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Style",
+          "attr": "variant",
+          "valueMap": {
+            "Outlined": "outlined",
+            "Elevated": "elevated",
+            "Filled": "filled"
+          }
+        },
+        {
+          "figmaProp": "Layout",
+          "unmapped": "no CEM enum attribute shares its value set (options: Slot, Media & text)"
+        }
+      ],
+      "props": [
+        {
+          "figmaProp": "Slot swap",
+          "kind": "instanceSwap",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show secondary action",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Header text",
+          "kind": "text",
+          "binding": "content"
+        },
+        {
+          "figmaProp": "Subhead text",
+          "kind": "text",
+          "binding": "content"
+        },
+        {
+          "figmaProp": "Title text",
+          "kind": "text",
+          "binding": "content"
+        },
+        {
+          "figmaProp": "Subtitle text",
+          "kind": "text",
+          "binding": "content"
+        },
+        {
+          "figmaProp": "Supporting text",
+          "kind": "text",
+          "binding": "content"
+        }
+      ],
+      "slots": [
+        {
+          "figmaSlotName": "Content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "content",
+          "provenance": "auto-exact"
+        }
+      ],
+      "confidence": 0.95,
+      "provenance": "auto-contains",
+      "rationale": "contains tier: set(s) [52346:27573, 52350:27876] contain-match CEM tag 'm3e-card' (mode attr); qualifier bound as fixed value(s) | fused sets bind attr 'orientation'; bare 'm3e-card' → 'vertical' (leftover)",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-checkbox",
@@ -1805,11 +2035,15 @@
           "figmaProp": "Supporting text",
           "kind": "text",
           "binding": "content"
-        },
+        }
+      ],
+      "slots": [
         {
-          "figmaProp": "Content",
+          "figmaSlotName": "Content",
           "kind": "slot",
-          "unmapped": "no CEM counterpart (Figma-only property)"
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
         }
       ],
       "confidence": 0.95,
@@ -3598,7 +3832,62 @@
     "confidence": 1,
     "provenance": "human",
     "rationale": "exact tier: normalized name 'list-item' == CEM tag slug",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-list-item",
+      "matcherKind": "set",
+      "figmaSets": [
+        {
+          "nodeId": "59106:13183",
+          "setName": "List item",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Alignment",
+          "unmapped": "no CEM enum attribute shares its value set (options: Middle-aligned, Top-aligned)"
+        },
+        {
+          "figmaProp": "State",
+          "unmapped": "no CEM enum attribute shares its value set (options: Enabled, Hovered, Focused, Pressed, Dragged, Disabled)"
+        },
+        {
+          "figmaProp": "Selected",
+          "unmapped": "no CEM enum attribute shares its value set (options: False, True)"
+        }
+      ],
+      "props": [
+        {
+          "figmaProp": "Show trailing element",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show leading element",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show focus indicator",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        }
+      ],
+      "slots": [
+        {
+          "figmaSlotName": "Content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        }
+      ],
+      "confidence": 1,
+      "provenance": "auto-exact",
+      "rationale": "exact tier: normalized name 'list-item' == CEM tag slug",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-loading-indicator",
@@ -3680,7 +3969,71 @@
     "confidence": 1,
     "provenance": "human",
     "rationale": "exact tier: normalized name 'menu' == CEM tag slug",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-menu",
+      "matcherKind": "set",
+      "figmaSets": [
+        {
+          "nodeId": "58966:3975",
+          "setName": "Menu",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Theme",
+          "attr": "variant",
+          "valueMap": {
+            "Standard": "standard",
+            "Vibrant": "vibrant"
+          }
+        },
+        {
+          "figmaProp": "Groups",
+          "unmapped": "no CEM enum attribute shares its value set (options: 1, 2, 3)"
+        }
+      ],
+      "props": [
+        {
+          "figmaProp": "Show scrollbar",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show section label",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        }
+      ],
+      "slots": [
+        {
+          "figmaSlotName": "List 1 content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        },
+        {
+          "figmaSlotName": "List 2 content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        },
+        {
+          "figmaSlotName": "List 3 content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        }
+      ],
+      "confidence": 1,
+      "provenance": "auto-exact",
+      "rationale": "exact tier: normalized name 'menu' == CEM tag slug",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-menu-item",
@@ -3732,7 +4085,63 @@
     "confidence": 0.95,
     "provenance": "human",
     "rationale": "contains tier: set(s) [58966:4100] contain-match CEM tag 'm3e-menu-item' (mode canonical); qualifier bound as fixed value(s) | no CEM enum matched the fused set values",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-menu-item",
+      "matcherKind": "contains",
+      "figmaSets": [
+        {
+          "nodeId": "58966:4100",
+          "setName": "Menu item/Standard",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "State",
+          "unmapped": "no CEM enum attribute shares its value set (options: Enabled, Hovered, Focused, Pressed, Disabled, Active)"
+        },
+        {
+          "figmaProp": "Selected",
+          "unmapped": "no CEM enum attribute shares its value set (options: False, True)"
+        }
+      ],
+      "props": [
+        {
+          "figmaProp": "Show leading element",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show trailing element",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show divider",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        },
+        {
+          "figmaProp": "Show focus indicator",
+          "kind": "boolean",
+          "unmapped": "no CEM counterpart (Figma-only property)"
+        }
+      ],
+      "slots": [
+        {
+          "figmaSlotName": "Content",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        }
+      ],
+      "confidence": 0.95,
+      "provenance": "auto-contains",
+      "rationale": "contains tier: set(s) [58966:4100] contain-match CEM tag 'm3e-menu-item' (mode canonical); qualifier bound as fixed value(s) | no CEM enum matched the fused set values",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-nav-bar",
@@ -4994,7 +5403,50 @@
     "confidence": 0.9,
     "provenance": "human",
     "rationale": "exact tier: normalized name 'tab' == CEM tag slug | structural tiebreak: slug 'tab' collides between 'm3e-tabs' (plural/container) and 'm3e-tab' (singular/item); Figma entity is a COMPONENT_SET → bound to 'm3e-tabs', leaving 'm3e-tab' as a code-only candidate (not silently dropped)",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-tabs",
+      "matcherKind": "set",
+      "figmaSets": [
+        {
+          "nodeId": "54563:40023",
+          "setName": "Tabs",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Configuration",
+          "unmapped": "no CEM enum attribute shares its value set (options: Fixed, Scrollable)"
+        },
+        {
+          "figmaProp": "Style",
+          "attr": "variant",
+          "valueMap": {
+            "Primary": "primary",
+            "Secondary": "secondary"
+          }
+        },
+        {
+          "figmaProp": "Layout",
+          "unmapped": "no CEM enum attribute shares its value set (options: Icon only, Label & icon, Label only)"
+        }
+      ],
+      "props": [],
+      "slots": [
+        {
+          "figmaSlotName": "Tab group",
+          "kind": "slot",
+          "multi": false,
+          "unmapped": "no CEM slot matches Figma SLOT property 'Tab group'",
+          "provenance": "auto-gap"
+        }
+      ],
+      "confidence": 0.9,
+      "provenance": "auto-exact",
+      "rationale": "exact tier: normalized name 'tab' == CEM tag slug | structural tiebreak: slug 'tab' collides between 'm3e-tabs' (plural/container) and 'm3e-tab' (singular/item); Figma entity is a COMPONENT_SET → bound to 'm3e-tabs', leaving 'm3e-tab' as a code-only candidate (not silently dropped)",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-timepicker",
@@ -5102,7 +5554,57 @@
     "confidence": 1,
     "provenance": "human",
     "rationale": "exact tier: normalized name 'toolbar' == CEM tag slug",
-    "status": "confirmed"
+    "status": "confirmed",
+    "proposedUpdate": {
+      "cemTag": "m3e-toolbar",
+      "matcherKind": "set",
+      "figmaSets": [
+        {
+          "nodeId": "58467:8206",
+          "setName": "Toolbar",
+          "fixedAttrs": {}
+        }
+      ],
+      "axes": [
+        {
+          "figmaProp": "Configuration",
+          "unmapped": "no CEM enum attribute shares its value set (options: Floating, Docked)"
+        },
+        {
+          "figmaProp": "Orientation",
+          "unmapped": "no CEM enum attribute shares its value set (options: Horizontal, Vertical)"
+        },
+        {
+          "figmaProp": "Color",
+          "attr": "variant",
+          "valueMap": {
+            "Vibrant": "vibrant",
+            "Standard": "standard"
+          }
+        }
+      ],
+      "props": [],
+      "slots": [
+        {
+          "figmaSlotName": "Content (standard)",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        },
+        {
+          "figmaSlotName": "Content (vibrant)",
+          "kind": "slot",
+          "multi": false,
+          "mappedTo": "(default)",
+          "provenance": "auto-fuzzy"
+        }
+      ],
+      "confidence": 1,
+      "provenance": "auto-exact",
+      "rationale": "exact tier: normalized name 'toolbar' == CEM tag slug",
+      "status": "proposed"
+    }
   },
   {
     "cemTag": "m3e-tooltip",

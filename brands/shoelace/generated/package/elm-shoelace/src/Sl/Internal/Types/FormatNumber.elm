@@ -2,7 +2,7 @@ module Sl.Internal.Types.FormatNumber exposing (Is, Attrs, ChildAdmittedBy, Curr
 
 {-| Type definitions for FormatNumber. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.FormatNumber` surface both re-export these, so they live in
+`Sl.Element.FormatNumber` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, CurrencyDisplay, Type, Builder, AttrCaps

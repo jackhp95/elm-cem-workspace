@@ -2,7 +2,7 @@ module Sl.Internal.Types.Alert exposing (Is, Attrs, ChildAdmittedBy, Countdown, 
 
 {-| Type definitions for Alert. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Alert` surface both re-export these, so they live in
+`Sl.Element.Alert` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Countdown, Variant, Builder, AttrCaps

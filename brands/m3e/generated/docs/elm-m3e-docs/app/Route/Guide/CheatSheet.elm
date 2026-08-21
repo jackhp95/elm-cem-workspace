@@ -15,7 +15,7 @@ import Head
 import Head.Seo as Seo
 import M3e
 import M3e.Attributes
-import M3e.Component.Heading
+import M3e.Element.Heading
 import M3e.Values as Value
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
@@ -23,7 +23,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -74,7 +74,7 @@ head _ =
         |> Seo.website
 
 
-card : String -> List (M3e.Element (M3e.Component.Heading.Is s) (TypedHtml.Component.Sectioning.SectionChildAdmittedBy childAdm) msg) -> M3e.Element (TypedHtml.Component.Sectioning.SectionIs s2) adm_ msg
+card : String -> List (M3e.Element (M3e.Element.Heading.Is s) (TypedHtml.Element.Sectioning.SectionChildAdmittedBy childAdm) msg) -> M3e.Element (TypedHtml.Element.Sectioning.SectionIs s2) adm_ msg
 card title items =
     TypedHtml.section [ TA.class "space-y-3" ]
         (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text title ] :: items)
@@ -132,10 +132,10 @@ view app _ =
 barrelVsSpecificCode : String
 barrelVsSpecificCode =
     """-- barrel — one import, shared vocabulary (M3e.Attributes.* unions, lint-checked)
-M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.Component.Button.icon (M3e.icon [ TA.name "save" ] []), M3e.text "Save" ]
+M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.Element.Button.icon (M3e.icon [ TA.name "save" ] []), M3e.text "Save" ]
 
 -- component module — component-scoped setters, compile-tight tokens
-M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []"""
+M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Element.Button.variant Value.filled ] []"""
 
 
 shapesCode : String
@@ -144,7 +144,7 @@ shapesCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 -- required-record form — the compiler demands the parts it can't do without
-M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
+M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
 
 -- builder pipe — a one-only setter is unwritable twice; order-free
 M3e.Build.Button.build { content = M3e.text "Save", action = M3e.Action.onClick Save }

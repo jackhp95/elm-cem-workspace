@@ -2,7 +2,7 @@ module Sl.Internal.Types.FormatBytes exposing (Is, Attrs, ChildAdmittedBy, Displ
 
 {-| Type definitions for FormatBytes. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.FormatBytes` surface both re-export these, so they live in
+`Sl.Element.FormatBytes` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Display, Unit, Builder, AttrCaps

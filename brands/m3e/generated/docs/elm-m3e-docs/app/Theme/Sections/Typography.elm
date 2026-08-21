@@ -9,7 +9,7 @@ per-mode numeric steppers, and a live 15-token size preview
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Option
+import M3e.Element.Option
 import M3e.Events
 import Theme exposing (Msg(..))
 import Theme.Fonts
@@ -18,10 +18,10 @@ import Theme.Sections.Shared as Shared
 import Theme.Tokens as Tokens
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ fontSelect "Display font" "display-font" model.displayFont SetDisplayFont
@@ -38,7 +38,7 @@ event's `target.value` via `M3e.Events.onChangeWith` (the select binding's
 plain `onChange` carries no value). Picking a font fires `SetDisplayFont` /
 `SetBodyFont`, which loads the webfont AND applies it globally.
 -}
-fontSelect : String -> String -> String -> (String -> Msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+fontSelect : String -> String -> String -> (String -> Msg) -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 fontSelect labelText idSuffix current toMsg =
     let
         inputId : String
@@ -55,7 +55,7 @@ fontSelect labelText idSuffix current toMsg =
             (List.map
                 (\font ->
                     M3e.option
-                        [ M3e.Component.Option.value font, M3e.Component.Option.selected (font == current) ]
+                        [ M3e.Element.Option.value font, M3e.Element.Option.selected (font == current) ]
                         [ M3e.text font ]
                 )
                 Theme.Fonts.curatedFonts
@@ -63,7 +63,7 @@ fontSelect labelText idSuffix current toMsg =
         ]
 
 
-preview : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+preview : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 preview model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
         (List.map

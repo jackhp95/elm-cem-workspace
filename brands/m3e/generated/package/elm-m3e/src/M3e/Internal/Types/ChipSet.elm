@@ -2,7 +2,7 @@ module M3e.Internal.Types.ChipSet exposing (Is, Attrs, Content, ChildAdmittedBy,
 
 {-| Type definitions for ChipSet. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ChipSet` surface both re-export these, so they live in
+`M3e.Element.ChipSet` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps

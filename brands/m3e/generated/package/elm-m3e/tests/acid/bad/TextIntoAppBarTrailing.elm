@@ -19,9 +19,9 @@ name `sharedText` — as does `title`.
 -}
 
 import M3e
-import M3e.Component.AppBar
+import M3e.Element.AppBar
 
 
 broken : M3e.Element free freeAdmittedBy msg
 broken =
-    M3e.Component.AppBar.trailing (M3e.text "3")
+    M3e.Element.AppBar.trailing (M3e.text "3")

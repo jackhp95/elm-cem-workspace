@@ -2,7 +2,7 @@ module BadgeIntoAppBarTrailing exposing (broken)
 
 {-| NEGATIVE probe — slot kind admittance, brand kind.
 
-`M3e.Component.AppBar.trailing` takes `Element TrailingSlot admittedBy msg`, and
+`M3e.Element.AppBar.trailing` takes `Element TrailingSlot admittedBy msg`, and
 `TrailingSlot` is a CLOSED row:
 
     type alias TrailingSlot =
@@ -23,9 +23,9 @@ The closedness of the slot row is the whole mechanism — see
 -}
 
 import M3e
-import M3e.Component.AppBar
+import M3e.Element.AppBar
 
 
 broken : M3e.Element free freeAdmittedBy msg
 broken =
-    M3e.Component.AppBar.trailing (M3e.badge [] [])
+    M3e.Element.AppBar.trailing (M3e.badge [] [])

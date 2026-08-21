@@ -2,7 +2,7 @@ module Sl.Internal.Types.IconButton exposing (Is, Attrs, ChildAdmittedBy, Target
 
 {-| Type definitions for IconButton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.IconButton` surface both re-export these, so they live in
+`Sl.Element.IconButton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Target, Builder, AttrCaps

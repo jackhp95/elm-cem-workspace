@@ -2,7 +2,7 @@ module M3e.Internal.Types.Divider exposing (Is, Attrs, ChildAdmittedBy, Builder,
 
 {-| Type definitions for Divider. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Divider` surface both re-export these, so they live in
+`M3e.Element.Divider` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

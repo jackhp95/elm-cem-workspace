@@ -13,16 +13,16 @@ suffix.
 
 import Dict
 import M3e exposing (Element)
-import M3e.Component.FormField as FormField
+import M3e.Element.FormField as FormField
 import Theme exposing (Msg(..))
 import Theme.Sections.Shared as Shared
 import Theme.Tokens as Tokens exposing (MotionDurationToken, StateOpacityToken)
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ -- No m3e component owns standalone muted body prose (see the recipe's

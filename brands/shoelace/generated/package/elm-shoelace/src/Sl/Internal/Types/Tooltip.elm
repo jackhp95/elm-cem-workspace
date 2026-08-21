@@ -2,7 +2,7 @@ module Sl.Internal.Types.Tooltip exposing (Is, Attrs, ChildAdmittedBy, Placement
 
 {-| Type definitions for Tooltip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Tooltip` surface both re-export these, so they live in
+`Sl.Element.Tooltip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps

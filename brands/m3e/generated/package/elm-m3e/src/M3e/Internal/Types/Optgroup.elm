@@ -2,7 +2,7 @@ module M3e.Internal.Types.Optgroup exposing (Is, Attrs, Content, LabelSlot, Chil
 
 {-| Type definitions for Optgroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Optgroup` surface both re-export these, so they live in
+`M3e.Element.Optgroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, LabelSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

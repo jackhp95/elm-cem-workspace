@@ -6,7 +6,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
+import M3e.Element.Card
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -65,7 +65,7 @@ head _ =
         |> Seo.website
 
 
-supportRow : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+supportRow : String -> String -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 supportRow browser note =
     TypedHtml.div [ TA.class "flex items-baseline justify-between gap-4 py-2.5" ]
         [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.small ] [ M3e.text browser ]
@@ -102,7 +102,7 @@ view _ _ =
                 [ Doc.sectionHeadingWithId (Doc.slugify "Supported browsers") "Supported browsers"
                 , M3e.card
                     [ M3e.Attributes.variant Value.outlined ]
-                    [ M3e.Component.Card.content
+                    [ M3e.Element.Card.content
                         (TypedHtml.div [ TA.class "flex flex-col px-2" ]
                             (List.intersperse (M3e.divider [] [])
                                 [ supportRow "Chrome / Edge" "Latest 2 versions"

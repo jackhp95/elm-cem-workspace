@@ -2,7 +2,7 @@ module M3e.Internal.Types.Badge exposing (Is, Attrs, Content, ChildAdmittedBy, P
 
 {-| Type definitions for Badge. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Badge` surface both re-export these, so they live in
+`M3e.Element.Badge` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, ChildAdmittedBy, Position, Size, Builder, AttrCaps

@@ -2,7 +2,7 @@ module M3e.Internal.Types.FloatingPanel exposing (Is, Attrs, ChildAdmittedBy, Sc
 
 {-| Type definitions for FloatingPanel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.FloatingPanel` surface both re-export these, so they live in
+`M3e.Element.FloatingPanel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, ScrollStrategy, Builder, AttrCaps

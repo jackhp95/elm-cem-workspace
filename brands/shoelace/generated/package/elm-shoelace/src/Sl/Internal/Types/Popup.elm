@@ -2,7 +2,7 @@ module Sl.Internal.Types.Popup exposing (Is, Attrs, ChildAdmittedBy, ArrowPlacem
 
 {-| Type definitions for Popup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Popup` surface both re-export these, so they live in
+`Sl.Element.Popup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, ArrowPlacement, AutoSize, FlipFallbackStrategy, Placement, Strategy, Sync, Builder, AttrCaps

@@ -2,7 +2,7 @@ module Sl.Internal.Types.Skeleton exposing (Is, Attrs, ChildAdmittedBy, Effect, 
 
 {-| Type definitions for Skeleton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Skeleton` surface both re-export these, so they live in
+`Sl.Element.Skeleton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Effect, Builder, AttrCaps

@@ -90,7 +90,7 @@ factsModule brand =
         factOf comp =
             let
                 moduleName =
-                    lib ++ ".Component." ++ (memberRef brand comp).module_
+                    lib ++ ".Element." ++ (memberRef brand comp).module_
 
                 attrRewrites =
                     (comp.attrs |> List.map (\a -> ( a.elmName, a.elmName )))

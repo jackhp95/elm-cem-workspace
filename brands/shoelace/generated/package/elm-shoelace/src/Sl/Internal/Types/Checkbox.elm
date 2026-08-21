@@ -2,7 +2,7 @@ module Sl.Internal.Types.Checkbox exposing (Is, Attrs, ChildAdmittedBy, Size, Bu
 
 {-| Type definitions for Checkbox. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Checkbox` surface both re-export these, so they live in
+`Sl.Element.Checkbox` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps

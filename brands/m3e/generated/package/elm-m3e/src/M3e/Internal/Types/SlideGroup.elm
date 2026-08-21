@@ -2,7 +2,7 @@ module M3e.Internal.Types.SlideGroup exposing (Is, Attrs, NextIconSlot, PrevIcon
 
 {-| Type definitions for SlideGroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.SlideGroup` surface both re-export these, so they live in
+`M3e.Element.SlideGroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, NextIconSlot, PrevIconSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

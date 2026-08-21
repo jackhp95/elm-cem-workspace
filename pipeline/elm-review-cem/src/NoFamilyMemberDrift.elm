@@ -1,7 +1,7 @@
 module NoFamilyMemberDrift exposing (rule, Family)
 
 {-| Guard the component↔family mapping: a generated **family module**
-(`<familyNamespace>.<F>`, e.g. `M3e.Family.Chip`) is a flat re-export of every
+(`<familyNamespace>.<F>`, e.g. `M3e.Component.Chip`) is a flat re-export of every
 member component in family `F` — one `import <componentNamespace>.<Member>`
 per member (see `elm-cem`'s `gen-family-package.js`, "FLAT SHAPE"). The set of
 members is decided once, in the family CONFIG (`_families.families` in a
@@ -23,8 +23,8 @@ Namespace-agnostic, like `NoMissingComponentApiNames`: pass in both
 namespaces and the flattened family config.
 
     NoFamilyMemberDrift.rule
-        { componentNamespace = [ "M3e", "Component" ]
-        , familyNamespace = [ "M3e", "Family" ]
+        { componentNamespace = [ "M3e", "Element" ]
+        , familyNamespace = [ "M3e", "Component" ]
         , families = M3e.Review.Families.families
         }
 
@@ -176,7 +176,7 @@ missingError family nameRange member =
     Rule.error
         { message = "Family `" ++ family ++ "` does not import component `" ++ member ++ "`"
         , details =
-            [ "The family config declares `" ++ member ++ "` a member of the `" ++ family ++ "` family, but this module has no `import ...Component." ++ member ++ "`."
+            [ "The family config declares `" ++ member ++ "` a member of the `" ++ family ++ "` family, but this module has no `import ...Element." ++ member ++ "`."
             , "Either the family module is stale (regenerate it from the family config) or the config still lists a component this family no longer includes (fix the config)."
             ]
         }

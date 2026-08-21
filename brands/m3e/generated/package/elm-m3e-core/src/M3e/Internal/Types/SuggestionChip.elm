@@ -2,7 +2,7 @@ module M3e.Internal.Types.SuggestionChip exposing (Is, Attrs, Content, IconSlot,
 
 {-| Type definitions for SuggestionChip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.SuggestionChip` surface both re-export these, so they live in
+`M3e.Element.SuggestionChip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Type, Variant, ActionCaps, Builder, AttrCaps, SlotCaps

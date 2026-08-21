@@ -2,7 +2,7 @@ module M3e.Internal.Types.StepperReset exposing (Is, Attrs, ChildAdmittedBy, Bui
 
 {-| Type definitions for StepperReset. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.StepperReset` surface both re-export these, so they live in
+`M3e.Element.StepperReset` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

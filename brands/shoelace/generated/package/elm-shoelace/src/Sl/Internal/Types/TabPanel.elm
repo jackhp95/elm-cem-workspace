@@ -2,7 +2,7 @@ module Sl.Internal.Types.TabPanel exposing (Is, Attrs, ChildAdmittedBy, Builder,
 
 {-| Type definitions for TabPanel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.TabPanel` surface both re-export these, so they live in
+`Sl.Element.TabPanel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

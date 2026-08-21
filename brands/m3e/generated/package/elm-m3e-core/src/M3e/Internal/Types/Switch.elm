@@ -2,7 +2,7 @@ module M3e.Internal.Types.Switch exposing (Is, Attrs, ChildAdmittedBy, Icons, Bu
 
 {-| Type definitions for Switch. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Switch` surface both re-export these, so they live in
+`M3e.Element.Switch` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Icons, Builder, AttrCaps

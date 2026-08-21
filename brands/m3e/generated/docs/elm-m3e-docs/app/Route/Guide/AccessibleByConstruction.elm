@@ -19,7 +19,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Action
-import M3e.Component.IconButton
+import M3e.Element.IconButton
 import M3e.Kind
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
@@ -89,7 +89,7 @@ beside the real output of the `missingRequiredAttribute` rule.
 
 helpButton : Element { s | iconButton : M3e.Kind.Brand } adm_ msg
 helpButton =
-    M3e.Component.IconButton.component { content = M3e.icon [ TA.name "help" ] [], ariaLabel = "Help", action = M3e.Action.none } [] []
+    M3e.Element.IconButton.component { content = M3e.icon [ TA.name "help" ] [], ariaLabel = "Help", action = M3e.Action.none } [] []
 
 
 view : App Data ActionData RouteParams -> Shared.Model -> View (PagesMsg Msg)
@@ -154,7 +154,7 @@ view app _ =
 
 namelessCode : String
 namelessCode =
-    """M3e.Component.IconButton.component
+    """M3e.Element.IconButton.component
     { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
     []
     []"""
@@ -166,7 +166,7 @@ linterText =
 
 The 1st argument to `component` is not what I expect:
 
-17|     M3e.Component.IconButton.component
+17|     M3e.Element.IconButton.component
 18|>        { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
 19|         []
 20|         []
@@ -174,17 +174,17 @@ The 1st argument to `component` is not what I expect:
 This argument is a record of type:
 
     { action : M3e.Action.Action capability msg1
-    , content : M3e.Element (M3e.Component.Icon.Is s) admittedBy msg
+    , content : M3e.Element (M3e.Element.Icon.Is s) admittedBy msg
     }
 
 But `component` needs the 1st argument to be:
 
-    { action : M3e.Action.Action M3e.Component.IconButton.ActionCaps msg
+    { action : M3e.Action.Action M3e.Element.IconButton.ActionCaps msg
     , ariaLabel : String
     , content :
           HtmlIr.Element.Element
-              M3e.Component.IconButton.Content
-              (M3e.Component.IconButton.ChildAdmittedBy childAdm)
+              M3e.Element.IconButton.Content
+              (M3e.Element.IconButton.ChildAdmittedBy childAdm)
               msg
     }
 

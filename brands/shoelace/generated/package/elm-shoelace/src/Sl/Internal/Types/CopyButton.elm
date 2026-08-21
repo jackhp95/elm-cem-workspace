@@ -2,7 +2,7 @@ module Sl.Internal.Types.CopyButton exposing (Is, Attrs, ChildAdmittedBy, Toolti
 
 {-| Type definitions for CopyButton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.CopyButton` surface both re-export these, so they live in
+`Sl.Element.CopyButton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, TooltipPlacement, Builder, AttrCaps

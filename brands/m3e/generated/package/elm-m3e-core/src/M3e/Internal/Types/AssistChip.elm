@@ -2,7 +2,7 @@ module M3e.Internal.Types.AssistChip exposing (Is, Attrs, Content, IconSlot, Chi
 
 {-| Type definitions for AssistChip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.AssistChip` surface both re-export these, so they live in
+`M3e.Element.AssistChip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Type, Variant, Builder, AttrCaps, SlotCaps

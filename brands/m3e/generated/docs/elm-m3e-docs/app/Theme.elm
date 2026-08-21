@@ -6,12 +6,12 @@ import HtmlIr.Kind
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Button
-import M3e.Component.Icon
-import M3e.Component.MenuItem
-import M3e.Component.MenuTrigger
-import M3e.Component.SelectionIndicator
-import M3e.Component.Theme
+import M3e.Element.Button
+import M3e.Element.Icon
+import M3e.Element.MenuItem
+import M3e.Element.MenuTrigger
+import M3e.Element.SelectionIndicator
+import M3e.Element.Theme
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value exposing (Value)
@@ -26,7 +26,7 @@ import Theme.Tokens
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Events
 import TypedHtml.Values
 
@@ -35,7 +35,7 @@ type alias Model =
     { scheme : Value Value.Scheme
     , seed : String
     , contrast : Value Value.Contrast
-    , variant : Value M3e.Component.Theme.Variant
+    , variant : Value M3e.Element.Theme.Variant
     , density : Float
     , motion : Value Value.Motion
     , displayFont : String
@@ -83,7 +83,7 @@ type Msg
     = SetScheme (Value Value.Scheme)
     | SetSeed String
     | SetContrast (Value Value.Contrast)
-    | SetVariant (Value M3e.Component.Theme.Variant)
+    | SetVariant (Value M3e.Element.Theme.Variant)
     | SetDensity Float
     | SetMotion (Value Value.Motion)
     | SetDisplayFont String
@@ -602,14 +602,14 @@ schemeToggle model =
                 Aria.false
             )
         ]
-        [ M3e.icon [ M3e.Component.Icon.name glyph ] [] ]
+        [ M3e.icon [ M3e.Element.Icon.name glyph ] [] ]
 
 
 {-| The 9 M3 dynamic-color variants valid on `m3e-theme`. Separated from the
 broader `Value.variantValues` (which covers every component's variant enum,
 not just theme's).
 -}
-themeVariantValues : List (Value M3e.Component.Theme.Variant)
+themeVariantValues : List (Value M3e.Element.Theme.Variant)
 themeVariantValues =
     [ Value.content
     , Value.expressive
@@ -627,7 +627,7 @@ themeVariantValues =
 `neutral` (the element's own documented default) for unknown strings so old
 blobs or typos don't silently break the decode.
 -}
-themeVariantFromString : String -> Value M3e.Component.Theme.Variant
+themeVariantFromString : String -> Value M3e.Element.Theme.Variant
 themeVariantFromString s =
     case s of
         "content" ->
@@ -661,7 +661,7 @@ themeVariantFromString s =
 {-| Editorial label for one theme variant. camelCase wire strings get
 split into title case; everything else is just capitalized.
 -}
-variantLabelFor : Value M3e.Component.Theme.Variant -> String
+variantLabelFor : Value M3e.Element.Theme.Variant -> String
 variantLabelFor v =
     case Value.toString v of
         "fruit-salad" ->
@@ -681,22 +681,22 @@ the sibling menu's `id`; the menu itself carries no `for`/`open` attribute.
 Selecting fires the existing `SetVariant` — no `Msg`/model change, only the
 rendering swap.
 -}
-variantSelect : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+variantSelect : Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 variantSelect model =
     TypedHtml.div [ TypedHtml.Attributes.class "inline-block" ]
         [ M3e.button
             []
             [ M3e.menuTrigger
-                [ M3e.Component.MenuTrigger.for variantMenuId ]
+                [ M3e.Element.MenuTrigger.for variantMenuId ]
                 [ M3e.text (variantLabelFor model.variant) ]
-            , M3e.Component.Button.trailingIcon
-                (M3e.icon [ M3e.Component.Icon.name "arrow_drop_down" ] [])
+            , M3e.Element.Button.trailingIcon
+                (M3e.icon [ M3e.Element.Icon.name "arrow_drop_down" ] [])
             ]
         , M3e.menu [ M3e.Attributes.id variantMenuId ]
             (List.map
                 (\v ->
                     M3e.menuItem
-                        [ M3e.Component.MenuItem.onClick (SetVariant v) ]
+                        [ M3e.Element.MenuItem.onClick (SetVariant v) ]
                         [ M3e.text (variantLabelFor v) ]
                 )
                 themeVariantValues
@@ -720,7 +720,7 @@ primary — never a hand-painted hex. Each swatch sets the avatar's
 resolves against that swatch's nested theme. The first option is the
 source-color picker (`sourceColorOption`). A small `m3e-heading` labels the row.
 -}
-colorOptions : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+colorOptions : Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 colorOptions model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1.5" ]
         [ TypedHtml.div []
@@ -745,19 +745,19 @@ carrying a `colorize` icon, with a transparent native `<input type=color>`
 stretched over it — clicking anywhere opens the OS color picker and fires
 `SetSeed`. The native input is the keyboard-accessible control.
 -}
-sourceColorOption : Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+sourceColorOption : Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 sourceColorOption model =
     TypedHtml.div
         [ TypedHtml.Attributes.class "relative inline-flex" ]
         [ TypedHtml.div []
-            [ M3e.theme [ M3e.Component.Theme.color model.seed ]
+            [ M3e.theme [ M3e.Element.Theme.color model.seed ]
                 [ M3e.avatar
                     [ M3e.Attributes.class "m3e-avatar-size-[2rem]"
                     , M3e.Attributes.style "--m3e-avatar-color" "var(--md-sys-color-primary)"
                     , M3e.Attributes.style "--m3e-avatar-label-color" "var(--md-sys-color-on-primary)"
                     ]
                     [ M3e.icon
-                        [ M3e.Component.Icon.name "colorize"
+                        [ M3e.Element.Icon.name "colorize"
                         , M3e.Attributes.style "font-size" "1rem"
                         ]
                         []
@@ -798,7 +798,7 @@ room to peek out past the 2rem avatar as a ring, rather than being fully hidden
 behind it.
 
 -}
-colorAvatar : Model -> String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+colorAvatar : Model -> String -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 colorAvatar model hex =
     let
         controlId : String
@@ -815,12 +815,12 @@ colorAvatar model hex =
         , Seam.selectionIndicatorShape
         ]
         [ M3e.selectionIndicator
-            [ M3e.Component.SelectionIndicator.for controlId
-            , M3e.Component.SelectionIndicator.selected (model.seed == hex)
+            [ M3e.Element.SelectionIndicator.for controlId
+            , M3e.Element.SelectionIndicator.selected (model.seed == hex)
             ]
             []
         , TypedHtml.div []
-            [ M3e.theme [ M3e.Component.Theme.color hex ]
+            [ M3e.theme [ M3e.Element.Theme.color hex ]
                 [ M3e.avatar
                     [ M3e.Attributes.class "m3e-avatar-size-[2rem]"
                     , M3e.Attributes.style "--m3e-avatar-color" "var(--md-sys-color-primary)"
@@ -883,11 +883,11 @@ here.
 view :
     { dir : TypedHtml.Values.Value TypedHtml.Values.Dir
     , onSetDirection : TypedHtml.Values.Value TypedHtml.Values.Dir -> msg
-    , sectionsEl : Element { cs | formField : M3e.Kind.Brand, segmentedButton : M3e.Kind.Brand, sharedFlow : HtmlIr.Kind.Shared, button : M3e.Kind.Brand } (TypedHtml.Component.Grouping.DivChildAdmittedBy sectionAdm) msg
+    , sectionsEl : Element { cs | formField : M3e.Kind.Brand, segmentedButton : M3e.Kind.Brand, sharedFlow : HtmlIr.Kind.Shared, button : M3e.Kind.Brand } (TypedHtml.Element.Grouping.DivChildAdmittedBy sectionAdm) msg
     }
     -> Model
     -> (Msg -> msg)
-    -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+    -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 view { sectionsEl } model toMsg =
     TypedHtml.div
         [ TypedHtml.Attributes.class "flex flex-col gap-2 py-4"
@@ -907,7 +907,7 @@ view { sectionsEl } model toMsg =
         ]
 
 
-resetAllButton : Element (M3e.Component.Button.Is s) admittedBy Msg
+resetAllButton : Element (M3e.Element.Button.Is s) admittedBy Msg
 resetAllButton =
     M3e.button
         [ TypedHtml.Events.onClick ResetAll ]

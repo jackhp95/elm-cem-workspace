@@ -1,7 +1,7 @@
 {
   "name": "elm-typed-html-elements",
   "version": "1.0.0",
-  "description": "elm-typed-html per-element home surfaces (TypedHtml.Component.*) and the TypedHtml barrel. Committed split sibling of the elm-typed-html staging root (jackhp95/elm-typed-html-elements).",
+  "description": "elm-typed-html per-element home surfaces (TypedHtml.Element.*) and the TypedHtml barrel. Committed split sibling of the elm-typed-html staging root (jackhp95/elm-typed-html-elements).",
   "license": "BSD-3-Clause",
   "private": true,
   "scripts": {

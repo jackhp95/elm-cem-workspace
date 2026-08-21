@@ -20,11 +20,11 @@ import ExampleNav
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Card
-import M3e.Component.ListItem
-import M3e.Component.NavItem
-import M3e.Component.SliderThumb
+import M3e.Element.AppBar
+import M3e.Element.Card
+import M3e.Element.ListItem
+import M3e.Element.NavItem
+import M3e.Element.SliderThumb
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
@@ -34,7 +34,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Kind
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -193,7 +193,7 @@ column's own `overflow-hidden` already suppresses the automatic minimum size),
 but it keeps the bounded-scroll invariant from depending on that.
 
 -}
-screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
+screen : Model -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ (PagesMsg Msg)
 screen model =
     TypedHtml.div
         [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -213,7 +213,7 @@ screen model =
 {-| The shared "Built from" + prev/next strip. Settings is the last example, so
 it has no next screen.
 -}
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -234,8 +234,8 @@ exampleFooter =
 appBar : Element { s | appBar : M3e.Kind.Brand } adm_ msg
 appBar =
     M3e.appBar [ M3e.Attributes.size Value.medium ]
-        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "menu" ] [])
-        , M3e.Component.AppBar.title (M3e.text "Settings")
+        [ M3e.Element.AppBar.leading (M3e.icon [ TA.name "menu" ] [])
+        , M3e.Element.AppBar.title (M3e.text "Settings")
         ]
 
 
@@ -282,7 +282,7 @@ navItem current ( section, name, iconName ) =
         [ M3e.Attributes.selected (section == current)
         , M3e.Events.onClick (PagesMsg.fromMsg (SelectSection section))
         ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name iconName ] [])
         , M3e.text name
         ]
 
@@ -298,10 +298,10 @@ every field any row needs. Each producing function's `view` returns an open row,
 which widens to fill this closed record.
 -}
 type alias Row msg =
-    Element { sharedFlow : TypedHtml.Kind.Shared, listItem : M3e.Kind.Brand, divider : M3e.Kind.Brand } (TypedHtml.Component.Grouping.DivChildAdmittedBy {}) msg
+    Element { sharedFlow : TypedHtml.Kind.Shared, listItem : M3e.Kind.Brand, divider : M3e.Kind.Brand } (TypedHtml.Element.Grouping.DivChildAdmittedBy {}) msg
 
 
-content : Model -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg))
+content : Model -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ (PagesMsg Msg))
 content model =
     [ accountCard
     , sectionCard "Notifications"
@@ -331,7 +331,7 @@ content model =
 {-| A settings section: an overline heading above a rounded card grouping the
 section's `ListItem` rows.
 -}
-sectionCard : String -> List (Row msg) -> Element (TypedHtml.Component.Grouping.DivIs s) admOut_ msg
+sectionCard : String -> List (Row msg) -> Element (TypedHtml.Element.Grouping.DivIs s) admOut_ msg
 sectionCard heading rows =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ Doc.sectionLabelCaps heading
@@ -348,7 +348,7 @@ groupedCard rows =
         [ M3e.Attributes.variant Value.filled
         , M3e.Attributes.class "m3e-card-shape-md-corner-large"
         ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex flex-col" ] (dividize rows))
         ]
 
@@ -363,16 +363,16 @@ dividize rows =
 {-| The account header: a profile card (avatar + name + email) followed by a
 drill-in row for managing the account.
 -}
-accountCard : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+accountCard : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 accountCard =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ Doc.sectionLabelCaps "Account"
         , groupedCard
             [ M3e.listItem []
-                [ M3e.Component.ListItem.leading (M3e.avatar [] [ M3e.text "JD" ])
+                [ M3e.Element.ListItem.leading (M3e.avatar [] [ M3e.text "JD" ])
                 , M3e.text "Jane Doe"
-                , M3e.Component.ListItem.supportingText (M3e.text "jane@example.com")
-                , M3e.Component.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
+                , M3e.Element.ListItem.supportingText (M3e.text "jane@example.com")
+                , M3e.Element.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
                 ]
             , linkRow "manage_accounts" "Manage account" "Password, 2FA, connected apps"
             , linkRow "sync" "Sync & backup" "Last synced 2 minutes ago"
@@ -385,10 +385,10 @@ accountCard =
 switchRow : String -> String -> String -> Bool -> Msg -> Row (PagesMsg Msg)
 switchRow iconName label supporting on toggle =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.supportingText (M3e.text supporting)
-        , M3e.Component.ListItem.trailing
+        , M3e.Element.ListItem.supportingText (M3e.text supporting)
+        , M3e.Element.ListItem.trailing
             (M3e.switch
                 [ Aria.label label
                 , M3e.Attributes.checked on
@@ -404,9 +404,9 @@ switchRow iconName label supporting on toggle =
 themeRow : String -> String -> String -> String -> Row (PagesMsg Msg)
 themeRow theme label iconName current =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.trailing
+        , M3e.Element.ListItem.trailing
             (M3e.radio
                 [ Aria.label label
                 , TA.name "theme"
@@ -423,7 +423,7 @@ themeRow theme label iconName current =
 supporting-text, so this row is a plain layout (leading icon + label above the
 slider) rather than a `ListItem` with the control crammed into a text slot.
 -}
-densityRow : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+densityRow : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 densityRow =
     TypedHtml.div [ TA.class "flex flex-col gap-3 px-4 py-3" ]
         [ TypedHtml.div [ TA.class "flex items-center gap-4" ]
@@ -439,7 +439,7 @@ densityRow =
             , Aria.label "Display density"
             , TA.class "w-full"
             ]
-            [ M3e.sliderThumb [ M3e.Component.SliderThumb.value 2 ] [] ]
+            [ M3e.sliderThumb [ M3e.Element.SliderThumb.value 2 ] [] ]
         ]
 
 
@@ -448,10 +448,10 @@ densityRow =
 linkRow : String -> String -> String -> Row msg
 linkRow iconName label supporting =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.supportingText (M3e.text supporting)
-        , M3e.Component.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
+        , M3e.Element.ListItem.supportingText (M3e.text supporting)
+        , M3e.Element.ListItem.trailing (M3e.icon [ TA.name "chevron_right" ] [])
         ]
 
 
@@ -460,8 +460,8 @@ linkRow iconName label supporting =
 infoRow : String -> String -> String -> Row msg
 infoRow iconName label value =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.trailing
+        , M3e.Element.ListItem.trailing
             (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text value ])
         ]

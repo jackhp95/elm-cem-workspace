@@ -22,7 +22,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -85,7 +85,7 @@ levels =
     ]
 
 
-swatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+swatch : ( String, String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 swatch ( shadow, label, token ) =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div

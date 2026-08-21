@@ -2,7 +2,7 @@ module M3e.Internal.Types.FabMenu exposing (Is, Attrs, Content, ChildAdmittedBy,
 
 {-| Type definitions for FabMenu. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.FabMenu` surface both re-export these, so they live in
+`M3e.Element.FabMenu` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, ChildAdmittedBy, Variant, Builder, AttrCaps

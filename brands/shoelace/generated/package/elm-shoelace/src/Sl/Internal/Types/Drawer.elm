@@ -2,7 +2,7 @@ module Sl.Internal.Types.Drawer exposing (Is, Attrs, ChildAdmittedBy, Placement,
 
 {-| Type definitions for Drawer. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Drawer` surface both re-export these, so they live in
+`Sl.Element.Drawer` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps

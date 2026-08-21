@@ -28,12 +28,12 @@ import ExampleNav
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Button
-import M3e.Component.Card
-import M3e.Component.Icon
-import M3e.Component.LinearProgressIndicator
-import M3e.Component.ListItem
+import M3e.Element.AppBar
+import M3e.Element.Button
+import M3e.Element.Card
+import M3e.Element.Icon
+import M3e.Element.LinearProgressIndicator
+import M3e.Element.ListItem
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
@@ -42,7 +42,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import View exposing (View)
 
 
@@ -96,7 +96,7 @@ adaptive layout, since the Figma source is one phone frame, not a responsive
 app. `statusBar`/`gestureBar` bookend the real content the same way the phone
 chrome bookends the frame in Figma; only the scrollable middle grows.
 -}
-screen : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+screen : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 screen =
     TypedHtml.div [ TA.class "mx-auto flex h-dvh w-full max-w-sm flex-col overflow-hidden" ]
         [ statusBar
@@ -112,7 +112,7 @@ screen =
         ]
 
 
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -141,12 +141,12 @@ exampleFooter =
 -- `M3e.divider`; nothing here paints a raw color or shape utility.
 
 
-statusBar : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+statusBar : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 statusBar =
     TypedHtml.div [ TA.class "relative flex shrink-0 items-center justify-between px-6 pt-3 pb-1" ]
         [ TypedHtml.span [] [ M3e.text "9:30" ]
         , TypedHtml.div [ TA.class "absolute inset-x-0 top-2 flex justify-center" ]
-            [ M3e.icon [ TA.name "camera", M3e.Component.Icon.opticalSize 16 ] [] ]
+            [ M3e.icon [ TA.name "camera", M3e.Element.Icon.opticalSize 16 ] [] ]
         , TypedHtml.div [ TA.class "flex items-center gap-1" ]
             [ M3e.icon [ TA.name "signal_cellular_alt" ] []
             , M3e.icon [ TA.name "wifi" ] []
@@ -158,7 +158,7 @@ statusBar =
 {-| The bottom home-indicator handle. A real `M3e.divider`, sized down to a
 short pill-width bar via layout classes only — no hand-painted fill/shape.
 -}
-gestureBar : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+gestureBar : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 gestureBar =
     TypedHtml.div [ TA.class "flex shrink-0 justify-center py-2" ]
         [ M3e.divider [ TA.class "w-8" ] [] ]
@@ -171,10 +171,10 @@ gestureBar =
 appBar : Element { s | appBar : M3e.Kind.Brand } adm_ msg
 appBar =
     M3e.appBar []
-        [ M3e.Component.AppBar.leading (backButton "Back")
-        , M3e.Component.AppBar.title (M3e.text "Label")
-        , M3e.Component.AppBar.trailing (appBarIcon "bookmark" "Bookmark")
-        , M3e.Component.AppBar.trailing (appBarIcon "more_vert" "More")
+        [ M3e.Element.AppBar.leading (backButton "Back")
+        , M3e.Element.AppBar.title (M3e.text "Label")
+        , M3e.Element.AppBar.trailing (appBarIcon "bookmark" "Bookmark")
+        , M3e.Element.AppBar.trailing (appBarIcon "more_vert" "More")
         ]
 
 
@@ -199,7 +199,7 @@ directly on the screen background, not a bounded surface). 136×136 leading
 thumbnail (`w-34 h-34` = 136px at the 4px Tailwind spacing step), a headline,
 supporting text, and a filled `Download` button.
 -}
-header : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+header : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 header =
     TypedHtml.div [ TA.class "flex items-start gap-4" ]
         [ thumbnail "w-34 h-34 shrink-0" "m3e-card-shape-md-corner-large"
@@ -215,7 +215,7 @@ downloadButton : Element { s | button : M3e.Kind.Brand } adm_ msg
 downloadButton =
     M3e.button
         [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Button.icon (M3e.icon [ TA.name "download" ] [])
+        [ M3e.Element.Button.icon (M3e.icon [ TA.name "download" ] [])
         , M3e.text "Download"
         ]
 
@@ -243,7 +243,7 @@ admitted there), so this stays a bare `TypedHtml.div` — sized/centered with
 layout classes only, no painted color or shape — wrapping the same real
 `M3e.icon` glyph.
 -}
-thumbnailIcon : String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+thumbnailIcon : String -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 thumbnailIcon sizeClasses =
     TypedHtml.div [ TA.class (sizeClasses ++ " flex items-center justify-center") ]
         [ M3e.icon [ TA.name "image" ] [] ]
@@ -265,7 +265,7 @@ see `packages/tailwind-m3e-web/generated/utilities.json`) — every other
 example's plain body/caption text stays classless and inherits the page's
 own default body type from the docs shell, and this does the same.
 -}
-bodyText : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+bodyText : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 bodyText =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "Published date" ]
@@ -280,7 +280,7 @@ bodyText =
 -- SECTION -----------------------------------------------------------------
 
 
-section : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+section : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 section =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div [ TA.class "flex items-center justify-between" ]
@@ -306,17 +306,17 @@ never a nested button).
 sectionItem : Int -> Element { s | listItem : M3e.Kind.Brand } adm_ msg
 sectionItem _ =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (thumbnailIcon "w-30 h-30 shrink-0")
+        [ M3e.Element.ListItem.leading (thumbnailIcon "w-30 h-30 shrink-0")
         , M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Title" ]
-        , M3e.Component.ListItem.supportingText
+        , M3e.Element.ListItem.supportingText
             (TypedHtml.div [ TA.class "flex flex-col gap-1" ]
                 [ TypedHtml.span []
                     [ M3e.text "Description duis aute irure dolor in reprehenderit in voluptate velit." ]
                 , metaRow
                 ]
             )
-        , M3e.Component.ListItem.trailing
-            (M3e.icon [ TA.name "play_arrow", M3e.Component.Icon.filled True ] [])
+        , M3e.Element.ListItem.trailing
+            (M3e.icon [ TA.name "play_arrow", M3e.Element.Icon.filled True ] [])
         ]
 
 
@@ -325,7 +325,7 @@ CSS already renders `body-medium`/`on-surface-variant` and cascades that down
 to unstyled children, so these spans stay classless rather than repainting
 a type role by hand.
 -}
-metaRow : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+metaRow : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 metaRow =
     TypedHtml.div [ TA.class "flex items-center gap-1" ]
         [ M3e.icon [ TA.name "add_circle" ] []
@@ -352,15 +352,15 @@ mediaPlayer =
         [ M3e.Attributes.variant Value.filled
         , M3e.Attributes.class "m3e-card-shape-md-corner-large"
         ]
-        [ M3e.Component.Card.header
+        [ M3e.Element.Card.header
             (M3e.linearProgressIndicator
-                [ M3e.Component.LinearProgressIndicator.defaultValue 20
+                [ M3e.Element.LinearProgressIndicator.defaultValue 20
                 , M3e.Attributes.max 100
                 , TA.class "block w-full"
                 ]
                 []
             )
-        , M3e.Component.Card.content playerRow
+        , M3e.Element.Card.content playerRow
         ]
 
 
@@ -373,7 +373,7 @@ the same way `Dashboard.elm`/`Travel.elm` build bespoke rows outside a `List`
 when their content doesn't fit a named-slot component. "Artist" still stays
 a classless span (no size/color role applies outside a real component here).
 -}
-playerRow : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+playerRow : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 playerRow =
     TypedHtml.div [ TA.class "flex items-center gap-3 p-3" ]
         [ thumbnailIcon "w-16 h-16 shrink-0"

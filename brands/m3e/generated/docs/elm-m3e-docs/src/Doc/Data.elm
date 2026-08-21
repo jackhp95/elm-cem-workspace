@@ -23,7 +23,7 @@ type alias Member =
 
 {-| The four API layers of a component, one per API-reference tab: `m3e` (the
 barrel's thin per-component slice — normally just the constructor), `components`
-(the `M3e.Component.<Name>` module's own members), `builder` (`M3e.Build.<Name>`'s
+(the `M3e.Element.<Name>` module's own members), `builder` (`M3e.Build.<Name>`'s
 pipe surface), and `raw` (the underlying custom element's CEM
 attributes/events/slots, read from `@m3e/web`'s `custom-elements.json`). Type
 aliases/unions are lifted OUT of the layers into `Component.types` — they are

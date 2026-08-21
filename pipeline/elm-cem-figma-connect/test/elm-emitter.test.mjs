@@ -246,7 +246,7 @@ test("surfaces record every real facet Face C measured — the per-facet-path fi
   assert.deepEqual(buttonComp.surfaces.top, {
     facet: "Standard",
     surface: "Standard",
-    module: "M3e.Component.Button",
+    module: "M3e.Element.Button",
     entry: "component",
     form: "record-double-list",
     finalizer: null,
@@ -318,7 +318,7 @@ test("renderChildElement: a multi-child HTML carrier wraps in the userland HTML 
     ],
   };
   const el = _internal.renderChildElement(spec, config, acc, "test");
-  assert.match(el, /^TypedHtml\.div \[ Native\.attribute "end" "true" \] \[ M3e\.Component\.Button\.component /);
+  assert.match(el, /^TypedHtml\.div \[ Native\.attribute "end" "true" \] \[ M3e\.Element\.Button\.component /);
   assert.doesNotMatch(el, /Native\.attribute "slot"/, "the slot attr is applied by the parent, never emitted on the carrier");
   assert.ok(acc.imports.has("TypedHtml") && acc.imports.has("Native"), "the userland seam modules are imported");
 });
@@ -327,7 +327,7 @@ test("renderChildElement: a single-child HTML carrier stays TRANSPARENT (no Type
   const acc = { imports: new Set(), skipped: [] };
   const spec = { tag: "span", children: [{ tag: "m3e-button", text: "Only" }] };
   const el = _internal.renderChildElement(spec, config, acc, "test");
-  assert.match(el, /^M3e\.Component\.Button\.component /, "single child drops the wrapper (span-carries-slot equivalence)");
+  assert.match(el, /^M3e\.Element\.Button\.component /, "single child drops the wrapper (span-carries-slot equivalence)");
   assert.ok(!acc.imports.has("TypedHtml"), "no HTML seam import when transparent");
 });
 
@@ -368,7 +368,7 @@ test("_internal.importsFor: token import is conditional (task C); double-list ne
   // action record and MUST import the action module.
   const top = buttonComp.surfaces.top;
   assert.deepEqual(_internal.importsFor(top, buttonComp, true), [
-    "import M3e.Component.Button",
+    "import M3e.Element.Button",
     "import M3e.Values",
     "import M3e.Action",
   ]);
@@ -386,8 +386,8 @@ test("_internal.renderExample reproduces each surface's call shape (double-list 
   // The Standard `top` surface is now the record-form `component` ctor: the
   // content lands in `content =`, plus `action = M3e.Action.none`.
   const top = _internal.renderExample(buttonComp.surfaces.top, buttonComp, setterLines, contentExpr);
-  assert.match(top, /^M3e\.Component\.Button\.component/);
-  assert.match(top, /M3e\.Component\.Button\.variant M3e\.Values\.filled/);
+  assert.match(top, /^M3e\.Element\.Button\.component/);
+  assert.match(top, /M3e\.Element\.Button\.variant M3e\.Values\.filled/);
   assert.match(top, /content = Kit\.text "\$\{label\}"/);
   assert.match(top, /action = M3e\.Action\.none/);
 
@@ -492,7 +492,7 @@ test("boolean axis emits Elm Bool literals (True/False), not enum tokens", () =>
   // through resolveToken. The real module/setter names are from elm-facts.
   assert.match(
     contents,
-    /M3e\.Component\.Switch\.checked \$\{checked\}/,
+    /M3e\.Element\.Switch\.checked \$\{checked\}/,
     "boolean setter must render as <Module>.<setter> <var>, not through token resolution"
   );
 
@@ -512,7 +512,7 @@ test("boolean axis emits Elm Bool literals (True/False), not enum tokens", () =>
   const constLine = lines.find((l) => l.includes("const checked =") && l.includes("getEnum"));
   const setterLine = lines.find(
     (l) =>
-      l.includes("M3e.Component.Switch.checked") &&
+      l.includes("M3e.Element.Switch.checked") &&
       l.includes("${checked}") &&
       !l.includes("M3e.Values")
   );
@@ -559,7 +559,7 @@ test("contrast: enum axis still routes through resolveToken (locks the boolean b
   // The setter line must also reference the token module (already imported).
   assert.match(
     contents,
-    /M3e\.Component\.Switch\.icons \$\{icons\}/,
+    /M3e\.Element\.Switch\.icons \$\{icons\}/,
     "enum setter line must render with variable interpolation"
   );
 
@@ -641,8 +641,8 @@ test("emitEntry: synthetic m3e-shape entry with digit-leading name value emits w
     "must emit the value-prefixed token for digit-leading CEM value"
   );
 
-  // The setter line must render as M3e.Component.Shape.name ${name}.
-  assert.match(contents, /M3e\.Component\.Shape\.name \$\{name\}/);
+  // The setter line must render as M3e.Element.Shape.name ${name}.
+  assert.match(contents, /M3e\.Element\.Shape\.name \$\{name\}/);
 });
 
 // ── Task 4 / defect D: examples.json children -> real Elm children ───────────
@@ -704,17 +704,17 @@ test("defect D: emitEntry with examples entry renders the ChildSpecs as real Elm
     // other two are the trailing child list (ctor prepends content to children).
     assert.match(
       contents,
-      /content = M3e\.Component\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]/,
+      /content = M3e\.Element\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]/,
       "the first ChildSpec renders as the record content (defect D, record form)"
     );
     assert.match(
       contents,
-      /\[ M3e\.Component\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]\n    , M3e\.Component\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]\n    \]/,
+      /\[ M3e\.Element\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]\n    , M3e\.Element\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]\n    \]/,
       "the remaining ChildSpecs render as the trailing child list (defect D)"
     );
     // The rendered children call the Kit text seam, so the file DOES import Kit.
     assert.match(contents, /"import Kit"/, "children that call Kit.text import the Kit seam");
-    assert.match(contents, /"import M3e\.Component\.ButtonSegment"/, "nested child module is imported");
+    assert.match(contents, /"import M3e\.Element\.ButtonSegment"/, "nested child module is imported");
   }
 });
 
@@ -736,7 +736,7 @@ test("Task 4: emitter.emit threads examples correctly through ctx", () => {
   // Record-form parent: the single ButtonSegment child folds into `content =`.
   assert.match(
     files[0].contents,
-    /content = M3e\.Component\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]/,
+    /content = M3e\.Element\.ButtonSegment\.component \[\] \[ Kit\.text "Label" \]/,
     "examples children rendered via emitter.emit ctx (defect D)"
   );
 });
@@ -764,22 +764,22 @@ const cardExamples = {
   },
 };
 
-test("defect D: slotted text children render as M3e.Component.Card.<slot> (Kit.text ...)", () => {
+test("defect D: slotted text children render as M3e.Element.Card.<slot> (Kit.text ...)", () => {
   const files = emitEntry(cardEntry, { ...config, examples: cardExamples });
   assert.equal(files.length, 1);
   const { contents } = files[0];
-  assert.match(contents, /M3e\.Component\.Card\.header \(Kit\.text "Header"\)/);
-  assert.match(contents, /M3e\.Component\.Card\.content \(Kit\.text "Supporting text goes here\."\)/);
+  assert.match(contents, /M3e\.Element\.Card\.header \(Kit\.text "Header"\)/);
+  assert.match(contents, /M3e\.Element\.Card\.content \(Kit\.text "Supporting text goes here\."\)/);
   // Nested custom element in a slot: m3e-button is now a record-form component,
   // so its content ("Action") folds into the record `content =`; its attr still
   // resolves to a token.
   assert.match(
     contents,
-    /M3e\.Component\.Card\.actions \(M3e\.Component\.Button\.component \{ content = Kit\.text "Action", action = M3e\.Action\.none \} \[ M3e\.Component\.Button\.variant M3e\.Values\.text \] \[\]\)/
+    /M3e\.Element\.Card\.actions \(M3e\.Element\.Button\.component \{ content = Kit\.text "Action", action = M3e\.Action\.none \} \[ M3e\.Element\.Button\.variant M3e\.Values\.text \] \[\]\)/
   );
   // Imports are minimal and include every referenced module + the Kit seam
   // (the nested record adds M3e.Action).
-  assert.match(contents, /"import Kit", "import M3e\.Action", "import M3e\.Component\.Button", "import M3e\.Component\.Card", "import M3e\.Values"/);
+  assert.match(contents, /"import Kit", "import M3e\.Action", "import M3e\.Element\.Button", "import M3e\.Element\.Card", "import M3e\.Values"/);
   // No leftover empty-shell [] children.
   assert.doesNotMatch(contents, /\n    \[\]`/);
 });
@@ -807,8 +807,8 @@ test("defect D: an empty-string boolean attr on a child (selected=\"\") becomes 
   const { contents } = files[0];
   // `selected` is a real Bool setter on m3e-tab (not a slot); "" -> True. m3e-tab
   // is a double-list component, so `component` keeps the `[attrs] [children]` shape.
-  assert.match(contents, /M3e\.Component\.Tab\.component \[ M3e\.Component\.Tab\.selected True \] \[ Kit\.text "Flights" \]/);
-  assert.match(contents, /M3e\.Component\.Tab\.component \[\] \[ Kit\.text "Trips" \]/);
+  assert.match(contents, /M3e\.Element\.Tab\.component \[ M3e\.Element\.Tab\.selected True \] \[ Kit\.text "Flights" \]/);
+  assert.match(contents, /M3e\.Element\.Tab\.component \[\] \[ Kit\.text "Trips" \]/);
 });
 
 test("defect D: opaque HTML child (<input>) is skipped with a header note, never guessed", () => {
@@ -853,7 +853,7 @@ test("_internal.renderChildElement: nested custom element, transparent HTML carr
       "t"
     ),
     // m3e-button is a record-form component: its text folds into `content =`.
-    'M3e.Component.Button.component { content = Kit.text "Action", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] []'
+    'M3e.Element.Button.component { content = Kit.text "Action", action = M3e.Action.none } [ M3e.Element.Button.variant M3e.Values.text ] []'
   );
   // Transparent HTML text carrier collapses to its single inner element.
   const acc2 = { imports: new Set(), skipped: [] };
@@ -906,14 +906,14 @@ test("elm iconTable: one file per row, facts-resolved names, [] children, -elm s
   // R-026 opaque-`Name` icons: the ligature is the positional `Name` argument of
   // `M3e.Icon.icon` (never a `name` string setter); children stay [].
   // Opaque-Name constructor + Name from the icons module (M3e.Icon); the filled
-  // setter from the component surface (M3e.Component.Icon), which type-unifies
+  // setter from the component surface (M3e.Element.Icon), which type-unifies
   // with M3e.Icon.icon's polymorphic attrs. Plain icons import only M3e.Icon;
   // filled icons import both (minimal).
   assert.match(files[0].contents, /M3e\.Icon\.icon M3e\.Icon\.wifi \[\] \[\]/);
-  assert.match(files[1].contents, /M3e\.Icon\.icon M3e\.Icon\.stars \[ M3e\.Component\.Icon\.filled True \] \[\]/);
+  assert.match(files[1].contents, /M3e\.Icon\.icon M3e\.Icon\.stars \[ M3e\.Element\.Icon\.filled True \] \[\]/);
   assert.match(files[0].contents, /"import M3e\.Icon"/);
-  assert.doesNotMatch(files[0].contents, /"import M3e\.Component\.Icon"/, "plain (unfilled) icon does not import the component surface");
-  assert.match(files[1].contents, /"import M3e\.Component\.Icon", "import M3e\.Icon"/, "filled icon imports both, sorted");
+  assert.doesNotMatch(files[0].contents, /"import M3e\.Element\.Icon"/, "plain (unfilled) icon does not import the component surface");
+  assert.match(files[1].contents, /"import M3e\.Element\.Icon", "import M3e\.Icon"/, "filled icon imports both, sorted");
   assert.doesNotMatch(files[0].contents, /Kit\.text|M3e\.Token|import Kit/, "no seam/token for icons");
 });
 
@@ -950,12 +950,12 @@ test("circular progress: float set-attrs -> M3e.CircularProgressIndicator.view [
     },
   });
   assert.equal(files.length, 2);
-  // Post-review this is a REGULAR component (M3e.Component.CircularProgressIndicator),
+  // Post-review this is a REGULAR component (M3e.Element.CircularProgressIndicator),
   // not a M3e.Progress group alias. `value` is a Float setter (setterArgTypes) ->
   // bare `70`, never a quoted string. `indeterminate` is Bool -> True.
-  assert.match(files[0].contents, /M3e\.Component\.CircularProgressIndicator\.component\n    \[ M3e\.Component\.CircularProgressIndicator\.value 70\n    \]\n    \[\]/);
-  assert.match(files[1].contents, /M3e\.Component\.CircularProgressIndicator\.indeterminate True/);
-  assert.match(files[0].contents, /"import M3e\.Component\.CircularProgressIndicator"/);
+  assert.match(files[0].contents, /M3e\.Element\.CircularProgressIndicator\.component\n    \[ M3e\.Element\.CircularProgressIndicator\.value 70\n    \]\n    \[\]/);
+  assert.match(files[1].contents, /M3e\.Element\.CircularProgressIndicator\.indeterminate True/);
+  assert.match(files[0].contents, /"import M3e\.Element\.CircularProgressIndicator"/);
   // task C: neither set references a token, so no token module is imported.
   assert.doesNotMatch(files[0].contents, /import M3e\.Values/);
 });
@@ -977,13 +977,13 @@ test("linear progress: fixedAttrs mode -> M3e.Values enum + float set-attrs valu
     surface: "top",
     setAttrs: { "m3e-linear-progress-indicator": { "Linear-determinate progress indicator": { value: "70" } } },
   });
-  // Post-review: regular component M3e.Component.LinearProgressIndicator; `mode`
+  // Post-review: regular component M3e.Element.LinearProgressIndicator; `mode`
   // is an enum (-> M3e.Values token), `value` a Float set-attr (-> bare 70).
   assert.match(
     files[0].contents,
-    /M3e\.Component\.LinearProgressIndicator\.component\n    \[ M3e\.Component\.LinearProgressIndicator\.mode M3e\.Values\.determinate\n    , M3e\.Component\.LinearProgressIndicator\.value 70\n    \]/
+    /M3e\.Element\.LinearProgressIndicator\.component\n    \[ M3e\.Element\.LinearProgressIndicator\.mode M3e\.Values\.determinate\n    , M3e\.Element\.LinearProgressIndicator\.value 70\n    \]/
   );
-  assert.match(files[1].contents, /M3e\.Component\.LinearProgressIndicator\.mode M3e\.Values\.indeterminate/);
+  assert.match(files[1].contents, /M3e\.Element\.LinearProgressIndicator\.mode M3e\.Values\.indeterminate/);
 });
 
 // ── T3: per-set set-attrs injection in the Elm emitter ───────────────────────

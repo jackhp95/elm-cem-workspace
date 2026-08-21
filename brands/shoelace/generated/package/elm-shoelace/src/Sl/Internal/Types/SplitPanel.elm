@@ -2,7 +2,7 @@ module Sl.Internal.Types.SplitPanel exposing (Is, Attrs, ChildAdmittedBy, Primar
 
 {-| Type definitions for SplitPanel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.SplitPanel` surface both re-export these, so they live in
+`Sl.Element.SplitPanel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Primary, Builder, AttrCaps

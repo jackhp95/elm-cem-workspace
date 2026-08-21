@@ -6,8 +6,8 @@ import Browser
 import Html
 import M3e
 import M3e.Action
-import M3e.Component.Button as Button
-import M3e.Component.Theme as Theme
+import M3e.Element.Button as Button
+import M3e.Element.Theme as Theme
 import M3e.Values as Value
 
 

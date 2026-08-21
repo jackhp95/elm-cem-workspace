@@ -366,10 +366,10 @@ homeModule brand ( home, members ) =
                 ]
                 |> List.sort
     in
-    file [ lib, "Component", home ]
+    file [ lib, "Element", home ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ lib ++ ".Component." ++ home ++ " exposing"
+                [ [ "module " ++ lib ++ ".Element." ++ home ++ " exposing"
                   , exposeBlock exposeGroups
                   , ""
                   , "{-| The `" ++ home ++ "` element home: constructors, per-element rows, and"

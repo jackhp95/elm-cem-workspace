@@ -2,7 +2,7 @@ module M3e.Internal.Types.BreadcrumbItem exposing (Is, Attrs, Content, IconSlot,
 
 {-| Type definitions for BreadcrumbItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.BreadcrumbItem` surface both re-export these, so they live in
+`M3e.Element.BreadcrumbItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Current, Builder, AttrCaps, SlotCaps

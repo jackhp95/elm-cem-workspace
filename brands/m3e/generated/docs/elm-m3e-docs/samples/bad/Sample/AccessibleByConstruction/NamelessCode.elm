@@ -7,14 +7,14 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Action
-import M3e.Component.IconButton
+import M3e.Element.IconButton
 import TypedHtml.Attributes as TA
 
 
 shown0_ =
-    M3e.Component.IconButton.component
+    M3e.Element.IconButton.component
         { content = M3e.icon [ TA.name "help" ] [], action = M3e.Action.none }
         []
         []

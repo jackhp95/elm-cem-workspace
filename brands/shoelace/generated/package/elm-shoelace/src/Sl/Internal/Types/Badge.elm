@@ -2,7 +2,7 @@ module Sl.Internal.Types.Badge exposing (Is, Attrs, ChildAdmittedBy, Variant, Bu
 
 {-| Type definitions for Badge. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Badge` surface both re-export these, so they live in
+`Sl.Element.Badge` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Variant, Builder, AttrCaps

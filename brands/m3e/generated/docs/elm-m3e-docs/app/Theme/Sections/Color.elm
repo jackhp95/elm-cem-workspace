@@ -25,8 +25,8 @@ no persisted-state change.
 import Dict
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.FormField as FormField
-import M3e.Component.Icon
+import M3e.Element.FormField as FormField
+import M3e.Element.Icon
 import M3e.Values as Value
 import Seam
 import Theme exposing (Msg(..))
@@ -34,17 +34,17 @@ import Theme.Tokens as Tokens exposing (ColorToken)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Events
 
 
-view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         (List.map (groupView model) Tokens.colorGroups)
 
 
-groupView : Theme.Model -> ( String, List ColorToken ) -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+groupView : Theme.Model -> ( String, List ColorToken ) -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 groupView model ( groupName, tokens ) =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
         [ M3e.heading
@@ -87,7 +87,7 @@ tokenChip model token =
         -- exactly like `Theme.sourceColorOption` — the click target is the
         -- native `<input type=color>` itself, stretched transparently over
         -- the decorative avatar rather than wrapped in a `<label for>`.
-        swatch : Element (TypedHtml.Component.Grouping.DivIs t) admittedBy Msg
+        swatch : Element (TypedHtml.Element.Grouping.DivIs t) admittedBy Msg
         swatch =
             TypedHtml.div [ TypedHtml.Attributes.class "inline-flex items-center" ]
                 [ TypedHtml.label
@@ -117,7 +117,7 @@ tokenChip model token =
                             [ TypedHtml.Events.onClick (ResetColorOverride token.cssVar)
                             , Aria.label ("Unset " ++ token.role)
                             ]
-                            [ M3e.icon [ M3e.Component.Icon.name "close" ] [] ]
+                            [ M3e.icon [ M3e.Element.Icon.name "close" ] [] ]
                         )
                     ]
 

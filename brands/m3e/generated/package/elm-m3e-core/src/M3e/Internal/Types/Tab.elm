@@ -2,7 +2,7 @@ module M3e.Internal.Types.Tab exposing (Is, Attrs, Content, IconSlot, ChildAdmit
 
 {-| Type definitions for Tab. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Tab` surface both re-export these, so they live in
+`M3e.Element.Tab` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

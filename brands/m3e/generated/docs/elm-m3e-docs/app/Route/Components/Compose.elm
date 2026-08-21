@@ -32,15 +32,15 @@ import FatalError exposing (FatalError)
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Badge
-import M3e.Component.Button
-import M3e.Component.Card
-import M3e.Component.FormField
-import M3e.Component.Heading
-import M3e.Component.IconButton
-import M3e.Component.Menu
-import M3e.Component.MenuItem
-import M3e.Component.SearchBar
+import M3e.Element.Badge
+import M3e.Element.Button
+import M3e.Element.Card
+import M3e.Element.FormField
+import M3e.Element.Heading
+import M3e.Element.IconButton
+import M3e.Element.Menu
+import M3e.Element.MenuItem
+import M3e.Element.SearchBar
 import M3e.Events
 import M3e.Review.Facts
 import M3e.Unsafe
@@ -52,9 +52,9 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Button
-import TypedHtml.Component.Grouping as Grouping
-import TypedHtml.Component.Sectioning as Sectioning
+import TypedHtml.Element.Button
+import TypedHtml.Element.Grouping as Grouping
+import TypedHtml.Element.Sectioning as Sectioning
 import TypedHtml.Events as TE
 import UrlPath exposing (UrlPath)
 import View exposing (View)
@@ -480,7 +480,7 @@ groups (mixing "set an attribute" and "add a child" controls in one row
 reads as one affordance when they are two), that node's menu (if open), and
 a recursive card per child node.
 -}
-viewNode : MenuCtx -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Component.Card.Is s) admittedBy Msg
+viewNode : MenuCtx -> Cem.Compose.Path -> Cem.Compose.Node -> Model -> Element (M3e.Element.Card.Is s) admittedBy Msg
 viewNode ctx path node model =
     let
         collapsed : Bool
@@ -541,7 +541,7 @@ adds/removes this node's `pathId` from the collapsed set, hiding or showing its
 body (attributes, slots, and child rows). The tag name and its controls stay
 visible when collapsed.
 -}
-collapseChevron : Cem.Compose.Path -> Bool -> Element (M3e.Component.IconButton.Is s) admittedBy Msg
+collapseChevron : Cem.Compose.Path -> Bool -> Element (M3e.Element.IconButton.Is s) admittedBy Msg
 collapseChevron path collapsed =
     M3e.iconButton
         [ Aria.label
@@ -594,7 +594,7 @@ headerRow ctx path node model =
 editing lives in its own `editControl` icon button (the tag used to double as the
 change-component button).
 -}
-tagHeading : Cem.Compose.Node -> Element (M3e.Component.Heading.Is s) admittedBy Cem.Compose.Msg
+tagHeading : Cem.Compose.Node -> Element (M3e.Element.Heading.Is s) admittedBy Cem.Compose.Msg
 tagHeading node =
     M3e.heading
         [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ]
@@ -638,7 +638,7 @@ reorderControls parentPath slotName index model =
             ]
 
 
-reorderButton : String -> String -> Bool -> Cem.Compose.Msg -> Element (M3e.Component.IconButton.Is s) admittedBy Cem.Compose.Msg
+reorderButton : String -> String -> Bool -> Cem.Compose.Msg -> Element (M3e.Element.IconButton.Is s) admittedBy Cem.Compose.Msg
 reorderButton label glyph isDisabled msg =
     M3e.iconButton
         [ Aria.label label
@@ -736,7 +736,7 @@ slotControl ctx path model info =
         )
 
 
-groupLabel : String -> Element (M3e.Component.Heading.Is s) admittedBy msg
+groupLabel : String -> Element (M3e.Element.Heading.Is s) admittedBy msg
 groupLabel label =
     M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text label ]
 
@@ -801,7 +801,7 @@ componentPicker :
     , options : List String
     , reference : Dict String Doc.Data.Component
     }
-    -> Element (M3e.Component.Card.Is s) admittedBy Msg
+    -> Element (M3e.Element.Card.Is s) admittedBy Msg
 componentPicker config =
     let
         query : String
@@ -868,11 +868,11 @@ rides in `leading`, the native `<input>` is the required `input` slot. Its
 own chrome (shape, container colour) replaces the hand-painted border/radius
 this used to carry.
 -}
-pickerSearchField : String -> (String -> Msg) -> Element (M3e.Component.SearchBar.Is s) admittedBy Msg
+pickerSearchField : String -> (String -> Msg) -> Element (M3e.Element.SearchBar.Is s) admittedBy Msg
 pickerSearchField query onSearch =
     M3e.searchBar
         [ M3e.Attributes.class "w-full" ]
-        [ M3e.Component.SearchBar.input
+        [ M3e.Element.SearchBar.input
             (TypedHtml.input
                 [ TA.value query
                 , TA.placeholder "Search components"
@@ -880,7 +880,7 @@ pickerSearchField query onSearch =
                 ]
                 []
             )
-        , M3e.Component.SearchBar.leading (M3e.icon [ TA.name "search" ] [])
+        , M3e.Element.SearchBar.leading (M3e.icon [ TA.name "search" ] [])
         ]
 
 
@@ -925,7 +925,7 @@ pickerSection onPick ( category, entries ) =
         (groupLabel category :: List.map (pickerItem onPick) entries)
 
 
-pickerItem : (String -> Msg) -> PickerEntry -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
+pickerItem : (String -> Msg) -> PickerEntry -> Element (TypedHtml.Element.Button.Is s) admittedBy Msg
 pickerItem onPick entry =
     TypedHtml.button
         [ TA.class "text-left w-full px-2 py-1"
@@ -969,7 +969,7 @@ A free-text attribute (`String`/`Float`/`Int`) keeps the plain
 normal flow (`freeTextMenuFor`), not a popover — so it needs no menu-trigger
 pairing at all.
 -}
-attrButtonElement : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
+attrButtonElement : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Element.Button.Is s) admittedBy Cem.Compose.Msg
 attrButtonElement path info =
     case info.kind of
         Cem.Compose.EnumChip _ ->
@@ -1000,7 +1000,7 @@ attrButtonElement path info =
 `attrButtonElement` split (plain free-text chips have no menu at all; their
 inline field is `freeTextMenuFor`).
 -}
-attrMenusFor : Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.AttrChipInfo -> List (Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg)
+attrMenusFor : Cem.Compose.Path -> Cem.Compose.Model -> List Cem.Compose.AttrChipInfo -> List (Element (M3e.Element.Menu.Is s) admittedBy Cem.Compose.Msg)
 attrMenusFor path model chips =
     chips
         |> List.filterMap
@@ -1029,7 +1029,7 @@ The button sits in a plain `flex flex-wrap` row, so the menu is a sibling of
 that row, built separately by `attrMenusFor` — the `for`/id pairing is
 unaffected by DOM position.
 -}
-discreteAttrButtonElement : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Cem.Compose.Msg
+discreteAttrButtonElement : Cem.Compose.Path -> Cem.Compose.AttrChipInfo -> Element (M3e.Element.Button.Is s) admittedBy Cem.Compose.Msg
 discreteAttrButtonElement path info =
     M3e.button
         [ M3e.Attributes.id (attrButtonHostId path info.name)
@@ -1052,7 +1052,7 @@ discreteAttrButtonElement path info =
 {-| The always-present menu a discrete attr chip's `menuTrigger` points at by
 id — built directly from `attrMenuOptions`, not gated on `model.openMenu`.
 -}
-discreteAttrMenu : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (M3e.Component.Menu.Is s) admittedBy Cem.Compose.Msg
+discreteAttrMenu : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.AttrChipInfo -> Element (M3e.Element.Menu.Is s) admittedBy Cem.Compose.Msg
 discreteAttrMenu path model info =
     M3e.menu [ M3e.Attributes.id (attrMenuId path info.name) ]
         (case Cem.Compose.attrMenuOptions path info.name model of
@@ -1145,7 +1145,7 @@ result type is fully polymorphic, so it slots into the button's content list.
 slotCountTrailing : Cem.Compose.SlotChipInfo -> List (Element free freeAdmittedBy msg)
 slotCountTrailing info =
     if info.filled > 0 then
-        [ M3e.Component.Button.trailingIcon (slotCountBadge info) ]
+        [ M3e.Element.Button.trailingIcon (slotCountBadge info) ]
 
     else
         []
@@ -1156,7 +1156,7 @@ neutral badge. `m3e-badge` has no color/variant attribute and defaults to the
 error color, so its container/text CSS custom properties are overridden to a
 quiet surface pair rather than red.
 -}
-slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Component.Badge.Is s) admittedBy msg
+slotCountBadge : Cem.Compose.SlotChipInfo -> Element (M3e.Element.Badge.Is s) admittedBy msg
 slotCountBadge info =
     M3e.badge
         [ M3e.Attributes.style "--m3e-badge-container-color" "var(--md-sys-color-surface-container-highest)"
@@ -1181,7 +1181,7 @@ content, not an add affordance). Marked `compose-slot-empty`/
 `compose-slot-filled` so the distinction is test-assertable.
 
 -}
-slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Button.Is s) admittedBy Msg
+slotButtonElement : Cem.Compose.Path -> Cem.Compose.Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Element.Button.Is s) admittedBy Msg
 slotButtonElement path model info =
     let
         onClickMsg : Msg
@@ -1289,7 +1289,7 @@ panel instead, styled like `componentPicker`, toggled by `model.slotAddPanel`:
     example titles across different components stay distinguishable.
 
 -}
-slotAddPanelElement : MenuCtx -> Cem.Compose.Path -> Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Component.Card.Is s) admittedBy Msg
+slotAddPanelElement : MenuCtx -> Cem.Compose.Path -> Model -> Cem.Compose.SlotChipInfo -> Element (M3e.Element.Card.Is s) admittedBy Msg
 slotAddPanelElement ctx path model info =
     let
         options : List Cem.Compose.SlotOption
@@ -1341,7 +1341,7 @@ slotAddPanelElement ctx path model info =
 **Icon**, **Nest a component...** — each included only when `options` (this
 slot's own `slotMenuOptions`) actually affords it.
 -}
-leadingSlotAddOptions : Cem.Compose.Path -> String -> List Cem.Compose.SlotOption -> List (Element (TypedHtml.Component.Button.Is s) admittedBy Msg)
+leadingSlotAddOptions : Cem.Compose.Path -> String -> List Cem.Compose.SlotOption -> List (Element (TypedHtml.Element.Button.Is s) admittedBy Msg)
 leadingSlotAddOptions path slotName options =
     List.concat
         [ if List.member Cem.Compose.OptionText options then
@@ -1430,7 +1430,7 @@ change-component picker's `pickerItem`, an extra CSS class hook for tests
 (e.g. `"compose-example-item"`, empty string for the three fixed options; not
 a styling class, just a test selector, so it stays on the element).
 -}
-slotAddOptionButton : String -> String -> Msg -> Element (TypedHtml.Component.Button.Is s) admittedBy Msg
+slotAddOptionButton : String -> String -> Msg -> Element (TypedHtml.Element.Button.Is s) admittedBy Msg
 slotAddOptionButton extraClass label msg =
     TypedHtml.button
         [ TA.class
@@ -1458,7 +1458,7 @@ textInputRow current toMsg =
         ]
 
 
-menuItemView : String -> Cem.Compose.Msg -> Element (M3e.Component.MenuItem.Is s) admittedBy Cem.Compose.Msg
+menuItemView : String -> Cem.Compose.Msg -> Element (M3e.Element.MenuItem.Is s) admittedBy Cem.Compose.Msg
 menuItemView label msg =
     M3e.menuItem [ M3e.Events.onClick msg ] [ M3e.text label ]
 
@@ -1549,16 +1549,16 @@ names which kind of content this is ("Text"/"Icon"), the plain `<input>`
 carries the current value, and `suffix` carries the trailing delete button.
 No leading drag handle (reordering is out of scope for this pass).
 -}
-childFormField : String -> String -> Cem.Compose.Path -> String -> Int -> Element (M3e.Component.FormField.Is s) admittedBy Cem.Compose.Msg
+childFormField : String -> String -> Cem.Compose.Path -> String -> Int -> Element (M3e.Element.FormField.Is s) admittedBy Cem.Compose.Msg
 childFormField labelText current path slotName index =
     M3e.formField []
-        [ M3e.Component.FormField.label (M3e.text labelText)
+        [ M3e.Element.FormField.label (M3e.text labelText)
         , TypedHtml.input
             [ TA.value current
             , TE.onInput (Cem.Compose.SetChildContent path slotName index)
             ]
             []
-        , M3e.Component.FormField.suffix
+        , M3e.Element.FormField.suffix
             (M3e.iconButton
                 [ Aria.label "Remove"
                 , M3e.Events.onClick (Cem.Compose.RemoveChild path slotName index)
@@ -1568,7 +1568,7 @@ childFormField labelText current path slotName index =
         ]
 
 
-removeButton : Cem.Compose.Msg -> Element (M3e.Component.IconButton.Is s) admittedBy Cem.Compose.Msg
+removeButton : Cem.Compose.Msg -> Element (M3e.Element.IconButton.Is s) admittedBy Cem.Compose.Msg
 removeButton msg =
     M3e.iconButton [ Aria.label "Remove", M3e.Events.onClick msg ]
         [ M3e.icon [ TA.name "close" ] [] ]

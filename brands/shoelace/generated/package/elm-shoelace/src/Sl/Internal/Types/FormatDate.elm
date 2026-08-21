@@ -2,7 +2,7 @@ module Sl.Internal.Types.FormatDate exposing (Is, Attrs, ChildAdmittedBy, Day, E
 
 {-| Type definitions for FormatDate. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.FormatDate` surface both re-export these, so they live in
+`Sl.Element.FormatDate` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Day, Era, Hour, HourFormat, Minute, Month, Second, TimeZoneName, Weekday, Year, Builder, AttrCaps

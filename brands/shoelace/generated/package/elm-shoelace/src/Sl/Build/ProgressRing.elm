@@ -17,7 +17,7 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Component.ProgressRing as Component
+import Sl.Element.ProgressRing as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 

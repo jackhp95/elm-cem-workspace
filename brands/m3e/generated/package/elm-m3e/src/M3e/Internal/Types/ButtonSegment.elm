@@ -2,7 +2,7 @@ module M3e.Internal.Types.ButtonSegment exposing (Is, Attrs, Content, IconSlot, 
 
 {-| Type definitions for ButtonSegment. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ButtonSegment` surface both re-export these, so they live in
+`M3e.Element.ButtonSegment` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

@@ -2,7 +2,7 @@ module M3e.Internal.Types.SplitPane exposing (Is, Attrs, ChildAdmittedBy, Orient
 
 {-| Type definitions for SplitPane. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.SplitPane` surface both re-export these, so they live in
+`M3e.Element.SplitPane` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Orientation, Builder, AttrCaps, SlotCaps

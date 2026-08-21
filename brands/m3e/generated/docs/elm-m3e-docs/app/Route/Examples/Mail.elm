@@ -34,14 +34,14 @@ import Head
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.AssistChip
-import M3e.Component.DrawerContainer
-import M3e.Component.Fab
-import M3e.Component.ListOption
-import M3e.Component.NavItem
-import M3e.Component.SearchBar
-import M3e.Component.SelectionList
+import M3e.Element.AppBar
+import M3e.Element.AssistChip
+import M3e.Element.DrawerContainer
+import M3e.Element.Fab
+import M3e.Element.ListOption
+import M3e.Element.NavItem
+import M3e.Element.SearchBar
+import M3e.Element.SelectionList
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
@@ -51,8 +51,8 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Grouping
+import TypedHtml.Element.Sectioning
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -237,7 +237,7 @@ clips it away entirely.
 content in both directions -- which is what the `relative` here anchors.
 
 -}
-screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "relative flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -253,7 +253,7 @@ screen model =
 
 {-| The shared "Built from" + prev/next strip.
 -}
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -277,7 +277,7 @@ exampleFooter =
 
 {-| Desktop navigation rail (hidden below `md:`).
 -}
-navRail : Element (TypedHtml.Component.Sectioning.NavIs s) adm_ Msg
+navRail : Element (TypedHtml.Element.Sectioning.NavIs s) adm_ Msg
 navRail =
     TypedHtml.nav [ TA.class "hidden md:flex" ]
         [ M3e.navRail [ M3e.Attributes.mode Value.expanded ]
@@ -289,7 +289,7 @@ railItem : Int -> { icon : String, label : String } -> Element { s | navItem : M
 railItem index d =
     M3e.navItem
         [ M3e.Attributes.selected (index == 0) ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
         , M3e.text d.label
         ]
 
@@ -305,7 +305,7 @@ wrapper around the bar) as the flex child mirrors `navRail`, whose `<nav>` is
 likewise the flex child at `md:` and up.
 
 -}
-bottomBar : Element (TypedHtml.Component.Sectioning.NavIs s) adm_ Msg
+bottomBar : Element (TypedHtml.Element.Sectioning.NavIs s) adm_ Msg
 bottomBar =
     TypedHtml.nav [ TA.class "md:hidden shrink-0" ]
         [ M3e.navBar []
@@ -317,7 +317,7 @@ barItem : Int -> { icon : String, label : String } -> Element { s | navItem : M3
 barItem index d =
     M3e.navItem
         [ M3e.Attributes.selected (index == 0) ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
         , M3e.text d.label
         ]
 
@@ -329,9 +329,9 @@ barItem index d =
 topBar : Element { s | appBar : M3e.Kind.Brand } adm_ Msg
 topBar =
     M3e.appBar [ M3e.Attributes.size Value.medium ]
-        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "menu" ] [])
-        , M3e.Component.AppBar.title (M3e.text "Mail")
-        , M3e.Component.AppBar.trailing searchBar
+        [ M3e.Element.AppBar.leading (M3e.icon [ TA.name "menu" ] [])
+        , M3e.Element.AppBar.title (M3e.text "Mail")
+        , M3e.Element.AppBar.trailing searchBar
         ]
 
 
@@ -339,14 +339,14 @@ searchBar : Element { s | searchBar : M3e.Kind.Brand } adm_ Msg
 searchBar =
     M3e.searchBar
         []
-        [ M3e.Component.SearchBar.input
+        [ M3e.Element.SearchBar.input
             (TypedHtml.input
                 [ TA.placeholder "Search mail"
                 , TA.type_ "search"
                 ]
                 []
             )
-        , M3e.Component.SearchBar.leading (M3e.icon [ TA.name "search" ] [])
+        , M3e.Element.SearchBar.leading (M3e.icon [ TA.name "search" ] [])
         ]
 
 
@@ -375,10 +375,10 @@ rather than pinned under the body -- so the footer is what you reach after
 reading the inbox, not a strip permanently spending viewport height.
 
 -}
-body : Model -> Element (M3e.Component.DrawerContainer.Is s) adm_ Msg
+body : Model -> Element (M3e.Element.DrawerContainer.Is s) adm_ Msg
 body model =
     M3e.drawerContainer
-        [ M3e.Component.DrawerContainer.endMode Value.auto
+        [ M3e.Element.DrawerContainer.endMode Value.auto
         , M3e.Attributes.end model.readerOpen
         , M3e.Events.onChangeWith drawerChangeDecoder
         , TA.class "flex-1 min-h-0 overflow-hidden"
@@ -389,7 +389,7 @@ body model =
             ]
         , [ readingPane (selectedMessage model) ]
             |> M3e.contentPane [ TA.class "h-full w-full overflow-y-auto md:w-[32rem]" ]
-            |> M3e.Component.DrawerContainer.end
+            |> M3e.Element.DrawerContainer.end
         ]
 
 
@@ -406,7 +406,7 @@ it, where dismissing is a preference rather than a necessity -- but a control
 that moves or disappears between widths is worse than one that does not.
 
 -}
-closeReader : Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+closeReader : Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 closeReader =
     TypedHtml.div [ TA.class "flex" ]
         [ M3e.iconButton
@@ -451,7 +451,7 @@ trailing slot instead of the built-in radio dot swapping it out.
 messageList : Model -> Element { s | selectionList : M3e.Kind.Brand } adm_ Msg
 messageList model =
     M3e.selectionList
-        [ M3e.Component.SelectionList.hideSelectionIndicator True ]
+        [ M3e.Element.SelectionList.hideSelectionIndicator True ]
         (List.intersperse divider
             (List.indexedMap (messageRow model.selected) inbox)
         )
@@ -471,14 +471,14 @@ place), so no separate aria attribute is needed here.
 messageRow : Int -> Int -> Message -> Element { s | listOption : M3e.Kind.Brand } adm_ Msg
 messageRow selected index message =
     M3e.listOption
-        [ M3e.Component.ListOption.selected (index == selected)
-        , M3e.Component.ListOption.onClick (SelectMessage index)
+        [ M3e.Element.ListOption.selected (index == selected)
+        , M3e.Element.ListOption.onClick (SelectMessage index)
         ]
-        [ M3e.Component.ListOption.leading (M3e.avatar [] [ M3e.text message.initials ])
-        , M3e.Component.ListOption.overline (M3e.text message.sender)
+        [ M3e.Element.ListOption.leading (M3e.avatar [] [ M3e.text message.initials ])
+        , M3e.Element.ListOption.overline (M3e.text message.sender)
         , M3e.text message.subject
-        , M3e.Component.ListOption.supportingText (M3e.text message.snippet)
-        , M3e.Component.ListOption.trailing
+        , M3e.Element.ListOption.supportingText (M3e.text message.snippet)
+        , M3e.Element.ListOption.trailing
             (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.small ] [ M3e.text message.time ])
         ]
 
@@ -491,7 +491,7 @@ messageRow selected index message =
 avatar and timestamp, label chips, and the body paragraphs — all styled with
 M3 token classes applied directly.
 -}
-readingPane : Message -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+readingPane : Message -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 readingPane message =
     TypedHtml.div [ TA.class "flex flex-col gap-6 p-6" ]
         [ closeReader
@@ -515,7 +515,7 @@ labelChip name =
     M3e.assistChip
         []
         [ M3e.text name
-        , M3e.Component.AssistChip.icon (M3e.icon [ TA.name "label" ] [])
+        , M3e.Element.AssistChip.icon (M3e.icon [ TA.name "label" ] [])
         ]
 
 
@@ -533,7 +533,7 @@ pointer events. Only the FAB itself should be clickable; the gutter around it
 belongs to whatever is underneath.
 
 -}
-composeFab : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+composeFab : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 composeFab =
     TypedHtml.div [ TA.class "pointer-events-none absolute bottom-20 right-6 md:bottom-6 [&>*]:pointer-events-auto" ]
         [ M3e.fab
@@ -542,6 +542,6 @@ composeFab =
             , Aria.label "Compose"
             ]
             [ M3e.icon [ TA.name "edit" ] []
-            , M3e.Component.Fab.label (M3e.text "Compose")
+            , M3e.Element.Fab.label (M3e.text "Compose")
             ]
         ]

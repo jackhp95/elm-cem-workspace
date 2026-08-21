@@ -2,7 +2,7 @@ module Sl.Internal.Types.QrCode exposing (Is, Attrs, ChildAdmittedBy, ErrorCorre
 
 {-| Type definitions for QrCode. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.QrCode` surface both re-export these, so they live in
+`Sl.Element.QrCode` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, ErrorCorrection, Builder, AttrCaps

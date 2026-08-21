@@ -9,7 +9,7 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
+import M3e.Element.Card
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -19,7 +19,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -120,7 +120,7 @@ type alias Accent =
 {-| A container/on-container pairing row: the bold role beside its container, so the
 "on" color is read directly off each layer/form.
 -}
-accentRow : Accent -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+accentRow : Accent -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 accentRow accent =
     TypedHtml.div [ TA.class "grid grid-cols-2 gap-3" ]
         [ swatch ( accent.name, accent.baseBg, accent.base )
@@ -128,7 +128,7 @@ accentRow accent =
         ]
 
 
-swatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+swatch : ( String, String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 swatch ( label, bg, role ) =
     TypedHtml.div
         [ TA.class (role ++ " rounded-md-corner-medium border border-outline-variant flex flex-col justify-between p-4 min-h-24")
@@ -197,7 +197,7 @@ forcedColorsCard : Element { s | card : M3e.Kind.Brand } adm_ msg
 forcedColorsCard =
     M3e.card
         [ M3e.Attributes.variant Value.outlined ]
-        [ M3e.Component.Card.header (M3e.heading [ M3e.Attributes.variant Value.title ] [ M3e.text "Test it" ])
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.header (M3e.heading [ M3e.Attributes.variant Value.title ] [ M3e.text "Test it" ])
+        , M3e.Element.Card.content
             (M3e.text "Enable Windows High Contrast or `forced-colors: active` in dev tools. The swatches above stay legible because every role respects the forced palette.")
         ]

@@ -2,7 +2,7 @@ module M3e.Internal.Types.FilterChip exposing (Is, Attrs, Content, IconSlot, Tra
 
 {-| Type definitions for FilterChip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.FilterChip` surface both re-export these, so they live in
+`M3e.Element.FilterChip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy, Variant, Builder, AttrCaps, SlotCaps

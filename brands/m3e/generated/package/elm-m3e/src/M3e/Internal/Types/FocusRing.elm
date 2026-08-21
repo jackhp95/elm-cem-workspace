@@ -2,7 +2,7 @@ module M3e.Internal.Types.FocusRing exposing (Is, Attrs, ChildAdmittedBy, Builde
 
 {-| Type definitions for FocusRing. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.FocusRing` surface both re-export these, so they live in
+`M3e.Element.FocusRing` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

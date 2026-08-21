@@ -2,7 +2,7 @@ module M3e.Internal.Types.Shape exposing (Is, Attrs, ChildAdmittedBy, Name, Buil
 
 {-| Type definitions for Shape. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Shape` surface both re-export these, so they live in
+`M3e.Element.Shape` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Name, Builder, AttrCaps

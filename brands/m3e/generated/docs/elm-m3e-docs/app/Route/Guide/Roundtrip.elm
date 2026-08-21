@@ -15,8 +15,8 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.Heading
+import M3e.Element.Card
+import M3e.Element.Heading
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -26,7 +26,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -246,8 +246,8 @@ rankedCells cells =
 pageHeading : Element { s | heading : M3e.Kind.Brand } admittedBy msg
 pageHeading =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.display
-        , M3e.Component.Heading.size Value.small
+        [ M3e.Element.Heading.variant Value.display
+        , M3e.Element.Heading.size Value.small
         , M3e.Attributes.level 1
         ]
         [ M3e.text "Round-trip report" ]
@@ -273,11 +273,11 @@ view app _ =
 vocabulary, so the form names aren't undefined jargon. `top`/`record`/`build`/`barrel`
 are the four interchangeable [surfaces](/guide/the-layers).
 -}
-surfaceLegend : Element (M3e.Component.Card.Is s) adm_ msg
+surfaceLegend : Element (M3e.Element.Card.Is s) adm_ msg
 surfaceLegend =
     M3e.card
-        [ M3e.Component.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "space-y-2" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "What the form names mean" ]
                 , Doc.markdown surfaceLegendText
@@ -292,15 +292,15 @@ surfaceLegendText =
 
 | Row | What it is | Surface map |
 | --- | --- | --- |
-| **top** | `M3e.Component.Divider.component […] […]` — the standard form (no required record): typed, slot-safe, composes anywhere. | the standard `component` surface ([surface map](/guide/the-layers)) |
-| **record** | `M3e.Component.Button.component { … }` — the required-record form: the parts a component can't omit are demanded by the compiler (the 29 components that have a required record). | the required-record `component` surface ([surface map](/guide/the-layers)) |
+| **top** | `M3e.Element.Divider.component […] […]` — the standard form (no required record): typed, slot-safe, composes anywhere. | the standard `component` surface ([surface map](/guide/the-layers)) |
+| **record** | `M3e.Element.Button.component { … }` — the required-record form: the parts a component can't omit are demanded by the compiler (the 29 components that have a required record). | the required-record `component` surface ([surface map](/guide/the-layers)) |
 | **build** | `M3e.Build.Button.build { … }` piped through `M3e.Build.Button.toElement` — one-only setters unwritable twice, order-free. | the `build` surface ([surface map](/guide/the-layers)) |
 | **barrel** | `M3e.button` — one import that re-exports every component's `component`, with the shared `M3e.Attributes.variant Value.filled` vocabulary. | the barrel surface the Guide teaches ([reference](/guide/reference)) |
 
 These are **peers, not a ranking** — interchangeable call shapes that all produce the same slottable value."""
 
 
-summarySection : List ( String, SurfaceAgg ) -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+summarySection : List ( String, SurfaceAgg ) -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 summarySection perSurface =
     TypedHtml.section
         [ TA.class "mt-12 space-y-4" ]
@@ -315,8 +315,8 @@ summarySection perSurface =
 surfaceRow : ( String, SurfaceAgg ) -> Element { s | card : M3e.Kind.Brand } admittedBy msg
 surfaceRow ( name, agg ) =
     M3e.card
-        [ M3e.Component.Card.variant Value.outlined ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.outlined ]
+        [ M3e.Element.Card.content
             (TypedHtml.div
                 [ TA.class "space-y-1" ]
                 [ TypedHtml.div
@@ -356,7 +356,7 @@ surfaceRow ( name, agg ) =
         ]
 
 
-cellsSection : List Cell -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+cellsSection : List Cell -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 cellsSection cells =
     TypedHtml.section
         [ TA.class "mt-12 space-y-4" ]
@@ -406,8 +406,8 @@ cellRow c =
             "seam " ++ String.fromInt c.seam ++ " · native " ++ String.fromInt c.native ++ " · chars " ++ String.fromInt c.charsInside
     in
     M3e.card
-        [ M3e.Component.Card.variant Value.outlined ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.outlined ]
+        [ M3e.Element.Card.content
             (TypedHtml.div
                 [ TA.class "space-y-1" ]
                 [ TypedHtml.div

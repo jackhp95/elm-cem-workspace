@@ -34,7 +34,7 @@ import Shared
 import Theme.Ports
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -133,7 +133,7 @@ view app shared model =
                 [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.small, M3e.Attributes.level 1 ]
                 [ M3e.text "All components" ]
 
-        content : List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg)
+        content : List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg)
         content =
             if model.revealed then
                 stackedBlocks shared.activeSurface app.data
@@ -158,7 +158,7 @@ a summary line, the category names, and a **Show all components** button that
 flips `revealed` on click.
 
 -}
-overview : Data -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+overview : Data -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 overview d =
     let
         withExamples : List Component
@@ -216,7 +216,7 @@ overview d =
 wrapped in an `id`-anchored `.cv-auto` block. All examples share the same
 site-wide `activeSurface` — no per-component index offset is needed any more.
 -}
-stackedBlocks : Usage.Surface -> Data -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg)
+stackedBlocks : Usage.Surface -> Data -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ Usage.Msg)
 stackedBlocks activeSurface d =
     let
         orderedComponents : List Component
@@ -224,7 +224,7 @@ stackedBlocks activeSurface d =
             Shared.componentCategories
                 |> List.concatMap (\( category, _ ) -> List.filter (\c -> c.category == category) d.components)
 
-        componentBlock : Component -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Usage.Msg)
+        componentBlock : Component -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ Usage.Msg)
         componentBlock component =
             let
                 examples : List UsageExample

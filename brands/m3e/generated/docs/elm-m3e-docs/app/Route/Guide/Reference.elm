@@ -15,8 +15,8 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.Heading
+import M3e.Element.Card
+import M3e.Element.Heading
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -27,8 +27,8 @@ import Set
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Grouping
+import TypedHtml.Element.Sectioning
 import TypedHtml.Kind
 import UrlPath
 import View exposing (View)
@@ -160,8 +160,8 @@ head _ =
 pageHeading : Element { s | heading : M3e.Kind.Brand } admittedBy msg
 pageHeading =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.display
-        , M3e.Component.Heading.size Value.small
+        [ M3e.Element.Heading.variant Value.display
+        , M3e.Element.Heading.size Value.small
         , M3e.Attributes.level 1
         ]
         [ M3e.text "Component reference" ]
@@ -214,11 +214,11 @@ generic **barrel** teaching form vs the precise **specific-module** form.
 Keeps the reference's terminology aligned with `/guide/the-layers` and
 `/guide/strictness` so a reader never meets a fifth name for the same idea.
 -}
-twoForms : Element (M3e.Component.Card.Is s) adm_ msg
+twoForms : Element (M3e.Element.Card.Is s) adm_ msg
 twoForms =
     M3e.card
-        [ M3e.Component.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.filled, TA.class "mt-8 max-w-2xl" ]
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "space-y-2" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "Two forms" ]
                 , Doc.markdown twoFormsText
@@ -232,12 +232,12 @@ twoFormsText =
     """Every component is reachable two ways — same output, different import and different strictness:
 
 - The **barrel** (`import M3e`) — one import for everything. `M3e.button`, `M3e.icon`, and the shared `M3e.Attributes.variant Value.filled` vocabulary. This is the form the [Guide](/guide/the-layers) teaches; it's the generic, easy form.
-- The **component module** (`import M3e.Button`) — `M3e.Component.Button.component` and its component-scoped `M3e.Component.Button.variant` / slot setters (`M3e.Component.Button.icon`). More precise: the compiler rejects a token or slot child that isn't valid for *that* component.
+- The **component module** (`import M3e.Button`) — `M3e.Element.Button.component` and its component-scoped `M3e.Element.Button.variant` / slot setters (`M3e.Element.Button.icon`). More precise: the compiler rejects a token or slot child that isn't valid for *that* component.
 
 Barrel-vs-module isn't a [surface](/guide/the-layers) choice and it isn't an escape hatch — it's a separate axis, only *which import you reach through*. Start on the barrel; reach for a component module when you want the tighter, component-scoped types."""
 
 
-indexGrid : List Component -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+indexGrid : List Component -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 indexGrid components =
     TypedHtml.div [ TA.class "mt-8 flex flex-wrap gap-2" ]
         (List.map
@@ -253,7 +253,7 @@ name-keyed groups a reader scans for (constructors, `variant*` tokens, `slot*`
 setters, `attr*`/other setters, `on*` events). Grouping by name prefix — not the
 JSON `role` — is what makes the ~650-member barrel navigable.
 -}
-barrelBlock : Component -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+barrelBlock : Component -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 barrelBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "mt-12 scroll-mt-6 space-y-6" ]
@@ -310,7 +310,7 @@ barrelGroup label pred members =
                 ]
 
 
-componentBlock : Component -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+componentBlock : Component -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 componentBlock c =
     TypedHtml.section
         [ TA.id c.slug, TA.class "scroll-mt-6 space-y-4" ]
@@ -339,8 +339,8 @@ memberRow m =
                 m.name ++ " : " ++ m.signature
     in
     M3e.card
-        [ M3e.Component.Card.variant Value.outlined ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.outlined ]
+        [ M3e.Element.Card.content
             (TypedHtml.div
                 []
                 [ Doc.preBlock sig
@@ -356,7 +356,7 @@ memberRow m =
 
 {-| Render \\n\\n-separated text as body paragraphs at the given type-scale size.
 -}
-prose : String -> String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+prose : String -> String -> String -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 prose layoutCls bodyCls s =
     TypedHtml.div [ TA.class layoutCls ]
         (s

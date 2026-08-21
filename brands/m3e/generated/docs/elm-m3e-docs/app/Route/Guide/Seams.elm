@@ -19,12 +19,12 @@ import Guide.Samples as Samples
 import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
-import M3e.Component.AppBar
-import M3e.Component.Button
-import M3e.Component.Card
-import M3e.Component.FormField
-import M3e.Component.Icon
-import M3e.Component.NavMenuItem
+import M3e.Element.AppBar
+import M3e.Element.Button
+import M3e.Element.Card
+import M3e.Element.FormField
+import M3e.Element.Icon
+import M3e.Element.NavMenuItem
 import M3e.Kind
 import M3e.Unsafe
 import M3e.Unsafe.Attributes
@@ -36,7 +36,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -89,16 +89,16 @@ head _ =
 
 saveButton : Element { s | button : M3e.Kind.Brand } admittedBy msg
 saveButton =
-    M3e.button [ M3e.Component.Button.variant Value.filled ]
-        [ M3e.Component.Button.icon (M3e.icon [ M3e.Component.Icon.name "save" ] [])
+    M3e.button [ M3e.Element.Button.variant Value.filled ]
+        [ M3e.Element.Button.icon (M3e.icon [ M3e.Element.Icon.name "save" ] [])
         , M3e.text "Save"
         ]
 
 
 emailField : Element { s | formField : M3e.Kind.Brand } admittedBy msg
 emailField =
-    M3e.formField [ M3e.Component.FormField.variant Value.outlined ]
-        [ M3e.Component.FormField.label
+    M3e.formField [ M3e.Element.FormField.variant Value.outlined ]
+        [ M3e.Element.FormField.label
             (TypedHtml.label [ TypedHtml.Attributes.for "email-field" ] [ M3e.text "Email address" ])
         , TypedHtml.input
             [ TypedHtml.Attributes.id "email-field"
@@ -120,7 +120,7 @@ site. No escape, no door.
 -- @sample-source seamsTwoColumn
 
 
-twoColumn : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+twoColumn : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 twoColumn =
     -- NOT a seam: standard HTML is already typed, so layout is a plain div.
     TypedHtml.div [ TypedHtml.Attributes.class "grid grid-cols-1 gap-4 md:grid-cols-2" ]
@@ -139,7 +139,7 @@ producer, contained and greppable, not scattered through feature code.
 -- @sample-source seamsModelViewer
 
 
-modelViewer : Element (M3e.Component.Card.Is k) freeAdm msg
+modelViewer : Element (M3e.Element.Card.Is k) freeAdm msg
 modelViewer =
     -- a real seam: a custom element the types can't express, contained once.
     -- The surface the third-party tag renders on comes from `m3e-card` (filled
@@ -148,7 +148,7 @@ modelViewer =
     -- has no background/shape of its own, so it needs a container to read as a
     -- box while its 3D content loads.
     M3e.card
-        [ M3e.Component.Card.variant Value.filled, TypedHtml.Attributes.class "h-48 w-full" ]
+        [ M3e.Element.Card.variant Value.filled, TypedHtml.Attributes.class "h-48 w-full" ]
         [ M3e.Unsafe.customElement "model-viewer"
             [ TypedHtml.Attributes.src "/models/chair.glb"
             , M3e.Unsafe.Attributes.customAttribute "camera-controls" ""
@@ -174,10 +174,10 @@ linkNav : Element { s | navMenu : M3e.Kind.Brand } admittedBy msg
 linkNav =
     -- the label slot admits { text : M3e.Kind.Brand, link : M3e.Kind.Brand }, so a
     -- typed `TypedHtml.a` fills it directly — a nav item that IS an anchor. The
-    -- required-record form (`M3e.Component.NavMenuItem.component`) enforces the required `label`.
+    -- required-record form (`M3e.Element.NavMenuItem.component`) enforces the required `label`.
     M3e.navMenu []
-        [ M3e.Component.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/seams" ] [ M3e.text "Seams" ] } [] []
-        , M3e.Component.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/the-layers" ] [ M3e.text "The surfaces" ] } [] []
+        [ M3e.Element.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/seams" ] [ M3e.text "Seams" ] } [] []
+        , M3e.Element.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Attributes.href "/guide/the-layers" ] [ M3e.text "The surfaces" ] } [] []
         ]
 
 
@@ -200,8 +200,8 @@ htmlInSlot =
     -- `TypedHtml.div` produces `sharedFlow`, so the wrapper goes in as itself — and the
     -- iconButton and badge INSIDE it are still checked against the div's content model.
     M3e.appBar [ TypedHtml.Attributes.class "px-2" ]
-        [ M3e.Component.AppBar.title (M3e.heading [] [ M3e.text "Inbox" ])
-        , M3e.Component.AppBar.trailing
+        [ M3e.Element.AppBar.title (M3e.heading [] [ M3e.text "Inbox" ])
+        , M3e.Element.AppBar.trailing
             (TypedHtml.div [ TypedHtml.Attributes.class "inline-flex items-center gap-1" ]
                 [ M3e.iconButton [ TypedHtml.Aria.label "Search" ] [ M3e.icon [ TypedHtml.Attributes.name "search" ] [] ]
                 , M3e.badge [] [ M3e.text "3" ]

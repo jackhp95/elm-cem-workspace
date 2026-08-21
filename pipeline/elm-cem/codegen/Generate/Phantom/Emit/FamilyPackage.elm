@@ -2,7 +2,7 @@ module Generate.Phantom.Emit.FamilyPackage exposing (files)
 
 {-| Port of bin/gen-family-package.js (G3, 2026-08-19 generator-consolidation
 research). Emits `<lib>.<namespace>.<Family>` flat family modules that
-re-export each member element's flat `<lib>.Component.*` surface,
+re-export each member element's flat `<lib>.Element.*` surface,
 additively.
 
 Per the plan's own Task 7 design note: this module never independently
@@ -408,7 +408,7 @@ generateFamilyModule familyModuleName members familyBlurb =
             , ""
             , memberList ++ "."
             , ""
-            , "Prefer whichever import reads best — the flat `M3e.Component.*` modules and"
+            , "Prefer whichever import reads best — the flat `M3e.Element.*` modules and"
             , "this family module are the same elements, same types."
             , ""
             , "@docs " ++ String.join ", " exposingAll
@@ -601,7 +601,7 @@ resolveMember : String -> Brand -> PlannedMember -> Result String Member
 resolveMember lib brand pm =
     let
         origModuleName =
-            lib ++ ".Component." ++ pm.component
+            lib ++ ".Element." ++ pm.component
     in
     case brand.comps |> List.filter (\c -> c.name == pm.component) |> List.head of
         Nothing ->
@@ -700,7 +700,8 @@ familyElmJsonFile pkg exposedModules =
 
 
 {-| Port of gen-family-package.js:453-482's README template — a fixed,
-non-family-parameterized usage example (the JS hardcodes `M3e.Family.Chip`
+non-family-parameterized usage example (the JS hardcoded `M3e.Family.Chip`,
+now emitted as `M3e.Component.Chip` post-namespace-rename
 literally rather than deriving it from any emitted family; preserved
 verbatim per the plan's "port line-for-line" rule). Always emitted — same
 "only if absent is a no-op here" reasoning as
@@ -718,8 +719,8 @@ familyReadmeFile pkg =
                 , "This package is a standalone sub-package of [elm-m3e](https://github.com/jackhp95/elm-m3e)."
                 , "It is a **purely additive** re-organization: each module here is a **flat**"
                 , "family module that re-exports the member elements of one family from the flat"
-                , "`M3e.Component.*` surface — element-named constructors (`M3e.Family.Chip.assist`"
-                , "delegates to `M3e.Component.AssistChip.component`) plus element-prefixed types"
+                , "`M3e.Element.*` surface — element-named constructors (`M3e.Component.Chip.assist`"
+                , "delegates to `M3e.Element.AssistChip.component`) plus element-prefixed types"
                 , "(`AssistIs`, `AssistAttrs`) and element-prefixed helpers (`assistVariant`) —"
                 , "so nothing built against the flat surface regresses. Depends on"
                 , "`jackhp95/elm-m3e-components` — it adds no logic of its own."
@@ -730,7 +731,7 @@ familyReadmeFile pkg =
                 , "## Usage"
                 , ""
                 , "```elm"
-                , "import M3e.Family.Chip as Chip"
+                , "import M3e.Component.Chip as Chip"
                 , ""
                 , "Chip.set [] [ Chip.child (Chip.assist [] [ Chip.assistChild ... ]) ]"
                 , "```"

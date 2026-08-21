@@ -4,7 +4,7 @@ module EnumNarrowingOk exposing (narrowingExamples)
 
 Proves the two-tier enum safety model (spec §3.4, §1.5):
 
-  - Tier 1 (compile-time): `M3e.Component.*` and `M3e.Build.*` setters accept
+  - Tier 1 (compile-time): `M3e.Element.*` and `M3e.Build.*` setters accept
     ONLY the closed Variant row for THAT component.
   - Tier 2 (elm-review): `M3e.Attributes` setters accept the global open union
     and are backstopped by `Cem.ValidEnumValue`.
@@ -19,8 +19,8 @@ import HtmlIr.Element exposing (Element)
 import HtmlIr.Kind exposing (Supported)
 import M3e.Attributes as A
 import M3e.Build.Button as Button
-import M3e.Component.SplitButton as SplitButton
-import M3e.Component.Theme as Theme
+import M3e.Element.SplitButton as SplitButton
+import M3e.Element.Theme as Theme
 import M3e.Kind exposing (Available, Used)
 import M3e.Values as V
 

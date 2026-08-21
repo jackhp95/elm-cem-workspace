@@ -37,7 +37,7 @@ nest inside `TypedHtml`/`M3e` content) is inherited unchanged from the IR.
   text-content atom) and `toHtml` (the render boundary). Note `text_` for the
   `<text>` element, mirroring `elm/svg` — the unsuffixed `text` is the content
   atom.
-- `TypedSvg.Component.*` — the strict per-group modules (Shape, Structure, Text,
+- `TypedSvg.Element.*` — the strict per-group modules (Shape, Structure, Text,
   Paint, Clip, Descriptive, Image) with tightened child-slot rows.
 - `TypedSvg.Attributes` — element-specific (`cx`, `viewBox`, `d`, …) and open-row
   presentation setters (`fill`, `stroke`, `strokeWidth`, …). Presentation

@@ -4,7 +4,7 @@ import BackendTask
 import Head
 import Head.Seo as Seo
 import M3e
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Values as Value
 import MimeType
 import Pages.Url
@@ -73,8 +73,8 @@ view _ _ =
             [ TypedHtml.p []
                 [ M3e.text "Redirecting to Welcome…" ]
             , M3e.button
-                [ M3e.Component.Button.variant Value.filled
-                , M3e.Component.Button.href "/getting-started/welcome"
+                [ M3e.Element.Button.variant Value.filled
+                , M3e.Element.Button.href "/getting-started/welcome"
                 ]
                 [ M3e.text "Go to Welcome" ]
             ]

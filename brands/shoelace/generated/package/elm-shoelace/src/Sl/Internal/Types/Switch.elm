@@ -2,7 +2,7 @@ module Sl.Internal.Types.Switch exposing (Is, Attrs, ChildAdmittedBy, Size, Buil
 
 {-| Type definitions for Switch. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Switch` surface both re-export these, so they live in
+`Sl.Element.Switch` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps

@@ -2,7 +2,7 @@ module Sl.Internal.Types.Range exposing (Is, Attrs, ChildAdmittedBy, Tooltip, Bu
 
 {-| Type definitions for Range. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Range` surface both re-export these, so they live in
+`Sl.Element.Range` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Tooltip, Builder, AttrCaps

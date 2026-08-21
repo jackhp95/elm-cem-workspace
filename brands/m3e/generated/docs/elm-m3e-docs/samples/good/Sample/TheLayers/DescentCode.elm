@@ -7,12 +7,12 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Action
 import M3e.Attributes
 import M3e.Build
 import M3e.Build.Button
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Values as Value
 import Sample.Support exposing (Msg(..))
 
@@ -24,12 +24,12 @@ shown0_ =
 
 -- component module: same output, component-scoped tighter types
 shown1_ =
-    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []
+    M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Element.Button.variant Value.filled ] []
 
 
 -- required-record form: the compiler demands the parts a button can't omit
 shown2_ =
-    M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
+    M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
 
 
 -- builder pipe: a one-only setter is unwritable twice; order-free

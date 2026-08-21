@@ -2,7 +2,7 @@ module M3e.Internal.Types.ExpansionPanel exposing (Is, Attrs, HeaderSlot, Toggle
 
 {-| Type definitions for ExpansionPanel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ExpansionPanel` surface both re-export these, so they live in
+`M3e.Element.ExpansionPanel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, HeaderSlot, ToggleIconSlot, ChildAdmittedBy, ToggleDirection, TogglePosition, Builder, AttrCaps, SlotCaps

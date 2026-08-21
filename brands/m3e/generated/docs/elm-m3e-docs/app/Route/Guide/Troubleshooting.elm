@@ -21,7 +21,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -72,7 +72,7 @@ head _ =
         |> Seo.website
 
 
-entry : String -> String -> M3e.Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+entry : String -> String -> M3e.Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 entry prose code =
     TypedHtml.section [ TA.class "space-y-3" ]
         [ Doc.markdown prose
@@ -153,7 +153,7 @@ m3eInNativeSlotError =
     List (M3e.Element (M3e.Heading.Is { a | …, sharedPhrasing : HtmlIr.Kind.Shared,
         sharedText : HtmlIr.Kind.Shared }) (SpanChildAdmittedBy childAdm) msg)
 But `span` needs the 2nd argument to be:
-    List (Element TypedHtml.Component.Text.SpanContent (SpanChildAdmittedBy childAdm) msg)"""
+    List (Element TypedHtml.Element.Text.SpanContent (SpanChildAdmittedBy childAdm) msg)"""
 
 
 deadClassNote : String

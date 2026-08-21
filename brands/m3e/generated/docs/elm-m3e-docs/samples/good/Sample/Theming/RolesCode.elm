@@ -7,9 +7,9 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.ListItem
+import M3e.Element.ListItem
 import M3e.Values
 import Sample.Support exposing (children, rows)
 import TypedHtml
@@ -27,7 +27,7 @@ shown0_ =
 shown1_ =
     M3e.listItem []
         [ M3e.text "Primary line"
-        , M3e.Component.ListItem.supportingText (M3e.text "Secondary text")
+        , M3e.Element.ListItem.supportingText (M3e.text "Secondary text")
         ]
 
 

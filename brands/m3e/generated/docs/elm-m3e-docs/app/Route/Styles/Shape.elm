@@ -19,7 +19,7 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Shape as Shape
+import M3e.Element.Shape as Shape
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -29,7 +29,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -99,7 +99,7 @@ head _ =
         |> Seo.website
 
 
-cornerSwatch : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+cornerSwatch : ( String, String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 cornerSwatch ( rounded, label, value ) =
     TypedHtml.div [ TA.class "flex flex-col gap-2" ]
         [ TypedHtml.div
@@ -118,7 +118,7 @@ tokens' open phantom rows unify into one wide record in the list literal, and
 passing the token through (rather than a literal enum) keeps the barrel-flatten
 rule from firing on a per-shape enum value.
 -}
-namedShapes : List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg)
+namedShapes : List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg)
 namedShapes =
     -- The lambda is inlined (no top-level `namedSwatch` signature) on purpose:
     -- `Shape.name` wants a wide closed record, and the tokens' open phantom rows

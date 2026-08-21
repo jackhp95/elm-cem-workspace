@@ -28,15 +28,15 @@ than the resolved default.
 
 import Dict
 import M3e exposing (Element)
-import M3e.Component.FormField as FormField
-import M3e.Component.Icon
+import M3e.Element.FormField as FormField
+import M3e.Element.Icon
 import Theme exposing (Msg(..))
 import Theme.Tokens as Tokens
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
-import TypedHtml.Component.Details
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Details
+import TypedHtml.Element.Grouping
 import TypedHtml.Events
 
 
@@ -59,7 +59,7 @@ type alias VarGroup =
     { prefix : List String, vars : List String }
 
 
-view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ -- No m3e component owns standalone muted body prose (see the recipe's
@@ -82,7 +82,7 @@ and nesting expansion panels inside it makes the outer accordion re-coordinate o
 the inner panels' bubbling `toggle` events, collapsing them a tick after they
 open. `<details>` sidesteps that while staying collapsible and keyboard-operable.
 -}
-categoryDetails : Theme.Model -> VarGroup -> Element (TypedHtml.Component.Details.DetailsIs s) admittedBy Msg
+categoryDetails : Theme.Model -> VarGroup -> Element (TypedHtml.Element.Details.DetailsIs s) admittedBy Msg
 categoryDetails model group =
     -- The `border-b` separator moved to a real `M3e.divider` interspersed
     -- between categories by the caller (`view`), so this element carries no
@@ -151,7 +151,7 @@ cssVarField model prefix cssVar =
                             [ TypedHtml.Events.onClick (UnsetCssOverride cssVar)
                             , Aria.label ("Clear --" ++ cssVar)
                             ]
-                            [ M3e.icon [ M3e.Component.Icon.name "close" ] [] ]
+                            [ M3e.icon [ M3e.Element.Icon.name "close" ] [] ]
                         )
                     ]
 

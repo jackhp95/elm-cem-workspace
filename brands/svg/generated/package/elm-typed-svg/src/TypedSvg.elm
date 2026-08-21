@@ -28,283 +28,283 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import TypedSvg.Component.Clip
-import TypedSvg.Component.Descriptive
-import TypedSvg.Component.Image
-import TypedSvg.Component.Paint
-import TypedSvg.Component.Shape
-import TypedSvg.Component.Structure
-import TypedSvg.Component.Text
+import TypedSvg.Element.Clip
+import TypedSvg.Element.Descriptive
+import TypedSvg.Element.Image
+import TypedSvg.Element.Paint
+import TypedSvg.Element.Shape
+import TypedSvg.Element.Structure
+import TypedSvg.Element.Text
 
 
-{-| See `TypedSvg.Component.Structure.a`.
+{-| See `TypedSvg.Element.Structure.a`.
 -}
 a :
-    List (Attr TypedSvg.Component.Structure.AAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.AChildAdmittedBy childAdm) msg)
+    List (Attr TypedSvg.Element.Structure.AAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.AChildAdmittedBy childAdm) msg)
     -> Element childAccepts admittedBy msg
 a =
-    TypedSvg.Component.Structure.a
+    TypedSvg.Element.Structure.a
 
 
-{-| See `TypedSvg.Component.Shape.circle`.
+{-| See `TypedSvg.Element.Shape.circle`.
 -}
 circle :
-    List (Attr TypedSvg.Component.Shape.CircleAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.CircleContent (TypedSvg.Component.Shape.CircleChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.CircleIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.CircleAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.CircleContent (TypedSvg.Element.Shape.CircleChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.CircleIs s) admittedBy msg
 circle =
-    TypedSvg.Component.Shape.circle
+    TypedSvg.Element.Shape.circle
 
 
-{-| See `TypedSvg.Component.Clip.clipPath`.
+{-| See `TypedSvg.Element.Clip.clipPath`.
 -}
 clipPath :
-    List (Attr TypedSvg.Component.Clip.ClipPathAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Clip.ClipPathChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Clip.ClipPathIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Clip.ClipPathAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Clip.ClipPathChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Clip.ClipPathIs s) admittedBy msg
 clipPath =
-    TypedSvg.Component.Clip.clipPath
+    TypedSvg.Element.Clip.clipPath
 
 
-{-| See `TypedSvg.Component.Structure.defs`.
+{-| See `TypedSvg.Element.Structure.defs`.
 -}
 defs :
-    List (Attr TypedSvg.Component.Structure.DefsAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.DefsChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.DefsIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.DefsAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.DefsChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.DefsIs s) admittedBy msg
 defs =
-    TypedSvg.Component.Structure.defs
+    TypedSvg.Element.Structure.defs
 
 
-{-| See `TypedSvg.Component.Descriptive.desc`.
+{-| See `TypedSvg.Element.Descriptive.desc`.
 -}
 desc :
-    List (Attr TypedSvg.Component.Descriptive.DescAttrs msg)
-    -> List (Element TypedSvg.Component.Descriptive.DescContent (TypedSvg.Component.Descriptive.DescChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Descriptive.DescIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Descriptive.DescAttrs msg)
+    -> List (Element TypedSvg.Element.Descriptive.DescContent (TypedSvg.Element.Descriptive.DescChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Descriptive.DescIs s) admittedBy msg
 desc =
-    TypedSvg.Component.Descriptive.desc
+    TypedSvg.Element.Descriptive.desc
 
 
-{-| See `TypedSvg.Component.Shape.ellipse`.
+{-| See `TypedSvg.Element.Shape.ellipse`.
 -}
 ellipse :
-    List (Attr TypedSvg.Component.Shape.EllipseAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.EllipseContent (TypedSvg.Component.Shape.EllipseChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.EllipseIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.EllipseAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.EllipseContent (TypedSvg.Element.Shape.EllipseChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.EllipseIs s) admittedBy msg
 ellipse =
-    TypedSvg.Component.Shape.ellipse
+    TypedSvg.Element.Shape.ellipse
 
 
-{-| See `TypedSvg.Component.Structure.g`.
+{-| See `TypedSvg.Element.Structure.g`.
 -}
 g :
-    List (Attr TypedSvg.Component.Structure.GAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.GChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.GIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.GAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.GChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.GIs s) admittedBy msg
 g =
-    TypedSvg.Component.Structure.g
+    TypedSvg.Element.Structure.g
 
 
-{-| See `TypedSvg.Component.Image.image`.
+{-| See `TypedSvg.Element.Image.image`.
 -}
 image :
-    List (Attr TypedSvg.Component.Image.Attrs msg)
-    -> List (Element TypedSvg.Component.Image.Content (TypedSvg.Component.Image.ChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Image.Is s) admittedBy msg
+    List (Attr TypedSvg.Element.Image.Attrs msg)
+    -> List (Element TypedSvg.Element.Image.Content (TypedSvg.Element.Image.ChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Image.Is s) admittedBy msg
 image =
-    TypedSvg.Component.Image.image
+    TypedSvg.Element.Image.image
 
 
-{-| See `TypedSvg.Component.Shape.line`.
+{-| See `TypedSvg.Element.Shape.line`.
 -}
 line :
-    List (Attr TypedSvg.Component.Shape.LineAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.LineContent (TypedSvg.Component.Shape.LineChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.LineIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.LineAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.LineContent (TypedSvg.Element.Shape.LineChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.LineIs s) admittedBy msg
 line =
-    TypedSvg.Component.Shape.line
+    TypedSvg.Element.Shape.line
 
 
-{-| See `TypedSvg.Component.Paint.linearGradient`.
+{-| See `TypedSvg.Element.Paint.linearGradient`.
 -}
 linearGradient :
-    List (Attr TypedSvg.Component.Paint.LinearGradientAttrs msg)
-    -> List (Element TypedSvg.Component.Paint.LinearGradientContent (TypedSvg.Component.Paint.LinearGradientChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Paint.LinearGradientIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Paint.LinearGradientAttrs msg)
+    -> List (Element TypedSvg.Element.Paint.LinearGradientContent (TypedSvg.Element.Paint.LinearGradientChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Paint.LinearGradientIs s) admittedBy msg
 linearGradient =
-    TypedSvg.Component.Paint.linearGradient
+    TypedSvg.Element.Paint.linearGradient
 
 
-{-| See `TypedSvg.Component.Clip.marker`.
+{-| See `TypedSvg.Element.Clip.marker`.
 -}
 marker :
-    List (Attr TypedSvg.Component.Clip.MarkerAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Clip.MarkerChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Clip.MarkerIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Clip.MarkerAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Clip.MarkerChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Clip.MarkerIs s) admittedBy msg
 marker =
-    TypedSvg.Component.Clip.marker
+    TypedSvg.Element.Clip.marker
 
 
-{-| See `TypedSvg.Component.Clip.mask`.
+{-| See `TypedSvg.Element.Clip.mask`.
 -}
 mask :
-    List (Attr TypedSvg.Component.Clip.MaskAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Clip.MaskChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Clip.MaskIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Clip.MaskAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Clip.MaskChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Clip.MaskIs s) admittedBy msg
 mask =
-    TypedSvg.Component.Clip.mask
+    TypedSvg.Element.Clip.mask
 
 
-{-| See `TypedSvg.Component.Shape.path`.
+{-| See `TypedSvg.Element.Shape.path`.
 -}
 path :
-    List (Attr TypedSvg.Component.Shape.PathAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.PathContent (TypedSvg.Component.Shape.PathChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.PathIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.PathAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.PathContent (TypedSvg.Element.Shape.PathChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.PathIs s) admittedBy msg
 path =
-    TypedSvg.Component.Shape.path
+    TypedSvg.Element.Shape.path
 
 
-{-| See `TypedSvg.Component.Paint.pattern`.
+{-| See `TypedSvg.Element.Paint.pattern`.
 -}
 pattern :
-    List (Attr TypedSvg.Component.Paint.PatternAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Paint.PatternChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Paint.PatternIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Paint.PatternAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Paint.PatternChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Paint.PatternIs s) admittedBy msg
 pattern =
-    TypedSvg.Component.Paint.pattern
+    TypedSvg.Element.Paint.pattern
 
 
-{-| See `TypedSvg.Component.Shape.polygon`.
+{-| See `TypedSvg.Element.Shape.polygon`.
 -}
 polygon :
-    List (Attr TypedSvg.Component.Shape.PolygonAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.PolygonContent (TypedSvg.Component.Shape.PolygonChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.PolygonIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.PolygonAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.PolygonContent (TypedSvg.Element.Shape.PolygonChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.PolygonIs s) admittedBy msg
 polygon =
-    TypedSvg.Component.Shape.polygon
+    TypedSvg.Element.Shape.polygon
 
 
-{-| See `TypedSvg.Component.Shape.polyline`.
+{-| See `TypedSvg.Element.Shape.polyline`.
 -}
 polyline :
-    List (Attr TypedSvg.Component.Shape.PolylineAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.PolylineContent (TypedSvg.Component.Shape.PolylineChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.PolylineIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.PolylineAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.PolylineContent (TypedSvg.Element.Shape.PolylineChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.PolylineIs s) admittedBy msg
 polyline =
-    TypedSvg.Component.Shape.polyline
+    TypedSvg.Element.Shape.polyline
 
 
-{-| See `TypedSvg.Component.Paint.radialGradient`.
+{-| See `TypedSvg.Element.Paint.radialGradient`.
 -}
 radialGradient :
-    List (Attr TypedSvg.Component.Paint.RadialGradientAttrs msg)
-    -> List (Element TypedSvg.Component.Paint.RadialGradientContent (TypedSvg.Component.Paint.RadialGradientChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Paint.RadialGradientIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Paint.RadialGradientAttrs msg)
+    -> List (Element TypedSvg.Element.Paint.RadialGradientContent (TypedSvg.Element.Paint.RadialGradientChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Paint.RadialGradientIs s) admittedBy msg
 radialGradient =
-    TypedSvg.Component.Paint.radialGradient
+    TypedSvg.Element.Paint.radialGradient
 
 
-{-| See `TypedSvg.Component.Shape.rect`.
+{-| See `TypedSvg.Element.Shape.rect`.
 -}
 rect :
-    List (Attr TypedSvg.Component.Shape.RectAttrs msg)
-    -> List (Element TypedSvg.Component.Shape.RectContent (TypedSvg.Component.Shape.RectChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Shape.RectIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Shape.RectAttrs msg)
+    -> List (Element TypedSvg.Element.Shape.RectContent (TypedSvg.Element.Shape.RectChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Shape.RectIs s) admittedBy msg
 rect =
-    TypedSvg.Component.Shape.rect
+    TypedSvg.Element.Shape.rect
 
 
-{-| See `TypedSvg.Component.Paint.stop`.
+{-| See `TypedSvg.Element.Paint.stop`.
 -}
 stop :
-    List (Attr TypedSvg.Component.Paint.StopAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Paint.StopChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Paint.StopIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Paint.StopAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Paint.StopChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Paint.StopIs s) admittedBy msg
 stop =
-    TypedSvg.Component.Paint.stop
+    TypedSvg.Element.Paint.stop
 
 
-{-| See `TypedSvg.Component.Structure.svg`.
+{-| See `TypedSvg.Element.Structure.svg`.
 -}
 svg :
-    List (Attr TypedSvg.Component.Structure.SvgAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.SvgChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.SvgIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.SvgAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.SvgChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.SvgIs s) admittedBy msg
 svg =
-    TypedSvg.Component.Structure.svg
+    TypedSvg.Element.Structure.svg
 
 
-{-| See `TypedSvg.Component.Structure.switch`.
+{-| See `TypedSvg.Element.Structure.switch`.
 -}
 switch :
-    List (Attr TypedSvg.Component.Structure.SwitchAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.SwitchChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.SwitchIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.SwitchAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.SwitchChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.SwitchIs s) admittedBy msg
 switch =
-    TypedSvg.Component.Structure.switch
+    TypedSvg.Element.Structure.switch
 
 
-{-| See `TypedSvg.Component.Structure.symbol`.
+{-| See `TypedSvg.Element.Structure.symbol`.
 -}
 symbol :
-    List (Attr TypedSvg.Component.Structure.SymbolAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Component.Structure.SymbolChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.SymbolIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.SymbolAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.SymbolChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.SymbolIs s) admittedBy msg
 symbol =
-    TypedSvg.Component.Structure.symbol
+    TypedSvg.Element.Structure.symbol
 
 
-{-| See `TypedSvg.Component.Text.text`.
+{-| See `TypedSvg.Element.Text.text`.
 -}
 text_ :
-    List (Attr TypedSvg.Component.Text.TextAttrs msg)
-    -> List (Element TypedSvg.Component.Text.TextContent (TypedSvg.Component.Text.TextChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Text.TextIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Text.TextAttrs msg)
+    -> List (Element TypedSvg.Element.Text.TextContent (TypedSvg.Element.Text.TextChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Text.TextIs s) admittedBy msg
 text_ =
-    TypedSvg.Component.Text.text
+    TypedSvg.Element.Text.text
 
 
-{-| See `TypedSvg.Component.Text.textPath`.
+{-| See `TypedSvg.Element.Text.textPath`.
 -}
 textPath :
-    List (Attr TypedSvg.Component.Text.TextPathAttrs msg)
-    -> List (Element TypedSvg.Component.Text.TextPathContent (TypedSvg.Component.Text.TextPathChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Text.TextPathIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Text.TextPathAttrs msg)
+    -> List (Element TypedSvg.Element.Text.TextPathContent (TypedSvg.Element.Text.TextPathChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Text.TextPathIs s) admittedBy msg
 textPath =
-    TypedSvg.Component.Text.textPath
+    TypedSvg.Element.Text.textPath
 
 
-{-| See `TypedSvg.Component.Descriptive.title`.
+{-| See `TypedSvg.Element.Descriptive.title`.
 -}
 title :
-    List (Attr TypedSvg.Component.Descriptive.TitleAttrs msg)
-    -> List (Element TypedSvg.Component.Descriptive.TitleContent (TypedSvg.Component.Descriptive.TitleChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Descriptive.TitleIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Descriptive.TitleAttrs msg)
+    -> List (Element TypedSvg.Element.Descriptive.TitleContent (TypedSvg.Element.Descriptive.TitleChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Descriptive.TitleIs s) admittedBy msg
 title =
-    TypedSvg.Component.Descriptive.title
+    TypedSvg.Element.Descriptive.title
 
 
-{-| See `TypedSvg.Component.Text.tspan`.
+{-| See `TypedSvg.Element.Text.tspan`.
 -}
 tspan :
-    List (Attr TypedSvg.Component.Text.TspanAttrs msg)
-    -> List (Element TypedSvg.Component.Text.TspanContent (TypedSvg.Component.Text.TspanChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Text.TspanIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Text.TspanAttrs msg)
+    -> List (Element TypedSvg.Element.Text.TspanContent (TypedSvg.Element.Text.TspanChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Text.TspanIs s) admittedBy msg
 tspan =
-    TypedSvg.Component.Text.tspan
+    TypedSvg.Element.Text.tspan
 
 
-{-| See `TypedSvg.Component.Structure.use`.
+{-| See `TypedSvg.Element.Structure.use`.
 -}
 use :
-    List (Attr TypedSvg.Component.Structure.UseAttrs msg)
-    -> List (Element TypedSvg.Component.Structure.UseContent (TypedSvg.Component.Structure.UseChildAdmittedBy childAdm) msg)
-    -> Element (TypedSvg.Component.Structure.UseIs s) admittedBy msg
+    List (Attr TypedSvg.Element.Structure.UseAttrs msg)
+    -> List (Element TypedSvg.Element.Structure.UseContent (TypedSvg.Element.Structure.UseChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.UseIs s) admittedBy msg
 use =
-    TypedSvg.Component.Structure.use
+    TypedSvg.Element.Structure.use
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

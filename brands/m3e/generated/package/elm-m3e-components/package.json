@@ -1,7 +1,7 @@
 {
   "name": "elm-m3e-components",
   "version": "1.0.0",
-  "description": "Family-grouped nested module organization for elm-m3e components (M3e.Family.*). Committed generator sibling of the elm-m3e staging root (jackhp95/elm-m3e-components).",
+  "description": "Family-grouped nested module organization for elm-m3e components (M3e.Component.*). Committed generator sibling of the elm-m3e staging root (jackhp95/elm-m3e-components).",
   "license": "BSD-3-Clause",
   "private": true,
   "scripts": {

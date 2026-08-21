@@ -2,7 +2,7 @@ module Sl.Internal.Types.Menu exposing (Is, Attrs, ChildAdmittedBy, Builder, Att
 
 {-| Type definitions for Menu. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Menu` surface both re-export these, so they live in
+`Sl.Element.Menu` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

@@ -250,8 +250,8 @@ for (const name of ["value", "checked"]) {
 
 // NB2f — `propertyOnly` suppresses the companion on the element whose live property
 // has no backing content attribute, while the sibling that DOES have one keeps it.
-const output = all[path.join("Probe", "Component", "Output.elm")];
-const widget = all[path.join("Probe", "Component", "Widget.elm")];
+const output = all[path.join("Probe", "Element", "Output.elm")];
+const widget = all[path.join("Probe", "Element", "Widget.elm")];
 check(!!output && output.includes("value : String -> Attr"), "NB2f: `propertyOnly` element still gets the live property setter");
 check(!!output && !output.includes("defaultValue"), "NB2f: `propertyOnly` element gets NO defaultValue companion");
 check(!!widget && widget.includes("defaultValue ="), "NB2f: a sibling element WITH a content attribute keeps defaultValue");
@@ -274,9 +274,9 @@ check(!attrs.includes('Ir.property "pressed"'), "NB2g: an opted-out attribute is
 // AND wc-dial but scoped to `["wc-widget"]`. wc-widget stands in for <input> (live value,
 // dirty-value flag), wc-gauge for <button>/<data>/<option> (reflected DOMString), and
 // wc-dial for <progress>/<meter>/<li> (numeric IDL type) — see NB2i for that one.
-const gauge = all[path.join("Probe", "Component", "Gauge.elm")];
+const gauge = all[path.join("Probe", "Element", "Gauge.elm")];
 const gaugeBuild = all[path.join("Probe", "Build", "Gauge.elm")];
-const dial = all[path.join("Probe", "Component", "Dial.elm")];
+const dial = all[path.join("Probe", "Element", "Dial.elm")];
 const dialTypes = all[path.join("Probe", "Internal", "Types", "Dial.elm")];
 const dialBuild = all[path.join("Probe", "Build", "Dial.elm")];
 

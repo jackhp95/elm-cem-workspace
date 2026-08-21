@@ -478,7 +478,7 @@ noMergedPipeAndSetter config =
 
 
 {-| Flag drift between a generated **family module** (`<familyNamespace>.<F>`,
-e.g. `M3e.Family.Chip`) and the family CONFIG it was generated from: a
+e.g. `M3e.Component.Chip`) and the family CONFIG it was generated from: a
 declared member the family module no longer imports ("component missing from
 family"), or an import the family module carries that the config no longer
 declares as a member ("family referencing a dead/unlisted component").
@@ -492,8 +492,8 @@ and wires it in:
     config =
         Cem.all M3e.Review.Facts.facts
             ++ [ Cem.noFamilyMemberDrift
-                    { componentNamespace = [ "M3e", "Component" ]
-                    , familyNamespace = [ "M3e", "Family" ]
+                    { componentNamespace = [ "M3e", "Element" ]
+                    , familyNamespace = [ "M3e", "Component" ]
                     , families = M3e.Review.Families.families
                     }
                ]

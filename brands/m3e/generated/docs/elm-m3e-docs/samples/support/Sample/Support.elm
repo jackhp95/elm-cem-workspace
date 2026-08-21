@@ -29,7 +29,7 @@ still checked for real. Keep the stub set small and boring; if a sample needs a
 -}
 
 import M3e exposing (Element)
-import M3e.Component.Theme
+import M3e.Element.Theme
 import M3e.Unsafe
 import M3e.Values as Value exposing (Value)
 
@@ -53,8 +53,8 @@ type alias Toast =
 type alias Model =
     { seed : String
     , brandSeed : String
-    , scheme : Value M3e.Component.Theme.Scheme
-    , contrast : Value M3e.Component.Theme.Contrast
+    , scheme : Value M3e.Element.Theme.Scheme
+    , contrast : Value M3e.Element.Theme.Contrast
     , density : Float
     , dark : Bool
     , dialogOpen : Bool

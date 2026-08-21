@@ -2,7 +2,7 @@ module M3e.Internal.Types.MenuItemRadio exposing (Is, Attrs, Content, IconSlot, 
 
 {-| Type definitions for MenuItemRadio. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.MenuItemRadio` surface both re-export these, so they live in
+`M3e.Element.MenuItemRadio` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, TrailingIconSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

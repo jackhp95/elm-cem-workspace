@@ -2,7 +2,7 @@ module M3e.Internal.Types.TimepickerInput exposing (Is, Attrs, ChildAdmittedBy, 
 
 {-| Type definitions for TimepickerInput. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.TimepickerInput` surface both re-export these, so they live in
+`M3e.Element.TimepickerInput` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Format, Period, ViewAttr, Builder, AttrCaps

@@ -2,7 +2,7 @@ module Sl.Internal.Types.Tree exposing (Is, Attrs, ChildAdmittedBy, Selection, B
 
 {-| Type definitions for Tree. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Tree` surface both re-export these, so they live in
+`Sl.Element.Tree` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Selection, Builder, AttrCaps

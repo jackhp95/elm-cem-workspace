@@ -24,10 +24,10 @@ import ExampleNav
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Card
-import M3e.Component.ListItem
-import M3e.Component.NavItem
+import M3e.Element.AppBar
+import M3e.Element.Card
+import M3e.Element.ListItem
+import M3e.Element.NavItem
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
@@ -36,7 +36,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import View exposing (View)
 
 
@@ -116,7 +116,7 @@ its flex basis, pushing the nav bar off the bottom of the viewport and turning
 the DOCUMENT into the scroller.
 
 -}
-screen : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+screen : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 screen =
     TypedHtml.div
         [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -132,7 +132,7 @@ screen =
         ]
 
 
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -152,7 +152,7 @@ exampleFooter =
 appBar : Element { s | appBar : M3e.Kind.Brand } adm_ msg
 appBar =
     M3e.appBar []
-        [ M3e.Component.AppBar.title (M3e.text "Rally redesign") ]
+        [ M3e.Element.AppBar.title (M3e.text "Rally redesign") ]
 
 
 
@@ -164,7 +164,7 @@ pane BELOW the primary on compact and BESIDE it on expanded. `flex-1` lets the
 primary grow; `lg:w-80 lg:shrink-0` fixes the supporting pane's width so it never
 crowds the primary.
 -}
-body : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+body : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 body =
     TypedHtml.div [ TA.class "mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 md:p-6 lg:flex-row" ]
         [ primary
@@ -174,7 +174,7 @@ body =
 
 {-| The primary region: the focus content. Flexes to fill the row.
 -}
-primary : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+primary : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 primary =
     TypedHtml.div [ TA.class "flex flex-1 flex-col gap-4 min-w-0" ]
         [ M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Project overview" ]
@@ -188,8 +188,8 @@ primary =
 summaryCard : Element { s | card : M3e.Kind.Brand } adm_ msg
 summaryCard =
     M3e.card [ M3e.Attributes.variant Value.elevated ]
-        [ M3e.Component.Card.header (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "This sprint" ])
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.header (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "This sprint" ])
+        , M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex flex-wrap gap-6 pt-1" ]
                 [ metric "12" "Tasks done"
                 , metric "3" "In review"
@@ -199,7 +199,7 @@ summaryCard =
         ]
 
 
-metric : String -> String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+metric : String -> String -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 metric value label =
     TypedHtml.div [ TA.class "flex flex-col" ]
         [ M3e.heading
@@ -214,8 +214,8 @@ metric value label =
 milestonesCard : Element { s | card : M3e.Kind.Brand } adm_ msg
 milestonesCard =
     M3e.card [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Card.header (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Milestones" ])
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.header (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Milestones" ])
+        , M3e.Element.Card.content
             (M3e.list []
                 (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                     [ milestoneRow "check_circle" "Motion tokens" "Shipped"
@@ -230,9 +230,9 @@ milestonesCard =
 milestoneRow : String -> String -> String -> Element { s | listItem : M3e.Kind.Brand } adm_ msg
 milestoneRow iconName label status =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.trailing
+        , M3e.Element.ListItem.trailing
             (M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text status ])
         ]
 
@@ -240,14 +240,14 @@ milestoneRow iconName label status =
 {-| The supporting pane: secondary, related material. Fixed width beside the
 primary on `lg:`, reflowed beneath it on compact.
 -}
-supporting : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+supporting : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 supporting =
     TypedHtml.div [ TA.class "shrink-0 lg:w-80" ]
         [ M3e.card
             [ M3e.Attributes.variant Value.filled
             , M3e.Attributes.class "m3e-card-shape-md-corner-large"
             ]
-            [ M3e.Component.Card.content
+            [ M3e.Element.Card.content
                 (TypedHtml.div [ TA.class "flex flex-col gap-4 p-4" ]
                     [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text "Recent activity" ]
                     , M3e.list [] (List.map activityRow activity)
@@ -276,9 +276,9 @@ activity =
 activityRow : Activity -> Element { s | listItem : M3e.Kind.Brand } adm_ msg
 activityRow a =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.avatar [] [ M3e.text a.initials ])
+        [ M3e.Element.ListItem.leading (M3e.avatar [] [ M3e.text a.initials ])
         , M3e.text a.who
-        , M3e.Component.ListItem.supportingText (M3e.text a.what)
+        , M3e.Element.ListItem.supportingText (M3e.text a.what)
         ]
 
 
@@ -315,6 +315,6 @@ navItem : { icon : String, label : String } -> Element { s | navItem : M3e.Kind.
 navItem d =
     M3e.navItem
         [ M3e.Attributes.selected (d.label == "Overview") ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
         , M3e.text d.label
         ]

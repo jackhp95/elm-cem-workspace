@@ -2,7 +2,7 @@ module M3e.Internal.Types.NavMenuItem exposing (Is, Attrs, Content, BadgeSlot, I
 
 {-| Type definitions for NavMenuItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.NavMenuItem` surface both re-export these, so they live in
+`M3e.Element.NavMenuItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, BadgeSlot, IconSlot, LabelSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

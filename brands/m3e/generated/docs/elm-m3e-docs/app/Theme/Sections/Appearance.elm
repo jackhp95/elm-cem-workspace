@@ -6,10 +6,10 @@ import M3e.Values as Value exposing (Value)
 import Theme exposing (Msg(..))
 import TypedHtml
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 
 
-view : Theme.Model -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+view : Theme.Model -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 view model =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-3" ]
         [ -- Each segmented control gets its own `Theme.controlLabel`: three
@@ -21,7 +21,7 @@ view model =
         ]
 
 
-labelled : String -> Element { s | segmentedButton : M3e.Kind.Brand, heading : M3e.Kind.Brand } (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) Msg -> Element (TypedHtml.Component.Grouping.DivIs t) admittedBy Msg
+labelled : String -> Element { s | segmentedButton : M3e.Kind.Brand, heading : M3e.Kind.Brand } (TypedHtml.Element.Grouping.DivChildAdmittedBy childAdm) Msg -> Element (TypedHtml.Element.Grouping.DivIs t) admittedBy Msg
 labelled lbl control =
     TypedHtml.div [ TypedHtml.Attributes.class "flex flex-col gap-1" ]
         [ Theme.controlLabel lbl, control ]

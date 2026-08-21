@@ -18,7 +18,7 @@ import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Component.QrCode as Component
+import Sl.Element.QrCode as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values

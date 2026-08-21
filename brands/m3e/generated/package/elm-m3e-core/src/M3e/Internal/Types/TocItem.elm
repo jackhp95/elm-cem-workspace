@@ -2,7 +2,7 @@ module M3e.Internal.Types.TocItem exposing (Is, Attrs, Content, ChildAdmittedBy,
 
 {-| Type definitions for TocItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.TocItem` surface both re-export these, so they live in
+`M3e.Element.TocItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps

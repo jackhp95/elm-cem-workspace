@@ -23,9 +23,9 @@ import ExampleNav
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Card
-import M3e.Component.NavItem
+import M3e.Element.AppBar
+import M3e.Element.Card
+import M3e.Element.NavItem
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
@@ -34,7 +34,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -171,7 +171,7 @@ but it keeps the "one bounded scroll region" invariant from hanging on that
 one class.
 
 -}
-screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -190,7 +190,7 @@ screen model =
         ]
 
 
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -209,7 +209,7 @@ exampleFooter =
 appBar : Element { s | appBar : M3e.Kind.Brand } adm_ msg
 appBar =
     M3e.appBar []
-        [ M3e.Component.AppBar.title (M3e.text "Feed") ]
+        [ M3e.Element.AppBar.title (M3e.text "Feed") ]
 
 
 
@@ -248,7 +248,7 @@ shownPosts filter =
         List.filter (\p -> p.category == filter) posts
 
 
-cardGrid : List Post -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+cardGrid : List Post -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 cardGrid shown =
     TypedHtml.div [ TA.class "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" ]
         (List.map postCard shown)
@@ -257,8 +257,8 @@ cardGrid shown =
 postCard : Post -> Element { s | card : M3e.Kind.Brand } adm_ msg
 postCard post =
     M3e.card [ M3e.Attributes.variant Value.elevated ]
-        [ M3e.Component.Card.header (media post)
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.header (media post)
+        , M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-2 pt-1" ]
                 [ M3e.heading
                     [ M3e.Attributes.variant Value.label
@@ -317,6 +317,6 @@ navItem : { icon : String, label : String } -> Element { s | navItem : M3e.Kind.
 navItem d =
     M3e.navItem
         [ M3e.Attributes.selected (d.label == "Home") ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
         , M3e.text d.label
         ]

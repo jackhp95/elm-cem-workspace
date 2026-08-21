@@ -150,7 +150,7 @@ view app _ =
 
 shippedCode : String
 shippedCode =
-    """import M3e.Component.Theme as Theme
+    """import M3e.Element.Theme as Theme
 
 Theme.component
     [ Theme.color model.seed
@@ -165,7 +165,7 @@ snackbarCode =
     """-- Elm owns WHEN the snackbar exists; the element owns the slide-in animation.
 -- Render the <avt-snackbar> element (via `M3e.Unsafe.customElement`) only while
 -- shown — mounting it is what triggers the toast:
-snackbar : Toast -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+snackbar : Toast -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 snackbar t =
     M3e.Unsafe.customElement "avt-snackbar"
         [ M3e.Unsafe.Attributes.customAttribute "message" t.message

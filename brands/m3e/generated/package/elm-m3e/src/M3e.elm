@@ -162,7 +162,7 @@ import M3e.Internal.Types.TreeItem
 import M3e.Internal.Types.YearView
 
 
-{-| The loose `m3e-accordion` producer — open attribute/child rows, no required record. See `M3e.Component.Accordion.component` for the required-content form.
+{-| The loose `m3e-accordion` producer — open attribute/child rows, no required record. See `M3e.Element.Accordion.component` for the required-content form.
 -}
 accordion :
     List (Attr M3e.Internal.Types.Accordion.Attrs msg)
@@ -172,7 +172,7 @@ accordion attrs children =
     Ir.fromNode (Ir.node "m3e-accordion" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ActionList.component`.
+{-| See `M3e.Element.ActionList.component`.
 -}
 actionList :
     List (Attr M3e.Internal.Types.ActionList.Attrs msg)
@@ -182,7 +182,7 @@ actionList attrs children =
     Ir.fromNode (Ir.node "m3e-action-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.AppBar.component`.
+{-| See `M3e.Element.AppBar.component`.
 -}
 appBar :
     List (Attr M3e.Internal.Types.AppBar.Attrs msg)
@@ -192,7 +192,7 @@ appBar attrs children =
     Ir.fromNode (Ir.node "m3e-app-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-assist-chip` producer — open attribute/child rows, no required record. See `M3e.Component.AssistChip.component` for the required-content form.
+{-| The loose `m3e-assist-chip` producer — open attribute/child rows, no required record. See `M3e.Element.AssistChip.component` for the required-content form.
 -}
 assistChip :
     List (Attr M3e.Internal.Types.AssistChip.Attrs msg)
@@ -202,7 +202,7 @@ assistChip attrs children =
     Ir.fromNode (Ir.node "m3e-assist-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Autocomplete.component`.
+{-| See `M3e.Element.Autocomplete.component`.
 -}
 autocomplete :
     List (Attr M3e.Internal.Types.Autocomplete.Attrs msg)
@@ -212,7 +212,7 @@ autocomplete attrs children =
     Ir.fromNode (Ir.node "m3e-autocomplete" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Avatar.component`.
+{-| See `M3e.Element.Avatar.component`.
 -}
 avatar :
     List (Attr M3e.Internal.Types.Avatar.Attrs msg)
@@ -222,7 +222,7 @@ avatar attrs children =
     Ir.fromNode (Ir.node "m3e-avatar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Badge.component`.
+{-| See `M3e.Element.Badge.component`.
 -}
 badge :
     List (Attr M3e.Internal.Types.Badge.Attrs msg)
@@ -232,7 +232,7 @@ badge attrs children =
     Ir.fromNode (Ir.node "m3e-badge" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.BottomSheet.component`.
+{-| See `M3e.Element.BottomSheet.component`.
 -}
 bottomSheet :
     List (Attr M3e.Internal.Types.BottomSheet.Attrs msg)
@@ -242,7 +242,7 @@ bottomSheet attrs children =
     Ir.fromNode (Ir.node "m3e-bottom-sheet" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.BottomSheetAction.component`.
+{-| See `M3e.Element.BottomSheetAction.component`.
 -}
 bottomSheetAction :
     List (Attr M3e.Internal.Types.BottomSheetAction.Attrs msg)
@@ -252,7 +252,7 @@ bottomSheetAction attrs children =
     Ir.fromNode (Ir.node "m3e-bottom-sheet-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.BottomSheetTrigger.component`.
+{-| See `M3e.Element.BottomSheetTrigger.component`.
 -}
 bottomSheetTrigger :
     List (Attr M3e.Internal.Types.BottomSheetTrigger.Attrs msg)
@@ -262,7 +262,7 @@ bottomSheetTrigger attrs children =
     Ir.fromNode (Ir.node "m3e-bottom-sheet-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-breadcrumb` producer — open attribute/child rows, no required record. See `M3e.Component.Breadcrumb.component` for the required-content form.
+{-| The loose `m3e-breadcrumb` producer — open attribute/child rows, no required record. See `M3e.Element.Breadcrumb.component` for the required-content form.
 -}
 breadcrumb :
     List (Attr M3e.Internal.Types.Breadcrumb.Attrs msg)
@@ -272,7 +272,7 @@ breadcrumb attrs children =
     Ir.fromNode (Ir.node "m3e-breadcrumb" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.BreadcrumbItem.component`.
+{-| See `M3e.Element.BreadcrumbItem.component`.
 -}
 breadcrumbItem :
     List (Attr M3e.Internal.Types.BreadcrumbItem.Attrs msg)
@@ -282,7 +282,7 @@ breadcrumbItem attrs children =
     Ir.fromNode (Ir.node "m3e-breadcrumb-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.BreadcrumbItemButton.component`.
+{-| See `M3e.Element.BreadcrumbItemButton.component`.
 -}
 breadcrumbItemButton :
     List (Attr M3e.Internal.Types.BreadcrumbItemButton.Attrs msg)
@@ -292,7 +292,7 @@ breadcrumbItemButton attrs children =
     Ir.fromNode (Ir.node "m3e-breadcrumb-item-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-button` producer — open attribute/child rows, no required record. See `M3e.Component.Button.component` for the required-content form.
+{-| The loose `m3e-button` producer — open attribute/child rows, no required record. See `M3e.Element.Button.component` for the required-content form.
 -}
 button :
     List (Attr M3e.Internal.Types.Button.Attrs msg)
@@ -302,7 +302,7 @@ button attrs children =
     Ir.fromNode (Ir.node "m3e-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ButtonGroup.component`.
+{-| See `M3e.Element.ButtonGroup.component`.
 -}
 buttonGroup :
     List (Attr M3e.Internal.Types.ButtonGroup.Attrs msg)
@@ -312,7 +312,7 @@ buttonGroup attrs children =
     Ir.fromNode (Ir.node "m3e-button-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ButtonSegment.component`.
+{-| See `M3e.Element.ButtonSegment.component`.
 -}
 buttonSegment :
     List (Attr M3e.Internal.Types.ButtonSegment.Attrs msg)
@@ -322,7 +322,7 @@ buttonSegment attrs children =
     Ir.fromNode (Ir.node "m3e-button-segment" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Calendar.component`.
+{-| See `M3e.Element.Calendar.component`.
 -}
 calendar :
     List (Attr M3e.Internal.Types.Calendar.Attrs msg)
@@ -332,7 +332,7 @@ calendar attrs children =
     Ir.fromNode (Ir.node "m3e-calendar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Card.component`.
+{-| See `M3e.Element.Card.component`.
 -}
 card :
     List (Attr M3e.Internal.Types.Card.Attrs msg)
@@ -342,7 +342,7 @@ card attrs children =
     Ir.fromNode (Ir.node "m3e-card" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Checkbox.component`.
+{-| See `M3e.Element.Checkbox.component`.
 -}
 checkbox :
     List (Attr M3e.Internal.Types.Checkbox.Attrs msg)
@@ -352,7 +352,7 @@ checkbox attrs children =
     Ir.fromNode (Ir.node "m3e-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-chip` producer — open attribute/child rows, no required record. See `M3e.Component.Chip.component` for the required-content form.
+{-| The loose `m3e-chip` producer — open attribute/child rows, no required record. See `M3e.Element.Chip.component` for the required-content form.
 -}
 chip :
     List (Attr M3e.Internal.Types.Chip.Attrs msg)
@@ -362,7 +362,7 @@ chip attrs children =
     Ir.fromNode (Ir.node "m3e-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ChipSet.component`.
+{-| See `M3e.Element.ChipSet.component`.
 -}
 chipSet :
     List (Attr M3e.Internal.Types.ChipSet.Attrs msg)
@@ -372,7 +372,7 @@ chipSet attrs children =
     Ir.fromNode (Ir.node "m3e-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.CircularProgressIndicator.component`.
+{-| See `M3e.Element.CircularProgressIndicator.component`.
 -}
 circularProgressIndicator :
     List (Attr M3e.Internal.Types.CircularProgressIndicator.Attrs msg)
@@ -382,7 +382,7 @@ circularProgressIndicator attrs children =
     Ir.fromNode (Ir.node "m3e-circular-progress-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Collapsible.component`.
+{-| See `M3e.Element.Collapsible.component`.
 -}
 collapsible :
     List (Attr M3e.Internal.Types.Collapsible.Attrs msg)
@@ -392,7 +392,7 @@ collapsible attrs children =
     Ir.fromNode (Ir.node "m3e-collapsible" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ContentPane.component`.
+{-| See `M3e.Element.ContentPane.component`.
 -}
 contentPane :
     List (Attr M3e.Internal.Types.ContentPane.Attrs msg)
@@ -402,7 +402,7 @@ contentPane attrs children =
     Ir.fromNode (Ir.node "m3e-content-pane" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DateInput.component`.
+{-| See `M3e.Element.DateInput.component`.
 -}
 dateInput :
     List (Attr M3e.Internal.Types.DateInput.Attrs msg)
@@ -412,7 +412,7 @@ dateInput attrs children =
     Ir.fromNode (Ir.node "m3e-date-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Datepicker.component`.
+{-| See `M3e.Element.Datepicker.component`.
 -}
 datepicker :
     List (Attr M3e.Internal.Types.Datepicker.Attrs msg)
@@ -422,7 +422,7 @@ datepicker attrs children =
     Ir.fromNode (Ir.node "m3e-datepicker" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DatepickerToggle.component`.
+{-| See `M3e.Element.DatepickerToggle.component`.
 -}
 datepickerToggle :
     List (Attr M3e.Internal.Types.DatepickerToggle.Attrs msg)
@@ -432,7 +432,7 @@ datepickerToggle attrs children =
     Ir.fromNode (Ir.node "m3e-datepicker-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Dialog.component`.
+{-| See `M3e.Element.Dialog.component`.
 -}
 dialog :
     List (Attr M3e.Internal.Types.Dialog.Attrs msg)
@@ -442,7 +442,7 @@ dialog attrs children =
     Ir.fromNode (Ir.node "m3e-dialog" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DialogAction.component`.
+{-| See `M3e.Element.DialogAction.component`.
 -}
 dialogAction :
     List (Attr M3e.Internal.Types.DialogAction.Attrs msg)
@@ -452,7 +452,7 @@ dialogAction attrs children =
     Ir.fromNode (Ir.node "m3e-dialog-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DialogTrigger.component`.
+{-| See `M3e.Element.DialogTrigger.component`.
 -}
 dialogTrigger :
     List (Attr M3e.Internal.Types.DialogTrigger.Attrs msg)
@@ -462,7 +462,7 @@ dialogTrigger attrs children =
     Ir.fromNode (Ir.node "m3e-dialog-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Divider.component`.
+{-| See `M3e.Element.Divider.component`.
 -}
 divider :
     List (Attr M3e.Internal.Types.Divider.Attrs msg)
@@ -472,7 +472,7 @@ divider attrs children =
     Ir.fromNode (Ir.node "m3e-divider" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DrawerContainer.component`.
+{-| See `M3e.Element.DrawerContainer.component`.
 -}
 drawerContainer :
     List (Attr M3e.Internal.Types.DrawerContainer.Attrs msg)
@@ -482,7 +482,7 @@ drawerContainer attrs children =
     Ir.fromNode (Ir.node "m3e-drawer-container" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.DrawerToggle.component`.
+{-| See `M3e.Element.DrawerToggle.component`.
 -}
 drawerToggle :
     List (Attr M3e.Internal.Types.DrawerToggle.Attrs msg)
@@ -492,7 +492,7 @@ drawerToggle attrs children =
     Ir.fromNode (Ir.node "m3e-drawer-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Elevation.component`.
+{-| See `M3e.Element.Elevation.component`.
 -}
 elevation :
     List (Attr M3e.Internal.Types.Elevation.Attrs msg)
@@ -502,7 +502,7 @@ elevation attrs children =
     Ir.fromNode (Ir.node "m3e-elevation" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ExpandableListItem.component`.
+{-| See `M3e.Element.ExpandableListItem.component`.
 -}
 expandableListItem :
     List (Attr M3e.Internal.Types.ExpandableListItem.Attrs msg)
@@ -512,7 +512,7 @@ expandableListItem attrs children =
     Ir.fromNode (Ir.node "m3e-expandable-list-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ExpansionHeader.component`.
+{-| See `M3e.Element.ExpansionHeader.component`.
 -}
 expansionHeader :
     List (Attr M3e.Internal.Types.ExpansionHeader.Attrs msg)
@@ -522,7 +522,7 @@ expansionHeader attrs children =
     Ir.fromNode (Ir.node "m3e-expansion-header" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-expansion-panel` producer — open attribute/child rows, no required record. See `M3e.Component.ExpansionPanel.component` for the required-content form.
+{-| The loose `m3e-expansion-panel` producer — open attribute/child rows, no required record. See `M3e.Element.ExpansionPanel.component` for the required-content form.
 -}
 expansionPanel :
     List (Attr M3e.Internal.Types.ExpansionPanel.Attrs msg)
@@ -532,7 +532,7 @@ expansionPanel attrs children =
     Ir.fromNode (Ir.node "m3e-expansion-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-fab` producer — open attribute/child rows, no required record. See `M3e.Component.Fab.component` for the required-content form.
+{-| The loose `m3e-fab` producer — open attribute/child rows, no required record. See `M3e.Element.Fab.component` for the required-content form.
 -}
 fab :
     List (Attr M3e.Internal.Types.Fab.Attrs msg)
@@ -542,7 +542,7 @@ fab attrs children =
     Ir.fromNode (Ir.node "m3e-fab" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FabMenu.component`.
+{-| See `M3e.Element.FabMenu.component`.
 -}
 fabMenu :
     List (Attr M3e.Internal.Types.FabMenu.Attrs msg)
@@ -552,7 +552,7 @@ fabMenu attrs children =
     Ir.fromNode (Ir.node "m3e-fab-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FabMenuItem.component`.
+{-| See `M3e.Element.FabMenuItem.component`.
 -}
 fabMenuItem :
     List (Attr M3e.Internal.Types.FabMenuItem.Attrs msg)
@@ -562,7 +562,7 @@ fabMenuItem attrs children =
     Ir.fromNode (Ir.node "m3e-fab-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FabMenuTrigger.component`.
+{-| See `M3e.Element.FabMenuTrigger.component`.
 -}
 fabMenuTrigger :
     List (Attr M3e.Internal.Types.FabMenuTrigger.Attrs msg)
@@ -572,7 +572,7 @@ fabMenuTrigger attrs children =
     Ir.fromNode (Ir.node "m3e-fab-menu-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-filter-chip` producer — open attribute/child rows, no required record. See `M3e.Component.FilterChip.component` for the required-content form.
+{-| The loose `m3e-filter-chip` producer — open attribute/child rows, no required record. See `M3e.Element.FilterChip.component` for the required-content form.
 -}
 filterChip :
     List (Attr M3e.Internal.Types.FilterChip.Attrs msg)
@@ -582,7 +582,7 @@ filterChip attrs children =
     Ir.fromNode (Ir.node "m3e-filter-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FilterChipSet.component`.
+{-| See `M3e.Element.FilterChipSet.component`.
 -}
 filterChipSet :
     List (Attr M3e.Internal.Types.FilterChipSet.Attrs msg)
@@ -592,7 +592,7 @@ filterChipSet attrs children =
     Ir.fromNode (Ir.node "m3e-filter-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FloatingPanel.component`.
+{-| See `M3e.Element.FloatingPanel.component`.
 -}
 floatingPanel :
     List (Attr M3e.Internal.Types.FloatingPanel.Attrs msg)
@@ -602,7 +602,7 @@ floatingPanel attrs children =
     Ir.fromNode (Ir.node "m3e-floating-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FocusRing.component`.
+{-| See `M3e.Element.FocusRing.component`.
 -}
 focusRing :
     List (Attr M3e.Internal.Types.FocusRing.Attrs msg)
@@ -612,7 +612,7 @@ focusRing attrs children =
     Ir.fromNode (Ir.node "m3e-focus-ring" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FocusTrap.component`.
+{-| See `M3e.Element.FocusTrap.component`.
 -}
 focusTrap :
     List (Attr M3e.Internal.Types.FocusTrap.Attrs msg)
@@ -622,7 +622,7 @@ focusTrap attrs children =
     Ir.fromNode (Ir.node "m3e-focus-trap" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.FormField.component`.
+{-| See `M3e.Element.FormField.component`.
 -}
 formField :
     List (Attr M3e.Internal.Types.FormField.Attrs msg)
@@ -632,7 +632,7 @@ formField attrs children =
     Ir.fromNode (Ir.node "m3e-form-field" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-heading` producer — open attribute/child rows, no required record. See `M3e.Component.Heading.component` for the required-content form.
+{-| The loose `m3e-heading` producer — open attribute/child rows, no required record. See `M3e.Element.Heading.component` for the required-content form.
 -}
 heading :
     List (Attr M3e.Internal.Types.Heading.Attrs msg)
@@ -642,7 +642,7 @@ heading attrs children =
     Ir.fromNode (Ir.node "m3e-heading" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Icon.component`.
+{-| See `M3e.Element.Icon.component`.
 -}
 icon :
     List (Attr M3e.Internal.Types.Icon.Attrs msg)
@@ -652,7 +652,7 @@ icon attrs children =
     Ir.fromNode (Ir.node "m3e-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-icon-button` producer — open attribute/child rows, no required record. See `M3e.Component.IconButton.component` for the required-content form.
+{-| The loose `m3e-icon-button` producer — open attribute/child rows, no required record. See `M3e.Element.IconButton.component` for the required-content form.
 -}
 iconButton :
     List (Attr M3e.Internal.Types.IconButton.Attrs msg)
@@ -662,7 +662,7 @@ iconButton attrs children =
     Ir.fromNode (Ir.node "m3e-icon-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-input-chip` producer — open attribute/child rows, no required record. See `M3e.Component.InputChip.component` for the required-content form.
+{-| The loose `m3e-input-chip` producer — open attribute/child rows, no required record. See `M3e.Element.InputChip.component` for the required-content form.
 -}
 inputChip :
     List (Attr M3e.Internal.Types.InputChip.Attrs msg)
@@ -672,7 +672,7 @@ inputChip attrs children =
     Ir.fromNode (Ir.node "m3e-input-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.InputChipSet.component`.
+{-| See `M3e.Element.InputChipSet.component`.
 -}
 inputChipSet :
     List (Attr M3e.Internal.Types.InputChipSet.Attrs msg)
@@ -682,7 +682,7 @@ inputChipSet attrs children =
     Ir.fromNode (Ir.node "m3e-input-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.LinearProgressIndicator.component`.
+{-| See `M3e.Element.LinearProgressIndicator.component`.
 -}
 linearProgressIndicator :
     List (Attr M3e.Internal.Types.LinearProgressIndicator.Attrs msg)
@@ -692,7 +692,7 @@ linearProgressIndicator attrs children =
     Ir.fromNode (Ir.node "m3e-linear-progress-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.List.component`.
+{-| See `M3e.Element.List.component`.
 -}
 list :
     List (Attr M3e.Internal.Types.List.Attrs msg)
@@ -702,7 +702,7 @@ list attrs children =
     Ir.fromNode (Ir.node "m3e-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ListAction.component`.
+{-| See `M3e.Element.ListAction.component`.
 -}
 listAction :
     List (Attr M3e.Internal.Types.ListAction.Attrs msg)
@@ -712,7 +712,7 @@ listAction attrs children =
     Ir.fromNode (Ir.node "m3e-list-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ListItem.component`.
+{-| See `M3e.Element.ListItem.component`.
 -}
 listItem :
     List (Attr M3e.Internal.Types.ListItem.Attrs msg)
@@ -722,7 +722,7 @@ listItem attrs children =
     Ir.fromNode (Ir.node "m3e-list-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ListItemButton.component`.
+{-| See `M3e.Element.ListItemButton.component`.
 -}
 listItemButton :
     List (Attr M3e.Internal.Types.ListItemButton.Attrs msg)
@@ -732,7 +732,7 @@ listItemButton attrs children =
     Ir.fromNode (Ir.node "m3e-list-item-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ListOption.component`.
+{-| See `M3e.Element.ListOption.component`.
 -}
 listOption :
     List (Attr M3e.Internal.Types.ListOption.Attrs msg)
@@ -742,7 +742,7 @@ listOption attrs children =
     Ir.fromNode (Ir.node "m3e-list-option" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.LoadingIndicator.component`.
+{-| See `M3e.Element.LoadingIndicator.component`.
 -}
 loadingIndicator :
     List (Attr M3e.Internal.Types.LoadingIndicator.Attrs msg)
@@ -752,7 +752,7 @@ loadingIndicator attrs children =
     Ir.fromNode (Ir.node "m3e-loading-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Menu.component`.
+{-| See `M3e.Element.Menu.component`.
 -}
 menu :
     List (Attr M3e.Internal.Types.Menu.Attrs msg)
@@ -762,7 +762,7 @@ menu attrs children =
     Ir.fromNode (Ir.node "m3e-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MenuItem.component`.
+{-| See `M3e.Element.MenuItem.component`.
 -}
 menuItem :
     List (Attr M3e.Internal.Types.MenuItem.Attrs msg)
@@ -772,7 +772,7 @@ menuItem attrs children =
     Ir.fromNode (Ir.node "m3e-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MenuItemCheckbox.component`.
+{-| See `M3e.Element.MenuItemCheckbox.component`.
 -}
 menuItemCheckbox :
     List (Attr M3e.Internal.Types.MenuItemCheckbox.Attrs msg)
@@ -782,7 +782,7 @@ menuItemCheckbox attrs children =
     Ir.fromNode (Ir.node "m3e-menu-item-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MenuItemGroup.component`.
+{-| See `M3e.Element.MenuItemGroup.component`.
 -}
 menuItemGroup :
     List (Attr M3e.Internal.Types.MenuItemGroup.Attrs msg)
@@ -792,7 +792,7 @@ menuItemGroup attrs children =
     Ir.fromNode (Ir.node "m3e-menu-item-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MenuItemRadio.component`.
+{-| See `M3e.Element.MenuItemRadio.component`.
 -}
 menuItemRadio :
     List (Attr M3e.Internal.Types.MenuItemRadio.Attrs msg)
@@ -802,7 +802,7 @@ menuItemRadio attrs children =
     Ir.fromNode (Ir.node "m3e-menu-item-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MenuTrigger.component`.
+{-| See `M3e.Element.MenuTrigger.component`.
 -}
 menuTrigger :
     List (Attr M3e.Internal.Types.MenuTrigger.Attrs msg)
@@ -812,7 +812,7 @@ menuTrigger attrs children =
     Ir.fromNode (Ir.node "m3e-menu-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MonthView.component`.
+{-| See `M3e.Element.MonthView.component`.
 -}
 monthView :
     List (Attr M3e.Internal.Types.MonthView.Attrs msg)
@@ -822,7 +822,7 @@ monthView attrs children =
     Ir.fromNode (Ir.node "m3e-month-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.MultiYearView.component`.
+{-| See `M3e.Element.MultiYearView.component`.
 -}
 multiYearView :
     List (Attr M3e.Internal.Types.MultiYearView.Attrs msg)
@@ -832,7 +832,7 @@ multiYearView attrs children =
     Ir.fromNode (Ir.node "m3e-multi-year-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavBar.component`.
+{-| See `M3e.Element.NavBar.component`.
 -}
 navBar :
     List (Attr M3e.Internal.Types.NavBar.Attrs msg)
@@ -842,7 +842,7 @@ navBar attrs children =
     Ir.fromNode (Ir.node "m3e-nav-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavItem.component`.
+{-| See `M3e.Element.NavItem.component`.
 -}
 navItem :
     List (Attr M3e.Internal.Types.NavItem.Attrs msg)
@@ -852,7 +852,7 @@ navItem attrs children =
     Ir.fromNode (Ir.node "m3e-nav-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavMenu.component`.
+{-| See `M3e.Element.NavMenu.component`.
 -}
 navMenu :
     List (Attr M3e.Internal.Types.NavMenu.Attrs msg)
@@ -862,7 +862,7 @@ navMenu attrs children =
     Ir.fromNode (Ir.node "m3e-nav-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-nav-menu-item` producer — open attribute/child rows, no required record. See `M3e.Component.NavMenuItem.component` for the required-content form.
+{-| The loose `m3e-nav-menu-item` producer — open attribute/child rows, no required record. See `M3e.Element.NavMenuItem.component` for the required-content form.
 -}
 navMenuItem :
     List (Attr M3e.Internal.Types.NavMenuItem.Attrs msg)
@@ -872,7 +872,7 @@ navMenuItem attrs children =
     Ir.fromNode (Ir.node "m3e-nav-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavMenuItemGroup.component`.
+{-| See `M3e.Element.NavMenuItemGroup.component`.
 -}
 navMenuItemGroup :
     List (Attr M3e.Internal.Types.NavMenuItemGroup.Attrs msg)
@@ -882,7 +882,7 @@ navMenuItemGroup attrs children =
     Ir.fromNode (Ir.node "m3e-nav-menu-item-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavRail.component`.
+{-| See `M3e.Element.NavRail.component`.
 -}
 navRail :
     List (Attr M3e.Internal.Types.NavRail.Attrs msg)
@@ -892,7 +892,7 @@ navRail attrs children =
     Ir.fromNode (Ir.node "m3e-nav-rail" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.NavRailToggle.component`.
+{-| See `M3e.Element.NavRailToggle.component`.
 -}
 navRailToggle :
     List (Attr M3e.Internal.Types.NavRailToggle.Attrs msg)
@@ -902,7 +902,7 @@ navRailToggle attrs children =
     Ir.fromNode (Ir.node "m3e-nav-rail-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Optgroup.component`.
+{-| See `M3e.Element.Optgroup.component`.
 -}
 optgroup :
     List (Attr M3e.Internal.Types.Optgroup.Attrs msg)
@@ -912,7 +912,7 @@ optgroup attrs children =
     Ir.fromNode (Ir.node "m3e-optgroup" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-option` producer — open attribute/child rows, no required record. See `M3e.Component.Option.component` for the required-content form.
+{-| The loose `m3e-option` producer — open attribute/child rows, no required record. See `M3e.Element.Option.component` for the required-content form.
 -}
 option :
     List (Attr M3e.Internal.Types.Option.Attrs msg)
@@ -922,7 +922,7 @@ option attrs children =
     Ir.fromNode (Ir.node "m3e-option" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.OptionPanel.component`.
+{-| See `M3e.Element.OptionPanel.component`.
 -}
 optionPanel :
     List (Attr M3e.Internal.Types.OptionPanel.Attrs msg)
@@ -932,7 +932,7 @@ optionPanel attrs children =
     Ir.fromNode (Ir.node "m3e-option-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Paginator.component`.
+{-| See `M3e.Element.Paginator.component`.
 -}
 paginator :
     List (Attr M3e.Internal.Types.Paginator.Attrs msg)
@@ -942,7 +942,7 @@ paginator attrs children =
     Ir.fromNode (Ir.node "m3e-paginator" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.PseudoCheckbox.component`.
+{-| See `M3e.Element.PseudoCheckbox.component`.
 -}
 pseudoCheckbox :
     List (Attr M3e.Internal.Types.PseudoCheckbox.Attrs msg)
@@ -952,7 +952,7 @@ pseudoCheckbox attrs children =
     Ir.fromNode (Ir.node "m3e-pseudo-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.PseudoRadio.component`.
+{-| See `M3e.Element.PseudoRadio.component`.
 -}
 pseudoRadio :
     List (Attr M3e.Internal.Types.PseudoRadio.Attrs msg)
@@ -962,7 +962,7 @@ pseudoRadio attrs children =
     Ir.fromNode (Ir.node "m3e-pseudo-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Radio.component`.
+{-| See `M3e.Element.Radio.component`.
 -}
 radio :
     List (Attr M3e.Internal.Types.Radio.Attrs msg)
@@ -972,7 +972,7 @@ radio attrs children =
     Ir.fromNode (Ir.node "m3e-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-radio-group` producer — open attribute/child rows, no required record. See `M3e.Component.RadioGroup.component` for the required-content form.
+{-| The loose `m3e-radio-group` producer — open attribute/child rows, no required record. See `M3e.Element.RadioGroup.component` for the required-content form.
 -}
 radioGroup :
     List (Attr M3e.Internal.Types.RadioGroup.Attrs msg)
@@ -982,7 +982,7 @@ radioGroup attrs children =
     Ir.fromNode (Ir.node "m3e-radio-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-rich-tooltip` producer — open attribute/child rows, no required record. See `M3e.Component.RichTooltip.component` for the required-content form.
+{-| The loose `m3e-rich-tooltip` producer — open attribute/child rows, no required record. See `M3e.Element.RichTooltip.component` for the required-content form.
 -}
 richTooltip :
     List (Attr M3e.Internal.Types.RichTooltip.Attrs msg)
@@ -992,7 +992,7 @@ richTooltip attrs children =
     Ir.fromNode (Ir.node "m3e-rich-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-rich-tooltip-action` producer — open attribute/child rows, no required record. See `M3e.Component.RichTooltipAction.component` for the required-content form.
+{-| The loose `m3e-rich-tooltip-action` producer — open attribute/child rows, no required record. See `M3e.Element.RichTooltipAction.component` for the required-content form.
 -}
 richTooltipAction :
     List (Attr M3e.Internal.Types.RichTooltipAction.Attrs msg)
@@ -1002,7 +1002,7 @@ richTooltipAction attrs children =
     Ir.fromNode (Ir.node "m3e-rich-tooltip-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Ripple.component`.
+{-| See `M3e.Element.Ripple.component`.
 -}
 ripple :
     List (Attr M3e.Internal.Types.Ripple.Attrs msg)
@@ -1012,7 +1012,7 @@ ripple attrs children =
     Ir.fromNode (Ir.node "m3e-ripple" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ScrollContainer.component`.
+{-| See `M3e.Element.ScrollContainer.component`.
 -}
 scrollContainer :
     List (Attr M3e.Internal.Types.ScrollContainer.Attrs msg)
@@ -1022,7 +1022,7 @@ scrollContainer attrs children =
     Ir.fromNode (Ir.node "m3e-scroll-container" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-search-bar` producer — open attribute/child rows, no required record. See `M3e.Component.SearchBar.component` for the required-content form.
+{-| The loose `m3e-search-bar` producer — open attribute/child rows, no required record. See `M3e.Element.SearchBar.component` for the required-content form.
 -}
 searchBar :
     List (Attr M3e.Internal.Types.SearchBar.Attrs msg)
@@ -1032,7 +1032,7 @@ searchBar attrs children =
     Ir.fromNode (Ir.node "m3e-search-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-search-view` producer — open attribute/child rows, no required record. See `M3e.Component.SearchView.component` for the required-content form.
+{-| The loose `m3e-search-view` producer — open attribute/child rows, no required record. See `M3e.Element.SearchView.component` for the required-content form.
 -}
 searchView :
     List (Attr M3e.Internal.Types.SearchView.Attrs msg)
@@ -1042,7 +1042,7 @@ searchView attrs children =
     Ir.fromNode (Ir.node "m3e-search-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-segmented-button` producer — open attribute/child rows, no required record. See `M3e.Component.SegmentedButton.component` for the required-content form.
+{-| The loose `m3e-segmented-button` producer — open attribute/child rows, no required record. See `M3e.Element.SegmentedButton.component` for the required-content form.
 -}
 segmentedButton :
     List (Attr M3e.Internal.Types.SegmentedButton.Attrs msg)
@@ -1052,7 +1052,7 @@ segmentedButton attrs children =
     Ir.fromNode (Ir.node "m3e-segmented-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-select` producer — open attribute/child rows, no required record. See `M3e.Component.Select.component` for the required-content form.
+{-| The loose `m3e-select` producer — open attribute/child rows, no required record. See `M3e.Element.Select.component` for the required-content form.
 -}
 select :
     List (Attr M3e.Internal.Types.Select.Attrs msg)
@@ -1062,7 +1062,7 @@ select attrs children =
     Ir.fromNode (Ir.node "m3e-select" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.SelectionIndicator.component`.
+{-| See `M3e.Element.SelectionIndicator.component`.
 -}
 selectionIndicator :
     List (Attr M3e.Internal.Types.SelectionIndicator.Attrs msg)
@@ -1072,7 +1072,7 @@ selectionIndicator attrs children =
     Ir.fromNode (Ir.node "m3e-selection-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.SelectionList.component`.
+{-| See `M3e.Element.SelectionList.component`.
 -}
 selectionList :
     List (Attr M3e.Internal.Types.SelectionList.Attrs msg)
@@ -1082,7 +1082,7 @@ selectionList attrs children =
     Ir.fromNode (Ir.node "m3e-selection-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Shape.component`.
+{-| See `M3e.Element.Shape.component`.
 -}
 shape :
     List (Attr M3e.Internal.Types.Shape.Attrs msg)
@@ -1092,7 +1092,7 @@ shape attrs children =
     Ir.fromNode (Ir.node "m3e-shape" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Skeleton.component`.
+{-| See `M3e.Element.Skeleton.component`.
 -}
 skeleton :
     List (Attr M3e.Internal.Types.Skeleton.Attrs msg)
@@ -1102,7 +1102,7 @@ skeleton attrs children =
     Ir.fromNode (Ir.node "m3e-skeleton" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Slide.component`.
+{-| See `M3e.Element.Slide.component`.
 -}
 slide :
     List (Attr M3e.Internal.Types.Slide.Attrs msg)
@@ -1112,7 +1112,7 @@ slide attrs children =
     Ir.fromNode (Ir.node "m3e-slide" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.SlideGroup.component`.
+{-| See `M3e.Element.SlideGroup.component`.
 -}
 slideGroup :
     List (Attr M3e.Internal.Types.SlideGroup.Attrs msg)
@@ -1122,7 +1122,7 @@ slideGroup attrs children =
     Ir.fromNode (Ir.node "m3e-slide-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-slider` producer — open attribute/child rows, no required record. See `M3e.Component.Slider.component` for the required-content form.
+{-| The loose `m3e-slider` producer — open attribute/child rows, no required record. See `M3e.Element.Slider.component` for the required-content form.
 -}
 slider :
     List (Attr M3e.Internal.Types.Slider.Attrs msg)
@@ -1132,7 +1132,7 @@ slider attrs children =
     Ir.fromNode (Ir.node "m3e-slider" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.SliderThumb.component`.
+{-| See `M3e.Element.SliderThumb.component`.
 -}
 sliderThumb :
     List (Attr M3e.Internal.Types.SliderThumb.Attrs msg)
@@ -1142,7 +1142,7 @@ sliderThumb attrs children =
     Ir.fromNode (Ir.node "m3e-slider-thumb" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-snackbar` producer — open attribute/child rows, no required record. See `M3e.Component.Snackbar.component` for the required-content form.
+{-| The loose `m3e-snackbar` producer — open attribute/child rows, no required record. See `M3e.Element.Snackbar.component` for the required-content form.
 -}
 snackbar :
     List (Attr M3e.Internal.Types.Snackbar.Attrs msg)
@@ -1152,7 +1152,7 @@ snackbar attrs children =
     Ir.fromNode (Ir.node "m3e-snackbar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-split-button` producer — open attribute/child rows, no required record. See `M3e.Component.SplitButton.component` for the required-content form.
+{-| The loose `m3e-split-button` producer — open attribute/child rows, no required record. See `M3e.Element.SplitButton.component` for the required-content form.
 -}
 splitButton :
     List (Attr M3e.Internal.Types.SplitButton.Attrs msg)
@@ -1162,7 +1162,7 @@ splitButton attrs children =
     Ir.fromNode (Ir.node "m3e-split-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-split-pane` producer — open attribute/child rows, no required record. See `M3e.Component.SplitPane.component` for the required-content form.
+{-| The loose `m3e-split-pane` producer — open attribute/child rows, no required record. See `M3e.Element.SplitPane.component` for the required-content form.
 -}
 splitPane :
     List (Attr M3e.Internal.Types.SplitPane.Attrs msg)
@@ -1172,7 +1172,7 @@ splitPane attrs children =
     Ir.fromNode (Ir.node "m3e-split-pane" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.StateLayer.component`.
+{-| See `M3e.Element.StateLayer.component`.
 -}
 stateLayer :
     List (Attr M3e.Internal.Types.StateLayer.Attrs msg)
@@ -1182,7 +1182,7 @@ stateLayer attrs children =
     Ir.fromNode (Ir.node "m3e-state-layer" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-step` producer — open attribute/child rows, no required record. See `M3e.Component.Step.component` for the required-content form.
+{-| The loose `m3e-step` producer — open attribute/child rows, no required record. See `M3e.Element.Step.component` for the required-content form.
 -}
 step :
     List (Attr M3e.Internal.Types.Step.Attrs msg)
@@ -1192,7 +1192,7 @@ step attrs children =
     Ir.fromNode (Ir.node "m3e-step" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.StepPanel.component`.
+{-| See `M3e.Element.StepPanel.component`.
 -}
 stepPanel :
     List (Attr M3e.Internal.Types.StepPanel.Attrs msg)
@@ -1202,7 +1202,7 @@ stepPanel attrs children =
     Ir.fromNode (Ir.node "m3e-step-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Stepper.component`.
+{-| See `M3e.Element.Stepper.component`.
 -}
 stepper :
     List (Attr M3e.Internal.Types.Stepper.Attrs msg)
@@ -1212,7 +1212,7 @@ stepper attrs children =
     Ir.fromNode (Ir.node "m3e-stepper" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.StepperNext.component`.
+{-| See `M3e.Element.StepperNext.component`.
 -}
 stepperNext :
     List (Attr M3e.Internal.Types.StepperNext.Attrs msg)
@@ -1222,7 +1222,7 @@ stepperNext attrs children =
     Ir.fromNode (Ir.node "m3e-stepper-next" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.StepperPrevious.component`.
+{-| See `M3e.Element.StepperPrevious.component`.
 -}
 stepperPrevious :
     List (Attr M3e.Internal.Types.StepperPrevious.Attrs msg)
@@ -1232,7 +1232,7 @@ stepperPrevious attrs children =
     Ir.fromNode (Ir.node "m3e-stepper-previous" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.StepperReset.component`.
+{-| See `M3e.Element.StepperReset.component`.
 -}
 stepperReset :
     List (Attr M3e.Internal.Types.StepperReset.Attrs msg)
@@ -1242,7 +1242,7 @@ stepperReset attrs children =
     Ir.fromNode (Ir.node "m3e-stepper-reset" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-suggestion-chip` producer — open attribute/child rows, no required record. See `M3e.Component.SuggestionChip.component` for the required-content form.
+{-| The loose `m3e-suggestion-chip` producer — open attribute/child rows, no required record. See `M3e.Element.SuggestionChip.component` for the required-content form.
 -}
 suggestionChip :
     List (Attr M3e.Internal.Types.SuggestionChip.Attrs msg)
@@ -1252,7 +1252,7 @@ suggestionChip attrs children =
     Ir.fromNode (Ir.node "m3e-suggestion-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Switch.component`.
+{-| See `M3e.Element.Switch.component`.
 -}
 switch :
     List (Attr M3e.Internal.Types.Switch.Attrs msg)
@@ -1262,7 +1262,7 @@ switch attrs children =
     Ir.fromNode (Ir.node "m3e-switch" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Tab.component`.
+{-| See `M3e.Element.Tab.component`.
 -}
 tab :
     List (Attr M3e.Internal.Types.Tab.Attrs msg)
@@ -1272,7 +1272,7 @@ tab attrs children =
     Ir.fromNode (Ir.node "m3e-tab" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TabPanel.component`.
+{-| See `M3e.Element.TabPanel.component`.
 -}
 tabPanel :
     List (Attr M3e.Internal.Types.TabPanel.Attrs msg)
@@ -1282,7 +1282,7 @@ tabPanel attrs children =
     Ir.fromNode (Ir.node "m3e-tab-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Tabs.component`.
+{-| See `M3e.Element.Tabs.component`.
 -}
 tabs :
     List (Attr M3e.Internal.Types.Tabs.Attrs msg)
@@ -1292,7 +1292,7 @@ tabs attrs children =
     Ir.fromNode (Ir.node "m3e-tabs" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TextHighlight.component`.
+{-| See `M3e.Element.TextHighlight.component`.
 -}
 textHighlight :
     List (Attr M3e.Internal.Types.TextHighlight.Attrs msg)
@@ -1302,7 +1302,7 @@ textHighlight attrs children =
     Ir.fromNode (Ir.node "m3e-text-highlight" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TextOverflow.component`.
+{-| See `M3e.Element.TextOverflow.component`.
 -}
 textOverflow :
     List (Attr M3e.Internal.Types.TextOverflow.Attrs msg)
@@ -1312,7 +1312,7 @@ textOverflow attrs children =
     Ir.fromNode (Ir.node "m3e-text-overflow" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TextareaAutosize.component`.
+{-| See `M3e.Element.TextareaAutosize.component`.
 -}
 textareaAutosize :
     List (Attr M3e.Internal.Types.TextareaAutosize.Attrs msg)
@@ -1322,7 +1322,7 @@ textareaAutosize attrs children =
     Ir.fromNode (Ir.node "m3e-textarea-autosize" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Theme.component`.
+{-| See `M3e.Element.Theme.component`.
 -}
 theme :
     List (Attr M3e.Internal.Types.Theme.Attrs msg)
@@ -1332,7 +1332,7 @@ theme attrs children =
     Ir.fromNode (Ir.node "m3e-theme" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.ThemeIcon.component`.
+{-| See `M3e.Element.ThemeIcon.component`.
 -}
 themeIcon :
     List (Attr M3e.Internal.Types.ThemeIcon.Attrs msg)
@@ -1342,7 +1342,7 @@ themeIcon attrs children =
     Ir.fromNode (Ir.node "m3e-theme-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Timepicker.component`.
+{-| See `M3e.Element.Timepicker.component`.
 -}
 timepicker :
     List (Attr M3e.Internal.Types.Timepicker.Attrs msg)
@@ -1352,7 +1352,7 @@ timepicker attrs children =
     Ir.fromNode (Ir.node "m3e-timepicker" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TimepickerDial.component`.
+{-| See `M3e.Element.TimepickerDial.component`.
 -}
 timepickerDial :
     List (Attr M3e.Internal.Types.TimepickerDial.Attrs msg)
@@ -1362,7 +1362,7 @@ timepickerDial attrs children =
     Ir.fromNode (Ir.node "m3e-timepicker-dial" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TimepickerInput.component`.
+{-| See `M3e.Element.TimepickerInput.component`.
 -}
 timepickerInput :
     List (Attr M3e.Internal.Types.TimepickerInput.Attrs msg)
@@ -1372,7 +1372,7 @@ timepickerInput attrs children =
     Ir.fromNode (Ir.node "m3e-timepicker-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TimepickerInputPeriodToggle.component`.
+{-| See `M3e.Element.TimepickerInputPeriodToggle.component`.
 -}
 timepickerInputPeriodToggle :
     List (Attr M3e.Internal.Types.TimepickerInputPeriodToggle.Attrs msg)
@@ -1382,7 +1382,7 @@ timepickerInputPeriodToggle attrs children =
     Ir.fromNode (Ir.node "m3e-timepicker-input-period-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.TimepickerToggle.component`.
+{-| See `M3e.Element.TimepickerToggle.component`.
 -}
 timepickerToggle :
     List (Attr M3e.Internal.Types.TimepickerToggle.Attrs msg)
@@ -1392,7 +1392,7 @@ timepickerToggle attrs children =
     Ir.fromNode (Ir.node "m3e-timepicker-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Toc.component`.
+{-| See `M3e.Element.Toc.component`.
 -}
 toc :
     List (Attr M3e.Internal.Types.Toc.Attrs msg)
@@ -1402,7 +1402,7 @@ toc attrs children =
     Ir.fromNode (Ir.node "m3e-toc" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-toc-item` producer — open attribute/child rows, no required record. See `M3e.Component.TocItem.component` for the required-content form.
+{-| The loose `m3e-toc-item` producer — open attribute/child rows, no required record. See `M3e.Element.TocItem.component` for the required-content form.
 -}
 tocItem :
     List (Attr M3e.Internal.Types.TocItem.Attrs msg)
@@ -1412,7 +1412,7 @@ tocItem attrs children =
     Ir.fromNode (Ir.node "m3e-toc-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Toolbar.component`.
+{-| See `M3e.Element.Toolbar.component`.
 -}
 toolbar :
     List (Attr M3e.Internal.Types.Toolbar.Attrs msg)
@@ -1422,7 +1422,7 @@ toolbar attrs children =
     Ir.fromNode (Ir.node "m3e-toolbar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-tooltip` producer — open attribute/child rows, no required record. See `M3e.Component.Tooltip.component` for the required-content form.
+{-| The loose `m3e-tooltip` producer — open attribute/child rows, no required record. See `M3e.Element.Tooltip.component` for the required-content form.
 -}
 tooltip :
     List (Attr M3e.Internal.Types.Tooltip.Attrs msg)
@@ -1432,7 +1432,7 @@ tooltip attrs children =
     Ir.fromNode (Ir.node "m3e-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.Tree.component`.
+{-| See `M3e.Element.Tree.component`.
 -}
 tree :
     List (Attr M3e.Internal.Types.Tree.Attrs msg)
@@ -1442,7 +1442,7 @@ tree attrs children =
     Ir.fromNode (Ir.node "m3e-tree" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| The loose `m3e-tree-item` producer — open attribute/child rows, no required record. See `M3e.Component.TreeItem.component` for the required-content form.
+{-| The loose `m3e-tree-item` producer — open attribute/child rows, no required record. See `M3e.Element.TreeItem.component` for the required-content form.
 -}
 treeItem :
     List (Attr M3e.Internal.Types.TreeItem.Attrs msg)
@@ -1452,7 +1452,7 @@ treeItem attrs children =
     Ir.fromNode (Ir.node "m3e-tree-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `M3e.Component.YearView.component`.
+{-| See `M3e.Element.YearView.component`.
 -}
 yearView :
     List (Attr M3e.Internal.Types.YearView.Attrs msg)

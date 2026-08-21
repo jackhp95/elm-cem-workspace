@@ -2,7 +2,7 @@ module Sl.Internal.Types.Tag exposing (Is, Attrs, ChildAdmittedBy, Size, Variant
 
 {-| Type definitions for Tag. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Tag` surface both re-export these, so they live in
+`Sl.Element.Tag` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Size, Variant, Builder, AttrCaps

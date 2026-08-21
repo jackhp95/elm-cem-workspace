@@ -12,7 +12,7 @@ The compiler must reject this with a type mismatch between the open-rowed
 
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Kind exposing (Supported)
-import M3e.Component.SplitButton as SplitButton
+import M3e.Element.SplitButton as SplitButton
 import M3e.Values as V
 
 

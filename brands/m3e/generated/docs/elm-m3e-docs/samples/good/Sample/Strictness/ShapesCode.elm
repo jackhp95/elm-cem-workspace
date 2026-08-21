@@ -7,12 +7,12 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Action
 import M3e.Attributes
 import M3e.Build
 import M3e.Build.Button
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Values as Value
 import Sample.Support exposing (Msg(..))
 
@@ -24,7 +24,7 @@ shown0_ =
 
 -- required-record form (`component`) — the compiler now DEMANDS the parts a button can't do without
 shown1_ =
-    M3e.Component.Button.component
+    M3e.Element.Button.component
         { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }
         []
         []

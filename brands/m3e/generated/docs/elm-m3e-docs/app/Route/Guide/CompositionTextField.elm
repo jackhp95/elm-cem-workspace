@@ -17,7 +17,7 @@ import Guide.Samples as Samples
 import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
-import M3e.Component.FormField
+import M3e.Element.FormField
 import M3e.Kind
 import M3e.Values as Value
 import Pages.Url
@@ -88,10 +88,10 @@ the one shared id "email-field". This is the value shown live and printed below.
 
 emailField : Element { s | formField : M3e.Kind.Brand } admittedBy msg
 emailField =
-    M3e.formField [ M3e.Component.FormField.variant Value.outlined ]
-        [ M3e.Component.FormField.label
+    M3e.formField [ M3e.Element.FormField.variant Value.outlined ]
+        [ M3e.Element.FormField.label
             (TypedHtml.label [ TypedHtml.Attributes.for "email-field" ] [ M3e.text "Email address" ])
-        , M3e.Component.FormField.hint (M3e.text "We'll never share it.")
+        , M3e.Element.FormField.hint (M3e.text "We'll never share it.")
         , TypedHtml.input
             [ TypedHtml.Attributes.id "email-field"
             , TypedHtml.Attributes.type_ "email"

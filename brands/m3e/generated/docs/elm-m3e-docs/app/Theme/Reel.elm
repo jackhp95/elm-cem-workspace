@@ -26,7 +26,7 @@ theme can't change it. See `cardRoleStrip`.)
 `m3e-card` (with `actionable`) is the interactive element: it dispatches a
 standard `click` event (`bubbles: true`, `composed: true`) that Elm's
 `Html.Events.on "click"` observes. The earlier native `<button>` wrapper was a
-workaround written before this was confirmed; this module now uses `M3e.Component.Card.onClick`
+workaround written before this was confirmed; this module now uses `M3e.Element.Card.onClick`
 directly so the card itself is the click target — no `M3e.Unsafe` needed.
 
 This module is pure and `msg`-generic. Two placements share it:
@@ -47,18 +47,18 @@ This module is pure and `msg`-generic. Two placements share it:
 
 import M3e exposing (Element)
 import M3e.Attributes as MA
-import M3e.Component.Avatar
-import M3e.Component.Card
-import M3e.Component.Heading
-import M3e.Component.Icon
-import M3e.Component.Theme
+import M3e.Element.Avatar
+import M3e.Element.Card
+import M3e.Element.Heading
+import M3e.Element.Icon
+import M3e.Element.Theme
 import M3e.Values as Value
 import Theme.Fonts
 import Theme.Presets exposing (Preset)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 
 
 {-| Configuration for the reel view — kept as a record so callers can omit
@@ -77,7 +77,7 @@ type alias Config msg =
 intentional on touch screens. The reel is layout-only Tailwind; the visual
 surface of every card is an `m3e-card`.
 -}
-view : Config msg -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+view : Config msg -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 view config =
     TypedHtml.div
         [ TA.class "flex gap-3 overflow-x-auto snap-x snap-mandatory px-4 py-3" ]
@@ -85,11 +85,11 @@ view config =
 
 
 {-| One theme card. The `m3e-card` (with `actionable`) is the interactive
-element — `M3e.Component.Card.onClick` fires on user click and dispatches `onPick`.
+element — `M3e.Element.Card.onClick` fires on user click and dispatches `onPick`.
 `<m3e-theme>` scopes the live-derived palette to this card's preset, and carries
 the `snap-start` + sizing layout so the card fills its snap region.
 -}
-card : Config msg -> Preset -> Element (M3e.Component.Theme.Is s) admittedBy msg
+card : Config msg -> Preset -> Element (M3e.Element.Theme.Is s) admittedBy msg
 card config preset =
     let
         isActive : Bool
@@ -97,9 +97,9 @@ card config preset =
             config.activeId == Just preset.id
     in
     M3e.theme
-        [ M3e.Component.Theme.color preset.seedColor
-        , M3e.Component.Theme.scheme preset.scheme
-        , M3e.Component.Theme.contrast preset.contrast
+        [ M3e.Element.Theme.color preset.seedColor
+        , M3e.Element.Theme.scheme preset.scheme
+        , M3e.Element.Theme.contrast preset.contrast
         , TA.class "block shrink-0 w-32 snap-start"
         ]
         [ presetCard config isActive preset ]
@@ -110,12 +110,12 @@ delivers the `onPick` message; `aria-pressed` + `aria-label` make it accessible.
 Selection state is expressed the M3 way — `elevated` when active, `outlined`
 otherwise — plus a `check_circle` badge.
 -}
-presetCard : Config msg -> Bool -> Preset -> Element (M3e.Component.Card.Is s) admittedBy msg
+presetCard : Config msg -> Bool -> Preset -> Element (M3e.Element.Card.Is s) admittedBy msg
 presetCard config isActive preset =
     M3e.card
-        [ M3e.Component.Card.actionable True
-        , M3e.Component.Card.onClick (config.onPick preset)
-        , M3e.Component.Card.variant
+        [ M3e.Element.Card.actionable True
+        , M3e.Element.Card.onClick (config.onPick preset)
+        , M3e.Element.Card.variant
             (if isActive then
                 Value.elevated
 
@@ -132,7 +132,7 @@ presetCard config isActive preset =
         , Aria.label ("Apply " ++ preset.name ++ " theme")
         , MA.class "w-full text-left m3e-card-padding-[0.625rem]"
         ]
-        [ M3e.Component.Card.content (cardBody isActive preset) ]
+        [ M3e.Element.Card.content (cardBody isActive preset) ]
 
 
 {-| The card's inner content, one row per line. Each row is a `TypedHtml.div`
@@ -140,7 +140,7 @@ presetCard config isActive preset =
 single m3e component kind — keeping the phantom-row lists homogeneous without
 per-child escapes.
 -}
-cardBody : Bool -> Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardBody : Bool -> Preset -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 cardBody isActive preset =
     TypedHtml.div
         [ TA.class "flex flex-col gap-1.5" ]
@@ -156,20 +156,20 @@ Active card → filled `check_circle` in primary; inactive → outline ring
 (`radio_button_unchecked`) in a neutral/dim tone so it recedes visually.
 Both icons occupy the same slot so no reflow occurs on selection change.
 -}
-cardBadge : Bool -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardBadge : Bool -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 cardBadge isActive =
     TypedHtml.div
         [ TA.class "flex justify-end -mb-1" ]
         [ if isActive then
             M3e.icon
-                [ M3e.Component.Icon.name "check_circle"
-                , M3e.Component.Icon.filled True
+                [ M3e.Element.Icon.name "check_circle"
+                , M3e.Element.Icon.filled True
                 ]
                 []
 
           else
             M3e.icon
-                [ M3e.Component.Icon.name "radio_button_unchecked" ]
+                [ M3e.Element.Icon.name "radio_button_unchecked" ]
                 []
         ]
 
@@ -178,13 +178,13 @@ cardBadge isActive =
 font. `font-family` is a regular CSS property, so inline `style` is reliable
 here (only CSS _custom_ properties are unreliable via the style encoder).
 -}
-cardName : Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardName : Preset -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 cardName preset =
     TypedHtml.div
         [ TA.class "min-w-0" ]
         [ M3e.heading
-            [ M3e.Component.Heading.variant Value.title
-            , M3e.Component.Heading.size Value.small
+            [ M3e.Element.Heading.variant Value.title
+            , M3e.Element.Heading.size Value.small
             , MA.class "truncate"
             , MA.style "font-family" (Theme.Fonts.fontStack preset.displayFont)
             ]
@@ -195,19 +195,19 @@ cardName preset =
 {-| "Aa" specimen: uppercase A in the display font, lowercase a in the body
 font — two `m3e-heading`s side by side so both fonts show at a glance.
 -}
-cardSpecimen : Preset -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardSpecimen : Preset -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 cardSpecimen preset =
     TypedHtml.div
         [ TA.class "flex items-baseline gap-1" ]
         [ M3e.heading
-            [ M3e.Component.Heading.variant Value.display
-            , M3e.Component.Heading.size Value.small
+            [ M3e.Element.Heading.variant Value.display
+            , M3e.Element.Heading.size Value.small
             , MA.style "font-family" (Theme.Fonts.fontStack preset.displayFont)
             ]
             [ M3e.text "A" ]
         , M3e.heading
-            [ M3e.Component.Heading.variant Value.title
-            , M3e.Component.Heading.size Value.medium
+            [ M3e.Element.Heading.variant Value.title
+            , M3e.Element.Heading.size Value.medium
             , MA.style "font-family" (Theme.Fonts.fontStack preset.bodyFont)
             ]
             [ M3e.text "a" ]
@@ -241,7 +241,7 @@ token `--color-primary`, which never re-derives under a nested theme. Setting
 drops `--x`).
 
 -}
-cardRoleStrip : Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+cardRoleStrip : Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 cardRoleStrip =
     TypedHtml.div
         [ TA.class "flex gap-1 mt-0.5" ]
@@ -257,7 +257,7 @@ given `--md-sys-color-<role>` token, applied by setting the avatar's own
 `--m3e-avatar-color` custom property inline. `m3e-avatar-size-*` keeps it a
 compact dot; the colour derives from the nearest `<m3e-theme>`.
 -}
-roleAvatar : String -> Element (M3e.Component.Avatar.Is s) admittedBy msg
+roleAvatar : String -> Element (M3e.Element.Avatar.Is s) admittedBy msg
 roleAvatar role =
     M3e.avatar
         [ MA.class "m3e-avatar-size-[0.875rem]"

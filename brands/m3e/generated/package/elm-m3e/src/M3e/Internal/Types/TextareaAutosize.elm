@@ -2,7 +2,7 @@ module M3e.Internal.Types.TextareaAutosize exposing (Is, Attrs, ChildAdmittedBy,
 
 {-| Type definitions for TextareaAutosize. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.TextareaAutosize` surface both re-export these, so they live in
+`M3e.Element.TextareaAutosize` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

@@ -12,8 +12,8 @@ resulting `Theme.Scale.ScaleMode`.
 
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.FormField as FormField
-import M3e.Component.Icon
+import M3e.Element.FormField as FormField
+import M3e.Element.Icon
 import M3e.Kind
 import M3e.Values as Value
 import Theme exposing (TypeScaleParam)
@@ -21,7 +21,7 @@ import Theme.Scale as Scale exposing (ScaleConfig, ScaleMode)
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Events
 
 
@@ -43,7 +43,7 @@ modeSegmented toMsg current =
 Linear uses `factor`, Modular uses `ratio`+`base`, Bump uses `bump`, Power
 uses `exponent`+`base`.
 -}
-stepperControls : (TypeScaleParam -> Float -> msg) -> ScaleConfig -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+stepperControls : (TypeScaleParam -> Float -> msg) -> ScaleConfig -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 stepperControls toMsg config =
     case config.mode of
         Scale.Linear ->
@@ -106,7 +106,7 @@ numberStepper labelText current step toMsg =
             , M3e.Attributes.size Value.small
             , Aria.label ("Decrease " ++ labelText)
             ]
-            [ M3e.icon [ M3e.Component.Icon.name "remove" ] [] ]
+            [ M3e.icon [ M3e.Element.Icon.name "remove" ] [] ]
         , TypedHtml.input
             [ TypedHtml.Attributes.id inputId
             , TypedHtml.Attributes.type_ "text"
@@ -121,5 +121,5 @@ numberStepper labelText current step toMsg =
             , M3e.Attributes.size Value.small
             , Aria.label ("Increase " ++ labelText)
             ]
-            [ M3e.icon [ M3e.Component.Icon.name "add" ] [] ]
+            [ M3e.icon [ M3e.Element.Icon.name "add" ] [] ]
         ]

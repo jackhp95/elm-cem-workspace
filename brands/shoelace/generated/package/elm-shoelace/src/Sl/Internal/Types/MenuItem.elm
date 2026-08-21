@@ -2,7 +2,7 @@ module Sl.Internal.Types.MenuItem exposing (Is, Attrs, ChildAdmittedBy, Type, Bu
 
 {-| Type definitions for MenuItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.MenuItem` surface both re-export these, so they live in
+`Sl.Element.MenuItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Type, Builder, AttrCaps

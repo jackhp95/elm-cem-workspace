@@ -165,7 +165,7 @@ view app _ =
 
 rootCode : String
 rootCode =
-    """import M3e.Component.Theme as Theme
+    """import M3e.Element.Theme as Theme
 
 Theme.component
     [ Theme.color model.seed                    -- the brand/seed color, e.g. "#4285F4"
@@ -186,7 +186,7 @@ M3e.card [ M3e.Attributes.variant M3e.Values.filled ] rows
 -- scale, no class involved.
 M3e.listItem []
     [ M3e.text "Primary line"
-    , M3e.Component.ListItem.supportingText (M3e.text "Secondary text")
+    , M3e.Element.ListItem.supportingText (M3e.text "Secondary text")
     ]
 
 -- The primary-action role: a filled button, with the state layer and focus

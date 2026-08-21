@@ -2,7 +2,7 @@ module M3e.Internal.Types.SplitButton exposing (Is, Attrs, LeadingButtonSlot, Tr
 
 {-| Type definitions for SplitButton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.SplitButton` surface both re-export these, so they live in
+`M3e.Element.SplitButton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy, Size, Variant, Builder, AttrCaps, SlotCaps

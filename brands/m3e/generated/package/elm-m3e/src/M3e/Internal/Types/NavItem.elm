@@ -2,7 +2,7 @@ module M3e.Internal.Types.NavItem exposing (Is, Attrs, Content, IconSlot, Select
 
 {-| Type definitions for NavItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.NavItem` surface both re-export these, so they live in
+`M3e.Element.NavItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy, Orientation, Builder, AttrCaps, SlotCaps

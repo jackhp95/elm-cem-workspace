@@ -2,7 +2,7 @@ module M3e.Internal.Types.Stepper exposing (Is, Attrs, PanelSlot, StepSlot, Chil
 
 {-| Type definitions for Stepper. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Stepper` surface both re-export these, so they live in
+`M3e.Element.Stepper` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, PanelSlot, StepSlot, ChildAdmittedBy, HeaderPosition, LabelPosition, Orientation, Builder, AttrCaps

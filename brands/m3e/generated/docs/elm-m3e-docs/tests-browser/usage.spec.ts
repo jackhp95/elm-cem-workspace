@@ -54,8 +54,10 @@ test("/components/button shows a live Usage section with preview + code", { tag:
 
   // (3) The derived M3e (Standard) code is rendered (attached; may be folded).
   // The barrel form (M3e.button) is not generated in the phantom substrate;
-  // the top surface uses the qualified form M3e.Button.view.
-  await expect(page.getByText("M3e.Button.view").first()).toBeAttached();
+  // the top surface uses the qualified per-component form
+  // M3e.Element.Button.component (renamed from M3e.Component.Button in
+  // reconciliation Task 7's module-namespace rename).
+  await expect(page.getByText("M3e.Element.Button.component").first()).toBeAttached();
 
   // Code folds render OPEN by default (Phase C). Assert with count queries
   // (race-free vs a per-fold loop): at least one fold exists and none lack `open`.

@@ -2,7 +2,7 @@ module Sl.Internal.Types.Carousel exposing (Is, Attrs, ChildAdmittedBy, Orientat
 
 {-| Type definitions for Carousel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Carousel` surface both re-export these, so they live in
+`Sl.Element.Carousel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Orientation, Builder, AttrCaps

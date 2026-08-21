@@ -10,8 +10,8 @@ import Head.Seo as Seo
 import Json.Decode as Decode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.Heading
+import M3e.Element.Card
+import M3e.Element.Heading
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -21,7 +21,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Kind
 import UrlPath
 import View exposing (View)
@@ -100,7 +100,7 @@ class from `data/style-tokens.json` (derived from `--md-sys-typescale-*`, see
 `scripts/gen-style-tokens.mjs`). The demo dogfoods the producers: the exhibit
 _is_ `M3e.heading` (display/headline/title/label) / `TypedHtml.span` (body).
 -}
-scale : List ( Element (M3e.Component.Heading.Is { a | sharedPhrasing : TypedHtml.Kind.Shared }) admittedBy msg, String )
+scale : List ( Element (M3e.Element.Heading.Is { a | sharedPhrasing : TypedHtml.Kind.Shared }) admittedBy msg, String )
 scale =
     [ ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.large, TA.class "text-on-surface" ] [ M3e.text "Display Large" ], "text-display-lg" )
     , ( M3e.heading [ M3e.Attributes.variant Value.display, M3e.Attributes.size Value.medium, TA.class "text-on-surface" ] [ M3e.text "Display Medium" ], "text-display-md" )
@@ -120,7 +120,7 @@ scale =
     ]
 
 
-row : Dict String String -> ( Element (TypedHtml.Component.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+row : Dict String String -> ( Element (TypedHtml.Element.Grouping.DivIs { a | heading : M3e.Kind.Brand, sharedPhrasing : TypedHtml.Kind.Shared }) (TypedHtml.Element.Grouping.DivChildAdmittedBy childAdm) msg, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 row metricsByClass ( exhibit, cls ) =
     let
         metrics : String
@@ -158,7 +158,7 @@ view app _ =
                 [ Doc.sectionHeadingWithId (Doc.slugify "The scale, live") "The scale, live"
                 , M3e.card
                     [ M3e.Attributes.variant Value.outlined ]
-                    [ M3e.Component.Card.content
+                    [ M3e.Element.Card.content
                         (TypedHtml.div [ TA.class "flex flex-col px-2" ]
                             (List.intersperse (M3e.divider [] []) (List.map (row app.data) scale))
                         )

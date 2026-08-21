@@ -139,8 +139,8 @@ layersDiagram : String
 layersDiagram =
     """SURFACES — same typed value, different call shape (a horizontal choice)
   M3e.button …                     barrel: one import, every component's `component`
-  M3e.Component.Divider.component [ … ] …           the standard/list form (no required record)
-  M3e.Component.Button.component { … } …            required-record form (the 29 with a required record)
+  M3e.Element.Divider.component [ … ] …           the standard/list form (no required record)
+  M3e.Element.Button.component { … } …            required-record form (the 29 with a required record)
   M3e.Build.Button.build { … } |> …      builder pipe, closed by M3e.Build.Button.toElement
 
 LOOSENESS — opt out of the strict phantom rows, still in the IR
@@ -158,10 +158,10 @@ descentCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 -- component module: same output, component-scoped tighter types
-M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []
+M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Element.Button.variant Value.filled ] []
 
 -- required-record form: the compiler demands the parts a button can't omit
-M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
+M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.onClick Save } [] []
 
 -- builder pipe: a one-only setter is unwritable twice; order-free
 M3e.Build.Button.build { content = M3e.text "Save", action = M3e.Action.onClick Save }

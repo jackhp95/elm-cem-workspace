@@ -2,7 +2,7 @@ module M3e.Internal.Types.LinearProgressIndicator exposing (Is, Attrs, ChildAdmi
 
 {-| Type definitions for LinearProgressIndicator. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.LinearProgressIndicator` surface both re-export these, so they live in
+`M3e.Element.LinearProgressIndicator` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Mode, Variant, Builder, AttrCaps

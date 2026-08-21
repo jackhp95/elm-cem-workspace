@@ -2,7 +2,7 @@ module Sl.Internal.Types.RadioGroup exposing (Is, Attrs, ChildAdmittedBy, Size, 
 
 {-| Type definitions for RadioGroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.RadioGroup` surface both re-export these, so they live in
+`Sl.Element.RadioGroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps

@@ -16,7 +16,7 @@ import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import Sl.Attributes as A
-import Sl.Component.ButtonGroup as Component
+import Sl.Element.ButtonGroup as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 

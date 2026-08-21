@@ -1,0 +1,152 @@
+module M3e.Element.Icon exposing
+    ( component
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Grade, grade, Variant, variant
+    , filled, name, opticalSize, weight
+    )
+
+{-| The `m3e-icon` component — strict per-component surface.
+
+A small symbol used to easily identify an action or category.
+
+@docs component
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Grade, grade, Variant, variant
+@docs filled, name, opticalSize, weight
+
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Basic icons" -->
+```elm
+M3e.Element.Icon.component [ M3e.Element.Icon.name "home" ] []
+```
+
+<!-- elm-cem:example title="SVG icons" -->
+```elm
+[ M3e.Element.Icon.component [ M3e.Element.Icon.variant M3e.Values.outlined, M3e.Element.Icon.name "search" ] []
+    , M3e.Element.Icon.component [ M3e.Element.Icon.variant M3e.Values.outlined, M3e.Element.Icon.name "home" ] []
+    , M3e.Element.Icon.component [ M3e.Element.Icon.variant M3e.Values.outlined, M3e.Element.Icon.name "settings" ] []
+    , M3e.Element.Icon.component [ M3e.Element.Icon.variant M3e.Values.outlined, M3e.Element.Icon.name "favorite" ] []
+    , M3e.Element.Icon.component [ M3e.Element.Icon.variant M3e.Values.outlined, M3e.Element.Icon.name "notifications" ] []
+    ]
+```
+
+<!-- elm-cem:docmeta category=Layout & style; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=58001-59569; figmaStatus=example-verified -->
+
+-}
+
+import HtmlIr.Attribute exposing (Attr)
+import HtmlIr.Element as El exposing (Element)
+import HtmlIr.Internal as Ir
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value as Val exposing (Value)
+import Json.Encode
+import M3e.Attributes as A
+import M3e.Html as H
+import M3e.Internal.Types.Icon
+import M3e.Kind exposing (Available, Ctx, Used)
+
+
+{-| The kind row `m3e-icon` produces — the SHARED icon atom kind, admissible
+into any library's opted-in slot.
+-}
+type alias Is s =
+    M3e.Internal.Types.Icon.Is s
+
+
+{-| The closed attribute-capability row.
+-}
+type alias Attrs =
+    M3e.Internal.Types.Icon.Attrs
+
+
+{-| The context demand this container injects into each child's admittedBy row.
+-}
+type alias ChildAdmittedBy childAdm =
+    M3e.Internal.Types.Icon.ChildAdmittedBy childAdm
+
+
+{-| The `grade` values valid on this component (compile-tight narrowing).
+-}
+type alias Grade =
+    M3e.Internal.Types.Icon.Grade
+
+
+{-| The `variant` values valid on this component (compile-tight narrowing).
+-}
+type alias Variant =
+    M3e.Internal.Types.Icon.Variant
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Icon.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Icon.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
+
+
+{-| Standard constructor: `[attributes] [children]`.
+-}
+component :
+    List (Attr Attrs msg)
+    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> Element (Is s) admittedBy msg
+component =
+    H.icon
+
+
+{-| The grade of the icon. (default: `"medium"`)
+-}
+grade : Value Grade -> Attr { c | grade : Supported } msg
+grade value_ =
+    Ir.attribute "grade" (Val.toString value_)
+
+
+{-| The appearance variant of the icon. (default: `"outlined"`)
+-}
+variant : Value Variant -> Attr { c | variant : Supported } msg
+variant value_ =
+    Ir.attribute "variant" (Val.toString value_)
+
+
+{-| See `M3e.Attributes.filled`.
+-}
+filled : Bool -> Attr { c | filled : Supported } msg
+filled =
+    A.filled
+
+
+{-| The name of the icon. (default: `""`)
+-}
+name : String -> Attr { c | name : Supported } msg
+name value_ =
+    Ir.attribute "name" value_
+
+
+{-| See `M3e.Attributes.opticalSize`.
+-}
+opticalSize : Float -> Attr { c | opticalSize : Supported } msg
+opticalSize =
+    A.opticalSize
+
+
+{-| See `M3e.Attributes.weight`.
+-}
+weight : Int -> Attr { c | weight : Supported } msg
+weight =
+    A.weight

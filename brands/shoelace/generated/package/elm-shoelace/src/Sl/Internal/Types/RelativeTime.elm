@@ -2,7 +2,7 @@ module Sl.Internal.Types.RelativeTime exposing (Is, Attrs, ChildAdmittedBy, Form
 
 {-| Type definitions for RelativeTime. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.RelativeTime` surface both re-export these, so they live in
+`Sl.Element.RelativeTime` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Format, Numeric, Builder, AttrCaps

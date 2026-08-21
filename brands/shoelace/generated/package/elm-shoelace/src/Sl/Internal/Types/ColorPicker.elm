@@ -2,7 +2,7 @@ module Sl.Internal.Types.ColorPicker exposing (Is, Attrs, ChildAdmittedBy, Forma
 
 {-| Type definitions for ColorPicker. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.ColorPicker` surface both re-export these, so they live in
+`Sl.Element.ColorPicker` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Format, Size, Builder, AttrCaps

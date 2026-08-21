@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "a"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "circle"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "clipPath"
-      , module_ = "TypedSvg.Component.Clip"
+      , module_ = "TypedSvg.Element.Clip"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "defs"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "desc"
-      , module_ = "TypedSvg.Component.Descriptive"
+      , module_ = "TypedSvg.Element.Descriptive"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "ellipse"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "g"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -119,7 +119,7 @@ facts =
       , usesAction = False
       }
     , { component = "image"
-      , module_ = "TypedSvg.Component.Image"
+      , module_ = "TypedSvg.Element.Image"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -134,7 +134,7 @@ facts =
       , usesAction = False
       }
     , { component = "line"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -149,7 +149,7 @@ facts =
       , usesAction = False
       }
     , { component = "linearGradient"
-      , module_ = "TypedSvg.Component.Paint"
+      , module_ = "TypedSvg.Element.Paint"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -164,7 +164,7 @@ facts =
       , usesAction = False
       }
     , { component = "marker"
-      , module_ = "TypedSvg.Component.Clip"
+      , module_ = "TypedSvg.Element.Clip"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -179,7 +179,7 @@ facts =
       , usesAction = False
       }
     , { component = "mask"
-      , module_ = "TypedSvg.Component.Clip"
+      , module_ = "TypedSvg.Element.Clip"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -194,7 +194,7 @@ facts =
       , usesAction = False
       }
     , { component = "path"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -209,7 +209,7 @@ facts =
       , usesAction = False
       }
     , { component = "pattern"
-      , module_ = "TypedSvg.Component.Paint"
+      , module_ = "TypedSvg.Element.Paint"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -224,7 +224,7 @@ facts =
       , usesAction = False
       }
     , { component = "polygon"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -239,7 +239,7 @@ facts =
       , usesAction = False
       }
     , { component = "polyline"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -254,7 +254,7 @@ facts =
       , usesAction = False
       }
     , { component = "radialGradient"
-      , module_ = "TypedSvg.Component.Paint"
+      , module_ = "TypedSvg.Element.Paint"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -269,7 +269,7 @@ facts =
       , usesAction = False
       }
     , { component = "rect"
-      , module_ = "TypedSvg.Component.Shape"
+      , module_ = "TypedSvg.Element.Shape"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -284,7 +284,7 @@ facts =
       , usesAction = False
       }
     , { component = "stop"
-      , module_ = "TypedSvg.Component.Paint"
+      , module_ = "TypedSvg.Element.Paint"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -299,7 +299,7 @@ facts =
       , usesAction = False
       }
     , { component = "svg"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -314,7 +314,7 @@ facts =
       , usesAction = False
       }
     , { component = "switch"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -329,7 +329,7 @@ facts =
       , usesAction = False
       }
     , { component = "symbol"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -344,7 +344,7 @@ facts =
       , usesAction = False
       }
     , { component = "text"
-      , module_ = "TypedSvg.Component.Text"
+      , module_ = "TypedSvg.Element.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -359,7 +359,7 @@ facts =
       , usesAction = False
       }
     , { component = "textPath"
-      , module_ = "TypedSvg.Component.Text"
+      , module_ = "TypedSvg.Element.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -374,7 +374,7 @@ facts =
       , usesAction = False
       }
     , { component = "title"
-      , module_ = "TypedSvg.Component.Descriptive"
+      , module_ = "TypedSvg.Element.Descriptive"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -389,7 +389,7 @@ facts =
       , usesAction = False
       }
     , { component = "tspan"
-      , module_ = "TypedSvg.Component.Text"
+      , module_ = "TypedSvg.Element.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -404,7 +404,7 @@ facts =
       , usesAction = False
       }
     , { component = "use"
-      , module_ = "TypedSvg.Component.Structure"
+      , module_ = "TypedSvg.Element.Structure"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]

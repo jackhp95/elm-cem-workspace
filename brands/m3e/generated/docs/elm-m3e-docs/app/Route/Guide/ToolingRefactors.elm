@@ -144,7 +144,7 @@ M3e.button [ TypedHtml.Attributes.class "flex-auto" ] [ M3e.text "Save" ]"""
 convertBefore : String
 convertBefore =
     """-- the per-component surface — what you might write, or arrive with
-M3e.Component.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Component.Button.variant Value.filled ] []"""
+M3e.Element.Button.component { content = M3e.text "Save", action = M3e.Action.none } [ M3e.Element.Button.variant Value.filled ] []"""
 
 
 convertAfter : String

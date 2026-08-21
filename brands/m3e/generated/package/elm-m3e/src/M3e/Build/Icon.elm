@@ -18,7 +18,7 @@ import HtmlIr.Kind exposing (Shared, Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Component.Icon as Component
+import M3e.Element.Icon as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Ctx, Used)
 import M3e.Values

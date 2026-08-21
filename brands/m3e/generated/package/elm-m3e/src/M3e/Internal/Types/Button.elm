@@ -2,7 +2,7 @@ module M3e.Internal.Types.Button exposing (Is, Attrs, Content, IconSlot, Selecte
 
 {-| Type definitions for Button. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Button` surface both re-export these, so they live in
+`M3e.Element.Button` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, Shape, Size, Type, Variant, ActionCaps, Builder, AttrCaps, SlotCaps

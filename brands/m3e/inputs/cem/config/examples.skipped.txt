@@ -10,6 +10,12 @@ ButtonGroup :: Native module support :: filtered: registration-only (script/link
 Card :: Native module support :: filtered: registration-only (script/link)
 Checkbox :: Native module support :: filtered: registration-only (script/link)
 ContentPane :: Native module support :: filtered: registration-only (script/link)
+ExpansionPanel :: Accordion (2) :: degraded: top: The 1st argument to `component` is not what I expect:
+ExpansionPanel :: Accordion :: degraded: top: The 1st argument to `component` is not what I expect:
+ExpansionPanel :: Standalone panels (2) :: degraded: top: The 1st argument to `component` is not what I expect:
+ExpansionPanel :: Standalone panels :: degraded: top: The 1st argument to `component` is not what I expect:
+ExpansionPanel :: Toggles (2) :: degraded: top: The 1st argument to `component` is not what I expect:
+ExpansionPanel :: Toggles :: degraded: top: The 1st argument to `component` is not what I expect:
 FabMenu :: Anatomy :: degraded: top: The 1st argument to `component` is not what I expect:
 FabMenu :: Disabling :: degraded: top: The 1st argument to `component` is not what I expect:
 FabMenu :: Links :: degraded: top: The 1st argument to `component` is not what I expect:

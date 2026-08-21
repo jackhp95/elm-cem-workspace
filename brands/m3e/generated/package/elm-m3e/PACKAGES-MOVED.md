@@ -14,16 +14,17 @@ or vendored `source-directories`), this note is your migration path.
 
 ## Where each namespace went
 
-Module namespaces are **unchanged at this release** — only the package boundaries
-moved. Point your `source-directories` (or, once published, your `elm.json`
-dependencies) at the package that owns each namespace you import:
+As of the namespace-rename release (plan Task 7 — see the `buildoc` note below and
+`scripts/rename-namespaces.mjs`) the module namespaces and package tiers **align**.
+Point your `source-directories` (or, once published, your `elm.json` dependencies)
+at the package that owns each namespace you import:
 
 | Namespace(s) you import | New package |
 | --- | --- |
 | `M3e` (barrel), `M3e.Html`, `M3e.Attributes`, `M3e.Action`, `M3e.Events`, `M3e.Kind`, `M3e.Values`, `M3e.Unsafe`, `M3e.Forge`, `M3e.Internal.*` | `jackhp95/elm-m3e-core` |
-| `M3e.Component.*` (per-element surfaces) | `jackhp95/elm-m3e-elements` |
+| `M3e.Element.*` (per-element surfaces; formerly `M3e.Component.*`) | `jackhp95/elm-m3e-elements` |
 | `M3e.Build.*` (builder DSL) | `jackhp95/elm-m3e-build` |
-| `M3e.Family.*` (element-family groupings) | `jackhp95/elm-m3e-components` |
+| `M3e.Component.*` (element-family groupings; formerly `M3e.Family.*`) | `jackhp95/elm-m3e-components` |
 | `M3e.Icon` | `jackhp95/elm-m3e-icons` |
 | `M3e.Review.Facts` | `jackhp95/elm-m3e-facts` |
 
@@ -54,18 +55,28 @@ use. Most apps need at least `-core` + `-elements`; add `-build`, `-components`,
 single-package import shape. Two independent changes are landing:
 
 1. **This split (already landed).** Repoint your `M3e.*` imports to the package
-   table above. Your *module imports* (`import M3e.Component.Button`, etc.) do **not**
-   change — only which package/`src` they resolve from.
-2. **A later namespace rename (NOT yet landed — design OQ-1 / plan Task 5).** A
-   future release renames `M3e.Component.*` → `M3e.Element.*` and
-   `M3e.Family.*` → `M3e.Component.*` so the package tier and the module namespace
-   align (`elm-m3e-elements` ⇄ `M3e.Element.*`, `elm-m3e-components` ⇄
-   `M3e.Component.*`). That release will **ship a `scripts/rename-namespaces.mjs`
-   migration script** that applies the full old→new map in a single atomic pass over
-   a target `.elm` tree — run it once against `buildoc` when it lands. Do **not**
-   hand-rename ahead of it; a naive sequential `Component→Element` then
-   `Family→Component` corrupts the result (the second pass re-captures the freshly
-   written `Element`).
+   table above — which package/`src` each namespace resolves from moved with the
+   split; the module *names* then also moved with the rename in change 2 below
+   (e.g. `import M3e.Component.Button` is now `import M3e.Element.Button`).
+2. **The namespace rename (LANDED — design OQ-1 / plan Task 7).** This release
+   renames `M3e.Component.*` → `M3e.Element.*` and `M3e.Family.*` → `M3e.Component.*`
+   so the package tier and the module namespace align (`elm-m3e-elements` ⇄
+   `M3e.Element.*`, `elm-m3e-components` ⇄ `M3e.Component.*`). Run the shipped
+   **`scripts/rename-namespaces.mjs`** migration script once against your own tree:
+
+   ```sh
+   node scripts/rename-namespaces.mjs path/to/your/src           # apply in place
+   node scripts/rename-namespaces.mjs --dry path/to/your/src     # preview only
+   node scripts/rename-namespaces.mjs --selftest                 # prove the atomicity guarantee
+   ```
+
+   It applies the full old→new map in a **single atomic pass** per `.elm` file
+   (also handles `TypedHtml.Component.*` → `TypedHtml.Element.*` for the sibling
+   HTML foundation). Do **not** hand-rename, and do **not** run it twice: a naive
+   sequential `Component→Element` then `Family→Component` — and equally a second run
+   of this script — corrupts the result, because the freshly written `Component`
+   tokens get re-captured and pushed on to `Element`. The script's `--selftest`
+   demonstrates both the single-pass guarantee and the run-exactly-once property.
 
 ## Registry publishing
 

@@ -30,7 +30,7 @@
   },
   "_families": {
     "lib": "M3e",
-    "namespace": "Family",
+    "namespace": "Component",
     "package": {
       "dir": "../elm-m3e-components",
       "name": "jackhp95/elm-m3e-components",

@@ -2,7 +2,7 @@ module M3e.Internal.Types.Radio exposing (Is, Attrs, ChildAdmittedBy, Builder, A
 
 {-| Type definitions for Radio. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Radio` surface both re-export these, so they live in
+`M3e.Element.Radio` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

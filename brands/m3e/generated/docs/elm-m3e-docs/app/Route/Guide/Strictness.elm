@@ -19,7 +19,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Kind
 import M3e.Values as Value
 import Pages.Url
@@ -85,7 +85,7 @@ button; they only change what you're allowed to leave out.
 saveButton : Element { s | button : M3e.Kind.Brand } adm_ msg
 saveButton =
     M3e.button [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Button.icon (M3e.icon [ TA.name "save" ] [])
+        [ M3e.Element.Button.icon (M3e.icon [ TA.name "save" ] [])
         , M3e.text "Save"
         ]
 
@@ -147,7 +147,7 @@ shapesCode =
 M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Save" ]
 
 -- required-record form (`component`) — the compiler now DEMANDS the parts a button can't do without
-M3e.Component.Button.component
+M3e.Element.Button.component
     { content = M3e.text "Save", action = M3e.Action.onClick SaveClicked }
     []
     []
@@ -162,7 +162,7 @@ recordError : String
 recordError =
     """The 1st argument to `component` is not what I expect:
 
-4| M3e.Component.Button.component { content = M3e.text "Save" } [] []
+4| M3e.Element.Button.component { content = M3e.text "Save" } [] []
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This argument is a record of type:
 

@@ -2,7 +2,7 @@ module Sl.Internal.Types.BreadcrumbItem exposing (Is, Attrs, ChildAdmittedBy, Ta
 
 {-| Type definitions for BreadcrumbItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.BreadcrumbItem` surface both re-export these, so they live in
+`Sl.Element.BreadcrumbItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Target, Builder, AttrCaps

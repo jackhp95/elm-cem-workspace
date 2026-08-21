@@ -18,7 +18,7 @@ import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Component.Switch as Component
+import M3e.Element.Switch as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)

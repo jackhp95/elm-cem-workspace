@@ -27,12 +27,12 @@ import ExampleNav
 import Head
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Card
-import M3e.Component.ListItem
-import M3e.Component.ListOption
-import M3e.Component.NavItem
-import M3e.Component.SelectionList
+import M3e.Element.AppBar
+import M3e.Element.Card
+import M3e.Element.ListItem
+import M3e.Element.ListOption
+import M3e.Element.NavItem
+import M3e.Element.SelectionList
 import M3e.Kind
 import M3e.Values as Value
 import PagesMsg exposing (PagesMsg)
@@ -40,7 +40,7 @@ import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -170,7 +170,7 @@ today; `min-h-0` states it directly so the invariant does not hinge on the
 overflow class staying put.
 
 -}
-screen : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+screen : Model -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 screen model =
     TypedHtml.div
         [ TA.class "flex flex-col md:flex-row h-dvh w-full overflow-hidden" ]
@@ -184,7 +184,7 @@ screen model =
         ]
 
 
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -204,7 +204,7 @@ exampleFooter =
 appBar : Element { s | appBar : M3e.Kind.Brand } adm_ msg
 appBar =
     M3e.appBar []
-        [ M3e.Component.AppBar.title (M3e.text "Contacts") ]
+        [ M3e.Element.AppBar.title (M3e.text "Contacts") ]
 
 
 
@@ -216,7 +216,7 @@ adaptivity: a single column on compact (list, then detail beneath), two panes on
 `md:` and up (a fixed `md:w-80` list beside a filling detail). Both panes scroll
 independently.
 -}
-body : Model -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+body : Model -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 body model =
     TypedHtml.div [ TA.class "flex flex-1 flex-col overflow-hidden md:flex-row" ]
         [ listPane model.selected
@@ -232,11 +232,11 @@ instead of a hand-painted class. `hideSelectionIndicator` keeps rows plain —
 no radio dot — since this list has no trailing content the built-in indicator
 would otherwise swap out.
 -}
-listPane : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+listPane : Int -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 listPane selected =
     TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto md:w-80 md:flex-none md:shrink-0" ]
         [ M3e.selectionList
-            [ M3e.Component.SelectionList.hideSelectionIndicator True ]
+            [ M3e.Element.SelectionList.hideSelectionIndicator True ]
             (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                 (List.indexedMap (contactRow selected) contacts)
             )
@@ -252,18 +252,18 @@ stopgap is needed.
 contactRow : Int -> Int -> Contact -> Element { s | listOption : M3e.Kind.Brand } adm_ Msg
 contactRow selected index contact =
     M3e.listOption
-        [ M3e.Component.ListOption.selected (index == selected)
-        , M3e.Component.ListOption.onClick (SelectContact index)
+        [ M3e.Element.ListOption.selected (index == selected)
+        , M3e.Element.ListOption.onClick (SelectContact index)
         ]
-        [ M3e.Component.ListOption.leading (M3e.avatar [] [ M3e.text contact.initials ])
+        [ M3e.Element.ListOption.leading (M3e.avatar [] [ M3e.text contact.initials ])
         , M3e.text contact.name
-        , M3e.Component.ListOption.supportingText (M3e.text contact.role)
+        , M3e.Element.ListOption.supportingText (M3e.text contact.role)
         ]
 
 
 {-| The detail pane — fills the rest on `md:`, stacks beneath the list on compact.
 -}
-detailPane : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+detailPane : Contact -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 detailPane contact =
     TypedHtml.div [ TA.class "min-h-0 flex-1 overflow-y-auto p-4 md:p-8" ]
         [ TypedHtml.div [ TA.class "mx-auto flex w-full max-w-xl flex-col gap-6" ]
@@ -273,7 +273,7 @@ detailPane contact =
         ]
 
 
-header : Contact -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+header : Contact -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 header contact =
     TypedHtml.div [ TA.class "flex flex-col items-center gap-3 pt-2" ]
         [ M3e.avatar [] [ M3e.text contact.initials ]
@@ -290,7 +290,7 @@ detailCard contact =
         [ M3e.Attributes.variant Value.filled
         , M3e.Attributes.class "m3e-card-shape-md-corner-large"
         ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.content
             (M3e.list []
                 (List.intersperse (M3e.divider [ M3e.Attributes.inset True ] [])
                     [ fieldRow "mail" "Email" contact.email
@@ -305,9 +305,9 @@ detailCard contact =
 fieldRow : String -> String -> String -> Element { s | listItem : M3e.Kind.Brand } adm_ msg
 fieldRow iconName label value =
     M3e.listItem []
-        [ M3e.Component.ListItem.leading (M3e.icon [ TA.name iconName ] [])
+        [ M3e.Element.ListItem.leading (M3e.icon [ TA.name iconName ] [])
         , M3e.text label
-        , M3e.Component.ListItem.supportingText (M3e.text value)
+        , M3e.Element.ListItem.supportingText (M3e.text value)
         ]
 
 
@@ -348,6 +348,6 @@ navItem : { icon : String, label : String } -> Element { s | navItem : M3e.Kind.
 navItem d =
     M3e.navItem
         [ M3e.Attributes.selected (d.label == "Contacts") ]
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name d.icon ] [])
         , M3e.text d.label
         ]

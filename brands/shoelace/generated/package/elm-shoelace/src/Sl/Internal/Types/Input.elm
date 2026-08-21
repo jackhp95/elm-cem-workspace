@@ -2,7 +2,7 @@ module Sl.Internal.Types.Input exposing (Is, Attrs, ChildAdmittedBy, Autocapital
 
 {-| Type definitions for Input. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Input` surface both re-export these, so they live in
+`Sl.Element.Input` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Autocapitalize, Autocorrect, Enterkeyhint, Inputmode, Size, Type, Builder, AttrCaps

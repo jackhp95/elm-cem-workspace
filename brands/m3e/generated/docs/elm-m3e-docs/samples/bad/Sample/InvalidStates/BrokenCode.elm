@@ -7,14 +7,14 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Values as Value
 
 
 shown0_ =
     M3e.button [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
+        [ M3e.Element.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
         , M3e.text "Save"
         ]

@@ -2,7 +2,7 @@ module Sl.Internal.Types.Button exposing (Is, Attrs, ChildAdmittedBy, Formenctyp
 
 {-| Type definitions for Button. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Button` surface both re-export these, so they live in
+`Sl.Element.Button` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Formenctype, Formmethod, Formtarget, Size, Target, Type, Variant, Builder, AttrCaps

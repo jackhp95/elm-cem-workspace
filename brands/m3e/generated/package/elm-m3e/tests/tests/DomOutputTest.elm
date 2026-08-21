@@ -18,7 +18,7 @@ here rather than only in the Playwright runtime harness.
 Ported to the phantom substrate: the two-step `HtmlIr.Element.toNode` then
 `HtmlIr.Node.toHtml` render path collapsed into `M3e.toHtml`; attribute setters
 moved to `M3e.Values` (variant tokens) and the per-component modules
-(`M3e.Component.Icon.name`, `M3e.Component.Button.icon`, `M3e.Component.ListItem.leading`); `aria-label` has no
+(`M3e.Element.Icon.name`, `M3e.Element.Button.icon`, `M3e.Element.ListItem.leading`); `aria-label` has no
 typed setter, so it crosses the library's lint-fenced escape
 `M3e.Unsafe.Attributes.fromHtmlAttribute` (formerly the userland `Seam.asAttribute`,
 now deleted along with the rest of `docs/kit/Seam.elm`). Slotted text was the
@@ -32,9 +32,9 @@ import Expect
 import Html.Attributes as HtmlAttr
 import M3e
 import M3e.Action as Action
-import M3e.Component.Button
-import M3e.Component.Icon
-import M3e.Component.ListItem
+import M3e.Element.Button
+import M3e.Element.Icon
+import M3e.Element.ListItem
 import M3e.Unsafe.Attributes
 import M3e.Values as Value
 import Test exposing (Test, describe, test)
@@ -65,7 +65,7 @@ suite =
             , test "M3e.iconButton renders an <m3e-icon-button> wrapping an <m3e-icon>" <|
                 \_ ->
                     M3e.iconButton [ M3e.Unsafe.Attributes.fromHtmlAttribute (HtmlAttr.attribute "aria-label" "Back") ]
-                        [ M3e.icon [ M3e.Component.Icon.name "arrow_back" ] [] ]
+                        [ M3e.icon [ M3e.Element.Icon.name "arrow_back" ] [] ]
                         |> toQuery
                         |> Expect.all
                             [ Query.has [ Selector.tag "m3e-icon-button" ]
@@ -75,7 +75,7 @@ suite =
         , describe "attribute and token emission"
             [ test "a variant token becomes a variant= attribute on the host" <|
                 \_ ->
-                    M3e.button [ M3e.Component.Button.variant Value.filled ] [ M3e.text "Go" ]
+                    M3e.button [ M3e.Element.Button.variant Value.filled ] [ M3e.text "Go" ]
                         |> toQuery
                         |> Query.has
                             [ Selector.tag "m3e-button"
@@ -84,30 +84,30 @@ suite =
             , test "an aria-label setter becomes an aria-label attribute" <|
                 \_ ->
                     M3e.iconButton [ M3e.Unsafe.Attributes.fromHtmlAttribute (HtmlAttr.attribute "aria-label" "Close") ]
-                        [ M3e.icon [ M3e.Component.Icon.name "close" ] [] ]
+                        [ M3e.icon [ M3e.Element.Icon.name "close" ] [] ]
                         |> toQuery
                         |> Query.has
                             [ Selector.attribute (HtmlAttr.attribute "aria-label" "Close") ]
             , test "an icon's name setter becomes a name attribute" <|
                 \_ ->
-                    M3e.icon [ M3e.Component.Icon.name "menu" ] []
+                    M3e.icon [ M3e.Element.Icon.name "menu" ] []
                         |> toQuery
                         |> Query.has [ Selector.attribute (HtmlAttr.attribute "name" "menu") ]
             ]
         , describe "slot stamping on slotted children"
-            [ test "M3e.Component.Button.icon stamps slot=icon on the placed icon" <|
+            [ test "M3e.Element.Button.icon stamps slot=icon on the placed icon" <|
                 \_ ->
                     M3e.button []
-                        [ M3e.Component.Button.icon (M3e.icon [ M3e.Component.Icon.name "add" ] [])
+                        [ M3e.Element.Button.icon (M3e.icon [ M3e.Element.Icon.name "add" ] [])
                         , M3e.text "Add"
                         ]
                         |> toQuery
                         |> Query.find [ Selector.tag "m3e-icon" ]
                         |> Query.has [ Selector.attribute (HtmlAttr.attribute "slot" "icon") ]
-            , test "M3e.Component.ListItem.leading stamps slot=leading on the placed content" <|
+            , test "M3e.Element.ListItem.leading stamps slot=leading on the placed content" <|
                 \_ ->
                     M3e.listItem []
-                        [ M3e.Component.ListItem.leading (M3e.icon [ M3e.Component.Icon.name "star" ] [])
+                        [ M3e.Element.ListItem.leading (M3e.icon [ M3e.Element.Icon.name "star" ] [])
                         , M3e.text "Starred"
                         ]
                         |> toQuery
@@ -134,11 +134,11 @@ suite =
                 \_ ->
                     M3e.list []
                         [ M3e.listItem []
-                            [ M3e.Component.ListItem.leading (M3e.icon [ M3e.Component.Icon.name "star" ] [])
+                            [ M3e.Element.ListItem.leading (M3e.icon [ M3e.Element.Icon.name "star" ] [])
                             , M3e.text "one"
                             ]
                         , M3e.listItem []
-                            [ M3e.Component.ListItem.leading (M3e.icon [ M3e.Component.Icon.name "star" ] [])
+                            [ M3e.Element.ListItem.leading (M3e.icon [ M3e.Element.Icon.name "star" ] [])
                             , M3e.text "two"
                             ]
                         ]
@@ -152,14 +152,14 @@ suite =
             -- attaches its click handler to `this.parentElement`, and toggles/
             -- anchors against `this.parentElement`. So it MUST be emitted as a
             -- CHILD of the clickable host, wrapping the label — never as an outer
-            -- wrapper around the host. `M3e.Component.Button.component` does this by placing
+            -- wrapper around the host. `M3e.Element.Button.component` does this by placing
             -- `Action.wrapContent action content` among the `m3e-button` children.
             -- These tests pin that nesting direction so a regen or an `Action`
             -- refactor that inverted it (host inside the toggle) fails loudly here
             -- instead of silently mis-anchoring the popup at runtime.
             [ test "togglesDatepicker emits <m3e-datepicker-toggle for> as a child of the host, wrapping the label" <|
                 \_ ->
-                    M3e.Component.Button.component
+                    M3e.Element.Button.component
                         { content = M3e.text "Pick date"
                         , action = Action.togglesDatepicker "cal1"
                         }
@@ -181,7 +181,7 @@ suite =
                     -- Also a compile-lock: `togglesTimepicker` only type-checks here
                     -- if `M3e.Button`'s ActionCaps admits `timepickerToggle`, i.e.
                     -- the config mirror landed in the required.action roster too.
-                    M3e.Component.Button.component
+                    M3e.Element.Button.component
                         { content = M3e.text "Pick time"
                         , action = Action.togglesTimepicker "clock1"
                         }
@@ -198,7 +198,7 @@ suite =
                             ]
             , test "the toggle is INNER — no clickable host nested inside it (anti-inversion)" <|
                 \_ ->
-                    M3e.Component.Button.component
+                    M3e.Element.Button.component
                         { content = M3e.text "Pick date"
                         , action = Action.togglesDatepicker "cal1"
                         }
@@ -210,7 +210,7 @@ suite =
                         |> Query.count (Expect.equal 0)
             , test "an opens-trigger wrapper (opensMenu) nests the same way — the whole family shares the contract" <|
                 \_ ->
-                    M3e.Component.Button.component
+                    M3e.Element.Button.component
                         { content = M3e.text "Open menu"
                         , action = Action.opensMenu "menu1"
                         }

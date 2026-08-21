@@ -132,7 +132,7 @@ surfacesOf brand tokenModule actionModule_ comp =
             (memberRef brand comp).module_
 
         topSurfaceModule =
-            brand.lib ++ ".Component." ++ surfaceMemberName
+            brand.lib ++ ".Element." ++ surfaceMemberName
 
         buildSurfaceModule =
             brand.lib ++ ".Build." ++ surfaceMemberName
@@ -273,7 +273,7 @@ encodeComponent brand tokenModule actionModule_ comp =
         -- snippet (a Button in a Dialog, the `icon` slot placer). The pre-R-025
         -- flat `<Lib>.<Member>` no longer exists, so it must carry the infix.
         moduleName =
-            brand.lib ++ ".Component." ++ ref.module_
+            brand.lib ++ ".Element." ++ ref.module_
 
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")

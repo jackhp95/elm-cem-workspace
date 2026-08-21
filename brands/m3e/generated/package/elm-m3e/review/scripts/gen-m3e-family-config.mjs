@@ -13,8 +13,8 @@
 //
 // "Flattened" means each family's `root` (if any) plus every `members[].component`
 // collapsed into one `members : List String` — the exact set `gen-family-package.js`
-// makes the family module `import M3e.Component.<X>` for (verified 1:1 against
-// every currently-generated `M3e.Family.*.elm` when this generator was written).
+// makes the family module `import M3e.Element.<X>` for (verified 1:1 against
+// every currently-generated `M3e.Component.*.elm` when this generator was written).
 //
 // Run `node review/scripts/gen-m3e-family-config.mjs` to regenerate; `--check`
 // re-runs to a temp file and byte-compares, so committed drift is a gate failure
@@ -68,7 +68,7 @@ The M3e family config (\`config/slots.json\`'s \`_families.families\`), flattene
 to the shape \`NoFamilyMemberDrift\` (jackhp95/elm-review-cem) expects: one entry
 per family, \`members\` carrying the family's \`root\` (if any) plus every
 declared member's component name — the exact set \`gen-family-package.js\`
-imports from \`M3e.Component.*\` into the generated \`M3e.Family.<F>\` module.
+imports from \`M3e.Element.*\` into the generated \`M3e.Component.<F>\` module.
 ${names.length} families.
 
 @docs families

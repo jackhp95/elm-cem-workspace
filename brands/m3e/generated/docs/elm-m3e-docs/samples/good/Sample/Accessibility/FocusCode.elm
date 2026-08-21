@@ -7,9 +7,9 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e
+import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Dialog
+import M3e.Element.Dialog
 import Sample.Support exposing (Msg(..), confirmButtons, model)
 
 
@@ -17,9 +17,9 @@ import Sample.Support exposing (Msg(..), confirmButtons, model)
 shown0_ =
     M3e.dialog
         [ M3e.Attributes.open model.dialogOpen
-        , M3e.Component.Dialog.onClosed CloseDialog
+        , M3e.Element.Dialog.onClosed CloseDialog
         ]
-        [ M3e.Component.Dialog.header (M3e.text "Delete file?")
+        [ M3e.Element.Dialog.header (M3e.text "Delete file?")
         , M3e.text "This cannot be undone."
-        , M3e.Component.Dialog.actions confirmButtons
+        , M3e.Element.Dialog.actions confirmButtons
         ]

@@ -24,7 +24,11 @@ they came from the same machine.
 > (`elm-m3e-core`/`-elements`/`-build`/`-components`/`-icons`/`-facts`); this
 > directory survives only as the generation-staging root. See
 > [`PACKAGES-MOVED.md`](./PACKAGES-MOVED.md) for the namespace→package table and the
-> consumer migration path (design OQ-5).
+> consumer migration path (design OQ-5). The module namespaces were also renamed
+> (`M3e.Component.*`→`M3e.Element.*`, `M3e.Family.*`→`M3e.Component.*`); migrate an
+> external consumer's `.elm` tree with the shipped
+> [`scripts/rename-namespaces.mjs`](./scripts/rename-namespaces.mjs) (atomic
+> single-pass — run once; see `--selftest`).
 
 ## What's in the repo
 

@@ -43,7 +43,8 @@ type alias ConfigResult =
 
     -- G1 (generator-consolidation): the `_iconModule`/`_families` config
     -- blocks, decoded so the Elm pass can eventually emit `<Lib>.Icon`/
-    -- `<Lib>.Family.*` itself (G2/G3) instead of the JS generators
+    -- `<Lib>.<namespace>.*` family modules (namespace from `_families.namespace`,
+    -- `Component` post Task-7 rename) itself (G2/G3) instead of the JS generators
     -- re-JSON-parsing the same config files a second time. `Nothing` when the
     -- key is absent — both are opt-in, mirroring the JS generators' own
     -- silent no-op when their config block is missing.

@@ -17,7 +17,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Button
+import M3e.Element.Button
 import M3e.Kind
 import M3e.Values as Value
 import Pages.Url
@@ -89,7 +89,7 @@ shown as real compiler text, not built here.
 savedButton : Element { s | button : M3e.Kind.Brand } adm_ msg
 savedButton =
     M3e.button [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Button.icon (M3e.icon [ TA.name "save" ] [])
+        [ M3e.Element.Button.icon (M3e.icon [ TA.name "save" ] [])
         , M3e.text "Save"
         ]
 
@@ -154,7 +154,7 @@ view app _ =
 brokenCode : String
 brokenCode =
     """M3e.button [ M3e.Attributes.variant Value.filled ]
-    [ M3e.Component.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
+    [ M3e.Element.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
     , M3e.text "Save"
     ]"""
 
@@ -163,7 +163,7 @@ errorText : String
 errorText =
     """The 1st argument to `icon` is not what I expect:
 
-9|     [ M3e.Component.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
+9|     [ M3e.Element.Button.icon (M3e.chip [] [ M3e.text "not an icon" ])
                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This `chip` call produces:
 

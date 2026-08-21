@@ -11,11 +11,11 @@ import HtmlIr.Node
 import TypedHtml as H
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as At
-import TypedHtml.Component.Button as Button
-import TypedHtml.Component.Grouping
-import TypedHtml.Component.Input as Input
-import TypedHtml.Component.Select as Select
-import TypedHtml.Component.Text as Text
+import TypedHtml.Element.Button as Button
+import TypedHtml.Element.Grouping
+import TypedHtml.Element.Input as Input
+import TypedHtml.Element.Select as Select
+import TypedHtml.Element.Text as Text
 import TypedHtml.Events as Ev
 import TypedHtml.Unsafe as Unsafe
 import TypedHtml.Values as V
@@ -27,7 +27,7 @@ type Msg
     | GotChecked Bool
 
 
-page : HtmlIr.Element.Element (TypedHtml.Component.Grouping.DivIs s) admittedBy Msg
+page : HtmlIr.Element.Element (TypedHtml.Element.Grouping.DivIs s) admittedBy Msg
 page =
     H.div [ At.class "page", Aria.role Aria.navigation, Aria.label "Main" ]
         [ -- AfterTable: co-located table family, no inner annotations
@@ -121,7 +121,7 @@ page =
         -- NAME had to diverge and not just the capability.
         , H.meter [ Text.valueNumeric 0.6 ] [ H.text "60%" ]
         , H.data [ Text.value "42" ] [ H.text "forty-two" ]
-        , H.ul [] [ H.li [ TypedHtml.Component.Grouping.valueOrdinal 2 ] [ H.text "second" ] ]
+        , H.ul [] [ H.li [ TypedHtml.Element.Grouping.valueOrdinal 2 ] [ H.text "second" ] ]
 
         -- The other side of the split: `<input>` IS controlled, so `At.value` writes
         -- its live DOM property, `At.defaultValue` writes the content attribute HTML

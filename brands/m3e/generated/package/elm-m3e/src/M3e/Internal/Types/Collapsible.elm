@@ -2,7 +2,7 @@ module M3e.Internal.Types.Collapsible exposing (Is, Attrs, ChildAdmittedBy, Orie
 
 {-| Type definitions for Collapsible. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Collapsible` surface both re-export these, so they live in
+`M3e.Element.Collapsible` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Orientation, Builder, AttrCaps

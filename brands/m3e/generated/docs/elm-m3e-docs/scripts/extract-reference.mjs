@@ -240,14 +240,16 @@ function setupScratch() {
   // never mutating the real library source (#187).
   fs.writeFileSync(path.join(SCRATCH, "src/M3e.elm"), barrelSource());
 
-  // Component sub-modules (M3e.Component.*) — these are the per-component
+  // Component sub-modules (M3e.Element.*) — these are the per-component
   // reference entries that map to categories.json slugs like "button", "theme".
-  const SRC_M3E_COMPONENT = path.join(SRC_M3E, "Component");
+  // (Namespace rename, reconciliation Task 7: the element-tier modules moved
+  // from M3e.Component.* to M3e.Element.*.)
+  const SRC_M3E_COMPONENT = path.join(SRC_M3E, "Element");
   const componentModules = fs.existsSync(SRC_M3E_COMPONENT)
     ? fs
         .readdirSync(SRC_M3E_COMPONENT)
         .filter((f) => f.endsWith(".elm"))
-        .map((f) => "M3e.Component." + f.replace(/\.elm$/, ""))
+        .map((f) => "M3e.Element." + f.replace(/\.elm$/, ""))
     : [];
 
   // Builder modules (M3e.Build.*) — the pipe API surface behind the Builder tab.
@@ -268,7 +270,8 @@ function setupScratch() {
       .filter((f) => f.endsWith(".elm"))
       .map((f) => "M3e." + f.replace(/\.elm$/, ""))
       .filter((m) => !NOT_EXPOSED.has(m)),
-    // Per-component modules under M3e.Component.* (Phase B layout).
+    // Per-component modules under M3e.Element.* (Phase B layout; renamed from
+    // M3e.Component.* in reconciliation Task 7).
     ...componentModules,
     // Builder modules under M3e.Build.* (the Builder-tab layer source).
     ...buildModules,
@@ -461,9 +464,11 @@ function cemMembers(decl) {
 //    tabs) plus `layers.{m3e,components,builder,raw}`, one per API-reference tab.
 function moduleEntry(mod, modulesByName, barrelSlice) {
   const name = mod.name.replace(/^M3e\./, "");
-  // For M3e.Component.Button → slug "button" (strip intermediate namespace so
+  // For M3e.Element.Button → slug "button" (strip intermediate namespace so
   // categories.json keys stay simple). Top-level M3e.Action → slug "action" unchanged.
-  const slug = name.replace(/^Component\./, "").toLowerCase();
+  // (Namespace rename, reconciliation Task 7: element-tier modules moved from the
+  // M3e.Component.* to the M3e.Element.* namespace.)
+  const slug = name.replace(/^Element\./, "").toLowerCase();
 
   // `component` is the per-component constructor in the 5-package split; `view`
   // is the pre-rename name, kept so an older tree still classifies.
@@ -582,20 +587,20 @@ const modulesByName = new Map(modules.map((m) => [m.name, m]));
 // ownership rule matches against.
 const componentSlugs = new Set(
   modules
-    .filter((m) => /^M3e\.Component\./.test(m.name))
-    .map((m) => m.name.replace(/^M3e\.Component\./, "").toLowerCase())
+    .filter((m) => /^M3e\.Element\./.test(m.name))
+    .map((m) => m.name.replace(/^M3e\.Element\./, "").toLowerCase())
 );
 const barrelSlice = barrelSliceByOwner(modulesByName.get("M3e"), componentSlugs);
 
 const components = modules
-  // Keep the bare `M3e` barrel plus every `M3e.Component.*` page module, plus any
+  // Keep the bare `M3e` barrel plus every `M3e.Element.*` page module, plus any
   // other top-level `M3e.*` module that maps to a page — but NOT `M3e.Build.*`,
   // which is consumed only as a layer source and must never surface as its own
   // page (no `build`-prefixed slug in categories.json).
   .filter(
     (m) =>
       m.name === "M3e" ||
-      /^M3e\.Component\./.test(m.name) ||
+      /^M3e\.Element\./.test(m.name) ||
       (/^M3e\./.test(m.name) && !/^M3e\.Build\./.test(m.name))
   )
   .map((m) => moduleEntry(m, modulesByName, barrelSlice))

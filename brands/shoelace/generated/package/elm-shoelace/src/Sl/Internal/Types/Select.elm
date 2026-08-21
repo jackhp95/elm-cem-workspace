@@ -2,7 +2,7 @@ module Sl.Internal.Types.Select exposing (Is, Attrs, ChildAdmittedBy, Placement,
 
 {-| Type definitions for Select. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Select` surface both re-export these, so they live in
+`Sl.Element.Select` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Placement, Size, Builder, AttrCaps

@@ -6,7 +6,7 @@ The M3e family config (`config/slots.json`'s `_families.families`), flattened
 to the shape `NoFamilyMemberDrift` (jackhp95/elm-review-cem) expects: one entry
 per family, `members` carrying the family's `root` (if any) plus every
 declared member's component name — the exact set `gen-family-package.js`
-imports from `M3e.Component.*` into the generated `M3e.Family.<F>` module.
+imports from `M3e.Element.*` into the generated `M3e.Component.<F>` module.
 21 families.
 
 @docs families

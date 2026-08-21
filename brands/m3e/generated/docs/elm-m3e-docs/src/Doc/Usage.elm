@@ -15,14 +15,14 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
-import M3e.Component.Heading
+import M3e.Element.Card
+import M3e.Element.Heading
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import TypedHtml.Kind
 
 
@@ -147,7 +147,7 @@ mounts a single `m3e-toc` that discovers these headings (and everything
 else on the page) at runtime; nothing here needs to enumerate them.
 
 -}
-usageBlocks : Surface -> List UsageExample -> List (Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg)
+usageBlocks : Surface -> List UsageExample -> List (Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg)
 usageBlocks activeSurface examples =
     case examples of
         [] ->
@@ -156,8 +156,8 @@ usageBlocks activeSurface examples =
         _ ->
             [ TypedHtml.div [ TA.class "space-y-6" ]
                 (M3e.heading
-                    [ M3e.Component.Heading.variant Value.headline
-                    , M3e.Component.Heading.size Value.small
+                    [ M3e.Element.Heading.variant Value.headline
+                    , M3e.Element.Heading.size Value.small
                     , M3e.Attributes.level 2
                     , M3e.Attributes.id (Doc.slugify "Usage")
                     ]
@@ -181,8 +181,8 @@ sectionBlock activeSurface ( sec, examples ) =
 
             else
                 [ M3e.heading
-                    [ M3e.Component.Heading.variant Value.title
-                    , M3e.Component.Heading.size Value.large
+                    [ M3e.Element.Heading.variant Value.title
+                    , M3e.Element.Heading.size Value.large
                     , M3e.Attributes.level 3
                     , M3e.Attributes.id (Doc.slugify sec)
                     ]
@@ -203,7 +203,7 @@ panel track) â€” the same header/content anatomy `/components/card/` documents â
 tabs read as controlling that card rather than floating between it and the preview
 above.
 -}
-exampleBlock : Surface -> UsageExample -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ Msg
+exampleBlock : Surface -> UsageExample -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ Msg
 exampleBlock activeSurface ex =
     let
         offered : List Surface
@@ -222,8 +222,8 @@ exampleBlock activeSurface ex =
         [ TypedHtml.p [ TA.class "max-w-2xl" ] [ M3e.text ex.title ]
         , Doc.showcase (Doc.rawPreview ex.html)
         , M3e.card []
-            [ M3e.Component.Card.header (surfaceTabs surface ex)
-            , M3e.Component.Card.content
+            [ M3e.Element.Card.header (surfaceTabs surface ex)
+            , M3e.Element.Card.content
                 (Doc.Slider.slidingPanels
                     (activeIndexFor surface ex)
                     (List.map (\( _, l ) -> codeFor l ex) (surfacesFor ex))
@@ -338,10 +338,10 @@ surface is identical to `M3e` by design, so we show a short rationale instead of
 hollow duplicate.
 
 -}
-codeFor : Surface -> UsageExample -> Element (M3e.Component.Card.Is s) admittedBy msg
+codeFor : Surface -> UsageExample -> Element (M3e.Element.Card.Is s) admittedBy msg
 codeFor surface ex =
     let
-        elmOrHtml : Maybe String -> Element (M3e.Component.Card.Is s) admittedBy msg
+        elmOrHtml : Maybe String -> Element (M3e.Element.Card.Is s) admittedBy msg
         elmOrHtml field =
             case field of
                 Just code ->
@@ -350,7 +350,7 @@ codeFor surface ex =
                 Nothing ->
                     Doc.codeBlock Doc.Xml ex.html
 
-        recordBuildCode : Maybe String -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
+        recordBuildCode : Maybe String -> String -> Element (M3e.Element.Card.Is s) admittedBy msg
         recordBuildCode field surfaceName =
             case field of
                 Just code ->
@@ -387,11 +387,11 @@ an inner div (containment for when this panel is the inactive/inert panel in a
 than the whole card.
 
 -}
-identicalSurfaceNote : String -> Element (M3e.Component.Card.Is s) admittedBy msg
+identicalSurfaceNote : String -> Element (M3e.Element.Card.Is s) admittedBy msg
 identicalSurfaceNote surface =
     M3e.card
         [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "overflow-x-auto" ]
                 [ TypedHtml.p []
                     [ M3e.text

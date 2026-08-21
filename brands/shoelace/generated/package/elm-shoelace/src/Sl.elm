@@ -88,7 +88,7 @@ import Sl.Internal.Types.TreeItem
 import Sl.Internal.Types.VisuallyHidden
 
 
-{-| See `Sl.Component.Alert.component`.
+{-| See `Sl.Element.Alert.component`.
 -}
 alert :
     List (Attr Sl.Internal.Types.Alert.Attrs msg)
@@ -98,7 +98,7 @@ alert attrs children =
     Ir.fromNode (Ir.node "sl-alert" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.AnimatedImage.component`.
+{-| See `Sl.Element.AnimatedImage.component`.
 -}
 animatedImage :
     List (Attr Sl.Internal.Types.AnimatedImage.Attrs msg)
@@ -108,7 +108,7 @@ animatedImage attrs children =
     Ir.fromNode (Ir.node "sl-animated-image" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Animation.component`.
+{-| See `Sl.Element.Animation.component`.
 -}
 animation :
     List (Attr Sl.Internal.Types.Animation.Attrs msg)
@@ -118,7 +118,7 @@ animation attrs children =
     Ir.fromNode (Ir.node "sl-animation" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Avatar.component`.
+{-| See `Sl.Element.Avatar.component`.
 -}
 avatar :
     List (Attr Sl.Internal.Types.Avatar.Attrs msg)
@@ -128,7 +128,7 @@ avatar attrs children =
     Ir.fromNode (Ir.node "sl-avatar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Badge.component`.
+{-| See `Sl.Element.Badge.component`.
 -}
 badge :
     List (Attr Sl.Internal.Types.Badge.Attrs msg)
@@ -138,7 +138,7 @@ badge attrs children =
     Ir.fromNode (Ir.node "sl-badge" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Breadcrumb.component`.
+{-| See `Sl.Element.Breadcrumb.component`.
 -}
 breadcrumb :
     List (Attr Sl.Internal.Types.Breadcrumb.Attrs msg)
@@ -148,7 +148,7 @@ breadcrumb attrs children =
     Ir.fromNode (Ir.node "sl-breadcrumb" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.BreadcrumbItem.component`.
+{-| See `Sl.Element.BreadcrumbItem.component`.
 -}
 breadcrumbItem :
     List (Attr Sl.Internal.Types.BreadcrumbItem.Attrs msg)
@@ -158,7 +158,7 @@ breadcrumbItem attrs children =
     Ir.fromNode (Ir.node "sl-breadcrumb-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Button.component`.
+{-| See `Sl.Element.Button.component`.
 -}
 button :
     List (Attr Sl.Internal.Types.Button.Attrs msg)
@@ -168,7 +168,7 @@ button attrs children =
     Ir.fromNode (Ir.node "sl-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ButtonGroup.component`.
+{-| See `Sl.Element.ButtonGroup.component`.
 -}
 buttonGroup :
     List (Attr Sl.Internal.Types.ButtonGroup.Attrs msg)
@@ -178,7 +178,7 @@ buttonGroup attrs children =
     Ir.fromNode (Ir.node "sl-button-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Card.component`.
+{-| See `Sl.Element.Card.component`.
 -}
 card :
     List (Attr Sl.Internal.Types.Card.Attrs msg)
@@ -188,7 +188,7 @@ card attrs children =
     Ir.fromNode (Ir.node "sl-card" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Carousel.component`.
+{-| See `Sl.Element.Carousel.component`.
 -}
 carousel :
     List (Attr Sl.Internal.Types.Carousel.Attrs msg)
@@ -198,7 +198,7 @@ carousel attrs children =
     Ir.fromNode (Ir.node "sl-carousel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.CarouselItem.component`.
+{-| See `Sl.Element.CarouselItem.component`.
 -}
 carouselItem :
     List (Attr Sl.Internal.Types.CarouselItem.Attrs msg)
@@ -208,7 +208,7 @@ carouselItem attrs children =
     Ir.fromNode (Ir.node "sl-carousel-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Checkbox.component`.
+{-| See `Sl.Element.Checkbox.component`.
 -}
 checkbox :
     List (Attr Sl.Internal.Types.Checkbox.Attrs msg)
@@ -218,7 +218,7 @@ checkbox attrs children =
     Ir.fromNode (Ir.node "sl-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ColorPicker.component`.
+{-| See `Sl.Element.ColorPicker.component`.
 -}
 colorPicker :
     List (Attr Sl.Internal.Types.ColorPicker.Attrs msg)
@@ -228,7 +228,7 @@ colorPicker attrs children =
     Ir.fromNode (Ir.node "sl-color-picker" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.CopyButton.component`.
+{-| See `Sl.Element.CopyButton.component`.
 -}
 copyButton :
     List (Attr Sl.Internal.Types.CopyButton.Attrs msg)
@@ -238,7 +238,7 @@ copyButton attrs children =
     Ir.fromNode (Ir.node "sl-copy-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Details.component`.
+{-| See `Sl.Element.Details.component`.
 -}
 details :
     List (Attr Sl.Internal.Types.Details.Attrs msg)
@@ -248,7 +248,7 @@ details attrs children =
     Ir.fromNode (Ir.node "sl-details" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Dialog.component`.
+{-| See `Sl.Element.Dialog.component`.
 -}
 dialog :
     List (Attr Sl.Internal.Types.Dialog.Attrs msg)
@@ -258,7 +258,7 @@ dialog attrs children =
     Ir.fromNode (Ir.node "sl-dialog" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Divider.component`.
+{-| See `Sl.Element.Divider.component`.
 -}
 divider :
     List (Attr Sl.Internal.Types.Divider.Attrs msg)
@@ -268,7 +268,7 @@ divider attrs children =
     Ir.fromNode (Ir.node "sl-divider" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Drawer.component`.
+{-| See `Sl.Element.Drawer.component`.
 -}
 drawer :
     List (Attr Sl.Internal.Types.Drawer.Attrs msg)
@@ -278,7 +278,7 @@ drawer attrs children =
     Ir.fromNode (Ir.node "sl-drawer" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Dropdown.component`.
+{-| See `Sl.Element.Dropdown.component`.
 -}
 dropdown :
     List (Attr Sl.Internal.Types.Dropdown.Attrs msg)
@@ -288,7 +288,7 @@ dropdown attrs children =
     Ir.fromNode (Ir.node "sl-dropdown" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.FormatBytes.component`.
+{-| See `Sl.Element.FormatBytes.component`.
 -}
 formatBytes :
     List (Attr Sl.Internal.Types.FormatBytes.Attrs msg)
@@ -298,7 +298,7 @@ formatBytes attrs children =
     Ir.fromNode (Ir.node "sl-format-bytes" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.FormatDate.component`.
+{-| See `Sl.Element.FormatDate.component`.
 -}
 formatDate :
     List (Attr Sl.Internal.Types.FormatDate.Attrs msg)
@@ -308,7 +308,7 @@ formatDate attrs children =
     Ir.fromNode (Ir.node "sl-format-date" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.FormatNumber.component`.
+{-| See `Sl.Element.FormatNumber.component`.
 -}
 formatNumber :
     List (Attr Sl.Internal.Types.FormatNumber.Attrs msg)
@@ -318,7 +318,7 @@ formatNumber attrs children =
     Ir.fromNode (Ir.node "sl-format-number" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Icon.component`.
+{-| See `Sl.Element.Icon.component`.
 -}
 icon :
     List (Attr Sl.Internal.Types.Icon.Attrs msg)
@@ -328,7 +328,7 @@ icon attrs children =
     Ir.fromNode (Ir.node "sl-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.IconButton.component`.
+{-| See `Sl.Element.IconButton.component`.
 -}
 iconButton :
     List (Attr Sl.Internal.Types.IconButton.Attrs msg)
@@ -338,7 +338,7 @@ iconButton attrs children =
     Ir.fromNode (Ir.node "sl-icon-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ImageComparer.component`.
+{-| See `Sl.Element.ImageComparer.component`.
 -}
 imageComparer :
     List (Attr Sl.Internal.Types.ImageComparer.Attrs msg)
@@ -348,7 +348,7 @@ imageComparer attrs children =
     Ir.fromNode (Ir.node "sl-image-comparer" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Include.component`.
+{-| See `Sl.Element.Include.component`.
 -}
 include :
     List (Attr Sl.Internal.Types.Include.Attrs msg)
@@ -358,7 +358,7 @@ include attrs children =
     Ir.fromNode (Ir.node "sl-include" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Input.component`.
+{-| See `Sl.Element.Input.component`.
 -}
 input :
     List (Attr Sl.Internal.Types.Input.Attrs msg)
@@ -368,7 +368,7 @@ input attrs children =
     Ir.fromNode (Ir.node "sl-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Menu.component`.
+{-| See `Sl.Element.Menu.component`.
 -}
 menu :
     List (Attr Sl.Internal.Types.Menu.Attrs msg)
@@ -378,7 +378,7 @@ menu attrs children =
     Ir.fromNode (Ir.node "sl-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.MenuItem.component`.
+{-| See `Sl.Element.MenuItem.component`.
 -}
 menuItem :
     List (Attr Sl.Internal.Types.MenuItem.Attrs msg)
@@ -388,7 +388,7 @@ menuItem attrs children =
     Ir.fromNode (Ir.node "sl-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.MenuLabel.component`.
+{-| See `Sl.Element.MenuLabel.component`.
 -}
 menuLabel :
     List (Attr Sl.Internal.Types.MenuLabel.Attrs msg)
@@ -398,7 +398,7 @@ menuLabel attrs children =
     Ir.fromNode (Ir.node "sl-menu-label" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.MutationObserver.component`.
+{-| See `Sl.Element.MutationObserver.component`.
 -}
 mutationObserver :
     List (Attr Sl.Internal.Types.MutationObserver.Attrs msg)
@@ -408,7 +408,7 @@ mutationObserver attrs children =
     Ir.fromNode (Ir.node "sl-mutation-observer" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Option.component`.
+{-| See `Sl.Element.Option.component`.
 -}
 option :
     List (Attr Sl.Internal.Types.Option.Attrs msg)
@@ -418,7 +418,7 @@ option attrs children =
     Ir.fromNode (Ir.node "sl-option" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Popup.component`.
+{-| See `Sl.Element.Popup.component`.
 -}
 popup :
     List (Attr Sl.Internal.Types.Popup.Attrs msg)
@@ -428,7 +428,7 @@ popup attrs children =
     Ir.fromNode (Ir.node "sl-popup" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ProgressBar.component`.
+{-| See `Sl.Element.ProgressBar.component`.
 -}
 progressBar :
     List (Attr Sl.Internal.Types.ProgressBar.Attrs msg)
@@ -438,7 +438,7 @@ progressBar attrs children =
     Ir.fromNode (Ir.node "sl-progress-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ProgressRing.component`.
+{-| See `Sl.Element.ProgressRing.component`.
 -}
 progressRing :
     List (Attr Sl.Internal.Types.ProgressRing.Attrs msg)
@@ -448,7 +448,7 @@ progressRing attrs children =
     Ir.fromNode (Ir.node "sl-progress-ring" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.QrCode.component`.
+{-| See `Sl.Element.QrCode.component`.
 -}
 qrCode :
     List (Attr Sl.Internal.Types.QrCode.Attrs msg)
@@ -458,7 +458,7 @@ qrCode attrs children =
     Ir.fromNode (Ir.node "sl-qr-code" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Radio.component`.
+{-| See `Sl.Element.Radio.component`.
 -}
 radio :
     List (Attr Sl.Internal.Types.Radio.Attrs msg)
@@ -468,7 +468,7 @@ radio attrs children =
     Ir.fromNode (Ir.node "sl-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.RadioButton.component`.
+{-| See `Sl.Element.RadioButton.component`.
 -}
 radioButton :
     List (Attr Sl.Internal.Types.RadioButton.Attrs msg)
@@ -478,7 +478,7 @@ radioButton attrs children =
     Ir.fromNode (Ir.node "sl-radio-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.RadioGroup.component`.
+{-| See `Sl.Element.RadioGroup.component`.
 -}
 radioGroup :
     List (Attr Sl.Internal.Types.RadioGroup.Attrs msg)
@@ -488,7 +488,7 @@ radioGroup attrs children =
     Ir.fromNode (Ir.node "sl-radio-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Range.component`.
+{-| See `Sl.Element.Range.component`.
 -}
 range :
     List (Attr Sl.Internal.Types.Range.Attrs msg)
@@ -498,7 +498,7 @@ range attrs children =
     Ir.fromNode (Ir.node "sl-range" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Rating.component`.
+{-| See `Sl.Element.Rating.component`.
 -}
 rating :
     List (Attr Sl.Internal.Types.Rating.Attrs msg)
@@ -508,7 +508,7 @@ rating attrs children =
     Ir.fromNode (Ir.node "sl-rating" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.RelativeTime.component`.
+{-| See `Sl.Element.RelativeTime.component`.
 -}
 relativeTime :
     List (Attr Sl.Internal.Types.RelativeTime.Attrs msg)
@@ -518,7 +518,7 @@ relativeTime attrs children =
     Ir.fromNode (Ir.node "sl-relative-time" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.ResizeObserver.component`.
+{-| See `Sl.Element.ResizeObserver.component`.
 -}
 resizeObserver :
     List (Attr Sl.Internal.Types.ResizeObserver.Attrs msg)
@@ -528,7 +528,7 @@ resizeObserver attrs children =
     Ir.fromNode (Ir.node "sl-resize-observer" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Select.component`.
+{-| See `Sl.Element.Select.component`.
 -}
 select :
     List (Attr Sl.Internal.Types.Select.Attrs msg)
@@ -538,7 +538,7 @@ select attrs children =
     Ir.fromNode (Ir.node "sl-select" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Skeleton.component`.
+{-| See `Sl.Element.Skeleton.component`.
 -}
 skeleton :
     List (Attr Sl.Internal.Types.Skeleton.Attrs msg)
@@ -548,7 +548,7 @@ skeleton attrs children =
     Ir.fromNode (Ir.node "sl-skeleton" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Spinner.component`.
+{-| See `Sl.Element.Spinner.component`.
 -}
 spinner :
     List (Attr Sl.Internal.Types.Spinner.Attrs msg)
@@ -558,7 +558,7 @@ spinner attrs children =
     Ir.fromNode (Ir.node "sl-spinner" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.SplitPanel.component`.
+{-| See `Sl.Element.SplitPanel.component`.
 -}
 splitPanel :
     List (Attr Sl.Internal.Types.SplitPanel.Attrs msg)
@@ -568,7 +568,7 @@ splitPanel attrs children =
     Ir.fromNode (Ir.node "sl-split-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Switch.component`.
+{-| See `Sl.Element.Switch.component`.
 -}
 switch :
     List (Attr Sl.Internal.Types.Switch.Attrs msg)
@@ -578,7 +578,7 @@ switch attrs children =
     Ir.fromNode (Ir.node "sl-switch" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Tab.component`.
+{-| See `Sl.Element.Tab.component`.
 -}
 tab :
     List (Attr Sl.Internal.Types.Tab.Attrs msg)
@@ -588,7 +588,7 @@ tab attrs children =
     Ir.fromNode (Ir.node "sl-tab" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.TabGroup.component`.
+{-| See `Sl.Element.TabGroup.component`.
 -}
 tabGroup :
     List (Attr Sl.Internal.Types.TabGroup.Attrs msg)
@@ -598,7 +598,7 @@ tabGroup attrs children =
     Ir.fromNode (Ir.node "sl-tab-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.TabPanel.component`.
+{-| See `Sl.Element.TabPanel.component`.
 -}
 tabPanel :
     List (Attr Sl.Internal.Types.TabPanel.Attrs msg)
@@ -608,7 +608,7 @@ tabPanel attrs children =
     Ir.fromNode (Ir.node "sl-tab-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Tag.component`.
+{-| See `Sl.Element.Tag.component`.
 -}
 tag :
     List (Attr Sl.Internal.Types.Tag.Attrs msg)
@@ -618,7 +618,7 @@ tag attrs children =
     Ir.fromNode (Ir.node "sl-tag" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Textarea.component`.
+{-| See `Sl.Element.Textarea.component`.
 -}
 textarea :
     List (Attr Sl.Internal.Types.Textarea.Attrs msg)
@@ -628,7 +628,7 @@ textarea attrs children =
     Ir.fromNode (Ir.node "sl-textarea" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Tooltip.component`.
+{-| See `Sl.Element.Tooltip.component`.
 -}
 tooltip :
     List (Attr Sl.Internal.Types.Tooltip.Attrs msg)
@@ -638,7 +638,7 @@ tooltip attrs children =
     Ir.fromNode (Ir.node "sl-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.Tree.component`.
+{-| See `Sl.Element.Tree.component`.
 -}
 tree :
     List (Attr Sl.Internal.Types.Tree.Attrs msg)
@@ -648,7 +648,7 @@ tree attrs children =
     Ir.fromNode (Ir.node "sl-tree" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.TreeItem.component`.
+{-| See `Sl.Element.TreeItem.component`.
 -}
 treeItem :
     List (Attr Sl.Internal.Types.TreeItem.Attrs msg)
@@ -658,7 +658,7 @@ treeItem attrs children =
     Ir.fromNode (Ir.node "sl-tree-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Sl.Component.VisuallyHidden.component`.
+{-| See `Sl.Element.VisuallyHidden.component`.
 -}
 visuallyHidden :
     List (Attr Sl.Internal.Types.VisuallyHidden.Attrs msg)

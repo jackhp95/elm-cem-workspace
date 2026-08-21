@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "alert"
-      , module_ = "Sl.Component.Alert"
+      , module_ = "Sl.Element.Alert"
       , enums = [ ( "countdown", [ "ltr", "rtl" ] ), ( "variant", [ "danger", "neutral", "primary", "success", "warning" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "animatedImage"
-      , module_ = "Sl.Component.AnimatedImage"
+      , module_ = "Sl.Element.AnimatedImage"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "animation"
-      , module_ = "Sl.Component.Animation"
+      , module_ = "Sl.Element.Animation"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "avatar"
-      , module_ = "Sl.Component.Avatar"
+      , module_ = "Sl.Element.Avatar"
       , enums = [ ( "loading", [ "eager", "lazy" ] ), ( "shape", [ "circle", "rounded", "square" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "badge"
-      , module_ = "Sl.Component.Badge"
+      , module_ = "Sl.Element.Badge"
       , enums = [ ( "variant", [ "danger", "neutral", "primary", "success", "warning" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "breadcrumb"
-      , module_ = "Sl.Component.Breadcrumb"
+      , module_ = "Sl.Element.Breadcrumb"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "breadcrumbItem"
-      , module_ = "Sl.Component.BreadcrumbItem"
+      , module_ = "Sl.Element.BreadcrumbItem"
       , enums = [ ( "target", [ "blank_", "parent_", "self_", "top_" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -119,7 +119,7 @@ facts =
       , usesAction = False
       }
     , { component = "button"
-      , module_ = "Sl.Component.Button"
+      , module_ = "Sl.Element.Button"
       , enums = [ ( "formenctype", [ "applicationXWwwFormUrlencoded", "multipartFormData", "textPlain" ] ), ( "formmethod", [ "get", "post" ] ), ( "formtarget", [ "blank_", "parent_", "self_", "top_" ] ), ( "size", [ "large", "medium", "small" ] ), ( "target", [ "blank_", "parent_", "self_", "top_" ] ), ( "type_", [ "button", "reset", "submit" ] ), ( "variant", [ "danger", "default", "neutral", "primary", "success", "text", "warning" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -134,7 +134,7 @@ facts =
       , usesAction = False
       }
     , { component = "buttonGroup"
-      , module_ = "Sl.Component.ButtonGroup"
+      , module_ = "Sl.Element.ButtonGroup"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -149,7 +149,7 @@ facts =
       , usesAction = False
       }
     , { component = "card"
-      , module_ = "Sl.Component.Card"
+      , module_ = "Sl.Element.Card"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -164,7 +164,7 @@ facts =
       , usesAction = False
       }
     , { component = "carousel"
-      , module_ = "Sl.Component.Carousel"
+      , module_ = "Sl.Element.Carousel"
       , enums = [ ( "orientation", [ "horizontal", "vertical" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -179,7 +179,7 @@ facts =
       , usesAction = False
       }
     , { component = "carouselItem"
-      , module_ = "Sl.Component.CarouselItem"
+      , module_ = "Sl.Element.CarouselItem"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -194,7 +194,7 @@ facts =
       , usesAction = False
       }
     , { component = "checkbox"
-      , module_ = "Sl.Component.Checkbox"
+      , module_ = "Sl.Element.Checkbox"
       , enums = [ ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -209,7 +209,7 @@ facts =
       , usesAction = False
       }
     , { component = "colorPicker"
-      , module_ = "Sl.Component.ColorPicker"
+      , module_ = "Sl.Element.ColorPicker"
       , enums = [ ( "format", [ "hex", "hsl", "hsv", "rgb" ] ), ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -224,7 +224,7 @@ facts =
       , usesAction = False
       }
     , { component = "copyButton"
-      , module_ = "Sl.Component.CopyButton"
+      , module_ = "Sl.Element.CopyButton"
       , enums = [ ( "tooltipPlacement", [ "bottom", "left", "right", "top" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -239,7 +239,7 @@ facts =
       , usesAction = False
       }
     , { component = "details"
-      , module_ = "Sl.Component.Details"
+      , module_ = "Sl.Element.Details"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -254,7 +254,7 @@ facts =
       , usesAction = False
       }
     , { component = "dialog"
-      , module_ = "Sl.Component.Dialog"
+      , module_ = "Sl.Element.Dialog"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -269,7 +269,7 @@ facts =
       , usesAction = False
       }
     , { component = "divider"
-      , module_ = "Sl.Component.Divider"
+      , module_ = "Sl.Element.Divider"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -284,7 +284,7 @@ facts =
       , usesAction = False
       }
     , { component = "drawer"
-      , module_ = "Sl.Component.Drawer"
+      , module_ = "Sl.Element.Drawer"
       , enums = [ ( "placement", [ "bottom", "end", "start", "top" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -299,7 +299,7 @@ facts =
       , usesAction = False
       }
     , { component = "dropdown"
-      , module_ = "Sl.Component.Dropdown"
+      , module_ = "Sl.Element.Dropdown"
       , enums = [ ( "placement", [ "bottom", "bottomEnd", "bottomStart", "left", "leftEnd", "leftStart", "right", "rightEnd", "rightStart", "top", "topEnd", "topStart" ] ), ( "sync", [ "both", "height", "width" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -314,7 +314,7 @@ facts =
       , usesAction = False
       }
     , { component = "formatBytes"
-      , module_ = "Sl.Component.FormatBytes"
+      , module_ = "Sl.Element.FormatBytes"
       , enums = [ ( "display", [ "long", "narrow", "short" ] ), ( "unit", [ "bit", "byte" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -329,7 +329,7 @@ facts =
       , usesAction = False
       }
     , { component = "formatDate"
-      , module_ = "Sl.Component.FormatDate"
+      , module_ = "Sl.Element.FormatDate"
       , enums = [ ( "day", [ "value2Digit", "numeric" ] ), ( "era", [ "long", "narrow", "short" ] ), ( "hour", [ "value2Digit", "numeric" ] ), ( "hourFormat", [ "value12", "value24", "auto" ] ), ( "minute", [ "value2Digit", "numeric" ] ), ( "month", [ "value2Digit", "long", "narrow", "numeric", "short" ] ), ( "second", [ "value2Digit", "numeric" ] ), ( "timeZoneName", [ "long", "short" ] ), ( "weekday", [ "long", "narrow", "short" ] ), ( "year", [ "value2Digit", "numeric" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -344,7 +344,7 @@ facts =
       , usesAction = False
       }
     , { component = "formatNumber"
-      , module_ = "Sl.Component.FormatNumber"
+      , module_ = "Sl.Element.FormatNumber"
       , enums = [ ( "currencyDisplay", [ "code", "name", "narrowsymbol", "symbol" ] ), ( "type_", [ "currency", "decimal", "percent" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -359,7 +359,7 @@ facts =
       , usesAction = False
       }
     , { component = "icon"
-      , module_ = "Sl.Component.Icon"
+      , module_ = "Sl.Element.Icon"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -374,7 +374,7 @@ facts =
       , usesAction = False
       }
     , { component = "iconButton"
-      , module_ = "Sl.Component.IconButton"
+      , module_ = "Sl.Element.IconButton"
       , enums = [ ( "target", [ "blank_", "parent_", "self_", "top_" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -389,7 +389,7 @@ facts =
       , usesAction = False
       }
     , { component = "imageComparer"
-      , module_ = "Sl.Component.ImageComparer"
+      , module_ = "Sl.Element.ImageComparer"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -404,7 +404,7 @@ facts =
       , usesAction = False
       }
     , { component = "include"
-      , module_ = "Sl.Component.Include"
+      , module_ = "Sl.Element.Include"
       , enums = [ ( "mode", [ "cors", "noCors", "sameOrigin" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -419,7 +419,7 @@ facts =
       , usesAction = False
       }
     , { component = "input"
-      , module_ = "Sl.Component.Input"
+      , module_ = "Sl.Element.Input"
       , enums = [ ( "autocapitalize", [ "characters", "none", "off", "on", "sentences", "words" ] ), ( "autocorrect", [ "off", "on" ] ), ( "enterkeyhint", [ "done", "enter", "go", "next", "previous", "search", "send" ] ), ( "inputmode", [ "decimal", "email", "none", "numeric", "search", "tel", "text", "url" ] ), ( "size", [ "large", "medium", "small" ] ), ( "type_", [ "date", "datetimeLocal", "email", "number", "password", "search", "tel", "text", "time", "url" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -434,7 +434,7 @@ facts =
       , usesAction = False
       }
     , { component = "menu"
-      , module_ = "Sl.Component.Menu"
+      , module_ = "Sl.Element.Menu"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -449,7 +449,7 @@ facts =
       , usesAction = False
       }
     , { component = "menuItem"
-      , module_ = "Sl.Component.MenuItem"
+      , module_ = "Sl.Element.MenuItem"
       , enums = [ ( "type_", [ "checkbox", "normal" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -464,7 +464,7 @@ facts =
       , usesAction = False
       }
     , { component = "menuLabel"
-      , module_ = "Sl.Component.MenuLabel"
+      , module_ = "Sl.Element.MenuLabel"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -479,7 +479,7 @@ facts =
       , usesAction = False
       }
     , { component = "mutationObserver"
-      , module_ = "Sl.Component.MutationObserver"
+      , module_ = "Sl.Element.MutationObserver"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -494,7 +494,7 @@ facts =
       , usesAction = False
       }
     , { component = "option"
-      , module_ = "Sl.Component.Option"
+      , module_ = "Sl.Element.Option"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -509,7 +509,7 @@ facts =
       , usesAction = False
       }
     , { component = "popup"
-      , module_ = "Sl.Component.Popup"
+      , module_ = "Sl.Element.Popup"
       , enums = [ ( "arrowPlacement", [ "anchor", "center", "end", "start" ] ), ( "autoSize", [ "both", "horizontal", "vertical" ] ), ( "flipFallbackStrategy", [ "bestFit", "initial" ] ), ( "placement", [ "bottom", "bottomEnd", "bottomStart", "left", "leftEnd", "leftStart", "right", "rightEnd", "rightStart", "top", "topEnd", "topStart" ] ), ( "strategy", [ "absolute", "fixed" ] ), ( "sync", [ "both", "height", "width" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -524,7 +524,7 @@ facts =
       , usesAction = False
       }
     , { component = "progressBar"
-      , module_ = "Sl.Component.ProgressBar"
+      , module_ = "Sl.Element.ProgressBar"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -539,7 +539,7 @@ facts =
       , usesAction = False
       }
     , { component = "progressRing"
-      , module_ = "Sl.Component.ProgressRing"
+      , module_ = "Sl.Element.ProgressRing"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -554,7 +554,7 @@ facts =
       , usesAction = False
       }
     , { component = "qrCode"
-      , module_ = "Sl.Component.QrCode"
+      , module_ = "Sl.Element.QrCode"
       , enums = [ ( "errorCorrection", [ "h", "l", "m", "q" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -569,7 +569,7 @@ facts =
       , usesAction = False
       }
     , { component = "radio"
-      , module_ = "Sl.Component.Radio"
+      , module_ = "Sl.Element.Radio"
       , enums = [ ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -584,7 +584,7 @@ facts =
       , usesAction = False
       }
     , { component = "radioButton"
-      , module_ = "Sl.Component.RadioButton"
+      , module_ = "Sl.Element.RadioButton"
       , enums = [ ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -599,7 +599,7 @@ facts =
       , usesAction = False
       }
     , { component = "radioGroup"
-      , module_ = "Sl.Component.RadioGroup"
+      , module_ = "Sl.Element.RadioGroup"
       , enums = [ ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -614,7 +614,7 @@ facts =
       , usesAction = False
       }
     , { component = "range"
-      , module_ = "Sl.Component.Range"
+      , module_ = "Sl.Element.Range"
       , enums = [ ( "tooltip", [ "bottom", "none", "top" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -629,7 +629,7 @@ facts =
       , usesAction = False
       }
     , { component = "rating"
-      , module_ = "Sl.Component.Rating"
+      , module_ = "Sl.Element.Rating"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -644,7 +644,7 @@ facts =
       , usesAction = False
       }
     , { component = "relativeTime"
-      , module_ = "Sl.Component.RelativeTime"
+      , module_ = "Sl.Element.RelativeTime"
       , enums = [ ( "format", [ "long", "narrow", "short" ] ), ( "numeric", [ "always", "auto" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -659,7 +659,7 @@ facts =
       , usesAction = False
       }
     , { component = "resizeObserver"
-      , module_ = "Sl.Component.ResizeObserver"
+      , module_ = "Sl.Element.ResizeObserver"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -674,7 +674,7 @@ facts =
       , usesAction = False
       }
     , { component = "select"
-      , module_ = "Sl.Component.Select"
+      , module_ = "Sl.Element.Select"
       , enums = [ ( "placement", [ "bottom", "top" ] ), ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -689,7 +689,7 @@ facts =
       , usesAction = False
       }
     , { component = "skeleton"
-      , module_ = "Sl.Component.Skeleton"
+      , module_ = "Sl.Element.Skeleton"
       , enums = [ ( "effect_", [ "none", "pulse", "sheen" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -704,7 +704,7 @@ facts =
       , usesAction = False
       }
     , { component = "spinner"
-      , module_ = "Sl.Component.Spinner"
+      , module_ = "Sl.Element.Spinner"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -719,7 +719,7 @@ facts =
       , usesAction = False
       }
     , { component = "splitPanel"
-      , module_ = "Sl.Component.SplitPanel"
+      , module_ = "Sl.Element.SplitPanel"
       , enums = [ ( "primary", [ "end", "start" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -734,7 +734,7 @@ facts =
       , usesAction = False
       }
     , { component = "switch"
-      , module_ = "Sl.Component.Switch"
+      , module_ = "Sl.Element.Switch"
       , enums = [ ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -749,7 +749,7 @@ facts =
       , usesAction = False
       }
     , { component = "tab"
-      , module_ = "Sl.Component.Tab"
+      , module_ = "Sl.Element.Tab"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -764,7 +764,7 @@ facts =
       , usesAction = False
       }
     , { component = "tabGroup"
-      , module_ = "Sl.Component.TabGroup"
+      , module_ = "Sl.Element.TabGroup"
       , enums = [ ( "activation", [ "auto", "manual" ] ), ( "placement", [ "bottom", "end", "start", "top" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -779,7 +779,7 @@ facts =
       , usesAction = False
       }
     , { component = "tabPanel"
-      , module_ = "Sl.Component.TabPanel"
+      , module_ = "Sl.Element.TabPanel"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -794,7 +794,7 @@ facts =
       , usesAction = False
       }
     , { component = "tag"
-      , module_ = "Sl.Component.Tag"
+      , module_ = "Sl.Element.Tag"
       , enums = [ ( "size", [ "large", "medium", "small" ] ), ( "variant", [ "danger", "neutral", "primary", "success", "text", "warning" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -809,7 +809,7 @@ facts =
       , usesAction = False
       }
     , { component = "textarea"
-      , module_ = "Sl.Component.Textarea"
+      , module_ = "Sl.Element.Textarea"
       , enums = [ ( "autocapitalize", [ "characters", "none", "off", "on", "sentences", "words" ] ), ( "enterkeyhint", [ "done", "enter", "go", "next", "previous", "search", "send" ] ), ( "inputmode", [ "decimal", "email", "none", "numeric", "search", "tel", "text", "url" ] ), ( "resize", [ "auto", "none", "vertical" ] ), ( "size", [ "large", "medium", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -824,7 +824,7 @@ facts =
       , usesAction = False
       }
     , { component = "tooltip"
-      , module_ = "Sl.Component.Tooltip"
+      , module_ = "Sl.Element.Tooltip"
       , enums = [ ( "placement", [ "bottom", "bottomEnd", "bottomStart", "left", "leftEnd", "leftStart", "right", "rightEnd", "rightStart", "top", "topEnd", "topStart" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -839,7 +839,7 @@ facts =
       , usesAction = False
       }
     , { component = "tree"
-      , module_ = "Sl.Component.Tree"
+      , module_ = "Sl.Element.Tree"
       , enums = [ ( "selection", [ "leaf", "multiple", "single" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -854,7 +854,7 @@ facts =
       , usesAction = False
       }
     , { component = "treeItem"
-      , module_ = "Sl.Component.TreeItem"
+      , module_ = "Sl.Element.TreeItem"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -869,7 +869,7 @@ facts =
       , usesAction = False
       }
     , { component = "visuallyHidden"
-      , module_ = "Sl.Component.VisuallyHidden"
+      , module_ = "Sl.Element.VisuallyHidden"
       , enums = []
       , requiredSlots = []
       , multiSlots = []

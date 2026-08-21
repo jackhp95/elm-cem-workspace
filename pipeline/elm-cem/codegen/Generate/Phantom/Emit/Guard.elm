@@ -535,7 +535,7 @@ guardComponentModule : Brand -> Comp -> List String
 guardComponentModule brand comp =
     let
         moduleName =
-            brand.lib ++ ".Component." ++ comp.name
+            brand.lib ++ ".Element." ++ comp.name
 
         namedSlots =
             comp.slots |> List.filter (\s -> s.name /= "unnamed")

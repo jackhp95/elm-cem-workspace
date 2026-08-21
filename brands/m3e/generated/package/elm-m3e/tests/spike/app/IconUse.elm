@@ -9,7 +9,7 @@ Verifies:
   - `Name` is a first-class value — it can be annotated and put in a list.
     This is what the previous one-function-per-icon surface could NOT express,
     and it is why the opaque-Name shape is not merely a size workaround (R-026).
-  - No M3e.Component.Icon import needed — the module is self-contained (IR only).
+  - No M3e.Element.Icon import needed — the module is self-contained (IR only).
 
 -}
 

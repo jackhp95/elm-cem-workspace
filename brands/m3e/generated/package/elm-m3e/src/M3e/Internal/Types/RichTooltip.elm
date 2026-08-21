@@ -2,7 +2,7 @@ module M3e.Internal.Types.RichTooltip exposing (Is, Attrs, Content, SubheadSlot,
 
 {-| Type definitions for RichTooltip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.RichTooltip` surface both re-export these, so they live in
+`M3e.Element.RichTooltip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, SubheadSlot, ChildAdmittedBy, Position, TouchGestures, Builder, AttrCaps, SlotCaps

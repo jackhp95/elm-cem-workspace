@@ -23,10 +23,10 @@ import ExampleNav
 import Head
 import M3e exposing (Attr, Element)
 import M3e.Attributes
-import M3e.Component.AppBar
-import M3e.Component.Card
-import M3e.Component.Fab
-import M3e.Component.NavItem
+import M3e.Element.AppBar
+import M3e.Element.Card
+import M3e.Element.Fab
+import M3e.Element.NavItem
 import M3e.Events
 import M3e.Kind
 import M3e.Values as Value
@@ -36,7 +36,7 @@ import Shared
 import TypedHtml
 import TypedHtml.Aria as Aria
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -209,7 +209,7 @@ view _ _ model =
 
 {-| The shared "Built from" + prev/next strip.
 -}
-exampleFooter : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+exampleFooter : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 exampleFooter =
     ExampleNav.footer
         { builtFrom =
@@ -239,10 +239,10 @@ appBar : Model -> Element { s | appBar : M3e.Kind.Brand } adm_ (PagesMsg Msg)
 appBar model =
     M3e.appBar
         [ TA.class "px-2" ]
-        [ M3e.Component.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True ] [])
-        , M3e.Component.AppBar.title (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Maru Market" ])
-        , M3e.Component.AppBar.trailing (iconAction "search")
-        , M3e.Component.AppBar.trailing (cartAction model.cart)
+        [ M3e.Element.AppBar.leading (M3e.icon [ TA.name "storefront", M3e.Attributes.filled True ] [])
+        , M3e.Element.AppBar.title (M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.large ] [ M3e.text "Maru Market" ])
+        , M3e.Element.AppBar.trailing (iconAction "search")
+        , M3e.Element.AppBar.trailing (cartAction model.cart)
         ]
 
 
@@ -262,7 +262,7 @@ compiler still checks the Badge is legal _inside the div_ rather than being told
 to stop looking.
 
 -}
-cartAction : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
+cartAction : Int -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ (PagesMsg Msg)
 cartAction count =
     TypedHtml.div
         [ TA.class "inline-flex" ]
@@ -336,7 +336,7 @@ navDestination current dest =
                     [ M3e.Attributes.selected False ]
     in
     M3e.navItem attrs
-        [ M3e.Component.NavItem.icon (M3e.icon [ TA.name dest.icon ] [])
+        [ M3e.Element.NavItem.icon (M3e.icon [ TA.name dest.icon ] [])
         , M3e.text dest.label
         ]
 
@@ -353,7 +353,7 @@ hero =
         [ M3e.Attributes.variant Value.filled
         , M3e.Attributes.class "m3e-filled-card-container-color-primary-container m3e-filled-card-text-color-on-primary-container m3e-card-shape-md-corner-extra-large"
         ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-1 p-6" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text "New season" ]
                 , M3e.heading [ M3e.Attributes.variant Value.headline, M3e.Attributes.size Value.small ] [ M3e.text "Everyday goods, thoughtfully made" ]
@@ -366,7 +366,7 @@ hero =
 {-| Category filter toolbar: a single-select FilterChipSet that scrolls
 horizontally on narrow screens, plus a sort action.
 -}
-filterBar : String -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
+filterBar : String -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ (PagesMsg Msg)
 filterBar current =
     TypedHtml.div [ TA.class "flex items-center gap-2" ]
         [ TypedHtml.div [ TA.class "min-w-0 flex-1 overflow-x-auto" ]
@@ -388,7 +388,7 @@ categoryChip current cat =
 
 {-| Responsive product grid: 1 col on mobile, 2 on small, 3/4 on larger screens.
 -}
-productGrid : List Product -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ (PagesMsg Msg)
+productGrid : List Product -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ (PagesMsg Msg)
 productGrid shown =
     TypedHtml.div [ TA.class "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" ]
         (List.map productCard shown)
@@ -399,14 +399,14 @@ productGrid shown =
 productCard : Product -> Element { s | card : M3e.Kind.Brand } adm_ (PagesMsg Msg)
 productCard product =
     M3e.card [ M3e.Attributes.variant Value.elevated ]
-        [ M3e.Component.Card.header (media product)
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.header (media product)
+        , M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex flex-col gap-0.5 px-1" ]
                 [ M3e.heading [ M3e.Attributes.variant Value.title, M3e.Attributes.size Value.medium ] [ M3e.text product.name ]
                 , M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large ] [ M3e.text product.category ]
                 ]
             )
-        , M3e.Component.Card.actions
+        , M3e.Element.Card.actions
             (TypedHtml.div [ TA.class "flex w-full items-center justify-between px-1" ]
                 [ M3e.heading
                     [ M3e.Attributes.variant Value.title
@@ -439,14 +439,14 @@ media product =
 
 {-| A floating checkout action over the content.
 -}
-checkoutFab : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+checkoutFab : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 checkoutFab =
     TypedHtml.div [ TA.class "pointer-events-none sticky bottom-6 flex justify-end pr-2" ]
         [ TypedHtml.div [ TA.class "pointer-events-auto" ]
             [ M3e.fab
                 [ M3e.Attributes.variant Value.primary, M3e.Attributes.extended True, Aria.label "Checkout" ]
                 [ M3e.icon [ TA.name "shopping_cart_checkout" ] []
-                , M3e.Component.Fab.label (M3e.text "Checkout")
+                , M3e.Element.Fab.label (M3e.text "Checkout")
                 ]
             ]
         ]

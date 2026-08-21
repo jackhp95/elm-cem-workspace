@@ -12,7 +12,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
+import M3e.Element.Card
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -22,7 +22,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -81,7 +81,7 @@ states =
     ]
 
 
-stateRow : ( String, String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+stateRow : ( String, String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 stateRow ( token, value, trigger ) =
     TypedHtml.div [ TA.class "flex flex-col gap-1 py-2.5" ]
         [ TypedHtml.div [ TA.class "flex flex-wrap items-baseline justify-between gap-2" ]
@@ -92,7 +92,7 @@ stateRow ( token, value, trigger ) =
         ]
 
 
-demoButtons : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+demoButtons : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 demoButtons =
     TypedHtml.div [ TA.class "flex flex-wrap gap-3 p-2" ]
         [ M3e.button [ M3e.Attributes.variant Value.filled ] [ M3e.text "Filled" ]
@@ -124,7 +124,7 @@ view _ _ =
                 [ Doc.sectionHeadingWithId (Doc.slugify "The three opacities") "The three opacities"
                 , M3e.card
                     [ M3e.Attributes.variant Value.outlined ]
-                    [ M3e.Component.Card.content
+                    [ M3e.Element.Card.content
                         (TypedHtml.div [ TA.class "flex flex-col px-2" ]
                             (List.intersperse (M3e.divider [] []) (List.map stateRow states))
                         )
@@ -136,7 +136,7 @@ view _ _ =
                     [ TypedHtml.p [ TA.class "text-body-lg text-on-surface-variant" ]
                         [ M3e.text "These buttons carry real state layers. Hover one for the 8% overlay, Tab to it for the 10% focus overlay, or press and hold for the 10% pressed overlay." ]
                     ]
-                , M3e.card [ M3e.Attributes.variant Value.outlined ] [ M3e.Component.Card.content demoButtons ]
+                , M3e.card [ M3e.Attributes.variant Value.outlined ] [ M3e.Element.Card.content demoButtons ]
                 ]
             ]
         )

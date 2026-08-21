@@ -2,7 +2,7 @@ module Sl.Internal.Types.Include exposing (Is, Attrs, ChildAdmittedBy, Mode, Bui
 
 {-| Type definitions for Include. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Include` surface both re-export these, so they live in
+`Sl.Element.Include` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Mode, Builder, AttrCaps

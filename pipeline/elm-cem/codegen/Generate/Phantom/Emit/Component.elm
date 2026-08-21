@@ -821,10 +821,10 @@ compModule brand comp =
         core =
             componentCore brand comp
     in
-    file [ core.lib, "Component", comp.name ]
+    file [ core.lib, "Element", comp.name ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ core.lib ++ ".Component." ++ comp.name ++ " exposing"
+                [ [ "module " ++ core.lib ++ ".Element." ++ comp.name ++ " exposing"
                   , core.exposing_
                   , ""
                   , "{-| The `" ++ comp.tag ++ "` component — strict per-component surface."
@@ -1137,7 +1137,7 @@ internalTypesModule brand comp =
                   , ""
                   , "{-| Type definitions for " ++ comp.name ++ ". The canonical home of this"
                   , "component's `Attrs`/`Is`/`Content`/… rows: the `" ++ lib ++ "` barrel and the strict"
-                  , "`" ++ lib ++ ".Component." ++ comp.name ++ "` surface both re-export these, so they live in"
+                  , "`" ++ lib ++ ".Element." ++ comp.name ++ "` surface both re-export these, so they live in"
                   , "the shared `core` tier (design §3.2a)."
                   , ""
                   , "@docs " ++ String.join ", " exposedNames
@@ -1688,7 +1688,7 @@ compBuildModule brand comp =
                   else
                     []
                 , [ "import " ++ lib ++ ".Kind exposing (" ++ String.join ", " kindImports ++ ")" ]
-                , [ "import " ++ lib ++ ".Component." ++ comp.name ++ " as Component" ]
+                , [ "import " ++ lib ++ ".Element." ++ comp.name ++ " as Component" ]
                 ]
                 ++ (case comp.actionCaps of
                         Just _ ->

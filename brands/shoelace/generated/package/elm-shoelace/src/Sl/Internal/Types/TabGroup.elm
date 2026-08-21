@@ -2,7 +2,7 @@ module Sl.Internal.Types.TabGroup exposing (Is, Attrs, ChildAdmittedBy, Activati
 
 {-| Type definitions for TabGroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.TabGroup` surface both re-export these, so they live in
+`Sl.Element.TabGroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps

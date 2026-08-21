@@ -2,7 +2,7 @@ module M3e.Internal.Types.Fab exposing (Is, Attrs, Content, CloseIconSlot, Label
 
 {-| Type definitions for Fab. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Fab` surface both re-export these, so they live in
+`M3e.Element.Fab` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, Size, Type, Variant, ActionCaps, Builder, AttrCaps, SlotCaps

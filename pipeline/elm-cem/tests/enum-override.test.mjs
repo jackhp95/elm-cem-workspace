@@ -91,8 +91,8 @@ const read = (rel) => {
 
 const attrs = read(path.join("Eo", "Attributes.elm"));
 const values = read(path.join("Eo", "Values.elm"));
-const bar = read(path.join("Eo", "Component", "Bar.elm"));
-const gate = read(path.join("Eo", "Component", "Gate.elm"));
+const bar = read(path.join("Eo", "Element", "Bar.elm"));
+const gate = read(path.join("Eo", "Element", "Gate.elm"));
 
 // ── LIST form: `"disable-pagination": ["true", "false", "auto"]` ───────────────
 //

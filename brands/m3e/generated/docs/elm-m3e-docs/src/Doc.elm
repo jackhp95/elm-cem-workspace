@@ -29,10 +29,10 @@ import Doc.Fold as Fold
 import Html exposing (Html, p, text)
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.AssistChip
-import M3e.Component.Card
-import M3e.Component.ContentPane
-import M3e.Component.Heading
+import M3e.Element.AssistChip
+import M3e.Element.Card
+import M3e.Element.ContentPane
+import M3e.Element.Heading
 import M3e.Kind
 import M3e.Unsafe
 import M3e.Unsafe.Attributes
@@ -42,7 +42,7 @@ import Markdown.Renderer
 import SyntaxHighlight
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 
 
 {-| A matraic-style "showcase" card: live demo content in an outlined card.
@@ -54,11 +54,11 @@ items instead, so the card stays within `max-w-full` without clipping — a live
 example's escaping menu/tooltip is free to overflow the card.
 
 -}
-showcase : Element accepts admittedBy msg -> Element (M3e.Component.Card.Is s) freeAdm msg
+showcase : Element accepts admittedBy msg -> Element (M3e.Element.Card.Is s) freeAdm msg
 showcase content =
     M3e.card
-        [ M3e.Component.Card.variant Value.outlined, TA.class "max-w-full" ]
-        [ M3e.Component.Card.content content ]
+        [ M3e.Element.Card.variant Value.outlined, TA.class "max-w-full" ]
+        [ M3e.Element.Card.content content ]
 
 
 {-| Render a raw HTML string as live DOM. The embedded `<m3e-*>` custom elements
@@ -98,7 +98,7 @@ type Lang
 
 
 {-| -}
-codeBlock : Lang -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
+codeBlock : Lang -> String -> Element (M3e.Element.Card.Is s) admittedBy msg
 codeBlock lang s =
     let
         trimmed : String
@@ -117,7 +117,7 @@ codeBlock lang s =
     -- card's border/corners stay fixed while just the code scrolls.
     M3e.card
         [ M3e.Attributes.variant Value.filled ]
-        [ M3e.Component.Card.content
+        [ M3e.Element.Card.content
             (TypedHtml.div [ TA.class "overflow-x-auto" ]
                 [ M3e.Unsafe.fromHtml (Fold.viewWith (highlightLine lang) trimmed) ]
             )
@@ -194,7 +194,7 @@ Falls back to the raw text in a paragraph if parsing/rendering fails, so a
 malformed doc-comment never blanks the page. The `doc-prose` wrapper carries
 the prose spacing/typography from `style.css`.
 -}
-markdown : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+markdown : String -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 markdown raw =
     TypedHtml.div [ TA.class "doc-prose" ]
         (List.map M3e.Unsafe.fromHtml (markdownBody raw))
@@ -203,18 +203,18 @@ markdown raw =
 {-| The route content pane: the standard `M3e.contentPane` wrapper every docs
 route hands to `View.fromElement` at its root.
 -}
-pane : List (Element childAccepts (M3e.Component.ContentPane.ChildAdmittedBy childAdm) msg) -> Element (M3e.Component.ContentPane.Is s) freeAdm msg
+pane : List (Element childAccepts (M3e.Element.ContentPane.ChildAdmittedBy childAdm) msg) -> Element (M3e.Element.ContentPane.Is s) freeAdm msg
 pane items =
     M3e.contentPane [ TA.class "mx-auto max-w-5xl space-y-12" ] items
 
 
 {-| A page's `<h1>`: display-small heading.
 -}
-pageHeading : String -> Element (M3e.Component.Heading.Is s) admittedBy msg
+pageHeading : String -> Element (M3e.Element.Heading.Is s) admittedBy msg
 pageHeading s =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.display
-        , M3e.Component.Heading.size Value.small
+        [ M3e.Element.Heading.variant Value.display
+        , M3e.Element.Heading.size Value.small
         , M3e.Attributes.level 1
         ]
         [ M3e.text s ]
@@ -229,11 +229,11 @@ anchor stable across renders:
     Doc.sectionHeadingWithId (Doc.slugify "Container pairings") "Container pairings"
 
 -}
-sectionHeadingWithId : String -> String -> Element (M3e.Component.Heading.Is s) admittedBy msg
+sectionHeadingWithId : String -> String -> Element (M3e.Element.Heading.Is s) admittedBy msg
 sectionHeadingWithId id s =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.headline
-        , M3e.Component.Heading.size Value.small
+        [ M3e.Element.Heading.variant Value.headline
+        , M3e.Element.Heading.size Value.small
         , M3e.Attributes.level 2
         , M3e.Attributes.id id
         ]
@@ -276,14 +276,14 @@ no token-backed semantic class to fall back to, so the eyebrow now renders in
 the heading's default colour. See `NoProprietaryDsClasses` burn-down notes.
 
 -}
-recapBox : String -> Element (M3e.Component.Card.Is s) adm_ msg
+recapBox : String -> Element (M3e.Element.Card.Is s) adm_ msg
 recapBox md =
     M3e.card
-        [ M3e.Component.Card.variant Value.filled ]
+        [ M3e.Element.Card.variant Value.filled ]
         [ TypedHtml.div [ TA.class "p-4 space-y-2" ]
             [ M3e.heading
-                [ M3e.Component.Heading.variant Value.label
-                , M3e.Component.Heading.size Value.large
+                [ M3e.Element.Heading.variant Value.label
+                , M3e.Element.Heading.size Value.large
                 ]
                 [ M3e.text "Recap" ]
             , TypedHtml.div [] [ markdown md ]
@@ -296,11 +296,11 @@ Use for overline labels that introduce API sections or content groups.
 No uppercase — M3 permits uppercase only for very short labels (≤20 chars);
 long dynamic labels can exceed that, so this helper always uses sentence case.
 -}
-sectionLabel : String -> Element (M3e.Component.Heading.Is s) adm_ msg
+sectionLabel : String -> Element (M3e.Element.Heading.Is s) adm_ msg
 sectionLabel s =
     M3e.heading
-        [ M3e.Component.Heading.variant Value.label
-        , M3e.Component.Heading.size Value.large
+        [ M3e.Element.Heading.variant Value.label
+        , M3e.Element.Heading.size Value.large
         ]
         [ M3e.text s ]
 
@@ -316,7 +316,7 @@ migrating them to `sectionLabel` directly, or restoring caps via
 `String.toUpper` if the visual distinction is worth an a11y/i18n tradeoff
 (screen readers get the transformed text, not the original).
 -}
-sectionLabelCaps : String -> Element (M3e.Component.Heading.Is s) adm_ msg
+sectionLabelCaps : String -> Element (M3e.Element.Heading.Is s) adm_ msg
 sectionLabelCaps s =
     sectionLabel s
 
@@ -353,14 +353,14 @@ which is out of scope here (see `NoProprietaryDsClasses` burn-down notes) — a
 defensible tradeoff since the eyebrow label above already marks this as a notice.
 
 -}
-callout : String -> String -> Element (M3e.Component.Card.Is s) admittedBy msg
+callout : String -> String -> Element (M3e.Element.Card.Is s) admittedBy msg
 callout label body =
     M3e.card
-        [ M3e.Component.Card.variant Value.filled ]
+        [ M3e.Element.Card.variant Value.filled ]
         [ TypedHtml.div [ TA.class "p-4 space-y-2" ]
             [ M3e.heading
-                [ M3e.Component.Heading.variant Value.label
-                , M3e.Component.Heading.size Value.medium
+                [ M3e.Element.Heading.variant Value.label
+                , M3e.Element.Heading.size Value.medium
                 ]
                 [ M3e.text label ]
             , TypedHtml.div [ TA.class "doc-prose" ]
@@ -373,7 +373,7 @@ callout label body =
 everywhere an example leans on a `Doc.*` helper. One definition, so the framing
 can't drift.
 -}
-userlandNote : Element (M3e.Component.Card.Is s) admittedBy msg
+userlandNote : Element (M3e.Element.Card.Is s) admittedBy msg
 userlandNote =
     callout "These helpers are our examples, not the library"
         """The `Doc.*` helpers in these examples are **this docs app's own module** — not part of `elm-m3e` (they won't resolve from a fresh install). You rarely need anything like them. The library gives you typed components (`M3e.*`) plus `TypedHtml` for standard HTML, and you never import `HtmlIr`: `M3e.Element`, `M3e.Attr`, `M3e.Node`, `M3e.Values.Value` and `M3e.Kind.Supported` / `.Shared` are all re-exported, so every type annotation you need is reachable from the brand. Build layout, text, and links directly from those. The genuine *escapes* ship with the library too, in one greppable, lint-fenced place — `M3e.Unsafe` (`fromHtml`, `fromNode`, `recast`, and `customElement` for a custom tag the types can't express) and `M3e.Unsafe.Attributes`. See [Escapes](/guide/seams)."""
@@ -383,7 +383,7 @@ userlandNote =
 inline `<code>` block so it wraps within the list item; falls back to plain text
 if it doesn't tokenize as Elm.
 -}
-elmSignature : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+elmSignature : String -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 elmSignature s =
     let
         trimmed : String
@@ -423,13 +423,13 @@ an escape here would have papered over that rather than fixed it. `Route.Guide`'
 anchorPill : { href : String, label : String } -> Element { s | assistChip : M3e.Kind.Brand } admittedBy msg
 anchorPill link =
     M3e.assistChip
-        [ M3e.Component.AssistChip.href link.href ]
+        [ M3e.Element.AssistChip.href link.href ]
         [ M3e.text link.label ]
 
 
 {-| A horizontally-scrollable `<pre><code>` block for a verbatim signature line.
 -}
-preBlock : String -> Element (TypedHtml.Component.Grouping.PreIs s) admittedBy msg
+preBlock : String -> Element (TypedHtml.Element.Grouping.PreIs s) admittedBy msg
 preBlock s =
     TypedHtml.pre [ TA.class "overflow-x-auto" ]
         [ TypedHtml.code [] [ M3e.text s ] ]
@@ -438,6 +438,6 @@ preBlock s =
 {-| A minimal `<div><p>…</p></div>` text block, for framework surfaces (e.g. the
 error page) that render a plain message with no typed M3e producer at hand.
 -}
-message : String -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+message : String -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 message body =
     TypedHtml.div [] [ TypedHtml.p [] [ M3e.text body ] ]

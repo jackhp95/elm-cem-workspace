@@ -2,7 +2,7 @@ module M3e.Internal.Types.Icon exposing (Is, Attrs, ChildAdmittedBy, Grade, Vari
 
 {-| Type definitions for Icon. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.Icon` surface both re-export these, so they live in
+`M3e.Element.Icon` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Grade, Variant, Builder, AttrCaps

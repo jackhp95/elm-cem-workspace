@@ -2,7 +2,7 @@ module Sl.Internal.Types.Animation exposing (Is, Attrs, ChildAdmittedBy, Builder
 
 {-| Type definitions for Animation. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Animation` surface both re-export these, so they live in
+`Sl.Element.Animation` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

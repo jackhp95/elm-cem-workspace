@@ -24,10 +24,10 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Button
-import M3e.Component.Card
-import M3e.Component.Heading
-import M3e.Component.Icon
+import M3e.Element.Button
+import M3e.Element.Card
+import M3e.Element.Heading
+import M3e.Element.Icon
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -40,7 +40,7 @@ import Theme.Presets
 import Theme.Reel
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Sectioning
+import TypedHtml.Element.Sectioning
 import UrlPath
 import View exposing (View)
 
@@ -129,12 +129,12 @@ view app shared _ =
         )
 
 
-hero : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+hero : Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 hero =
     TypedHtml.section [ TA.class "space-y-5" ]
         [ M3e.heading
-            [ M3e.Component.Heading.variant Value.display
-            , M3e.Component.Heading.size Value.large
+            [ M3e.Element.Heading.variant Value.display
+            , M3e.Element.Heading.size Value.large
             , M3e.Attributes.level 1
             ]
             [ M3e.text "Type-safe Material 3 Expressive for Elm" ]
@@ -146,8 +146,8 @@ hero =
                 ]
             ]
         , TypedHtml.div [ TA.class "flex flex-wrap items-center gap-3 pt-2" ]
-            [ M3e.button [ M3e.Component.Button.variant Value.filled, M3e.Component.Button.href "/getting-started/installation" ] [ M3e.text "Get started" ]
-            , M3e.button [ M3e.Component.Button.variant Value.outlined, M3e.Component.Button.href "/guide/reference" ] [ M3e.text "Browse the API reference" ]
+            [ M3e.button [ M3e.Element.Button.variant Value.filled, M3e.Element.Button.href "/getting-started/installation" ] [ M3e.text "Get started" ]
+            , M3e.button [ M3e.Element.Button.variant Value.outlined, M3e.Element.Button.href "/guide/reference" ] [ M3e.text "Browse the API reference" ]
             ]
         ]
 
@@ -155,7 +155,7 @@ hero =
 {-| The "Why elm-m3e" highlight cards. The "Real M3 tokens" card's copy
 points users downward to the live theme reel below it.
 -}
-highlights : Int -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+highlights : Int -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 highlights componentCount =
     TypedHtml.section [ TA.class "space-y-6" ]
         [ Doc.sectionHeadingWithId (Doc.slugify "Why elm-m3e") "Why elm-m3e"
@@ -176,12 +176,12 @@ highlights componentCount =
 highlightCard : String -> String -> String -> Element { s | card : M3e.Kind.Brand } admittedBy msg
 highlightCard iconName cardTitle cardBody =
     M3e.card
-        [ M3e.Component.Card.variant Value.elevated ]
-        [ M3e.Component.Card.header (M3e.heading [ M3e.Component.Heading.variant Value.title ] [ M3e.text cardTitle ])
-        , M3e.Component.Card.content
+        [ M3e.Element.Card.variant Value.elevated ]
+        [ M3e.Element.Card.header (M3e.heading [ M3e.Element.Heading.variant Value.title ] [ M3e.text cardTitle ])
+        , M3e.Element.Card.content
             (TypedHtml.div [ TA.class "flex gap-3" ]
                 [ TypedHtml.div [ TA.class "shrink-0" ]
-                    [ M3e.icon [ M3e.Component.Icon.name iconName ] [] ]
+                    [ M3e.icon [ M3e.Element.Icon.name iconName ] [] ]
                 , TypedHtml.p [] [ M3e.text cardBody ]
                 ]
             )
@@ -198,7 +198,7 @@ Clicking a card fires `PickTheme presetId` which routes through
 as required by the elm-pages route contract.
 
 -}
-themeReel : Shared.Model -> Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
+themeReel : Shared.Model -> Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ (PagesMsg Msg)
 themeReel shared =
     TypedHtml.section [ TA.class "space-y-4 -mx-4 sm:-mx-8" ]
         [ TypedHtml.div [ TA.class "px-4 sm:px-8" ]
@@ -211,7 +211,7 @@ themeReel shared =
         ]
 
 
-statusGrid : Element (TypedHtml.Component.Sectioning.SectionIs s) adm_ msg
+statusGrid : Element (TypedHtml.Element.Sectioning.SectionIs s) adm_ msg
 statusGrid =
     TypedHtml.section [ TA.class "space-y-3" ]
         [ Doc.sectionHeadingWithId (Doc.slugify "Status") "Status"

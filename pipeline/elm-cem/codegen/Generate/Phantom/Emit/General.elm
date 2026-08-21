@@ -32,15 +32,15 @@ generalModule brand =
 
                 -- Barrel-in-core (design §3.2a): for FLAT members reference the
                 -- canonical type definitions in `<Lib>.Internal.Types.<C>.*` (a
-                -- core-tier module) directly, NOT the `<Lib>.Component.<C>.*`
+                -- core-tier module) directly, NOT the `<Lib>.Element.<C>.*`
                 -- re-exports (which live in the `elements` tier). The
-                -- `<Lib>.Component.<C>` aliases are verbatim re-exports of these
+                -- `<Lib>.Element.<C>` aliases are verbatim re-exports of these
                 -- Internal.Types definitions, so the referenced types are identical —
                 -- but pointing at core keeps the barrel free of any `elements`
                 -- dependency, so it can live in `core` without tripping split.js's DAG
                 -- gate. HOME members (native families) define their types INLINE in the
-                -- `<Lib>.Component.<Home>` module — there is no `Internal.Types.<Home>`
-                -- module to point at — so those keep the `Component` reference (the
+                -- `<Lib>.Element.<Home>` module — there is no `Internal.Types.<Home>`
+                -- module to point at — so those keep the element-tier reference (the
                 -- home-brand barrel decoupling is deferred to the html split, Task 4).
                 q n =
                     case homeOf comp of
@@ -48,7 +48,7 @@ generalModule brand =
                             lib ++ ".Internal.Types." ++ ref.module_ ++ "." ++ ref.prefix ++ n
 
                         Just _ ->
-                            lib ++ ".Component." ++ ref.module_ ++ "." ++ ref.prefix ++ n
+                            lib ++ ".Element." ++ ref.module_ ++ "." ++ ref.prefix ++ n
 
                 -- Single per-component constructor, `component` (post view/el unification).
                 -- For home members the flat re-export decl still lives at `comp.ctor`
@@ -61,10 +61,10 @@ generalModule brand =
                 target =
                     case homeOf comp of
                         Nothing ->
-                            lib ++ ".Component." ++ comp.name ++ ".component"
+                            lib ++ ".Element." ++ comp.name ++ ".component"
 
                         Just _ ->
-                            lib ++ ".Component." ++ ref.module_ ++ "." ++ comp.ctor
+                            lib ++ ".Element." ++ ref.module_ ++ "." ++ comp.ctor
 
                 childType =
                     if comp.transparent then
@@ -194,8 +194,8 @@ generalModule brand =
                 -- Barrel-in-core (design §3.2a): a FLAT member's constructor emits the
                 -- loose `Ir.node "<tag>"` body directly. For plain components this is
                 -- byte-identical to `M3e.Html.<tag>` — which is exactly what the
-                -- `elements`-tier `M3e.Component.<C>.component` delegates to — so the
-                -- barrel stops re-exporting `M3e.Component.<C>.component` (an `elements`
+                -- `elements`-tier `M3e.Element.<C>.component` delegates to — so the
+                -- barrel stops re-exporting `M3e.Element.<C>.component` (an `elements`
                 -- dependency that would force `core → elements` and fail the DAG gate).
                 -- Required-content components already used this loose body; now the
                 -- point-free delegating branch does too. HOME members keep re-exporting
@@ -318,7 +318,7 @@ generalModule brand =
                                         "import " ++ lib ++ ".Internal.Types." ++ (memberRef brand c).module_
 
                                     Just _ ->
-                                        "import " ++ lib ++ ".Component." ++ (memberRef brand c).module_
+                                        "import " ++ lib ++ ".Element." ++ (memberRef brand c).module_
                             )
                         |> List.foldr
                             (\i acc ->

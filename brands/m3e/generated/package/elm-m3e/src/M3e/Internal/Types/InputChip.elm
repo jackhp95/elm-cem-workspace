@@ -2,7 +2,7 @@ module M3e.Internal.Types.InputChip exposing (Is, Attrs, Content, AvatarSlot, Ic
 
 {-| Type definitions for InputChip. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.InputChip` surface both re-export these, so they live in
+`M3e.Element.InputChip` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, AvatarSlot, IconSlot, RemoveIconSlot, ChildAdmittedBy, Variant, Builder, AttrCaps, SlotCaps

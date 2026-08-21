@@ -2,7 +2,7 @@ module M3e.Internal.Types.ActionList exposing (Is, Attrs, Content, ChildAdmitted
 
 {-| Type definitions for ActionList. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ActionList` surface both re-export these, so they live in
+`M3e.Element.ActionList` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, ChildAdmittedBy, Variant, Builder, AttrCaps

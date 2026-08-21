@@ -7,7 +7,7 @@ Change the sample there; this file follows.
 
 -}
 
-import M3e.Component.Theme as Theme
+import M3e.Element.Theme as Theme
 import Sample.Support exposing (appBody, model)
 
 

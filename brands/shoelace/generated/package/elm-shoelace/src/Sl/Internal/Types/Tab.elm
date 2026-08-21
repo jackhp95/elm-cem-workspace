@@ -2,7 +2,7 @@ module Sl.Internal.Types.Tab exposing (Is, Attrs, ChildAdmittedBy, Builder, Attr
 
 {-| Type definitions for Tab. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Tab` surface both re-export these, so they live in
+`Sl.Element.Tab` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

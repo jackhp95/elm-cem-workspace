@@ -2,7 +2,7 @@ module M3e.Internal.Types.IconButton exposing (Is, Attrs, Content, SelectedSlot,
 
 {-| Type definitions for IconButton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.IconButton` surface both re-export these, so they live in
+`M3e.Element.IconButton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, SelectedSlot, ChildAdmittedBy, Shape, Size, Type, Variant, Width, ActionCaps, Builder, AttrCaps, SlotCaps

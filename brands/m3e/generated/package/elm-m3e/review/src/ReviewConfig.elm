@@ -66,23 +66,23 @@ config =
         |> List.map (ignoreElmPages >> ignoreLibraryTests >> ignoreGeneratedSubstrate >> ignoreGeneratedComposeAttrs)
     )
         -- `NoMissingComponentApiNames` is the one rule that must run ON the
-        -- generated library (`src/M3e/Component/*`) — it guards that every
+        -- generated library (`src/M3e/Element/*`) — it guards that every
         -- generated component module exposes its `<name>`/`required` constructors.
         -- So it is deliberately EXEMPT from `ignoreGeneratedSubstrate` (which
         -- otherwise hides `../src/` when review runs from `docs/`). It self-scopes
-        -- to `M3e.Component.*` modules, so it is a no-op on the docs app.
-        ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Component" ] }
+        -- to `M3e.Element.*` modules, so it is a no-op on the docs app.
+        ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Element" ] }
 
            -- `NoFamilyMemberDrift` is the other rule that must run ON generated
-           -- code: it checks each `M3e.Family.<F>` module in `elm-m3e-components/`
+           -- code: it checks each `M3e.Component.<F>` module in `elm-m3e-components/`
            -- (also swallowed by `ignoreGeneratedSubstrate` otherwise) against the
            -- family config (`M3e.Review.Families`, generated from
            -- `config/slots.json`'s `_families` by
            -- `review/scripts/gen-m3e-family-config.mjs`). Self-scopes to
-           -- `M3e.Family.*` modules, so it is a no-op elsewhere.
+           -- `M3e.Component.*` modules, so it is a no-op elsewhere.
            , Cem.noFamilyMemberDrift
-                { componentNamespace = [ "M3e", "Component" ]
-                , familyNamespace = [ "M3e", "Family" ]
+                { componentNamespace = [ "M3e", "Element" ]
+                , familyNamespace = [ "M3e", "Component" ]
                 , families = M3e.Review.Families.families
                 }
            ]
@@ -287,7 +287,7 @@ common =
 
     -- `Shared.elm`'s `navMenu.renderGroup` (and its inner `leaves`/`body` lets)
     -- deliberately stay unannotated: the value flows into three different m3e
-    -- component call sites (`M3e.divider`, `M3e.Component.NavMenuItemGroup`,
+    -- component call sites (`M3e.divider`, `M3e.Element.NavMenuItemGroup`,
     -- `M3e.navMenu`) each demanding a different stacked extensible-record
     -- phantom row (`Is s` widens `s` per-component). Hand-writing a concrete
     -- annotation either under- or over-constrains that row and breaks

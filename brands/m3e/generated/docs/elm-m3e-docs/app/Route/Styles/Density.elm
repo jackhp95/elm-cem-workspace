@@ -6,7 +6,7 @@ import Head
 import Head.Seo as Seo
 import M3e exposing (Element)
 import M3e.Attributes
-import M3e.Component.Card
+import M3e.Element.Card
 import M3e.Kind
 import M3e.Values as Value
 import MimeType
@@ -16,7 +16,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
+import TypedHtml.Element.Grouping
 import UrlPath
 import View exposing (View)
 
@@ -85,7 +85,7 @@ densityScaleClass n =
         "[--md-sys-density-scale:0]"
 
 
-demoBar : Int -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+demoBar : Int -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 demoBar scaleValue =
     TypedHtml.div [ TA.class "space-y-2" ]
         [ M3e.heading [ M3e.Attributes.variant Value.label, M3e.Attributes.size Value.large, TA.class "text-on-surface-variant" ]
@@ -121,8 +121,8 @@ view _ _ =
                 ]
             , M3e.card
                 [ M3e.Attributes.variant Value.outlined ]
-                [ M3e.Component.Card.header (M3e.heading [ M3e.Attributes.variant Value.title ] [ M3e.text "Density scale, 0 to -3" ])
-                , M3e.Component.Card.content
+                [ M3e.Element.Card.header (M3e.heading [ M3e.Attributes.variant Value.title ] [ M3e.text "Density scale, 0 to -3" ])
+                , M3e.Element.Card.content
                     (TypedHtml.div [ TA.class "space-y-6" ]
                         [ demoBar 0
                         , demoBar -1

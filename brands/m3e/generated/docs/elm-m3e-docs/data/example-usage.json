@@ -1,58 +1,14 @@
 {
-  "appbar": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "assistchip": [
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
   "attributes": [
     {
       "title": "Dashboard",
       "route": "/examples/dashboard"
     },
     {
+      "title": "DetailedView",
+      "route": "/examples/detailedview"
+    },
+    {
       "title": "Feed",
       "route": "/examples/feed"
     },
@@ -79,66 +35,6 @@
     {
       "title": "Travel",
       "route": "/examples/travel"
-    }
-  ],
-  "badge": [
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    }
-  ],
-  "card": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "chipset": [
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    }
-  ],
-  "divider": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
     }
   ],
   "events": [
@@ -147,124 +43,12 @@
       "route": "/examples/feed"
     },
     {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "fab": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    }
-  ],
-  "filterchip": [
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    }
-  ],
-  "filterchipset": [
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    }
-  ],
-  "heading": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
       "title": "Mail",
       "route": "/examples/mail"
     },
     {
       "title": "Settings",
       "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "icon": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "iconbutton": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
     },
     {
       "title": "Shop",
@@ -281,90 +65,8 @@
       "route": "/examples/dashboard"
     },
     {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "linearprogressindicator": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    }
-  ],
-  "list": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    }
-  ],
-  "listaction": [
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    }
-  ],
-  "listitem": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    }
-  ],
-  "navbar": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
+      "title": "DetailedView",
+      "route": "/examples/detailedview"
     },
     {
       "title": "Feed",
@@ -395,124 +97,20 @@
       "route": "/examples/travel"
     }
   ],
-  "navitem": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
+  "unsafe": [
     {
       "title": "Shop",
       "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "navrail": [
-    {
-      "title": "Dashboard",
-      "route": "/examples/dashboard"
-    },
-    {
-      "title": "Feed",
-      "route": "/examples/feed"
-    },
-    {
-      "title": "ListDetail",
-      "route": "/examples/listdetail"
-    },
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    },
-    {
-      "title": "Shop",
-      "route": "/examples/shop"
-    },
-    {
-      "title": "SupportingPane",
-      "route": "/examples/supportingpane"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "radio": [
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    }
-  ],
-  "searchbar": [
-    {
-      "title": "Mail",
-      "route": "/examples/mail"
-    },
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "slider": [
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    }
-  ],
-  "sliderthumb": [
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    }
-  ],
-  "switch": [
-    {
-      "title": "Settings",
-      "route": "/examples/settings"
-    }
-  ],
-  "tab": [
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
-    }
-  ],
-  "tabs": [
-    {
-      "title": "Travel",
-      "route": "/examples/travel"
     }
   ],
   "values": [
     {
       "title": "Dashboard",
       "route": "/examples/dashboard"
+    },
+    {
+      "title": "DetailedView",
+      "route": "/examples/detailedview"
     },
     {
       "title": "Feed",

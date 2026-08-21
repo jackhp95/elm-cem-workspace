@@ -2,7 +2,7 @@ module Sl.Internal.Types.Dropdown exposing (Is, Attrs, ChildAdmittedBy, Placemen
 
 {-| Type definitions for Dropdown. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Dropdown` surface both re-export these, so they live in
+`Sl.Element.Dropdown` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps

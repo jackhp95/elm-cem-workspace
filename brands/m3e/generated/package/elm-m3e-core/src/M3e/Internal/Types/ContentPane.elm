@@ -2,7 +2,7 @@ module M3e.Internal.Types.ContentPane exposing (Is, Attrs, ChildAdmittedBy, Buil
 
 {-| Type definitions for ContentPane. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ContentPane` surface both re-export these, so they live in
+`M3e.Element.ContentPane` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

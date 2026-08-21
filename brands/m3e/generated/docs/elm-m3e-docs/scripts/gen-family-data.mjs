@@ -8,8 +8,8 @@
 //   and its own module comment admitted it "mirrors [slots.json's _families]
 //   rather than re-deriving it, so it can only go stale." It HAD gone stale: the
 //   Tabs family's `TabPanel` member was labelled `panel`, but the real generated
-//   `M3e.Family.Tabs` re-exports it as `tabPanel` (a reader following the docs
-//   would write `M3e.Family.Tabs.panel` and hit a compile error). Deriving the
+//   `M3e.Component.Tabs` re-exports it as `tabPanel` (a reader following the docs
+//   would write `M3e.Component.Tabs.panel` and hit a compile error). Deriving the
 //   table from the one source removes that whole class of drift.
 //
 // FAITHFUL TO THE FAMILY GENERATOR
@@ -18,7 +18,7 @@
 //   is the FAMILY name (`pushMember(root, family)`), every other member's is its
 //   `path` field; the emitted constructor is `lowerFirst(elementLabel)`. This
 //   script mirrors that exactly, so `data/families.json` names match the actual
-//   `M3e.Family.<F>` constructors 1:1.
+//   `M3e.Component.<F>` constructors 1:1.
 //
 // Output schema (consumed by Route.Family):
 //   [ { "family": "<F>", "members": [ { "component": "<Comp>",

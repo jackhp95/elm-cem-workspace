@@ -2,7 +2,7 @@ module M3e.Internal.Types.ListAction exposing (Is, Attrs, Content, LeadingSlot, 
 
 {-| Type definitions for ListAction. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
-`M3e.Component.ListAction` surface both re-export these, so they live in
+`M3e.Element.ListAction` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps

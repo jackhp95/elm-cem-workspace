@@ -8,7 +8,7 @@ import { toElm } from "./to-elm.mjs";
 // `M3e.<Mod>.view` / `Kit.*` / `Native.*` vocab (which targeted the DELETED
 // docs/kit against an older elm-m3e API) to the CURRENT library the converter
 // now emits against, sourced from Face C via the canonical elm-shape engine:
-//   - component call form  `M3e.Component.<N>.component` (double-list) or the
+//   - component call form  `M3e.Element.<N>.component` (double-list) or the
 //     `{ <requiredSlot fields…>, <requiredAttr fields…>, action? }` record form.
 //   - text seam `M3e.text`; plain HTML `TypedHtml.<tag>`; raw attr
 //     `TypedHtml.Unsafe.Attributes.customAttribute`; dynamic tag
@@ -24,13 +24,13 @@ test("button with icon slot + text (record form: content + action)", () => {
     `<m3e-button variant="filled"><m3e-icon slot="icon" name="add"></m3e-icon>New</m3e-button>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.Button.component { content = M3e.text "New", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled ] [ M3e.Component.Button.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] []) ]`,
+    code: `M3e.Element.Button.component { content = M3e.text "New", action = M3e.Action.none } [ M3e.Element.Button.variant M3e.Values.filled ] [ M3e.Element.Button.icon (M3e.Element.Icon.component [ M3e.Element.Icon.name "add" ] []) ]`,
   });
 });
 
 test("plain text-only button", () => {
   assert.deepEqual(conv(`<m3e-button variant="tonal">Tonal</m3e-button>`), {
-    code: `M3e.Component.Button.component { content = M3e.text "Tonal", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.tonal ] []`,
+    code: `M3e.Element.Button.component { content = M3e.text "Tonal", action = M3e.Action.none } [ M3e.Element.Button.variant M3e.Values.tonal ] []`,
   });
 });
 
@@ -38,7 +38,7 @@ test("plain text-only button", () => {
 // requirements live in elm-review rules now.
 test("checkbox without aria-label converts (double-list form)", () => {
   assert.deepEqual(conv(`<m3e-checkbox checked></m3e-checkbox>`), {
-    code: `M3e.Component.Checkbox.component [ M3e.Component.Checkbox.checked True ] []`,
+    code: `M3e.Element.Checkbox.component [ M3e.Element.Checkbox.checked True ] []`,
   });
 });
 
@@ -52,7 +52,7 @@ test("icon-button: aria-label is a required record field; icon -> content", () =
     `<m3e-icon-button aria-label="Toggle theme"><m3e-icon name="dark_mode"></m3e-icon></m3e-icon-button>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "dark_mode" ] [], ariaLabel = "Toggle theme", action = M3e.Action.none } [] []`,
+    code: `M3e.Element.IconButton.component { content = M3e.Element.Icon.component [ M3e.Element.Icon.name "dark_mode" ] [], ariaLabel = "Toggle theme", action = M3e.Action.none } [] []`,
   });
 });
 
@@ -61,7 +61,7 @@ test("icon-button: aria-label is a required record field; icon -> content", () =
 test("checkbox aria-label -> TypedHtml.Aria.label universal setter", () => {
   const r = conv(`<m3e-checkbox aria-label="Accept" checked></m3e-checkbox>`);
   assert.deepEqual(r, {
-    code: `M3e.Component.Checkbox.component [ TypedHtml.Aria.label "Accept", M3e.Component.Checkbox.checked True ] []`,
+    code: `M3e.Element.Checkbox.component [ TypedHtml.Aria.label "Accept", M3e.Element.Checkbox.checked True ] []`,
   });
 });
 
@@ -72,7 +72,7 @@ test("custom element in a text-admitting slot is preserved, not folded to text",
   const r = conv(
     `<m3e-nav-menu-item-group><m3e-heading m3e-toc-ignore slot="label" variant="label" size="large">Mail</m3e-heading></m3e-nav-menu-item-group>`,
   );
-  assert.match(r.code, /NavMenuItemGroup\.label \(M3e\.Component\.Heading\.component /);
+  assert.match(r.code, /NavMenuItemGroup\.label \(M3e\.Element\.Heading\.component /);
   assert.doesNotMatch(r.code, /NavMenuItemGroup\.label \(M3e\.text "Mail"\)/);
 });
 
@@ -84,7 +84,7 @@ test("generic text-only wrapper in a required label slot folds into the record",
     `<m3e-nav-menu-item><span slot="label">Inbox</span></m3e-nav-menu-item>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.NavMenuItem.component { label = M3e.text "Inbox" } [] []`,
+    code: `M3e.Element.NavMenuItem.component { label = M3e.text "Inbox" } [] []`,
   });
 });
 
@@ -94,14 +94,14 @@ test("generic text-only wrapper in a required label slot folds into the record",
 test("top: universal id/class via M3e.Attributes; style/for via customAttribute", () => {
   const html = `<m3e-checkbox id="c1" class="a b" style="color: red; --x: 1px" for="ctrl" checked></m3e-checkbox>`;
   assert.deepEqual(conv(html), {
-    code: `M3e.Component.Checkbox.component [ M3e.Attributes.id "c1", M3e.Attributes.class "a b", TypedHtml.Unsafe.Attributes.customAttribute "style" "color: red; --x: 1px", TypedHtml.Unsafe.Attributes.customAttribute "for" "ctrl", M3e.Component.Checkbox.checked True ] []`,
+    code: `M3e.Element.Checkbox.component [ M3e.Attributes.id "c1", M3e.Attributes.class "a b", TypedHtml.Unsafe.Attributes.customAttribute "style" "color: red; --x: 1px", TypedHtml.Unsafe.Attributes.customAttribute "for" "ctrl", M3e.Element.Checkbox.checked True ] []`,
   });
 });
 
 // A component that DOES declare `for` (m3e-app-bar) keeps its TYPED setter.
 test("top: typed `for` (m3e-app-bar) is preserved via Face C's setter", () => {
   assert.deepEqual(conv(`<m3e-app-bar for="scrollContainer"></m3e-app-bar>`), {
-    code: `M3e.Component.AppBar.component [ M3e.Component.AppBar.for "scrollContainer" ] []`,
+    code: `M3e.Element.AppBar.component [ M3e.Element.AppBar.for "scrollContainer" ] []`,
   });
 });
 
@@ -114,19 +114,19 @@ test("icon-button with no default content -> skip (required content absent)", ()
 
 test("icon standalone (double-list form)", () => {
   assert.deepEqual(conv(`<m3e-icon name="add"></m3e-icon>`), {
-    code: `M3e.Component.Icon.component [ M3e.Component.Icon.name "add" ] []`,
+    code: `M3e.Element.Icon.component [ M3e.Element.Icon.name "add" ] []`,
   });
 });
 
 test("bool attr on a double-list component (icon filled)", () => {
   assert.deepEqual(conv(`<m3e-icon name="add" filled></m3e-icon>`), {
-    code: `M3e.Component.Icon.component [ M3e.Component.Icon.name "add", M3e.Component.Icon.filled True ] []`,
+    code: `M3e.Element.Icon.component [ M3e.Element.Icon.name "add", M3e.Element.Icon.filled True ] []`,
   });
 });
 
 test("enum attr rendered via M3e.Values with camelCase", () => {
   assert.deepEqual(conv(`<m3e-button size="extra-large">Big</m3e-button>`), {
-    code: `M3e.Component.Button.component { content = M3e.text "Big", action = M3e.Action.none } [ M3e.Component.Button.size M3e.Values.extraLarge ] []`,
+    code: `M3e.Element.Button.component { content = M3e.text "Big", action = M3e.Action.none } [ M3e.Element.Button.size M3e.Values.extraLarge ] []`,
   });
 });
 
@@ -134,14 +134,14 @@ test("enum attr rendered via M3e.Values with camelCase", () => {
 test("keyword attr `type` -> escaped `type_` setter", () => {
   const r = conv(`<m3e-button variant="filled" type="submit">Submit</m3e-button>`);
   assert.ok(!r.skip, `expected no skip, got: ${r.skip}`);
-  assert.match(r.code, /M3e\.Component\.Button\.type_ M3e\.Values\.submit/);
+  assert.match(r.code, /M3e\.Element\.Button\.type_ M3e\.Values\.submit/);
 });
 
 // A valid enum value emits its M3e.Values token; an INVALID one degrades to a
 // grep-able comment (never a non-existent token that would null the surface).
 test("enum: valid value emits token, invalid value degrades to a comment", () => {
   assert.deepEqual(conv(`<m3e-nav-bar mode="expanded"></m3e-nav-bar>`), {
-    code: `M3e.Component.NavBar.component [ M3e.Component.NavBar.mode M3e.Values.expanded ] []`,
+    code: `M3e.Element.NavBar.component [ M3e.Element.NavBar.mode M3e.Values.expanded ] []`,
   });
   const bad = conv(`<m3e-nav-bar mode="extended"></m3e-nav-bar>`);
   assert.match(bad.code, /\{- round-trip: dropped mode="extended" on m3e-nav-bar/);
@@ -154,7 +154,7 @@ test("multiple default children -> first folds to content, rest trail", () => {
   assert.deepEqual(
     conv(`<m3e-button variant="text"><m3e-icon name="a"></m3e-icon>Hi</m3e-button>`),
     {
-      code: `M3e.Component.Button.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "a" ] [], action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.text ] [ M3e.text "Hi" ]`,
+      code: `M3e.Element.Button.component { content = M3e.Element.Icon.component [ M3e.Element.Icon.name "a" ] [], action = M3e.Action.none } [ M3e.Element.Button.variant M3e.Values.text ] [ M3e.text "Hi" ]`,
     },
   );
 });
@@ -162,7 +162,7 @@ test("multiple default children -> first folds to content, rest trail", () => {
 test("string attr with escaping", () => {
   const r = conv(`<m3e-button href='/a"b'>Go</m3e-button>`);
   assert.deepEqual(r, {
-    code: `M3e.Component.Button.component { content = M3e.text "Go", action = M3e.Action.none } [ M3e.Component.Button.href "/a\\"b" ] []`,
+    code: `M3e.Element.Button.component { content = M3e.text "Go", action = M3e.Action.none } [ M3e.Element.Button.href "/a\\"b" ] []`,
   });
 });
 
@@ -180,7 +180,7 @@ test("non-typed attr is preserved via the customAttribute escape", () => {
 test("m3e element with id/class emits universal M3e.Attributes setters", () => {
   const r = conv(`<m3e-button variant="filled" id="x" class="y">Go</m3e-button>`);
   assert.deepEqual(r, {
-    code: `M3e.Component.Button.component { content = M3e.text "Go", action = M3e.Action.none } [ M3e.Component.Button.variant M3e.Values.filled, M3e.Attributes.id "x", M3e.Attributes.class "y" ] []`,
+    code: `M3e.Element.Button.component { content = M3e.text "Go", action = M3e.Action.none } [ M3e.Element.Button.variant M3e.Values.filled, M3e.Attributes.id "x", M3e.Attributes.class "y" ] []`,
   });
 });
 
@@ -197,7 +197,7 @@ test("nav-menu-item required label folds into the record; icon trails", () => {
     `<m3e-nav-menu-item selected><m3e-icon slot="icon" name="home"></m3e-icon><a slot="label" href="/">Home</a></m3e-nav-menu-item>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Unsafe.Attributes.customAttribute "href" "/" ] [ M3e.text "Home" ] } [ M3e.Component.NavMenuItem.selected True ] [ M3e.Component.NavMenuItem.icon (M3e.Component.Icon.component [ M3e.Component.Icon.name "home" ] []) ]`,
+    code: `M3e.Element.NavMenuItem.component { label = TypedHtml.a [ TypedHtml.Unsafe.Attributes.customAttribute "href" "/" ] [ M3e.text "Home" ] } [ M3e.Element.NavMenuItem.selected True ] [ M3e.Element.NavMenuItem.icon (M3e.Element.Icon.component [ M3e.Element.Icon.name "home" ] []) ]`,
   });
 });
 
@@ -207,7 +207,7 @@ test("tree-item required label + nested child tree-items", () => {
     `<m3e-tree-item open><span slot="label">Getting Started</span><m3e-tree-item><span slot="label">Overview</span></m3e-tree-item></m3e-tree-item>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Component.TreeItem.open True ] [ M3e.Component.TreeItem.component { label = M3e.text "Overview" } [] [] ]`,
+    code: `M3e.Element.TreeItem.component { label = M3e.text "Getting Started" } [ M3e.Element.TreeItem.open True ] [ M3e.Element.TreeItem.component { label = M3e.text "Overview" } [] [] ]`,
   });
 });
 
@@ -226,7 +226,7 @@ test("tabs: bare tab-panel child routes to named panel slot; tab -> raw element"
     `<m3e-tabs><m3e-tab>One</m3e-tab><m3e-tab-panel>First panel</m3e-tab-panel></m3e-tabs>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [] [ M3e.text "One" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [] [ M3e.text "First panel" ]) ]`,
+    code: `M3e.Element.Tabs.component [] [ M3e.Element.Tab.component [] [ M3e.text "One" ], M3e.Element.Tabs.panel (M3e.Element.TabPanel.component [] [ M3e.text "First panel" ]) ]`,
   });
 });
 
@@ -235,7 +235,7 @@ test("tabs: interleaved children preserve source order (tab,tab,panel,panel)", (
     `<m3e-tabs><m3e-tab>A</m3e-tab><m3e-tab>B</m3e-tab><m3e-tab-panel>PA</m3e-tab-panel><m3e-tab-panel>PB</m3e-tab-panel></m3e-tabs>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.Tabs.component [] [ M3e.Component.Tab.component [] [ M3e.text "A" ], M3e.Component.Tab.component [] [ M3e.text "B" ], M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [] [ M3e.text "PA" ]), M3e.Component.Tabs.panel (M3e.Component.TabPanel.component [] [ M3e.text "PB" ]) ]`,
+    code: `M3e.Element.Tabs.component [] [ M3e.Element.Tab.component [] [ M3e.text "A" ], M3e.Element.Tab.component [] [ M3e.text "B" ], M3e.Element.Tabs.panel (M3e.Element.TabPanel.component [] [ M3e.text "PA" ]), M3e.Element.Tabs.panel (M3e.Element.TabPanel.component [] [ M3e.text "PB" ]) ]`,
   });
 });
 
@@ -248,7 +248,7 @@ test("split-button folds both required slots; slotted child keeps its aria-label
     `<m3e-split-button><m3e-button slot="leading-button">Go</m3e-button><m3e-icon-button slot="trailing-button" aria-label="Keyboard arrow down"><m3e-icon name="keyboard_arrow_down"></m3e-icon></m3e-icon-button></m3e-split-button>`,
   );
   assert.deepEqual(r, {
-    code: `M3e.Component.SplitButton.component { leadingButton = M3e.Component.Button.component { content = M3e.text "Go", action = M3e.Action.none } [] [], trailingButton = M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "keyboard_arrow_down" ] [], ariaLabel = "Keyboard arrow down", action = M3e.Action.none } [] [] } [] []`,
+    code: `M3e.Element.SplitButton.component { leadingButton = M3e.Element.Button.component { content = M3e.text "Go", action = M3e.Action.none } [] [], trailingButton = M3e.Element.IconButton.component { content = M3e.Element.Icon.component [ M3e.Element.Icon.name "keyboard_arrow_down" ] [], ariaLabel = "Keyboard arrow down", action = M3e.Action.none } [] [] } [] []`,
   });
 });
 
@@ -260,7 +260,7 @@ test("split-button slotted child keeps id/class + typed setters", () => {
   );
   assert.match(
     r.code,
-    /trailingButton = M3e\.Component\.IconButton\.component \{ content = .*ariaLabel = "x", action = M3e\.Action\.none \} \[ M3e\.Attributes\.id "ib", M3e\.Attributes\.class "c", M3e\.Component\.IconButton\.toggle True \]/,
+    /trailingButton = M3e\.Element\.IconButton\.component \{ content = .*ariaLabel = "x", action = M3e\.Action\.none \} \[ M3e\.Attributes\.id "ib", M3e\.Attributes\.class "c", M3e\.Element\.IconButton\.toggle True \]/,
   );
 });
 
@@ -271,12 +271,12 @@ test("card with header + content(div) slots", () => {
     `<m3e-card variant="outlined"><m3e-heading slot="header" variant="title" size="small">People</m3e-heading><div slot="content"><m3e-chip-set><m3e-chip>Name</m3e-chip></m3e-chip-set></div></m3e-card>`,
   );
   assert.ok(!r.skip, `expected no skip, got: ${r.skip}`);
-  assert.match(r.code, /M3e\.Component\.Card\.component/);
-  assert.match(r.code, /M3e\.Component\.Card\.header/);
-  assert.match(r.code, /M3e\.Component\.Card\.content/);
+  assert.match(r.code, /M3e\.Element\.Card\.component/);
+  assert.match(r.code, /M3e\.Element\.Card\.header/);
+  assert.match(r.code, /M3e\.Element\.Card\.content/);
   assert.match(r.code, /TypedHtml\.div/);
-  assert.match(r.code, /M3e\.Component\.Heading\.component \{ content = M3e\.text "People" \}/);
-  assert.match(r.code, /M3e\.Component\.Chip\.component \{ content = M3e\.text "Name" \}/);
+  assert.match(r.code, /M3e\.Element\.Heading\.component \{ content = M3e\.text "People" \}/);
+  assert.match(r.code, /M3e\.Element\.Chip\.component \{ content = M3e\.text "Name" \}/);
 });
 
 // --- (b) plain HTML + (c) anchor -> TypedHtml.a ----------------------------
@@ -284,14 +284,14 @@ test("card with header + content(div) slots", () => {
 test("plain div maps to TypedHtml.div", () => {
   const r = conv(`<div><m3e-icon name="a"></m3e-icon></div>`);
   assert.deepEqual(r, {
-    code: `TypedHtml.div [] [ M3e.Component.Icon.component [ M3e.Component.Icon.name "a" ] [] ]`,
+    code: `TypedHtml.div [] [ M3e.Element.Icon.component [ M3e.Element.Icon.name "a" ] [] ]`,
   });
 });
 
 test("plain div carries its class attribute via customAttribute", () => {
   const r = conv(`<div class="grid"><m3e-icon name="a"></m3e-icon></div>`);
   assert.deepEqual(r, {
-    code: `TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "class" "grid" ] [ M3e.Component.Icon.component [ M3e.Component.Icon.name "a" ] [] ]`,
+    code: `TypedHtml.div [ TypedHtml.Unsafe.Attributes.customAttribute "class" "grid" ] [ M3e.Element.Icon.component [ M3e.Element.Icon.name "a" ] [] ]`,
   });
 });
 
@@ -330,20 +330,20 @@ test("anchor-wrapped card -> TypedHtml.a", () => {
   assert.ok(
     r.code &&
       /TypedHtml\.a \[ TypedHtml\.Unsafe\.Attributes\.customAttribute "href" "\/x"/.test(r.code) &&
-      /M3e\.Component\.Card\.component/.test(r.code),
+      /M3e\.Element\.Card\.component/.test(r.code),
     r.code || r.skip,
   );
 });
 
 test("numeric attribute -> Float literal (no quotes)", () => {
   assert.deepEqual(conv(`<m3e-icon name="star" optical-size="24"></m3e-icon>`), {
-    code: `M3e.Component.Icon.component [ M3e.Component.Icon.name "star", M3e.Component.Icon.opticalSize 24 ] []`,
+    code: `M3e.Element.Icon.component [ M3e.Element.Icon.name "star", M3e.Element.Icon.opticalSize 24 ] []`,
   });
 });
 
 test("void elements (<hr>) -> TypedHtml 2-arg producer with empty lists", () => {
   assert.deepEqual(conv(`<m3e-menu id="m"><hr></m3e-menu>`), {
-    code: `M3e.Component.Menu.component [ M3e.Attributes.id "m" ] [ TypedHtml.hr [] [] ]`,
+    code: `M3e.Element.Menu.component [ M3e.Attributes.id "m" ] [ TypedHtml.hr [] [] ]`,
   });
 });
 

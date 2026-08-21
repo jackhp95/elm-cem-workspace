@@ -2,7 +2,7 @@ module Sl.Internal.Types.Divider exposing (Is, Attrs, ChildAdmittedBy, Builder, 
 
 {-| Type definitions for Divider. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
-`Sl.Component.Divider` surface both re-export these, so they live in
+`Sl.Element.Divider` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
 @docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps

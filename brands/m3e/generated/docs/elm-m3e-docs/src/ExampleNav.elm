@@ -26,8 +26,8 @@ import M3e.Attributes
 import M3e.Values as Value
 import TypedHtml
 import TypedHtml.Attributes as TA
-import TypedHtml.Component.Grouping
-import TypedHtml.Component.Text
+import TypedHtml.Element.Grouping
+import TypedHtml.Element.Text
 
 
 {-| Render the footer for one example page.
@@ -45,7 +45,7 @@ footer :
     , prev : Maybe ( String, String )
     , next : Maybe ( String, String )
     }
-    -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+    -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 footer { builtFrom, prev, next } =
     -- The outer `<div>` stays a plain div (its `DivIs` kind is pinned verbatim
     -- by every `exampleFooter` wrapper across the example pages), with an
@@ -83,13 +83,13 @@ this app's anchors carry no default underline to begin with, making the class a
 no-op everywhere, not just inside `.doc-prose`.
 
 -}
-backRow : Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+backRow : Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 backRow =
     TypedHtml.div [ TA.class "flex" ]
         [ TypedHtml.a [ TA.href "/examples" ] [ M3e.text "← Back to examples" ] ]
 
 
-builtFromRow : List ( String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+builtFromRow : List ( String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 builtFromRow builtFrom =
     TypedHtml.div [ TA.class "flex flex-wrap items-baseline gap-x-2 gap-y-1" ]
         (M3e.heading
@@ -104,13 +104,13 @@ dropped: `m3e-icon`/plain text expose no colour property, and neither a Tailwind
 paint utility nor a custom CSS class is an acceptable substitute, so the link
 reads at the default foreground. Filed as an m3e gap rather than hand-painted.
 -}
-componentLink : ( String, String ) -> Element (TypedHtml.Component.Text.SpanIs s) adm_ msg
+componentLink : ( String, String ) -> Element (TypedHtml.Element.Text.SpanIs s) adm_ msg
 componentLink ( slug, label ) =
     TypedHtml.span []
         [ TypedHtml.a [ TA.href ("/components/" ++ slug) ] [ M3e.text label ] ]
 
 
-prevNextRow : Maybe ( String, String ) -> Maybe ( String, String ) -> Element (TypedHtml.Component.Grouping.DivIs s) adm_ msg
+prevNextRow : Maybe ( String, String ) -> Maybe ( String, String ) -> Element (TypedHtml.Element.Grouping.DivIs s) adm_ msg
 prevNextRow prev next =
     TypedHtml.div [ TA.class "flex items-center justify-between gap-4" ]
         [ pagerSlot "← " prev
@@ -121,7 +121,7 @@ prevNextRow prev next =
 {-| One side of the prev/next pager. `prefix`/absence of `arrow` keeps the
 "previous" arrow leading and the "next" arrow trailing.
 -}
-pagerSlot : String -> Maybe ( String, String ) -> Element (TypedHtml.Component.Text.SpanIs s) adm_ msg
+pagerSlot : String -> Maybe ( String, String ) -> Element (TypedHtml.Element.Text.SpanIs s) adm_ msg
 pagerSlot leadingArrow slot =
     case slot of
         Nothing ->
