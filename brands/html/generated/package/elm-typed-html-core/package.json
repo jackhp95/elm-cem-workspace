@@ -1,0 +1,10 @@
+{
+  "name": "elm-typed-html-core",
+  "version": "1.0.0",
+  "description": "elm-typed-html shared vocabulary: Kind, Attributes, Values, Aria, Events, Unsafe. Committed split sibling of the elm-typed-html staging root (jackhp95/elm-typed-html-core).",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-typed-html/node_modules/.bin/elm"
+  }
+}

@@ -1,0 +1,36 @@
+{
+    "type": "package",
+    "name": "jackhp95/elm-typed-html-elements",
+    "summary": "elm-typed-html element homes + the TypedHtml barrel",
+    "license": "BSD-3-Clause",
+    "version": "1.0.0",
+    "exposed-modules": [
+        "TypedHtml",
+        "TypedHtml.Component.A",
+        "TypedHtml.Component.Button",
+        "TypedHtml.Component.Details",
+        "TypedHtml.Component.Embedded",
+        "TypedHtml.Component.Form",
+        "TypedHtml.Component.Grouping",
+        "TypedHtml.Component.Img",
+        "TypedHtml.Component.Input",
+        "TypedHtml.Component.Media",
+        "TypedHtml.Component.Metadata",
+        "TypedHtml.Component.Scripting",
+        "TypedHtml.Component.Sectioning",
+        "TypedHtml.Component.Select",
+        "TypedHtml.Component.Table",
+        "TypedHtml.Component.Text",
+        "TypedHtml.Component.Textarea"
+    ],
+    "elm-version": "0.19.0 <= v < 0.20.0",
+    "dependencies": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.0.0 <= v < 2.0.0",
+        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
+        "jackhp95/elm-typed-html-core": "1.0.0 <= v < 2.0.0"
+    },
+    "test-dependencies": {}
+}

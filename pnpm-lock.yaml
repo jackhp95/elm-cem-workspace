@@ -27,6 +27,12 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
+  brands/html/generated/package/elm-typed-html-core: {}
+
+  brands/html/generated/package/elm-typed-html-elements: {}
+
+  brands/html/generated/package/elm-typed-html-facts: {}
+
   brands/m3e/generated/docs/elm-m3e-docs:
     dependencies:
       '@m3e/web':

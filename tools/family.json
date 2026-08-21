@@ -102,6 +102,19 @@
       "srcDir": "brands/html/generated/package/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
+    "$comment_elm_typed_html_split_siblings": "The three committed split siblings materialized by explosion Task 4 (facts/core/elements). html is a home-only brand (own=[]) so no build/components tier is derivable \u2014 3 tiers is the real ceiling. Emitted by `elm-cem split --out=..` from elm-typed-html/packages.json. Unlike m3e's split, the TypedHtml barrel lives in the ELEMENTS tier (home Component modules fuse types+surface, so the barrel has a hard elements dependency; barrel-in-core would need a cross-brand home-emitter decoupling out of Task 4 scope \u2014 see elm-typed-html/packages.json $scopeNote). No copyFidelity block yet: no published jackhp95/* mirror snapshot to compare against (same as elm-typed-html/elm-shoelace, OQ-6).",
+    "elm-typed-html-core": {
+      "srcDir": "brands/html/generated/package/elm-typed-html-core",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-typed-html-elements": {
+      "srcDir": "brands/html/generated/package/elm-typed-html-elements",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-typed-html-facts": {
+      "srcDir": "brands/html/generated/package/elm-typed-html-facts",
+      "mirror": { "auditedExclusions": false }
+    },
     "elm-typed-svg": {
       "srcDir": "brands/svg/generated/package/elm-typed-svg",
       "mirror": { "auditedExclusions": false }
