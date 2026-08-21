@@ -21,7 +21,7 @@ import { test, expect } from "@playwright/test";
  * no-ops; M3e.Html and M3e.Raw layers retired). The top surface (M3e.Button.view)
  * and raw HTML are always present; Record/Build show a rationale tab.
  */
-test("/components/button shows a live Usage section with preview + code", async ({
+test("/components/button shows a live Usage section with preview + code", { tag: "@smoke" }, async ({
   page,
 }) => {
   const errors: string[] = [];

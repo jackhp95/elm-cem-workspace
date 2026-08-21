@@ -26,7 +26,7 @@ import { test, expect } from "@playwright/test";
  * (every menu is always in the DOM, only the clicked one is shown).
  */
 
-test("a slot add-panel offers every valid kind, not just text (M-IA2b)", async ({ page }) => {
+test("a slot add-panel offers every valid kind, not just text (M-IA2b)", { tag: "@smoke" }, async ({ page }) => {
   await page.goto("/components/compose");
 
   // Add a fresh listItem via the ROOT list's "unnamed" slot (`.first()` — the

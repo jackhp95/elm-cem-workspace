@@ -60,7 +60,7 @@ const MAIN_SCROLL_REGION = "#docs-drawer > div.overflow-y-auto";
 // "content is reachable" assertion is meaningful rather than vacuous.
 const TALL_EXAMPLE = "/examples/shop";
 
-test("the docs shell is a fixed-viewport flex row (rail | main column) with one scroll region", async ({
+test("the docs shell is a fixed-viewport flex row (rail | main column) with one scroll region", { tag: "@smoke" }, async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 800 });

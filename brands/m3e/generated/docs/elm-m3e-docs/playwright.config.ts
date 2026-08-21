@@ -46,12 +46,16 @@ export default defineConfig({
   // load-sensitive suites; a test that retries EVERY run is a signal for a
   // deeper fix, not a substitute for one.
   retries: 2,
-  // Cap workers so the static server isn't overwhelmed. Playwright defaults to
-  // ceil(cpus/2) which on an M-series Mac is 5-6 — enough that all-components
-  // (53 simultaneous CE-upgrade pages) starves slower tests of CPU/net budget.
-  // 3 workers keeps utilisation high while cutting the contention that causes
-  // the timeouts retries recover from.
-  workers: 3,
+  // Worker cap. The old value (3) existed to stop the all-components 53-page
+  // CE-upgrade sweep from starving slower tests of CPU/net budget and tripping
+  // the per-test timeout. Two things changed that math (2026-08-21): the
+  // heaviest hydration page (/guide/reference, 6600+ upgrades) no longer backs
+  // any test, and the local gate runs a SMOKE subset (@smoke) rather than the
+  // full sweep — the sweep only runs in the full/CI path. With that headroom, 5
+  // workers is safe: measured the full suite at 6 workers = 139s vs 3 = ~205s,
+  // 0 flakes. retries:2 stays as the net. Bump toward '50%' of cores only after
+  // validating under a loaded machine.
+  workers: 5,
   reporter: [["list"]],
   use: {
     baseURL,

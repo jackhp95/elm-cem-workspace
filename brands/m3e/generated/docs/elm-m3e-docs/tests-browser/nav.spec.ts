@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
  * current, so the tree doesn't repeat that -- it's just that one section's
  * page list, flat (no category sub-groups, not even for Components).
  */
-test("drawer on a Components route shows only components, flat", async ({ page }) => {
+test("drawer on a Components route shows only components, flat", { tag: "@smoke" }, async ({ page }) => {
   await page.goto("/components/button");
   // At a desktop width the tree is already pinned open (`Shared.init` seeds
   // `treeOpen` from `treePinsOpen`), so there is nothing to click first --

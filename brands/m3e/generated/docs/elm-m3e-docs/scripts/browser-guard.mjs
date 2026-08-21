@@ -36,20 +36,28 @@ if (missing.length > 0 && require) {
     process.exit(1);
 }
 
-// The @heavy tests (full-catalog kitchen-sink renders — e.g. /components/all's
-// ~2200-upgrade page) are broad smoke nets whose per-component depth is already
-// covered by all-components.spec.ts + usage.spec.ts. They dominate local
-// `gate-all` wall time, so the fast local gate excludes them; CI
-// (REQUIRE_CLONE_GATES=1) and an explicit RUN_HEAVY=1 run the full suite so
-// full-scale-mount coverage is never lost. `--grep-invert` is prepended so a
-// caller-supplied grep still composes (Playwright ANDs the two).
-const runHeavy = require || process.env.RUN_HEAVY === "1";
-const heavyFilter = runHeavy ? [] : ["--grep-invert", "@heavy"];
-if (!runHeavy) {
-    console.log("test:browser: excluding @heavy full-catalog tests (fast local gate) — set RUN_HEAVY=1 or REQUIRE_CLONE_GATES=1 to include them");
-}
+// Browser-suite tiers (2026-08-21):
+//   • SMOKE (default — the fast local `gate-all` inner loop): only @smoke-tagged
+//     tests, a curated handful (~6) that assures the app shell hydrates and a
+//     couple of components mount + interact cleanly. Seconds, not minutes. This
+//     is deliberately NOT full coverage — it's a fast proxy so `gate-all` stays
+//     tight for iteration.
+//   • FULL (CI via REQUIRE_CLONE_GATES=1, or RUN_FULL_BROWSER=1 locally): the
+//     entire suite — the 53-page all-components sweep, every functional spec,
+//     and the @heavy full-catalog renders. This is the real per-component
+//     coverage; it MUST run in CI on every branch before merge.
+// A caller-supplied grep (process.argv) still composes — Playwright ANDs them.
+// RUN_HEAVY=1 is kept as a full-suite alias for back-compat with the earlier
+// @heavy-only opt-in.
+const runFull = require || process.env.RUN_FULL_BROWSER === "1" || process.env.RUN_HEAVY === "1";
+const tierFilter = runFull ? [] : ["--grep", "@smoke"];
+console.log(
+    runFull
+        ? "test:browser: FULL suite (all specs + all-components sweep + @heavy full-catalog renders)"
+        : "test:browser: SMOKE subset (@smoke-tagged only) — set RUN_FULL_BROWSER=1 or REQUIRE_CLONE_GATES=1 for the full suite",
+);
 
-const res = spawnSync(resolve(DOCS, "node_modules/.bin/playwright"), ["test", ...heavyFilter, ...process.argv.slice(2)], {
+const res = spawnSync(resolve(DOCS, "node_modules/.bin/playwright"), ["test", ...tierFilter, ...process.argv.slice(2)], {
     cwd: DOCS,
     stdio: "inherit",
 });

@@ -31,7 +31,7 @@ const LONG_ROUTE = "/components/button";
 
 test.use({ viewport: MOBILE });
 
-test("mobile shell: content scrolls in a bounded inner region (nothing clipped)", async ({ page }) => {
+test("mobile shell: content scrolls in a bounded inner region (nothing clipped)", { tag: "@smoke" }, async ({ page }) => {
   await page.goto(LONG_ROUTE);
   await expect(page.locator("#docs-app-bar")).toBeVisible();
 
@@ -73,7 +73,7 @@ test("mobile shell: content scrolls in a bounded inner region (nothing clipped)"
   expect(scroll.moved).toBeGreaterThan(0);
 });
 
-test("FOUC guard is shipped and nothing stays undefined after load", async ({ page }) => {
+test("FOUC guard is shipped and nothing stays undefined after load", { tag: "@smoke" }, async ({ page }) => {
   await page.goto("/getting-started/welcome");
   await expect(page.locator("#docs-app-bar")).toBeVisible();
 
