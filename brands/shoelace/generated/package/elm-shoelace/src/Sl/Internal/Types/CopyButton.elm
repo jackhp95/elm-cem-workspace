@@ -1,7 +1,12 @@
-module Sl.Internal.Types.CopyButton exposing (..)
+module Sl.Internal.Types.CopyButton exposing (Is, Attrs, ChildAdmittedBy, TooltipPlacement, Builder, AttrCaps)
 
-{-| Internal type definitions for CopyButton — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for CopyButton. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.CopyButton` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, TooltipPlacement, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for CopyButton (generated).
+-}
 type alias Is s =
     { s | copyButton : Brand }
 
 
+{-| The `Attrs` type row for CopyButton (generated).
+-}
 type alias Attrs =
     { class : Supported
     , copyLabel : Supported
@@ -33,10 +42,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for CopyButton (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | copyButton : Ctx }
 
 
+{-| The `TooltipPlacement` type row for CopyButton (generated).
+-}
 type alias TooltipPlacement =
     { bottom : Supported
     , left : Supported
@@ -45,10 +58,14 @@ type alias TooltipPlacement =
     }
 
 
+{-| The `Builder` type row for CopyButton (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for CopyButton (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , copyLabel : Available

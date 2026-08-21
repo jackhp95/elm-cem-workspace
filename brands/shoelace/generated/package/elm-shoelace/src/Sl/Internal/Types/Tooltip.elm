@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Tooltip exposing (..)
+module Sl.Internal.Types.Tooltip exposing (Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps)
 
-{-| Internal type definitions for Tooltip — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Tooltip. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Tooltip` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Tooltip (generated).
+-}
 type alias Is s =
     { s | tooltip : Brand }
 
 
+{-| The `Attrs` type row for Tooltip (generated).
+-}
 type alias Attrs =
     { class : Supported
     , content : Supported
@@ -34,10 +43,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Tooltip (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | tooltip : Ctx }
 
 
+{-| The `Placement` type row for Tooltip (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , bottomEnd : Supported
@@ -54,10 +67,14 @@ type alias Placement =
     }
 
 
+{-| The `Builder` type row for Tooltip (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Tooltip (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , content : Available

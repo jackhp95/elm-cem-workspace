@@ -1,7 +1,12 @@
-module Sl.Internal.Types.TabGroup exposing (..)
+module Sl.Internal.Types.TabGroup exposing (Is, Attrs, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps)
 
-{-| Internal type definitions for TabGroup — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for TabGroup. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.TabGroup` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for TabGroup (generated).
+-}
 type alias Is s =
     { s | tabGroup : Brand }
 
 
+{-| The `Attrs` type row for TabGroup (generated).
+-}
 type alias Attrs =
     { activation : Supported
     , class : Supported
@@ -28,16 +37,22 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for TabGroup (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | tabGroup : Ctx }
 
 
+{-| The `Activation` type row for TabGroup (generated).
+-}
 type alias Activation =
     { auto : Supported
     , manual : Supported
     }
 
 
+{-| The `Placement` type row for TabGroup (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , end : Supported
@@ -46,10 +61,14 @@ type alias Placement =
     }
 
 
+{-| The `Builder` type row for TabGroup (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for TabGroup (generated).
+-}
 type alias AttrCaps =
     { activation : Available
     , class : Available

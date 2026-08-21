@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Textarea exposing (..)
+module Sl.Internal.Types.Textarea exposing (Is, Attrs, ChildAdmittedBy, Autocapitalize, Enterkeyhint, Inputmode, Resize, Size, Builder, AttrCaps)
 
-{-| Internal type definitions for Textarea — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Textarea. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Textarea` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Autocapitalize, Enterkeyhint, Inputmode, Resize, Size, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Textarea (generated).
+-}
 type alias Is s =
     { s | textarea : Brand }
 
 
+{-| The `Attrs` type row for Textarea (generated).
+-}
 type alias Attrs =
     { autocapitalize : Supported
     , autocomplete : Supported
@@ -50,10 +59,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Textarea (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | textarea : Ctx }
 
 
+{-| The `Autocapitalize` type row for Textarea (generated).
+-}
 type alias Autocapitalize =
     { characters : Supported
     , none : Supported
@@ -64,6 +77,8 @@ type alias Autocapitalize =
     }
 
 
+{-| The `Enterkeyhint` type row for Textarea (generated).
+-}
 type alias Enterkeyhint =
     { done : Supported
     , enter : Supported
@@ -75,6 +90,8 @@ type alias Enterkeyhint =
     }
 
 
+{-| The `Inputmode` type row for Textarea (generated).
+-}
 type alias Inputmode =
     { decimal : Supported
     , email : Supported
@@ -87,6 +104,8 @@ type alias Inputmode =
     }
 
 
+{-| The `Resize` type row for Textarea (generated).
+-}
 type alias Resize =
     { auto : Supported
     , none : Supported
@@ -94,6 +113,8 @@ type alias Resize =
     }
 
 
+{-| The `Size` type row for Textarea (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -101,10 +122,14 @@ type alias Size =
     }
 
 
+{-| The `Builder` type row for Textarea (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Textarea (generated).
+-}
 type alias AttrCaps =
     { autocapitalize : Available
     , autocomplete : Available

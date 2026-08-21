@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Alert exposing (..)
+module Sl.Internal.Types.Alert exposing (Is, Attrs, ChildAdmittedBy, Countdown, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Alert — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Alert. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Alert` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Countdown, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Alert (generated).
+-}
 type alias Is s =
     { s | alert : Brand }
 
 
+{-| The `Attrs` type row for Alert (generated).
+-}
 type alias Attrs =
     { class : Supported
     , closable : Supported
@@ -31,16 +40,22 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Alert (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | alert : Ctx }
 
 
+{-| The `Countdown` type row for Alert (generated).
+-}
 type alias Countdown =
     { ltr : Supported
     , rtl : Supported
     }
 
 
+{-| The `Variant` type row for Alert (generated).
+-}
 type alias Variant =
     { danger : Supported
     , neutral : Supported
@@ -50,10 +65,14 @@ type alias Variant =
     }
 
 
+{-| The `Builder` type row for Alert (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Alert (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , closable : Available

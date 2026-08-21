@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Input exposing (..)
+module Sl.Internal.Types.Input exposing (Is, Attrs, ChildAdmittedBy, Autocapitalize, Autocorrect, Enterkeyhint, Inputmode, Size, Type, Builder, AttrCaps)
 
-{-| Internal type definitions for Input — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Input. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Input` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Autocapitalize, Autocorrect, Enterkeyhint, Inputmode, Size, Type, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Input (generated).
+-}
 type alias Is s =
     { s | input : Brand }
 
 
+{-| The `Attrs` type row for Input (generated).
+-}
 type alias Attrs =
     { autocapitalize : Supported
     , autocomplete : Supported
@@ -59,10 +68,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Input (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | input : Ctx }
 
 
+{-| The `Autocapitalize` type row for Input (generated).
+-}
 type alias Autocapitalize =
     { characters : Supported
     , none : Supported
@@ -73,12 +86,16 @@ type alias Autocapitalize =
     }
 
 
+{-| The `Autocorrect` type row for Input (generated).
+-}
 type alias Autocorrect =
     { off : Supported
     , on : Supported
     }
 
 
+{-| The `Enterkeyhint` type row for Input (generated).
+-}
 type alias Enterkeyhint =
     { done : Supported
     , enter : Supported
@@ -90,6 +107,8 @@ type alias Enterkeyhint =
     }
 
 
+{-| The `Inputmode` type row for Input (generated).
+-}
 type alias Inputmode =
     { decimal : Supported
     , email : Supported
@@ -102,6 +121,8 @@ type alias Inputmode =
     }
 
 
+{-| The `Size` type row for Input (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -109,6 +130,8 @@ type alias Size =
     }
 
 
+{-| The `Type` type row for Input (generated).
+-}
 type alias Type =
     { date : Supported
     , datetimeLocal : Supported
@@ -123,10 +146,14 @@ type alias Type =
     }
 
 
+{-| The `Builder` type row for Input (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Input (generated).
+-}
 type alias AttrCaps =
     { autocapitalize : Available
     , autocomplete : Available

@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Drawer exposing (..)
+module Sl.Internal.Types.Drawer exposing (Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps)
 
-{-| Internal type definitions for Drawer — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Drawer. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Drawer` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Placement, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Drawer (generated).
+-}
 type alias Is s =
     { s | drawer : Brand }
 
 
+{-| The `Attrs` type row for Drawer (generated).
+-}
 type alias Attrs =
     { class : Supported
     , contained : Supported
@@ -33,10 +42,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Drawer (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | drawer : Ctx }
 
 
+{-| The `Placement` type row for Drawer (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , end : Supported
@@ -45,10 +58,14 @@ type alias Placement =
     }
 
 
+{-| The `Builder` type row for Drawer (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Drawer (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , contained : Available

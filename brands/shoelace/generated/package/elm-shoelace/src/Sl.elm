@@ -28,644 +28,644 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import Sl.Component.Alert
-import Sl.Component.AnimatedImage
-import Sl.Component.Animation
-import Sl.Component.Avatar
-import Sl.Component.Badge
-import Sl.Component.Breadcrumb
-import Sl.Component.BreadcrumbItem
-import Sl.Component.Button
-import Sl.Component.ButtonGroup
-import Sl.Component.Card
-import Sl.Component.Carousel
-import Sl.Component.CarouselItem
-import Sl.Component.Checkbox
-import Sl.Component.ColorPicker
-import Sl.Component.CopyButton
-import Sl.Component.Details
-import Sl.Component.Dialog
-import Sl.Component.Divider
-import Sl.Component.Drawer
-import Sl.Component.Dropdown
-import Sl.Component.FormatBytes
-import Sl.Component.FormatDate
-import Sl.Component.FormatNumber
-import Sl.Component.Icon
-import Sl.Component.IconButton
-import Sl.Component.ImageComparer
-import Sl.Component.Include
-import Sl.Component.Input
-import Sl.Component.Menu
-import Sl.Component.MenuItem
-import Sl.Component.MenuLabel
-import Sl.Component.MutationObserver
-import Sl.Component.Option
-import Sl.Component.Popup
-import Sl.Component.ProgressBar
-import Sl.Component.ProgressRing
-import Sl.Component.QrCode
-import Sl.Component.Radio
-import Sl.Component.RadioButton
-import Sl.Component.RadioGroup
-import Sl.Component.Range
-import Sl.Component.Rating
-import Sl.Component.RelativeTime
-import Sl.Component.ResizeObserver
-import Sl.Component.Select
-import Sl.Component.Skeleton
-import Sl.Component.Spinner
-import Sl.Component.SplitPanel
-import Sl.Component.Switch
-import Sl.Component.Tab
-import Sl.Component.TabGroup
-import Sl.Component.TabPanel
-import Sl.Component.Tag
-import Sl.Component.Textarea
-import Sl.Component.Tooltip
-import Sl.Component.Tree
-import Sl.Component.TreeItem
-import Sl.Component.VisuallyHidden
+import Sl.Internal.Types.Alert
+import Sl.Internal.Types.AnimatedImage
+import Sl.Internal.Types.Animation
+import Sl.Internal.Types.Avatar
+import Sl.Internal.Types.Badge
+import Sl.Internal.Types.Breadcrumb
+import Sl.Internal.Types.BreadcrumbItem
+import Sl.Internal.Types.Button
+import Sl.Internal.Types.ButtonGroup
+import Sl.Internal.Types.Card
+import Sl.Internal.Types.Carousel
+import Sl.Internal.Types.CarouselItem
+import Sl.Internal.Types.Checkbox
+import Sl.Internal.Types.ColorPicker
+import Sl.Internal.Types.CopyButton
+import Sl.Internal.Types.Details
+import Sl.Internal.Types.Dialog
+import Sl.Internal.Types.Divider
+import Sl.Internal.Types.Drawer
+import Sl.Internal.Types.Dropdown
+import Sl.Internal.Types.FormatBytes
+import Sl.Internal.Types.FormatDate
+import Sl.Internal.Types.FormatNumber
+import Sl.Internal.Types.Icon
+import Sl.Internal.Types.IconButton
+import Sl.Internal.Types.ImageComparer
+import Sl.Internal.Types.Include
+import Sl.Internal.Types.Input
+import Sl.Internal.Types.Menu
+import Sl.Internal.Types.MenuItem
+import Sl.Internal.Types.MenuLabel
+import Sl.Internal.Types.MutationObserver
+import Sl.Internal.Types.Option
+import Sl.Internal.Types.Popup
+import Sl.Internal.Types.ProgressBar
+import Sl.Internal.Types.ProgressRing
+import Sl.Internal.Types.QrCode
+import Sl.Internal.Types.Radio
+import Sl.Internal.Types.RadioButton
+import Sl.Internal.Types.RadioGroup
+import Sl.Internal.Types.Range
+import Sl.Internal.Types.Rating
+import Sl.Internal.Types.RelativeTime
+import Sl.Internal.Types.ResizeObserver
+import Sl.Internal.Types.Select
+import Sl.Internal.Types.Skeleton
+import Sl.Internal.Types.Spinner
+import Sl.Internal.Types.SplitPanel
+import Sl.Internal.Types.Switch
+import Sl.Internal.Types.Tab
+import Sl.Internal.Types.TabGroup
+import Sl.Internal.Types.TabPanel
+import Sl.Internal.Types.Tag
+import Sl.Internal.Types.Textarea
+import Sl.Internal.Types.Tooltip
+import Sl.Internal.Types.Tree
+import Sl.Internal.Types.TreeItem
+import Sl.Internal.Types.VisuallyHidden
 
 
 {-| See `Sl.Component.Alert.component`.
 -}
 alert :
-    List (Attr Sl.Component.Alert.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Alert.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Alert.Is s) admittedBy msg
-alert =
-    Sl.Component.Alert.component
+    List (Attr Sl.Internal.Types.Alert.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Alert.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Alert.Is s) admittedBy msg
+alert attrs children =
+    Ir.fromNode (Ir.node "sl-alert" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.AnimatedImage.component`.
 -}
 animatedImage :
-    List (Attr Sl.Component.AnimatedImage.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.AnimatedImage.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.AnimatedImage.Is s) admittedBy msg
-animatedImage =
-    Sl.Component.AnimatedImage.component
+    List (Attr Sl.Internal.Types.AnimatedImage.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.AnimatedImage.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.AnimatedImage.Is s) admittedBy msg
+animatedImage attrs children =
+    Ir.fromNode (Ir.node "sl-animated-image" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Animation.component`.
 -}
 animation :
-    List (Attr Sl.Component.Animation.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Animation.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Animation.Is s) admittedBy msg
-animation =
-    Sl.Component.Animation.component
+    List (Attr Sl.Internal.Types.Animation.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Animation.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Animation.Is s) admittedBy msg
+animation attrs children =
+    Ir.fromNode (Ir.node "sl-animation" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Avatar.component`.
 -}
 avatar :
-    List (Attr Sl.Component.Avatar.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Avatar.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Avatar.Is s) admittedBy msg
-avatar =
-    Sl.Component.Avatar.component
+    List (Attr Sl.Internal.Types.Avatar.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Avatar.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Avatar.Is s) admittedBy msg
+avatar attrs children =
+    Ir.fromNode (Ir.node "sl-avatar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Badge.component`.
 -}
 badge :
-    List (Attr Sl.Component.Badge.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Badge.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Badge.Is s) admittedBy msg
-badge =
-    Sl.Component.Badge.component
+    List (Attr Sl.Internal.Types.Badge.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Badge.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Badge.Is s) admittedBy msg
+badge attrs children =
+    Ir.fromNode (Ir.node "sl-badge" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Breadcrumb.component`.
 -}
 breadcrumb :
-    List (Attr Sl.Component.Breadcrumb.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Breadcrumb.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Breadcrumb.Is s) admittedBy msg
-breadcrumb =
-    Sl.Component.Breadcrumb.component
+    List (Attr Sl.Internal.Types.Breadcrumb.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Breadcrumb.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Breadcrumb.Is s) admittedBy msg
+breadcrumb attrs children =
+    Ir.fromNode (Ir.node "sl-breadcrumb" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.BreadcrumbItem.component`.
 -}
 breadcrumbItem :
-    List (Attr Sl.Component.BreadcrumbItem.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.BreadcrumbItem.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.BreadcrumbItem.Is s) admittedBy msg
-breadcrumbItem =
-    Sl.Component.BreadcrumbItem.component
+    List (Attr Sl.Internal.Types.BreadcrumbItem.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.BreadcrumbItem.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.BreadcrumbItem.Is s) admittedBy msg
+breadcrumbItem attrs children =
+    Ir.fromNode (Ir.node "sl-breadcrumb-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Button.component`.
 -}
 button :
-    List (Attr Sl.Component.Button.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Button.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Button.Is s) admittedBy msg
-button =
-    Sl.Component.Button.component
+    List (Attr Sl.Internal.Types.Button.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Button.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Button.Is s) admittedBy msg
+button attrs children =
+    Ir.fromNode (Ir.node "sl-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ButtonGroup.component`.
 -}
 buttonGroup :
-    List (Attr Sl.Component.ButtonGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ButtonGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ButtonGroup.Is s) admittedBy msg
-buttonGroup =
-    Sl.Component.ButtonGroup.component
+    List (Attr Sl.Internal.Types.ButtonGroup.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ButtonGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ButtonGroup.Is s) admittedBy msg
+buttonGroup attrs children =
+    Ir.fromNode (Ir.node "sl-button-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Card.component`.
 -}
 card :
-    List (Attr Sl.Component.Card.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Card.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Card.Is s) admittedBy msg
-card =
-    Sl.Component.Card.component
+    List (Attr Sl.Internal.Types.Card.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Card.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Card.Is s) admittedBy msg
+card attrs children =
+    Ir.fromNode (Ir.node "sl-card" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Carousel.component`.
 -}
 carousel :
-    List (Attr Sl.Component.Carousel.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Carousel.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Carousel.Is s) admittedBy msg
-carousel =
-    Sl.Component.Carousel.component
+    List (Attr Sl.Internal.Types.Carousel.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Carousel.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Carousel.Is s) admittedBy msg
+carousel attrs children =
+    Ir.fromNode (Ir.node "sl-carousel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.CarouselItem.component`.
 -}
 carouselItem :
-    List (Attr Sl.Component.CarouselItem.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.CarouselItem.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.CarouselItem.Is s) admittedBy msg
-carouselItem =
-    Sl.Component.CarouselItem.component
+    List (Attr Sl.Internal.Types.CarouselItem.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.CarouselItem.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.CarouselItem.Is s) admittedBy msg
+carouselItem attrs children =
+    Ir.fromNode (Ir.node "sl-carousel-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Checkbox.component`.
 -}
 checkbox :
-    List (Attr Sl.Component.Checkbox.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Checkbox.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Checkbox.Is s) admittedBy msg
-checkbox =
-    Sl.Component.Checkbox.component
+    List (Attr Sl.Internal.Types.Checkbox.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Checkbox.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Checkbox.Is s) admittedBy msg
+checkbox attrs children =
+    Ir.fromNode (Ir.node "sl-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ColorPicker.component`.
 -}
 colorPicker :
-    List (Attr Sl.Component.ColorPicker.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ColorPicker.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ColorPicker.Is s) admittedBy msg
-colorPicker =
-    Sl.Component.ColorPicker.component
+    List (Attr Sl.Internal.Types.ColorPicker.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ColorPicker.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ColorPicker.Is s) admittedBy msg
+colorPicker attrs children =
+    Ir.fromNode (Ir.node "sl-color-picker" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.CopyButton.component`.
 -}
 copyButton :
-    List (Attr Sl.Component.CopyButton.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.CopyButton.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.CopyButton.Is s) admittedBy msg
-copyButton =
-    Sl.Component.CopyButton.component
+    List (Attr Sl.Internal.Types.CopyButton.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.CopyButton.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.CopyButton.Is s) admittedBy msg
+copyButton attrs children =
+    Ir.fromNode (Ir.node "sl-copy-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Details.component`.
 -}
 details :
-    List (Attr Sl.Component.Details.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Details.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Details.Is s) admittedBy msg
-details =
-    Sl.Component.Details.component
+    List (Attr Sl.Internal.Types.Details.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Details.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Details.Is s) admittedBy msg
+details attrs children =
+    Ir.fromNode (Ir.node "sl-details" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Dialog.component`.
 -}
 dialog :
-    List (Attr Sl.Component.Dialog.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Dialog.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Dialog.Is s) admittedBy msg
-dialog =
-    Sl.Component.Dialog.component
+    List (Attr Sl.Internal.Types.Dialog.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Dialog.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Dialog.Is s) admittedBy msg
+dialog attrs children =
+    Ir.fromNode (Ir.node "sl-dialog" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Divider.component`.
 -}
 divider :
-    List (Attr Sl.Component.Divider.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Divider.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Divider.Is s) admittedBy msg
-divider =
-    Sl.Component.Divider.component
+    List (Attr Sl.Internal.Types.Divider.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Divider.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Divider.Is s) admittedBy msg
+divider attrs children =
+    Ir.fromNode (Ir.node "sl-divider" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Drawer.component`.
 -}
 drawer :
-    List (Attr Sl.Component.Drawer.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Drawer.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Drawer.Is s) admittedBy msg
-drawer =
-    Sl.Component.Drawer.component
+    List (Attr Sl.Internal.Types.Drawer.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Drawer.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Drawer.Is s) admittedBy msg
+drawer attrs children =
+    Ir.fromNode (Ir.node "sl-drawer" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Dropdown.component`.
 -}
 dropdown :
-    List (Attr Sl.Component.Dropdown.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Dropdown.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Dropdown.Is s) admittedBy msg
-dropdown =
-    Sl.Component.Dropdown.component
+    List (Attr Sl.Internal.Types.Dropdown.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Dropdown.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Dropdown.Is s) admittedBy msg
+dropdown attrs children =
+    Ir.fromNode (Ir.node "sl-dropdown" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.FormatBytes.component`.
 -}
 formatBytes :
-    List (Attr Sl.Component.FormatBytes.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.FormatBytes.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.FormatBytes.Is s) admittedBy msg
-formatBytes =
-    Sl.Component.FormatBytes.component
+    List (Attr Sl.Internal.Types.FormatBytes.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.FormatBytes.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.FormatBytes.Is s) admittedBy msg
+formatBytes attrs children =
+    Ir.fromNode (Ir.node "sl-format-bytes" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.FormatDate.component`.
 -}
 formatDate :
-    List (Attr Sl.Component.FormatDate.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.FormatDate.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.FormatDate.Is s) admittedBy msg
-formatDate =
-    Sl.Component.FormatDate.component
+    List (Attr Sl.Internal.Types.FormatDate.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.FormatDate.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.FormatDate.Is s) admittedBy msg
+formatDate attrs children =
+    Ir.fromNode (Ir.node "sl-format-date" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.FormatNumber.component`.
 -}
 formatNumber :
-    List (Attr Sl.Component.FormatNumber.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.FormatNumber.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.FormatNumber.Is s) admittedBy msg
-formatNumber =
-    Sl.Component.FormatNumber.component
+    List (Attr Sl.Internal.Types.FormatNumber.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.FormatNumber.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.FormatNumber.Is s) admittedBy msg
+formatNumber attrs children =
+    Ir.fromNode (Ir.node "sl-format-number" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Icon.component`.
 -}
 icon :
-    List (Attr Sl.Component.Icon.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Icon.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Icon.Is s) admittedBy msg
-icon =
-    Sl.Component.Icon.component
+    List (Attr Sl.Internal.Types.Icon.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Icon.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Icon.Is s) admittedBy msg
+icon attrs children =
+    Ir.fromNode (Ir.node "sl-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.IconButton.component`.
 -}
 iconButton :
-    List (Attr Sl.Component.IconButton.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.IconButton.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.IconButton.Is s) admittedBy msg
-iconButton =
-    Sl.Component.IconButton.component
+    List (Attr Sl.Internal.Types.IconButton.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.IconButton.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.IconButton.Is s) admittedBy msg
+iconButton attrs children =
+    Ir.fromNode (Ir.node "sl-icon-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ImageComparer.component`.
 -}
 imageComparer :
-    List (Attr Sl.Component.ImageComparer.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ImageComparer.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ImageComparer.Is s) admittedBy msg
-imageComparer =
-    Sl.Component.ImageComparer.component
+    List (Attr Sl.Internal.Types.ImageComparer.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ImageComparer.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ImageComparer.Is s) admittedBy msg
+imageComparer attrs children =
+    Ir.fromNode (Ir.node "sl-image-comparer" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Include.component`.
 -}
 include :
-    List (Attr Sl.Component.Include.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Include.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Include.Is s) admittedBy msg
-include =
-    Sl.Component.Include.component
+    List (Attr Sl.Internal.Types.Include.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Include.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Include.Is s) admittedBy msg
+include attrs children =
+    Ir.fromNode (Ir.node "sl-include" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Input.component`.
 -}
 input :
-    List (Attr Sl.Component.Input.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Input.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Input.Is s) admittedBy msg
-input =
-    Sl.Component.Input.component
+    List (Attr Sl.Internal.Types.Input.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Input.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Input.Is s) admittedBy msg
+input attrs children =
+    Ir.fromNode (Ir.node "sl-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Menu.component`.
 -}
 menu :
-    List (Attr Sl.Component.Menu.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Menu.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Menu.Is s) admittedBy msg
-menu =
-    Sl.Component.Menu.component
+    List (Attr Sl.Internal.Types.Menu.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Menu.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Menu.Is s) admittedBy msg
+menu attrs children =
+    Ir.fromNode (Ir.node "sl-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.MenuItem.component`.
 -}
 menuItem :
-    List (Attr Sl.Component.MenuItem.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.MenuItem.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.MenuItem.Is s) admittedBy msg
-menuItem =
-    Sl.Component.MenuItem.component
+    List (Attr Sl.Internal.Types.MenuItem.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.MenuItem.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.MenuItem.Is s) admittedBy msg
+menuItem attrs children =
+    Ir.fromNode (Ir.node "sl-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.MenuLabel.component`.
 -}
 menuLabel :
-    List (Attr Sl.Component.MenuLabel.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.MenuLabel.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.MenuLabel.Is s) admittedBy msg
-menuLabel =
-    Sl.Component.MenuLabel.component
+    List (Attr Sl.Internal.Types.MenuLabel.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.MenuLabel.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.MenuLabel.Is s) admittedBy msg
+menuLabel attrs children =
+    Ir.fromNode (Ir.node "sl-menu-label" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.MutationObserver.component`.
 -}
 mutationObserver :
-    List (Attr Sl.Component.MutationObserver.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.MutationObserver.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.MutationObserver.Is s) admittedBy msg
-mutationObserver =
-    Sl.Component.MutationObserver.component
+    List (Attr Sl.Internal.Types.MutationObserver.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.MutationObserver.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.MutationObserver.Is s) admittedBy msg
+mutationObserver attrs children =
+    Ir.fromNode (Ir.node "sl-mutation-observer" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Option.component`.
 -}
 option :
-    List (Attr Sl.Component.Option.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Option.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Option.Is s) admittedBy msg
-option =
-    Sl.Component.Option.component
+    List (Attr Sl.Internal.Types.Option.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Option.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Option.Is s) admittedBy msg
+option attrs children =
+    Ir.fromNode (Ir.node "sl-option" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Popup.component`.
 -}
 popup :
-    List (Attr Sl.Component.Popup.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Popup.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Popup.Is s) admittedBy msg
-popup =
-    Sl.Component.Popup.component
+    List (Attr Sl.Internal.Types.Popup.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Popup.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Popup.Is s) admittedBy msg
+popup attrs children =
+    Ir.fromNode (Ir.node "sl-popup" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ProgressBar.component`.
 -}
 progressBar :
-    List (Attr Sl.Component.ProgressBar.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ProgressBar.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ProgressBar.Is s) admittedBy msg
-progressBar =
-    Sl.Component.ProgressBar.component
+    List (Attr Sl.Internal.Types.ProgressBar.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ProgressBar.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ProgressBar.Is s) admittedBy msg
+progressBar attrs children =
+    Ir.fromNode (Ir.node "sl-progress-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ProgressRing.component`.
 -}
 progressRing :
-    List (Attr Sl.Component.ProgressRing.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ProgressRing.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ProgressRing.Is s) admittedBy msg
-progressRing =
-    Sl.Component.ProgressRing.component
+    List (Attr Sl.Internal.Types.ProgressRing.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ProgressRing.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ProgressRing.Is s) admittedBy msg
+progressRing attrs children =
+    Ir.fromNode (Ir.node "sl-progress-ring" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.QrCode.component`.
 -}
 qrCode :
-    List (Attr Sl.Component.QrCode.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.QrCode.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.QrCode.Is s) admittedBy msg
-qrCode =
-    Sl.Component.QrCode.component
+    List (Attr Sl.Internal.Types.QrCode.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.QrCode.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.QrCode.Is s) admittedBy msg
+qrCode attrs children =
+    Ir.fromNode (Ir.node "sl-qr-code" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Radio.component`.
 -}
 radio :
-    List (Attr Sl.Component.Radio.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Radio.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Radio.Is s) admittedBy msg
-radio =
-    Sl.Component.Radio.component
+    List (Attr Sl.Internal.Types.Radio.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Radio.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Radio.Is s) admittedBy msg
+radio attrs children =
+    Ir.fromNode (Ir.node "sl-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.RadioButton.component`.
 -}
 radioButton :
-    List (Attr Sl.Component.RadioButton.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.RadioButton.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.RadioButton.Is s) admittedBy msg
-radioButton =
-    Sl.Component.RadioButton.component
+    List (Attr Sl.Internal.Types.RadioButton.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.RadioButton.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.RadioButton.Is s) admittedBy msg
+radioButton attrs children =
+    Ir.fromNode (Ir.node "sl-radio-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.RadioGroup.component`.
 -}
 radioGroup :
-    List (Attr Sl.Component.RadioGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.RadioGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.RadioGroup.Is s) admittedBy msg
-radioGroup =
-    Sl.Component.RadioGroup.component
+    List (Attr Sl.Internal.Types.RadioGroup.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.RadioGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.RadioGroup.Is s) admittedBy msg
+radioGroup attrs children =
+    Ir.fromNode (Ir.node "sl-radio-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Range.component`.
 -}
 range :
-    List (Attr Sl.Component.Range.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Range.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Range.Is s) admittedBy msg
-range =
-    Sl.Component.Range.component
+    List (Attr Sl.Internal.Types.Range.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Range.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Range.Is s) admittedBy msg
+range attrs children =
+    Ir.fromNode (Ir.node "sl-range" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Rating.component`.
 -}
 rating :
-    List (Attr Sl.Component.Rating.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Rating.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Rating.Is s) admittedBy msg
-rating =
-    Sl.Component.Rating.component
+    List (Attr Sl.Internal.Types.Rating.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Rating.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Rating.Is s) admittedBy msg
+rating attrs children =
+    Ir.fromNode (Ir.node "sl-rating" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.RelativeTime.component`.
 -}
 relativeTime :
-    List (Attr Sl.Component.RelativeTime.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.RelativeTime.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.RelativeTime.Is s) admittedBy msg
-relativeTime =
-    Sl.Component.RelativeTime.component
+    List (Attr Sl.Internal.Types.RelativeTime.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.RelativeTime.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.RelativeTime.Is s) admittedBy msg
+relativeTime attrs children =
+    Ir.fromNode (Ir.node "sl-relative-time" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.ResizeObserver.component`.
 -}
 resizeObserver :
-    List (Attr Sl.Component.ResizeObserver.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.ResizeObserver.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.ResizeObserver.Is s) admittedBy msg
-resizeObserver =
-    Sl.Component.ResizeObserver.component
+    List (Attr Sl.Internal.Types.ResizeObserver.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.ResizeObserver.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.ResizeObserver.Is s) admittedBy msg
+resizeObserver attrs children =
+    Ir.fromNode (Ir.node "sl-resize-observer" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Select.component`.
 -}
 select :
-    List (Attr Sl.Component.Select.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Select.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Select.Is s) admittedBy msg
-select =
-    Sl.Component.Select.component
+    List (Attr Sl.Internal.Types.Select.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Select.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Select.Is s) admittedBy msg
+select attrs children =
+    Ir.fromNode (Ir.node "sl-select" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Skeleton.component`.
 -}
 skeleton :
-    List (Attr Sl.Component.Skeleton.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Skeleton.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Skeleton.Is s) admittedBy msg
-skeleton =
-    Sl.Component.Skeleton.component
+    List (Attr Sl.Internal.Types.Skeleton.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Skeleton.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Skeleton.Is s) admittedBy msg
+skeleton attrs children =
+    Ir.fromNode (Ir.node "sl-skeleton" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Spinner.component`.
 -}
 spinner :
-    List (Attr Sl.Component.Spinner.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Spinner.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Spinner.Is s) admittedBy msg
-spinner =
-    Sl.Component.Spinner.component
+    List (Attr Sl.Internal.Types.Spinner.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Spinner.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Spinner.Is s) admittedBy msg
+spinner attrs children =
+    Ir.fromNode (Ir.node "sl-spinner" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.SplitPanel.component`.
 -}
 splitPanel :
-    List (Attr Sl.Component.SplitPanel.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.SplitPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.SplitPanel.Is s) admittedBy msg
-splitPanel =
-    Sl.Component.SplitPanel.component
+    List (Attr Sl.Internal.Types.SplitPanel.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.SplitPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.SplitPanel.Is s) admittedBy msg
+splitPanel attrs children =
+    Ir.fromNode (Ir.node "sl-split-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Switch.component`.
 -}
 switch :
-    List (Attr Sl.Component.Switch.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Switch.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Switch.Is s) admittedBy msg
-switch =
-    Sl.Component.Switch.component
+    List (Attr Sl.Internal.Types.Switch.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Switch.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Switch.Is s) admittedBy msg
+switch attrs children =
+    Ir.fromNode (Ir.node "sl-switch" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Tab.component`.
 -}
 tab :
-    List (Attr Sl.Component.Tab.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Tab.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Tab.Is s) admittedBy msg
-tab =
-    Sl.Component.Tab.component
+    List (Attr Sl.Internal.Types.Tab.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Tab.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Tab.Is s) admittedBy msg
+tab attrs children =
+    Ir.fromNode (Ir.node "sl-tab" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.TabGroup.component`.
 -}
 tabGroup :
-    List (Attr Sl.Component.TabGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.TabGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.TabGroup.Is s) admittedBy msg
-tabGroup =
-    Sl.Component.TabGroup.component
+    List (Attr Sl.Internal.Types.TabGroup.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.TabGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.TabGroup.Is s) admittedBy msg
+tabGroup attrs children =
+    Ir.fromNode (Ir.node "sl-tab-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.TabPanel.component`.
 -}
 tabPanel :
-    List (Attr Sl.Component.TabPanel.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.TabPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.TabPanel.Is s) admittedBy msg
-tabPanel =
-    Sl.Component.TabPanel.component
+    List (Attr Sl.Internal.Types.TabPanel.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.TabPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.TabPanel.Is s) admittedBy msg
+tabPanel attrs children =
+    Ir.fromNode (Ir.node "sl-tab-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Tag.component`.
 -}
 tag :
-    List (Attr Sl.Component.Tag.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Tag.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Tag.Is s) admittedBy msg
-tag =
-    Sl.Component.Tag.component
+    List (Attr Sl.Internal.Types.Tag.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Tag.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Tag.Is s) admittedBy msg
+tag attrs children =
+    Ir.fromNode (Ir.node "sl-tag" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Textarea.component`.
 -}
 textarea :
-    List (Attr Sl.Component.Textarea.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Textarea.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Textarea.Is s) admittedBy msg
-textarea =
-    Sl.Component.Textarea.component
+    List (Attr Sl.Internal.Types.Textarea.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Textarea.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Textarea.Is s) admittedBy msg
+textarea attrs children =
+    Ir.fromNode (Ir.node "sl-textarea" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Tooltip.component`.
 -}
 tooltip :
-    List (Attr Sl.Component.Tooltip.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Tooltip.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Tooltip.Is s) admittedBy msg
-tooltip =
-    Sl.Component.Tooltip.component
+    List (Attr Sl.Internal.Types.Tooltip.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Tooltip.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Tooltip.Is s) admittedBy msg
+tooltip attrs children =
+    Ir.fromNode (Ir.node "sl-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.Tree.component`.
 -}
 tree :
-    List (Attr Sl.Component.Tree.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.Tree.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.Tree.Is s) admittedBy msg
-tree =
-    Sl.Component.Tree.component
+    List (Attr Sl.Internal.Types.Tree.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.Tree.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.Tree.Is s) admittedBy msg
+tree attrs children =
+    Ir.fromNode (Ir.node "sl-tree" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.TreeItem.component`.
 -}
 treeItem :
-    List (Attr Sl.Component.TreeItem.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.TreeItem.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.TreeItem.Is s) admittedBy msg
-treeItem =
-    Sl.Component.TreeItem.component
+    List (Attr Sl.Internal.Types.TreeItem.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.TreeItem.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.TreeItem.Is s) admittedBy msg
+treeItem attrs children =
+    Ir.fromNode (Ir.node "sl-tree-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `Sl.Component.VisuallyHidden.component`.
 -}
 visuallyHidden :
-    List (Attr Sl.Component.VisuallyHidden.Attrs msg)
-    -> List (Element childAccepts (Sl.Component.VisuallyHidden.ChildAdmittedBy childAdm) msg)
-    -> Element (Sl.Component.VisuallyHidden.Is s) admittedBy msg
-visuallyHidden =
-    Sl.Component.VisuallyHidden.component
+    List (Attr Sl.Internal.Types.VisuallyHidden.Attrs msg)
+    -> List (Element childAccepts (Sl.Internal.Types.VisuallyHidden.ChildAdmittedBy childAdm) msg)
+    -> Element (Sl.Internal.Types.VisuallyHidden.Is s) admittedBy msg
+visuallyHidden attrs children =
+    Ir.fromNode (Ir.node "sl-visually-hidden" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Checkbox exposing (..)
+module Sl.Internal.Types.Checkbox exposing (Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps)
 
-{-| Internal type definitions for Checkbox — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Checkbox. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Checkbox` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Checkbox (generated).
+-}
 type alias Is s =
     { s | checkbox : Brand }
 
 
+{-| The `Attrs` type row for Checkbox (generated).
+-}
 type alias Attrs =
     { checked : Supported
     , class : Supported
@@ -37,10 +46,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Checkbox (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | checkbox : Ctx }
 
 
+{-| The `Size` type row for Checkbox (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -48,10 +61,14 @@ type alias Size =
     }
 
 
+{-| The `Builder` type row for Checkbox (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Checkbox (generated).
+-}
 type alias AttrCaps =
     { checked : Available
     , class : Available

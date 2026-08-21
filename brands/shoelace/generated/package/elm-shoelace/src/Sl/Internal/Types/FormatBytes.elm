@@ -1,7 +1,12 @@
-module Sl.Internal.Types.FormatBytes exposing (..)
+module Sl.Internal.Types.FormatBytes exposing (Is, Attrs, ChildAdmittedBy, Display, Unit, Builder, AttrCaps)
 
-{-| Internal type definitions for FormatBytes — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for FormatBytes. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.FormatBytes` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Display, Unit, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for FormatBytes (generated).
+-}
 type alias Is s =
     { s | formatBytes : Brand }
 
 
+{-| The `Attrs` type row for FormatBytes (generated).
+-}
 type alias Attrs =
     { class : Supported
     , display : Supported
@@ -25,10 +34,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for FormatBytes (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | formatBytes : Ctx }
 
 
+{-| The `Display` type row for FormatBytes (generated).
+-}
 type alias Display =
     { long : Supported
     , narrow : Supported
@@ -36,16 +49,22 @@ type alias Display =
     }
 
 
+{-| The `Unit` type row for FormatBytes (generated).
+-}
 type alias Unit =
     { bit : Supported
     , byte : Supported
     }
 
 
+{-| The `Builder` type row for FormatBytes (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for FormatBytes (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , display : Available

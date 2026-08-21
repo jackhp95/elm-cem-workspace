@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Tab exposing (..)
+module Sl.Internal.Types.Tab exposing (Is, Attrs, ChildAdmittedBy, Builder, AttrCaps)
 
-{-| Internal type definitions for Tab — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Tab. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Tab` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -9,10 +14,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Tab (generated).
+-}
 type alias Is s =
     { s | tab : Brand }
 
 
+{-| The `Attrs` type row for Tab (generated).
+-}
 type alias Attrs =
     { active : Supported
     , class : Supported
@@ -26,14 +35,20 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Tab (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | tab : Ctx }
 
 
+{-| The `Builder` type row for Tab (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Tab (generated).
+-}
 type alias AttrCaps =
     { active : Available
     , class : Available

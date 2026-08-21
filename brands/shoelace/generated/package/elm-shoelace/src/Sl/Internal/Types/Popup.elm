@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Popup exposing (..)
+module Sl.Internal.Types.Popup exposing (Is, Attrs, ChildAdmittedBy, ArrowPlacement, AutoSize, FlipFallbackStrategy, Placement, Strategy, Sync, Builder, AttrCaps)
 
-{-| Internal type definitions for Popup — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Popup. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Popup` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, ArrowPlacement, AutoSize, FlipFallbackStrategy, Placement, Strategy, Sync, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Popup (generated).
+-}
 type alias Is s =
     { s | popup : Brand }
 
 
+{-| The `Attrs` type row for Popup (generated).
+-}
 type alias Attrs =
     { active : Supported
     , anchor : Supported
@@ -45,10 +54,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Popup (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | popup : Ctx }
 
 
+{-| The `ArrowPlacement` type row for Popup (generated).
+-}
 type alias ArrowPlacement =
     { anchor : Supported
     , center : Supported
@@ -57,6 +70,8 @@ type alias ArrowPlacement =
     }
 
 
+{-| The `AutoSize` type row for Popup (generated).
+-}
 type alias AutoSize =
     { both : Supported
     , horizontal : Supported
@@ -64,12 +79,16 @@ type alias AutoSize =
     }
 
 
+{-| The `FlipFallbackStrategy` type row for Popup (generated).
+-}
 type alias FlipFallbackStrategy =
     { bestFit : Supported
     , initial : Supported
     }
 
 
+{-| The `Placement` type row for Popup (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , bottomEnd : Supported
@@ -86,12 +105,16 @@ type alias Placement =
     }
 
 
+{-| The `Strategy` type row for Popup (generated).
+-}
 type alias Strategy =
     { absolute : Supported
     , fixed : Supported
     }
 
 
+{-| The `Sync` type row for Popup (generated).
+-}
 type alias Sync =
     { both : Supported
     , height : Supported
@@ -99,10 +122,14 @@ type alias Sync =
     }
 
 
+{-| The `Builder` type row for Popup (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Popup (generated).
+-}
 type alias AttrCaps =
     { active : Available
     , anchor : Available

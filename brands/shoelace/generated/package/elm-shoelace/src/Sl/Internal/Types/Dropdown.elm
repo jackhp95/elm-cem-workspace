@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Dropdown exposing (..)
+module Sl.Internal.Types.Dropdown exposing (Is, Attrs, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps)
 
-{-| Internal type definitions for Dropdown — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Dropdown. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Dropdown` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Dropdown (generated).
+-}
 type alias Is s =
     { s | dropdown : Brand }
 
 
+{-| The `Attrs` type row for Dropdown (generated).
+-}
 type alias Attrs =
     { class : Supported
     , disabled : Supported
@@ -34,10 +43,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Dropdown (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | dropdown : Ctx }
 
 
+{-| The `Placement` type row for Dropdown (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , bottomEnd : Supported
@@ -54,6 +67,8 @@ type alias Placement =
     }
 
 
+{-| The `Sync` type row for Dropdown (generated).
+-}
 type alias Sync =
     { both : Supported
     , height : Supported
@@ -61,10 +76,14 @@ type alias Sync =
     }
 
 
+{-| The `Builder` type row for Dropdown (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Dropdown (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , disabled : Available

@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Select exposing (..)
+module Sl.Internal.Types.Select exposing (Is, Attrs, ChildAdmittedBy, Placement, Size, Builder, AttrCaps)
 
-{-| Internal type definitions for Select — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Select. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Select` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Placement, Size, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Select (generated).
+-}
 type alias Is s =
     { s | select : Brand }
 
 
+{-| The `Attrs` type row for Select (generated).
+-}
 type alias Attrs =
     { class : Supported
     , clearable : Supported
@@ -50,16 +59,22 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Select (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | select : Ctx }
 
 
+{-| The `Placement` type row for Select (generated).
+-}
 type alias Placement =
     { bottom : Supported
     , top : Supported
     }
 
 
+{-| The `Size` type row for Select (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -67,10 +82,14 @@ type alias Size =
     }
 
 
+{-| The `Builder` type row for Select (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Select (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , clearable : Available

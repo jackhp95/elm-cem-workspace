@@ -1,7 +1,12 @@
-module Sl.Internal.Types.Button exposing (..)
+module Sl.Internal.Types.Button exposing (Is, Attrs, ChildAdmittedBy, Formenctype, Formmethod, Formtarget, Size, Target, Type, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Button — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Button. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.Button` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Formenctype, Formmethod, Formtarget, Size, Target, Type, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Button (generated).
+-}
 type alias Is s =
     { s | button : Brand }
 
 
+{-| The `Attrs` type row for Button (generated).
+-}
 type alias Attrs =
     { caret : Supported
     , circle : Supported
@@ -46,10 +55,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Button (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | button : Ctx }
 
 
+{-| The `Formenctype` type row for Button (generated).
+-}
 type alias Formenctype =
     { applicationXWwwFormUrlencoded : Supported
     , multipartFormData : Supported
@@ -57,12 +70,16 @@ type alias Formenctype =
     }
 
 
+{-| The `Formmethod` type row for Button (generated).
+-}
 type alias Formmethod =
     { get : Supported
     , post : Supported
     }
 
 
+{-| The `Formtarget` type row for Button (generated).
+-}
 type alias Formtarget =
     { blank_ : Supported
     , parent_ : Supported
@@ -71,6 +88,8 @@ type alias Formtarget =
     }
 
 
+{-| The `Size` type row for Button (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -78,6 +97,8 @@ type alias Size =
     }
 
 
+{-| The `Target` type row for Button (generated).
+-}
 type alias Target =
     { blank_ : Supported
     , parent_ : Supported
@@ -86,6 +107,8 @@ type alias Target =
     }
 
 
+{-| The `Type` type row for Button (generated).
+-}
 type alias Type =
     { button : Supported
     , reset : Supported
@@ -93,6 +116,8 @@ type alias Type =
     }
 
 
+{-| The `Variant` type row for Button (generated).
+-}
 type alias Variant =
     { danger : Supported
     , default : Supported
@@ -104,10 +129,14 @@ type alias Variant =
     }
 
 
+{-| The `Builder` type row for Button (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Button (generated).
+-}
 type alias AttrCaps =
     { caret : Available
     , circle : Available

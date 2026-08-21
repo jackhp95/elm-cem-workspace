@@ -1,7 +1,12 @@
-module Sl.Internal.Types.FormatNumber exposing (..)
+module Sl.Internal.Types.FormatNumber exposing (Is, Attrs, ChildAdmittedBy, CurrencyDisplay, Type, Builder, AttrCaps)
 
-{-| Internal type definitions for FormatNumber — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for FormatNumber. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.FormatNumber` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, CurrencyDisplay, Type, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for FormatNumber (generated).
+-}
 type alias Is s =
     { s | formatNumber : Brand }
 
 
+{-| The `Attrs` type row for FormatNumber (generated).
+-}
 type alias Attrs =
     { class : Supported
     , currency : Supported
@@ -32,10 +41,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for FormatNumber (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | formatNumber : Ctx }
 
 
+{-| The `CurrencyDisplay` type row for FormatNumber (generated).
+-}
 type alias CurrencyDisplay =
     { code : Supported
     , name : Supported
@@ -44,6 +57,8 @@ type alias CurrencyDisplay =
     }
 
 
+{-| The `Type` type row for FormatNumber (generated).
+-}
 type alias Type =
     { currency : Supported
     , decimal : Supported
@@ -51,10 +66,14 @@ type alias Type =
     }
 
 
+{-| The `Builder` type row for FormatNumber (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for FormatNumber (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , currency : Available

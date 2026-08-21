@@ -1,7 +1,12 @@
-module Sl.Internal.Types.MenuItem exposing (..)
+module Sl.Internal.Types.MenuItem exposing (Is, Attrs, ChildAdmittedBy, Type, Builder, AttrCaps)
 
-{-| Internal type definitions for MenuItem — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for MenuItem. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
+`Sl.Component.MenuItem` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Type, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for MenuItem (generated).
+-}
 type alias Is s =
     { s | menuItem : Brand }
 
 
+{-| The `Attrs` type row for MenuItem (generated).
+-}
 type alias Attrs =
     { checked : Supported
     , class : Supported
@@ -27,20 +36,28 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for MenuItem (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | menuItem : Ctx }
 
 
+{-| The `Type` type row for MenuItem (generated).
+-}
 type alias Type =
     { checkbox : Supported
     , normal : Supported
     }
 
 
+{-| The `Builder` type row for MenuItem (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for MenuItem (generated).
+-}
 type alias AttrCaps =
     { checked : Available
     , class : Available
