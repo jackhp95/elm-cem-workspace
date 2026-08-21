@@ -1,6 +1,29 @@
 # Spec: defer docs-shell hydration (nav-tree + theme-reel) to lower the per-page floor
 
-**Status:** proposed · **Owner:** docs/elm-pages app (`brands/m3e/generated/docs/elm-m3e-docs`) · **Author:** gate-perf investigation, 2026-08-21 · **Expected tier:** planning → fable/opus xhigh; execution → opus medium
+**Status:** DONE (theme-editor half) · nav-tree half WON'T-DO (see Outcome) · **Owner:** docs/elm-pages app (`brands/m3e/generated/docs/elm-m3e-docs`) · **Author:** gate-perf investigation, 2026-08-21 · **Expected tier:** planning → fable/opus xhigh; execution → opus medium
+
+## Outcome (2026-08-21, main a36fd8e4/9c72e361)
+
+The theme-editor deferral LANDED and delivered essentially the whole win:
+`settingsSheetContent` (the theme reel + 6-section control accordion) now mounts only
+on first settings-button click. **Measured on `/components/button`: live `<m3e-*>` on
+load 914 → 301 (−67%); time-to-app-bar 2.55s → ~0.8–1.7s (load-dependent, near the
+`/examples/*` baseline); full browser suite test-work 686s → 369s (−46%); tests under
+2s 13% → 75%; suite wall ~126s → ~84s.** All 230 tests green, 0 flaky.
+
+**The nav-tree half was investigated and rejected as not worth doing.** This spec's
+"~274 nav-tree elements" figure below was WRONG — it came from an overlapping probe
+selector. The real nav-tree is **57 elements (56 categorized component links)**, and it
+is the *default-visible primary nav* (pinned open on desktop), so "defer until opened"
+does not apply — deferring it would either pop the nav in on load or add a mount-on-open
+lag to the primary navigation, for a ~50–100ms saving. After the theme-editor win, the
+remaining 301 live elements are **content-dominated (198 = 66% is the page's own demo,
+irreducible); nav-menu 57, nav-rail 17, app-bar/toc/other ~29.** There is no large
+deferrable chrome chunk left. Effort closed as complete.
+
+---
+
+_(Original spec preserved below for the record; its ~274 nav-tree estimate is corrected above.)_
 
 ## TL;DR
 
