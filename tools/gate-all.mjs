@@ -164,13 +164,29 @@ const CHRONIC_SKIPS = {
 // decouple "path to verify tracked" from "path to read content from").
 const KNOWN_BROKEN_TOOL_TESTS = new Set([path.join(repoRoot, "tools", "check-drift.test.mjs")]);
 
-function record(name, status, detail) {
+// Timing instrumentation (2026-08-21): every step recorded below now carries
+// its own wall-clock duration, measured around its ACTUAL execution (the
+// spawned child process for scheduled steps — see gate-scheduler.mjs's
+// `startedAt` — or the in-process work done by each direct `record()` caller
+// below: fetchSnapshotsGate, genElmM3eReferenceGate, factsBundleE2E). This is
+// pure additive instrumentation: it changes nothing about pass/fail/skip
+// determination, only what gets printed and stored alongside it. Prior art:
+// `Date.now()` is what this repo's own tools/*.test.mjs files already use for
+// wall-clock assertions (tools/lib/gate-scheduler.test.mjs,
+// tools/check-mirror-drift.test.mjs) — no new dependency, no perf.now().
+function formatDuration(ms) {
+    if (ms == null || Number.isNaN(ms)) return "";
+    return `(${(ms / 1000).toFixed(1)}s)`;
+}
+
+function record(name, status, detail, durationMs) {
     // Accept booleans too, for callers written before "skip" existed.
     if (status === true) status = "pass";
     if (status === false) status = "fail";
-    results.push({ name, status, detail: detail || "" });
+    results.push({ name, status, detail: detail || "", durationMs: durationMs ?? null });
     const label = status === "pass" ? "PASS" : status === "skip" ? "SKIP" : "FAIL";
-    console.log(`\n${label}  ${name}${detail ? `  — ${detail}` : ""}`);
+    const dur = durationMs != null ? `  ${formatDuration(durationMs)}` : "";
+    console.log(`\n${label}  ${name}${dur}${detail ? `  — ${detail}` : ""}`);
 }
 
 /**
@@ -178,18 +194,21 @@ function record(name, status, detail) {
  * record() call `runItem`'s SKIP-detection has always made — this is the
  * single bridge point the scheduler-based dispatch and the old
  * spawnSync-based `runItem` both funnel through, so `record()`'s output
- * shape genuinely never changed (spec §5).
+ * shape genuinely never changed (spec §5). `durationMs` is the scheduler's
+ * own wall-clock around the spawned child (see gate-scheduler.mjs), passed
+ * straight through so a SKIP detected here still reports how long the step
+ * actually ran for.
  */
-function recordSchedulerResult({ name, status, detail, stdout, stderr }) {
+function recordSchedulerResult({ name, status, detail, stdout, stderr, durationMs }) {
     console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
     if (stdout) process.stdout.write(stdout);
     if (stderr) process.stderr.write(stderr);
     if (status === "pass" && /(^|\n)SKIP[:\s]/.test(stdout || "")) {
         const reason = (stdout.match(/^SKIP.*$/m) || [])[0] || "skipped";
-        record(name, "skip", reason);
+        record(name, "skip", reason, durationMs);
         return;
     }
-    record(name, status, detail);
+    record(name, status, detail, durationMs);
 }
 
 // ── 1. discover workspace packages ────────────────────────────────────────
@@ -295,10 +314,12 @@ function discoverToolTests() {
 function fetchSnapshotsGate() {
     const name = "workspace: fetch-snapshots (pre-fetch .cache/snapshots/*)";
     console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    const started = Date.now();
     const result = spawnSync(process.execPath, [path.join(repoRoot, "tools", "fetch-snapshots.mjs")], {
         cwd: repoRoot,
         encoding: "utf8",
     });
+    const durationMs = Date.now() - started;
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
     if (result.status === 0) {
@@ -309,9 +330,10 @@ function fetchSnapshotsGate() {
             someUnavailable
                 ? "elm-cem's committed-bundle snapshot is always available; one or more network-fetched snapshots were not reachable this run (non-blocking — see CHRONIC_SKIPS for the gates this affects)"
                 : "all snapshots materialized (bundle + network)",
+            durationMs,
         );
     } else {
-        record(name, false, `exited ${result.status} — a LOCAL snapshot problem, not a network one (see output above)`);
+        record(name, false, `exited ${result.status} — a LOCAL snapshot problem, not a network one (see output above)`, durationMs);
     }
 }
 
@@ -333,15 +355,22 @@ function fetchSnapshotsGate() {
 function genElmM3eReferenceGate() {
     const name = "workspace: gen elm-m3e docs/data/reference.json (elm make --docs)";
     console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    const started = Date.now();
     const docsDir = path.join(repoRoot, "brands", "m3e", "generated", "docs", "elm-m3e-docs");
     if (!fs.existsSync(path.join(docsDir, "scripts", "extract-reference.mjs"))) {
-        record(name, true, "brands/m3e/generated/docs/elm-m3e-docs not present or has no extract-reference.mjs — nothing to generate");
+        record(
+            name,
+            true,
+            "brands/m3e/generated/docs/elm-m3e-docs not present or has no extract-reference.mjs — nothing to generate",
+            Date.now() - started,
+        );
         return;
     }
     const result = spawnSync("node", ["scripts/extract-reference.mjs"], { cwd: docsDir, encoding: "utf8" });
+    const durationMs = Date.now() - started;
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
-    record(name, result.status === 0, result.status === 0 ? "" : `extract-reference.mjs exited ${result.status}`);
+    record(name, result.status === 0, result.status === 0 ? "" : `extract-reference.mjs exited ${result.status}`, durationMs);
 }
 
 // ── 3. the end-to-end facts-bundle proof ──────────────────────────────────
@@ -351,9 +380,10 @@ function genElmM3eReferenceGate() {
 function factsBundleE2E() {
     const name = "e2e: facts bundle generate + validate (elm-m3e config)";
     console.log(`\n${"─".repeat(72)}\n▶ ${name}`);
+    const started = Date.now();
 
     if (!fs.existsSync(ELM_M3E)) {
-        record(name, false, `elm-m3e checkout not found at ${ELM_M3E} (set ELM_M3E)`);
+        record(name, false, `elm-m3e checkout not found at ${ELM_M3E} (set ELM_M3E)`, Date.now() - started);
         return false;
     }
 
@@ -367,13 +397,13 @@ function factsBundleE2E() {
         if (gen.stdout) process.stdout.write(gen.stdout);
         if (gen.stderr) process.stderr.write(gen.stderr);
         if (gen.status !== 0) {
-            record(name, false, `generator exited ${gen.status}`);
+            record(name, false, `generator exited ${gen.status}`, Date.now() - started);
             return false;
         }
 
         const schemaPath = path.join(repoRoot, "docs", "facts-bundle", "schema.json");
         if (!fs.existsSync(schemaPath)) {
-            record(name, false, `schema not found at ${schemaPath}`);
+            record(name, false, `schema not found at ${schemaPath}`, Date.now() - started);
             return false;
         }
         const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
@@ -434,13 +464,13 @@ function factsBundleE2E() {
 
         if (problems.length > 0) {
             for (const p of problems) console.error(`   bad ${p}`);
-            record(name, false, problems.join(" | "));
+            record(name, false, problems.join(" | "), Date.now() - started);
             return false;
         }
-        record(name, true, "both faces generated, non-empty, schema-valid");
+        record(name, true, "both faces generated, non-empty, schema-valid", Date.now() - started);
         return true;
     } catch (e) {
-        record(name, false, `threw: ${e.message}`);
+        record(name, false, `threw: ${e.message}`, Date.now() - started);
         return false;
     } finally {
         fs.rmSync(work, { recursive: true, force: true });
@@ -734,10 +764,17 @@ async function main() {
     const skipped = results.filter((r) => r.status === "skip");
     const passed = results.filter((r) => r.status === "pass");
     const width = Math.max(...results.map((r) => r.name.length));
-    console.log(`\n${"═".repeat(72)}\nGATE-ALL SUMMARY\n${"═".repeat(72)}`);
-    for (const r of results) {
+    console.log(`\n${"═".repeat(72)}\nGATE-ALL SUMMARY (slowest first)\n${"═".repeat(72)}`);
+    // A COPY, sorted slowest-first, so the long pole is visible at a glance —
+    // `results` itself stays in natural run-completion order because the
+    // CHRONIC_SKIPS / unexpected-skip / no-longer-chronic analysis below
+    // reads `results`/`skipped` and was not designed against a resorted
+    // array (undated steps, i.e. durationMs === null, sort to the bottom).
+    const bySlowest = [...results].sort((a, b) => (b.durationMs ?? -1) - (a.durationMs ?? -1));
+    for (const r of bySlowest) {
         const label = r.status === "pass" ? "PASS" : r.status === "skip" ? "SKIP" : "FAIL";
-        console.log(`${label}  ${r.name.padEnd(width)}${r.detail ? `  ${r.detail}` : ""}`);
+        const dur = r.durationMs != null ? `  ${formatDuration(r.durationMs)}` : "";
+        console.log(`${label}  ${r.name.padEnd(width)}${dur}${r.detail ? `  ${r.detail}` : ""}`);
     }
     console.log("─".repeat(72));
     console.log(`${passed.length}/${results.length} passed, ${skipped.length} skipped, ${failed.length} failed`);

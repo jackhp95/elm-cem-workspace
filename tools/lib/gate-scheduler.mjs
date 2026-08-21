@@ -34,7 +34,7 @@ import { spawn } from "node:child_process";
  * tag-based mutual exclusion (`exclusiveWith`).
  *
  * @param {StepDescriptor[]} steps
- * @param {{concurrency:number, onResult:(r:{name:string,status:'pass'|'fail',detail:string,stdout:string,stderr:string})=>void}} options
+ * @param {{concurrency:number, onResult:(r:{name:string,status:'pass'|'fail',detail:string,stdout:string,stderr:string,durationMs:number})=>void}} options
  * @returns {Promise<void>} resolves once every step has completed
  */
 export function runScheduled(steps, { concurrency, onResult }) {
@@ -61,6 +61,10 @@ export function runScheduled(steps, { concurrency, onResult }) {
             let stdout = "";
             let stderr = "";
             let done = false;
+            // Wall-clock around the actual spawned process, not the pool-dispatch
+            // bookkeeping around it — this is the number gate-all.mjs's SUMMARY
+            // table and live per-step line report as each step's duration.
+            const startedAt = Date.now();
             const child = spawn(step.command, step.args, {
                 cwd: step.cwd,
                 env: { ...process.env, ...(step.env || {}) },
@@ -85,6 +89,7 @@ export function runScheduled(steps, { concurrency, onResult }) {
                     detail: ok ? "" : spawnError || `exit code ${code}`,
                     stdout,
                     stderr,
+                    durationMs: Date.now() - startedAt,
                 });
                 pump();
                 pump(); // a release may have unblocked more than one waiter
