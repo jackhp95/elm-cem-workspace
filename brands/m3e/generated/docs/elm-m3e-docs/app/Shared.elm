@@ -127,6 +127,15 @@ type alias Model =
     -- localStorage (via `Theme.Ports.storeSurface`/`readSurface`) survives a
     -- reload. Routes only read it and forward tab clicks to the store port.
     , activeSurface : Doc.Usage.Surface
+
+    -- The settings bottom sheet (`settingsBottomSheet`) carries the entire theme
+    -- editor — the ~44-card theme reel plus the 6-section control accordion,
+    -- ~600 live `<m3e-*>` elements. It is `modal` and closed by default, so most
+    -- page views never open it. This gates its content out of the initial DOM
+    -- until the settings button is first clicked (`MountSettings`), so a page
+    -- load hydrates ~600 fewer custom elements. One-way: once mounted it stays
+    -- mounted (reopening is instant); the flag never goes back to False.
+    , settingsMounted : Bool
     }
 
 
@@ -346,6 +355,7 @@ type Msg
     | ResetControlRow
     | PresetRequested String
     | SurfaceLoaded Decode.Value
+    | MountSettings
 
 
 init :
@@ -377,6 +387,7 @@ init flags _ =
       , searchQuery = ""
       , searchIndex = Nothing
       , activeSurface = Doc.Usage.Top
+      , settingsMounted = False
       }
       -- Load every reel card's specimen-subset webfont once at boot (§D6). The
       -- reel appears in both the settings drawer AND the Welcome page, and Shared
@@ -469,6 +480,15 @@ update msg model =
     case msg of
         ToggleTree ->
             ( setTreeOpen (not model.treeOpen) model, Effect.none )
+
+        -- First click of the settings button (which also natively opens the
+        -- element-owned bottom sheet) mounts the theme editor into it. Deferred
+        -- to keep ~600 live `<m3e-*>` editor elements out of every page's initial
+        -- hydration — see `Model.settingsMounted`. Idempotent and one-way: once
+        -- mounted it stays, so reopening the sheet is instant and this never
+        -- re-renders the sheet content away mid-session.
+        MountSettings ->
+            ( { model | settingsMounted = True }, Effect.none )
 
         -- A route change re-pins both panels to their width's default: closed
         -- on a narrow screen (so a mobile overlay can't survive the navigation
@@ -866,7 +886,15 @@ settings-specific end drawer.)
 settingsButton : Element { s | iconButton : M3e.Kind.Brand } admittedBy Msg
 settingsButton =
     M3e.iconButton
-        [ Aria.label "Settings" ]
+        [ Aria.label "Settings"
+
+        -- Additive to the nested native trigger (which still owns show()/dismiss
+        -- synchronously — see `settingsBottomSheet`): this only flips
+        -- `settingsMounted` so the sheet's content mounts on first open. It does
+        -- NOT drive open/close, so the deferred dismiss-outside-listener race the
+        -- native trigger avoids is untouched.
+        , M3e.Events.onClick MountSettings
+        ]
         [ M3e.icon [ M3e.Component.Icon.name "more_vert" ] []
         , M3e.bottomSheetTrigger [ M3e.Component.BottomSheetTrigger.for "settings-sheet" ] []
         ]
@@ -900,7 +928,14 @@ settingsBottomSheet model =
         , M3e.Component.BottomSheet.hideable True
         , M3e.Component.BottomSheet.detents "half full"
         ]
-        [ settingsSheetContent model ]
+        (if model.settingsMounted then
+            [ settingsSheetContent model ]
+
+         else
+            -- Deferred until first open (see `Model.settingsMounted`): an empty
+            -- sheet hydrates none of the ~600-element theme editor on page load.
+            []
+        )
 
 
 {-| One accordion entry: a header (plain text label) plus the section's body.
