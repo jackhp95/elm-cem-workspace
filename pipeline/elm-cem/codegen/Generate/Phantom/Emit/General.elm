@@ -30,8 +30,25 @@ generalModule brand =
                 ref =
                     memberRef brand comp
 
+                -- Barrel-in-core (design §3.2a): for FLAT members reference the
+                -- canonical type definitions in `<Lib>.Internal.Types.<C>.*` (a
+                -- core-tier module) directly, NOT the `<Lib>.Component.<C>.*`
+                -- re-exports (which live in the `elements` tier). The
+                -- `<Lib>.Component.<C>` aliases are verbatim re-exports of these
+                -- Internal.Types definitions, so the referenced types are identical —
+                -- but pointing at core keeps the barrel free of any `elements`
+                -- dependency, so it can live in `core` without tripping split.js's DAG
+                -- gate. HOME members (native families) define their types INLINE in the
+                -- `<Lib>.Component.<Home>` module — there is no `Internal.Types.<Home>`
+                -- module to point at — so those keep the `Component` reference (the
+                -- home-brand barrel decoupling is deferred to the html split, Task 4).
                 q n =
-                    lib ++ ".Component." ++ ref.module_ ++ "." ++ ref.prefix ++ n
+                    case homeOf comp of
+                        Nothing ->
+                            lib ++ ".Internal.Types." ++ ref.module_ ++ "." ++ ref.prefix ++ n
+
+                        Just _ ->
+                            lib ++ ".Component." ++ ref.module_ ++ "." ++ ref.prefix ++ n
 
                 -- Single per-component constructor, `component` (post view/el unification).
                 -- For home members the flat re-export decl still lives at `comp.ctor`
@@ -174,15 +191,31 @@ generalModule brand =
                     , "    Ir.fromNode (" ++ nodeHead brand ++ " \"" ++ comp.tag ++ "\" attrs (List.map HtmlIr.Element.toNode children))"
                     ]
 
+                -- Barrel-in-core (design §3.2a): a FLAT member's constructor emits the
+                -- loose `Ir.node "<tag>"` body directly. For plain components this is
+                -- byte-identical to `M3e.Html.<tag>` — which is exactly what the
+                -- `elements`-tier `M3e.Component.<C>.component` delegates to — so the
+                -- barrel stops re-exporting `M3e.Component.<C>.component` (an `elements`
+                -- dependency that would force `core → elements` and fail the DAG gate).
+                -- Required-content components already used this loose body; now the
+                -- point-free delegating branch does too. HOME members keep re-exporting
+                -- their home module's loose `comp.ctor` producer unchanged (their
+                -- decoupling is deferred to the html split, Task 4); `requiredRecord` is
+                -- always `Nothing` for home members, so this preserves prior behaviour.
                 bodyLines =
-                    case requiredRecord of
-                        Just _ ->
+                    case homeOf comp of
+                        Nothing ->
                             looseBody
 
-                        Nothing ->
-                            [ rCtor ++ " ="
-                            , "    " ++ target
-                            ]
+                        Just _ ->
+                            case requiredRecord of
+                                Just _ ->
+                                    looseBody
+
+                                Nothing ->
+                                    [ rCtor ++ " ="
+                                    , "    " ++ target
+                                    ]
 
                 docLine =
                     case requiredRecord of
@@ -252,24 +285,16 @@ generalModule brand =
                                 False
                     )
 
-        -- A flat component whose `component` ctor requires a record forces the
-        -- barrel's loose Ir.node body (see `ctorSig`'s `looseBody`).
-        anyFlatRequiredContent =
-            brand.comps
-                |> List.any
-                    (\c ->
-                        homeOf c
-                            == Nothing
-                            && (not (List.isEmpty (c.slots |> List.filter .required))
-                                    || not (List.isEmpty c.requiredAttrs)
-                                    || c.actionCaps /= Nothing
-                               )
-                    )
+        -- Ir is needed for atoms and slot placers (Ir.fromNode, Ir.addAttribute,
+        -- Ir.attribute). Post barrel-in-core decoupling (§3.2a) EVERY flat member's
+        -- constructor also emits a loose `Ir.node` body, so Ir is needed whenever the
+        -- brand has any flat component (home members keep their point-free re-export
+        -- and need no Ir).
+        anyFlatComp =
+            brand.comps |> List.any (\c -> homeOf c == Nothing)
 
-        -- Ir is needed for atoms, slot placers (Ir.fromNode, Ir.addAttribute,
-        -- Ir.attribute), AND any flat required-content component's loose body.
         needsIrImport =
-            not (List.isEmpty brand.atoms) || not (List.isEmpty slotPlacerResult.placers) || anyFlatRequiredContent
+            anyFlatComp || not (List.isEmpty brand.atoms) || not (List.isEmpty slotPlacerResult.placers)
 
         imports =
             (substrateReExportImports
@@ -286,7 +311,15 @@ generalModule brand =
                         [ "import HtmlIr.Kind exposing (Shared)" ]
                    )
                 ++ (brand.comps
-                        |> List.map (\c -> "import " ++ lib ++ ".Component." ++ (memberRef brand c).module_)
+                        |> List.map
+                            (\c ->
+                                case homeOf c of
+                                    Nothing ->
+                                        "import " ++ lib ++ ".Internal.Types." ++ (memberRef brand c).module_
+
+                                    Just _ ->
+                                        "import " ++ lib ++ ".Component." ++ (memberRef brand c).module_
+                            )
                         |> List.foldr
                             (\i acc ->
                                 if List.member i acc then

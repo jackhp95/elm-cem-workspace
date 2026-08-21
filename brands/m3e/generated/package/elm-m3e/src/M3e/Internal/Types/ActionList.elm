@@ -1,7 +1,12 @@
-module M3e.Internal.Types.ActionList exposing (..)
+module M3e.Internal.Types.ActionList exposing (Is, Attrs, Content, ChildAdmittedBy, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for ActionList — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for ActionList. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.ActionList` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, ChildAdmittedBy, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for ActionList (generated).
+-}
 type alias Is s =
     { s | actionList : Brand }
 
 
+{-| The `Attrs` type row for ActionList (generated).
+-}
 type alias Attrs =
     { class : Supported
     , id : Supported
@@ -23,6 +32,8 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for ActionList (generated).
+-}
 type alias Content =
     { divider : Brand
     , expandableListItem : Brand
@@ -30,20 +41,28 @@ type alias Content =
     }
 
 
+{-| The `ChildAdmittedBy` type row for ActionList (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | actionList : Ctx }
 
 
+{-| The `Variant` type row for ActionList (generated).
+-}
 type alias Variant =
     { segmented : Supported
     , standard : Supported
     }
 
 
+{-| The `Builder` type row for ActionList (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for ActionList (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , id : Available

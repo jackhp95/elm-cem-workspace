@@ -1,7 +1,12 @@
-module M3e.Internal.Types.ListOption exposing (..)
+module M3e.Internal.Types.ListOption exposing (Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for ListOption — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for ListOption. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.ListOption` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -9,10 +14,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for ListOption (generated).
+-}
 type alias Is s =
     { s | listOption : Brand }
 
 
+{-| The `Attrs` type row for ListOption (generated).
+-}
 type alias Attrs =
     { class : Supported
     , disabled : Supported
@@ -28,6 +37,8 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for ListOption (generated).
+-}
 type alias Content =
     { heading : Brand
     , sharedFlow : Shared
@@ -36,6 +47,8 @@ type alias Content =
     }
 
 
+{-| The `LeadingSlot` type row for ListOption (generated).
+-}
 type alias LeadingSlot =
     { avatar : Brand
     , heading : Brand
@@ -46,6 +59,8 @@ type alias LeadingSlot =
     }
 
 
+{-| The `OverlineSlot` type row for ListOption (generated).
+-}
 type alias OverlineSlot =
     { heading : Brand
     , sharedFlow : Shared
@@ -54,6 +69,8 @@ type alias OverlineSlot =
     }
 
 
+{-| The `SupportingTextSlot` type row for ListOption (generated).
+-}
 type alias SupportingTextSlot =
     { heading : Brand
     , sharedFlow : Shared
@@ -62,6 +79,8 @@ type alias SupportingTextSlot =
     }
 
 
+{-| The `TrailingSlot` type row for ListOption (generated).
+-}
 type alias TrailingSlot =
     { avatar : Brand
     , checkbox : Brand
@@ -75,14 +94,20 @@ type alias TrailingSlot =
     }
 
 
+{-| The `ChildAdmittedBy` type row for ListOption (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | listOption : Ctx }
 
 
+{-| The `Builder` type row for ListOption (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for ListOption (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , disabled : Available
@@ -98,6 +123,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for ListOption (generated).
+-}
 type alias SlotCaps =
     { leading : Available
     , overline : Available

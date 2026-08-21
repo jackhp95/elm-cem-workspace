@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Fab exposing (..)
+module M3e.Internal.Types.Fab exposing (Is, Attrs, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, Size, Type, Variant, ActionCaps, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for Fab — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Fab. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Fab` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, Size, Type, Variant, ActionCaps, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Fab (generated).
+-}
 type alias Is s =
     { s | fab : Brand }
 
 
+{-| The `Attrs` type row for Fab (generated).
+-}
 type alias Attrs =
     { class : Supported
     , disabled : Supported
@@ -36,24 +45,34 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for Fab (generated).
+-}
 type alias Content =
     { sharedIcon : Shared }
 
 
+{-| The `CloseIconSlot` type row for Fab (generated).
+-}
 type alias CloseIconSlot =
     { sharedIcon : Shared }
 
 
+{-| The `LabelSlot` type row for Fab (generated).
+-}
 type alias LabelSlot =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `ChildAdmittedBy` type row for Fab (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | fab : Ctx }
 
 
+{-| The `Size` type row for Fab (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -61,6 +80,8 @@ type alias Size =
     }
 
 
+{-| The `Type` type row for Fab (generated).
+-}
 type alias Type =
     { button : Supported
     , reset : Supported
@@ -68,6 +89,8 @@ type alias Type =
     }
 
 
+{-| The `Variant` type row for Fab (generated).
+-}
 type alias Variant =
     { primary : Supported
     , primaryContainer : Supported
@@ -79,6 +102,8 @@ type alias Variant =
     }
 
 
+{-| The `ActionCaps` type row for Fab (generated).
+-}
 type alias ActionCaps =
     { bottomSheetAction : Supported
     , bottomSheetTrigger : Supported
@@ -98,10 +123,14 @@ type alias ActionCaps =
     }
 
 
+{-| The `Builder` type row for Fab (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Fab (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , disabled : Available
@@ -124,6 +153,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for Fab (generated).
+-}
 type alias SlotCaps =
     { closeIcon : Available
     , label : Available

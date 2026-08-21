@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Calendar exposing (..)
+module M3e.Internal.Types.Calendar exposing (Is, Attrs, ChildAdmittedBy, StartView, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for Calendar — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Calendar. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Calendar` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, StartView, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Calendar (generated).
+-}
 type alias Is s =
     { s | calendar : Brand }
 
 
+{-| The `Attrs` type row for Calendar (generated).
+-}
 type alias Attrs =
     { class : Supported
     , date : Supported
@@ -36,10 +45,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Calendar (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | calendar : Ctx }
 
 
+{-| The `StartView` type row for Calendar (generated).
+-}
 type alias StartView =
     { month : Supported
     , multiYear : Supported
@@ -47,10 +60,14 @@ type alias StartView =
     }
 
 
+{-| The `Builder` type row for Calendar (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Calendar (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , date : Available
@@ -73,6 +90,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for Calendar (generated).
+-}
 type alias SlotCaps =
     { header : Available
     }

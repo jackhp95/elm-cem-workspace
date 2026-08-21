@@ -30,144 +30,144 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import M3e.Component.Accordion
-import M3e.Component.ActionList
-import M3e.Component.AppBar
-import M3e.Component.AssistChip
-import M3e.Component.Autocomplete
-import M3e.Component.Avatar
-import M3e.Component.Badge
-import M3e.Component.BottomSheet
-import M3e.Component.BottomSheetAction
-import M3e.Component.BottomSheetTrigger
-import M3e.Component.Breadcrumb
-import M3e.Component.BreadcrumbItem
-import M3e.Component.BreadcrumbItemButton
-import M3e.Component.Button
-import M3e.Component.ButtonGroup
-import M3e.Component.ButtonSegment
-import M3e.Component.Calendar
-import M3e.Component.Card
-import M3e.Component.Checkbox
-import M3e.Component.Chip
-import M3e.Component.ChipSet
-import M3e.Component.CircularProgressIndicator
-import M3e.Component.Collapsible
-import M3e.Component.ContentPane
-import M3e.Component.DateInput
-import M3e.Component.Datepicker
-import M3e.Component.DatepickerToggle
-import M3e.Component.Dialog
-import M3e.Component.DialogAction
-import M3e.Component.DialogTrigger
-import M3e.Component.Divider
-import M3e.Component.DrawerContainer
-import M3e.Component.DrawerToggle
-import M3e.Component.Elevation
-import M3e.Component.ExpandableListItem
-import M3e.Component.ExpansionHeader
-import M3e.Component.ExpansionPanel
-import M3e.Component.Fab
-import M3e.Component.FabMenu
-import M3e.Component.FabMenuItem
-import M3e.Component.FabMenuTrigger
-import M3e.Component.FilterChip
-import M3e.Component.FilterChipSet
-import M3e.Component.FloatingPanel
-import M3e.Component.FocusRing
-import M3e.Component.FocusTrap
-import M3e.Component.FormField
-import M3e.Component.Heading
-import M3e.Component.Icon
-import M3e.Component.IconButton
-import M3e.Component.InputChip
-import M3e.Component.InputChipSet
-import M3e.Component.LinearProgressIndicator
-import M3e.Component.List
-import M3e.Component.ListAction
-import M3e.Component.ListItem
-import M3e.Component.ListItemButton
-import M3e.Component.ListOption
-import M3e.Component.LoadingIndicator
-import M3e.Component.Menu
-import M3e.Component.MenuItem
-import M3e.Component.MenuItemCheckbox
-import M3e.Component.MenuItemGroup
-import M3e.Component.MenuItemRadio
-import M3e.Component.MenuTrigger
-import M3e.Component.MonthView
-import M3e.Component.MultiYearView
-import M3e.Component.NavBar
-import M3e.Component.NavItem
-import M3e.Component.NavMenu
-import M3e.Component.NavMenuItem
-import M3e.Component.NavMenuItemGroup
-import M3e.Component.NavRail
-import M3e.Component.NavRailToggle
-import M3e.Component.Optgroup
-import M3e.Component.Option
-import M3e.Component.OptionPanel
-import M3e.Component.Paginator
-import M3e.Component.PseudoCheckbox
-import M3e.Component.PseudoRadio
-import M3e.Component.Radio
-import M3e.Component.RadioGroup
-import M3e.Component.RichTooltip
-import M3e.Component.RichTooltipAction
-import M3e.Component.Ripple
-import M3e.Component.ScrollContainer
-import M3e.Component.SearchBar
-import M3e.Component.SearchView
-import M3e.Component.SegmentedButton
-import M3e.Component.Select
-import M3e.Component.SelectionIndicator
-import M3e.Component.SelectionList
-import M3e.Component.Shape
-import M3e.Component.Skeleton
-import M3e.Component.Slide
-import M3e.Component.SlideGroup
-import M3e.Component.Slider
-import M3e.Component.SliderThumb
-import M3e.Component.Snackbar
-import M3e.Component.SplitButton
-import M3e.Component.SplitPane
-import M3e.Component.StateLayer
-import M3e.Component.Step
-import M3e.Component.StepPanel
-import M3e.Component.Stepper
-import M3e.Component.StepperNext
-import M3e.Component.StepperPrevious
-import M3e.Component.StepperReset
-import M3e.Component.SuggestionChip
-import M3e.Component.Switch
-import M3e.Component.Tab
-import M3e.Component.TabPanel
-import M3e.Component.Tabs
-import M3e.Component.TextHighlight
-import M3e.Component.TextOverflow
-import M3e.Component.TextareaAutosize
-import M3e.Component.Theme
-import M3e.Component.ThemeIcon
-import M3e.Component.Timepicker
-import M3e.Component.TimepickerDial
-import M3e.Component.TimepickerInput
-import M3e.Component.TimepickerInputPeriodToggle
-import M3e.Component.TimepickerToggle
-import M3e.Component.Toc
-import M3e.Component.TocItem
-import M3e.Component.Toolbar
-import M3e.Component.Tooltip
-import M3e.Component.Tree
-import M3e.Component.TreeItem
-import M3e.Component.YearView
+import M3e.Internal.Types.Accordion
+import M3e.Internal.Types.ActionList
+import M3e.Internal.Types.AppBar
+import M3e.Internal.Types.AssistChip
+import M3e.Internal.Types.Autocomplete
+import M3e.Internal.Types.Avatar
+import M3e.Internal.Types.Badge
+import M3e.Internal.Types.BottomSheet
+import M3e.Internal.Types.BottomSheetAction
+import M3e.Internal.Types.BottomSheetTrigger
+import M3e.Internal.Types.Breadcrumb
+import M3e.Internal.Types.BreadcrumbItem
+import M3e.Internal.Types.BreadcrumbItemButton
+import M3e.Internal.Types.Button
+import M3e.Internal.Types.ButtonGroup
+import M3e.Internal.Types.ButtonSegment
+import M3e.Internal.Types.Calendar
+import M3e.Internal.Types.Card
+import M3e.Internal.Types.Checkbox
+import M3e.Internal.Types.Chip
+import M3e.Internal.Types.ChipSet
+import M3e.Internal.Types.CircularProgressIndicator
+import M3e.Internal.Types.Collapsible
+import M3e.Internal.Types.ContentPane
+import M3e.Internal.Types.DateInput
+import M3e.Internal.Types.Datepicker
+import M3e.Internal.Types.DatepickerToggle
+import M3e.Internal.Types.Dialog
+import M3e.Internal.Types.DialogAction
+import M3e.Internal.Types.DialogTrigger
+import M3e.Internal.Types.Divider
+import M3e.Internal.Types.DrawerContainer
+import M3e.Internal.Types.DrawerToggle
+import M3e.Internal.Types.Elevation
+import M3e.Internal.Types.ExpandableListItem
+import M3e.Internal.Types.ExpansionHeader
+import M3e.Internal.Types.ExpansionPanel
+import M3e.Internal.Types.Fab
+import M3e.Internal.Types.FabMenu
+import M3e.Internal.Types.FabMenuItem
+import M3e.Internal.Types.FabMenuTrigger
+import M3e.Internal.Types.FilterChip
+import M3e.Internal.Types.FilterChipSet
+import M3e.Internal.Types.FloatingPanel
+import M3e.Internal.Types.FocusRing
+import M3e.Internal.Types.FocusTrap
+import M3e.Internal.Types.FormField
+import M3e.Internal.Types.Heading
+import M3e.Internal.Types.Icon
+import M3e.Internal.Types.IconButton
+import M3e.Internal.Types.InputChip
+import M3e.Internal.Types.InputChipSet
+import M3e.Internal.Types.LinearProgressIndicator
+import M3e.Internal.Types.List
+import M3e.Internal.Types.ListAction
+import M3e.Internal.Types.ListItem
+import M3e.Internal.Types.ListItemButton
+import M3e.Internal.Types.ListOption
+import M3e.Internal.Types.LoadingIndicator
+import M3e.Internal.Types.Menu
+import M3e.Internal.Types.MenuItem
+import M3e.Internal.Types.MenuItemCheckbox
+import M3e.Internal.Types.MenuItemGroup
+import M3e.Internal.Types.MenuItemRadio
+import M3e.Internal.Types.MenuTrigger
+import M3e.Internal.Types.MonthView
+import M3e.Internal.Types.MultiYearView
+import M3e.Internal.Types.NavBar
+import M3e.Internal.Types.NavItem
+import M3e.Internal.Types.NavMenu
+import M3e.Internal.Types.NavMenuItem
+import M3e.Internal.Types.NavMenuItemGroup
+import M3e.Internal.Types.NavRail
+import M3e.Internal.Types.NavRailToggle
+import M3e.Internal.Types.Optgroup
+import M3e.Internal.Types.Option
+import M3e.Internal.Types.OptionPanel
+import M3e.Internal.Types.Paginator
+import M3e.Internal.Types.PseudoCheckbox
+import M3e.Internal.Types.PseudoRadio
+import M3e.Internal.Types.Radio
+import M3e.Internal.Types.RadioGroup
+import M3e.Internal.Types.RichTooltip
+import M3e.Internal.Types.RichTooltipAction
+import M3e.Internal.Types.Ripple
+import M3e.Internal.Types.ScrollContainer
+import M3e.Internal.Types.SearchBar
+import M3e.Internal.Types.SearchView
+import M3e.Internal.Types.SegmentedButton
+import M3e.Internal.Types.Select
+import M3e.Internal.Types.SelectionIndicator
+import M3e.Internal.Types.SelectionList
+import M3e.Internal.Types.Shape
+import M3e.Internal.Types.Skeleton
+import M3e.Internal.Types.Slide
+import M3e.Internal.Types.SlideGroup
+import M3e.Internal.Types.Slider
+import M3e.Internal.Types.SliderThumb
+import M3e.Internal.Types.Snackbar
+import M3e.Internal.Types.SplitButton
+import M3e.Internal.Types.SplitPane
+import M3e.Internal.Types.StateLayer
+import M3e.Internal.Types.Step
+import M3e.Internal.Types.StepPanel
+import M3e.Internal.Types.Stepper
+import M3e.Internal.Types.StepperNext
+import M3e.Internal.Types.StepperPrevious
+import M3e.Internal.Types.StepperReset
+import M3e.Internal.Types.SuggestionChip
+import M3e.Internal.Types.Switch
+import M3e.Internal.Types.Tab
+import M3e.Internal.Types.TabPanel
+import M3e.Internal.Types.Tabs
+import M3e.Internal.Types.TextHighlight
+import M3e.Internal.Types.TextOverflow
+import M3e.Internal.Types.TextareaAutosize
+import M3e.Internal.Types.Theme
+import M3e.Internal.Types.ThemeIcon
+import M3e.Internal.Types.Timepicker
+import M3e.Internal.Types.TimepickerDial
+import M3e.Internal.Types.TimepickerInput
+import M3e.Internal.Types.TimepickerInputPeriodToggle
+import M3e.Internal.Types.TimepickerToggle
+import M3e.Internal.Types.Toc
+import M3e.Internal.Types.TocItem
+import M3e.Internal.Types.Toolbar
+import M3e.Internal.Types.Tooltip
+import M3e.Internal.Types.Tree
+import M3e.Internal.Types.TreeItem
+import M3e.Internal.Types.YearView
 
 
 {-| The loose `m3e-accordion` producer — open attribute/child rows, no required record. See `M3e.Component.Accordion.component` for the required-content form.
 -}
 accordion :
-    List (Attr M3e.Component.Accordion.Attrs msg)
-    -> List (Element M3e.Component.Accordion.Content (M3e.Component.Accordion.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Accordion.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Accordion.Attrs msg)
+    -> List (Element M3e.Internal.Types.Accordion.Content (M3e.Internal.Types.Accordion.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Accordion.Is s) admittedBy msg
 accordion attrs children =
     Ir.fromNode (Ir.node "m3e-accordion" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -175,29 +175,29 @@ accordion attrs children =
 {-| See `M3e.Component.ActionList.component`.
 -}
 actionList :
-    List (Attr M3e.Component.ActionList.Attrs msg)
-    -> List (Element M3e.Component.ActionList.Content (M3e.Component.ActionList.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ActionList.Is s) admittedBy msg
-actionList =
-    M3e.Component.ActionList.component
+    List (Attr M3e.Internal.Types.ActionList.Attrs msg)
+    -> List (Element M3e.Internal.Types.ActionList.Content (M3e.Internal.Types.ActionList.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ActionList.Is s) admittedBy msg
+actionList attrs children =
+    Ir.fromNode (Ir.node "m3e-action-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.AppBar.component`.
 -}
 appBar :
-    List (Attr M3e.Component.AppBar.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.AppBar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.AppBar.Is s) admittedBy msg
-appBar =
-    M3e.Component.AppBar.component
+    List (Attr M3e.Internal.Types.AppBar.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.AppBar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.AppBar.Is s) admittedBy msg
+appBar attrs children =
+    Ir.fromNode (Ir.node "m3e-app-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-assist-chip` producer — open attribute/child rows, no required record. See `M3e.Component.AssistChip.component` for the required-content form.
 -}
 assistChip :
-    List (Attr M3e.Component.AssistChip.Attrs msg)
-    -> List (Element M3e.Component.AssistChip.Content (M3e.Component.AssistChip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.AssistChip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.AssistChip.Attrs msg)
+    -> List (Element M3e.Internal.Types.AssistChip.Content (M3e.Internal.Types.AssistChip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.AssistChip.Is s) admittedBy msg
 assistChip attrs children =
     Ir.fromNode (Ir.node "m3e-assist-chip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -205,69 +205,69 @@ assistChip attrs children =
 {-| See `M3e.Component.Autocomplete.component`.
 -}
 autocomplete :
-    List (Attr M3e.Component.Autocomplete.Attrs msg)
-    -> List (Element M3e.Component.Autocomplete.Content (M3e.Component.Autocomplete.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Autocomplete.Is s) admittedBy msg
-autocomplete =
-    M3e.Component.Autocomplete.component
+    List (Attr M3e.Internal.Types.Autocomplete.Attrs msg)
+    -> List (Element M3e.Internal.Types.Autocomplete.Content (M3e.Internal.Types.Autocomplete.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Autocomplete.Is s) admittedBy msg
+autocomplete attrs children =
+    Ir.fromNode (Ir.node "m3e-autocomplete" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Avatar.component`.
 -}
 avatar :
-    List (Attr M3e.Component.Avatar.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Avatar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Avatar.Is s) admittedBy msg
-avatar =
-    M3e.Component.Avatar.component
+    List (Attr M3e.Internal.Types.Avatar.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Avatar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Avatar.Is s) admittedBy msg
+avatar attrs children =
+    Ir.fromNode (Ir.node "m3e-avatar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Badge.component`.
 -}
 badge :
-    List (Attr M3e.Component.Badge.Attrs msg)
-    -> List (Element M3e.Component.Badge.Content (M3e.Component.Badge.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Badge.Is s) admittedBy msg
-badge =
-    M3e.Component.Badge.component
+    List (Attr M3e.Internal.Types.Badge.Attrs msg)
+    -> List (Element M3e.Internal.Types.Badge.Content (M3e.Internal.Types.Badge.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Badge.Is s) admittedBy msg
+badge attrs children =
+    Ir.fromNode (Ir.node "m3e-badge" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.BottomSheet.component`.
 -}
 bottomSheet :
-    List (Attr M3e.Component.BottomSheet.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.BottomSheet.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.BottomSheet.Is s) admittedBy msg
-bottomSheet =
-    M3e.Component.BottomSheet.component
+    List (Attr M3e.Internal.Types.BottomSheet.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.BottomSheet.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.BottomSheet.Is s) admittedBy msg
+bottomSheet attrs children =
+    Ir.fromNode (Ir.node "m3e-bottom-sheet" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.BottomSheetAction.component`.
 -}
 bottomSheetAction :
-    List (Attr M3e.Component.BottomSheetAction.Attrs msg)
-    -> List (Element M3e.Component.BottomSheetAction.Content (M3e.Component.BottomSheetAction.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.BottomSheetAction.Is s) admittedBy msg
-bottomSheetAction =
-    M3e.Component.BottomSheetAction.component
+    List (Attr M3e.Internal.Types.BottomSheetAction.Attrs msg)
+    -> List (Element M3e.Internal.Types.BottomSheetAction.Content (M3e.Internal.Types.BottomSheetAction.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.BottomSheetAction.Is s) admittedBy msg
+bottomSheetAction attrs children =
+    Ir.fromNode (Ir.node "m3e-bottom-sheet-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.BottomSheetTrigger.component`.
 -}
 bottomSheetTrigger :
-    List (Attr M3e.Component.BottomSheetTrigger.Attrs msg)
-    -> List (Element M3e.Component.BottomSheetTrigger.Content (M3e.Component.BottomSheetTrigger.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.BottomSheetTrigger.Is s) admittedBy msg
-bottomSheetTrigger =
-    M3e.Component.BottomSheetTrigger.component
+    List (Attr M3e.Internal.Types.BottomSheetTrigger.Attrs msg)
+    -> List (Element M3e.Internal.Types.BottomSheetTrigger.Content (M3e.Internal.Types.BottomSheetTrigger.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.BottomSheetTrigger.Is s) admittedBy msg
+bottomSheetTrigger attrs children =
+    Ir.fromNode (Ir.node "m3e-bottom-sheet-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-breadcrumb` producer — open attribute/child rows, no required record. See `M3e.Component.Breadcrumb.component` for the required-content form.
 -}
 breadcrumb :
-    List (Attr M3e.Component.Breadcrumb.Attrs msg)
-    -> List (Element M3e.Component.Breadcrumb.Content (M3e.Component.Breadcrumb.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Breadcrumb.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Breadcrumb.Attrs msg)
+    -> List (Element M3e.Internal.Types.Breadcrumb.Content (M3e.Internal.Types.Breadcrumb.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Breadcrumb.Is s) admittedBy msg
 breadcrumb attrs children =
     Ir.fromNode (Ir.node "m3e-breadcrumb" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -275,29 +275,29 @@ breadcrumb attrs children =
 {-| See `M3e.Component.BreadcrumbItem.component`.
 -}
 breadcrumbItem :
-    List (Attr M3e.Component.BreadcrumbItem.Attrs msg)
-    -> List (Element M3e.Component.BreadcrumbItem.Content (M3e.Component.BreadcrumbItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.BreadcrumbItem.Is s) admittedBy msg
-breadcrumbItem =
-    M3e.Component.BreadcrumbItem.component
+    List (Attr M3e.Internal.Types.BreadcrumbItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.BreadcrumbItem.Content (M3e.Internal.Types.BreadcrumbItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.BreadcrumbItem.Is s) admittedBy msg
+breadcrumbItem attrs children =
+    Ir.fromNode (Ir.node "m3e-breadcrumb-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.BreadcrumbItemButton.component`.
 -}
 breadcrumbItemButton :
-    List (Attr M3e.Component.BreadcrumbItemButton.Attrs msg)
-    -> List (Element M3e.Component.BreadcrumbItemButton.Content (M3e.Component.BreadcrumbItemButton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.BreadcrumbItemButton.Is s) admittedBy msg
-breadcrumbItemButton =
-    M3e.Component.BreadcrumbItemButton.component
+    List (Attr M3e.Internal.Types.BreadcrumbItemButton.Attrs msg)
+    -> List (Element M3e.Internal.Types.BreadcrumbItemButton.Content (M3e.Internal.Types.BreadcrumbItemButton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.BreadcrumbItemButton.Is s) admittedBy msg
+breadcrumbItemButton attrs children =
+    Ir.fromNode (Ir.node "m3e-breadcrumb-item-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-button` producer — open attribute/child rows, no required record. See `M3e.Component.Button.component` for the required-content form.
 -}
 button :
-    List (Attr M3e.Component.Button.Attrs msg)
-    -> List (Element M3e.Component.Button.Content (M3e.Component.Button.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Button.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Button.Attrs msg)
+    -> List (Element M3e.Internal.Types.Button.Content (M3e.Internal.Types.Button.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Button.Is s) admittedBy msg
 button attrs children =
     Ir.fromNode (Ir.node "m3e-button" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -305,59 +305,59 @@ button attrs children =
 {-| See `M3e.Component.ButtonGroup.component`.
 -}
 buttonGroup :
-    List (Attr M3e.Component.ButtonGroup.Attrs msg)
-    -> List (Element M3e.Component.ButtonGroup.Content (M3e.Component.ButtonGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ButtonGroup.Is s) admittedBy msg
-buttonGroup =
-    M3e.Component.ButtonGroup.component
+    List (Attr M3e.Internal.Types.ButtonGroup.Attrs msg)
+    -> List (Element M3e.Internal.Types.ButtonGroup.Content (M3e.Internal.Types.ButtonGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ButtonGroup.Is s) admittedBy msg
+buttonGroup attrs children =
+    Ir.fromNode (Ir.node "m3e-button-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ButtonSegment.component`.
 -}
 buttonSegment :
-    List (Attr M3e.Component.ButtonSegment.Attrs msg)
-    -> List (Element M3e.Component.ButtonSegment.Content (M3e.Component.ButtonSegment.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ButtonSegment.Is s) admittedBy msg
-buttonSegment =
-    M3e.Component.ButtonSegment.component
+    List (Attr M3e.Internal.Types.ButtonSegment.Attrs msg)
+    -> List (Element M3e.Internal.Types.ButtonSegment.Content (M3e.Internal.Types.ButtonSegment.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ButtonSegment.Is s) admittedBy msg
+buttonSegment attrs children =
+    Ir.fromNode (Ir.node "m3e-button-segment" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Calendar.component`.
 -}
 calendar :
-    List (Attr M3e.Component.Calendar.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Calendar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Calendar.Is s) admittedBy msg
-calendar =
-    M3e.Component.Calendar.component
+    List (Attr M3e.Internal.Types.Calendar.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Calendar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Calendar.Is s) admittedBy msg
+calendar attrs children =
+    Ir.fromNode (Ir.node "m3e-calendar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Card.component`.
 -}
 card :
-    List (Attr M3e.Component.Card.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Card.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Card.Is s) admittedBy msg
-card =
-    M3e.Component.Card.component
+    List (Attr M3e.Internal.Types.Card.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Card.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Card.Is s) admittedBy msg
+card attrs children =
+    Ir.fromNode (Ir.node "m3e-card" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Checkbox.component`.
 -}
 checkbox :
-    List (Attr M3e.Component.Checkbox.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Checkbox.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Checkbox.Is s) admittedBy msg
-checkbox =
-    M3e.Component.Checkbox.component
+    List (Attr M3e.Internal.Types.Checkbox.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Checkbox.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Checkbox.Is s) admittedBy msg
+checkbox attrs children =
+    Ir.fromNode (Ir.node "m3e-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-chip` producer — open attribute/child rows, no required record. See `M3e.Component.Chip.component` for the required-content form.
 -}
 chip :
-    List (Attr M3e.Component.Chip.Attrs msg)
-    -> List (Element M3e.Component.Chip.Content (M3e.Component.Chip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Chip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Chip.Attrs msg)
+    -> List (Element M3e.Internal.Types.Chip.Content (M3e.Internal.Types.Chip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Chip.Is s) admittedBy msg
 chip attrs children =
     Ir.fromNode (Ir.node "m3e-chip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -365,169 +365,169 @@ chip attrs children =
 {-| See `M3e.Component.ChipSet.component`.
 -}
 chipSet :
-    List (Attr M3e.Component.ChipSet.Attrs msg)
-    -> List (Element M3e.Component.ChipSet.Content (M3e.Component.ChipSet.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ChipSet.Is s) admittedBy msg
-chipSet =
-    M3e.Component.ChipSet.component
+    List (Attr M3e.Internal.Types.ChipSet.Attrs msg)
+    -> List (Element M3e.Internal.Types.ChipSet.Content (M3e.Internal.Types.ChipSet.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ChipSet.Is s) admittedBy msg
+chipSet attrs children =
+    Ir.fromNode (Ir.node "m3e-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.CircularProgressIndicator.component`.
 -}
 circularProgressIndicator :
-    List (Attr M3e.Component.CircularProgressIndicator.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.CircularProgressIndicator.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.CircularProgressIndicator.Is s) admittedBy msg
-circularProgressIndicator =
-    M3e.Component.CircularProgressIndicator.component
+    List (Attr M3e.Internal.Types.CircularProgressIndicator.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.CircularProgressIndicator.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.CircularProgressIndicator.Is s) admittedBy msg
+circularProgressIndicator attrs children =
+    Ir.fromNode (Ir.node "m3e-circular-progress-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Collapsible.component`.
 -}
 collapsible :
-    List (Attr M3e.Component.Collapsible.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Collapsible.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Collapsible.Is s) admittedBy msg
-collapsible =
-    M3e.Component.Collapsible.component
+    List (Attr M3e.Internal.Types.Collapsible.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Collapsible.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Collapsible.Is s) admittedBy msg
+collapsible attrs children =
+    Ir.fromNode (Ir.node "m3e-collapsible" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ContentPane.component`.
 -}
 contentPane :
-    List (Attr M3e.Component.ContentPane.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.ContentPane.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ContentPane.Is s) admittedBy msg
-contentPane =
-    M3e.Component.ContentPane.component
+    List (Attr M3e.Internal.Types.ContentPane.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.ContentPane.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ContentPane.Is s) admittedBy msg
+contentPane attrs children =
+    Ir.fromNode (Ir.node "m3e-content-pane" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DateInput.component`.
 -}
 dateInput :
-    List (Attr M3e.Component.DateInput.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DateInput.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DateInput.Is s) admittedBy msg
-dateInput =
-    M3e.Component.DateInput.component
+    List (Attr M3e.Internal.Types.DateInput.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DateInput.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DateInput.Is s) admittedBy msg
+dateInput attrs children =
+    Ir.fromNode (Ir.node "m3e-date-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Datepicker.component`.
 -}
 datepicker :
-    List (Attr M3e.Component.Datepicker.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Datepicker.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Datepicker.Is s) admittedBy msg
-datepicker =
-    M3e.Component.Datepicker.component
+    List (Attr M3e.Internal.Types.Datepicker.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Datepicker.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Datepicker.Is s) admittedBy msg
+datepicker attrs children =
+    Ir.fromNode (Ir.node "m3e-datepicker" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DatepickerToggle.component`.
 -}
 datepickerToggle :
-    List (Attr M3e.Component.DatepickerToggle.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DatepickerToggle.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DatepickerToggle.Is s) admittedBy msg
-datepickerToggle =
-    M3e.Component.DatepickerToggle.component
+    List (Attr M3e.Internal.Types.DatepickerToggle.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DatepickerToggle.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DatepickerToggle.Is s) admittedBy msg
+datepickerToggle attrs children =
+    Ir.fromNode (Ir.node "m3e-datepicker-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Dialog.component`.
 -}
 dialog :
-    List (Attr M3e.Component.Dialog.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Dialog.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Dialog.Is s) admittedBy msg
-dialog =
-    M3e.Component.Dialog.component
+    List (Attr M3e.Internal.Types.Dialog.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Dialog.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Dialog.Is s) admittedBy msg
+dialog attrs children =
+    Ir.fromNode (Ir.node "m3e-dialog" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DialogAction.component`.
 -}
 dialogAction :
-    List (Attr M3e.Component.DialogAction.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DialogAction.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DialogAction.Is s) admittedBy msg
-dialogAction =
-    M3e.Component.DialogAction.component
+    List (Attr M3e.Internal.Types.DialogAction.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DialogAction.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DialogAction.Is s) admittedBy msg
+dialogAction attrs children =
+    Ir.fromNode (Ir.node "m3e-dialog-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DialogTrigger.component`.
 -}
 dialogTrigger :
-    List (Attr M3e.Component.DialogTrigger.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DialogTrigger.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DialogTrigger.Is s) admittedBy msg
-dialogTrigger =
-    M3e.Component.DialogTrigger.component
+    List (Attr M3e.Internal.Types.DialogTrigger.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DialogTrigger.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DialogTrigger.Is s) admittedBy msg
+dialogTrigger attrs children =
+    Ir.fromNode (Ir.node "m3e-dialog-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Divider.component`.
 -}
 divider :
-    List (Attr M3e.Component.Divider.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Divider.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Divider.Is s) admittedBy msg
-divider =
-    M3e.Component.Divider.component
+    List (Attr M3e.Internal.Types.Divider.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Divider.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Divider.Is s) admittedBy msg
+divider attrs children =
+    Ir.fromNode (Ir.node "m3e-divider" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DrawerContainer.component`.
 -}
 drawerContainer :
-    List (Attr M3e.Component.DrawerContainer.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DrawerContainer.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DrawerContainer.Is s) admittedBy msg
-drawerContainer =
-    M3e.Component.DrawerContainer.component
+    List (Attr M3e.Internal.Types.DrawerContainer.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DrawerContainer.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DrawerContainer.Is s) admittedBy msg
+drawerContainer attrs children =
+    Ir.fromNode (Ir.node "m3e-drawer-container" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.DrawerToggle.component`.
 -}
 drawerToggle :
-    List (Attr M3e.Component.DrawerToggle.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.DrawerToggle.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.DrawerToggle.Is s) admittedBy msg
-drawerToggle =
-    M3e.Component.DrawerToggle.component
+    List (Attr M3e.Internal.Types.DrawerToggle.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.DrawerToggle.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.DrawerToggle.Is s) admittedBy msg
+drawerToggle attrs children =
+    Ir.fromNode (Ir.node "m3e-drawer-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Elevation.component`.
 -}
 elevation :
-    List (Attr M3e.Component.Elevation.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Elevation.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Elevation.Is s) admittedBy msg
-elevation =
-    M3e.Component.Elevation.component
+    List (Attr M3e.Internal.Types.Elevation.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Elevation.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Elevation.Is s) admittedBy msg
+elevation attrs children =
+    Ir.fromNode (Ir.node "m3e-elevation" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ExpandableListItem.component`.
 -}
 expandableListItem :
-    List (Attr M3e.Component.ExpandableListItem.Attrs msg)
-    -> List (Element M3e.Component.ExpandableListItem.Content (M3e.Component.ExpandableListItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ExpandableListItem.Is s) admittedBy msg
-expandableListItem =
-    M3e.Component.ExpandableListItem.component
+    List (Attr M3e.Internal.Types.ExpandableListItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.ExpandableListItem.Content (M3e.Internal.Types.ExpandableListItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ExpandableListItem.Is s) admittedBy msg
+expandableListItem attrs children =
+    Ir.fromNode (Ir.node "m3e-expandable-list-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ExpansionHeader.component`.
 -}
 expansionHeader :
-    List (Attr M3e.Component.ExpansionHeader.Attrs msg)
-    -> List (Element M3e.Component.ExpansionHeader.Content (M3e.Component.ExpansionHeader.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ExpansionHeader.Is s) admittedBy msg
-expansionHeader =
-    M3e.Component.ExpansionHeader.component
+    List (Attr M3e.Internal.Types.ExpansionHeader.Attrs msg)
+    -> List (Element M3e.Internal.Types.ExpansionHeader.Content (M3e.Internal.Types.ExpansionHeader.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ExpansionHeader.Is s) admittedBy msg
+expansionHeader attrs children =
+    Ir.fromNode (Ir.node "m3e-expansion-header" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-expansion-panel` producer — open attribute/child rows, no required record. See `M3e.Component.ExpansionPanel.component` for the required-content form.
 -}
 expansionPanel :
-    List (Attr M3e.Component.ExpansionPanel.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.ExpansionPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ExpansionPanel.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.ExpansionPanel.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.ExpansionPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ExpansionPanel.Is s) admittedBy msg
 expansionPanel attrs children =
     Ir.fromNode (Ir.node "m3e-expansion-panel" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -535,9 +535,9 @@ expansionPanel attrs children =
 {-| The loose `m3e-fab` producer — open attribute/child rows, no required record. See `M3e.Component.Fab.component` for the required-content form.
 -}
 fab :
-    List (Attr M3e.Component.Fab.Attrs msg)
-    -> List (Element M3e.Component.Fab.Content (M3e.Component.Fab.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Fab.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Fab.Attrs msg)
+    -> List (Element M3e.Internal.Types.Fab.Content (M3e.Internal.Types.Fab.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Fab.Is s) admittedBy msg
 fab attrs children =
     Ir.fromNode (Ir.node "m3e-fab" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -545,39 +545,39 @@ fab attrs children =
 {-| See `M3e.Component.FabMenu.component`.
 -}
 fabMenu :
-    List (Attr M3e.Component.FabMenu.Attrs msg)
-    -> List (Element M3e.Component.FabMenu.Content (M3e.Component.FabMenu.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FabMenu.Is s) admittedBy msg
-fabMenu =
-    M3e.Component.FabMenu.component
+    List (Attr M3e.Internal.Types.FabMenu.Attrs msg)
+    -> List (Element M3e.Internal.Types.FabMenu.Content (M3e.Internal.Types.FabMenu.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FabMenu.Is s) admittedBy msg
+fabMenu attrs children =
+    Ir.fromNode (Ir.node "m3e-fab-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FabMenuItem.component`.
 -}
 fabMenuItem :
-    List (Attr M3e.Component.FabMenuItem.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FabMenuItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FabMenuItem.Is s) admittedBy msg
-fabMenuItem =
-    M3e.Component.FabMenuItem.component
+    List (Attr M3e.Internal.Types.FabMenuItem.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FabMenuItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FabMenuItem.Is s) admittedBy msg
+fabMenuItem attrs children =
+    Ir.fromNode (Ir.node "m3e-fab-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FabMenuTrigger.component`.
 -}
 fabMenuTrigger :
-    List (Attr M3e.Component.FabMenuTrigger.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FabMenuTrigger.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FabMenuTrigger.Is s) admittedBy msg
-fabMenuTrigger =
-    M3e.Component.FabMenuTrigger.component
+    List (Attr M3e.Internal.Types.FabMenuTrigger.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FabMenuTrigger.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FabMenuTrigger.Is s) admittedBy msg
+fabMenuTrigger attrs children =
+    Ir.fromNode (Ir.node "m3e-fab-menu-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-filter-chip` producer — open attribute/child rows, no required record. See `M3e.Component.FilterChip.component` for the required-content form.
 -}
 filterChip :
-    List (Attr M3e.Component.FilterChip.Attrs msg)
-    -> List (Element M3e.Component.FilterChip.Content (M3e.Component.FilterChip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FilterChip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.FilterChip.Attrs msg)
+    -> List (Element M3e.Internal.Types.FilterChip.Content (M3e.Internal.Types.FilterChip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FilterChip.Is s) admittedBy msg
 filterChip attrs children =
     Ir.fromNode (Ir.node "m3e-filter-chip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -585,59 +585,59 @@ filterChip attrs children =
 {-| See `M3e.Component.FilterChipSet.component`.
 -}
 filterChipSet :
-    List (Attr M3e.Component.FilterChipSet.Attrs msg)
-    -> List (Element M3e.Component.FilterChipSet.Content (M3e.Component.FilterChipSet.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FilterChipSet.Is s) admittedBy msg
-filterChipSet =
-    M3e.Component.FilterChipSet.component
+    List (Attr M3e.Internal.Types.FilterChipSet.Attrs msg)
+    -> List (Element M3e.Internal.Types.FilterChipSet.Content (M3e.Internal.Types.FilterChipSet.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FilterChipSet.Is s) admittedBy msg
+filterChipSet attrs children =
+    Ir.fromNode (Ir.node "m3e-filter-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FloatingPanel.component`.
 -}
 floatingPanel :
-    List (Attr M3e.Component.FloatingPanel.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FloatingPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FloatingPanel.Is s) admittedBy msg
-floatingPanel =
-    M3e.Component.FloatingPanel.component
+    List (Attr M3e.Internal.Types.FloatingPanel.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FloatingPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FloatingPanel.Is s) admittedBy msg
+floatingPanel attrs children =
+    Ir.fromNode (Ir.node "m3e-floating-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FocusRing.component`.
 -}
 focusRing :
-    List (Attr M3e.Component.FocusRing.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FocusRing.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FocusRing.Is s) admittedBy msg
-focusRing =
-    M3e.Component.FocusRing.component
+    List (Attr M3e.Internal.Types.FocusRing.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FocusRing.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FocusRing.Is s) admittedBy msg
+focusRing attrs children =
+    Ir.fromNode (Ir.node "m3e-focus-ring" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FocusTrap.component`.
 -}
 focusTrap :
-    List (Attr M3e.Component.FocusTrap.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FocusTrap.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FocusTrap.Is s) admittedBy msg
-focusTrap =
-    M3e.Component.FocusTrap.component
+    List (Attr M3e.Internal.Types.FocusTrap.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FocusTrap.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FocusTrap.Is s) admittedBy msg
+focusTrap attrs children =
+    Ir.fromNode (Ir.node "m3e-focus-trap" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.FormField.component`.
 -}
 formField :
-    List (Attr M3e.Component.FormField.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.FormField.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.FormField.Is s) admittedBy msg
-formField =
-    M3e.Component.FormField.component
+    List (Attr M3e.Internal.Types.FormField.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.FormField.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.FormField.Is s) admittedBy msg
+formField attrs children =
+    Ir.fromNode (Ir.node "m3e-form-field" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-heading` producer — open attribute/child rows, no required record. See `M3e.Component.Heading.component` for the required-content form.
 -}
 heading :
-    List (Attr M3e.Component.Heading.Attrs msg)
-    -> List (Element M3e.Component.Heading.Content (M3e.Component.Heading.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Heading.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Heading.Attrs msg)
+    -> List (Element M3e.Internal.Types.Heading.Content (M3e.Internal.Types.Heading.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Heading.Is s) admittedBy msg
 heading attrs children =
     Ir.fromNode (Ir.node "m3e-heading" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -645,19 +645,19 @@ heading attrs children =
 {-| See `M3e.Component.Icon.component`.
 -}
 icon :
-    List (Attr M3e.Component.Icon.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Icon.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Icon.Is s) admittedBy msg
-icon =
-    M3e.Component.Icon.component
+    List (Attr M3e.Internal.Types.Icon.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Icon.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Icon.Is s) admittedBy msg
+icon attrs children =
+    Ir.fromNode (Ir.node "m3e-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-icon-button` producer — open attribute/child rows, no required record. See `M3e.Component.IconButton.component` for the required-content form.
 -}
 iconButton :
-    List (Attr M3e.Component.IconButton.Attrs msg)
-    -> List (Element M3e.Component.IconButton.Content (M3e.Component.IconButton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.IconButton.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.IconButton.Attrs msg)
+    -> List (Element M3e.Internal.Types.IconButton.Content (M3e.Internal.Types.IconButton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.IconButton.Is s) admittedBy msg
 iconButton attrs children =
     Ir.fromNode (Ir.node "m3e-icon-button" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -665,9 +665,9 @@ iconButton attrs children =
 {-| The loose `m3e-input-chip` producer — open attribute/child rows, no required record. See `M3e.Component.InputChip.component` for the required-content form.
 -}
 inputChip :
-    List (Attr M3e.Component.InputChip.Attrs msg)
-    -> List (Element M3e.Component.InputChip.Content (M3e.Component.InputChip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.InputChip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.InputChip.Attrs msg)
+    -> List (Element M3e.Internal.Types.InputChip.Content (M3e.Internal.Types.InputChip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.InputChip.Is s) admittedBy msg
 inputChip attrs children =
     Ir.fromNode (Ir.node "m3e-input-chip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -675,199 +675,199 @@ inputChip attrs children =
 {-| See `M3e.Component.InputChipSet.component`.
 -}
 inputChipSet :
-    List (Attr M3e.Component.InputChipSet.Attrs msg)
-    -> List (Element M3e.Component.InputChipSet.Content (M3e.Component.InputChipSet.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.InputChipSet.Is s) admittedBy msg
-inputChipSet =
-    M3e.Component.InputChipSet.component
+    List (Attr M3e.Internal.Types.InputChipSet.Attrs msg)
+    -> List (Element M3e.Internal.Types.InputChipSet.Content (M3e.Internal.Types.InputChipSet.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.InputChipSet.Is s) admittedBy msg
+inputChipSet attrs children =
+    Ir.fromNode (Ir.node "m3e-input-chip-set" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.LinearProgressIndicator.component`.
 -}
 linearProgressIndicator :
-    List (Attr M3e.Component.LinearProgressIndicator.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.LinearProgressIndicator.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.LinearProgressIndicator.Is s) admittedBy msg
-linearProgressIndicator =
-    M3e.Component.LinearProgressIndicator.component
+    List (Attr M3e.Internal.Types.LinearProgressIndicator.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.LinearProgressIndicator.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.LinearProgressIndicator.Is s) admittedBy msg
+linearProgressIndicator attrs children =
+    Ir.fromNode (Ir.node "m3e-linear-progress-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.List.component`.
 -}
 list :
-    List (Attr M3e.Component.List.Attrs msg)
-    -> List (Element M3e.Component.List.Content (M3e.Component.List.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.List.Is s) admittedBy msg
-list =
-    M3e.Component.List.component
+    List (Attr M3e.Internal.Types.List.Attrs msg)
+    -> List (Element M3e.Internal.Types.List.Content (M3e.Internal.Types.List.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.List.Is s) admittedBy msg
+list attrs children =
+    Ir.fromNode (Ir.node "m3e-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ListAction.component`.
 -}
 listAction :
-    List (Attr M3e.Component.ListAction.Attrs msg)
-    -> List (Element M3e.Component.ListAction.Content (M3e.Component.ListAction.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ListAction.Is s) admittedBy msg
-listAction =
-    M3e.Component.ListAction.component
+    List (Attr M3e.Internal.Types.ListAction.Attrs msg)
+    -> List (Element M3e.Internal.Types.ListAction.Content (M3e.Internal.Types.ListAction.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ListAction.Is s) admittedBy msg
+listAction attrs children =
+    Ir.fromNode (Ir.node "m3e-list-action" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ListItem.component`.
 -}
 listItem :
-    List (Attr M3e.Component.ListItem.Attrs msg)
-    -> List (Element M3e.Component.ListItem.Content (M3e.Component.ListItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ListItem.Is s) admittedBy msg
-listItem =
-    M3e.Component.ListItem.component
+    List (Attr M3e.Internal.Types.ListItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.ListItem.Content (M3e.Internal.Types.ListItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ListItem.Is s) admittedBy msg
+listItem attrs children =
+    Ir.fromNode (Ir.node "m3e-list-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ListItemButton.component`.
 -}
 listItemButton :
-    List (Attr M3e.Component.ListItemButton.Attrs msg)
-    -> List (Element M3e.Component.ListItemButton.Content (M3e.Component.ListItemButton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ListItemButton.Is s) admittedBy msg
-listItemButton =
-    M3e.Component.ListItemButton.component
+    List (Attr M3e.Internal.Types.ListItemButton.Attrs msg)
+    -> List (Element M3e.Internal.Types.ListItemButton.Content (M3e.Internal.Types.ListItemButton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ListItemButton.Is s) admittedBy msg
+listItemButton attrs children =
+    Ir.fromNode (Ir.node "m3e-list-item-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ListOption.component`.
 -}
 listOption :
-    List (Attr M3e.Component.ListOption.Attrs msg)
-    -> List (Element M3e.Component.ListOption.Content (M3e.Component.ListOption.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ListOption.Is s) admittedBy msg
-listOption =
-    M3e.Component.ListOption.component
+    List (Attr M3e.Internal.Types.ListOption.Attrs msg)
+    -> List (Element M3e.Internal.Types.ListOption.Content (M3e.Internal.Types.ListOption.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ListOption.Is s) admittedBy msg
+listOption attrs children =
+    Ir.fromNode (Ir.node "m3e-list-option" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.LoadingIndicator.component`.
 -}
 loadingIndicator :
-    List (Attr M3e.Component.LoadingIndicator.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.LoadingIndicator.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.LoadingIndicator.Is s) admittedBy msg
-loadingIndicator =
-    M3e.Component.LoadingIndicator.component
+    List (Attr M3e.Internal.Types.LoadingIndicator.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.LoadingIndicator.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.LoadingIndicator.Is s) admittedBy msg
+loadingIndicator attrs children =
+    Ir.fromNode (Ir.node "m3e-loading-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Menu.component`.
 -}
 menu :
-    List (Attr M3e.Component.Menu.Attrs msg)
-    -> List (Element M3e.Component.Menu.Content (M3e.Component.Menu.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Menu.Is s) admittedBy msg
-menu =
-    M3e.Component.Menu.component
+    List (Attr M3e.Internal.Types.Menu.Attrs msg)
+    -> List (Element M3e.Internal.Types.Menu.Content (M3e.Internal.Types.Menu.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Menu.Is s) admittedBy msg
+menu attrs children =
+    Ir.fromNode (Ir.node "m3e-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MenuItem.component`.
 -}
 menuItem :
-    List (Attr M3e.Component.MenuItem.Attrs msg)
-    -> List (Element M3e.Component.MenuItem.Content (M3e.Component.MenuItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MenuItem.Is s) admittedBy msg
-menuItem =
-    M3e.Component.MenuItem.component
+    List (Attr M3e.Internal.Types.MenuItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.MenuItem.Content (M3e.Internal.Types.MenuItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MenuItem.Is s) admittedBy msg
+menuItem attrs children =
+    Ir.fromNode (Ir.node "m3e-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MenuItemCheckbox.component`.
 -}
 menuItemCheckbox :
-    List (Attr M3e.Component.MenuItemCheckbox.Attrs msg)
-    -> List (Element M3e.Component.MenuItemCheckbox.Content (M3e.Component.MenuItemCheckbox.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MenuItemCheckbox.Is s) admittedBy msg
-menuItemCheckbox =
-    M3e.Component.MenuItemCheckbox.component
+    List (Attr M3e.Internal.Types.MenuItemCheckbox.Attrs msg)
+    -> List (Element M3e.Internal.Types.MenuItemCheckbox.Content (M3e.Internal.Types.MenuItemCheckbox.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MenuItemCheckbox.Is s) admittedBy msg
+menuItemCheckbox attrs children =
+    Ir.fromNode (Ir.node "m3e-menu-item-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MenuItemGroup.component`.
 -}
 menuItemGroup :
-    List (Attr M3e.Component.MenuItemGroup.Attrs msg)
-    -> List (Element M3e.Component.MenuItemGroup.Content (M3e.Component.MenuItemGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MenuItemGroup.Is s) admittedBy msg
-menuItemGroup =
-    M3e.Component.MenuItemGroup.component
+    List (Attr M3e.Internal.Types.MenuItemGroup.Attrs msg)
+    -> List (Element M3e.Internal.Types.MenuItemGroup.Content (M3e.Internal.Types.MenuItemGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MenuItemGroup.Is s) admittedBy msg
+menuItemGroup attrs children =
+    Ir.fromNode (Ir.node "m3e-menu-item-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MenuItemRadio.component`.
 -}
 menuItemRadio :
-    List (Attr M3e.Component.MenuItemRadio.Attrs msg)
-    -> List (Element M3e.Component.MenuItemRadio.Content (M3e.Component.MenuItemRadio.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MenuItemRadio.Is s) admittedBy msg
-menuItemRadio =
-    M3e.Component.MenuItemRadio.component
+    List (Attr M3e.Internal.Types.MenuItemRadio.Attrs msg)
+    -> List (Element M3e.Internal.Types.MenuItemRadio.Content (M3e.Internal.Types.MenuItemRadio.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MenuItemRadio.Is s) admittedBy msg
+menuItemRadio attrs children =
+    Ir.fromNode (Ir.node "m3e-menu-item-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MenuTrigger.component`.
 -}
 menuTrigger :
-    List (Attr M3e.Component.MenuTrigger.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.MenuTrigger.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MenuTrigger.Is s) admittedBy msg
-menuTrigger =
-    M3e.Component.MenuTrigger.component
+    List (Attr M3e.Internal.Types.MenuTrigger.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.MenuTrigger.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MenuTrigger.Is s) admittedBy msg
+menuTrigger attrs children =
+    Ir.fromNode (Ir.node "m3e-menu-trigger" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MonthView.component`.
 -}
 monthView :
-    List (Attr M3e.Component.MonthView.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.MonthView.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MonthView.Is s) admittedBy msg
-monthView =
-    M3e.Component.MonthView.component
+    List (Attr M3e.Internal.Types.MonthView.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.MonthView.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MonthView.Is s) admittedBy msg
+monthView attrs children =
+    Ir.fromNode (Ir.node "m3e-month-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.MultiYearView.component`.
 -}
 multiYearView :
-    List (Attr M3e.Component.MultiYearView.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.MultiYearView.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.MultiYearView.Is s) admittedBy msg
-multiYearView =
-    M3e.Component.MultiYearView.component
+    List (Attr M3e.Internal.Types.MultiYearView.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.MultiYearView.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.MultiYearView.Is s) admittedBy msg
+multiYearView attrs children =
+    Ir.fromNode (Ir.node "m3e-multi-year-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.NavBar.component`.
 -}
 navBar :
-    List (Attr M3e.Component.NavBar.Attrs msg)
-    -> List (Element M3e.Component.NavBar.Content (M3e.Component.NavBar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavBar.Is s) admittedBy msg
-navBar =
-    M3e.Component.NavBar.component
+    List (Attr M3e.Internal.Types.NavBar.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavBar.Content (M3e.Internal.Types.NavBar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavBar.Is s) admittedBy msg
+navBar attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-bar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.NavItem.component`.
 -}
 navItem :
-    List (Attr M3e.Component.NavItem.Attrs msg)
-    -> List (Element M3e.Component.NavItem.Content (M3e.Component.NavItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavItem.Is s) admittedBy msg
-navItem =
-    M3e.Component.NavItem.component
+    List (Attr M3e.Internal.Types.NavItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavItem.Content (M3e.Internal.Types.NavItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavItem.Is s) admittedBy msg
+navItem attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-item" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.NavMenu.component`.
 -}
 navMenu :
-    List (Attr M3e.Component.NavMenu.Attrs msg)
-    -> List (Element M3e.Component.NavMenu.Content (M3e.Component.NavMenu.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavMenu.Is s) admittedBy msg
-navMenu =
-    M3e.Component.NavMenu.component
+    List (Attr M3e.Internal.Types.NavMenu.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavMenu.Content (M3e.Internal.Types.NavMenu.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavMenu.Is s) admittedBy msg
+navMenu attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-menu" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-nav-menu-item` producer — open attribute/child rows, no required record. See `M3e.Component.NavMenuItem.component` for the required-content form.
 -}
 navMenuItem :
-    List (Attr M3e.Component.NavMenuItem.Attrs msg)
-    -> List (Element M3e.Component.NavMenuItem.Content (M3e.Component.NavMenuItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavMenuItem.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.NavMenuItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavMenuItem.Content (M3e.Internal.Types.NavMenuItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavMenuItem.Is s) admittedBy msg
 navMenuItem attrs children =
     Ir.fromNode (Ir.node "m3e-nav-menu-item" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -875,49 +875,49 @@ navMenuItem attrs children =
 {-| See `M3e.Component.NavMenuItemGroup.component`.
 -}
 navMenuItemGroup :
-    List (Attr M3e.Component.NavMenuItemGroup.Attrs msg)
-    -> List (Element M3e.Component.NavMenuItemGroup.Content (M3e.Component.NavMenuItemGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavMenuItemGroup.Is s) admittedBy msg
-navMenuItemGroup =
-    M3e.Component.NavMenuItemGroup.component
+    List (Attr M3e.Internal.Types.NavMenuItemGroup.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavMenuItemGroup.Content (M3e.Internal.Types.NavMenuItemGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavMenuItemGroup.Is s) admittedBy msg
+navMenuItemGroup attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-menu-item-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.NavRail.component`.
 -}
 navRail :
-    List (Attr M3e.Component.NavRail.Attrs msg)
-    -> List (Element M3e.Component.NavRail.Content (M3e.Component.NavRail.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavRail.Is s) admittedBy msg
-navRail =
-    M3e.Component.NavRail.component
+    List (Attr M3e.Internal.Types.NavRail.Attrs msg)
+    -> List (Element M3e.Internal.Types.NavRail.Content (M3e.Internal.Types.NavRail.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavRail.Is s) admittedBy msg
+navRail attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-rail" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.NavRailToggle.component`.
 -}
 navRailToggle :
-    List (Attr M3e.Component.NavRailToggle.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.NavRailToggle.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.NavRailToggle.Is s) admittedBy msg
-navRailToggle =
-    M3e.Component.NavRailToggle.component
+    List (Attr M3e.Internal.Types.NavRailToggle.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.NavRailToggle.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.NavRailToggle.Is s) admittedBy msg
+navRailToggle attrs children =
+    Ir.fromNode (Ir.node "m3e-nav-rail-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Optgroup.component`.
 -}
 optgroup :
-    List (Attr M3e.Component.Optgroup.Attrs msg)
-    -> List (Element M3e.Component.Optgroup.Content (M3e.Component.Optgroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Optgroup.Is s) admittedBy msg
-optgroup =
-    M3e.Component.Optgroup.component
+    List (Attr M3e.Internal.Types.Optgroup.Attrs msg)
+    -> List (Element M3e.Internal.Types.Optgroup.Content (M3e.Internal.Types.Optgroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Optgroup.Is s) admittedBy msg
+optgroup attrs children =
+    Ir.fromNode (Ir.node "m3e-optgroup" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-option` producer — open attribute/child rows, no required record. See `M3e.Component.Option.component` for the required-content form.
 -}
 option :
-    List (Attr M3e.Component.Option.Attrs msg)
-    -> List (Element M3e.Component.Option.Content (M3e.Component.Option.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Option.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Option.Attrs msg)
+    -> List (Element M3e.Internal.Types.Option.Content (M3e.Internal.Types.Option.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Option.Is s) admittedBy msg
 option attrs children =
     Ir.fromNode (Ir.node "m3e-option" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -925,59 +925,59 @@ option attrs children =
 {-| See `M3e.Component.OptionPanel.component`.
 -}
 optionPanel :
-    List (Attr M3e.Component.OptionPanel.Attrs msg)
-    -> List (Element M3e.Component.OptionPanel.Content (M3e.Component.OptionPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.OptionPanel.Is s) admittedBy msg
-optionPanel =
-    M3e.Component.OptionPanel.component
+    List (Attr M3e.Internal.Types.OptionPanel.Attrs msg)
+    -> List (Element M3e.Internal.Types.OptionPanel.Content (M3e.Internal.Types.OptionPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.OptionPanel.Is s) admittedBy msg
+optionPanel attrs children =
+    Ir.fromNode (Ir.node "m3e-option-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Paginator.component`.
 -}
 paginator :
-    List (Attr M3e.Component.Paginator.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Paginator.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Paginator.Is s) admittedBy msg
-paginator =
-    M3e.Component.Paginator.component
+    List (Attr M3e.Internal.Types.Paginator.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Paginator.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Paginator.Is s) admittedBy msg
+paginator attrs children =
+    Ir.fromNode (Ir.node "m3e-paginator" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.PseudoCheckbox.component`.
 -}
 pseudoCheckbox :
-    List (Attr M3e.Component.PseudoCheckbox.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.PseudoCheckbox.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.PseudoCheckbox.Is s) admittedBy msg
-pseudoCheckbox =
-    M3e.Component.PseudoCheckbox.component
+    List (Attr M3e.Internal.Types.PseudoCheckbox.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.PseudoCheckbox.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.PseudoCheckbox.Is s) admittedBy msg
+pseudoCheckbox attrs children =
+    Ir.fromNode (Ir.node "m3e-pseudo-checkbox" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.PseudoRadio.component`.
 -}
 pseudoRadio :
-    List (Attr M3e.Component.PseudoRadio.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.PseudoRadio.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.PseudoRadio.Is s) admittedBy msg
-pseudoRadio =
-    M3e.Component.PseudoRadio.component
+    List (Attr M3e.Internal.Types.PseudoRadio.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.PseudoRadio.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.PseudoRadio.Is s) admittedBy msg
+pseudoRadio attrs children =
+    Ir.fromNode (Ir.node "m3e-pseudo-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Radio.component`.
 -}
 radio :
-    List (Attr M3e.Component.Radio.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Radio.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Radio.Is s) admittedBy msg
-radio =
-    M3e.Component.Radio.component
+    List (Attr M3e.Internal.Types.Radio.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Radio.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Radio.Is s) admittedBy msg
+radio attrs children =
+    Ir.fromNode (Ir.node "m3e-radio" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-radio-group` producer — open attribute/child rows, no required record. See `M3e.Component.RadioGroup.component` for the required-content form.
 -}
 radioGroup :
-    List (Attr M3e.Component.RadioGroup.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.RadioGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.RadioGroup.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.RadioGroup.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.RadioGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.RadioGroup.Is s) admittedBy msg
 radioGroup attrs children =
     Ir.fromNode (Ir.node "m3e-radio-group" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -985,9 +985,9 @@ radioGroup attrs children =
 {-| The loose `m3e-rich-tooltip` producer — open attribute/child rows, no required record. See `M3e.Component.RichTooltip.component` for the required-content form.
 -}
 richTooltip :
-    List (Attr M3e.Component.RichTooltip.Attrs msg)
-    -> List (Element M3e.Component.RichTooltip.Content (M3e.Component.RichTooltip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.RichTooltip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.RichTooltip.Attrs msg)
+    -> List (Element M3e.Internal.Types.RichTooltip.Content (M3e.Internal.Types.RichTooltip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.RichTooltip.Is s) admittedBy msg
 richTooltip attrs children =
     Ir.fromNode (Ir.node "m3e-rich-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -995,9 +995,9 @@ richTooltip attrs children =
 {-| The loose `m3e-rich-tooltip-action` producer — open attribute/child rows, no required record. See `M3e.Component.RichTooltipAction.component` for the required-content form.
 -}
 richTooltipAction :
-    List (Attr M3e.Component.RichTooltipAction.Attrs msg)
-    -> List (Element M3e.Component.RichTooltipAction.Content (M3e.Component.RichTooltipAction.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.RichTooltipAction.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.RichTooltipAction.Attrs msg)
+    -> List (Element M3e.Internal.Types.RichTooltipAction.Content (M3e.Internal.Types.RichTooltipAction.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.RichTooltipAction.Is s) admittedBy msg
 richTooltipAction attrs children =
     Ir.fromNode (Ir.node "m3e-rich-tooltip-action" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1005,29 +1005,29 @@ richTooltipAction attrs children =
 {-| See `M3e.Component.Ripple.component`.
 -}
 ripple :
-    List (Attr M3e.Component.Ripple.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Ripple.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Ripple.Is s) admittedBy msg
-ripple =
-    M3e.Component.Ripple.component
+    List (Attr M3e.Internal.Types.Ripple.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Ripple.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Ripple.Is s) admittedBy msg
+ripple attrs children =
+    Ir.fromNode (Ir.node "m3e-ripple" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ScrollContainer.component`.
 -}
 scrollContainer :
-    List (Attr M3e.Component.ScrollContainer.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.ScrollContainer.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ScrollContainer.Is s) admittedBy msg
-scrollContainer =
-    M3e.Component.ScrollContainer.component
+    List (Attr M3e.Internal.Types.ScrollContainer.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.ScrollContainer.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ScrollContainer.Is s) admittedBy msg
+scrollContainer attrs children =
+    Ir.fromNode (Ir.node "m3e-scroll-container" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-search-bar` producer — open attribute/child rows, no required record. See `M3e.Component.SearchBar.component` for the required-content form.
 -}
 searchBar :
-    List (Attr M3e.Component.SearchBar.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SearchBar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SearchBar.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SearchBar.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SearchBar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SearchBar.Is s) admittedBy msg
 searchBar attrs children =
     Ir.fromNode (Ir.node "m3e-search-bar" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1035,9 +1035,9 @@ searchBar attrs children =
 {-| The loose `m3e-search-view` producer — open attribute/child rows, no required record. See `M3e.Component.SearchView.component` for the required-content form.
 -}
 searchView :
-    List (Attr M3e.Component.SearchView.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SearchView.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SearchView.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SearchView.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SearchView.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SearchView.Is s) admittedBy msg
 searchView attrs children =
     Ir.fromNode (Ir.node "m3e-search-view" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1045,9 +1045,9 @@ searchView attrs children =
 {-| The loose `m3e-segmented-button` producer — open attribute/child rows, no required record. See `M3e.Component.SegmentedButton.component` for the required-content form.
 -}
 segmentedButton :
-    List (Attr M3e.Component.SegmentedButton.Attrs msg)
-    -> List (Element M3e.Component.SegmentedButton.Content (M3e.Component.SegmentedButton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SegmentedButton.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SegmentedButton.Attrs msg)
+    -> List (Element M3e.Internal.Types.SegmentedButton.Content (M3e.Internal.Types.SegmentedButton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SegmentedButton.Is s) admittedBy msg
 segmentedButton attrs children =
     Ir.fromNode (Ir.node "m3e-segmented-button" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1055,9 +1055,9 @@ segmentedButton attrs children =
 {-| The loose `m3e-select` producer — open attribute/child rows, no required record. See `M3e.Component.Select.component` for the required-content form.
 -}
 select :
-    List (Attr M3e.Component.Select.Attrs msg)
-    -> List (Element M3e.Component.Select.Content (M3e.Component.Select.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Select.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Select.Attrs msg)
+    -> List (Element M3e.Internal.Types.Select.Content (M3e.Internal.Types.Select.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Select.Is s) admittedBy msg
 select attrs children =
     Ir.fromNode (Ir.node "m3e-select" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1065,69 +1065,69 @@ select attrs children =
 {-| See `M3e.Component.SelectionIndicator.component`.
 -}
 selectionIndicator :
-    List (Attr M3e.Component.SelectionIndicator.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SelectionIndicator.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SelectionIndicator.Is s) admittedBy msg
-selectionIndicator =
-    M3e.Component.SelectionIndicator.component
+    List (Attr M3e.Internal.Types.SelectionIndicator.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SelectionIndicator.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SelectionIndicator.Is s) admittedBy msg
+selectionIndicator attrs children =
+    Ir.fromNode (Ir.node "m3e-selection-indicator" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.SelectionList.component`.
 -}
 selectionList :
-    List (Attr M3e.Component.SelectionList.Attrs msg)
-    -> List (Element M3e.Component.SelectionList.Content (M3e.Component.SelectionList.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SelectionList.Is s) admittedBy msg
-selectionList =
-    M3e.Component.SelectionList.component
+    List (Attr M3e.Internal.Types.SelectionList.Attrs msg)
+    -> List (Element M3e.Internal.Types.SelectionList.Content (M3e.Internal.Types.SelectionList.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SelectionList.Is s) admittedBy msg
+selectionList attrs children =
+    Ir.fromNode (Ir.node "m3e-selection-list" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Shape.component`.
 -}
 shape :
-    List (Attr M3e.Component.Shape.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Shape.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Shape.Is s) admittedBy msg
-shape =
-    M3e.Component.Shape.component
+    List (Attr M3e.Internal.Types.Shape.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Shape.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Shape.Is s) admittedBy msg
+shape attrs children =
+    Ir.fromNode (Ir.node "m3e-shape" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Skeleton.component`.
 -}
 skeleton :
-    List (Attr M3e.Component.Skeleton.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Skeleton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Skeleton.Is s) admittedBy msg
-skeleton =
-    M3e.Component.Skeleton.component
+    List (Attr M3e.Internal.Types.Skeleton.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Skeleton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Skeleton.Is s) admittedBy msg
+skeleton attrs children =
+    Ir.fromNode (Ir.node "m3e-skeleton" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Slide.component`.
 -}
 slide :
-    List (Attr M3e.Component.Slide.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Slide.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Slide.Is s) admittedBy msg
-slide =
-    M3e.Component.Slide.component
+    List (Attr M3e.Internal.Types.Slide.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Slide.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Slide.Is s) admittedBy msg
+slide attrs children =
+    Ir.fromNode (Ir.node "m3e-slide" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.SlideGroup.component`.
 -}
 slideGroup :
-    List (Attr M3e.Component.SlideGroup.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SlideGroup.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SlideGroup.Is s) admittedBy msg
-slideGroup =
-    M3e.Component.SlideGroup.component
+    List (Attr M3e.Internal.Types.SlideGroup.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SlideGroup.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SlideGroup.Is s) admittedBy msg
+slideGroup attrs children =
+    Ir.fromNode (Ir.node "m3e-slide-group" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-slider` producer — open attribute/child rows, no required record. See `M3e.Component.Slider.component` for the required-content form.
 -}
 slider :
-    List (Attr M3e.Component.Slider.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Slider.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Slider.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Slider.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Slider.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Slider.Is s) admittedBy msg
 slider attrs children =
     Ir.fromNode (Ir.node "m3e-slider" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1135,19 +1135,19 @@ slider attrs children =
 {-| See `M3e.Component.SliderThumb.component`.
 -}
 sliderThumb :
-    List (Attr M3e.Component.SliderThumb.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SliderThumb.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SliderThumb.Is s) admittedBy msg
-sliderThumb =
-    M3e.Component.SliderThumb.component
+    List (Attr M3e.Internal.Types.SliderThumb.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SliderThumb.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SliderThumb.Is s) admittedBy msg
+sliderThumb attrs children =
+    Ir.fromNode (Ir.node "m3e-slider-thumb" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-snackbar` producer — open attribute/child rows, no required record. See `M3e.Component.Snackbar.component` for the required-content form.
 -}
 snackbar :
-    List (Attr M3e.Component.Snackbar.Attrs msg)
-    -> List (Element M3e.Component.Snackbar.Content (M3e.Component.Snackbar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Snackbar.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Snackbar.Attrs msg)
+    -> List (Element M3e.Internal.Types.Snackbar.Content (M3e.Internal.Types.Snackbar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Snackbar.Is s) admittedBy msg
 snackbar attrs children =
     Ir.fromNode (Ir.node "m3e-snackbar" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1155,9 +1155,9 @@ snackbar attrs children =
 {-| The loose `m3e-split-button` producer — open attribute/child rows, no required record. See `M3e.Component.SplitButton.component` for the required-content form.
 -}
 splitButton :
-    List (Attr M3e.Component.SplitButton.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SplitButton.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SplitButton.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SplitButton.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SplitButton.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SplitButton.Is s) admittedBy msg
 splitButton attrs children =
     Ir.fromNode (Ir.node "m3e-split-button" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1165,9 +1165,9 @@ splitButton attrs children =
 {-| The loose `m3e-split-pane` producer — open attribute/child rows, no required record. See `M3e.Component.SplitPane.component` for the required-content form.
 -}
 splitPane :
-    List (Attr M3e.Component.SplitPane.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.SplitPane.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SplitPane.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SplitPane.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.SplitPane.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SplitPane.Is s) admittedBy msg
 splitPane attrs children =
     Ir.fromNode (Ir.node "m3e-split-pane" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1175,19 +1175,19 @@ splitPane attrs children =
 {-| See `M3e.Component.StateLayer.component`.
 -}
 stateLayer :
-    List (Attr M3e.Component.StateLayer.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.StateLayer.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.StateLayer.Is s) admittedBy msg
-stateLayer =
-    M3e.Component.StateLayer.component
+    List (Attr M3e.Internal.Types.StateLayer.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.StateLayer.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.StateLayer.Is s) admittedBy msg
+stateLayer attrs children =
+    Ir.fromNode (Ir.node "m3e-state-layer" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-step` producer — open attribute/child rows, no required record. See `M3e.Component.Step.component` for the required-content form.
 -}
 step :
-    List (Attr M3e.Component.Step.Attrs msg)
-    -> List (Element M3e.Component.Step.Content (M3e.Component.Step.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Step.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Step.Attrs msg)
+    -> List (Element M3e.Internal.Types.Step.Content (M3e.Internal.Types.Step.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Step.Is s) admittedBy msg
 step attrs children =
     Ir.fromNode (Ir.node "m3e-step" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1195,59 +1195,59 @@ step attrs children =
 {-| See `M3e.Component.StepPanel.component`.
 -}
 stepPanel :
-    List (Attr M3e.Component.StepPanel.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.StepPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.StepPanel.Is s) admittedBy msg
-stepPanel =
-    M3e.Component.StepPanel.component
+    List (Attr M3e.Internal.Types.StepPanel.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.StepPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.StepPanel.Is s) admittedBy msg
+stepPanel attrs children =
+    Ir.fromNode (Ir.node "m3e-step-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Stepper.component`.
 -}
 stepper :
-    List (Attr M3e.Component.Stepper.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Stepper.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Stepper.Is s) admittedBy msg
-stepper =
-    M3e.Component.Stepper.component
+    List (Attr M3e.Internal.Types.Stepper.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Stepper.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Stepper.Is s) admittedBy msg
+stepper attrs children =
+    Ir.fromNode (Ir.node "m3e-stepper" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.StepperNext.component`.
 -}
 stepperNext :
-    List (Attr M3e.Component.StepperNext.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.StepperNext.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.StepperNext.Is s) admittedBy msg
-stepperNext =
-    M3e.Component.StepperNext.component
+    List (Attr M3e.Internal.Types.StepperNext.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.StepperNext.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.StepperNext.Is s) admittedBy msg
+stepperNext attrs children =
+    Ir.fromNode (Ir.node "m3e-stepper-next" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.StepperPrevious.component`.
 -}
 stepperPrevious :
-    List (Attr M3e.Component.StepperPrevious.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.StepperPrevious.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.StepperPrevious.Is s) admittedBy msg
-stepperPrevious =
-    M3e.Component.StepperPrevious.component
+    List (Attr M3e.Internal.Types.StepperPrevious.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.StepperPrevious.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.StepperPrevious.Is s) admittedBy msg
+stepperPrevious attrs children =
+    Ir.fromNode (Ir.node "m3e-stepper-previous" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.StepperReset.component`.
 -}
 stepperReset :
-    List (Attr M3e.Component.StepperReset.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.StepperReset.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.StepperReset.Is s) admittedBy msg
-stepperReset =
-    M3e.Component.StepperReset.component
+    List (Attr M3e.Internal.Types.StepperReset.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.StepperReset.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.StepperReset.Is s) admittedBy msg
+stepperReset attrs children =
+    Ir.fromNode (Ir.node "m3e-stepper-reset" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-suggestion-chip` producer — open attribute/child rows, no required record. See `M3e.Component.SuggestionChip.component` for the required-content form.
 -}
 suggestionChip :
-    List (Attr M3e.Component.SuggestionChip.Attrs msg)
-    -> List (Element M3e.Component.SuggestionChip.Content (M3e.Component.SuggestionChip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.SuggestionChip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.SuggestionChip.Attrs msg)
+    -> List (Element M3e.Internal.Types.SuggestionChip.Content (M3e.Internal.Types.SuggestionChip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.SuggestionChip.Is s) admittedBy msg
 suggestionChip attrs children =
     Ir.fromNode (Ir.node "m3e-suggestion-chip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1255,159 +1255,159 @@ suggestionChip attrs children =
 {-| See `M3e.Component.Switch.component`.
 -}
 switch :
-    List (Attr M3e.Component.Switch.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Switch.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Switch.Is s) admittedBy msg
-switch =
-    M3e.Component.Switch.component
+    List (Attr M3e.Internal.Types.Switch.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Switch.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Switch.Is s) admittedBy msg
+switch attrs children =
+    Ir.fromNode (Ir.node "m3e-switch" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Tab.component`.
 -}
 tab :
-    List (Attr M3e.Component.Tab.Attrs msg)
-    -> List (Element M3e.Component.Tab.Content (M3e.Component.Tab.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Tab.Is s) admittedBy msg
-tab =
-    M3e.Component.Tab.component
+    List (Attr M3e.Internal.Types.Tab.Attrs msg)
+    -> List (Element M3e.Internal.Types.Tab.Content (M3e.Internal.Types.Tab.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Tab.Is s) admittedBy msg
+tab attrs children =
+    Ir.fromNode (Ir.node "m3e-tab" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TabPanel.component`.
 -}
 tabPanel :
-    List (Attr M3e.Component.TabPanel.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TabPanel.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TabPanel.Is s) admittedBy msg
-tabPanel =
-    M3e.Component.TabPanel.component
+    List (Attr M3e.Internal.Types.TabPanel.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TabPanel.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TabPanel.Is s) admittedBy msg
+tabPanel attrs children =
+    Ir.fromNode (Ir.node "m3e-tab-panel" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Tabs.component`.
 -}
 tabs :
-    List (Attr M3e.Component.Tabs.Attrs msg)
-    -> List (Element M3e.Component.Tabs.Content (M3e.Component.Tabs.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Tabs.Is s) admittedBy msg
-tabs =
-    M3e.Component.Tabs.component
+    List (Attr M3e.Internal.Types.Tabs.Attrs msg)
+    -> List (Element M3e.Internal.Types.Tabs.Content (M3e.Internal.Types.Tabs.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Tabs.Is s) admittedBy msg
+tabs attrs children =
+    Ir.fromNode (Ir.node "m3e-tabs" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TextHighlight.component`.
 -}
 textHighlight :
-    List (Attr M3e.Component.TextHighlight.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TextHighlight.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TextHighlight.Is s) admittedBy msg
-textHighlight =
-    M3e.Component.TextHighlight.component
+    List (Attr M3e.Internal.Types.TextHighlight.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TextHighlight.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TextHighlight.Is s) admittedBy msg
+textHighlight attrs children =
+    Ir.fromNode (Ir.node "m3e-text-highlight" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TextOverflow.component`.
 -}
 textOverflow :
-    List (Attr M3e.Component.TextOverflow.Attrs msg)
-    -> List (Element M3e.Component.TextOverflow.Content (M3e.Component.TextOverflow.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TextOverflow.Is s) admittedBy msg
-textOverflow =
-    M3e.Component.TextOverflow.component
+    List (Attr M3e.Internal.Types.TextOverflow.Attrs msg)
+    -> List (Element M3e.Internal.Types.TextOverflow.Content (M3e.Internal.Types.TextOverflow.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TextOverflow.Is s) admittedBy msg
+textOverflow attrs children =
+    Ir.fromNode (Ir.node "m3e-text-overflow" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TextareaAutosize.component`.
 -}
 textareaAutosize :
-    List (Attr M3e.Component.TextareaAutosize.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TextareaAutosize.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TextareaAutosize.Is s) admittedBy msg
-textareaAutosize =
-    M3e.Component.TextareaAutosize.component
+    List (Attr M3e.Internal.Types.TextareaAutosize.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TextareaAutosize.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TextareaAutosize.Is s) admittedBy msg
+textareaAutosize attrs children =
+    Ir.fromNode (Ir.node "m3e-textarea-autosize" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Theme.component`.
 -}
 theme :
-    List (Attr M3e.Component.Theme.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Theme.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Theme.Is s) admittedBy msg
-theme =
-    M3e.Component.Theme.component
+    List (Attr M3e.Internal.Types.Theme.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Theme.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Theme.Is s) admittedBy msg
+theme attrs children =
+    Ir.fromNode (Ir.node "m3e-theme" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.ThemeIcon.component`.
 -}
 themeIcon :
-    List (Attr M3e.Component.ThemeIcon.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.ThemeIcon.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.ThemeIcon.Is s) admittedBy msg
-themeIcon =
-    M3e.Component.ThemeIcon.component
+    List (Attr M3e.Internal.Types.ThemeIcon.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.ThemeIcon.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.ThemeIcon.Is s) admittedBy msg
+themeIcon attrs children =
+    Ir.fromNode (Ir.node "m3e-theme-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Timepicker.component`.
 -}
 timepicker :
-    List (Attr M3e.Component.Timepicker.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Timepicker.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Timepicker.Is s) admittedBy msg
-timepicker =
-    M3e.Component.Timepicker.component
+    List (Attr M3e.Internal.Types.Timepicker.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Timepicker.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Timepicker.Is s) admittedBy msg
+timepicker attrs children =
+    Ir.fromNode (Ir.node "m3e-timepicker" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TimepickerDial.component`.
 -}
 timepickerDial :
-    List (Attr M3e.Component.TimepickerDial.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TimepickerDial.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TimepickerDial.Is s) admittedBy msg
-timepickerDial =
-    M3e.Component.TimepickerDial.component
+    List (Attr M3e.Internal.Types.TimepickerDial.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TimepickerDial.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TimepickerDial.Is s) admittedBy msg
+timepickerDial attrs children =
+    Ir.fromNode (Ir.node "m3e-timepicker-dial" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TimepickerInput.component`.
 -}
 timepickerInput :
-    List (Attr M3e.Component.TimepickerInput.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TimepickerInput.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TimepickerInput.Is s) admittedBy msg
-timepickerInput =
-    M3e.Component.TimepickerInput.component
+    List (Attr M3e.Internal.Types.TimepickerInput.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TimepickerInput.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TimepickerInput.Is s) admittedBy msg
+timepickerInput attrs children =
+    Ir.fromNode (Ir.node "m3e-timepicker-input" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TimepickerInputPeriodToggle.component`.
 -}
 timepickerInputPeriodToggle :
-    List (Attr M3e.Component.TimepickerInputPeriodToggle.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TimepickerInputPeriodToggle.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TimepickerInputPeriodToggle.Is s) admittedBy msg
-timepickerInputPeriodToggle =
-    M3e.Component.TimepickerInputPeriodToggle.component
+    List (Attr M3e.Internal.Types.TimepickerInputPeriodToggle.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TimepickerInputPeriodToggle.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TimepickerInputPeriodToggle.Is s) admittedBy msg
+timepickerInputPeriodToggle attrs children =
+    Ir.fromNode (Ir.node "m3e-timepicker-input-period-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.TimepickerToggle.component`.
 -}
 timepickerToggle :
-    List (Attr M3e.Component.TimepickerToggle.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.TimepickerToggle.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TimepickerToggle.Is s) admittedBy msg
-timepickerToggle =
-    M3e.Component.TimepickerToggle.component
+    List (Attr M3e.Internal.Types.TimepickerToggle.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.TimepickerToggle.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TimepickerToggle.Is s) admittedBy msg
+timepickerToggle attrs children =
+    Ir.fromNode (Ir.node "m3e-timepicker-toggle" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| See `M3e.Component.Toc.component`.
 -}
 toc :
-    List (Attr M3e.Component.Toc.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Toc.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Toc.Is s) admittedBy msg
-toc =
-    M3e.Component.Toc.component
+    List (Attr M3e.Internal.Types.Toc.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Toc.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Toc.Is s) admittedBy msg
+toc attrs children =
+    Ir.fromNode (Ir.node "m3e-toc" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-toc-item` producer — open attribute/child rows, no required record. See `M3e.Component.TocItem.component` for the required-content form.
 -}
 tocItem :
-    List (Attr M3e.Component.TocItem.Attrs msg)
-    -> List (Element M3e.Component.TocItem.Content (M3e.Component.TocItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TocItem.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.TocItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.TocItem.Content (M3e.Internal.Types.TocItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TocItem.Is s) admittedBy msg
 tocItem attrs children =
     Ir.fromNode (Ir.node "m3e-toc-item" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1415,19 +1415,19 @@ tocItem attrs children =
 {-| See `M3e.Component.Toolbar.component`.
 -}
 toolbar :
-    List (Attr M3e.Component.Toolbar.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.Toolbar.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Toolbar.Is s) admittedBy msg
-toolbar =
-    M3e.Component.Toolbar.component
+    List (Attr M3e.Internal.Types.Toolbar.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.Toolbar.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Toolbar.Is s) admittedBy msg
+toolbar attrs children =
+    Ir.fromNode (Ir.node "m3e-toolbar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-tooltip` producer — open attribute/child rows, no required record. See `M3e.Component.Tooltip.component` for the required-content form.
 -}
 tooltip :
-    List (Attr M3e.Component.Tooltip.Attrs msg)
-    -> List (Element M3e.Component.Tooltip.Content (M3e.Component.Tooltip.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Tooltip.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.Tooltip.Attrs msg)
+    -> List (Element M3e.Internal.Types.Tooltip.Content (M3e.Internal.Types.Tooltip.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Tooltip.Is s) admittedBy msg
 tooltip attrs children =
     Ir.fromNode (Ir.node "m3e-tooltip" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1435,19 +1435,19 @@ tooltip attrs children =
 {-| See `M3e.Component.Tree.component`.
 -}
 tree :
-    List (Attr M3e.Component.Tree.Attrs msg)
-    -> List (Element M3e.Component.Tree.Content (M3e.Component.Tree.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.Tree.Is s) admittedBy msg
-tree =
-    M3e.Component.Tree.component
+    List (Attr M3e.Internal.Types.Tree.Attrs msg)
+    -> List (Element M3e.Internal.Types.Tree.Content (M3e.Internal.Types.Tree.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.Tree.Is s) admittedBy msg
+tree attrs children =
+    Ir.fromNode (Ir.node "m3e-tree" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The loose `m3e-tree-item` producer — open attribute/child rows, no required record. See `M3e.Component.TreeItem.component` for the required-content form.
 -}
 treeItem :
-    List (Attr M3e.Component.TreeItem.Attrs msg)
-    -> List (Element M3e.Component.TreeItem.Content (M3e.Component.TreeItem.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.TreeItem.Is s) admittedBy msg
+    List (Attr M3e.Internal.Types.TreeItem.Attrs msg)
+    -> List (Element M3e.Internal.Types.TreeItem.Content (M3e.Internal.Types.TreeItem.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.TreeItem.Is s) admittedBy msg
 treeItem attrs children =
     Ir.fromNode (Ir.node "m3e-tree-item" attrs (List.map HtmlIr.Element.toNode children))
 
@@ -1455,11 +1455,11 @@ treeItem attrs children =
 {-| See `M3e.Component.YearView.component`.
 -}
 yearView :
-    List (Attr M3e.Component.YearView.Attrs msg)
-    -> List (Element childAccepts (M3e.Component.YearView.ChildAdmittedBy childAdm) msg)
-    -> Element (M3e.Component.YearView.Is s) admittedBy msg
-yearView =
-    M3e.Component.YearView.component
+    List (Attr M3e.Internal.Types.YearView.Attrs msg)
+    -> List (Element childAccepts (M3e.Internal.Types.YearView.ChildAdmittedBy childAdm) msg)
+    -> Element (M3e.Internal.Types.YearView.Is s) admittedBy msg
+yearView attrs children =
+    Ir.fromNode (Ir.node "m3e-year-view" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Icon exposing (..)
+module M3e.Internal.Types.Icon exposing (Is, Attrs, ChildAdmittedBy, Grade, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Icon — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Icon. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Icon` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Grade, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Ctx, Used)
 
 
+{-| The `Is` type row for Icon (generated).
+-}
 type alias Is s =
     { s | sharedIcon : Shared }
 
 
+{-| The `Attrs` type row for Icon (generated).
+-}
 type alias Attrs =
     { class : Supported
     , filled : Supported
@@ -28,10 +37,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Icon (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | icon : Ctx }
 
 
+{-| The `Grade` type row for Icon (generated).
+-}
 type alias Grade =
     { high : Supported
     , low : Supported
@@ -39,6 +52,8 @@ type alias Grade =
     }
 
 
+{-| The `Variant` type row for Icon (generated).
+-}
 type alias Variant =
     { outlined : Supported
     , rounded : Supported
@@ -46,10 +61,14 @@ type alias Variant =
     }
 
 
+{-| The `Builder` type row for Icon (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Icon (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , filled : Available

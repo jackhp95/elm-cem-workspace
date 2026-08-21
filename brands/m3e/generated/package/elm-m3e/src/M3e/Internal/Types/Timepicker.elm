@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Timepicker exposing (..)
+module M3e.Internal.Types.Timepicker exposing (Is, Attrs, ChildAdmittedBy, Format, Mode, Orientation, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Timepicker — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Timepicker. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Timepicker` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Format, Mode, Orientation, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Timepicker (generated).
+-}
 type alias Is s =
     { s | timepicker : Brand }
 
 
+{-| The `Attrs` type row for Timepicker (generated).
+-}
 type alias Attrs =
     { class : Supported
     , confirmLabel : Supported
@@ -44,10 +53,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Timepicker (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | timepicker : Ctx }
 
 
+{-| The `Format` type row for Timepicker (generated).
+-}
 type alias Format =
     { value12 : Supported
     , value24 : Supported
@@ -55,12 +68,16 @@ type alias Format =
     }
 
 
+{-| The `Mode` type row for Timepicker (generated).
+-}
 type alias Mode =
     { dial : Supported
     , input : Supported
     }
 
 
+{-| The `Orientation` type row for Timepicker (generated).
+-}
 type alias Orientation =
     { auto : Supported
     , horizontal : Supported
@@ -68,6 +85,8 @@ type alias Orientation =
     }
 
 
+{-| The `Variant` type row for Timepicker (generated).
+-}
 type alias Variant =
     { auto : Supported
     , docked : Supported
@@ -75,10 +94,14 @@ type alias Variant =
     }
 
 
+{-| The `Builder` type row for Timepicker (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Timepicker (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , confirmLabel : Available

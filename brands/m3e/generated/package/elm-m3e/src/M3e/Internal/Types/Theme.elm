@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Theme exposing (..)
+module M3e.Internal.Types.Theme exposing (Is, Attrs, ChildAdmittedBy, Contrast, Motion, Scheme, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Theme — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Theme. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Theme` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Contrast, Motion, Scheme, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Theme (generated).
+-}
 type alias Is s =
     { s | theme : Brand }
 
 
+{-| The `Attrs` type row for Theme (generated).
+-}
 type alias Attrs =
     { class : Supported
     , color : Supported
@@ -30,10 +39,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Theme (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | theme : Ctx }
 
 
+{-| The `Contrast` type row for Theme (generated).
+-}
 type alias Contrast =
     { high : Supported
     , medium : Supported
@@ -41,12 +54,16 @@ type alias Contrast =
     }
 
 
+{-| The `Motion` type row for Theme (generated).
+-}
 type alias Motion =
     { expressive : Supported
     , standard : Supported
     }
 
 
+{-| The `Scheme` type row for Theme (generated).
+-}
 type alias Scheme =
     { auto : Supported
     , dark : Supported
@@ -54,6 +71,8 @@ type alias Scheme =
     }
 
 
+{-| The `Variant` type row for Theme (generated).
+-}
 type alias Variant =
     { content : Supported
     , expressive : Supported
@@ -67,10 +86,14 @@ type alias Variant =
     }
 
 
+{-| The `Builder` type row for Theme (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Theme (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , color : Available

@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Optgroup exposing (..)
+module M3e.Internal.Types.Optgroup exposing (Is, Attrs, Content, LabelSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for Optgroup — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Optgroup. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Optgroup` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, LabelSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -9,10 +14,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Optgroup (generated).
+-}
 type alias Is s =
     { s | optgroup : Brand }
 
 
+{-| The `Attrs` type row for Optgroup (generated).
+-}
 type alias Attrs =
     { class : Supported
     , id : Supported
@@ -21,24 +30,34 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for Optgroup (generated).
+-}
 type alias Content =
     { option : Brand }
 
 
+{-| The `LabelSlot` type row for Optgroup (generated).
+-}
 type alias LabelSlot =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `ChildAdmittedBy` type row for Optgroup (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | optgroup : Ctx }
 
 
+{-| The `Builder` type row for Optgroup (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Optgroup (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , id : Available
@@ -47,6 +66,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for Optgroup (generated).
+-}
 type alias SlotCaps =
     { label : Available
     }

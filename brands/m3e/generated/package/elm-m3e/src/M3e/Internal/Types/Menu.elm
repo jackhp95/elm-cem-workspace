@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Menu exposing (..)
+module M3e.Internal.Types.Menu exposing (Is, Attrs, Content, ChildAdmittedBy, PositionX, PositionY, Variant, Builder, AttrCaps)
 
-{-| Internal type definitions for Menu — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Menu. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Menu` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, ChildAdmittedBy, PositionX, PositionY, Variant, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Menu (generated).
+-}
 type alias Is s =
     { s | menu : Brand }
 
 
+{-| The `Attrs` type row for Menu (generated).
+-}
 type alias Attrs =
     { class : Supported
     , id : Supported
@@ -28,6 +37,8 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for Menu (generated).
+-}
 type alias Content =
     { divider : Brand
     , menuItem : Brand
@@ -37,32 +48,44 @@ type alias Content =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Menu (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | menu : Ctx }
 
 
+{-| The `PositionX` type row for Menu (generated).
+-}
 type alias PositionX =
     { after : Supported
     , before : Supported
     }
 
 
+{-| The `PositionY` type row for Menu (generated).
+-}
 type alias PositionY =
     { above : Supported
     , below : Supported
     }
 
 
+{-| The `Variant` type row for Menu (generated).
+-}
 type alias Variant =
     { standard : Supported
     , vibrant : Supported
     }
 
 
+{-| The `Builder` type row for Menu (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Menu (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , id : Available

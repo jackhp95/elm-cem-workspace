@@ -15,7 +15,7 @@
     "iconFamily": "Material Symbols",
     "attribution": "Source: Material Symbols ligature names from @iconify-json/material-symbols\n(base icons, style-suffix-free).",
     "package": {
-      "dir": "elm-m3e-icons",
+      "dir": "../elm-m3e-icons",
       "name": "jackhp95/elm-m3e-icons",
       "summary": "Type-safe Material Symbols icon names for elm-m3e.",
       "version": "1.0.0",
@@ -32,8 +32,8 @@
     "lib": "M3e",
     "namespace": "Family",
     "package": {
-      "dir": "elm-m3e-families",
-      "name": "jackhp95/elm-m3e-families",
+      "dir": "../elm-m3e-components",
+      "name": "jackhp95/elm-m3e-components",
       "summary": "Family-grouped nested module organization for elm-m3e components.",
       "version": "1.0.0",
       "deps": {
@@ -43,7 +43,7 @@
         "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-m3e-core": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e-components": "1.0.0 <= v < 2.0.0"
+        "jackhp95/elm-m3e-elements": "1.0.0 <= v < 2.0.0"
       }
     },
     "families": {

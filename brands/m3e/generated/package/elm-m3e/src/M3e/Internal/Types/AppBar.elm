@@ -1,7 +1,12 @@
-module M3e.Internal.Types.AppBar exposing (..)
+module M3e.Internal.Types.AppBar exposing (Is, Attrs, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy, Size, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for AppBar — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for AppBar. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.AppBar` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy, Size, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for AppBar (generated).
+-}
 type alias Is s =
     { s | appBar : Brand }
 
 
+{-| The `Attrs` type row for AppBar (generated).
+-}
 type alias Attrs =
     { centered : Supported
     , class : Supported
@@ -25,6 +34,8 @@ type alias Attrs =
     }
 
 
+{-| The `LeadingSlot` type row for AppBar (generated).
+-}
 type alias LeadingSlot =
     { button : Brand
     , iconButton : Brand
@@ -32,6 +43,8 @@ type alias LeadingSlot =
     }
 
 
+{-| The `SubtitleSlot` type row for AppBar (generated).
+-}
 type alias SubtitleSlot =
     { heading : Brand
     , sharedFlow : Shared
@@ -40,6 +53,8 @@ type alias SubtitleSlot =
     }
 
 
+{-| The `TitleSlot` type row for AppBar (generated).
+-}
 type alias TitleSlot =
     { heading : Brand
     , sharedFlow : Shared
@@ -48,6 +63,8 @@ type alias TitleSlot =
     }
 
 
+{-| The `TrailingSlot` type row for AppBar (generated).
+-}
 type alias TrailingSlot =
     { button : Brand
     , iconButton : Brand
@@ -57,10 +74,14 @@ type alias TrailingSlot =
     }
 
 
+{-| The `ChildAdmittedBy` type row for AppBar (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | appBar : Ctx }
 
 
+{-| The `Size` type row for AppBar (generated).
+-}
 type alias Size =
     { large : Supported
     , medium : Supported
@@ -68,10 +89,14 @@ type alias Size =
     }
 
 
+{-| The `Builder` type row for AppBar (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for AppBar (generated).
+-}
 type alias AttrCaps =
     { centered : Available
     , class : Available
@@ -83,6 +108,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for AppBar (generated).
+-}
 type alias SlotCaps =
     { leadingIcon : Available
     , subtitle : Available

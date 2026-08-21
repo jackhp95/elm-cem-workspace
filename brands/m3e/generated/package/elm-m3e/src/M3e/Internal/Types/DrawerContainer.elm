@@ -1,7 +1,12 @@
-module M3e.Internal.Types.DrawerContainer exposing (..)
+module M3e.Internal.Types.DrawerContainer exposing (Is, Attrs, ChildAdmittedBy, EndMode, StartMode, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for DrawerContainer — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for DrawerContainer. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.DrawerContainer` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, EndMode, StartMode, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for DrawerContainer (generated).
+-}
 type alias Is s =
     { s | drawerContainer : Brand }
 
 
+{-| The `Attrs` type row for DrawerContainer (generated).
+-}
 type alias Attrs =
     { class : Supported
     , end : Supported
@@ -29,10 +38,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for DrawerContainer (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | drawerContainer : Ctx }
 
 
+{-| The `EndMode` type row for DrawerContainer (generated).
+-}
 type alias EndMode =
     { auto : Supported
     , over : Supported
@@ -41,6 +54,8 @@ type alias EndMode =
     }
 
 
+{-| The `StartMode` type row for DrawerContainer (generated).
+-}
 type alias StartMode =
     { auto : Supported
     , over : Supported
@@ -49,10 +64,14 @@ type alias StartMode =
     }
 
 
+{-| The `Builder` type row for DrawerContainer (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for DrawerContainer (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , end : Available
@@ -68,6 +87,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for DrawerContainer (generated).
+-}
 type alias SlotCaps =
     { end : Available
     , start : Available

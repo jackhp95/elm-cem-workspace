@@ -1,7 +1,12 @@
-module M3e.Internal.Types.BreadcrumbItemButton exposing (..)
+module M3e.Internal.Types.BreadcrumbItemButton exposing (Is, Attrs, Content, ChildAdmittedBy, Current, Builder, AttrCaps)
 
-{-| Internal type definitions for BreadcrumbItemButton — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for BreadcrumbItemButton. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.BreadcrumbItemButton` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, ChildAdmittedBy, Current, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for BreadcrumbItemButton (generated).
+-}
 type alias Is s =
     { s | breadcrumbItemButton : Brand }
 
 
+{-| The `Attrs` type row for BreadcrumbItemButton (generated).
+-}
 type alias Attrs =
     { class : Supported
     , current : Supported
@@ -29,6 +38,8 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for BreadcrumbItemButton (generated).
+-}
 type alias Content =
     { heading : Brand
     , sharedIcon : Shared
@@ -36,10 +47,14 @@ type alias Content =
     }
 
 
+{-| The `ChildAdmittedBy` type row for BreadcrumbItemButton (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | breadcrumbItemButton : Ctx }
 
 
+{-| The `Current` type row for BreadcrumbItemButton (generated).
+-}
 type alias Current =
     { date : Supported
     , location : Supported
@@ -50,10 +65,14 @@ type alias Current =
     }
 
 
+{-| The `Builder` type row for BreadcrumbItemButton (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for BreadcrumbItemButton (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , current : Available

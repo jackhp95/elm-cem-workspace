@@ -1,7 +1,12 @@
-module M3e.Internal.Types.BottomSheetAction exposing (..)
+module M3e.Internal.Types.BottomSheetAction exposing (Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps)
 
-{-| Internal type definitions for BottomSheetAction — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for BottomSheetAction. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.BottomSheetAction` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -9,10 +14,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for BottomSheetAction (generated).
+-}
 type alias Is s =
     { s | bottomSheetAction : Brand }
 
 
+{-| The `Attrs` type row for BottomSheetAction (generated).
+-}
 type alias Attrs =
     { class : Supported
     , id : Supported
@@ -21,20 +30,28 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for BottomSheetAction (generated).
+-}
 type alias Content =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `ChildAdmittedBy` type row for BottomSheetAction (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | bottomSheetAction : Ctx }
 
 
+{-| The `Builder` type row for BottomSheetAction (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for BottomSheetAction (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , id : Available

@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Dialog exposing (..)
+module M3e.Internal.Types.Dialog exposing (Is, Attrs, CloseIconSlot, HeaderSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for Dialog — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Dialog. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Dialog` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, CloseIconSlot, HeaderSlot, ChildAdmittedBy, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -9,10 +14,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Dialog (generated).
+-}
 type alias Is s =
     { s | dialog : Brand }
 
 
+{-| The `Attrs` type row for Dialog (generated).
+-}
 type alias Attrs =
     { alert : Supported
     , class : Supported
@@ -32,24 +41,34 @@ type alias Attrs =
     }
 
 
+{-| The `CloseIconSlot` type row for Dialog (generated).
+-}
 type alias CloseIconSlot =
     { sharedIcon : Shared }
 
 
+{-| The `HeaderSlot` type row for Dialog (generated).
+-}
 type alias HeaderSlot =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `ChildAdmittedBy` type row for Dialog (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | dialog : Ctx }
 
 
+{-| The `Builder` type row for Dialog (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Dialog (generated).
+-}
 type alias AttrCaps =
     { alert : Available
     , class : Available
@@ -69,6 +88,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for Dialog (generated).
+-}
 type alias SlotCaps =
     { actions : Available
     , closeIcon : Available

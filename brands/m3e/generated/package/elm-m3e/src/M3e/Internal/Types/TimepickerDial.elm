@@ -1,7 +1,12 @@
-module M3e.Internal.Types.TimepickerDial exposing (..)
+module M3e.Internal.Types.TimepickerDial exposing (Is, Attrs, ChildAdmittedBy, Format, Period, ViewAttr, Builder, AttrCaps)
 
-{-| Internal type definitions for TimepickerDial — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for TimepickerDial. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.TimepickerDial` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Format, Period, ViewAttr, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for TimepickerDial (generated).
+-}
 type alias Is s =
     { s | timepickerDial : Brand }
 
 
+{-| The `Attrs` type row for TimepickerDial (generated).
+-}
 type alias Attrs =
     { class : Supported
     , format : Supported
@@ -34,10 +43,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for TimepickerDial (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | timepickerDial : Ctx }
 
 
+{-| The `Format` type row for TimepickerDial (generated).
+-}
 type alias Format =
     { value12 : Supported
     , value24 : Supported
@@ -45,12 +58,16 @@ type alias Format =
     }
 
 
+{-| The `Period` type row for TimepickerDial (generated).
+-}
 type alias Period =
     { am : Supported
     , pm : Supported
     }
 
 
+{-| The `ViewAttr` type row for TimepickerDial (generated).
+-}
 type alias ViewAttr =
     { hour : Supported
     , minute : Supported
@@ -58,10 +75,14 @@ type alias ViewAttr =
     }
 
 
+{-| The `Builder` type row for TimepickerDial (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for TimepickerDial (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , format : Available

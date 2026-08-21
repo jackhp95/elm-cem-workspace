@@ -1,7 +1,12 @@
-module M3e.Internal.Types.TextHighlight exposing (..)
+module M3e.Internal.Types.TextHighlight exposing (Is, Attrs, ChildAdmittedBy, Mode, Builder, AttrCaps)
 
-{-| Internal type definitions for TextHighlight — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for TextHighlight. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.TextHighlight` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Mode, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for TextHighlight (generated).
+-}
 type alias Is s =
     { s | textHighlight : Brand }
 
 
+{-| The `Attrs` type row for TextHighlight (generated).
+-}
 type alias Attrs =
     { caseSensitive : Supported
     , class : Supported
@@ -27,10 +36,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for TextHighlight (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | textHighlight : Ctx }
 
 
+{-| The `Mode` type row for TextHighlight (generated).
+-}
 type alias Mode =
     { contains : Supported
     , endsWith : Supported
@@ -38,10 +51,14 @@ type alias Mode =
     }
 
 
+{-| The `Builder` type row for TextHighlight (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for TextHighlight (generated).
+-}
 type alias AttrCaps =
     { caseSensitive : Available
     , class : Available

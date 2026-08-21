@@ -1,7 +1,12 @@
-module M3e.Internal.Types.Slider exposing (..)
+module M3e.Internal.Types.Slider exposing (Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps)
 
-{-| Internal type definitions for Slider — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Slider. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.Slider` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Slider (generated).
+-}
 type alias Is s =
     { s | slider : Brand }
 
 
+{-| The `Attrs` type row for Slider (generated).
+-}
 type alias Attrs =
     { class : Supported
     , disabled : Supported
@@ -32,10 +41,14 @@ type alias Attrs =
     }
 
 
+{-| The `ChildAdmittedBy` type row for Slider (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | slider : Ctx }
 
 
+{-| The `Size` type row for Slider (generated).
+-}
 type alias Size =
     { extraLarge : Supported
     , extraSmall : Supported
@@ -45,10 +58,14 @@ type alias Size =
     }
 
 
+{-| The `Builder` type row for Slider (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Slider (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , disabled : Available

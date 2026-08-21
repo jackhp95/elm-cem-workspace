@@ -1093,14 +1093,54 @@ internalTypesModule brand comp =
                         , "    " ++ slotCapsBody
                         ]
                    )
+
+        -- Barrel-in-core (design §3.2a): these type definitions live in the `core`
+        -- tier and are re-exported by both the `M3e` barrel (core) AND the strict
+        -- `M3e.Component.<C>` surfaces (elements) — so `core` must publicly expose
+        -- them for the cross-package (elements → core) re-export to resolve. A
+        -- published package module cannot use `exposing (..)`, so enumerate the
+        -- exposed names by scanning `aliasDefs` (kept DRY — cannot drift from the
+        -- definitions above; the module contains only these type aliases).
+        typeAliasName line =
+            if String.startsWith "type alias " line then
+                line
+                    |> String.dropLeft (String.length "type alias ")
+                    |> String.words
+                    |> List.head
+
+            else
+                Nothing
+
+        exposedNames =
+            aliasDefs |> List.filterMap typeAliasName
+
+        -- A published module must document every exposed declaration (elm make
+        -- --docs enforces both `@docs` coverage AND a doc comment on each). Inject
+        -- a one-line doc comment directly above every `type alias` (kept DRY off
+        -- the same lines the exposing list is derived from).
+        documentedAliasDefs =
+            aliasDefs
+                |> List.concatMap
+                    (\line ->
+                        case typeAliasName line of
+                            Just nm ->
+                                [ "{-| The `" ++ nm ++ "` type row for " ++ comp.name ++ " (generated). -}", line ]
+
+                            Nothing ->
+                                [ line ]
+                    )
     in
     file [ lib, "Internal", "Types", comp.name ]
         (String.join "\n"
             (List.concat
-                [ [ "module " ++ lib ++ ".Internal.Types." ++ comp.name ++ " exposing (..)"
+                [ [ "module " ++ lib ++ ".Internal.Types." ++ comp.name ++ " exposing (" ++ String.join ", " exposedNames ++ ")"
                   , ""
-                  , "{-| Internal type definitions for " ++ comp.name ++ " — unexposed so docs.json"
-                  , "shows short qualified references instead of expanded record rows."
+                  , "{-| Type definitions for " ++ comp.name ++ ". The canonical home of this"
+                  , "component's `Attrs`/`Is`/`Content`/… rows: the `" ++ lib ++ "` barrel and the strict"
+                  , "`" ++ lib ++ ".Component." ++ comp.name ++ "` surface both re-export these, so they live in"
+                  , "the shared `core` tier (design §3.2a)."
+                  , ""
+                  , "@docs " ++ String.join ", " exposedNames
                   , "-}"
                   , ""
                   ]
@@ -1108,7 +1148,7 @@ internalTypesModule brand comp =
                 , [ ""
                   , ""
                   ]
-                , aliasDefs
+                , documentedAliasDefs
                 , [ "" ]
                 ]
             )

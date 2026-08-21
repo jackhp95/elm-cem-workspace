@@ -1,7 +1,12 @@
-module M3e.Internal.Types.BreadcrumbItem exposing (..)
+module M3e.Internal.Types.BreadcrumbItem exposing (Is, Attrs, Content, IconSlot, ChildAdmittedBy, Current, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for BreadcrumbItem — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for BreadcrumbItem. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.BreadcrumbItem` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, IconSlot, ChildAdmittedBy, Current, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for BreadcrumbItem (generated).
+-}
 type alias Is s =
     { s | breadcrumbItem : Brand }
 
 
+{-| The `Attrs` type row for BreadcrumbItem (generated).
+-}
 type alias Attrs =
     { class : Supported
     , current : Supported
@@ -30,6 +39,8 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for BreadcrumbItem (generated).
+-}
 type alias Content =
     { heading : Brand
     , sharedIcon : Shared
@@ -37,14 +48,20 @@ type alias Content =
     }
 
 
+{-| The `IconSlot` type row for BreadcrumbItem (generated).
+-}
 type alias IconSlot =
     { sharedIcon : Shared }
 
 
+{-| The `ChildAdmittedBy` type row for BreadcrumbItem (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | breadcrumbItem : Ctx }
 
 
+{-| The `Current` type row for BreadcrumbItem (generated).
+-}
 type alias Current =
     { date : Supported
     , location : Supported
@@ -55,10 +72,14 @@ type alias Current =
     }
 
 
+{-| The `Builder` type row for BreadcrumbItem (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for BreadcrumbItem (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , current : Available
@@ -75,6 +96,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for BreadcrumbItem (generated).
+-}
 type alias SlotCaps =
     { icon : Available
     }

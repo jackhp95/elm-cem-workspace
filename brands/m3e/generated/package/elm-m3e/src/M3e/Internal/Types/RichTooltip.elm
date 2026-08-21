@@ -1,7 +1,12 @@
-module M3e.Internal.Types.RichTooltip exposing (..)
+module M3e.Internal.Types.RichTooltip exposing (Is, Attrs, Content, SubheadSlot, ChildAdmittedBy, Position, TouchGestures, Builder, AttrCaps, SlotCaps)
 
-{-| Internal type definitions for RichTooltip — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for RichTooltip. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `M3e` barrel and the strict
+`M3e.Component.RichTooltip` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, SubheadSlot, ChildAdmittedBy, Position, TouchGestures, Builder, AttrCaps, SlotCaps
+
 -}
 
 import HtmlIr.Kind exposing (Shared, Supported)
@@ -10,10 +15,14 @@ import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for RichTooltip (generated).
+-}
 type alias Is s =
     { s | richTooltip : Brand }
 
 
+{-| The `Attrs` type row for RichTooltip (generated).
+-}
 type alias Attrs =
     { class : Supported
     , disabled : Supported
@@ -30,22 +39,30 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for RichTooltip (generated).
+-}
 type alias Content =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `SubheadSlot` type row for RichTooltip (generated).
+-}
 type alias SubheadSlot =
     { heading : Brand
     , sharedText : Shared
     }
 
 
+{-| The `ChildAdmittedBy` type row for RichTooltip (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | richTooltip : Ctx }
 
 
+{-| The `Position` type row for RichTooltip (generated).
+-}
 type alias Position =
     { above : Supported
     , aboveAfter : Supported
@@ -58,6 +75,8 @@ type alias Position =
     }
 
 
+{-| The `TouchGestures` type row for RichTooltip (generated).
+-}
 type alias TouchGestures =
     { auto : Supported
     , off : Supported
@@ -65,10 +84,14 @@ type alias TouchGestures =
     }
 
 
+{-| The `Builder` type row for RichTooltip (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for RichTooltip (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , disabled : Available
@@ -85,6 +108,8 @@ type alias AttrCaps =
     }
 
 
+{-| The `SlotCaps` type row for RichTooltip (generated).
+-}
 type alias SlotCaps =
     { actions : Available
     , subhead : Available
