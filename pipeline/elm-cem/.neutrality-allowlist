@@ -4,6 +4,15 @@
 # Each entry below is a curated, reviewed hit. A NEW file appearing as a gate
 # violation should be neutralized, not reflexively added here.
 
+# specs/2026-08-19-facts-bundle-slot-admission-data.md: a pre-existing, unfinished
+# plan doc that predates the core/ -> pipeline/ reorg, recovered from an untracked
+# leftover (2026-08-20 cleanup) and moved here without rewriting its internal
+# path references (core/elm-cem, core/cem-figma-connect, brands/m3e/outputs/*),
+# which are now stale post-reorg. Deliberately left unrewritten — see the
+# cleanup task's own commit message; correcting the paths is in scope for
+# whoever actually executes this plan, not this allowlist entry.
+specs/2026-08-19-facts-bundle-slot-admission-data.md
+
 # --- Docs: ecosystem links + downstream-consumer references ---
 # README lists the elm-cem-m3e / elm-m3e ecosystem repos; the layout example is
 # neutral (Shoelace), but the ecosystem section names the sibling repos.
