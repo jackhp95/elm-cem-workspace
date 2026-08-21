@@ -56,6 +56,32 @@ five-package shape. Executors: update `docs/facts-bundle/schema.json`'s `brandFa
 `M3e.Family.*`) as a small phase-1-amendment task BEFORE starting Task 5 of this plan — this is now
 in scope, not a separate blocked track. Revisit if/when the six-package rework (§8) ever lands.
 
+> **REVERSED 2026-08-20/21 (Jack, OQ-1 — reconciliation plan Task 9, see
+> `docs/superpowers/specs/2026-08-20-reconciliation-design.md` §7): DECISION 1 above is reversed. Do
+> NOT apply the (1a) backward walk.** The (1a) resolution's premise was explicit: it walked the
+> schema *backward* to the five-package OLD naming **specifically because** "the spec's aspirational
+> six-package `M3e.Element.*` rework ... **has not landed**" (§8's coordination dependency being
+> unowned, concurrent, and of unknown timing). That premise is now **falsified**: the
+> 2026-08-20/21 package-explosion + module-namespace reconciliation (`exec/reconcile`, Tasks 1-7)
+> has landed the six-package split (`core`/`elements`/`build`/`components`/`icons`/`facts`) *and*
+> the atomic namespace rename (`M3e.Element.*` per-element, `M3e.Component.*` families,
+> `TypedHtml.Element.*`) on the committed tree. The rework this decision was waiting on is no longer
+> "not landed" — it is real, committed reality. Per the reconciliation design's §7.2 analysis,
+> DECISION 1's own text already conceded that option **(1b)** ("block phase 2 on the package rework
+> landing ... correct per the schema-as-written") was rejected *only* for coupling phase 2 to that
+> then-unowned track — an objection reconciliation dissolves. The faithful outcome is therefore to
+> **effectively adopt (1b) retroactively**: `docs/facts-bundle/schema.json`'s six NEW-naming keys
+> (`core`/`elements`/`build`/`components`/`icons`/`facts`, `M3e.Element.*` illustration) were never
+> edited to the (1a) five-key shape in the first place — this reversal confirms the schema is
+> correct **as-written** and must **not** be retargeted backward now or in any future phase-2 work
+> against the reconciled tree. Verified 2026-08-21: `docs/facts-bundle/schema.json:819` still
+> requires exactly `["core","elements","build","components","icons","facts"]`, and
+> `pipeline/elm-cem/tests/facts-bundle-schema.test.mjs` exercises those six keys plus
+> `M3e.Element.ListItem`/`M3e.Build.ListItem` module strings — both pass against the reconciled
+> tree (`docs(reconcile)` commit, Task 9). A future reader must treat DECISION 1's original (1a) body
+> above as **superseded history**, not live guidance — kept only so the "why" of the original call
+> remains legible.
+
 ### DECISION 2 — `cssProperties.syntax` source (MINOR)
 
 The schema's `brandFactsCssProperty` is `{ syntax?, default? }`. `Cem.CssProperty` (`Cem.elm:81-85`) carries `{ name, description, default }` — **no `syntax`**. Face B (`facts-bundle.js`) reportedly retains a `syntax`; confirm during Task 3 Step 1 where Face B sources it (likely a `.d.ts`/CEM `type` field). If `syntax` is not recoverable in the Elm model, emit `syntax` **absent** (schema allows it) and note the gap; do **not** invent a value. Flagged so the executor doesn't silently fabricate it.
