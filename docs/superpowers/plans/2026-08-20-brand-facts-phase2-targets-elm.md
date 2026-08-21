@@ -49,6 +49,13 @@ A phase-2 producer run against the current tree would emit `targets.elm.packages
 
 **Every package-shape reference in Tasks 5, 6, and 8 below is written parametrically ("the package keys and module namespaces per DECISION 1") so the plan is executable under either (1a) or (1b) once chosen. Do not start Task 5 until this is answered.**
 
+**RESOLVED 2026-08-20 (human decision):** **(1a)** — retarget the phase-1 schema to the shipped
+five-package shape. Executors: update `docs/facts-bundle/schema.json`'s `brandFactsTargets`/
+`brandFactsElmComponentTargets` (and its test fixtures/validator) to the five current keys
+(`html`/`components`/`builder`/`icons`/`facts`, per-element = `M3e.Component.*`, families =
+`M3e.Family.*`) as a small phase-1-amendment task BEFORE starting Task 5 of this plan — this is now
+in scope, not a separate blocked track. Revisit if/when the six-package rework (§8) ever lands.
+
 ### DECISION 2 — `cssProperties.syntax` source (MINOR)
 
 The schema's `brandFactsCssProperty` is `{ syntax?, default? }`. `Cem.CssProperty` (`Cem.elm:81-85`) carries `{ name, description, default }` — **no `syntax`**. Face B (`facts-bundle.js`) reportedly retains a `syntax`; confirm during Task 3 Step 1 where Face B sources it (likely a `.d.ts`/CEM `type` field). If `syntax` is not recoverable in the Elm model, emit `syntax` **absent** (schema allows it) and note the gap; do **not** invent a value. Flagged so the executor doesn't silently fabricate it.
