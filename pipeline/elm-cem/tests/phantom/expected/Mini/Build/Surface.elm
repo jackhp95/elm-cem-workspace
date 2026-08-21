@@ -19,7 +19,7 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Mini.Attributes as A
-import Mini.Component.Surface as Component
+import Mini.Element.Surface as Component
 import Mini.Forge.Internal as B
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
 import Mini.Values

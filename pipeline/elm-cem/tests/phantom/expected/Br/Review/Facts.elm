@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "barren"
-      , module_ = "Br.Component.Barren"
+      , module_ = "Br.Element.Barren"
       , enums = []
       , requiredSlots = []
       , multiSlots = []

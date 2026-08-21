@@ -1,7 +1,12 @@
-module Hz.Internal.Types.Placement exposing (..)
+module Hz.Internal.Types.Placement exposing (Is, Attrs, Content, ChildAdmittedBy, Position, Builder, AttrCaps)
 
-{-| Internal type definitions for Placement — unexposed so docs.json
-shows short qualified references instead of expanded record rows.
+{-| Type definitions for Placement. The canonical home of this
+component's `Attrs`/`Is`/`Content`/… rows: the `Hz` barrel and the strict
+`Hz.Element.Placement` surface both re-export these, so they live in
+the shared `core` tier (design §3.2a).
+
+@docs Is, Attrs, Content, ChildAdmittedBy, Position, Builder, AttrCaps
+
 -}
 
 import HtmlIr.Kind exposing (Supported)
@@ -10,10 +15,14 @@ import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
+{-| The `Is` type row for Placement (generated).
+-}
 type alias Is s =
     { s | placement : Brand }
 
 
+{-| The `Attrs` type row for Placement (generated).
+-}
 type alias Attrs =
     { class : Supported
     , id : Supported
@@ -23,14 +32,20 @@ type alias Attrs =
     }
 
 
+{-| The `Content` type row for Placement (generated).
+-}
 type alias Content =
     {}
 
 
+{-| The `ChildAdmittedBy` type row for Placement (generated).
+-}
 type alias ChildAdmittedBy childAdm =
     { childAdm | placement : Ctx }
 
 
+{-| The `Position` type row for Placement (generated).
+-}
 type alias Position =
     { blank_ : Supported
     , parent_ : Supported
@@ -40,10 +55,14 @@ type alias Position =
     }
 
 
+{-| The `Builder` type row for Placement (generated).
+-}
 type alias Builder attrCaps slotCaps msg s =
     B.Builder Attrs attrCaps slotCaps (Is s) msg
 
 
+{-| The `AttrCaps` type row for Placement (generated).
+-}
 type alias AttrCaps =
     { class : Available
     , id : Available

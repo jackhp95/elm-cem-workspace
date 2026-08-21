@@ -14,9 +14,9 @@ import Mini.Attributes
 import Mini.Build.Button
 import Mini.Build.Chip
 import Mini.Build.Icon
-import Mini.Component.Button
-import Mini.Component.Chip
-import Mini.Component.Surface
+import Mini.Element.Button
+import Mini.Element.Chip
+import Mini.Element.Surface
 import Mini.Events
 import Mini.Kind
 import Mini.Values
@@ -32,30 +32,30 @@ page =
     Mini.surface [ Mini.Attributes.class "layout", Mini.Events.delegate (Mini.Events.onClick RowClicked) ]
         [ -- general surface, narrowed setter via specific module, named slot, event
           Mini.button
-            [ Mini.Component.Button.variant Mini.Values.filled, Mini.Component.Button.onClick Pressed ]
+            [ Mini.Element.Button.variant Mini.Values.filled, Mini.Element.Button.onClick Pressed ]
             [ Mini.text "Save"
-            , Mini.Component.Button.icon (Mini.icon [] [ Mini.text "star" ])
+            , Mini.Element.Button.icon (Mini.icon [] [ Mini.text "star" ])
             ]
 
         -- component form: required content enforced structurally
-        , Mini.Component.Button.component { content = Mini.text "Go" } [] []
+        , Mini.Element.Button.component { content = Mini.text "Go" } [] []
 
         -- union setter from the general vocabulary (chip admits size)
-        , Mini.chip [ Mini.Attributes.size Mini.Values.small, Mini.Component.Chip.disabled True ] [ Mini.text "tag" ]
+        , Mini.chip [ Mini.Attributes.size Mini.Values.small, Mini.Element.Chip.disabled True ] [ Mini.text "tag" ]
 
         -- narrowed chip setter via Component module
-        , Mini.Component.Chip.component [ Mini.Component.Chip.size Mini.Values.big ] [ Mini.text "big tag" ]
+        , Mini.Element.Chip.component [ Mini.Element.Chip.size Mini.Values.big ] [ Mini.text "big tag" ]
 
         -- `_variants`: the base setter keeps the spec-correct String and the
         -- AsNumber variant sits beside it, claiming the SAME capability row.
         , Mini.button [ Mini.Attributes.weight "auto" ] [ Mini.text "kw" ]
         , Mini.button [ Mini.Attributes.weightAsNumber 1.5 ] [ Mini.text "num" ]
-        , Mini.Component.Button.component { content = Mini.text "narrowed num" } [ Mini.Component.Button.weightAsNumber 2 ] []
+        , Mini.Element.Button.component { content = Mini.text "narrowed num" } [ Mini.Element.Button.weightAsNumber 2 ] []
 
         -- the `ints` renderer, from the shared vocabulary and from the co-located
         -- per-component re-export
         , Mini.surface [ Mini.Attributes.gridAsInts [ 2, 3 ] ] []
-        , Mini.Component.Surface.component [ Mini.Component.Surface.gridAsInts [ 4, 5 ], Mini.Component.Surface.grid "6x7" ] []
+        , Mini.Element.Surface.component [ Mini.Element.Surface.gridAsInts [ 4, 5 ], Mini.Element.Surface.grid "6x7" ] []
 
         -- restricted-parent element in its REQUIRED parent
         , Mini.tabs [] [ Mini.tab [] [ Mini.text "One" ] ]
@@ -67,7 +67,7 @@ page =
             ]
 
         -- IR-native `key`: attach diff keys to children; phantom rows preserved
-        , Mini.chip [ Mini.Component.Chip.disabled False ]
+        , Mini.chip [ Mini.Element.Chip.disabled False ]
             [ Mini.text "keyed-a" |> Mini.key "a"
             , Mini.text "keyed-b" |> Mini.key "b"
             ]

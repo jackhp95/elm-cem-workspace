@@ -1,4 +1,4 @@
-module Hz.Component.AttrSlot exposing
+module Hz.Element.AttrSlot exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, HintSlot, LabelSlot, ChildAdmittedBy
     , withHint, withLabel

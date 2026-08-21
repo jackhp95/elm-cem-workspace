@@ -23,29 +23,30 @@ placements are caught by `Cem.ValidSlotKind` (elm-review).
 import Html
 import HtmlIr.Attribute
 import HtmlIr.Element
+import HtmlIr.Internal as Ir
 import HtmlIr.Node
-import Or.Component.Plain
-import Or.Component.Widget
+import Or.Internal.Types.Plain
+import Or.Internal.Types.Widget
 
 
-{-| See `Or.Component.Plain.component`.
+{-| See `Or.Element.Plain.component`.
 -}
 plain :
-    List (Attr Or.Component.Plain.Attrs msg)
-    -> List (Element Or.Component.Plain.Content (Or.Component.Plain.ChildAdmittedBy childAdm) msg)
-    -> Element (Or.Component.Plain.Is s) admittedBy msg
-plain =
-    Or.Component.Plain.component
+    List (Attr Or.Internal.Types.Plain.Attrs msg)
+    -> List (Element Or.Internal.Types.Plain.Content (Or.Internal.Types.Plain.ChildAdmittedBy childAdm) msg)
+    -> Element (Or.Internal.Types.Plain.Is s) admittedBy msg
+plain attrs children =
+    Ir.fromNode (Ir.node "or-plain" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Or.Component.Widget.component`.
+{-| See `Or.Element.Widget.component`.
 -}
 widget :
-    List (Attr Or.Component.Widget.Attrs msg)
-    -> List (Element Or.Component.Widget.Content (Or.Component.Widget.ChildAdmittedBy childAdm) msg)
-    -> Element (Or.Component.Widget.Is s) admittedBy msg
-widget =
-    Or.Component.Widget.component
+    List (Attr Or.Internal.Types.Widget.Attrs msg)
+    -> List (Element Or.Internal.Types.Widget.Content (Or.Internal.Types.Widget.ChildAdmittedBy childAdm) msg)
+    -> Element (Or.Internal.Types.Widget.Is s) admittedBy msg
+widget attrs children =
+    Ir.fromNode (Ir.node "or-widget" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.

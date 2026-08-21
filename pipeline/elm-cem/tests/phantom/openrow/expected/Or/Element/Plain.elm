@@ -1,17 +1,15 @@
-module Hz.Component.Blocked exposing
+module Or.Element.Plain exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-    , label
     , child
     )
 
-{-| The `hz-blocked` component — strict per-component surface.
+{-| The `or-plain` component — strict per-component surface.
 
-Tests the KERNEL-BLOCKED guard: attributes whose DOM name elm/virtual-dom rewrites or ignores get no setter on any surface, while a legitimate sibling attribute on the same element still does.
+An element declaring NO attributes of its own, so every field in its `Attrs` row came from `_globals` — which makes an open global's absence from that row unambiguous.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-@docs label
 @docs child
 
 -}
@@ -20,46 +18,48 @@ import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
-import Hz.Attributes as A
-import Hz.Html as H
-import Hz.Internal.Types.Blocked
-import Hz.Kind exposing (Available, Brand, Ctx, Used)
+import HtmlIr.Value exposing (Value)
+import Or.Attributes as A
+import Or.Html as H
+import Or.Internal.Types.Plain
+import Or.Kind exposing (Available, Brand, Ctx, Used)
+import Or.Values
 
 
-{-| The kind row `hz-blocked` produces (open — composes into any slot naming it).
+{-| The kind row `or-plain` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Hz.Internal.Types.Blocked.Is s
+    Or.Internal.Types.Plain.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Hz.Internal.Types.Blocked.Attrs
+    Or.Internal.Types.Plain.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Hz.Internal.Types.Blocked.Content
+    Or.Internal.Types.Plain.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Blocked.ChildAdmittedBy childAdm
+    Or.Internal.Types.Plain.ChildAdmittedBy childAdm
 
 
-{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+{-| The narrowed pipe-builder this component's `Or.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Blocked.Builder attrCaps slotCaps msg kind
+    Or.Internal.Types.Plain.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Hz.Internal.Types.Blocked.AttrCaps
+    Or.Internal.Types.Plain.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -75,14 +75,7 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.blocked
-
-
-{-| See `Hz.Attributes.label`.
--}
-label : String -> Attr { c | label : Supported } msg
-label =
-    A.label
+    H.plain
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

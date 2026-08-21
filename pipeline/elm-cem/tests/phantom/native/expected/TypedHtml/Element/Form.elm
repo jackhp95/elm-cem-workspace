@@ -1,4 +1,4 @@
-module TypedHtml.Component.Form exposing
+module TypedHtml.Element.Form exposing
     ( fieldset, legend
     , FieldsetIs, FieldsetAttrs, FieldsetContent, FieldsetChildAdmittedBy, LegendIs, LegendAttrs, LegendContent, LegendChildAdmittedBy, LegendAdmittedBy
     )

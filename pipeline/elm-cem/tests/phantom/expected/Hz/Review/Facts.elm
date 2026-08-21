@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "attrSlot"
-      , module_ = "Hz.Component.AttrSlot"
+      , module_ = "Hz.Element.AttrSlot"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "blocked"
-      , module_ = "Hz.Component.Blocked"
+      , module_ = "Hz.Element.Blocked"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "duplicate"
-      , module_ = "Hz.Component.Duplicate"
+      , module_ = "Hz.Element.Duplicate"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "errorOnly"
-      , module_ = "Hz.Component.ErrorOnly"
+      , module_ = "Hz.Element.ErrorOnly"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "eventClash"
-      , module_ = "Hz.Component.EventClash"
+      , module_ = "Hz.Element.EventClash"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "global"
-      , module_ = "Hz.Component.Global"
+      , module_ = "Hz.Element.Global"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "placement"
-      , module_ = "Hz.Component.Placement"
+      , module_ = "Hz.Element.Placement"
       , enums = [ ( "position", [ "blank_", "parent_", "self_", "top_", "top" ] ) ]
       , requiredSlots = []
       , multiSlots = []
@@ -119,7 +119,7 @@ facts =
       , usesAction = False
       }
     , { component = "text"
-      , module_ = "Hz.Component.Text"
+      , module_ = "Hz.Element.Text"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -134,7 +134,7 @@ facts =
       , usesAction = False
       }
     , { component = "textElement"
-      , module_ = "Hz.Component.TextElement"
+      , module_ = "Hz.Element.TextElement"
       , enums = []
       , requiredSlots = []
       , multiSlots = []

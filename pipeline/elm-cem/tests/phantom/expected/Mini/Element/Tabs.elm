@@ -1,12 +1,12 @@
-module Or.Component.Plain exposing
+module Mini.Element.Tabs exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
-{-| The `or-plain` component — strict per-component surface.
+{-| The `mini-tabs` component — strict per-component surface.
 
-An element declaring NO attributes of its own, so every field in its `Attrs` row came from `_globals` — which makes an open global's absence from that row unambiguous.
+A tab bar. Only admits tabs.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
@@ -19,47 +19,47 @@ import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value exposing (Value)
-import Or.Attributes as A
-import Or.Html as H
-import Or.Internal.Types.Plain
-import Or.Kind exposing (Available, Brand, Ctx, Used)
-import Or.Values
+import Mini.Attributes as A
+import Mini.Html as H
+import Mini.Internal.Types.Tabs
+import Mini.Kind exposing (Available, Brand, Ctx, Used)
+import Mini.Values
 
 
-{-| The kind row `or-plain` produces (open — composes into any slot naming it).
+{-| The kind row `mini-tabs` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Or.Internal.Types.Plain.Is s
+    Mini.Internal.Types.Tabs.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Or.Internal.Types.Plain.Attrs
+    Mini.Internal.Types.Tabs.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Or.Internal.Types.Plain.Content
+    Mini.Internal.Types.Tabs.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Or.Internal.Types.Plain.ChildAdmittedBy childAdm
+    Mini.Internal.Types.Tabs.ChildAdmittedBy childAdm
 
 
-{-| The narrowed pipe-builder this component's `Or.Build.<X>` module exposes.
+{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Or.Internal.Types.Plain.Builder attrCaps slotCaps msg kind
+    Mini.Internal.Types.Tabs.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Or.Internal.Types.Plain.AttrCaps
+    Mini.Internal.Types.Tabs.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -75,7 +75,7 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.plain
+    H.tabs
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

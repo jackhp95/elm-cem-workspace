@@ -15,7 +15,7 @@ module Br.Build.Barren exposing
 -}
 
 import Br.Attributes as A
-import Br.Component.Barren as Component
+import Br.Element.Barren as Component
 import Br.Forge.Internal as B
 import Br.Kind exposing (Available, Brand, Ctx, Used)
 import HtmlIr.Element as El exposing (Element)

@@ -1,4 +1,4 @@
-module Hz.Component.Duplicate exposing
+module Hz.Element.Duplicate exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , value, defaultValue

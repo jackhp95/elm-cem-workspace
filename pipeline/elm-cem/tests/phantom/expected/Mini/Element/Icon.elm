@@ -1,41 +1,16 @@
-module Mini.Component.Chip exposing
+module Mini.Element.Icon exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-    , Size, size
-    , disabled
     , child
     )
 
-{-| The `mini-chip` component — strict per-component surface.
+{-| The `mini-icon` component — strict per-component surface.
 
-A compact labelled element.
+A shared icon atom.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-@docs Size, size
-@docs disabled
 @docs child
-
-
-## Examples
-
-
-### Examples
-
-<!-- elm-cem:example title="Basic chip" -->
-```elm
-Chip.component [] [ text "Filter" ]
-```
-
-
-### States
-
-<!-- elm-cem:example title="Disabled chip" -->
-```elm
-Chip.component [ Chip.disabled True ] [ text "Filter" ]
-```
-
-<!-- elm-cem:docmeta category=actions -->
 
 -}
 
@@ -43,54 +18,49 @@ import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Mini.Attributes as A
 import Mini.Html as H
-import Mini.Internal.Types.Chip
-import Mini.Kind exposing (Available, Brand, Ctx, Used)
+import Mini.Internal.Types.Icon
+import Mini.Kind exposing (Available, Ctx, Used)
 import Mini.Values
 
 
-{-| The kind row `mini-chip` produces (open — composes into any slot naming it).
+{-| The kind row `mini-icon` produces — the SHARED icon atom kind, admissible
+into any library's opted-in slot.
 -}
 type alias Is s =
-    Mini.Internal.Types.Chip.Is s
+    Mini.Internal.Types.Icon.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Mini.Internal.Types.Chip.Attrs
+    Mini.Internal.Types.Icon.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Mini.Internal.Types.Chip.Content
+    Mini.Internal.Types.Icon.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Mini.Internal.Types.Chip.ChildAdmittedBy childAdm
-
-
-{-| The `size` values valid on this component (compile-tight narrowing).
--}
-type alias Size =
-    Mini.Internal.Types.Chip.Size
+    Mini.Internal.Types.Icon.ChildAdmittedBy childAdm
 
 
 {-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Mini.Internal.Types.Chip.Builder attrCaps slotCaps msg kind
+    Mini.Internal.Types.Icon.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Mini.Internal.Types.Chip.AttrCaps
+    Mini.Internal.Types.Icon.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -106,21 +76,7 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.chip
-
-
-{-| Chip size.
--}
-size : Value Size -> Attr { c | size : Supported } msg
-size value_ =
-    Ir.attribute "size" (Val.toString value_)
-
-
-{-| See `Mini.Attributes.disabled`.
--}
-disabled : Bool -> Attr { c | disabled : Supported } msg
-disabled =
-    A.disabled
+    H.icon
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

@@ -19,7 +19,7 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Hz.Attributes as A
-import Hz.Component.Placement as Component
+import Hz.Element.Placement as Component
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 import Hz.Values

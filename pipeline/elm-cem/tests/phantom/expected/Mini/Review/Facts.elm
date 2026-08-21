@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "button"
-      , module_ = "Mini.Component.Button"
+      , module_ = "Mini.Element.Button"
       , enums = [ ( "variant", [ "filled", "tonal" ] ) ]
       , requiredSlots = [ "unnamed" ]
       , multiSlots = [ "unnamed" ]
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "chip"
-      , module_ = "Mini.Component.Chip"
+      , module_ = "Mini.Element.Chip"
       , enums = [ ( "size", [ "big", "small" ] ) ]
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "icon"
-      , module_ = "Mini.Component.Icon"
+      , module_ = "Mini.Element.Icon"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "surface"
-      , module_ = "Mini.Component.Surface"
+      , module_ = "Mini.Element.Surface"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "tab"
-      , module_ = "Mini.Component.Tab"
+      , module_ = "Mini.Element.Tab"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "tabs"
-      , module_ = "Mini.Component.Tabs"
+      , module_ = "Mini.Element.Tabs"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "toolbar"
-      , module_ = "Mini.Component.Toolbar"
+      , module_ = "Mini.Element.Toolbar"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]

@@ -14,7 +14,7 @@ import Cem.Facts exposing (Facet(..), Fact)
 facts : List Fact
 facts =
     [ { component = "a"
-      , module_ = "TypedHtml.Component.A"
+      , module_ = "TypedHtml.Element.A"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -29,7 +29,7 @@ facts =
       , usesAction = False
       }
     , { component = "div"
-      , module_ = "TypedHtml.Component.Grouping"
+      , module_ = "TypedHtml.Element.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -44,7 +44,7 @@ facts =
       , usesAction = False
       }
     , { component = "fieldset"
-      , module_ = "TypedHtml.Component.Form"
+      , module_ = "TypedHtml.Element.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -59,7 +59,7 @@ facts =
       , usesAction = False
       }
     , { component = "legend"
-      , module_ = "TypedHtml.Component.Form"
+      , module_ = "TypedHtml.Element.Form"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -74,7 +74,7 @@ facts =
       , usesAction = False
       }
     , { component = "optgroup"
-      , module_ = "TypedHtml.Component.Select"
+      , module_ = "TypedHtml.Element.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -89,7 +89,7 @@ facts =
       , usesAction = False
       }
     , { component = "option"
-      , module_ = "TypedHtml.Component.Select"
+      , module_ = "TypedHtml.Element.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -104,7 +104,7 @@ facts =
       , usesAction = False
       }
     , { component = "p"
-      , module_ = "TypedHtml.Component.Grouping"
+      , module_ = "TypedHtml.Element.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -119,7 +119,7 @@ facts =
       , usesAction = False
       }
     , { component = "picture"
-      , module_ = "TypedHtml.Component.Media"
+      , module_ = "TypedHtml.Element.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -134,7 +134,7 @@ facts =
       , usesAction = False
       }
     , { component = "pictureSource"
-      , module_ = "TypedHtml.Component.Media"
+      , module_ = "TypedHtml.Element.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -149,7 +149,7 @@ facts =
       , usesAction = False
       }
     , { component = "select"
-      , module_ = "TypedHtml.Component.Select"
+      , module_ = "TypedHtml.Element.Select"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -164,7 +164,7 @@ facts =
       , usesAction = False
       }
     , { component = "source"
-      , module_ = "TypedHtml.Component.Media"
+      , module_ = "TypedHtml.Element.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -179,7 +179,7 @@ facts =
       , usesAction = False
       }
     , { component = "span"
-      , module_ = "TypedHtml.Component.Grouping"
+      , module_ = "TypedHtml.Element.Grouping"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
@@ -194,7 +194,7 @@ facts =
       , usesAction = False
       }
     , { component = "track"
-      , module_ = "TypedHtml.Component.Media"
+      , module_ = "TypedHtml.Element.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = []
@@ -209,7 +209,7 @@ facts =
       , usesAction = False
       }
     , { component = "video"
-      , module_ = "TypedHtml.Component.Media"
+      , module_ = "TypedHtml.Element.Media"
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]

@@ -30,105 +30,105 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import Hz.Component.AttrSlot
-import Hz.Component.Blocked
-import Hz.Component.Duplicate
-import Hz.Component.ErrorOnly
-import Hz.Component.EventClash
-import Hz.Component.Global
-import Hz.Component.Placement
-import Hz.Component.Text
-import Hz.Component.TextElement
+import Hz.Internal.Types.AttrSlot
+import Hz.Internal.Types.Blocked
+import Hz.Internal.Types.Duplicate
+import Hz.Internal.Types.ErrorOnly
+import Hz.Internal.Types.EventClash
+import Hz.Internal.Types.Global
+import Hz.Internal.Types.Placement
+import Hz.Internal.Types.Text
+import Hz.Internal.Types.TextElement
 
 
-{-| See `Hz.Component.AttrSlot.component`.
+{-| See `Hz.Element.AttrSlot.component`.
 -}
 attrSlot :
-    List (Attr Hz.Component.AttrSlot.Attrs msg)
-    -> List (Element childAccepts (Hz.Component.AttrSlot.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.AttrSlot.Is s) admittedBy msg
-attrSlot =
-    Hz.Component.AttrSlot.component
+    List (Attr Hz.Internal.Types.AttrSlot.Attrs msg)
+    -> List (Element childAccepts (Hz.Internal.Types.AttrSlot.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.AttrSlot.Is s) admittedBy msg
+attrSlot attrs children =
+    Ir.fromNode (Ir.node "hz-attr-slot" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.Blocked.component`.
+{-| See `Hz.Element.Blocked.component`.
 -}
 blocked :
-    List (Attr Hz.Component.Blocked.Attrs msg)
-    -> List (Element Hz.Component.Blocked.Content (Hz.Component.Blocked.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.Blocked.Is s) admittedBy msg
-blocked =
-    Hz.Component.Blocked.component
+    List (Attr Hz.Internal.Types.Blocked.Attrs msg)
+    -> List (Element Hz.Internal.Types.Blocked.Content (Hz.Internal.Types.Blocked.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.Blocked.Is s) admittedBy msg
+blocked attrs children =
+    Ir.fromNode (Ir.node "hz-blocked" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.Duplicate.component`.
+{-| See `Hz.Element.Duplicate.component`.
 -}
 duplicate :
-    List (Attr Hz.Component.Duplicate.Attrs msg)
-    -> List (Element Hz.Component.Duplicate.Content (Hz.Component.Duplicate.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.Duplicate.Is s) admittedBy msg
-duplicate =
-    Hz.Component.Duplicate.component
+    List (Attr Hz.Internal.Types.Duplicate.Attrs msg)
+    -> List (Element Hz.Internal.Types.Duplicate.Content (Hz.Internal.Types.Duplicate.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.Duplicate.Is s) admittedBy msg
+duplicate attrs children =
+    Ir.fromNode (Ir.node "hz-duplicate" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.ErrorOnly.component`.
+{-| See `Hz.Element.ErrorOnly.component`.
 -}
 errorOnly :
-    List (Attr Hz.Component.ErrorOnly.Attrs msg)
-    -> List (Element childAccepts (Hz.Component.ErrorOnly.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.ErrorOnly.Is s) admittedBy msg
-errorOnly =
-    Hz.Component.ErrorOnly.component
+    List (Attr Hz.Internal.Types.ErrorOnly.Attrs msg)
+    -> List (Element childAccepts (Hz.Internal.Types.ErrorOnly.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.ErrorOnly.Is s) admittedBy msg
+errorOnly attrs children =
+    Ir.fromNode (Ir.node "hz-error-only" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.EventClash.component`.
+{-| See `Hz.Element.EventClash.component`.
 -}
 eventClash :
-    List (Attr Hz.Component.EventClash.Attrs msg)
-    -> List (Element Hz.Component.EventClash.Content (Hz.Component.EventClash.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.EventClash.Is s) admittedBy msg
-eventClash =
-    Hz.Component.EventClash.component
+    List (Attr Hz.Internal.Types.EventClash.Attrs msg)
+    -> List (Element Hz.Internal.Types.EventClash.Content (Hz.Internal.Types.EventClash.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.EventClash.Is s) admittedBy msg
+eventClash attrs children =
+    Ir.fromNode (Ir.node "hz-event-clash" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.Global.component`.
+{-| See `Hz.Element.Global.component`.
 -}
 global :
-    List (Attr Hz.Component.Global.Attrs msg)
-    -> List (Element Hz.Component.Global.Content (Hz.Component.Global.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.Global.Is s) admittedBy msg
-global =
-    Hz.Component.Global.component
+    List (Attr Hz.Internal.Types.Global.Attrs msg)
+    -> List (Element Hz.Internal.Types.Global.Content (Hz.Internal.Types.Global.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.Global.Is s) admittedBy msg
+global attrs children =
+    Ir.fromNode (Ir.node "hz-global" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.Placement.component`.
+{-| See `Hz.Element.Placement.component`.
 -}
 placement :
-    List (Attr Hz.Component.Placement.Attrs msg)
-    -> List (Element Hz.Component.Placement.Content (Hz.Component.Placement.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.Placement.Is s) admittedBy msg
-placement =
-    Hz.Component.Placement.component
+    List (Attr Hz.Internal.Types.Placement.Attrs msg)
+    -> List (Element Hz.Internal.Types.Placement.Content (Hz.Internal.Types.Placement.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.Placement.Is s) admittedBy msg
+placement attrs children =
+    Ir.fromNode (Ir.node "hz-placement" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.Text.component`.
+{-| See `Hz.Element.Text.component`.
 -}
 hzCapitalText :
-    List (Attr Hz.Component.Text.Attrs msg)
-    -> List (Element Hz.Component.Text.Content (Hz.Component.Text.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.Text.Is s) admittedBy msg
-hzCapitalText =
-    Hz.Component.Text.component
+    List (Attr Hz.Internal.Types.Text.Attrs msg)
+    -> List (Element Hz.Internal.Types.Text.Content (Hz.Internal.Types.Text.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.Text.Is s) admittedBy msg
+hzCapitalText attrs children =
+    Ir.fromNode (Ir.node "hz-capital-text" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Hz.Component.TextElement.component`.
+{-| See `Hz.Element.TextElement.component`.
 -}
 textElement :
-    List (Attr Hz.Component.TextElement.Attrs msg)
-    -> List (Element Hz.Component.TextElement.Content (Hz.Component.TextElement.ChildAdmittedBy childAdm) msg)
-    -> Element (Hz.Component.TextElement.Is s) admittedBy msg
-textElement =
-    Hz.Component.TextElement.component
+    List (Attr Hz.Internal.Types.TextElement.Attrs msg)
+    -> List (Element Hz.Internal.Types.TextElement.Content (Hz.Internal.Types.TextElement.ChildAdmittedBy childAdm) msg)
+    -> Element (Hz.Internal.Types.TextElement.Is s) admittedBy msg
+textElement attrs children =
+    Ir.fromNode (Ir.node "hz-text" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

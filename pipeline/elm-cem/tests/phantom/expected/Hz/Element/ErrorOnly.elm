@@ -1,4 +1,4 @@
-module Hz.Component.ErrorOnly exposing
+module Hz.Element.ErrorOnly exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , onHzError

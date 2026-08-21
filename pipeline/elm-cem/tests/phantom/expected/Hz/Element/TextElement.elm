@@ -1,12 +1,12 @@
-module Hz.Component.Text exposing
+module Hz.Element.TextElement exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
-{-| The `hz-capital-text` component — strict per-component surface.
+{-| The `hz-text` component — strict per-component surface.
 
-Tests K7 (capitalized-name shape, fluent): name=Text decapitalizes to ctor=text, collides with \_atoms.text. K7 must revert to Naming.camel tag = hzCapitalText.
+Tests K7 (lowercase-name shape): hz-text element, ctor is textElement, no atom collision.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
@@ -20,44 +20,44 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import Hz.Attributes as A
 import Hz.Html as H
-import Hz.Internal.Types.Text
+import Hz.Internal.Types.TextElement
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
-{-| The kind row `hz-capital-text` produces (open — composes into any slot naming it).
+{-| The kind row `hz-text` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Hz.Internal.Types.Text.Is s
+    Hz.Internal.Types.TextElement.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Hz.Internal.Types.Text.Attrs
+    Hz.Internal.Types.TextElement.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Hz.Internal.Types.Text.Content
+    Hz.Internal.Types.TextElement.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Text.ChildAdmittedBy childAdm
+    Hz.Internal.Types.TextElement.ChildAdmittedBy childAdm
 
 
 {-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Text.Builder attrCaps slotCaps msg kind
+    Hz.Internal.Types.TextElement.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Hz.Internal.Types.Text.AttrCaps
+    Hz.Internal.Types.TextElement.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -73,7 +73,7 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.hzCapitalText
+    H.textElement
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

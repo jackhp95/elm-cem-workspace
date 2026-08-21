@@ -28,151 +28,151 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import TypedHtml.Component.A
-import TypedHtml.Component.Form
-import TypedHtml.Component.Grouping
-import TypedHtml.Component.Media
-import TypedHtml.Component.Select
+import TypedHtml.Element.A
+import TypedHtml.Element.Form
+import TypedHtml.Element.Grouping
+import TypedHtml.Element.Media
+import TypedHtml.Element.Select
 
 
-{-| See `TypedHtml.Component.A.a`.
+{-| See `TypedHtml.Element.A.a`.
 -}
 a :
-    List (Attr TypedHtml.Component.A.Attrs msg)
-    -> List (Element childAccepts (TypedHtml.Component.A.ChildAdmittedBy childAdm) msg)
+    List (Attr TypedHtml.Element.A.Attrs msg)
+    -> List (Element childAccepts (TypedHtml.Element.A.ChildAdmittedBy childAdm) msg)
     -> Element childAccepts admittedBy msg
 a =
-    TypedHtml.Component.A.a
+    TypedHtml.Element.A.a
 
 
-{-| See `TypedHtml.Component.Grouping.div`.
+{-| See `TypedHtml.Element.Grouping.div`.
 -}
 div :
-    List (Attr TypedHtml.Component.Grouping.DivAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Component.Grouping.DivChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Grouping.DivIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Grouping.DivAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Element.Grouping.DivChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Grouping.DivIs s) admittedBy msg
 div =
-    TypedHtml.Component.Grouping.div
+    TypedHtml.Element.Grouping.div
 
 
-{-| See `TypedHtml.Component.Form.fieldset`.
+{-| See `TypedHtml.Element.Form.fieldset`.
 -}
 fieldset :
-    List (Attr TypedHtml.Component.Form.FieldsetAttrs msg)
-    -> List (Element TypedHtml.Component.Form.FieldsetContent (TypedHtml.Component.Form.FieldsetChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Form.FieldsetIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Form.FieldsetAttrs msg)
+    -> List (Element TypedHtml.Element.Form.FieldsetContent (TypedHtml.Element.Form.FieldsetChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Form.FieldsetIs s) admittedBy msg
 fieldset =
-    TypedHtml.Component.Form.fieldset
+    TypedHtml.Element.Form.fieldset
 
 
-{-| See `TypedHtml.Component.Form.legend`.
+{-| See `TypedHtml.Element.Form.legend`.
 -}
 legend :
-    List (Attr TypedHtml.Component.Form.LegendAttrs msg)
-    -> List (Element TypedHtml.Component.Form.LegendContent (TypedHtml.Component.Form.LegendChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Form.LegendIs s) TypedHtml.Component.Form.LegendAdmittedBy msg
+    List (Attr TypedHtml.Element.Form.LegendAttrs msg)
+    -> List (Element TypedHtml.Element.Form.LegendContent (TypedHtml.Element.Form.LegendChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Form.LegendIs s) TypedHtml.Element.Form.LegendAdmittedBy msg
 legend =
-    TypedHtml.Component.Form.legend
+    TypedHtml.Element.Form.legend
 
 
-{-| See `TypedHtml.Component.Select.optgroup`.
+{-| See `TypedHtml.Element.Select.optgroup`.
 -}
 optgroup :
-    List (Attr TypedHtml.Component.Select.OptgroupAttrs msg)
-    -> List (Element TypedHtml.Component.Select.OptgroupContent (TypedHtml.Component.Select.OptgroupChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Select.OptgroupIs s) TypedHtml.Component.Select.OptgroupAdmittedBy msg
+    List (Attr TypedHtml.Element.Select.OptgroupAttrs msg)
+    -> List (Element TypedHtml.Element.Select.OptgroupContent (TypedHtml.Element.Select.OptgroupChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Select.OptgroupIs s) TypedHtml.Element.Select.OptgroupAdmittedBy msg
 optgroup =
-    TypedHtml.Component.Select.optgroup
+    TypedHtml.Element.Select.optgroup
 
 
-{-| See `TypedHtml.Component.Select.option`.
+{-| See `TypedHtml.Element.Select.option`.
 -}
 option :
-    List (Attr TypedHtml.Component.Select.OptionAttrs msg)
-    -> List (Element TypedHtml.Component.Select.OptionContent (TypedHtml.Component.Select.OptionChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Select.OptionIs s) TypedHtml.Component.Select.OptionAdmittedBy msg
+    List (Attr TypedHtml.Element.Select.OptionAttrs msg)
+    -> List (Element TypedHtml.Element.Select.OptionContent (TypedHtml.Element.Select.OptionChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Select.OptionIs s) TypedHtml.Element.Select.OptionAdmittedBy msg
 option =
-    TypedHtml.Component.Select.option
+    TypedHtml.Element.Select.option
 
 
-{-| See `TypedHtml.Component.Grouping.p`.
+{-| See `TypedHtml.Element.Grouping.p`.
 -}
 p :
-    List (Attr TypedHtml.Component.Grouping.PAttrs msg)
-    -> List (Element TypedHtml.Component.Grouping.PContent (TypedHtml.Component.Grouping.PChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Grouping.PIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Grouping.PAttrs msg)
+    -> List (Element TypedHtml.Element.Grouping.PContent (TypedHtml.Element.Grouping.PChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Grouping.PIs s) admittedBy msg
 p =
-    TypedHtml.Component.Grouping.p
+    TypedHtml.Element.Grouping.p
 
 
-{-| See `TypedHtml.Component.Media.picture`.
+{-| See `TypedHtml.Element.Media.picture`.
 -}
 picture :
-    List (Attr TypedHtml.Component.Media.PictureAttrs msg)
-    -> List (Element TypedHtml.Component.Media.PictureContent (TypedHtml.Component.Media.PictureChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Media.PictureIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Media.PictureAttrs msg)
+    -> List (Element TypedHtml.Element.Media.PictureContent (TypedHtml.Element.Media.PictureChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Media.PictureIs s) admittedBy msg
 picture =
-    TypedHtml.Component.Media.picture
+    TypedHtml.Element.Media.picture
 
 
-{-| See `TypedHtml.Component.Media.pictureSource`.
+{-| See `TypedHtml.Element.Media.pictureSource`.
 -}
 pictureSource :
-    List (Attr TypedHtml.Component.Media.PictureSourceAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Component.Media.PictureSourceChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Media.PictureSourceIs s) TypedHtml.Component.Media.PictureSourceAdmittedBy msg
+    List (Attr TypedHtml.Element.Media.PictureSourceAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Element.Media.PictureSourceChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Media.PictureSourceIs s) TypedHtml.Element.Media.PictureSourceAdmittedBy msg
 pictureSource =
-    TypedHtml.Component.Media.pictureSource
+    TypedHtml.Element.Media.pictureSource
 
 
-{-| See `TypedHtml.Component.Select.select`.
+{-| See `TypedHtml.Element.Select.select`.
 -}
 select :
-    List (Attr TypedHtml.Component.Select.SelectAttrs msg)
-    -> List (Element TypedHtml.Component.Select.SelectContent (TypedHtml.Component.Select.SelectChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Select.SelectIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Select.SelectAttrs msg)
+    -> List (Element TypedHtml.Element.Select.SelectContent (TypedHtml.Element.Select.SelectChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Select.SelectIs s) admittedBy msg
 select =
-    TypedHtml.Component.Select.select
+    TypedHtml.Element.Select.select
 
 
-{-| See `TypedHtml.Component.Media.source`.
+{-| See `TypedHtml.Element.Media.source`.
 -}
 source :
-    List (Attr TypedHtml.Component.Media.SourceAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Component.Media.SourceChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Media.SourceIs s) TypedHtml.Component.Media.SourceAdmittedBy msg
+    List (Attr TypedHtml.Element.Media.SourceAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Element.Media.SourceChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Media.SourceIs s) TypedHtml.Element.Media.SourceAdmittedBy msg
 source =
-    TypedHtml.Component.Media.source
+    TypedHtml.Element.Media.source
 
 
-{-| See `TypedHtml.Component.Grouping.span`.
+{-| See `TypedHtml.Element.Grouping.span`.
 -}
 span :
-    List (Attr TypedHtml.Component.Grouping.SpanAttrs msg)
-    -> List (Element TypedHtml.Component.Grouping.SpanContent (TypedHtml.Component.Grouping.SpanChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Grouping.SpanIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Grouping.SpanAttrs msg)
+    -> List (Element TypedHtml.Element.Grouping.SpanContent (TypedHtml.Element.Grouping.SpanChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Grouping.SpanIs s) admittedBy msg
 span =
-    TypedHtml.Component.Grouping.span
+    TypedHtml.Element.Grouping.span
 
 
-{-| See `TypedHtml.Component.Media.track`.
+{-| See `TypedHtml.Element.Media.track`.
 -}
 track :
-    List (Attr TypedHtml.Component.Media.TrackAttrs msg)
-    -> List (Element childAccepts (TypedHtml.Component.Media.TrackChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Media.TrackIs s) TypedHtml.Component.Media.TrackAdmittedBy msg
+    List (Attr TypedHtml.Element.Media.TrackAttrs msg)
+    -> List (Element childAccepts (TypedHtml.Element.Media.TrackChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Media.TrackIs s) TypedHtml.Element.Media.TrackAdmittedBy msg
 track =
-    TypedHtml.Component.Media.track
+    TypedHtml.Element.Media.track
 
 
-{-| See `TypedHtml.Component.Media.video`.
+{-| See `TypedHtml.Element.Media.video`.
 -}
 video :
-    List (Attr TypedHtml.Component.Media.VideoAttrs msg)
-    -> List (Element TypedHtml.Component.Media.VideoContent (TypedHtml.Component.Media.VideoChildAdmittedBy childAdm) msg)
-    -> Element (TypedHtml.Component.Media.VideoIs s) admittedBy msg
+    List (Attr TypedHtml.Element.Media.VideoAttrs msg)
+    -> List (Element TypedHtml.Element.Media.VideoContent (TypedHtml.Element.Media.VideoChildAdmittedBy childAdm) msg)
+    -> Element (TypedHtml.Element.Media.VideoIs s) admittedBy msg
 video =
-    TypedHtml.Component.Media.video
+    TypedHtml.Element.Media.video
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

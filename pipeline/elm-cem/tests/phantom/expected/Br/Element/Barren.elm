@@ -1,63 +1,65 @@
-module Hz.Component.Global exposing
+module Br.Element.Barren exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+    , count, label
     , child
     )
 
-{-| The `hz-global` component — strict per-component surface.
+{-| The `br-barren` component — strict per-component surface.
 
-Tests K2: redeclares global attrs id, class, slot, style.
+A component with zero enum types (K6: no closed enums, no enum tokens).
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+@docs count, label
 @docs child
 
 -}
 
+import Br.Attributes as A
+import Br.Html as H
+import Br.Internal.Types.Barren
+import Br.Kind exposing (Available, Brand, Ctx, Used)
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
-import Hz.Attributes as A
-import Hz.Html as H
-import Hz.Internal.Types.Global
-import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
-{-| The kind row `hz-global` produces (open — composes into any slot naming it).
+{-| The kind row `br-barren` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Hz.Internal.Types.Global.Is s
+    Br.Internal.Types.Barren.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Hz.Internal.Types.Global.Attrs
+    Br.Internal.Types.Barren.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Hz.Internal.Types.Global.Content
+    Br.Internal.Types.Barren.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Global.ChildAdmittedBy childAdm
+    Br.Internal.Types.Barren.ChildAdmittedBy childAdm
 
 
-{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
+{-| The narrowed pipe-builder this component's `Br.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Global.Builder attrCaps slotCaps msg kind
+    Br.Internal.Types.Barren.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Hz.Internal.Types.Global.AttrCaps
+    Br.Internal.Types.Barren.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -73,7 +75,21 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.global
+    H.barren
+
+
+{-| See `Br.Attributes.count`.
+-}
+count : Float -> Attr { c | count : Supported } msg
+count =
+    A.count
+
+
+{-| See `Br.Attributes.label`.
+-}
+label : String -> Attr { c | label : Supported } msg
+label =
+    A.label
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

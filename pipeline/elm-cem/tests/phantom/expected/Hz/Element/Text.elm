@@ -1,12 +1,12 @@
-module Mini.Component.Icon exposing
+module Hz.Element.Text exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , child
     )
 
-{-| The `mini-icon` component — strict per-component surface.
+{-| The `hz-capital-text` component — strict per-component surface.
 
-A shared icon atom.
+Tests K7 (capitalized-name shape, fluent): name=Text decapitalizes to ctor=text, collides with \_atoms.text. K7 must revert to Naming.camel tag = hzCapitalText.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
@@ -17,50 +17,47 @@ A shared icon atom.
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value exposing (Value)
-import Mini.Attributes as A
-import Mini.Html as H
-import Mini.Internal.Types.Icon
-import Mini.Kind exposing (Available, Ctx, Used)
-import Mini.Values
+import HtmlIr.Kind exposing (Supported)
+import Hz.Attributes as A
+import Hz.Html as H
+import Hz.Internal.Types.Text
+import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
-{-| The kind row `mini-icon` produces — the SHARED icon atom kind, admissible
-into any library's opted-in slot.
+{-| The kind row `hz-capital-text` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Mini.Internal.Types.Icon.Is s
+    Hz.Internal.Types.Text.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Mini.Internal.Types.Icon.Attrs
+    Hz.Internal.Types.Text.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Mini.Internal.Types.Icon.Content
+    Hz.Internal.Types.Text.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Mini.Internal.Types.Icon.ChildAdmittedBy childAdm
+    Hz.Internal.Types.Text.ChildAdmittedBy childAdm
 
 
-{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+{-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Mini.Internal.Types.Icon.Builder attrCaps slotCaps msg kind
+    Hz.Internal.Types.Text.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Mini.Internal.Types.Icon.AttrCaps
+    Hz.Internal.Types.Text.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -76,7 +73,7 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.icon
+    H.hzCapitalText
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

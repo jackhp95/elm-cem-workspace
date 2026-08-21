@@ -1,4 +1,4 @@
-module TypedHtml.Component.A exposing
+module TypedHtml.Element.A exposing
     ( a
     , Attrs, ChildAdmittedBy
     , href

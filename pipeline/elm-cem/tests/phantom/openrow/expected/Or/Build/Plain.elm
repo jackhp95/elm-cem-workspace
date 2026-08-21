@@ -19,7 +19,7 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Or.Attributes as A
-import Or.Component.Plain as Component
+import Or.Element.Plain as Component
 import Or.Forge.Internal as B
 import Or.Kind exposing (Available, Brand, Ctx, Used)
 import Or.Values

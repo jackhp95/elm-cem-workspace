@@ -1,17 +1,17 @@
-module Hz.Component.Placement exposing
+module Hz.Element.Blocked exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-    , Position, position
+    , label
     , child
     )
 
-{-| The `hz-placement` component — strict per-component surface.
+{-| The `hz-blocked` component — strict per-component surface.
 
-Tests K1: enum with both \_top and top tokens.
+Tests the KERNEL-BLOCKED guard: attributes whose DOM name elm/virtual-dom rewrites or ignores get no setter on any surface, while a legitimate sibling attribute on the same element still does.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
-@docs Position, position
+@docs label
 @docs child
 
 -}
@@ -20,53 +20,46 @@ import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
 import Hz.Attributes as A
 import Hz.Html as H
-import Hz.Internal.Types.Placement
+import Hz.Internal.Types.Blocked
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
-{-| The kind row `hz-placement` produces (open — composes into any slot naming it).
+{-| The kind row `hz-blocked` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Hz.Internal.Types.Placement.Is s
+    Hz.Internal.Types.Blocked.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Hz.Internal.Types.Placement.Attrs
+    Hz.Internal.Types.Blocked.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Hz.Internal.Types.Placement.Content
+    Hz.Internal.Types.Blocked.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.Placement.ChildAdmittedBy childAdm
-
-
-{-| The `position` values valid on this component (compile-tight narrowing).
--}
-type alias Position =
-    Hz.Internal.Types.Placement.Position
+    Hz.Internal.Types.Blocked.ChildAdmittedBy childAdm
 
 
 {-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.Placement.Builder attrCaps slotCaps msg kind
+    Hz.Internal.Types.Blocked.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Hz.Internal.Types.Placement.AttrCaps
+    Hz.Internal.Types.Blocked.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -82,14 +75,14 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.placement
+    H.blocked
 
 
-{-| Position enum with leading-underscore and plain tokens.
+{-| See `Hz.Attributes.label`.
 -}
-position : Value Position -> Attr { c | position : Supported } msg
-position value_ =
-    Ir.attribute "position" (Val.toString value_)
+label : String -> Attr { c | label : Supported } msg
+label =
+    A.label
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

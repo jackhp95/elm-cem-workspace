@@ -1,4 +1,4 @@
-module Mini.Component.Button exposing
+module Mini.Element.Button exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, IconSlot, ChildAdmittedBy
     , Variant, variant

@@ -30,84 +30,84 @@ import HtmlIr.Element
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
-import Mini.Component.Button
-import Mini.Component.Chip
-import Mini.Component.Icon
-import Mini.Component.Surface
-import Mini.Component.Tab
-import Mini.Component.Tabs
-import Mini.Component.Toolbar
+import Mini.Internal.Types.Button
+import Mini.Internal.Types.Chip
+import Mini.Internal.Types.Icon
+import Mini.Internal.Types.Surface
+import Mini.Internal.Types.Tab
+import Mini.Internal.Types.Tabs
+import Mini.Internal.Types.Toolbar
 import Mini.Kind
 
 
-{-| The loose `mini-button` producer — open attribute/child rows, no required record. See `Mini.Component.Button.component` for the required-content form.
+{-| The loose `mini-button` producer — open attribute/child rows, no required record. See `Mini.Element.Button.component` for the required-content form.
 -}
 button :
-    List (Attr Mini.Component.Button.Attrs msg)
-    -> List (Element Mini.Component.Button.Content (Mini.Component.Button.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Button.Is s) admittedBy msg
+    List (Attr Mini.Internal.Types.Button.Attrs msg)
+    -> List (Element Mini.Internal.Types.Button.Content (Mini.Internal.Types.Button.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Button.Is s) admittedBy msg
 button attrs children =
     Ir.fromNode (Ir.node "mini-button" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Chip.component`.
+{-| See `Mini.Element.Chip.component`.
 -}
 chip :
-    List (Attr Mini.Component.Chip.Attrs msg)
-    -> List (Element Mini.Component.Chip.Content (Mini.Component.Chip.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Chip.Is s) admittedBy msg
-chip =
-    Mini.Component.Chip.component
+    List (Attr Mini.Internal.Types.Chip.Attrs msg)
+    -> List (Element Mini.Internal.Types.Chip.Content (Mini.Internal.Types.Chip.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Chip.Is s) admittedBy msg
+chip attrs children =
+    Ir.fromNode (Ir.node "mini-chip" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Icon.component`.
+{-| See `Mini.Element.Icon.component`.
 -}
 icon :
-    List (Attr Mini.Component.Icon.Attrs msg)
-    -> List (Element Mini.Component.Icon.Content (Mini.Component.Icon.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Icon.Is s) admittedBy msg
-icon =
-    Mini.Component.Icon.component
+    List (Attr Mini.Internal.Types.Icon.Attrs msg)
+    -> List (Element Mini.Internal.Types.Icon.Content (Mini.Internal.Types.Icon.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Icon.Is s) admittedBy msg
+icon attrs children =
+    Ir.fromNode (Ir.node "mini-icon" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Surface.component`.
+{-| See `Mini.Element.Surface.component`.
 -}
 surface :
-    List (Attr Mini.Component.Surface.Attrs msg)
-    -> List (Element childAccepts (Mini.Component.Surface.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Surface.Is s) admittedBy msg
-surface =
-    Mini.Component.Surface.component
+    List (Attr Mini.Internal.Types.Surface.Attrs msg)
+    -> List (Element childAccepts (Mini.Internal.Types.Surface.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Surface.Is s) admittedBy msg
+surface attrs children =
+    Ir.fromNode (Ir.node "mini-surface" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Tab.component`.
+{-| See `Mini.Element.Tab.component`.
 -}
 tab :
-    List (Attr Mini.Component.Tab.Attrs msg)
-    -> List (Element Mini.Component.Tab.Content (Mini.Component.Tab.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Tab.Is s) Mini.Component.Tab.AdmittedBy msg
-tab =
-    Mini.Component.Tab.component
+    List (Attr Mini.Internal.Types.Tab.Attrs msg)
+    -> List (Element Mini.Internal.Types.Tab.Content (Mini.Internal.Types.Tab.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Tab.Is s) Mini.Internal.Types.Tab.AdmittedBy msg
+tab attrs children =
+    Ir.fromNode (Ir.node "mini-tab" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Tabs.component`.
+{-| See `Mini.Element.Tabs.component`.
 -}
 tabs :
-    List (Attr Mini.Component.Tabs.Attrs msg)
-    -> List (Element Mini.Component.Tabs.Content (Mini.Component.Tabs.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Tabs.Is s) admittedBy msg
-tabs =
-    Mini.Component.Tabs.component
+    List (Attr Mini.Internal.Types.Tabs.Attrs msg)
+    -> List (Element Mini.Internal.Types.Tabs.Content (Mini.Internal.Types.Tabs.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Tabs.Is s) admittedBy msg
+tabs attrs children =
+    Ir.fromNode (Ir.node "mini-tabs" attrs (List.map HtmlIr.Element.toNode children))
 
 
-{-| See `Mini.Component.Toolbar.component`.
+{-| See `Mini.Element.Toolbar.component`.
 -}
 toolbar :
-    List (Attr Mini.Component.Toolbar.Attrs msg)
-    -> List (Element Mini.Kind.Actions (Mini.Component.Toolbar.ChildAdmittedBy childAdm) msg)
-    -> Element (Mini.Component.Toolbar.Is s) admittedBy msg
-toolbar =
-    Mini.Component.Toolbar.component
+    List (Attr Mini.Internal.Types.Toolbar.Attrs msg)
+    -> List (Element Mini.Kind.Actions (Mini.Internal.Types.Toolbar.ChildAdmittedBy childAdm) msg)
+    -> Element (Mini.Internal.Types.Toolbar.Is s) admittedBy msg
+toolbar attrs children =
+    Ir.fromNode (Ir.node "mini-toolbar" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

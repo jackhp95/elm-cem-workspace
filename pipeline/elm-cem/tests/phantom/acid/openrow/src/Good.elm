@@ -13,7 +13,7 @@ import HtmlIr.Element
 import HtmlIr.Node
 import Or
 import Or.Attributes
-import Or.Component.Widget
+import Or.Element.Widget
 import Or.Kind
 import Or.Values
 
@@ -24,7 +24,7 @@ its own CEM attribute — the mixed case.
 page : HtmlIr.Element.Element { s | widget : Or.Kind.Brand } admittedBy msg
 page =
     Or.widget
-        [ Or.Component.Widget.label "hello"
+        [ Or.Element.Widget.label "hello"
         , Or.Attributes.class "container"
         , Or.Attributes.cflag True
         , Or.Attributes.cdir Or.Values.ltr

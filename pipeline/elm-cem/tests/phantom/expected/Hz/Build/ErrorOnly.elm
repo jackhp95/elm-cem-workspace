@@ -16,7 +16,7 @@ import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import Hz.Attributes as A
-import Hz.Component.ErrorOnly as Component
+import Hz.Element.ErrorOnly as Component
 import Hz.Events as Ev
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)

@@ -1,4 +1,4 @@
-module TypedHtml.Component.Grouping exposing
+module TypedHtml.Element.Grouping exposing
     ( div, p, span
     , DivIs, DivAttrs, DivChildAdmittedBy, DivRoles, PIs, PAttrs, PContent, PChildAdmittedBy, SpanIs, SpanAttrs, SpanContent, SpanChildAdmittedBy
     )

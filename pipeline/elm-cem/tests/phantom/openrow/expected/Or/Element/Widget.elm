@@ -1,15 +1,17 @@
-module Mini.Component.Tab exposing
+module Or.Element.Widget exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+    , label
     , child
     )
 
-{-| The `mini-tab` component — strict per-component surface.
+{-| The `or-widget` component — strict per-component surface.
 
-A single tab. Only valid inside mini-tabs.
+An element with one attribute of its own, so its `Attrs` row is a mix of global and CEM fields.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy, AdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+@docs label
 @docs child
 
 -}
@@ -17,56 +19,49 @@ A single tab. Only valid inside mini-tabs.
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Kind exposing (Supported)
 import HtmlIr.Value exposing (Value)
-import Mini.Attributes as A
-import Mini.Html as H
-import Mini.Internal.Types.Tab
-import Mini.Kind exposing (Available, Brand, Ctx, Used)
-import Mini.Values
+import Or.Attributes as A
+import Or.Html as H
+import Or.Internal.Types.Widget
+import Or.Kind exposing (Available, Brand, Ctx, Used)
+import Or.Values
 
 
-{-| The kind row `mini-tab` produces (open — composes into any slot naming it).
+{-| The kind row `or-widget` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Mini.Internal.Types.Tab.Is s
+    Or.Internal.Types.Widget.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Mini.Internal.Types.Tab.Attrs
+    Or.Internal.Types.Widget.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Mini.Internal.Types.Tab.Content
+    Or.Internal.Types.Widget.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Mini.Internal.Types.Tab.ChildAdmittedBy childAdm
+    Or.Internal.Types.Widget.ChildAdmittedBy childAdm
 
 
-{-| The CLOSED parent contexts this element is valid inside — `mini-tab` is
-only writable as a direct child of `mini-tabs`.
--}
-type alias AdmittedBy =
-    Mini.Internal.Types.Tab.AdmittedBy
-
-
-{-| The narrowed pipe-builder this component's `Mini.Build.<X>` module exposes.
+{-| The narrowed pipe-builder this component's `Or.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Mini.Internal.Types.Tab.Builder attrCaps slotCaps msg kind
+    Or.Internal.Types.Widget.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Mini.Internal.Types.Tab.AttrCaps
+    Or.Internal.Types.Widget.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -80,9 +75,16 @@ type alias SlotCaps =
 component :
     List (Attr Attrs msg)
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
-    -> Element (Is s) AdmittedBy msg
+    -> Element (Is s) admittedBy msg
 component =
-    H.tab
+    H.widget
+
+
+{-| See `Or.Attributes.label`.
+-}
+label : String -> Attr { c | label : Supported } msg
+label =
+    A.label
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

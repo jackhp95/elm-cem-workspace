@@ -1,15 +1,17 @@
-module Hz.Component.TextElement exposing
+module Hz.Element.EventClash exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+    , onError, onHzError, onLoad, onHzLoad
     , child
     )
 
-{-| The `hz-text` component — strict per-component surface.
+{-| The `hz-event-clash` component — strict per-component surface.
 
-Tests K7 (lowercase-name shape): hz-text element, ctor is textElement, no atom collision.
+Tests K4: native error + hz-error events.
 
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+@docs onError, onHzError, onLoad, onHzLoad
 @docs child
 
 -}
@@ -19,45 +21,46 @@ import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Supported)
 import Hz.Attributes as A
+import Hz.Events as Ev
 import Hz.Html as H
-import Hz.Internal.Types.TextElement
+import Hz.Internal.Types.EventClash
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 
 
-{-| The kind row `hz-text` produces (open — composes into any slot naming it).
+{-| The kind row `hz-event-clash` produces (open — composes into any slot naming it).
 -}
 type alias Is s =
-    Hz.Internal.Types.TextElement.Is s
+    Hz.Internal.Types.EventClash.Is s
 
 
 {-| The closed attribute-capability row.
 -}
 type alias Attrs =
-    Hz.Internal.Types.TextElement.Attrs
+    Hz.Internal.Types.EventClash.Attrs
 
 
 {-| The kinds the default slot admits.
 -}
 type alias Content =
-    Hz.Internal.Types.TextElement.Content
+    Hz.Internal.Types.EventClash.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
 -}
 type alias ChildAdmittedBy childAdm =
-    Hz.Internal.Types.TextElement.ChildAdmittedBy childAdm
+    Hz.Internal.Types.EventClash.ChildAdmittedBy childAdm
 
 
 {-| The narrowed pipe-builder this component's `Hz.Build.<X>` module exposes.
 -}
 type alias Builder attrCaps slotCaps msg kind =
-    Hz.Internal.Types.TextElement.Builder attrCaps slotCaps msg kind
+    Hz.Internal.Types.EventClash.Builder attrCaps slotCaps msg kind
 
 
 {-| The attribute capabilities this component's builder admits.
 -}
 type alias AttrCaps =
-    Hz.Internal.Types.TextElement.AttrCaps
+    Hz.Internal.Types.EventClash.AttrCaps
 
 
 {-| The singular-slot capabilities this component's builder admits.
@@ -73,7 +76,35 @@ component :
     -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
-    H.textElement
+    H.eventClash
+
+
+{-| See `Hz.Events.onError`.
+-}
+onError : msg -> Attr { c | onError : Supported } msg
+onError =
+    Ev.onError
+
+
+{-| See `Hz.Events.onHzError`.
+-}
+onHzError : msg -> Attr { c | onHzError : Supported } msg
+onHzError =
+    Ev.onHzError
+
+
+{-| See `Hz.Events.onLoad`.
+-}
+onLoad : msg -> Attr { c | onLoad : Supported } msg
+onLoad =
+    Ev.onLoad
+
+
+{-| See `Hz.Events.onHzLoad`.
+-}
+onHzLoad : msg -> Attr { c | onHzLoad : Supported } msg
+onHzLoad =
+    Ev.onHzLoad
 
 
 {-| Place a pre-built element into the default (unnamed) slot (input

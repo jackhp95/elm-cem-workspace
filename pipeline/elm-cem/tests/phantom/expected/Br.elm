@@ -20,21 +20,22 @@ placements are caught by `Cem.ValidSlotKind` (elm-review).
 
 -}
 
-import Br.Component.Barren
+import Br.Internal.Types.Barren
 import Html
 import HtmlIr.Attribute
 import HtmlIr.Element
+import HtmlIr.Internal as Ir
 import HtmlIr.Node
 
 
-{-| See `Br.Component.Barren.component`.
+{-| See `Br.Element.Barren.component`.
 -}
 barren :
-    List (Attr Br.Component.Barren.Attrs msg)
-    -> List (Element Br.Component.Barren.Content (Br.Component.Barren.ChildAdmittedBy childAdm) msg)
-    -> Element (Br.Component.Barren.Is s) admittedBy msg
-barren =
-    Br.Component.Barren.component
+    List (Attr Br.Internal.Types.Barren.Attrs msg)
+    -> List (Element Br.Internal.Types.Barren.Content (Br.Internal.Types.Barren.ChildAdmittedBy childAdm) msg)
+    -> Element (Br.Internal.Types.Barren.Is s) admittedBy msg
+barren attrs children =
+    Ir.fromNode (Ir.node "br-barren" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.

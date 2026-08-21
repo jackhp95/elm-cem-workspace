@@ -1,4 +1,4 @@
-module TypedHtml.Component.Media exposing
+module TypedHtml.Element.Media exposing
     ( picture, pictureSource, source, track, video
     , PictureIs, PictureAttrs, PictureContent, PictureChildAdmittedBy, PictureSourceIs, PictureSourceAttrs, PictureSourceChildAdmittedBy, PictureSourceAdmittedBy, SourceIs, SourceAttrs, SourceChildAdmittedBy, SourceAdmittedBy, TrackIs, TrackAttrs, TrackChildAdmittedBy, TrackAdmittedBy, VideoIs, VideoAttrs, VideoContent, VideoChildAdmittedBy
     , src, srcset

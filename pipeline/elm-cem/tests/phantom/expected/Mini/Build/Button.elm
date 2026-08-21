@@ -21,7 +21,7 @@ import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Mini.Attributes as A
-import Mini.Component.Button as Component
+import Mini.Element.Button as Component
 import Mini.Events as Ev
 import Mini.Forge.Internal as B
 import Mini.Kind exposing (Available, Brand, Ctx, Used)

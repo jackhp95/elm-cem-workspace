@@ -1,4 +1,4 @@
-module TypedHtml.Component.Select exposing
+module TypedHtml.Element.Select exposing
     ( optgroup, option, select
     , OptgroupIs, OptgroupAttrs, OptgroupContent, OptgroupChildAdmittedBy, OptgroupAdmittedBy, OptionIs, OptionAttrs, OptionContent, OptionChildAdmittedBy, OptionAdmittedBy, SelectIs, SelectAttrs, SelectContent, SelectChildAdmittedBy
     , disabled, size, value, defaultValue, valueAsNumber
