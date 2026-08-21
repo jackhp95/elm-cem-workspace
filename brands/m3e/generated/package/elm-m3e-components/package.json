@@ -1,0 +1,10 @@
+{
+  "name": "elm-m3e-components",
+  "version": "1.0.0",
+  "description": "Family-grouped nested module organization for elm-m3e components (M3e.Family.*). Committed generator sibling of the elm-m3e staging root (jackhp95/elm-m3e-components).",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-m3e/node_modules/.bin/elm --dep-src=jackhp95/elm-m3e-core=../elm-m3e-core/src --dep-src=jackhp95/elm-m3e-elements=../elm-m3e-elements/src"
+  }
+}

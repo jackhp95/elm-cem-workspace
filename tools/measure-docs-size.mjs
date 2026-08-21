@@ -78,7 +78,7 @@ const FAMILY_SRC = {
   "jackhp95/elm-cem-facts": process.env.FACTS_SRC || path.join(ROOT, "pipeline/elm-cem-facts/src"),
 };
 
-const DEFAULT_TARGETS = ["brands/m3e/generated/package/elm-m3e/elm-m3e-icons"];
+const DEFAULT_TARGETS = ["brands/m3e/generated/package/elm-m3e-icons"];
 
 const copyElm = (src, dst) => {
   for (const e of fs.readdirSync(src, { withFileTypes: true })) {

@@ -25,8 +25,13 @@ const eject = require(path.join(repo, "bin", "eject.js"));
 
 const IR = "jackhp95/elm-virtual-dom-intermediate-representation";
 const FACTS = "jackhp95/elm-cem-facts";
-const M3E = "jackhp95/elm-m3e";
 const brand = eject.BRANDS.m3e;
+// The brand's published primitives package eject removes from a vendored
+// consumer. After the package explosion the single `jackhp95/elm-m3e` identity
+// is retired (design OQ-5) and `brand.package` is `jackhp95/elm-m3e-core` (the
+// primitives tier); track it off the family-config so this test follows the
+// registered identity instead of a stale literal.
+const M3E = brand.package;
 
 const { check, finish } = makeCheck("eject-test");
 

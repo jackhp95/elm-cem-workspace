@@ -74,7 +74,7 @@ config =
         ++ [ NoMissingComponentApiNames.rule { componentNamespace = [ "M3e", "Component" ] }
 
            -- `NoFamilyMemberDrift` is the other rule that must run ON generated
-           -- code: it checks each `M3e.Family.<F>` module in `elm-m3e-families/`
+           -- code: it checks each `M3e.Family.<F>` module in `elm-m3e-components/`
            -- (also swallowed by `ignoreGeneratedSubstrate` otherwise) against the
            -- family config (`M3e.Review.Families`, generated from
            -- `config/slots.json`'s `_families` by
@@ -105,7 +105,12 @@ ignoreGeneratedSubstrate : Rule -> Rule
 ignoreGeneratedSubstrate =
     Rule.ignoreErrorsForDirectories
         [ "../../package/elm-m3e/src/"
-        , "../../package/elm-m3e/elm-m3e-families/src/"
+        , "../../package/elm-m3e-core/src/"
+        , "../../package/elm-m3e-elements/src/"
+        , "../../package/elm-m3e-build/src/"
+        , "../../package/elm-m3e-facts/src/"
+        , "../../package/elm-m3e-icons/src/"
+        , "../../package/elm-m3e-components/src/"
         , "../../package/elm-m3e/tests/"
         , "../../../../../brands/html/generated/package/elm-typed-html/src/"
         , "../../../../../packages/elm-virtual-dom-intermediate-representation/src/"
@@ -169,7 +174,7 @@ working directory the review runs from.
 ignoreVendor : Rule -> Rule
 ignoreVendor rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-components/src/", "../../package/elm-m3e-components/src/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 
@@ -180,7 +185,7 @@ style rules do not.
 ignoreGenerated : Rule -> Rule
 ignoreGenerated rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/", ".elm-pages/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-components/src/", "../../package/elm-m3e-components/src/", ".elm-pages/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 
@@ -263,7 +268,7 @@ so that the ignore works regardless of working directory.
 ignorePublicApi : Rule -> Rule
 ignorePublicApi rule =
     rule
-        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-families/src/" ]
+        |> Rule.ignoreErrorsForDirectories [ "src/M3e/", "../src/M3e/", "../elm-m3e-components/src/", "../../package/elm-m3e-components/src/" ]
         |> Rule.ignoreErrorsForFiles [ "src/M3e.elm", "../src/M3e.elm" ]
 
 

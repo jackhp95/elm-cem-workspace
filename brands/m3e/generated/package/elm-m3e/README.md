@@ -19,6 +19,13 @@ they came from the same machine.
 > **Status: prerelease, not yet published.** Breaking changes are embraced; the
 > priority is correctness and uniformity over back-compat.
 
+> **⚠️ The `jackhp95/elm-m3e` single-package identity is RETIRED.** The library is
+> now **six** concern-separated packages
+> (`elm-m3e-core`/`-elements`/`-build`/`-components`/`-icons`/`-facts`); this
+> directory survives only as the generation-staging root. See
+> [`PACKAGES-MOVED.md`](./PACKAGES-MOVED.md) for the namespace→package table and the
+> consumer migration path (design OQ-5).
+
 ## What's in the repo
 
 The repo root (`elm.json` + `src/`) is the package, but the registry package

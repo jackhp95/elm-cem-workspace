@@ -28,7 +28,7 @@
     "check:format": "node_modules/.bin/elm-format --validate ../../docs/elm-m3e-docs/app ../../docs/elm-m3e-docs/src review/src tests/acid",
     "check:review": "npm --prefix ../../docs/elm-m3e-docs run check:review",
     "check:cem": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/../../docs/elm-m3e-docs/vendor/elm-foundation}\" node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" gate --flags-from=../../docs/elm-m3e-docs/node_modules/@m3e/web/dist/custom-elements.json --config-from=config/slots.json --config-from=config/native-mdn.json --config-from=config/examples.generated.json --config-from=config/figma.generated.json --nested-pkg=../elm-m3e-icons",
-    "split": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" split --packages=packages.json --src=src --out=dist-packages",
+    "split": "PATH=\"$PWD/node_modules/.bin:$PATH\" node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" split --packages=packages.json --src=src --out=..",
     "verify:split": "PATH=\"$PWD/node_modules/.bin:$PATH\" IR_SRC=\"${IR_SRC:-$PWD/../../docs/elm-m3e-docs/vendor/elm-foundation}\" FACTS_SRC=\"${FACTS_SRC:-$PWD/../../../../../pipeline/elm-cem-facts/src}\" node scripts/check-split.mjs",
     "check:nav": "npm --prefix ../../docs/elm-m3e-docs run check:nav",
     "check:drift": "npm --prefix ../../docs/elm-m3e-docs run check:drift",

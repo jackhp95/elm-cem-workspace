@@ -1,0 +1,174 @@
+module M3e.Component.Tooltip exposing
+    ( component
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+    , Position, position, TouchGestures, touchGestures
+    , disabled, for, hideDelay, showDelay
+    , child
+    )
+
+{-| The `m3e-tooltip` component — strict per-component surface.
+
+Adds additional context to a button or other UI element.
+
+@docs component
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
+@docs Position, position, TouchGestures, touchGestures
+@docs disabled, for, hideDelay, showDelay
+@docs child
+
+
+## Examples
+
+
+### Examples
+
+<!-- elm-cem:example title="Plain tooltip" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "arrow_back" ] [], ariaLabel = "Go back", action = M3e.Action.none } [ M3e.Attributes.id "button" ] []
+    , M3e.Component.Tooltip.component { content = M3e.text "Go Back" } [ M3e.Component.Tooltip.for "button" ] []
+    ]
+```
+
+<!-- elm-cem:example title="Rich tooltip" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "settings" ] [], ariaLabel = "Settings", action = M3e.Action.none } [ M3e.Attributes.id "button2" ] []
+    , M3e.Component.RichTooltip.component { content = M3e.text "Now you can adjust the uploaded image quality, and upgrade your available storage space." } [ M3e.Component.RichTooltip.for "button2" ] [ M3e.Component.RichTooltip.subhead (M3e.text "New settings available") ]
+    ]
+```
+
+<!-- elm-cem:example title="Actions" -->
+```elm
+[ M3e.Component.IconButton.component { content = M3e.Component.Icon.component [ M3e.Component.Icon.name "settings" ] [], ariaLabel = "Settings", action = M3e.Action.none } [ M3e.Attributes.id "button3" ] []
+    , M3e.Component.RichTooltip.component { content = M3e.text "Now you can adjust the uploaded image quality, and upgrade your available storage space." } [ M3e.Component.RichTooltip.for "button3" ] [ M3e.Component.RichTooltip.subhead (M3e.text "New settings available"), M3e.Component.RichTooltip.actions (TypedHtml.div [] [ M3e.Component.Button.component { content = M3e.Component.RichTooltipAction.component { content = M3e.text "Learn more" } [] [], action = M3e.Action.none } [] [] ]) ]
+    ]
+```
+
+<!-- elm-cem:docmeta category=Communication; figmaUrl=https://www.figma.com/design/UtwpUdPiOZEuxp8Nq1d5yQ/Material-3-Design-Kit--Community-?node-id=54061-33881; figmaStatus=example-verified -->
+
+-}
+
+import HtmlIr.Attribute exposing (Attr)
+import HtmlIr.Element as El exposing (Element)
+import HtmlIr.Internal as Ir
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value as Val exposing (Value)
+import M3e.Attributes as A
+import M3e.Html as H
+import M3e.Internal.Types.Tooltip
+import M3e.Kind exposing (Available, Brand, Ctx, Used)
+
+
+{-| The kind row `m3e-tooltip` produces (open — composes into any slot naming it).
+-}
+type alias Is s =
+    M3e.Internal.Types.Tooltip.Is s
+
+
+{-| The closed attribute-capability row.
+-}
+type alias Attrs =
+    M3e.Internal.Types.Tooltip.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    M3e.Internal.Types.Tooltip.Content
+
+
+{-| The context demand this container injects into each child's admittedBy row.
+-}
+type alias ChildAdmittedBy childAdm =
+    M3e.Internal.Types.Tooltip.ChildAdmittedBy childAdm
+
+
+{-| The `position` values valid on this component (compile-tight narrowing).
+-}
+type alias Position =
+    M3e.Internal.Types.Tooltip.Position
+
+
+{-| The `touchGestures` values valid on this component (compile-tight narrowing).
+-}
+type alias TouchGestures =
+    M3e.Internal.Types.Tooltip.TouchGestures
+
+
+{-| The narrowed pipe-builder this component's `M3e.Build.<X>` module exposes.
+-}
+type alias Builder attrCaps slotCaps msg kind =
+    M3e.Internal.Types.Tooltip.Builder attrCaps slotCaps msg kind
+
+
+{-| The attribute capabilities this component's builder admits.
+-}
+type alias AttrCaps =
+    M3e.Internal.Types.Tooltip.AttrCaps
+
+
+{-| The singular-slot capabilities this component's builder admits.
+-}
+type alias SlotCaps =
+    {}
+
+
+{-| Required-content (and action) constructor — omissions are unwritable.
+-}
+component :
+    { content : Element Content (ChildAdmittedBy childAdm) msg }
+    -> List (Attr Attrs msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
+    -> Element (Is s) admittedBy msg
+component required_ attrs children =
+    H.tooltip attrs (required_.content :: children)
+
+
+{-| The position of the tooltip. (default: `"below"`)
+-}
+position : Value Position -> Attr { c | position : Supported } msg
+position value_ =
+    Ir.attribute "position" (Val.toString value_)
+
+
+{-| The mode in which to handle touch gestures. (default: `"auto"`)
+-}
+touchGestures : Value TouchGestures -> Attr { c | touchGestures : Supported } msg
+touchGestures value_ =
+    Ir.attribute "touch-gestures" (Val.toString value_)
+
+
+{-| See `M3e.Attributes.disabled`.
+-}
+disabled : Bool -> Attr { c | disabled : Supported } msg
+disabled =
+    A.disabled
+
+
+{-| See `M3e.Attributes.for`.
+-}
+for : String -> Attr { c | for : Supported } msg
+for =
+    A.for
+
+
+{-| See `M3e.Attributes.hideDelay`.
+-}
+hideDelay : Float -> Attr { c | hideDelay : Supported } msg
+hideDelay =
+    A.hideDelay
+
+
+{-| See `M3e.Attributes.showDelay`.
+-}
+showDelay : Float -> Attr { c | showDelay : Supported } msg
+showDelay =
+    A.showDelay
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

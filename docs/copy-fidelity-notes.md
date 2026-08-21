@@ -194,6 +194,19 @@ move"). The gate itself only needs the path lists; this doc is where the
   entire subtree left the package. Narrow back to a package-internal path only
   if docs ever returns to the elm-m3e package.
 
+### 2026-08-20 — `PACKAGES-MOVED.md` (explosion Task 3 monolith-retirement note)
+
+- `PACKAGES-MOVED.md` is `authorizedExtra`: it is the one-page "the packages
+  moved" migration note written by explosion Task 3 (design OQ-5) when the
+  single-package `jackhp95/elm-m3e` identity was retired in favour of the six
+  concern-separated siblings (`elm-m3e-core`/`-elements`/`-build`/`-components`/
+  `-icons`/`-facts`). It is new workspace content that the pinned
+  `jackhp95/elm-m3e` mirror snapshot does not yet carry (it predates the
+  retirement), so it flags as workspace-ahead-of-upstream — same pattern as the
+  Detailed-view/Family-tab entries above. It is pinned from the package README
+  and `VISION.md`. Remove this entry once `jackhp95/elm-m3e` is republished (or
+  formally un-published) with the note in place — part of OQ-6.
+
 ## cem-figma-connect
 
 - **Phase 4 token-graph/links feature work** (workspace-ahead-of-upstream,

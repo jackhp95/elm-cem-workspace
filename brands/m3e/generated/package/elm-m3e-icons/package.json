@@ -1,0 +1,10 @@
+{
+  "name": "elm-m3e-icons",
+  "version": "1.0.0",
+  "description": "Type-safe Material Symbols icon names for elm-m3e. Committed generator sibling of the elm-m3e staging root (jackhp95/elm-m3e-icons).",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-m3e/node_modules/.bin/elm"
+  }
+}

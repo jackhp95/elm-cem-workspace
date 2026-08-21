@@ -50,6 +50,8 @@
           "specs/2026-08-05-remove-raw-html-element-design.md",
           "docs/samples/good/Sample/AccessibleByConstruction/NamelessCode.elm"
         ],
+        "authorizedAbsentPrefixes": ["elm-m3e-icons/", "elm-m3e-components/", "elm-m3e-families/"],
+        "$authorizedAbsentPrefixesNote": "MIRROR-LAG (explosion Task 2, 2026-08-20): the pinned jackhp95/elm-m3e snapshot still carries elm-m3e-icons/ (and the pre-Task-1 elm-m3e-families/) NESTED under the package, but Task 2 promoted them to committed SIBLINGS under brands/m3e/generated/package/ (elm-m3e-icons/, elm-m3e-components/) — outside elm-m3e's srcDir. So the nested copies are legitimately absent from the workspace tree until the mirror is republished post-reshape (OQ-6). Same wave-1 tailwind/cfc mirror-lag pattern (see the elm-cem-figma-connect $mirrorLagNote). Remove these prefixes once jackhp95/elm-m3e is republished with the new sibling shape. (elm-m3e-components/ + elm-m3e-families/ are belt-and-suspenders: the current snapshot lacks them, but a re-pin between Task 1 and republish could carry either the old -families or the mid-move nested -components name.)",
         "authorizedExtra": [
           "docs/scripts/fix-native-bins.mjs",
           "docs/scripts/browser-guard.mjs",
@@ -80,11 +82,37 @@
           "docs/scripts/worktree-port.test.mjs",
           "docs/data/roundtrip-layer1.json",
           "review/scripts/gen-m3e-family-config.mjs",
-          "review/src/M3e/Review/Families.elm"
+          "review/src/M3e/Review/Families.elm",
+          "PACKAGES-MOVED.md"
         ],
-        "authorizedExtraPrefixes": ["elm-m3e-families/"],
+        "authorizedExtraPrefixes": ["elm-m3e-components/"],
         "$notes": "Full per-path reasoning for every allowlist entry above (why each is authorized-absent or authorized-extra) lives in docs/copy-fidelity-notes.md#elm-m3e — moved there verbatim from this package's retired tools/copy-fidelity-elm-m3e.sh so the institutional memory survives the consolidation."
       }
+    },
+    "$comment_elm_m3e_split_siblings": "The six committed split/generator siblings materialized by explosion Task 2 (spec 2026-08-20-package-explosion-design.md §3.4 tree). core/elements/build/facts come from `elm-cem split --out=..` (elm-m3e/package.json `split`); icons/components from gen-icon-module/gen-family-package (slots.json _iconModule/_families dir → ../elm-m3e-{icons,components}). No copyFidelity block yet: OQ-6 (publishing / GitHub-mirror wiring) is out of scope for Task 2 — these have no published jackhp95/* mirror snapshot to compare against yet, same as elm-typed-html/elm-shoelace. Add a copyFidelity block per package when its mirror is first published (the immediate-next-priority per OQ-6).",
+    "elm-m3e-core": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-core",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-m3e-elements": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-elements",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-m3e-build": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-build",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-m3e-facts": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-facts",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-m3e-icons": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-icons",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-m3e-components": {
+      "srcDir": "brands/m3e/generated/package/elm-m3e-components",
+      "mirror": { "auditedExclusions": false }
     },
     "elm-cem-compose": {
       "srcDir": "pipeline/elm-cem-compose",
@@ -102,7 +130,7 @@
       "srcDir": "brands/html/generated/package/elm-typed-html",
       "mirror": { "auditedExclusions": false }
     },
-    "$comment_elm_typed_html_split_siblings": "The three committed split siblings materialized by explosion Task 4 (facts/core/elements). html is a home-only brand (own=[]) so no build/components tier is derivable \u2014 3 tiers is the real ceiling. Emitted by `elm-cem split --out=..` from elm-typed-html/packages.json. Unlike m3e's split, the TypedHtml barrel lives in the ELEMENTS tier (home Component modules fuse types+surface, so the barrel has a hard elements dependency; barrel-in-core would need a cross-brand home-emitter decoupling out of Task 4 scope \u2014 see elm-typed-html/packages.json $scopeNote). No copyFidelity block yet: no published jackhp95/* mirror snapshot to compare against (same as elm-typed-html/elm-shoelace, OQ-6).",
+    "$comment_elm_typed_html_split_siblings": "The three committed split siblings materialized by explosion Task 4 (facts/core/elements). html is a home-only brand (own=[]) so no build/components tier is derivable — 3 tiers is the real ceiling. Emitted by `elm-cem split --out=..` from elm-typed-html/packages.json. Unlike m3e's split, the TypedHtml barrel lives in the ELEMENTS tier (home Component modules fuse types+surface, so the barrel has a hard elements dependency; barrel-in-core would need a cross-brand home-emitter decoupling out of Task 4 scope — see elm-typed-html/packages.json $scopeNote). No copyFidelity block yet: no published jackhp95/* mirror snapshot to compare against (same as elm-typed-html/elm-shoelace, OQ-6).",
     "elm-typed-html-core": {
       "srcDir": "brands/html/generated/package/elm-typed-html-core",
       "mirror": { "auditedExclusions": false }

@@ -1,8 +1,8 @@
 {
   "key": "m3e",
   "namespace": "M3e",
-  "package": "jackhp95/elm-m3e",
-  "repo": "jackhp95/elm-m3e",
+  "package": "jackhp95/elm-m3e-core",
+  "repo": "jackhp95/elm-m3e-core",
   "webPackage": "@m3e/web",
   "consumerPackages": [
     {
@@ -11,7 +11,32 @@
       "moduleRoots": ["TypedHtml"]
     },
     {
-      "package": "jackhp95/elm-m3e",
+      "package": "jackhp95/elm-m3e-elements",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e.Component"]
+    },
+    {
+      "package": "jackhp95/elm-m3e-build",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e.Build"]
+    },
+    {
+      "package": "jackhp95/elm-m3e-components",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e.Family"]
+    },
+    {
+      "package": "jackhp95/elm-m3e-icons",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e.Icon"]
+    },
+    {
+      "package": "jackhp95/elm-m3e-facts",
+      "range": "1.0.0 <= v < 2.0.0",
+      "moduleRoots": ["M3e.Review.Facts"]
+    },
+    {
+      "package": "jackhp95/elm-m3e-core",
       "range": "1.0.0 <= v < 2.0.0",
       "moduleRoots": ["M3e"]
     },
