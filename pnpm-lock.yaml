@@ -121,6 +121,18 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
+  brands/m3e/generated/package/elm-m3e-build: {}
+
+  brands/m3e/generated/package/elm-m3e-components: {}
+
+  brands/m3e/generated/package/elm-m3e-core: {}
+
+  brands/m3e/generated/package/elm-m3e-elements: {}
+
+  brands/m3e/generated/package/elm-m3e-facts: {}
+
+  brands/m3e/generated/package/elm-m3e-icons: {}
+
   brands/m3e/generated/style/elm-m3e-tailwind:
     dependencies:
       elm-cem-tailwind:
