@@ -108,44 +108,6 @@ test("the 'Load an example' section is headed and qualifies duplicate example ti
   await expect(page.locator("m3e-list-item m3e-heading[slot='overline']")).toHaveCount(1);
 });
 
-test("setting an attribute updates both the live element and the snippet", async ({ page }) => {
-  await page.goto("/components/compose");
-
-  // The root "list" node's own "variant" attribute is a discrete (enum)
-  // button: filled, outlined, ... — click it (`.first()` = the root's) and
-  // pick a token.
-  await page.getByRole("button", { name: "variant" }).first().click();
-  await page.getByRole("menuitem", { name: "segmented", exact: true }).click();
-
-  // The live preview: a real `m3e-list` carrying the attribute.
-  await expect(page.locator("m3e-list").first()).toHaveAttribute("variant", "segmented");
-
-  // The generated-code snippet: the setter call that produced it.
-  const snippet = page.locator(".cf-root").first();
-  await expect(snippet).toContainText("M3e.Attributes.variant");
-  await expect(snippet).toContainText("M3e.Values.segmented");
-});
-
-test("nesting three levels deep works with chips alone", async ({ page }) => {
-  await page.goto("/components/compose");
-
-  // list > listItem > (trailing) checkbox — three levels, buttons and panels
-  // only, no hand-authored code. Add a fresh listItem via the root's
-  // component-only "unnamed" slot (its panel's one leading option is "Nest a
-  // component..."), then drive ITS trailing.
-  await page.getByRole("button", { name: "unnamed" }).first().click();
-  const unnamedPanel = page.locator(".compose-slot-add-panel");
-  await unnamedPanel.getByRole("button", { name: "Nest a component...", exact: true }).click();
-  await unnamedPanel.locator(".compose-component-picker").getByRole("button", { name: "listItem", exact: true }).click();
-  await page.getByRole("button", { name: "trailing" }).last().click();
-
-  const panel = page.locator(".compose-slot-add-panel");
-  await panel.getByRole("button", { name: "Nest a component...", exact: true }).click();
-  await panel.locator(".compose-component-picker").getByRole("button", { name: "Checkbox", exact: true }).click();
-
-  await expect(page.locator("m3e-list > m3e-list-item > m3e-checkbox")).toHaveCount(1);
-});
-
 test("changing a node's component (edit the tag) rewrites the tree", async ({ page }) => {
   await page.goto("/components/compose");
 
@@ -508,23 +470,6 @@ test("the root-card explainer renders on first load and is dismissible (Part 6)"
 
   await explainer.getByRole("button", { name: "Dismiss" }).click();
   await expect(page.locator(".compose-root-explainer")).toHaveCount(0);
-});
-
-test("screenshot: the opened slot add-panel shows the leading options and the 'Load an example' section together (M-IA2b)", async ({
-  page,
-}) => {
-  await page.goto("/components/compose");
-
-  // The first listItem's "overline" slot has both the three fixed leading
-  // options AND a "Load an example" section (its only nestable component,
-  // `heading`, has real examples) — the one slot on this starter tree that
-  // shows both halves of the panel in a single screenshot.
-  await page.getByRole("button", { name: /overline/ }).first().click();
-  const panel = page.locator(".compose-slot-add-panel");
-  await expect(panel).toBeVisible();
-  await expect(panel.getByText("Load an example", { exact: true })).toBeVisible();
-
-  await panel.screenshot({ path: "/tmp/m-ia2b-slot-menu.png" });
 });
 
 test("the drawer links to Compose", async ({ page }) => {

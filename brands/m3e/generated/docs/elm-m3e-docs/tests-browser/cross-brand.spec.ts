@@ -60,15 +60,11 @@ test("a native wrapper lands in an m3e slot and its children upgrade", async ({
   expect(box, "the trailing wrapper has no layout box").not.toBeNull();
   expect(box!.width).toBeGreaterThan(0);
   expect(box!.height).toBeGreaterThan(0);
-});
 
-test("the guide documents the one-way limit", async ({ page }) => {
-  await page.goto("/guide/seams");
-  await expect(page.locator("#docs-app-bar")).toBeVisible();
-
-  // The reverse direction is a designed limit, and the guide has to say so —
-  // otherwise the next reader re-derives it from a type error. (It already has
-  // been re-derived twice.)
+  // The reverse direction is a designed limit, and the guide (this same
+  // /guide/seams page) has to say so — otherwise the next reader re-derives it
+  // from a type error (it already has been, twice). Folded in from a former
+  // standalone test that navigated /guide/seams a second time just for this.
   await expect(
     page.getByText("The other direction is a designed limit"),
   ).toBeVisible();

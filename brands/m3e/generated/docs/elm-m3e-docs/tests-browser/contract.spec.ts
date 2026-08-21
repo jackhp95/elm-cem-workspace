@@ -62,18 +62,13 @@ test.describe("F7 — toggle controls render bare (no self-wrapped m3e-form-fiel
       const upgraded = await sw.evaluate((el) => !!el.shadowRoot);
       expect(upgraded, "m3e-switch must be upgraded").toBe(true);
     }
-  });
 
-  test("the bare switch is exposed to the a11y tree as role=switch", async ({
-    page,
-  }) => {
-    await page.goto("/components/switch");
-    await waitDefined(page, "m3e-switch");
-    // The shadow control exposes role=switch — an accessibility-tree fact
-    // invisible to Test.Html (which sees only the light-DOM <m3e-switch>).
-    const switches = page.getByRole("switch");
-    await expect(switches.first()).toBeVisible();
-    expect(await switches.count()).toBeGreaterThan(0);
+    // a11y tree: the shadow control also exposes role=switch — a fact invisible
+    // to Test.Html (which sees only the light-DOM <m3e-switch>). Folded in from a
+    // former standalone test that re-navigated /components/switch just for this.
+    const byRole = page.getByRole("switch");
+    await expect(byRole.first()).toBeVisible();
+    expect(await byRole.count()).toBeGreaterThan(0);
   });
 });
 

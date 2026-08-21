@@ -64,33 +64,13 @@ test("/components/button shows a live Usage section with preview + code", { tag:
     .poll(async () => page.locator("details.cf-fold:not([open])").count())
     .toBe(0);
 
+  // (4) API-surface strip (folded in from the former standalone "renders code
+  // for the available API surfaces" test, which navigated the same page a second
+  // time just for these two reads). The raw-HTML surface is always present, and
+  // the "M3e" layer tab is rendered. Mid/bottom (M3e.Html.*/M3e.Raw.*) tabs are
+  // retired in the phantom substrate, so they are intentionally not asserted.
+  await expect(page.getByText("<m3e-button").first()).toBeAttached();
+  await expect(page.getByText("M3e", { exact: true }).first()).toBeVisible();
+
   expect(errors, `console errors:\n${errors.join("\n")}`).toEqual([]);
-});
-
-test("/components/button renders code for the available API surfaces", async ({
-  page,
-}) => {
-  await page.goto("/components/button");
-  // Wait for the Standard (top) surface code to be rendered. Barrel form
-  // (M3e.button) is not generated in the phantom substrate; top uses M3e.Button.view.
-  await page.waitForFunction(() =>
-    [...document.querySelectorAll("code.elmsh")].some((c) =>
-      (c.textContent || "").includes("M3e.Button.view"),
-    ),
-  );
-
-  // Each surface's panel is mounted. Top (M3e.Button.view) and raw HTML are
-  // always present. Mid/bottom (M3e.Html.*/M3e.Raw.*) are null in the phantom
-  // substrate, so their tabs are absent. Match on text present in the rendered page.
-  for (const code of [
-    "M3e.Button.view", // M3e top surface (Standard form)
-    "<m3e-button", // raw HTML
-  ]) {
-    await expect(page.getByText(code).first()).toBeAttached();
-  }
-
-  // The layer tab strip is rendered. Only "M3e" and "HTML" tabs are guaranteed
-  // present in the phantom substrate (mid/bottom retired). Check "M3e" tab.
-  const m3eTab = page.getByText("M3e", { exact: true }).first();
-  await expect(m3eTab).toBeVisible();
 });

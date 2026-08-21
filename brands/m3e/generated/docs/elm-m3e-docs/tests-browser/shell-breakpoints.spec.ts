@@ -134,7 +134,13 @@ test("on mobile, opening the TOC closes the tree and the hamburger reopens it on
  * 144-208px of content at a 960-1024px viewport -- one word per line, code
  * blocks clipped.
  */
-for (const width of [960, 1024, 1280, 1440]) {
+// Content width is monotonic in viewport width (chrome is fixed, so every extra
+// viewport px is content px), so the readability floor only needs the two
+// endpoints: 960 (the worst measured case — Guide's longest labels, ~542px
+// content, closest to the 500px floor) and 1440 (widest). The interior widths
+// (1024/1280) are guaranteed >=500px by monotonicity and were dropped to halve
+// this loop's cost.
+for (const width of [960, 1440]) {
   test(`the content column stays readable at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/components/button");
