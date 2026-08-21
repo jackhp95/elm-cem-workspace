@@ -5,7 +5,10 @@ plan assumes its findings). **Templates followed:** `docs/plans/2026-08-20-packa
 and `docs/plans/2026-08-19-repo-shape-v2-wave1-plan.md`.
 
 **This plan is NOT executed by its author.** It is handed to a fresh execution agent after Jack reviews
-it. **Two Open Questions (OQ-1, OQ-2) GATE Task 8** — do not start Task 8 until Jack answers them.
+it. **All three open questions are RESOLVED (Jack, 2026-08-20)** — no task is gated:
+OQ-1 = reverse DECISION 1 (keep the six NEW-naming keys); OQ-2 = **land the module-namespace rename now**
+(added scope — Task 7, highest blast radius); OQ-5 = html stays 3 tiers this pass, 5 is the confirmed
+future target pending the (out-of-scope) DAG rework. See design §11.
 
 **Expected model tier (informational):** planning tier already spent; execution/orchestration →
 opus at medium, with a sonnet worker for the mechanical regeneration/verification steps.
@@ -20,8 +23,10 @@ JS→Elm generator port) plus schema, Figma SLOT support, and security hardening
 Side A's outputs must be regenerated *from*. **Side A's intent is re-derived on top as config + one
 emitter edit + re-running the materialization** — its 719 committed generated files are **regenerated
 fresh**, never textually lifted (design §1, §4.3–4.4). The naming rename is Side A's honored, confirmed
-intent and *lands*; the only genuinely human-owned decision is how Side B's Brand Facts schema responds
-to it (Task 8, gated).
+intent and *lands*. Jack has also pulled the **module-namespace rename** into scope (OQ-2) — the
+explosion plan's deliberately-last, unbuilt "Task 5", highest blast radius — sequenced here onto a green
+tree as Task 7. With OQ-1 resolved (reverse DECISION 1), the schema task (Task 9) is a straightforward
+confirmation, no longer gated.
 
 ### The crux, in one line (design §4)
 
@@ -46,7 +51,12 @@ line + role. The rename map (design §2.1): `html→core`, `components(tag)→el
   docmeta enrichment; §4.4 elm-format drift trap).
 - **D-R3 — commit only from a clean worktree.** The Side B lineage authors commits as
   `Test <test@example.com>` (design §9). Before any commit, verify identity (Task 0 Step 0.3).
-- **D-R4 — schema is gated.** Task 8 waits on OQ-1/OQ-2.
+- **D-R4 — namespaces stay OLD through Task 6, flip in Task 7.** Materialization (Tasks 3–6) runs with the
+  *current* namespaces (`M3e.Component.*` / `M3e.Family.*`); the atomic namespace rename lands **last, on a
+  green tree** (Task 7), matching the explosion plan's own sequencing for its highest-blast-radius change.
+- **D-R5 — namespace rename is a single atomic pass.** Never sequential `Component→Element` then
+  `Family→Component` (the second would recapture freshly-written `Element` tokens). Build the full old→new
+  map, apply once (design §7.3).
 
 ---
 
@@ -129,7 +139,7 @@ emitter needs a small fix — escalate per the blocked protocol before proceedin
       re-created.
 - [ ] **3.3 Assert names.** `elm-m3e-components/elm.json` `name` == `"jackhp95/elm-m3e-components"`;
       `elm-m3e-icons/elm.json` `name` == `"jackhp95/elm-m3e-icons"`; family module namespace still
-      `M3e.Family.*` (namespace rename is deferred — design §2.1, §7.3).
+      `M3e.Family.*` at this stage (the namespace rename lands later, on the green tree — Task 7 / D-R4).
 - [ ] **3.4 Byte-compare against Side A's INTENT, accounting for the two known deltas (design §4.3–4.4).**
       elm-format the freshly emitted `elm-m3e-icons`/`elm-m3e-components` trees the same way the committed
       trees were, then `diff -r` against Side A's committed siblings
@@ -188,7 +198,8 @@ materialize `core/elements/build/facts` from Side B's (enriched) monolith `src/`
 - [ ] **4.14** Repoint the relative `source-directories` that reached into the flat monolith `src/` (e.g.
       `brands/m3e/generated/docs/elm-m3e-docs/elm.json` — the docs samples) to the new siblings, matching
       Side A's Task 3 edits (`git show exec/explosion-task4:…` for each).
-- [ ] **4.15** Retire the monolith published identity (OQ-5 confirmed on Side A): stop publishing
+- [ ] **4.15** Retire the monolith published identity (confirmed on Side A — *explosion* design OQ-5, not
+      this doc's OQ-5): stop publishing
       `jackhp95/elm-m3e`; add `PACKAGES-MOVED.md` (Side A authored it — copy from
       `git show exec/explosion-task4:brands/m3e/generated/package/elm-m3e/PACKAGES-MOVED.md`) and pin it
       from the package README/`VISION.md` as Side A did.
@@ -200,6 +211,14 @@ materialize `core/elements/build/facts` from Side B's (enriched) monolith `src/`
 
 Side B did not touch elm-typed-html generation, and html uses the unchanged `elm-cem split` (design §2.4).
 This task is a straight re-application of Side A's Task 4.
+
+> **OQ-5 resolved (record inline — do NOT build 5 tiers here):** 3 tiers (facts/core/elements) is the
+> ceiling **for this reconciliation pass** because html is a home-only brand and no Build/components tier
+> is derivable by regeneration today. **5 tiers (facts/core/elements/components/builders) is the confirmed
+> REAL future target** — reachable only once the separate **DAG rework** (linear IR → Core → Elements →
+> Components → Builders) lands, which is out of scope and not yet built. Attempting 5 now would require
+> that rework. Record the 5-tier target in the html `packages.json` `$scopeNote` / migration note so 3 is
+> never mistaken as permanent (design §2.4, §11-OQ5).
 
 - [ ] **5.1** Add `brands/html/generated/package/elm-typed-html/packages.json` (3 packages
       `elm-typed-html-{facts,core,elements}`) — copy verbatim from
@@ -237,75 +256,152 @@ The true conflict surface (design §5). Handle each explicitly.
       **both** the 9 new sibling steps **and** the `12 file(s)` count (design §5.3).
 - [ ] **6.5 Commit** Task 6: `chore(reconcile): reconcile family.json, shape gate, copy-fidelity notes, gate fixture`.
 
+> **MILESTONE — green reconciled tree, NEW package names, OLD namespaces.** After Task 6, run
+> `GATE_ALL_CONCURRENCY=1 node tools/gate-all.mjs` and confirm green. This is the exact state Side A
+> reached (package rename fully re-derived), now on Side B's base. It is the green tree Task 7's
+> highest-blast-radius namespace rename lands on (D-R4).
+
 ---
 
-## Task 7: Re-baseline the Face-A generator bundle + phantom re-bless
+## Task 7: Module-namespace rename (OQ-2 — the explosion plan's deferred "Task 5")
 
-Both sides changed the generator; the reconciled generator is neither side's baseline (design §6, memory
+**Real added scope (Jack, OQ-2).** Rename `M3e.Component.*`→`M3e.Element.*`, `M3e.Family.*`→`M3e.Component.*`,
+`TypedHtml.Component.*`→`TypedHtml.Element.*` (core/`Build`/icon/facts namespaces stay). This is the
+highest-blast-radius change in the reconciliation — every generated module + **~181 non-generated consumer
+`.elm` files** + review-rule logic. It lands **last, on the green tree** (Task 6 milestone) so any compile
+break is unambiguously the rename's fault. **Model tier (informational):** opus / high (design-bearing +
+wide edit).
+
+**D-R5 (load-bearing) — single atomic pass.** Build the full old→new token map and apply it in ONE
+traversal. A sequential `Component→Element` then `Family→Component` would re-capture the freshly-written
+`Element` tokens and corrupt the result. **Line numbers below are re-verified on the reconciliation base
+(origin/main) — the explosion plan's citations (e.g. `Component.elm:646`) are stale because Side B rewrote
+`Component.elm`.**
+
+### 7a. Drive the generated side from config + emitters (so regeneration emits new namespaces)
+
+- [ ] **7.1 First concrete action.** Edit `brands/m3e/inputs/cem/config/slots.json` `_families.namespace`
+      `"Family"` → `"Component"` (decoded at `Generate/Config.elm:236` `field "namespace"`, consumed by
+      `Generate/Phantom/Emit/FamilyPackage.elm` to build `<lib>.<namespace>.<Family>` paths — the mechanism
+      survived the JS→Elm port). Then edit the per-element emitter in
+      `pipeline/elm-cem/codegen/Generate/Phantom/Emit/Component.elm`: the `"Component"` path segment at
+      **`:824`** (`file [ core.lib, "Component", comp.name ]`) and the module line at **`:827`**
+      (`"module " ++ core.lib ++ ".Component." ++ comp.name`) → `"Element"`. **Do NOT touch** the
+      `Internal.Types` emission (`:278`, `:312` — no `Component` path segment) or any `M3e.Build` emission
+      (Build namespace stays). Also grep the emitter for any other `"Component"` path segment (e.g. a
+      `Home.elm` file-path builder) and flip those too: `rg -n '"Component"' pipeline/elm-cem/codegen/Generate/`.
+- [ ] **7.2 Flip the barrel emitter's imports.** The barrel producer (`Generate/Phantom/Emit/General.elm`
+      / the `M3e.elm` barrel emitter) imports `M3e.Component.*` — retarget to `M3e.Element.*`. Locate:
+      `rg -n 'Component' pipeline/elm-cem/codegen/Generate/Phantom/Emit/General.elm`. (This pairs with the
+      barrel-in-core edit from Task 2/4b — the barrel now lives in `core` and must reference `M3e.Element.*`.)
+- [ ] **7.3 Flip the `elements` bucket prefix.** `brands/m3e/generated/package/elm-m3e/packages.json:99`
+      `"prefix": "M3e.Component."` → `"M3e.Element."`. Leave `M3e.Build`/`M3e.Build.` (`:122`/`:125`)
+      untouched. (The family package's namespace is now `Component`, sourced from slots.json 7.1.)
+- [ ] **7.4 GO/NO-GO GATE — regenerate + re-materialize + inspect headers.** Re-run the m3e generator and
+      split (`pnpm --filter elm-m3e run gen:src && pnpm --filter elm-m3e run split`), re-materialize +
+      elm-format the siblings, and re-run the html gen/split (7.7). **Confirm:** emitted per-element module
+      headers say `module M3e.Element.<C>` (e.g. `elm-m3e-elements/src/M3e/Element/Button.elm` →
+      `module M3e.Element.Button`); family modules say `module M3e.Component.<F>` under
+      `elm-m3e-components/src/M3e/Component/*.elm`. If headers still say `M3e.Component`/`M3e.Family` for
+      the wrong tier, STOP — the emitter edit is incomplete (do not proceed to the consumer remap).
+
+### 7b. Consumer migration (the ~181-file atomic remap)
+
+- [ ] **7.5 Ship the migration script** `brands/m3e/generated/package/elm-m3e/scripts/rename-namespaces.mjs`
+      — an **atomic single-pass** remap over a target dir's `.elm` files applying the full map at once
+      (D-R5). Reference it from the `PACKAGES-MOVED.md` migration note + README so external consumers can
+      run it. (`elmq`/`elm-rust-lsp` are viable rename-aware engines if preferred over text remap — but the
+      map must still apply atomically.)
+- [ ] **7.6 Apply it to in-repo non-generated consumers.** Run the script over the docs app
+      (`brands/m3e/generated/docs/elm-m3e-docs/app/**`, `src/**`, `samples/**`) and any other non-generated
+      `.elm` consumer. (Scope check: `git grep -lE 'M3e\.Component\.|M3e\.Family\.' -- '*.elm' | grep -vE
+      'generated/package/[^/]+/src/'` — ~181 files on the base.)
+- [ ] **7.7 html half.** Flip the html emitter's `TypedHtml.Component.*` path segment → `TypedHtml.Element.*`
+      (same emitter family), regenerate + re-split the 3 html siblings, and run the migration remap over
+      html's non-generated consumers (`brands/html/generated/package/elm-typed-html/verify/**` fixtures).
+- [ ] **7.8 Hand-edit the review-rule LOGIC (NOT a text remap).**
+      `pipeline/elm-review-cem/src/NoFamilyMemberDrift.elm:26-27` hardcodes
+      `componentNamespace = [ "M3e", "Component" ]` / `familyNamespace = [ "M3e", "Family" ]` — flip to
+      `[ "M3e", "Element" ]` / `[ "M3e", "Component" ]` by hand. Also update `review/src/ReviewConfig.elm`
+      namespace lists and any elm-review-cem test fixtures whose *expectations* hardcode the old namespaces
+      (`rg -n 'M3e","(Component|Family)"' pipeline/elm-review-cem/`).
+
+### 7c. Repoint + verify + commit
+
+- [ ] **7.9 Repoint stragglers.** Any docs `source-directories`, `tools/family.json` `authorizedExtra*`, or
+      migration notes naming `M3e.Component`/`M3e.Family` module paths → new namespaces.
+- [ ] **7.10 Re-grep — every remaining hit is a miss.** `rg -n 'M3e\.Component\.|M3e\.Family\.|TypedHtml\.Component\.'`
+      repo-wide (exclude `dist/` and migration-note prose). The only surviving `M3e.Component.` should be
+      the *family* modules (intended) and the review rule's *new* `["M3e","Component"]` (intended). No
+      `M3e.Family.` or `TypedHtml.Component.` should remain outside a migration note.
+- [ ] **7.11 GATE.** `GATE_ALL_CONCURRENCY=1 node tools/gate-all.mjs` green — the whole tree recompiles
+      under the new namespaces and the elm-review-cem drift rules pass. **Commit atomically** (this is the
+      one release that flips namespaces): `refactor(reconcile): atomic module-namespace rename (Component→Element, Family→Component, TypedHtml.Component→Element)`.
+
+---
+
+## Task 8: Re-baseline the Face-A generator bundle + phantom re-bless
+
+Both sides changed the generator, **and Task 7 changed it again** (namespace emission) — so the bundle
+re-baseline must run **after** Task 7 to capture the final emitter output (design §6, memory
 `generator-change-d046-rebaseline`).
 
-- [ ] **7.1 Re-baseline the Face-A bundle.** Regenerate `tools/snapshots/elm-cem-generator.bundle`
-      (+ `tools/snapshot-refs.json`) against the reconciled generator+config, via the repo's bundle-regen
-      path. The `workspace: ab-elm-cem (Face A byte-identity)` and `ab-elm-m3e-split` gates must then pass.
-- [ ] **7.2 Re-bless phantom expectations** if the generator change moved any
-      `pipeline/elm-cem/tests/phantom/expected/**` output (both sides touched
-      `Generate/Phantom/Emit/`). Regenerate + verify the phantom golden fixtures.
-- [ ] **7.3 Commit** Task 7: `chore(reconcile): re-baseline Face-A generator bundle + phantom expectations`.
+- [ ] **8.1 Re-baseline the Face-A bundle.** Regenerate `tools/snapshots/elm-cem-generator.bundle`
+      (+ `tools/snapshot-refs.json`) against the final reconciled generator+config (post-namespace-rename),
+      via the repo's bundle-regen path. The `workspace: ab-elm-cem (Face A byte-identity)` and
+      `ab-elm-m3e-split` gates must then pass.
+- [ ] **8.2 Re-bless phantom expectations** if the generator changes moved any
+      `pipeline/elm-cem/tests/phantom/expected/**` output (both sides + the namespace rename touched
+      `Generate/Phantom/Emit/`). Regenerate + verify the phantom golden fixtures — note the phantom
+      fixtures' own module namespaces may shift if they exercise `Component`/`Family` paths.
+- [ ] **8.3 Commit** Task 8: `chore(reconcile): re-baseline Face-A generator bundle + phantom expectations`.
 
 ---
 
-## Task 8: Brand Facts schema reconciliation — **GATED on OQ-1 + OQ-2** (design §7, §11)
+## Task 9: Brand Facts schema — confirm satisfied, record DECISION 1 reversal (OQ-1)
 
-**DO NOT START until Jack answers OQ-1 and OQ-2.** Written parametrically so it is executable under
-either resolution.
+**No longer gated.** OQ-1 resolved = reverse DECISION 1 (keep the six NEW-naming keys). With Task 7 landed,
+the schema's `module` strings (`M3e.Element.*` / `M3e.Component.*`) are also real, so the schema
+(`docs/facts-bundle/schema.json`) is satisfied *fully* as-written — no edit to the schema's required keys.
 
-- [ ] **8.0 Confirm the resolution.** Read Jack's answer to OQ-1 (reverse DECISION 1?) and OQ-2 (namespace
-      scope). Record the chosen path at the top of the commit message.
-
-**If OQ-1 = "keep the six NEW-naming keys" (recommended, design §7.2):**
-- [ ] **8.1** Do **not** apply DECISION 1's (1a) backward retarget. Confirm
-      `docs/facts-bundle/schema.json:819` still requires `["core","elements","build","components","icons",
-      "facts"]` (it already does on the base). Confirm the phase-2 producer plan
-      (`docs/superpowers/plans/2026-08-20-brand-facts-phase2-targets-elm.md`) is updated to note the
-      premise flip (Side A landed; effectively option 1b).
-- [ ] **8.2 (per OQ-2 sub-answer):**
-      - **OQ-2(a) — land the namespace rename:** execute Side A's deferred namespace pass
-        (`M3e.Component.*`→`M3e.Element.*` per-element, `M3e.Family.*`→`M3e.Component.*` families) so the
-        schema's `module` strings are fully satisfied. **This is substantial, previously-unbuilt work
-        (Side A's "Task 5") — scope it as its own sub-plan if chosen; it touches every generated module +
-        every consumer reference.** Anti-footgun applies to namespaces too.
-      - **OQ-2(b) — partial retarget:** keep the six package **keys** but edit the schema's per-component
-        `brandFactsElmComponentTargets` `module` illustrations to the *current* `M3e.Component.*` /
-        `M3e.Family.*` namespaces (+ its test fixtures/validator). Smaller; defers the namespace rename.
-
-**If OQ-1 = "apply DECISION 1 (1a), keep schema on OLD 5-package naming":**
-- [ ] **8.1-alt** This conflicts with landing Side A's rename (Tasks 1–6). **Surface the contradiction to
-      Jack before proceeding** — you cannot both land the NEW package names *and* retarget the schema to
-      OLD names describing them. (This branch of the plan should not be reachable if Side A's rename is
-      honored; included only for completeness.)
-
-- [ ] **8.3 Verify** `elm-cem` schema tests + `validateBrandFacts` pass under the chosen shape.
-- [ ] **8.4 Commit** Task 8: `feat(reconcile): resolve Brand Facts schema per DECISION-1 premise flip (OQ-1/OQ-2)`.
+- [ ] **9.1 Confirm the schema is unchanged and correct.** Verify `docs/facts-bundle/schema.json:819`
+      still requires `["core","elements","build","components","icons","facts"]` and the per-component
+      `brandFactsElmComponentTargets` still illustrates `M3e.Element.*` — both now match the reconciled
+      reality. **Do NOT apply DECISION 1's (1a) backward walk.**
+- [ ] **9.2 Record the reversal.** Update `docs/superpowers/plans/2026-08-20-brand-facts-phase2-targets-elm.md`:
+      annotate the "RESOLVED (1a)" block to note that DECISION 1's premise ("the elm-m3e package rework has
+      not landed") is **falsified by this reconciliation** — the rework (package rename + namespace rename)
+      has now landed, so DECISION 1 is **reversed** and the schema keeps its six NEW keys. This prevents a
+      future reader from re-applying the stale walk-back.
+- [ ] **9.3 Verify** `elm-cem` schema tests + `validateBrandFacts` pass against the reconciled tree (new
+      package keys + new namespaces). If a phase-2 producer run is in scope, confirm it emits
+      `targets.elm.packages` with the six NEW keys and `M3e.Element.*`/`M3e.Component.*` module strings.
+- [ ] **9.4 Commit** Task 9: `docs(reconcile): confirm Brand Facts schema; record DECISION 1 reversal (OQ-1)`.
 
 ---
 
-## Task 9: Full reconciled gate + final verification
+## Task 10: Full reconciled gate + final verification
 
-- [ ] **9.1 Run the full gate serially:** `GATE_ALL_CONCURRENCY=1 node tools/gate-all.mjs`, save to
+- [ ] **10.1 Run the full gate serially:** `GATE_ALL_CONCURRENCY=1 node tools/gate-all.mjs`, save to
       `/tmp/reconcile-final-gate.log`. It must be **green**, exercising: the new sibling-package
       `check` steps (`elm-m3e-{core,elements,build,components,icons,facts}: check`,
       `elm-typed-html-{core,elements,facts}: check`); `verify-split`; `check-m3e-5pkg` (NEW names);
       `ab-elm-cem` + `ab-elm-m3e-split` byte-identity (post-rebaseline); `tools/*.test.mjs (12 file(s))`;
-      and all Side B security-hardening + Figma tests.
-- [ ] **9.2 Diff the two gate logs.** `diff /tmp/reconcile-baseline-gate.log /tmp/reconcile-final-gate.log`
+      the elm-review-cem namespace-drift rules **under the new namespaces**; and all Side B
+      security-hardening + Figma tests.
+- [ ] **10.2 Diff the two gate logs.** `diff /tmp/reconcile-baseline-gate.log /tmp/reconcile-final-gate.log`
       — every new/changed step must be an *addition* (new siblings) or an *expected* change; no
       regression from the Side B baseline.
-- [ ] **9.3 Re-run the identity guard (Step 0.3)** before the final commit.
-- [ ] **9.4 Confirm `git status` clean** and the branch contains exactly the reconciliation commits atop
+- [ ] **10.3 Final namespace sweep.** `rg -n 'M3e\.Family\.|TypedHtml\.Component\.'` repo-wide (exclude
+      `dist/` + migration notes) returns **nothing** outside migration prose; the only `M3e.Component.`
+      hits are the family modules + the review rule's new list (Task 7.10).
+- [ ] **10.4 Re-run the identity guard (Step 0.3)** before the final commit.
+- [ ] **10.5 Confirm `git status` clean** and the branch contains exactly the reconciliation commits atop
       `origin/main` (`git log --oneline origin/main..HEAD`).
-- [ ] **9.5 Final report** to Jack: the Task-3 crux-gate result (did the generator compatibility hold?),
-      the final gate green evidence (paste the tail), the schema resolution taken, and any residual OQ-3
-      (mirror republish) / OQ-5 (html tier doc) follow-ons.
+- [ ] **10.6 Final report** to Jack: the Task-3 crux-gate result (did the generator compatibility hold?),
+      the Task-7 namespace-rename outcome (files remapped, gate green), the final gate green evidence
+      (paste the tail), and the residual OQ-3 (mirror republish) follow-on (now more overdue — the
+      namespace rename shifts the mirror further from the published snapshot).
 
 ---
 
@@ -313,19 +409,26 @@ either resolution.
 
 ```
 Task 0 ─▶ Task 1 ─▶ Task 2 ─▶ Task 3 (CRUX GATE) ─▶ Task 4 ─┐
-                                                            ├─▶ Task 6 ─▶ Task 7 ─▶ Task 9
+                                                            ├─▶ Task 6 ─▶ [GREEN] ─▶ Task 7 (namespace) ─▶ Task 8 (bundle) ─▶ Task 9 (schema) ─▶ Task 10 (final gate)
 Task 5 (html, independent after Task 0) ────────────────────┘
-Task 8 (schema) — GATED on OQ-1/OQ-2; can run any time after Task 4, before Task 9's final gate
 ```
 
 - Task 5 (html) is independent of Tasks 1–4 (Side B never touched html) and may run in parallel after
-  Task 0.
-- Task 3 is the hard gate: if it fails, everything downstream pauses pending an emitter fix.
-- Task 8 is human-gated and must land before Task 9's final gate (schema tests run in gate-all).
+  Task 0 — but its namespace half (`TypedHtml.Component.*`→`TypedHtml.Element.*`) is folded into Task 7.7,
+  so html must reach the green milestone before Task 7.
+- Task 3 is the first hard gate: if it fails, everything downstream pauses pending an emitter fix.
+- Task 7 is the second hard gate + highest blast radius: it lands ONLY on the green tree (Task 6 milestone),
+  in a single atomic remap pass (D-R5), and gates green before Task 8.
+- Task 8 (bundle) MUST follow Task 7 — the bundle must capture the post-rename emitter output.
+- Task 9 (schema) is no longer gated (OQ-1/OQ-2 resolved) — a confirmation + decision-reversal record.
 
 ## Task count / shape
 
-**10 tasks (0–9)**, ~45 checkboxed steps. Shape: 1 baseline/guard task, 1 crux-proof gate (Task 3, the
-consequential one), 4 materialization tasks (m3e config+regen, m3e split, html split, overlap-file
-reconcile), 1 generator-bundle re-baseline, 1 human-gated schema task, 1 final full-gate verification.
-The only non-mechanical task is Task 8 (gated on Jack's two Open Questions).
+**11 tasks (0–10)**, ~58 checkboxed steps — up from 10 tasks / ~45 steps, the growth entirely from Task 7
+(the namespace rename Jack pulled into scope, OQ-2). Shape: 1 baseline/guard task; 1 crux-proof gate
+(Task 3); 4 package-rename+materialization tasks (m3e config+regen, m3e split, html split, overlap-file
+reconcile) reaching a **green milestone**; **1 highest-blast-radius atomic namespace rename (Task 7 — the
+new work)**; 1 generator-bundle re-baseline (moved after the rename); 1 schema confirmation + DECISION 1
+reversal record (Task 9, un-gated); 1 final full-gate verification. The two hard gates are Task 3
+(generator compatibility) and Task 7 (namespace rename on a green tree). No task is human-gated anymore —
+all three open questions are resolved.

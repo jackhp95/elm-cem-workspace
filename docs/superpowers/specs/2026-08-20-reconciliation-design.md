@@ -60,20 +60,37 @@ common ancestor of both sides.
    (`core/elements/build/components/icons/facts`). The newest Side B commit (`5d609ba4`) records
    DECISION 1 = option (1a): retarget that schema *backward* to the old 5-package naming, explicitly on
    the premise that "the elm-m3e package rework … **has not landed**" (an unowned concurrent track, §8 of
-   that doc). **That unlanded rework is Side A.** Reconciliation falsifies DECISION 1's premise, which
-   makes reversing it (→ effectively option 1b, "the six-package shape is now real; produce against it")
-   the faithful both-sides outcome. Because DECISION 1 is a *recorded human decision*, reversing it is
-   the single biggest Open Question for Jack (§7, §11-OQ1). Evidence strongly favors reversal.
+   that doc). **That unlanded rework is Side A.** Reconciliation falsifies DECISION 1's premise.
+   **RESOLVED 2026-08-20 (Jack): reverse DECISION 1** — do NOT apply the (1a) backward walk; keep the six
+   NEW-naming keys (effectively option 1b, which DECISION 1 itself calls "correct per the schema-as-written").
+   (§7, OQ-1 resolved.)
 
-5. **Side B's security hardening (GIT_DIR/GIT_WORK_TREE scrubbing) is conflict-free to keep, and Side A
+5. **The module-namespace rename lands NOW, inside this reconciliation — it is real added scope (design §7.3, §11).**
+   RESOLVED 2026-08-20 (Jack, OQ-2): execute the namespace rename (`M3e.Component.*`→`M3e.Element.*`,
+   `M3e.Family.*`→`M3e.Component.*`, `TypedHtml.Component.*`→`TypedHtml.Element.*`) as part of this pass —
+   *not* deferred, *not* a partial schema-string retarget. This is the package-explosion plan's deliberately-last
+   "Task 5", flagged there as **highest blast radius**: it touches every generated module plus **181 non-generated
+   consumer `.elm` files** (docs app, elm-review-cem src/tests/fixtures, html verify) and carries an atomic-single-pass
+   ordering hazard (the `Family→Component` half would recapture freshly-written `Element` tokens). Landing it makes
+   the schema (finding 4) satisfied *fully* as-written — six NEW keys **and** `M3e.Element.*`/`M3e.Component.*`
+   module strings both real. Re-derived as a real, gate-verified task in the plan (Plan Task 7).
+
+6. **Side B's security hardening (GIT_DIR/GIT_WORK_TREE scrubbing) is conflict-free to keep, and Side A
    introduced no new exposure of that class.** None of Side A's changed scripts spawns a nested `git`
    subprocess; none of the scripts Side B hardened is touched by Side A. (§8.)
 
-6. **Both sides changed the shared Elm generator, so the Face-A generator snapshot bundle must be
-   re-baselined once — a known follow-on, not a conflict** (memory `generator-change-d046-rebaseline`).
-   (§6, §10.)
+7. **Both sides changed the shared Elm generator — and now so does the namespace rename (finding 5) — so
+   the Face-A generator snapshot bundle must be re-baselined once, *after* the namespace rename, a known
+   follow-on, not a conflict** (memory `generator-change-d046-rebaseline`). (§6, §10.)
 
-7. **The `Test <test@example.com>` authorship is not limited to the tip commit — it pervades the entire
+8. **html's tier ceiling for THIS pass stays 3, but 5 is the confirmed FUTURE target (OQ-5 resolved).**
+   RESOLVED 2026-08-20 (Jack): 5 tiers (facts/core/elements/components/builders) is the real long-term
+   target for html too, but only becomes architecturally reachable once the separate DAG rework (linear
+   IR → Core → Elements → Components → Builders) lands — which is **out of scope here and not yet landed**.
+   Today's home-only-brand finding (no Build tier derivable via regen) is still true *right now*, so this
+   reconciliation lands html at 3 tiers. Recorded so nobody later mistakes 3 as a permanent ceiling. (§2.4.)
+
+9. **The `Test <test@example.com>` authorship is not limited to the tip commit — it pervades the entire
    Side B lineage** at both author and committer level, across two rebase/replay passes. This worktree's
    git config is clean; the corruption lives in whatever process authors Side B. Informative for the Side
    B owner; out of scope to fix here. (§9.)
@@ -108,11 +125,14 @@ The **load-bearing inversion**: the *string* `elm-m3e-components` moves from the
 forbids any blanket find-replace of `elm-m3e-components` because the string carries two opposite meanings
 across the rename boundary.
 
-**Not yet done on Side A (deferred to an unbuilt Task 5):** the *module namespace* rename
-(`M3e.Component.*` → `M3e.Element.*` per-element, `M3e.Family.*` → `M3e.Component.*` families). On
-`exec/explosion-task4` the package **names** are inverted but the **namespaces** are still
-`M3e.Component.*` / `M3e.Family.*`. Package names and their module namespaces are therefore intentionally
-misaligned at Side A's landed state. This matters for the schema coupling (§7).
+**Not done on Side A, but IN SCOPE for this reconciliation (Jack, OQ-2 — see §7.3):** the *module
+namespace* rename (`M3e.Component.*` → `M3e.Element.*` per-element, `M3e.Family.*` → `M3e.Component.*`
+families, `TypedHtml.Component.*` → `TypedHtml.Element.*`). On `exec/explosion-task4` the package **names**
+are inverted but the **namespaces** are still `M3e.Component.*` / `M3e.Family.*` — Side A deliberately
+sequenced this rename last (its unbuilt "Task 5", flagged **highest blast radius**) and never reached it.
+Package names and module namespaces are therefore misaligned at Side A's landed state. **Jack has pulled
+this rename into the reconciliation** (Plan Task 7), which both aligns name⇄namespace and fully satisfies
+Side B's schema (§7).
 
 ### 2.2 The mechanisms Side A used (all unchanged infrastructure, consumed as-is)
 
@@ -139,12 +159,19 @@ elements}` + the `elm-typed-html/` shell.
 
 Configured in `brands/html/generated/package/elm-typed-html/packages.json` (3 packages: facts/core/
 elements). Its `$scopeNote` records that html is a *home-only* brand (`Emit.elm: own=[]`, all 16
-`TypedHtml.Component.*` are HOME modules), so **no Build or components tier is derivable — 3 is the real
-ceiling.** A key asymmetry vs m3e: the TypedHtml **barrel lives in the `-elements` tier, not `-core`**
-(home Component modules fuse types+surface, so the barrel has a hard elements dependency; barrel-in-core
-would need a cross-brand home-emitter decoupling that also touches `elm-typed-svg`, out of scope). This
-*contradicts* the design doc's earlier aspirational "5-tier ceiling" theory for html — Side A landed 3
-and the `$scopeNote` calls 3 the real ceiling. (Doc-vs-landed divergence; noted, not blocking.)
+`TypedHtml.Component.*` are HOME modules), so **no Build or components tier is derivable *by regeneration
+today* — 3 is the ceiling for this reconciliation pass.** A key asymmetry vs m3e: the TypedHtml **barrel
+lives in the `-elements` tier, not `-core`** (home Component modules fuse types+surface, so the barrel has
+a hard elements dependency; barrel-in-core would need a cross-brand home-emitter decoupling that also
+touches `elm-typed-svg`, out of scope).
+
+**OQ-5 resolved 2026-08-20 (Jack): 5 tiers (facts/core/elements/components/builders) is the confirmed
+REAL long-term target for html too — 3 is NOT a permanent limit.** It becomes architecturally reachable
+only once the separate **DAG rework** (a linear IR → Core → Elements → Components → Builders pipeline)
+lands, which is **not yet landed and out of scope for this reconciliation**. The design doc's earlier
+"5-tier ceiling" theory is therefore *not retired* — it is the future target; it is merely blocked on the
+DAG rework. This pass lands 3; the plan (Task 5) records the 5-tier future target inline so 3 is never
+mistaken as final.
 
 ### 2.5 Side A's non-generated logic footprint (the part that must re-derive onto Side B)
 
@@ -405,24 +432,50 @@ and it *has* landed on `exec/explosion-task4`. In the reconciled world:
   honors Side B's *schema design* (which correctly anticipated the six-package shape) and Side A's
   *delivery* of that shape. The two were designed for each other; they merely landed on separate branches.
 
-### 7.3 The residual namespace caveat (a real sequencing sub-question)
+> **RESOLVED 2026-08-20 (Jack, OQ-1): reverse DECISION 1 — keep the six NEW-naming keys, do NOT apply the
+> (1a) backward walk.** This is exactly the recommendation above (effectively option 1b). The executor must
+> update `docs/superpowers/plans/2026-08-20-brand-facts-phase2-targets-elm.md` to record that DECISION 1's
+> premise ("the rework has not landed") is falsified by this reconciliation and the decision is reversed —
+> so a future reader doesn't re-apply the stale walk-back. (Plan Task 9.)
 
-Even with Side A landed, one half of the schema's aspiration is *not* yet real: the schema's per-component
-`module` values use the **namespace** rename (`M3e.Element.*` per-element, `M3e.Component.*` families),
-but Side A **deferred** the namespace rename (unbuilt Task 5) — its modules are still `M3e.Component.*` /
-`M3e.Family.*`. So the reconciled state satisfies the schema's package **keys** but not its per-component
-**module** strings. Two sub-options (OQ-2, §11):
-- **(a)** Pull Side A's deferred namespace rename (Task 5) into reconciliation scope, so the schema is
-  fully satisfied as written.
-- **(b)** Keep the six NEW package **keys** but have the schema's `module` fields describe the *current*
-  `M3e.Component.*` / `M3e.Family.*` namespaces (a *partial* retarget: names new, namespaces current) —
-  smaller scope, defers the namespace rename to its own later track.
+### 7.3 The namespace half — RESOLVED: land the rename now (OQ-2)
 
-Both are legitimate; the choice is Jack's because it sets reconciliation scope. Neither requires DECISION
-1's full backward walk to OLD *package names*.
+The schema's per-component `module` values use the **namespace** rename (`M3e.Element.*` per-element,
+`M3e.Component.*` families), which Side A **deferred** — its modules are still `M3e.Component.*` /
+`M3e.Family.*`. So Side A's landed state satisfies the schema's package **keys** but not its per-component
+**module** strings. This was OQ-2.
 
-> **This is the single decision that reconciliation cannot make on Jack's behalf** — it reverses (or
-> re-scopes) a recorded human decision. The plan sequences all schema work behind it (Plan Task 8, GATED).
+> **RESOLVED 2026-08-20 (Jack, OQ-2): execute the module-namespace rename NOW, as part of this
+> reconciliation — the full rename, not a partial schema-string retarget.** This lands Side A's deliberately-last,
+> unbuilt "Task 5" (`M3e.Component.*`→`M3e.Element.*`, `M3e.Family.*`→`M3e.Component.*`,
+> `TypedHtml.Component.*`→`TypedHtml.Element.*`), so the schema is satisfied *fully* as-written — both keys
+> and module strings — and package name ⇄ namespace align (`elm-m3e-elements` owns `M3e.Element.*`,
+> `elm-m3e-components` owns `M3e.Component.*`).
+
+This is **real added scope** and changes the plan's task count and sequencing (§10, and Plan Task 7). It
+is the highest-blast-radius change in the whole reconciliation:
+
+- **Emission side (config + emitters):** `slots.json` `_families.namespace` `"Family"`→`"Component"`
+  (decoded at `Config.elm:236`, consumed by `FamilyPackage.elm` to build `<lib>.<namespace>.<Family>`
+  paths — the mechanism survived the JS→Elm port); the per-element emitter path segment in
+  `Component.elm:824` (`file [ core.lib, "Component", comp.name ]`) + `:827` (module line)
+  `"Component"`→`"Element"` (**verified on the base — the explosion plan's stale `:646` no longer
+  applies**); the barrel emitter's `M3e.Component.*` imports → `M3e.Element.*`; and the `packages.json`
+  `elements` bucket prefix `M3e.Component.` (`:99`) → `M3e.Element.` (`M3e.Build`/`M3e.Build.` at `:122`/`:125`
+  stay — Build namespace unchanged).
+- **Consumer side (migration):** an **atomic single-pass** remap across **181 non-generated `.elm`
+  files** (docs app `brands/m3e/generated/docs/elm-m3e-docs/app/**`, samples, elm-review-cem
+  src/tests/fixtures, html verify fixtures). The single-pass rule is load-bearing: a sequential
+  `Component→Element` then `Family→Component` would re-capture the freshly-written `Element` tokens.
+- **Logic edits (not text remaps):** the elm-review-cem rule `pipeline/elm-review-cem/src/NoFamilyMemberDrift.elm:26-27`
+  hardcodes `componentNamespace = ["M3e","Component"]` / `familyNamespace = ["M3e","Family"]` — these must
+  flip to `["M3e","Element"]` / `["M3e","Component"]` **by hand** (a rule-logic change, not covered by the
+  text remap); plus `review/src/ReviewConfig.elm` namespace lists.
+
+Because this is highest blast radius, it is sequenced (like Side A's own plan) **last, on an
+already-green reconciled tree** — after the package rename + materialization have landed and the gate is
+green — so any compile break is unambiguously the namespace rename's fault, not the materialization's.
+See Plan Task 7 for the gate-verified, cold-start-executable steps.
 
 ---
 
@@ -494,51 +547,86 @@ re-derived**, with all generated artifacts regenerated (never textually lifted):
    shell retained + published-identity retired.
 4. **`Component.elm` barrel-in-core edit re-applied** onto Side B's rewritten `Component.elm`
    (`internalTypesModule` public exposing + `@docs`), verified against emitted `Internal.Types`.
-5. **elm-typed-html 3-tier split** re-applied (pure Side-A work, no Side B interaction).
+5. **elm-typed-html 3-tier split** re-applied (pure Side-A work, no Side B interaction). 3 tiers is this
+   pass's ceiling; **5 tiers recorded as the confirmed future target** pending the (out-of-scope, unlanded)
+   DAG rework (OQ-5, §2.4).
 6. **The 4 overlap files reconciled**: `family.json` (both regions), `copy-fidelity-notes.md` (both
    sections), `gate-all-expected-steps.json` (regenerated to carry both sets), `Component.elm` (item 4).
-7. **Brand Facts schema resolved per Jack's OQ-1/OQ-2** (§7): default recommendation = keep the six
-   NEW-naming keys (do not apply DECISION 1's 1a backward walk), with the namespace sub-question (OQ-2)
-   deciding whether module strings are new (land Task 5) or current (partial retarget).
-8. **Face-A generator bundle re-baselined once** (§6); phantom expectations re-blessed if touched
-   (memory `generator-change-d046-rebaseline`).
-9. **Full `gate-all` green** on the reconciled branch, including the new sibling-package steps, the
-   `12-file` tools test count, `verify-split`, `check-m3e-5pkg` (new names), and both byte-identity gates.
+7. **Module-namespace rename landed (OQ-2)** on the now-green tree: `M3e.Component.*`→`M3e.Element.*`,
+   `M3e.Family.*`→`M3e.Component.*`, `TypedHtml.Component.*`→`TypedHtml.Element.*` — via config+emitter
+   changes (re-materialized) plus an atomic single-pass consumer remap of ~181 files + hand-edited review
+   rules. After this, package name ⇄ namespace align and Side B's schema is satisfied *fully* as-written.
+8. **Brand Facts schema resolved per Jack (§7): DECISION 1 reversed** — keep the six NEW-naming keys, do
+   NOT apply the 1a backward walk (OQ-1); with the namespace rename (item 7) landed, the schema's `module`
+   strings are also real, so it is satisfied fully. The phase-2 producer plan doc is updated to record the
+   reversal.
+9. **Face-A generator bundle re-baselined once, AFTER the namespace rename** (§6); phantom expectations
+   re-blessed if touched (memory `generator-change-d046-rebaseline`).
+10. **Full `gate-all` green** on the reconciled branch, including the new sibling-package steps, the
+   `12-file` tools test count, `verify-split`, `check-m3e-5pkg` (new names), both byte-identity gates, and
+   the elm-review-cem namespace-drift rules under the new namespaces.
 
-**Is this just "Side A on top of Side B"?** Almost — with one honest qualification that is *not*
-manufactured complexity: Side A's **generated files** are *not* layered on; they are **regenerated** from
-Side B's generator (because the producer moved and Side B enriched the source). Side A's **config +
-one emitter edit + the materialization act** *are* layered on. And the schema (§7) is the one place where
-the two sides' *design intents* must be actively reconciled by a human decision rather than mechanically
-combined. Everything else is adjacent.
+**Is this just "Side A on top of Side B"?** Mostly — with two honest qualifications that are *not*
+manufactured complexity: (i) Side A's **generated files** are *not* layered on; they are **regenerated**
+from Side B's generator (because the producer moved and Side B enriched the source), and Side A's **config
++ one emitter edit + the materialization act** *are* layered on; and (ii) Jack pulled the **namespace
+rename** (Side A's unbuilt Task 5) into scope, which is the highest-blast-radius change and the only one
+that fully satisfies Side B's schema. The schema itself (§7) is now settled by Jack's decision (reverse
+DECISION 1). Everything else is adjacent.
 
 ---
 
-## 11. Open questions for Jack
+## 11. Open questions — resolutions + what remains
 
-- **OQ-1 (blocking Plan Task 8) — Reverse DECISION 1?** Side B's recorded human decision (1a) walked the
-  Brand Facts schema back to OLD 5-package naming *because Side A hadn't landed*. Reconciliation lands
-  Side A, falsifying that premise. **Recommendation (evidence-backed, §7):** do **not** apply the 1a
-  backward walk — keep the schema's six NEW-naming keys, which Side A now satisfies (effectively option
-  1b, which DECISION 1 itself calls "correct per the schema-as-written"). Confirm before touching the
-  schema. This reverses a recorded decision, so only Jack can make it.
-- **OQ-2 (blocking Plan Task 8, dependent on OQ-1) — namespace scope.** The schema's per-component
-  `module` values assume the *namespace* rename (`M3e.Element.*` / `M3e.Component.*`), which Side A
-  deferred (unbuilt Task 5). Either (a) pull the namespace rename into reconciliation scope so the schema
-  is fully satisfied, or (b) keep the new package **keys** but describe the *current* `M3e.Component.*` /
-  `M3e.Family.*` namespaces in the schema (partial retarget). Sets reconciliation scope.
+### Resolved 2026-08-20 (Jack)
+
+- **OQ-1 — Reverse DECISION 1? → YES.** Do **not** apply the (1a) backward walk; keep the schema's six
+  NEW-naming keys (effectively option 1b, "correct per the schema-as-written"). Executor also updates the
+  phase-2 producer plan doc to record the reversal so the stale walk-back isn't re-applied. (§7.2, Plan Task 9.)
+- **OQ-2 — Namespace scope? → LAND THE RENAME NOW.** Execute the full module-namespace rename
+  (`M3e.Component.*`→`M3e.Element.*`, `M3e.Family.*`→`M3e.Component.*`, `TypedHtml.Component.*`→`TypedHtml.Element.*`)
+  as real scope in this reconciliation — not deferred, not a partial schema-string retarget. This is the
+  highest-blast-radius change (~181 consumer files + emitter/config + review-rule logic) and adds one task,
+  re-sequenced onto the green tree. (§7.3, Plan Task 7.) With it landed, the schema is satisfied fully
+  as-written and no partial retarget is needed.
+- **OQ-5 — html tier ceiling? → 3 now, 5 is the confirmed future target.** 5 tiers
+  (facts/core/elements/components/builders) is the real long-term target for html, reachable only once the
+  separate DAG rework (linear IR → Core → Elements → Components → Builders) lands — out of scope and not
+  yet landed. This pass lands 3; the 5-tier target is recorded in both docs so 3 is never mistaken as
+  permanent. The design doc's 5-tier theory is therefore **not retired** — it is deferred behind the DAG
+  rework. (§2.4, Plan Task 5.)
+
+### Still open (do not block the plan)
+
 - **OQ-3 (non-blocking) — mirror republish (OQ-6 from Side A).** Both sides carry mirror-lag allowlist
   entries (`authorizedAbsentPrefixes`/`authorizedExtraPrefixes`) pending a republish of the
   `jackhp95/elm-m3e` snapshot with the new sibling shape. When is that republish scheduled? Until then the
-  reconciled `tools/family.json` keeps both sides' lag entries. Not blocking, but the entries should be
-  removed in a follow-on once the mirror is republished.
+  reconciled `tools/family.json` keeps both sides' lag entries; they should be removed in a follow-on once
+  the mirror is republished. **Note:** the namespace rename (OQ-2) shifts the mirror even further from the
+  published snapshot, so the republish is now more overdue — still a follow-on, not a blocker.
 - **OQ-4 (informational, not this task's job) — Side B / wave1 corrupted identity.** The process
   authoring Side B commits as `Test <test@example.com>` (§9). It should fix its git identity/env before
   the next push, and the reconciliation executor must commit from a clean worktree. Surface to the Side B
   owner.
-- **OQ-5 (non-blocking) — html tier ceiling doc-vs-landed divergence.** The explosion design doc argues a
-  5-tier html ceiling; Side A landed 3 (home-only brand, real ceiling). Reconciliation follows the landed
-  3-tier reality; confirm the doc's 5-tier theory is formally retired.
+
+### Do the three resolutions interact with anything else in the plan? (checked)
+
+- **Landing the namespace rename now (OQ-2) vs the barrel-in-core edit (Task 4/2):** the barrel emitter
+  references `M3e.Component.*`; after the rename it must reference `M3e.Element.*`. Because the rename is
+  sequenced *after* materialization (Plan Task 7), the barrel first lands referencing `M3e.Component.*`
+  (Task 4), then Task 7 flips it with the rest — consistent, no double-work beyond the single re-generation
+  Task 7 already performs. Captured in Plan Task 7.
+- **OQ-2 vs the `elements` bucket:** `packages.json` `elements` bucket is `{prefix:"M3e.Component."}` up to
+  and including materialization (Tasks 4–6), and flips to `{prefix:"M3e.Element."}` in Task 7 with a re-split.
+  No task between 4 and 7 assumes the `Element` prefix. Captured.
+- **OQ-2 vs the family package name↔namespace:** after Task 7, `elm-m3e-components` (package name, from the
+  rename) owns `M3e.Component.*` (namespace, also from the rename) — the same inversion applied to both,
+  consistent. The string `M3e.Component.*` moves from the tag-grouped modules to the family modules exactly
+  as the package name did. Anti-footgun applies to namespaces too (single atomic pass).
+- **OQ-1 vs OQ-2:** with both resolved, the schema task (Plan Task 9) is no longer gated or forked — it is
+  a straight "confirm satisfied as-written, record DECISION 1 reversal." No dangling dependency remains.
+- **No other plan task assumed the namespace rename would *not* happen** beyond the ones above; all are
+  now reconciled. No new open question is created by these three resolutions.
 
 ---
 
