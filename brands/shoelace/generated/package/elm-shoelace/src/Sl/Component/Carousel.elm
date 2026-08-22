@@ -1,4 +1,4 @@
-module Sl.Component.Carousel exposing (CarouselIs, CarouselAttrs, CarouselBuilder, CarouselAttrCaps, CarouselSlotCaps, CarouselChildAdmittedBy, CarouselOrientation, carousel, carouselOrientation, carouselAutoplay, carouselAutoplayInterval, carouselLoop, carouselMouseDragging, carouselNavigation, carouselPagination, carouselSlidesPerMove, carouselSlidesPerPage, carouselOnSlideChange)
+module Sl.Component.Carousel exposing (CarouselIs, CarouselAttrs, CarouselBuilder, CarouselAttrCaps, CarouselSlotCaps, CarouselContent, CarouselChildAdmittedBy, CarouselOrientation, carousel, carouselOrientation, carouselAutoplay, carouselAutoplayInterval, carouselLoop, carouselMouseDragging, carouselNavigation, carouselPagination, carouselSlidesPerMove, carouselSlidesPerPage, carouselOnSlideChange, carouselChild)
 
 {-| The **Carousel** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs CarouselIs, CarouselAttrs, CarouselBuilder, CarouselAttrCaps, CarouselSlotCaps, CarouselChildAdmittedBy, CarouselOrientation, carousel, carouselOrientation, carouselAutoplay, carouselAutoplayInterval, carouselLoop, carouselMouseDragging, carouselNavigation, carouselPagination, carouselSlidesPerMove, carouselSlidesPerPage, carouselOnSlideChange
+@docs CarouselIs, CarouselAttrs, CarouselBuilder, CarouselAttrCaps, CarouselSlotCaps, CarouselContent, CarouselChildAdmittedBy, CarouselOrientation, carousel, carouselOrientation, carouselAutoplay, carouselAutoplayInterval, carouselLoop, carouselMouseDragging, carouselNavigation, carouselPagination, carouselSlidesPerMove, carouselSlidesPerPage, carouselOnSlideChange, carouselChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Carousel as Carousel_
 -}
 carousel :
     List (Attr CarouselAttrs msg)
-    -> List (Element childAccepts (CarouselChildAdmittedBy childAdm) msg)
+    -> List (Element CarouselContent (CarouselChildAdmittedBy childAdm) msg)
     -> Element (CarouselIs s) admittedBy msg
 carousel =
     Carousel_.component
@@ -61,6 +61,12 @@ type alias CarouselAttrCaps =
 -}
 type alias CarouselSlotCaps =
     Carousel_.SlotCaps
+
+
+{-| See [`Sl.Element.Carousel.Content`](Sl.Element.Carousel#Content).
+-}
+type alias CarouselContent =
+    Carousel_.Content
 
 
 {-| See [`Sl.Element.Carousel.ChildAdmittedBy`](Sl.Element.Carousel#ChildAdmittedBy).
@@ -143,3 +149,10 @@ carouselSlidesPerPage =
 carouselOnSlideChange : msg -> Attr { c | onSlideChange : Supported } msg
 carouselOnSlideChange =
     Carousel_.onSlideChange
+
+
+{-| See [`Sl.Element.Carousel.child`](Sl.Element.Carousel#child).
+-}
+carouselChild : Element CarouselContent admittedBy msg -> Element free freeAdmittedBy msg
+carouselChild =
+    Carousel_.child

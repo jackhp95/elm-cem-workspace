@@ -1,4 +1,4 @@
-module Sl.Component.TreeItem exposing (TreeItemIs, TreeItemAttrs, TreeItemBuilder, TreeItemAttrCaps, TreeItemSlotCaps, TreeItemChildAdmittedBy, treeItem, treeItemDisabled, treeItemExpanded, treeItemLazy, treeItemSelected, treeItemDefaultSelected, treeItemOnExpand, treeItemOnAfterExpand, treeItemOnCollapse, treeItemOnAfterCollapse, treeItemOnLazyChange, treeItemOnLazyLoad)
+module Sl.Component.TreeItem exposing (TreeItemIs, TreeItemAttrs, TreeItemBuilder, TreeItemAttrCaps, TreeItemSlotCaps, TreeItemContent, TreeItemChildAdmittedBy, treeItem, treeItemDisabled, treeItemExpanded, treeItemLazy, treeItemSelected, treeItemDefaultSelected, treeItemOnExpand, treeItemOnAfterExpand, treeItemOnCollapse, treeItemOnAfterCollapse, treeItemOnLazyChange, treeItemOnLazyLoad, treeItemChild)
 
 {-| The **TreeItem** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TreeItemIs, TreeItemAttrs, TreeItemBuilder, TreeItemAttrCaps, TreeItemSlotCaps, TreeItemChildAdmittedBy, treeItem, treeItemDisabled, treeItemExpanded, treeItemLazy, treeItemSelected, treeItemDefaultSelected, treeItemOnExpand, treeItemOnAfterExpand, treeItemOnCollapse, treeItemOnAfterCollapse, treeItemOnLazyChange, treeItemOnLazyLoad
+@docs TreeItemIs, TreeItemAttrs, TreeItemBuilder, TreeItemAttrCaps, TreeItemSlotCaps, TreeItemContent, TreeItemChildAdmittedBy, treeItem, treeItemDisabled, treeItemExpanded, treeItemLazy, treeItemSelected, treeItemDefaultSelected, treeItemOnExpand, treeItemOnAfterExpand, treeItemOnCollapse, treeItemOnAfterCollapse, treeItemOnLazyChange, treeItemOnLazyLoad, treeItemChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.TreeItem as TreeItem_
 -}
 treeItem :
     List (Attr TreeItemAttrs msg)
-    -> List (Element childAccepts (TreeItemChildAdmittedBy childAdm) msg)
+    -> List (Element TreeItemContent (TreeItemChildAdmittedBy childAdm) msg)
     -> Element (TreeItemIs s) admittedBy msg
 treeItem =
     TreeItem_.component
@@ -60,6 +60,12 @@ type alias TreeItemAttrCaps =
 -}
 type alias TreeItemSlotCaps =
     TreeItem_.SlotCaps
+
+
+{-| See [`Sl.Element.TreeItem.Content`](Sl.Element.TreeItem#Content).
+-}
+type alias TreeItemContent =
+    TreeItem_.Content
 
 
 {-| See [`Sl.Element.TreeItem.ChildAdmittedBy`](Sl.Element.TreeItem#ChildAdmittedBy).
@@ -143,3 +149,10 @@ treeItemOnLazyChange =
 treeItemOnLazyLoad : msg -> Attr { c | onLazyLoad : Supported } msg
 treeItemOnLazyLoad =
     TreeItem_.onLazyLoad
+
+
+{-| See [`Sl.Element.TreeItem.child`](Sl.Element.TreeItem#child).
+-}
+treeItemChild : Element TreeItemContent admittedBy msg -> Element free freeAdmittedBy msg
+treeItemChild =
+    TreeItem_.child

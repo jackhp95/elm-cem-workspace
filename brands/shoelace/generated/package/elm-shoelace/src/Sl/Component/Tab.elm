@@ -1,4 +1,4 @@
-module Sl.Component.Tab exposing (TabIs, TabAttrs, TabBuilder, TabAttrCaps, TabSlotCaps, TabChildAdmittedBy, tab, tabActive, tabClosable, tabDisabled, tabPanel, tabOnClose)
+module Sl.Component.Tab exposing (TabIs, TabAttrs, TabBuilder, TabAttrCaps, TabSlotCaps, TabContent, TabChildAdmittedBy, tab, tabActive, tabClosable, tabDisabled, tabPanel, tabOnClose, tabChild)
 
 {-| The **Tab** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TabIs, TabAttrs, TabBuilder, TabAttrCaps, TabSlotCaps, TabChildAdmittedBy, tab, tabActive, tabClosable, tabDisabled, tabPanel, tabOnClose
+@docs TabIs, TabAttrs, TabBuilder, TabAttrCaps, TabSlotCaps, TabContent, TabChildAdmittedBy, tab, tabActive, tabClosable, tabDisabled, tabPanel, tabOnClose, tabChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.Tab as Tab_
 -}
 tab :
     List (Attr TabAttrs msg)
-    -> List (Element childAccepts (TabChildAdmittedBy childAdm) msg)
+    -> List (Element TabContent (TabChildAdmittedBy childAdm) msg)
     -> Element (TabIs s) admittedBy msg
 tab =
     Tab_.component
@@ -60,6 +60,12 @@ type alias TabAttrCaps =
 -}
 type alias TabSlotCaps =
     Tab_.SlotCaps
+
+
+{-| See [`Sl.Element.Tab.Content`](Sl.Element.Tab#Content).
+-}
+type alias TabContent =
+    Tab_.Content
 
 
 {-| See [`Sl.Element.Tab.ChildAdmittedBy`](Sl.Element.Tab#ChildAdmittedBy).
@@ -101,3 +107,10 @@ tabPanel =
 tabOnClose : msg -> Attr { c | onClose : Supported } msg
 tabOnClose =
     Tab_.onClose
+
+
+{-| See [`Sl.Element.Tab.child`](Sl.Element.Tab#child).
+-}
+tabChild : Element TabContent admittedBy msg -> Element free freeAdmittedBy msg
+tabChild =
+    Tab_.child

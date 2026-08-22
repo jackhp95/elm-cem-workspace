@@ -1,4 +1,4 @@
-module Sl.Component.Checkbox exposing (CheckboxIs, CheckboxAttrs, CheckboxBuilder, CheckboxAttrCaps, CheckboxSlotCaps, CheckboxChildAdmittedBy, CheckboxSize, checkbox, checkboxSize, checkboxChecked, checkboxDisabled, checkboxForm, checkboxHelpText, checkboxIndeterminate, checkboxName, checkboxRequired, checkboxTitle, checkboxValue, checkboxDefaultChecked, checkboxDefaultValue, checkboxOnBlur, checkboxOnChange, checkboxOnFocus, checkboxOnInput, checkboxOnInvalid)
+module Sl.Component.Checkbox exposing (CheckboxIs, CheckboxAttrs, CheckboxBuilder, CheckboxAttrCaps, CheckboxSlotCaps, CheckboxContent, CheckboxChildAdmittedBy, CheckboxSize, checkbox, checkboxSize, checkboxChecked, checkboxDisabled, checkboxForm, checkboxHelpText, checkboxIndeterminate, checkboxName, checkboxRequired, checkboxTitle, checkboxValue, checkboxDefaultChecked, checkboxDefaultValue, checkboxOnBlur, checkboxOnChange, checkboxOnFocus, checkboxOnInput, checkboxOnInvalid, checkboxChild)
 
 {-| The **Checkbox** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs CheckboxIs, CheckboxAttrs, CheckboxBuilder, CheckboxAttrCaps, CheckboxSlotCaps, CheckboxChildAdmittedBy, CheckboxSize, checkbox, checkboxSize, checkboxChecked, checkboxDisabled, checkboxForm, checkboxHelpText, checkboxIndeterminate, checkboxName, checkboxRequired, checkboxTitle, checkboxValue, checkboxDefaultChecked, checkboxDefaultValue, checkboxOnBlur, checkboxOnChange, checkboxOnFocus, checkboxOnInput, checkboxOnInvalid
+@docs CheckboxIs, CheckboxAttrs, CheckboxBuilder, CheckboxAttrCaps, CheckboxSlotCaps, CheckboxContent, CheckboxChildAdmittedBy, CheckboxSize, checkbox, checkboxSize, checkboxChecked, checkboxDisabled, checkboxForm, checkboxHelpText, checkboxIndeterminate, checkboxName, checkboxRequired, checkboxTitle, checkboxValue, checkboxDefaultChecked, checkboxDefaultValue, checkboxOnBlur, checkboxOnChange, checkboxOnFocus, checkboxOnInput, checkboxOnInvalid, checkboxChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Checkbox as Checkbox_
 -}
 checkbox :
     List (Attr CheckboxAttrs msg)
-    -> List (Element childAccepts (CheckboxChildAdmittedBy childAdm) msg)
+    -> List (Element CheckboxContent (CheckboxChildAdmittedBy childAdm) msg)
     -> Element (CheckboxIs s) admittedBy msg
 checkbox =
     Checkbox_.component
@@ -61,6 +61,12 @@ type alias CheckboxAttrCaps =
 -}
 type alias CheckboxSlotCaps =
     Checkbox_.SlotCaps
+
+
+{-| See [`Sl.Element.Checkbox.Content`](Sl.Element.Checkbox#Content).
+-}
+type alias CheckboxContent =
+    Checkbox_.Content
 
 
 {-| See [`Sl.Element.Checkbox.ChildAdmittedBy`](Sl.Element.Checkbox#ChildAdmittedBy).
@@ -192,3 +198,10 @@ checkboxOnInput =
 checkboxOnInvalid : msg -> Attr { c | onInvalid : Supported } msg
 checkboxOnInvalid =
     Checkbox_.onInvalid
+
+
+{-| See [`Sl.Element.Checkbox.child`](Sl.Element.Checkbox#child).
+-}
+checkboxChild : Element CheckboxContent admittedBy msg -> Element free freeAdmittedBy msg
+checkboxChild =
+    Checkbox_.child

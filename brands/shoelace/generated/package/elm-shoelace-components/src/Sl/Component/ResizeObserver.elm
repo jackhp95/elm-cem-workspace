@@ -1,4 +1,4 @@
-module Sl.Component.ResizeObserver exposing (ResizeObserverIs, ResizeObserverAttrs, ResizeObserverBuilder, ResizeObserverAttrCaps, ResizeObserverSlotCaps, ResizeObserverChildAdmittedBy, resizeObserver, resizeObserverDisabled, resizeObserverOnResize)
+module Sl.Component.ResizeObserver exposing (ResizeObserverIs, ResizeObserverAttrs, ResizeObserverBuilder, ResizeObserverAttrCaps, ResizeObserverSlotCaps, ResizeObserverChildAdmittedBy, resizeObserver, resizeObserverDisabled, resizeObserverOnResize, resizeObserverChild)
 
 {-| The **ResizeObserver** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs ResizeObserverIs, ResizeObserverAttrs, ResizeObserverBuilder, ResizeObserverAttrCaps, ResizeObserverSlotCaps, ResizeObserverChildAdmittedBy, resizeObserver, resizeObserverDisabled, resizeObserverOnResize
+@docs ResizeObserverIs, ResizeObserverAttrs, ResizeObserverBuilder, ResizeObserverAttrCaps, ResizeObserverSlotCaps, ResizeObserverChildAdmittedBy, resizeObserver, resizeObserverDisabled, resizeObserverOnResize, resizeObserverChild
 
 -}
 
@@ -80,3 +80,10 @@ resizeObserverDisabled =
 resizeObserverOnResize : msg -> Attr { c | onResize : Supported } msg
 resizeObserverOnResize =
     ResizeObserver_.onResize
+
+
+{-| See [`Sl.Element.ResizeObserver.child`](Sl.Element.ResizeObserver#child).
+-}
+resizeObserverChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+resizeObserverChild =
+    ResizeObserver_.child

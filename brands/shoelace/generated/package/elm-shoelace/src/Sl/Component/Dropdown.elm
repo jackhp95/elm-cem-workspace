@@ -1,4 +1,4 @@
-module Sl.Component.Dropdown exposing (DropdownIs, DropdownAttrs, DropdownBuilder, DropdownAttrCaps, DropdownSlotCaps, DropdownChildAdmittedBy, DropdownPlacement, DropdownSync, dropdown, dropdownPlacement, dropdownSync, dropdownDisabled, dropdownDistance, dropdownHoist, dropdownOpen, dropdownSkidding, dropdownStayOpenOnSelect, dropdownOnShow, dropdownOnAfterShow, dropdownOnHide, dropdownOnAfterHide)
+module Sl.Component.Dropdown exposing (DropdownIs, DropdownAttrs, DropdownBuilder, DropdownAttrCaps, DropdownSlotCaps, DropdownContent, DropdownTriggerSlot, DropdownChildAdmittedBy, DropdownPlacement, DropdownSync, dropdown, dropdownPlacement, dropdownSync, dropdownDisabled, dropdownDistance, dropdownHoist, dropdownOpen, dropdownSkidding, dropdownStayOpenOnSelect, dropdownOnShow, dropdownOnAfterShow, dropdownOnHide, dropdownOnAfterHide, dropdownTrigger, dropdownChild)
 
 {-| The **Dropdown** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs DropdownIs, DropdownAttrs, DropdownBuilder, DropdownAttrCaps, DropdownSlotCaps, DropdownChildAdmittedBy, DropdownPlacement, DropdownSync, dropdown, dropdownPlacement, dropdownSync, dropdownDisabled, dropdownDistance, dropdownHoist, dropdownOpen, dropdownSkidding, dropdownStayOpenOnSelect, dropdownOnShow, dropdownOnAfterShow, dropdownOnHide, dropdownOnAfterHide
+@docs DropdownIs, DropdownAttrs, DropdownBuilder, DropdownAttrCaps, DropdownSlotCaps, DropdownContent, DropdownTriggerSlot, DropdownChildAdmittedBy, DropdownPlacement, DropdownSync, dropdown, dropdownPlacement, dropdownSync, dropdownDisabled, dropdownDistance, dropdownHoist, dropdownOpen, dropdownSkidding, dropdownStayOpenOnSelect, dropdownOnShow, dropdownOnAfterShow, dropdownOnHide, dropdownOnAfterHide, dropdownTrigger, dropdownChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Dropdown as Dropdown_
 -}
 dropdown :
     List (Attr DropdownAttrs msg)
-    -> List (Element childAccepts (DropdownChildAdmittedBy childAdm) msg)
+    -> List (Element DropdownContent (DropdownChildAdmittedBy childAdm) msg)
     -> Element (DropdownIs s) admittedBy msg
 dropdown =
     Dropdown_.component
@@ -61,6 +61,18 @@ type alias DropdownAttrCaps =
 -}
 type alias DropdownSlotCaps =
     Dropdown_.SlotCaps
+
+
+{-| See [`Sl.Element.Dropdown.Content`](Sl.Element.Dropdown#Content).
+-}
+type alias DropdownContent =
+    Dropdown_.Content
+
+
+{-| See [`Sl.Element.Dropdown.TriggerSlot`](Sl.Element.Dropdown#TriggerSlot).
+-}
+type alias DropdownTriggerSlot =
+    Dropdown_.TriggerSlot
 
 
 {-| See [`Sl.Element.Dropdown.ChildAdmittedBy`](Sl.Element.Dropdown#ChildAdmittedBy).
@@ -163,3 +175,17 @@ dropdownOnHide =
 dropdownOnAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 dropdownOnAfterHide =
     Dropdown_.onAfterHide
+
+
+{-| See [`Sl.Element.Dropdown.trigger`](Sl.Element.Dropdown#trigger).
+-}
+dropdownTrigger : Element DropdownTriggerSlot admittedBy msg -> Element free freeAdmittedBy msg
+dropdownTrigger =
+    Dropdown_.trigger
+
+
+{-| See [`Sl.Element.Dropdown.child`](Sl.Element.Dropdown#child).
+-}
+dropdownChild : Element DropdownContent admittedBy msg -> Element free freeAdmittedBy msg
+dropdownChild =
+    Dropdown_.child

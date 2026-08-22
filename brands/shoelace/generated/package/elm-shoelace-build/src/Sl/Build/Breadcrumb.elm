@@ -1,4 +1,4 @@
-module Sl.Build.Breadcrumb exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withLabel, withSlot, withStyle)
+module Sl.Build.Breadcrumb exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withLabel, withSlot, withStyle, withChild)
 
 {-| The **Breadcrumb** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Breadcrumb`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withLabel, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withLabel, withSlot, withStyle, withChild
 
 -}
 
@@ -48,6 +48,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.BreadcrumbContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-breadcrumb" [] []
@@ -57,6 +62,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BreadcrumbIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

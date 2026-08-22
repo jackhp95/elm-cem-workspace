@@ -1,4 +1,4 @@
-module Sl.Component.Tag exposing (TagIs, TagAttrs, TagBuilder, TagAttrCaps, TagSlotCaps, TagChildAdmittedBy, TagSize, TagVariant, tag, tagSize, tagVariant, tagPill, tagRemovable, tagOnRemove)
+module Sl.Component.Tag exposing (TagIs, TagAttrs, TagBuilder, TagAttrCaps, TagSlotCaps, TagChildAdmittedBy, TagSize, TagVariant, tag, tagSize, tagVariant, tagPill, tagRemovable, tagOnRemove, tagChild)
 
 {-| The **Tag** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TagIs, TagAttrs, TagBuilder, TagAttrCaps, TagSlotCaps, TagChildAdmittedBy, TagSize, TagVariant, tag, tagSize, tagVariant, tagPill, tagRemovable, tagOnRemove
+@docs TagIs, TagAttrs, TagBuilder, TagAttrCaps, TagSlotCaps, TagChildAdmittedBy, TagSize, TagVariant, tag, tagSize, tagVariant, tagPill, tagRemovable, tagOnRemove, tagChild
 
 -}
 
@@ -114,3 +114,10 @@ tagRemovable =
 tagOnRemove : msg -> Attr { c | onRemove : Supported } msg
 tagOnRemove =
     Tag_.onRemove
+
+
+{-| See [`Sl.Element.Tag.child`](Sl.Element.Tag#child).
+-}
+tagChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+tagChild =
+    Tag_.child

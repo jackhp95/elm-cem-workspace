@@ -1,4 +1,4 @@
-module Sl.Component.MenuItem exposing (MenuItemIs, MenuItemAttrs, MenuItemBuilder, MenuItemAttrCaps, MenuItemSlotCaps, MenuItemChildAdmittedBy, MenuItemType, menuItem, menuItemType_, menuItemChecked, menuItemDisabled, menuItemLoading, menuItemValue, menuItemDefaultChecked, menuItemDefaultValue)
+module Sl.Component.MenuItem exposing (MenuItemIs, MenuItemAttrs, MenuItemBuilder, MenuItemAttrCaps, MenuItemSlotCaps, MenuItemSubmenuSlot, MenuItemChildAdmittedBy, MenuItemType, menuItem, menuItemType_, menuItemChecked, menuItemDisabled, menuItemLoading, menuItemValue, menuItemDefaultChecked, menuItemDefaultValue, menuItemSubmenu, menuItemChild)
 
 {-| The **MenuItem** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs MenuItemIs, MenuItemAttrs, MenuItemBuilder, MenuItemAttrCaps, MenuItemSlotCaps, MenuItemChildAdmittedBy, MenuItemType, menuItem, menuItemType_, menuItemChecked, menuItemDisabled, menuItemLoading, menuItemValue, menuItemDefaultChecked, menuItemDefaultValue
+@docs MenuItemIs, MenuItemAttrs, MenuItemBuilder, MenuItemAttrCaps, MenuItemSlotCaps, MenuItemSubmenuSlot, MenuItemChildAdmittedBy, MenuItemType, menuItem, menuItemType_, menuItemChecked, menuItemDisabled, menuItemLoading, menuItemValue, menuItemDefaultChecked, menuItemDefaultValue, menuItemSubmenu, menuItemChild
 
 -}
 
@@ -61,6 +61,12 @@ type alias MenuItemAttrCaps =
 -}
 type alias MenuItemSlotCaps =
     MenuItem_.SlotCaps
+
+
+{-| See [`Sl.Element.MenuItem.SubmenuSlot`](Sl.Element.MenuItem#SubmenuSlot).
+-}
+type alias MenuItemSubmenuSlot =
+    MenuItem_.SubmenuSlot
 
 
 {-| See [`Sl.Element.MenuItem.ChildAdmittedBy`](Sl.Element.MenuItem#ChildAdmittedBy).
@@ -122,3 +128,17 @@ menuItemDefaultChecked =
 menuItemDefaultValue : String -> Attr { c | value : Supported } msg
 menuItemDefaultValue =
     MenuItem_.defaultValue
+
+
+{-| See [`Sl.Element.MenuItem.submenu`](Sl.Element.MenuItem#submenu).
+-}
+menuItemSubmenu : Element MenuItemSubmenuSlot admittedBy msg -> Element free freeAdmittedBy msg
+menuItemSubmenu =
+    MenuItem_.submenu
+
+
+{-| See [`Sl.Element.MenuItem.child`](Sl.Element.MenuItem#child).
+-}
+menuItemChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+menuItemChild =
+    MenuItem_.child

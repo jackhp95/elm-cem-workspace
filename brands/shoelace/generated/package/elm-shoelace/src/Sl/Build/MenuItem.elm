@@ -1,4 +1,4 @@
-module Sl.Build.MenuItem exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue)
+module Sl.Build.MenuItem exposing (Builder, AttrCaps, SlotCaps, Is, SubmenuSlot, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue, submenu, withSubmenu, withChild)
 
 {-| The **MenuItem** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.MenuItem`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue
+@docs Builder, AttrCaps, SlotCaps, Is, SubmenuSlot, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue, submenu, withSubmenu, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias SubmenuSlot =
+    Component.MenuItemSubmenuSlot
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-menu-item" [] []
@@ -58,6 +63,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.MenuItemIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+submenu :
+    B.Builder childRow childAttrCaps childSlotCaps Component.MenuItemSubmenuSlot msg
+    -> Element free freeAdmittedBy msg
+submenu builder =
+    Component.menuItemSubmenu (B.toElement builder)
+
+
+{-| -}
+withSubmenu :
+    B.Builder childRow childAttrCaps childSlotCaps Component.MenuItemSubmenuSlot msg
+    -> Builder attrCaps { s | submenu : Available } msg kind
+    -> Builder attrCaps { s | submenu : Used } msg kind
+withSubmenu slotBuilder builder_ =
+    B.withChild (El.toNode (Component.menuItemSubmenu (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

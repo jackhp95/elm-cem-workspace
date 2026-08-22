@@ -1,4 +1,4 @@
-module Sl.Build.TreeItem exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle)
+module Sl.Build.TreeItem exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle, withChild)
 
 {-| The **TreeItem** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.TreeItem`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.TreeItemContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-tree-item" [] []
@@ -58,6 +63,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TreeItemIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

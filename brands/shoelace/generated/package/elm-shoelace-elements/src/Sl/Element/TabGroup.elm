@@ -1,16 +1,18 @@
 module Sl.Element.TabGroup exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, NavSlot, ChildAdmittedBy
     , Activation, activation, Placement, placement
     , fixedScrollControls, noScrollControls, onTabShow, onTabHide
+    , nav, child
     )
 
 {-| The `sl-tab-group` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, NavSlot, ChildAdmittedBy
 @docs Activation, activation, Placement, placement
 @docs fixedScrollControls, noScrollControls, onTabShow, onTabHide
+@docs nav, child
 
 -}
 
@@ -36,6 +38,18 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.TabGroup.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.TabGroup.Content
+
+
+{-| The kinds the `nav` slot admits.
+-}
+type alias NavSlot =
+    Sl.Internal.Types.TabGroup.NavSlot
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -78,7 +92,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.tabGroup
@@ -125,3 +139,20 @@ onTabShow =
 onTabHide : msg -> Attr { c | onTabHide : Supported } msg
 onTabHide =
     Ev.onTabHide
+
+
+{-| Place an element into the named `nav` slot (input constrained to the
+slot's kinds; output row free so it composes into the child list).
+-}
+nav : Element NavSlot admittedBy msg -> Element free freeAdmittedBy msg
+nav element =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "nav") (El.toNode element))
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

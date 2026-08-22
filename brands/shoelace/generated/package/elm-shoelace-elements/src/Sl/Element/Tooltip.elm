@@ -3,6 +3,7 @@ module Sl.Element.Tooltip exposing
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Placement, placement
     , content, disabled, distance, hoist, open, skidding, trigger, onShow, onAfterShow, onHide, onAfterHide
+    , child
     )
 
 {-| The `sl-tooltip` component — strict per-component surface.
@@ -11,6 +12,7 @@ module Sl.Element.Tooltip exposing
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Placement, placement
 @docs content, disabled, distance, hoist, open, skidding, trigger, onShow, onAfterShow, onHide, onAfterHide
+@docs child
 
 -}
 
@@ -68,7 +70,10 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
+{-| Standard constructor: `[attributes] [children]`. The default slot is
+kind-permissive (`any`): children of any kind compose, but each child's OWN
+admittedBy must still admit this context — a restricted-parent element is
+rejected here at compile time.
 -}
 component :
     List (Attr Attrs msg)
@@ -161,3 +166,12 @@ onHide =
 onAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 onAfterHide =
     Ev.onAfterHide
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

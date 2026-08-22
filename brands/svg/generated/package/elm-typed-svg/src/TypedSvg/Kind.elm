@@ -87,12 +87,15 @@ type alias SvgContainerContent =
     , clipPath : Brand
     , defs : Brand
     , ellipse : Brand
+    , filter : Brand
+    , foreignObject : Brand
     , g : Brand
     , image : Brand
     , line : Brand
     , linearGradient : Brand
     , marker : Brand
     , mask : Brand
+    , metadata : Brand
     , path : Brand
     , pattern : Brand
     , polygon : Brand
@@ -104,6 +107,7 @@ type alias SvgContainerContent =
     , symbol : Brand
     , text : Brand
     , use : Brand
+    , view : Brand
     }
 
 

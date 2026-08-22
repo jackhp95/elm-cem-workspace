@@ -1,4 +1,4 @@
-module Sl.Component.CarouselItem exposing (CarouselItemIs, CarouselItemAttrs, CarouselItemBuilder, CarouselItemAttrCaps, CarouselItemSlotCaps, CarouselItemChildAdmittedBy, carouselItem)
+module Sl.Component.CarouselItem exposing (CarouselItemIs, CarouselItemAttrs, CarouselItemBuilder, CarouselItemAttrCaps, CarouselItemSlotCaps, CarouselItemChildAdmittedBy, carouselItem, carouselItemChild)
 
 {-| The **CarouselItem** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs CarouselItemIs, CarouselItemAttrs, CarouselItemBuilder, CarouselItemAttrCaps, CarouselItemSlotCaps, CarouselItemChildAdmittedBy, carouselItem
+@docs CarouselItemIs, CarouselItemAttrs, CarouselItemBuilder, CarouselItemAttrCaps, CarouselItemSlotCaps, CarouselItemChildAdmittedBy, carouselItem, carouselItemChild
 
 -}
 
@@ -65,3 +65,10 @@ type alias CarouselItemSlotCaps =
 -}
 type alias CarouselItemChildAdmittedBy childAdm =
     CarouselItem_.ChildAdmittedBy childAdm
+
+
+{-| See [`Sl.Element.CarouselItem.child`](Sl.Element.CarouselItem#child).
+-}
+carouselItemChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+carouselItemChild =
+    CarouselItem_.child

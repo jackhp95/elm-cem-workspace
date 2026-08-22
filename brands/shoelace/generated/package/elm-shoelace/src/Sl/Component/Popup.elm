@@ -1,4 +1,4 @@
-module Sl.Component.Popup exposing (PopupIs, PopupAttrs, PopupBuilder, PopupAttrCaps, PopupSlotCaps, PopupChildAdmittedBy, PopupArrowPlacement, PopupAutoSize, PopupFlipFallbackStrategy, PopupPlacement, PopupStrategy, PopupSync, popup, popupArrowPlacement, popupAutoSize, popupFlipFallbackStrategy, popupPlacement, popupStrategy, popupSync, popupActive, popupAnchor, popupArrow, popupArrowPadding, popupAutoSizePadding, popupAutosizeboundary, popupDistance, popupFlip, popupFlipFallbackPlacements, popupFlipPadding, popupFlipboundary, popupHoverBridge, popupShift, popupShiftPadding, popupShiftboundary, popupSkidding, popupOnReposition)
+module Sl.Component.Popup exposing (PopupIs, PopupAttrs, PopupBuilder, PopupAttrCaps, PopupSlotCaps, PopupChildAdmittedBy, PopupArrowPlacement, PopupAutoSize, PopupFlipFallbackStrategy, PopupPlacement, PopupStrategy, PopupSync, popup, popupArrowPlacement, popupAutoSize, popupFlipFallbackStrategy, popupPlacement, popupStrategy, popupSync, popupActive, popupAnchor, popupArrow, popupArrowPadding, popupAutoSizePadding, popupAutosizeboundary, popupDistance, popupFlip, popupFlipFallbackPlacements, popupFlipPadding, popupFlipboundary, popupHoverBridge, popupShift, popupShiftPadding, popupShiftboundary, popupSkidding, popupOnReposition, popupChild)
 
 {-| The **Popup** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs PopupIs, PopupAttrs, PopupBuilder, PopupAttrCaps, PopupSlotCaps, PopupChildAdmittedBy, PopupArrowPlacement, PopupAutoSize, PopupFlipFallbackStrategy, PopupPlacement, PopupStrategy, PopupSync, popup, popupArrowPlacement, popupAutoSize, popupFlipFallbackStrategy, popupPlacement, popupStrategy, popupSync, popupActive, popupAnchor, popupArrow, popupArrowPadding, popupAutoSizePadding, popupAutosizeboundary, popupDistance, popupFlip, popupFlipFallbackPlacements, popupFlipPadding, popupFlipboundary, popupHoverBridge, popupShift, popupShiftPadding, popupShiftboundary, popupSkidding, popupOnReposition
+@docs PopupIs, PopupAttrs, PopupBuilder, PopupAttrCaps, PopupSlotCaps, PopupChildAdmittedBy, PopupArrowPlacement, PopupAutoSize, PopupFlipFallbackStrategy, PopupPlacement, PopupStrategy, PopupSync, popup, popupArrowPlacement, popupAutoSize, popupFlipFallbackStrategy, popupPlacement, popupStrategy, popupSync, popupActive, popupAnchor, popupArrow, popupArrowPadding, popupAutoSizePadding, popupAutosizeboundary, popupDistance, popupFlip, popupFlipFallbackPlacements, popupFlipPadding, popupFlipboundary, popupHoverBridge, popupShift, popupShiftPadding, popupShiftboundary, popupSkidding, popupOnReposition, popupChild
 
 -}
 
@@ -264,3 +264,10 @@ popupSkidding =
 popupOnReposition : msg -> Attr { c | onReposition : Supported } msg
 popupOnReposition =
     Popup_.onReposition
+
+
+{-| See [`Sl.Element.Popup.child`](Sl.Element.Popup#child).
+-}
+popupChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+popupChild =
+    Popup_.child

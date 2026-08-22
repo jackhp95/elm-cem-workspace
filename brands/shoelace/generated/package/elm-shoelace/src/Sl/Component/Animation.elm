@@ -1,4 +1,4 @@
-module Sl.Component.Animation exposing (AnimationIs, AnimationAttrs, AnimationBuilder, AnimationAttrCaps, AnimationSlotCaps, AnimationChildAdmittedBy, animation, animationDelay, animationDirection, animationDuration, animationEasing, animationEndDelay, animationFill, animationIterationStart, animationIterations, animationName, animationPlay, animationPlaybackRate, animationOnCancel, animationOnFinish, animationOnStart)
+module Sl.Component.Animation exposing (AnimationIs, AnimationAttrs, AnimationBuilder, AnimationAttrCaps, AnimationSlotCaps, AnimationChildAdmittedBy, animation, animationDelay, animationDirection, animationDuration, animationEasing, animationEndDelay, animationFill, animationIterationStart, animationIterations, animationName, animationPlay, animationPlaybackRate, animationOnCancel, animationOnFinish, animationOnStart, animationChild)
 
 {-| The **Animation** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs AnimationIs, AnimationAttrs, AnimationBuilder, AnimationAttrCaps, AnimationSlotCaps, AnimationChildAdmittedBy, animation, animationDelay, animationDirection, animationDuration, animationEasing, animationEndDelay, animationFill, animationIterationStart, animationIterations, animationName, animationPlay, animationPlaybackRate, animationOnCancel, animationOnFinish, animationOnStart
+@docs AnimationIs, AnimationAttrs, AnimationBuilder, AnimationAttrCaps, AnimationSlotCaps, AnimationChildAdmittedBy, animation, animationDelay, animationDirection, animationDuration, animationEasing, animationEndDelay, animationFill, animationIterationStart, animationIterations, animationName, animationPlay, animationPlaybackRate, animationOnCancel, animationOnFinish, animationOnStart, animationChild
 
 -}
 
@@ -164,3 +164,10 @@ animationOnFinish =
 animationOnStart : msg -> Attr { c | onStart : Supported } msg
 animationOnStart =
     Animation_.onStart
+
+
+{-| See [`Sl.Element.Animation.child`](Sl.Element.Animation#child).
+-}
+animationChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+animationChild =
+    Animation_.child

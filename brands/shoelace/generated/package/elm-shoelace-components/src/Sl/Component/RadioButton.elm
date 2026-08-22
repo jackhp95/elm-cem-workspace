@@ -1,4 +1,4 @@
-module Sl.Component.RadioButton exposing (RadioButtonIs, RadioButtonAttrs, RadioButtonBuilder, RadioButtonAttrCaps, RadioButtonSlotCaps, RadioButtonChildAdmittedBy, RadioButtonSize, radioButton, radioButtonSize, radioButtonDisabled, radioButtonPill, radioButtonValue, radioButtonDefaultValue, radioButtonOnBlur, radioButtonOnFocus)
+module Sl.Component.RadioButton exposing (RadioButtonIs, RadioButtonAttrs, RadioButtonBuilder, RadioButtonAttrCaps, RadioButtonSlotCaps, RadioButtonContent, RadioButtonChildAdmittedBy, RadioButtonSize, radioButton, radioButtonSize, radioButtonDisabled, radioButtonPill, radioButtonValue, radioButtonDefaultValue, radioButtonOnBlur, radioButtonOnFocus, radioButtonChild)
 
 {-| The **RadioButton** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs RadioButtonIs, RadioButtonAttrs, RadioButtonBuilder, RadioButtonAttrCaps, RadioButtonSlotCaps, RadioButtonChildAdmittedBy, RadioButtonSize, radioButton, radioButtonSize, radioButtonDisabled, radioButtonPill, radioButtonValue, radioButtonDefaultValue, radioButtonOnBlur, radioButtonOnFocus
+@docs RadioButtonIs, RadioButtonAttrs, RadioButtonBuilder, RadioButtonAttrCaps, RadioButtonSlotCaps, RadioButtonContent, RadioButtonChildAdmittedBy, RadioButtonSize, radioButton, radioButtonSize, radioButtonDisabled, radioButtonPill, radioButtonValue, radioButtonDefaultValue, radioButtonOnBlur, radioButtonOnFocus, radioButtonChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.RadioButton as RadioButton_
 -}
 radioButton :
     List (Attr RadioButtonAttrs msg)
-    -> List (Element childAccepts (RadioButtonChildAdmittedBy childAdm) msg)
+    -> List (Element RadioButtonContent (RadioButtonChildAdmittedBy childAdm) msg)
     -> Element (RadioButtonIs s) admittedBy msg
 radioButton =
     RadioButton_.component
@@ -61,6 +61,12 @@ type alias RadioButtonAttrCaps =
 -}
 type alias RadioButtonSlotCaps =
     RadioButton_.SlotCaps
+
+
+{-| See [`Sl.Element.RadioButton.Content`](Sl.Element.RadioButton#Content).
+-}
+type alias RadioButtonContent =
+    RadioButton_.Content
 
 
 {-| See [`Sl.Element.RadioButton.ChildAdmittedBy`](Sl.Element.RadioButton#ChildAdmittedBy).
@@ -122,3 +128,10 @@ radioButtonOnBlur =
 radioButtonOnFocus : msg -> Attr { c | onFocus : Supported } msg
 radioButtonOnFocus =
     RadioButton_.onFocus
+
+
+{-| See [`Sl.Element.RadioButton.child`](Sl.Element.RadioButton#child).
+-}
+radioButtonChild : Element RadioButtonContent admittedBy msg -> Element free freeAdmittedBy msg
+radioButtonChild =
+    RadioButton_.child

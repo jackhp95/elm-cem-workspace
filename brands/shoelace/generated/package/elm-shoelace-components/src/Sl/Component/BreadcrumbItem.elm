@@ -1,4 +1,4 @@
-module Sl.Component.BreadcrumbItem exposing (BreadcrumbItemIs, BreadcrumbItemAttrs, BreadcrumbItemBuilder, BreadcrumbItemAttrCaps, BreadcrumbItemSlotCaps, BreadcrumbItemChildAdmittedBy, BreadcrumbItemTarget, breadcrumbItem, breadcrumbItemTarget, breadcrumbItemHref, breadcrumbItemRel)
+module Sl.Component.BreadcrumbItem exposing (BreadcrumbItemIs, BreadcrumbItemAttrs, BreadcrumbItemBuilder, BreadcrumbItemAttrCaps, BreadcrumbItemSlotCaps, BreadcrumbItemChildAdmittedBy, BreadcrumbItemTarget, breadcrumbItem, breadcrumbItemTarget, breadcrumbItemHref, breadcrumbItemRel, breadcrumbItemChild)
 
 {-| The **BreadcrumbItem** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs BreadcrumbItemIs, BreadcrumbItemAttrs, BreadcrumbItemBuilder, BreadcrumbItemAttrCaps, BreadcrumbItemSlotCaps, BreadcrumbItemChildAdmittedBy, BreadcrumbItemTarget, breadcrumbItem, breadcrumbItemTarget, breadcrumbItemHref, breadcrumbItemRel
+@docs BreadcrumbItemIs, BreadcrumbItemAttrs, BreadcrumbItemBuilder, BreadcrumbItemAttrCaps, BreadcrumbItemSlotCaps, BreadcrumbItemChildAdmittedBy, BreadcrumbItemTarget, breadcrumbItem, breadcrumbItemTarget, breadcrumbItemHref, breadcrumbItemRel, breadcrumbItemChild
 
 -}
 
@@ -94,3 +94,10 @@ breadcrumbItemHref =
 breadcrumbItemRel : String -> Attr { c | rel : Supported } msg
 breadcrumbItemRel =
     BreadcrumbItem_.rel
+
+
+{-| See [`Sl.Element.BreadcrumbItem.child`](Sl.Element.BreadcrumbItem#child).
+-}
+breadcrumbItemChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+breadcrumbItemChild =
+    BreadcrumbItem_.child

@@ -1,4 +1,4 @@
-module Sl.Component.Select exposing (SelectIs, SelectAttrs, SelectBuilder, SelectAttrCaps, SelectSlotCaps, SelectChildAdmittedBy, SelectPlacement, SelectSize, select, selectPlacement, selectSize, selectClearable, selectDisabled, selectFilled, selectForm, selectGettag, selectHelpText, selectHoist, selectLabel, selectMaxOptionsVisible, selectMultiple, selectName, selectOpen, selectPill, selectPlaceholder, selectRequired, selectValue, selectDefaultValue, selectOnChange, selectOnClear, selectOnInput, selectOnFocus, selectOnBlur, selectOnShow, selectOnAfterShow, selectOnHide, selectOnAfterHide, selectOnInvalid)
+module Sl.Component.Select exposing (SelectIs, SelectAttrs, SelectBuilder, SelectAttrCaps, SelectSlotCaps, SelectContent, SelectChildAdmittedBy, SelectPlacement, SelectSize, select, selectPlacement, selectSize, selectClearable, selectDisabled, selectFilled, selectForm, selectGettag, selectHelpText, selectHoist, selectLabel, selectMaxOptionsVisible, selectMultiple, selectName, selectOpen, selectPill, selectPlaceholder, selectRequired, selectValue, selectDefaultValue, selectOnChange, selectOnClear, selectOnInput, selectOnFocus, selectOnBlur, selectOnShow, selectOnAfterShow, selectOnHide, selectOnAfterHide, selectOnInvalid, selectChild)
 
 {-| The **Select** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs SelectIs, SelectAttrs, SelectBuilder, SelectAttrCaps, SelectSlotCaps, SelectChildAdmittedBy, SelectPlacement, SelectSize, select, selectPlacement, selectSize, selectClearable, selectDisabled, selectFilled, selectForm, selectGettag, selectHelpText, selectHoist, selectLabel, selectMaxOptionsVisible, selectMultiple, selectName, selectOpen, selectPill, selectPlaceholder, selectRequired, selectValue, selectDefaultValue, selectOnChange, selectOnClear, selectOnInput, selectOnFocus, selectOnBlur, selectOnShow, selectOnAfterShow, selectOnHide, selectOnAfterHide, selectOnInvalid
+@docs SelectIs, SelectAttrs, SelectBuilder, SelectAttrCaps, SelectSlotCaps, SelectContent, SelectChildAdmittedBy, SelectPlacement, SelectSize, select, selectPlacement, selectSize, selectClearable, selectDisabled, selectFilled, selectForm, selectGettag, selectHelpText, selectHoist, selectLabel, selectMaxOptionsVisible, selectMultiple, selectName, selectOpen, selectPill, selectPlaceholder, selectRequired, selectValue, selectDefaultValue, selectOnChange, selectOnClear, selectOnInput, selectOnFocus, selectOnBlur, selectOnShow, selectOnAfterShow, selectOnHide, selectOnAfterHide, selectOnInvalid, selectChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Select as Select_
 -}
 select :
     List (Attr SelectAttrs msg)
-    -> List (Element childAccepts (SelectChildAdmittedBy childAdm) msg)
+    -> List (Element SelectContent (SelectChildAdmittedBy childAdm) msg)
     -> Element (SelectIs s) admittedBy msg
 select =
     Select_.component
@@ -61,6 +61,12 @@ type alias SelectAttrCaps =
 -}
 type alias SelectSlotCaps =
     Select_.SlotCaps
+
+
+{-| See [`Sl.Element.Select.Content`](Sl.Element.Select#Content).
+-}
+type alias SelectContent =
+    Select_.Content
 
 
 {-| See [`Sl.Element.Select.ChildAdmittedBy`](Sl.Element.Select#ChildAdmittedBy).
@@ -282,3 +288,10 @@ selectOnAfterHide =
 selectOnInvalid : msg -> Attr { c | onInvalid : Supported } msg
 selectOnInvalid =
     Select_.onInvalid
+
+
+{-| See [`Sl.Element.Select.child`](Sl.Element.Select#child).
+-}
+selectChild : Element SelectContent admittedBy msg -> Element free freeAdmittedBy msg
+selectChild =
+    Select_.child

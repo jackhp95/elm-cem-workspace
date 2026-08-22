@@ -1,16 +1,18 @@
 module Sl.Element.RadioGroup exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Size, size
     , form, helpText, label, name, required, value, defaultValue, onChange, onInput, onInvalid
+    , child
     )
 
 {-| The `sl-radio-group` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Size, size
 @docs form, helpText, label, name, required, value, defaultValue, onChange, onInput, onInvalid
+@docs child
 
 -}
 
@@ -36,6 +38,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.RadioGroup.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.RadioGroup.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -72,7 +80,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.radioGroup
@@ -153,3 +161,12 @@ onInput =
 onInvalid : msg -> Attr { c | onInvalid : Supported } msg
 onInvalid =
     Ev.onInvalid
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

@@ -1,4 +1,4 @@
-module Sl.Component.Radio exposing (RadioIs, RadioAttrs, RadioBuilder, RadioAttrCaps, RadioSlotCaps, RadioChildAdmittedBy, RadioSize, radio, radioSize, radioDisabled, radioValue, radioDefaultValue, radioOnBlur, radioOnFocus)
+module Sl.Component.Radio exposing (RadioIs, RadioAttrs, RadioBuilder, RadioAttrCaps, RadioSlotCaps, RadioContent, RadioChildAdmittedBy, RadioSize, radio, radioSize, radioDisabled, radioValue, radioDefaultValue, radioOnBlur, radioOnFocus, radioChild)
 
 {-| The **Radio** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs RadioIs, RadioAttrs, RadioBuilder, RadioAttrCaps, RadioSlotCaps, RadioChildAdmittedBy, RadioSize, radio, radioSize, radioDisabled, radioValue, radioDefaultValue, radioOnBlur, radioOnFocus
+@docs RadioIs, RadioAttrs, RadioBuilder, RadioAttrCaps, RadioSlotCaps, RadioContent, RadioChildAdmittedBy, RadioSize, radio, radioSize, radioDisabled, radioValue, radioDefaultValue, radioOnBlur, radioOnFocus, radioChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Radio as Radio_
 -}
 radio :
     List (Attr RadioAttrs msg)
-    -> List (Element childAccepts (RadioChildAdmittedBy childAdm) msg)
+    -> List (Element RadioContent (RadioChildAdmittedBy childAdm) msg)
     -> Element (RadioIs s) admittedBy msg
 radio =
     Radio_.component
@@ -61,6 +61,12 @@ type alias RadioAttrCaps =
 -}
 type alias RadioSlotCaps =
     Radio_.SlotCaps
+
+
+{-| See [`Sl.Element.Radio.Content`](Sl.Element.Radio#Content).
+-}
+type alias RadioContent =
+    Radio_.Content
 
 
 {-| See [`Sl.Element.Radio.ChildAdmittedBy`](Sl.Element.Radio#ChildAdmittedBy).
@@ -115,3 +121,10 @@ radioOnBlur =
 radioOnFocus : msg -> Attr { c | onFocus : Supported } msg
 radioOnFocus =
     Radio_.onFocus
+
+
+{-| See [`Sl.Element.Radio.child`](Sl.Element.Radio#child).
+-}
+radioChild : Element RadioContent admittedBy msg -> Element free freeAdmittedBy msg
+radioChild =
+    Radio_.child

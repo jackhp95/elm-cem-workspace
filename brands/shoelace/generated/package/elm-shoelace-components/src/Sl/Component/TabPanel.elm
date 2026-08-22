@@ -1,4 +1,4 @@
-module Sl.Component.TabPanel exposing (TabPanelIs, TabPanelAttrs, TabPanelBuilder, TabPanelAttrCaps, TabPanelSlotCaps, TabPanelChildAdmittedBy, tabPanel, tabPanelActive, tabPanelName)
+module Sl.Component.TabPanel exposing (TabPanelIs, TabPanelAttrs, TabPanelBuilder, TabPanelAttrCaps, TabPanelSlotCaps, TabPanelChildAdmittedBy, tabPanel, tabPanelActive, tabPanelName, tabPanelChild)
 
 {-| The **TabPanel** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TabPanelIs, TabPanelAttrs, TabPanelBuilder, TabPanelAttrCaps, TabPanelSlotCaps, TabPanelChildAdmittedBy, tabPanel, tabPanelActive, tabPanelName
+@docs TabPanelIs, TabPanelAttrs, TabPanelBuilder, TabPanelAttrCaps, TabPanelSlotCaps, TabPanelChildAdmittedBy, tabPanel, tabPanelActive, tabPanelName, tabPanelChild
 
 -}
 
@@ -80,3 +80,10 @@ tabPanelActive =
 tabPanelName : String -> Attr { c | name : Supported } msg
 tabPanelName =
     TabPanel_.name
+
+
+{-| See [`Sl.Element.TabPanel.child`](Sl.Element.TabPanel#child).
+-}
+tabPanelChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+tabPanelChild =
+    TabPanel_.child

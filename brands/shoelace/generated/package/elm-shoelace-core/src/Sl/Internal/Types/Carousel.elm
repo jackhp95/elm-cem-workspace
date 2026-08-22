@@ -1,11 +1,11 @@
-module Sl.Internal.Types.Carousel exposing (Is, Attrs, ChildAdmittedBy, Orientation, Builder, AttrCaps)
+module Sl.Internal.Types.Carousel exposing (Is, Attrs, Content, ChildAdmittedBy, Orientation, Builder, AttrCaps)
 
 {-| Type definitions for Carousel. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.Carousel` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Orientation, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Orientation, Builder, AttrCaps
 
 -}
 
@@ -39,6 +39,12 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     }
+
+
+{-| The `Content` type row for Carousel (generated).
+-}
+type alias Content =
+    { carouselItem : Brand }
 
 
 {-| The `ChildAdmittedBy` type row for Carousel (generated).

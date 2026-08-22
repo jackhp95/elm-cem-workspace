@@ -103,12 +103,15 @@ type alias PatternContent =
     , defs : Brand
     , desc : Brand
     , ellipse : Brand
+    , filter : Brand
+    , foreignObject : Brand
     , g : Brand
     , image : Brand
     , line : Brand
     , linearGradient : Brand
     , marker : Brand
     , mask : Brand
+    , metadata : Brand
     , path : Brand
     , pattern : Brand
     , polygon : Brand
@@ -121,6 +124,7 @@ type alias PatternContent =
     , text : Brand
     , title : Brand
     , use : Brand
+    , view : Brand
     }
 
 

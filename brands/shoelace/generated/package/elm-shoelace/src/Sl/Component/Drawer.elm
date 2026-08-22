@@ -1,4 +1,4 @@
-module Sl.Component.Drawer exposing (DrawerIs, DrawerAttrs, DrawerBuilder, DrawerAttrCaps, DrawerSlotCaps, DrawerChildAdmittedBy, DrawerPlacement, drawer, drawerPlacement, drawerContained, drawerLabel, drawerNoHeader, drawerOpen, drawerOnShow, drawerOnAfterShow, drawerOnHide, drawerOnAfterHide, drawerOnInitialFocus, drawerOnRequestClose)
+module Sl.Component.Drawer exposing (DrawerIs, DrawerAttrs, DrawerBuilder, DrawerAttrCaps, DrawerSlotCaps, DrawerChildAdmittedBy, DrawerPlacement, drawer, drawerPlacement, drawerContained, drawerLabel, drawerNoHeader, drawerOpen, drawerOnShow, drawerOnAfterShow, drawerOnHide, drawerOnAfterHide, drawerOnInitialFocus, drawerOnRequestClose, drawerChild)
 
 {-| The **Drawer** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs DrawerIs, DrawerAttrs, DrawerBuilder, DrawerAttrCaps, DrawerSlotCaps, DrawerChildAdmittedBy, DrawerPlacement, drawer, drawerPlacement, drawerContained, drawerLabel, drawerNoHeader, drawerOpen, drawerOnShow, drawerOnAfterShow, drawerOnHide, drawerOnAfterHide, drawerOnInitialFocus, drawerOnRequestClose
+@docs DrawerIs, DrawerAttrs, DrawerBuilder, DrawerAttrCaps, DrawerSlotCaps, DrawerChildAdmittedBy, DrawerPlacement, drawer, drawerPlacement, drawerContained, drawerLabel, drawerNoHeader, drawerOpen, drawerOnShow, drawerOnAfterShow, drawerOnHide, drawerOnAfterHide, drawerOnInitialFocus, drawerOnRequestClose, drawerChild
 
 -}
 
@@ -150,3 +150,10 @@ drawerOnInitialFocus =
 drawerOnRequestClose : msg -> Attr { c | onRequestClose : Supported } msg
 drawerOnRequestClose =
     Drawer_.onRequestClose
+
+
+{-| See [`Sl.Element.Drawer.child`](Sl.Element.Drawer#child).
+-}
+drawerChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+drawerChild =
+    Drawer_.child

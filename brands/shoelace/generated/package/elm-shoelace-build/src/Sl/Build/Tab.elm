@@ -1,4 +1,4 @@
-module Sl.Build.Tab exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle)
+module Sl.Build.Tab exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle, withChild)
 
 {-| The **Tab** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Tab`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.TabContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-tab" [] []
@@ -58,6 +63,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TabIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

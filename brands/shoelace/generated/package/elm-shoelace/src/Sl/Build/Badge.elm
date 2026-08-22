@@ -1,4 +1,4 @@
-module Sl.Build.Badge exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant)
+module Sl.Build.Badge exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant, withChild)
 
 {-| The **Badge** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Badge`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant, withChild
 
 -}
 
@@ -57,6 +57,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BadgeIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

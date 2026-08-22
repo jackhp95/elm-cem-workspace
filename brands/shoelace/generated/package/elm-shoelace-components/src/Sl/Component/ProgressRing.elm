@@ -1,4 +1,4 @@
-module Sl.Component.ProgressRing exposing (ProgressRingIs, ProgressRingAttrs, ProgressRingBuilder, ProgressRingAttrCaps, ProgressRingSlotCaps, ProgressRingChildAdmittedBy, progressRing, progressRingLabel, progressRingValue, progressRingDefaultValue)
+module Sl.Component.ProgressRing exposing (ProgressRingIs, ProgressRingAttrs, ProgressRingBuilder, ProgressRingAttrCaps, ProgressRingSlotCaps, ProgressRingContent, ProgressRingChildAdmittedBy, progressRing, progressRingLabel, progressRingValue, progressRingDefaultValue, progressRingChild)
 
 {-| The **ProgressRing** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs ProgressRingIs, ProgressRingAttrs, ProgressRingBuilder, ProgressRingAttrCaps, ProgressRingSlotCaps, ProgressRingChildAdmittedBy, progressRing, progressRingLabel, progressRingValue, progressRingDefaultValue
+@docs ProgressRingIs, ProgressRingAttrs, ProgressRingBuilder, ProgressRingAttrCaps, ProgressRingSlotCaps, ProgressRingContent, ProgressRingChildAdmittedBy, progressRing, progressRingLabel, progressRingValue, progressRingDefaultValue, progressRingChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.ProgressRing as ProgressRing_
 -}
 progressRing :
     List (Attr ProgressRingAttrs msg)
-    -> List (Element childAccepts (ProgressRingChildAdmittedBy childAdm) msg)
+    -> List (Element ProgressRingContent (ProgressRingChildAdmittedBy childAdm) msg)
     -> Element (ProgressRingIs s) admittedBy msg
 progressRing =
     ProgressRing_.component
@@ -62,6 +62,12 @@ type alias ProgressRingSlotCaps =
     ProgressRing_.SlotCaps
 
 
+{-| See [`Sl.Element.ProgressRing.Content`](Sl.Element.ProgressRing#Content).
+-}
+type alias ProgressRingContent =
+    ProgressRing_.Content
+
+
 {-| See [`Sl.Element.ProgressRing.ChildAdmittedBy`](Sl.Element.ProgressRing#ChildAdmittedBy).
 -}
 type alias ProgressRingChildAdmittedBy childAdm =
@@ -87,3 +93,10 @@ progressRingValue =
 progressRingDefaultValue : Float -> Attr { c | value : Supported } msg
 progressRingDefaultValue =
     ProgressRing_.defaultValue
+
+
+{-| See [`Sl.Element.ProgressRing.child`](Sl.Element.ProgressRing#child).
+-}
+progressRingChild : Element ProgressRingContent admittedBy msg -> Element free freeAdmittedBy msg
+progressRingChild =
+    ProgressRing_.child

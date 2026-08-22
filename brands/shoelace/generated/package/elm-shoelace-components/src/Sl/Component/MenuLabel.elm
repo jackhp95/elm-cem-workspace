@@ -1,4 +1,4 @@
-module Sl.Component.MenuLabel exposing (MenuLabelIs, MenuLabelAttrs, MenuLabelBuilder, MenuLabelAttrCaps, MenuLabelSlotCaps, MenuLabelChildAdmittedBy, menuLabel)
+module Sl.Component.MenuLabel exposing (MenuLabelIs, MenuLabelAttrs, MenuLabelBuilder, MenuLabelAttrCaps, MenuLabelSlotCaps, MenuLabelChildAdmittedBy, menuLabel, menuLabelChild)
 
 {-| The **MenuLabel** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs MenuLabelIs, MenuLabelAttrs, MenuLabelBuilder, MenuLabelAttrCaps, MenuLabelSlotCaps, MenuLabelChildAdmittedBy, menuLabel
+@docs MenuLabelIs, MenuLabelAttrs, MenuLabelBuilder, MenuLabelAttrCaps, MenuLabelSlotCaps, MenuLabelChildAdmittedBy, menuLabel, menuLabelChild
 
 -}
 
@@ -65,3 +65,10 @@ type alias MenuLabelSlotCaps =
 -}
 type alias MenuLabelChildAdmittedBy childAdm =
     MenuLabel_.ChildAdmittedBy childAdm
+
+
+{-| See [`Sl.Element.MenuLabel.child`](Sl.Element.MenuLabel#child).
+-}
+menuLabelChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+menuLabelChild =
+    MenuLabel_.child

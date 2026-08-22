@@ -1,4 +1,4 @@
-module Sl.Component.Switch exposing (SwitchIs, SwitchAttrs, SwitchBuilder, SwitchAttrCaps, SwitchSlotCaps, SwitchChildAdmittedBy, SwitchSize, switch, switchSize, switchChecked, switchDisabled, switchForm, switchHelpText, switchName, switchRequired, switchTitle, switchValue, switchDefaultChecked, switchDefaultValue, switchOnBlur, switchOnChange, switchOnInput, switchOnFocus, switchOnInvalid)
+module Sl.Component.Switch exposing (SwitchIs, SwitchAttrs, SwitchBuilder, SwitchAttrCaps, SwitchSlotCaps, SwitchContent, SwitchChildAdmittedBy, SwitchSize, switch, switchSize, switchChecked, switchDisabled, switchForm, switchHelpText, switchName, switchRequired, switchTitle, switchValue, switchDefaultChecked, switchDefaultValue, switchOnBlur, switchOnChange, switchOnInput, switchOnFocus, switchOnInvalid, switchChild)
 
 {-| The **Switch** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs SwitchIs, SwitchAttrs, SwitchBuilder, SwitchAttrCaps, SwitchSlotCaps, SwitchChildAdmittedBy, SwitchSize, switch, switchSize, switchChecked, switchDisabled, switchForm, switchHelpText, switchName, switchRequired, switchTitle, switchValue, switchDefaultChecked, switchDefaultValue, switchOnBlur, switchOnChange, switchOnInput, switchOnFocus, switchOnInvalid
+@docs SwitchIs, SwitchAttrs, SwitchBuilder, SwitchAttrCaps, SwitchSlotCaps, SwitchContent, SwitchChildAdmittedBy, SwitchSize, switch, switchSize, switchChecked, switchDisabled, switchForm, switchHelpText, switchName, switchRequired, switchTitle, switchValue, switchDefaultChecked, switchDefaultValue, switchOnBlur, switchOnChange, switchOnInput, switchOnFocus, switchOnInvalid, switchChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Switch as Switch_
 -}
 switch :
     List (Attr SwitchAttrs msg)
-    -> List (Element childAccepts (SwitchChildAdmittedBy childAdm) msg)
+    -> List (Element SwitchContent (SwitchChildAdmittedBy childAdm) msg)
     -> Element (SwitchIs s) admittedBy msg
 switch =
     Switch_.component
@@ -61,6 +61,12 @@ type alias SwitchAttrCaps =
 -}
 type alias SwitchSlotCaps =
     Switch_.SlotCaps
+
+
+{-| See [`Sl.Element.Switch.Content`](Sl.Element.Switch#Content).
+-}
+type alias SwitchContent =
+    Switch_.Content
 
 
 {-| See [`Sl.Element.Switch.ChildAdmittedBy`](Sl.Element.Switch#ChildAdmittedBy).
@@ -185,3 +191,10 @@ switchOnFocus =
 switchOnInvalid : msg -> Attr { c | onInvalid : Supported } msg
 switchOnInvalid =
     Switch_.onInvalid
+
+
+{-| See [`Sl.Element.Switch.child`](Sl.Element.Switch#child).
+-}
+switchChild : Element SwitchContent admittedBy msg -> Element free freeAdmittedBy msg
+switchChild =
+    Switch_.child

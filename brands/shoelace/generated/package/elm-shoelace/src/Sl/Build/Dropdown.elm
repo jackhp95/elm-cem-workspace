@@ -1,4 +1,4 @@
-module Sl.Build.Dropdown exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync)
+module Sl.Build.Dropdown exposing (Builder, AttrCaps, SlotCaps, Is, Content, TriggerSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync, trigger, withTrigger, withChild)
 
 {-| The **Dropdown** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Dropdown`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync
+@docs Builder, AttrCaps, SlotCaps, Is, Content, TriggerSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync, trigger, withTrigger, withChild
 
 -}
 
@@ -49,6 +49,16 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.DropdownContent
+
+
+{-| -}
+type alias TriggerSlot =
+    Component.DropdownTriggerSlot
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-dropdown" [] []
@@ -58,6 +68,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.DropdownIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+trigger :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DropdownTriggerSlot msg
+    -> Element free freeAdmittedBy msg
+trigger builder =
+    Component.dropdownTrigger (B.toElement builder)
+
+
+{-| -}
+withTrigger :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DropdownTriggerSlot msg
+    -> Builder attrCaps { s | trigger : Available } msg kind
+    -> Builder attrCaps { s | trigger : Used } msg kind
+withTrigger slotBuilder builder_ =
+    B.withChild (El.toNode (Component.dropdownTrigger (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

@@ -1,4 +1,4 @@
-module Sl.Component.Breadcrumb exposing (BreadcrumbIs, BreadcrumbAttrs, BreadcrumbBuilder, BreadcrumbAttrCaps, BreadcrumbSlotCaps, BreadcrumbChildAdmittedBy, breadcrumb, breadcrumbLabel)
+module Sl.Component.Breadcrumb exposing (BreadcrumbIs, BreadcrumbAttrs, BreadcrumbBuilder, BreadcrumbAttrCaps, BreadcrumbSlotCaps, BreadcrumbContent, BreadcrumbChildAdmittedBy, breadcrumb, breadcrumbLabel, breadcrumbChild)
 
 {-| The **Breadcrumb** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs BreadcrumbIs, BreadcrumbAttrs, BreadcrumbBuilder, BreadcrumbAttrCaps, BreadcrumbSlotCaps, BreadcrumbChildAdmittedBy, breadcrumb, breadcrumbLabel
+@docs BreadcrumbIs, BreadcrumbAttrs, BreadcrumbBuilder, BreadcrumbAttrCaps, BreadcrumbSlotCaps, BreadcrumbContent, BreadcrumbChildAdmittedBy, breadcrumb, breadcrumbLabel, breadcrumbChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.Breadcrumb as Breadcrumb_
 -}
 breadcrumb :
     List (Attr BreadcrumbAttrs msg)
-    -> List (Element childAccepts (BreadcrumbChildAdmittedBy childAdm) msg)
+    -> List (Element BreadcrumbContent (BreadcrumbChildAdmittedBy childAdm) msg)
     -> Element (BreadcrumbIs s) admittedBy msg
 breadcrumb =
     Breadcrumb_.component
@@ -62,6 +62,12 @@ type alias BreadcrumbSlotCaps =
     Breadcrumb_.SlotCaps
 
 
+{-| See [`Sl.Element.Breadcrumb.Content`](Sl.Element.Breadcrumb#Content).
+-}
+type alias BreadcrumbContent =
+    Breadcrumb_.Content
+
+
 {-| See [`Sl.Element.Breadcrumb.ChildAdmittedBy`](Sl.Element.Breadcrumb#ChildAdmittedBy).
 -}
 type alias BreadcrumbChildAdmittedBy childAdm =
@@ -73,3 +79,10 @@ type alias BreadcrumbChildAdmittedBy childAdm =
 breadcrumbLabel : String -> Attr { c | label : Supported } msg
 breadcrumbLabel =
     Breadcrumb_.label
+
+
+{-| See [`Sl.Element.Breadcrumb.child`](Sl.Element.Breadcrumb#child).
+-}
+breadcrumbChild : Element BreadcrumbContent admittedBy msg -> Element free freeAdmittedBy msg
+breadcrumbChild =
+    Breadcrumb_.child

@@ -1,4 +1,4 @@
-module Sl.Build.Radio exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBlur, withOnFocus, withSize, withSlot, withStyle, withValue)
+module Sl.Build.Radio exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBlur, withOnFocus, withSize, withSlot, withStyle, withValue, withChild)
 
 {-| The **Radio** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Radio`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBlur, withOnFocus, withSize, withSlot, withStyle, withValue
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBlur, withOnFocus, withSize, withSlot, withStyle, withValue, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.RadioContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-radio" [] []
@@ -58,6 +63,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RadioIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

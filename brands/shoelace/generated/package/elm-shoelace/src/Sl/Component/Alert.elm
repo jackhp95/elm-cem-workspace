@@ -1,4 +1,4 @@
-module Sl.Component.Alert exposing (AlertIs, AlertAttrs, AlertBuilder, AlertAttrCaps, AlertSlotCaps, AlertChildAdmittedBy, AlertCountdown, AlertVariant, alert, alertCountdown, alertVariant, alertClosable, alertDuration, alertOpen, alertOnShow, alertOnAfterShow, alertOnHide, alertOnAfterHide)
+module Sl.Component.Alert exposing (AlertIs, AlertAttrs, AlertBuilder, AlertAttrCaps, AlertSlotCaps, AlertChildAdmittedBy, AlertCountdown, AlertVariant, alert, alertCountdown, alertVariant, alertClosable, alertDuration, alertOpen, alertOnShow, alertOnAfterShow, alertOnHide, alertOnAfterHide, alertChild)
 
 {-| The **Alert** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs AlertIs, AlertAttrs, AlertBuilder, AlertAttrCaps, AlertSlotCaps, AlertChildAdmittedBy, AlertCountdown, AlertVariant, alert, alertCountdown, alertVariant, alertClosable, alertDuration, alertOpen, alertOnShow, alertOnAfterShow, alertOnHide, alertOnAfterHide
+@docs AlertIs, AlertAttrs, AlertBuilder, AlertAttrCaps, AlertSlotCaps, AlertChildAdmittedBy, AlertCountdown, AlertVariant, alert, alertCountdown, alertVariant, alertClosable, alertDuration, alertOpen, alertOnShow, alertOnAfterShow, alertOnHide, alertOnAfterHide, alertChild
 
 -}
 
@@ -142,3 +142,10 @@ alertOnHide =
 alertOnAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 alertOnAfterHide =
     Alert_.onAfterHide
+
+
+{-| See [`Sl.Element.Alert.child`](Sl.Element.Alert#child).
+-}
+alertChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+alertChild =
+    Alert_.child

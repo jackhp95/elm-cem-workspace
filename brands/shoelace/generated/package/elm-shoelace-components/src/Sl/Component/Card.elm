@@ -1,4 +1,4 @@
-module Sl.Component.Card exposing (CardIs, CardAttrs, CardBuilder, CardAttrCaps, CardSlotCaps, CardChildAdmittedBy, card)
+module Sl.Component.Card exposing (CardIs, CardAttrs, CardBuilder, CardAttrCaps, CardSlotCaps, CardChildAdmittedBy, card, cardChild)
 
 {-| The **Card** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs CardIs, CardAttrs, CardBuilder, CardAttrCaps, CardSlotCaps, CardChildAdmittedBy, card
+@docs CardIs, CardAttrs, CardBuilder, CardAttrCaps, CardSlotCaps, CardChildAdmittedBy, card, cardChild
 
 -}
 
@@ -65,3 +65,10 @@ type alias CardSlotCaps =
 -}
 type alias CardChildAdmittedBy childAdm =
     Card_.ChildAdmittedBy childAdm
+
+
+{-| See [`Sl.Element.Card.child`](Sl.Element.Card#child).
+-}
+cardChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+cardChild =
+    Card_.child

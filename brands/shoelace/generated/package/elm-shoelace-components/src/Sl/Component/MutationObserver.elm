@@ -1,4 +1,4 @@
-module Sl.Component.MutationObserver exposing (MutationObserverIs, MutationObserverAttrs, MutationObserverBuilder, MutationObserverAttrCaps, MutationObserverSlotCaps, MutationObserverChildAdmittedBy, mutationObserver, mutationObserverAttr, mutationObserverAttrOldValue, mutationObserverCharData, mutationObserverCharDataOldValue, mutationObserverChildList, mutationObserverDisabled, mutationObserverOnMutation)
+module Sl.Component.MutationObserver exposing (MutationObserverIs, MutationObserverAttrs, MutationObserverBuilder, MutationObserverAttrCaps, MutationObserverSlotCaps, MutationObserverChildAdmittedBy, mutationObserver, mutationObserverAttr, mutationObserverAttrOldValue, mutationObserverCharData, mutationObserverCharDataOldValue, mutationObserverChildList, mutationObserverDisabled, mutationObserverOnMutation, mutationObserverChild)
 
 {-| The **MutationObserver** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs MutationObserverIs, MutationObserverAttrs, MutationObserverBuilder, MutationObserverAttrCaps, MutationObserverSlotCaps, MutationObserverChildAdmittedBy, mutationObserver, mutationObserverAttr, mutationObserverAttrOldValue, mutationObserverCharData, mutationObserverCharDataOldValue, mutationObserverChildList, mutationObserverDisabled, mutationObserverOnMutation
+@docs MutationObserverIs, MutationObserverAttrs, MutationObserverBuilder, MutationObserverAttrCaps, MutationObserverSlotCaps, MutationObserverChildAdmittedBy, mutationObserver, mutationObserverAttr, mutationObserverAttrOldValue, mutationObserverCharData, mutationObserverCharDataOldValue, mutationObserverChildList, mutationObserverDisabled, mutationObserverOnMutation, mutationObserverChild
 
 -}
 
@@ -115,3 +115,10 @@ mutationObserverDisabled =
 mutationObserverOnMutation : msg -> Attr { c | onMutation : Supported } msg
 mutationObserverOnMutation =
     MutationObserver_.onMutation
+
+
+{-| See [`Sl.Element.MutationObserver.child`](Sl.Element.MutationObserver#child).
+-}
+mutationObserverChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+mutationObserverChild =
+    MutationObserver_.child

@@ -1,15 +1,15 @@
-module Sl.Internal.Types.RadioButton exposing (Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps)
+module Sl.Internal.Types.RadioButton exposing (Is, Attrs, Content, ChildAdmittedBy, Size, Builder, AttrCaps)
 
 {-| Type definitions for RadioButton. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.RadioButton` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Size, Builder, AttrCaps
 
 -}
 
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -34,6 +34,23 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     , value : Supported
+    }
+
+
+{-| The `Content` type row for RadioButton (generated).
+-}
+type alias Content =
+    { avatar : Brand
+    , badge : Brand
+    , formatBytes : Brand
+    , formatDate : Brand
+    , formatNumber : Brand
+    , icon : Brand
+    , relativeTime : Brand
+    , sharedText : Shared
+    , spinner : Brand
+    , tag : Brand
+    , visuallyHidden : Brand
     }
 
 

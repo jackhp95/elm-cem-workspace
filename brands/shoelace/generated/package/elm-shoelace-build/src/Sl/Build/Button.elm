@@ -1,4 +1,4 @@
-module Sl.Build.Button exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant)
+module Sl.Build.Button exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant, withChild)
 
 {-| The **Button** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Button`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant, withChild
 
 -}
 
@@ -50,6 +50,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.ButtonContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-button" [] []
@@ -59,6 +64,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ButtonIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

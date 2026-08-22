@@ -1,4 +1,4 @@
-module Sl.Component.Badge exposing (BadgeIs, BadgeAttrs, BadgeBuilder, BadgeAttrCaps, BadgeSlotCaps, BadgeChildAdmittedBy, BadgeVariant, badge, badgeVariant, badgePill, badgePulse)
+module Sl.Component.Badge exposing (BadgeIs, BadgeAttrs, BadgeBuilder, BadgeAttrCaps, BadgeSlotCaps, BadgeChildAdmittedBy, BadgeVariant, badge, badgeVariant, badgePill, badgePulse, badgeChild)
 
 {-| The **Badge** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs BadgeIs, BadgeAttrs, BadgeBuilder, BadgeAttrCaps, BadgeSlotCaps, BadgeChildAdmittedBy, BadgeVariant, badge, badgeVariant, badgePill, badgePulse
+@docs BadgeIs, BadgeAttrs, BadgeBuilder, BadgeAttrCaps, BadgeSlotCaps, BadgeChildAdmittedBy, BadgeVariant, badge, badgeVariant, badgePill, badgePulse, badgeChild
 
 -}
 
@@ -94,3 +94,10 @@ badgePill =
 badgePulse : Bool -> Attr { c | pulse : Supported } msg
 badgePulse =
     Badge_.pulse
+
+
+{-| See [`Sl.Element.Badge.child`](Sl.Element.Badge#child).
+-}
+badgeChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+badgeChild =
+    Badge_.child

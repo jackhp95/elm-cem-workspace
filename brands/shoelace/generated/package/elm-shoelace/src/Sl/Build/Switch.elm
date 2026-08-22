@@ -1,4 +1,4 @@
-module Sl.Build.Switch exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue)
+module Sl.Build.Switch exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue, withChild)
 
 {-| The **Switch** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Switch`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.SwitchContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-switch" [] []
@@ -58,6 +63,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SwitchIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

@@ -1,4 +1,4 @@
-module Sl.Component.ProgressBar exposing (ProgressBarIs, ProgressBarAttrs, ProgressBarBuilder, ProgressBarAttrCaps, ProgressBarSlotCaps, ProgressBarChildAdmittedBy, progressBar, progressBarIndeterminate, progressBarLabel, progressBarValue, progressBarDefaultValue)
+module Sl.Component.ProgressBar exposing (ProgressBarIs, ProgressBarAttrs, ProgressBarBuilder, ProgressBarAttrCaps, ProgressBarSlotCaps, ProgressBarContent, ProgressBarChildAdmittedBy, progressBar, progressBarIndeterminate, progressBarLabel, progressBarValue, progressBarDefaultValue, progressBarChild)
 
 {-| The **ProgressBar** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs ProgressBarIs, ProgressBarAttrs, ProgressBarBuilder, ProgressBarAttrCaps, ProgressBarSlotCaps, ProgressBarChildAdmittedBy, progressBar, progressBarIndeterminate, progressBarLabel, progressBarValue, progressBarDefaultValue
+@docs ProgressBarIs, ProgressBarAttrs, ProgressBarBuilder, ProgressBarAttrCaps, ProgressBarSlotCaps, ProgressBarContent, ProgressBarChildAdmittedBy, progressBar, progressBarIndeterminate, progressBarLabel, progressBarValue, progressBarDefaultValue, progressBarChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.ProgressBar as ProgressBar_
 -}
 progressBar :
     List (Attr ProgressBarAttrs msg)
-    -> List (Element childAccepts (ProgressBarChildAdmittedBy childAdm) msg)
+    -> List (Element ProgressBarContent (ProgressBarChildAdmittedBy childAdm) msg)
     -> Element (ProgressBarIs s) admittedBy msg
 progressBar =
     ProgressBar_.component
@@ -62,6 +62,12 @@ type alias ProgressBarSlotCaps =
     ProgressBar_.SlotCaps
 
 
+{-| See [`Sl.Element.ProgressBar.Content`](Sl.Element.ProgressBar#Content).
+-}
+type alias ProgressBarContent =
+    ProgressBar_.Content
+
+
 {-| See [`Sl.Element.ProgressBar.ChildAdmittedBy`](Sl.Element.ProgressBar#ChildAdmittedBy).
 -}
 type alias ProgressBarChildAdmittedBy childAdm =
@@ -94,3 +100,10 @@ progressBarValue =
 progressBarDefaultValue : Float -> Attr { c | value : Supported } msg
 progressBarDefaultValue =
     ProgressBar_.defaultValue
+
+
+{-| See [`Sl.Element.ProgressBar.child`](Sl.Element.ProgressBar#child).
+-}
+progressBarChild : Element ProgressBarContent admittedBy msg -> Element free freeAdmittedBy msg
+progressBarChild =
+    ProgressBar_.child

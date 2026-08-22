@@ -1,4 +1,4 @@
-module Sl.Build.Popup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync)
+module Sl.Build.Popup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync, withChild)
 
 {-| The **Popup** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Popup`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync, withChild
 
 -}
 
@@ -58,6 +58,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PopupIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

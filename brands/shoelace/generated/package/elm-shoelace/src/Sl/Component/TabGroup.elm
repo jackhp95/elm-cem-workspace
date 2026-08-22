@@ -1,4 +1,4 @@
-module Sl.Component.TabGroup exposing (TabGroupIs, TabGroupAttrs, TabGroupBuilder, TabGroupAttrCaps, TabGroupSlotCaps, TabGroupChildAdmittedBy, TabGroupActivation, TabGroupPlacement, tabGroup, tabGroupActivation, tabGroupPlacement, tabGroupFixedScrollControls, tabGroupNoScrollControls, tabGroupOnTabShow, tabGroupOnTabHide)
+module Sl.Component.TabGroup exposing (TabGroupIs, TabGroupAttrs, TabGroupBuilder, TabGroupAttrCaps, TabGroupSlotCaps, TabGroupContent, TabGroupNavSlot, TabGroupChildAdmittedBy, TabGroupActivation, TabGroupPlacement, tabGroup, tabGroupActivation, tabGroupPlacement, tabGroupFixedScrollControls, tabGroupNoScrollControls, tabGroupOnTabShow, tabGroupOnTabHide, tabGroupNav, tabGroupChild)
 
 {-| The **TabGroup** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TabGroupIs, TabGroupAttrs, TabGroupBuilder, TabGroupAttrCaps, TabGroupSlotCaps, TabGroupChildAdmittedBy, TabGroupActivation, TabGroupPlacement, tabGroup, tabGroupActivation, tabGroupPlacement, tabGroupFixedScrollControls, tabGroupNoScrollControls, tabGroupOnTabShow, tabGroupOnTabHide
+@docs TabGroupIs, TabGroupAttrs, TabGroupBuilder, TabGroupAttrCaps, TabGroupSlotCaps, TabGroupContent, TabGroupNavSlot, TabGroupChildAdmittedBy, TabGroupActivation, TabGroupPlacement, tabGroup, tabGroupActivation, tabGroupPlacement, tabGroupFixedScrollControls, tabGroupNoScrollControls, tabGroupOnTabShow, tabGroupOnTabHide, tabGroupNav, tabGroupChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.TabGroup as TabGroup_
 -}
 tabGroup :
     List (Attr TabGroupAttrs msg)
-    -> List (Element childAccepts (TabGroupChildAdmittedBy childAdm) msg)
+    -> List (Element TabGroupContent (TabGroupChildAdmittedBy childAdm) msg)
     -> Element (TabGroupIs s) admittedBy msg
 tabGroup =
     TabGroup_.component
@@ -61,6 +61,18 @@ type alias TabGroupAttrCaps =
 -}
 type alias TabGroupSlotCaps =
     TabGroup_.SlotCaps
+
+
+{-| See [`Sl.Element.TabGroup.Content`](Sl.Element.TabGroup#Content).
+-}
+type alias TabGroupContent =
+    TabGroup_.Content
+
+
+{-| See [`Sl.Element.TabGroup.NavSlot`](Sl.Element.TabGroup#NavSlot).
+-}
+type alias TabGroupNavSlot =
+    TabGroup_.NavSlot
 
 
 {-| See [`Sl.Element.TabGroup.ChildAdmittedBy`](Sl.Element.TabGroup#ChildAdmittedBy).
@@ -121,3 +133,17 @@ tabGroupOnTabShow =
 tabGroupOnTabHide : msg -> Attr { c | onTabHide : Supported } msg
 tabGroupOnTabHide =
     TabGroup_.onTabHide
+
+
+{-| See [`Sl.Element.TabGroup.nav`](Sl.Element.TabGroup#nav).
+-}
+tabGroupNav : Element TabGroupNavSlot admittedBy msg -> Element free freeAdmittedBy msg
+tabGroupNav =
+    TabGroup_.nav
+
+
+{-| See [`Sl.Element.TabGroup.child`](Sl.Element.TabGroup#child).
+-}
+tabGroupChild : Element TabGroupContent admittedBy msg -> Element free freeAdmittedBy msg
+tabGroupChild =
+    TabGroup_.child

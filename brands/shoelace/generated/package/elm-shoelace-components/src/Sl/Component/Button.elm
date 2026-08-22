@@ -1,4 +1,4 @@
-module Sl.Component.Button exposing (ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonChildAdmittedBy, ButtonFormenctype, ButtonFormmethod, ButtonFormtarget, ButtonSize, ButtonTarget, ButtonType, ButtonVariant, button, buttonFormenctype, buttonFormmethod, buttonFormtarget, buttonSize, buttonTarget, buttonType_, buttonVariant, buttonCaret, buttonCircle, buttonDisabled, buttonDownload, buttonForm, buttonFormnovalidate, buttonHref, buttonLoading, buttonName, buttonOutline, buttonPill, buttonRel, buttonTitle, buttonValue, buttonDefaultValue, buttonOnBlur, buttonOnFocus, buttonOnInvalid)
+module Sl.Component.Button exposing (ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonContent, ButtonChildAdmittedBy, ButtonFormenctype, ButtonFormmethod, ButtonFormtarget, ButtonSize, ButtonTarget, ButtonType, ButtonVariant, button, buttonFormenctype, buttonFormmethod, buttonFormtarget, buttonSize, buttonTarget, buttonType_, buttonVariant, buttonCaret, buttonCircle, buttonDisabled, buttonDownload, buttonForm, buttonFormnovalidate, buttonHref, buttonLoading, buttonName, buttonOutline, buttonPill, buttonRel, buttonTitle, buttonValue, buttonDefaultValue, buttonOnBlur, buttonOnFocus, buttonOnInvalid, buttonChild)
 
 {-| The **Button** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonChildAdmittedBy, ButtonFormenctype, ButtonFormmethod, ButtonFormtarget, ButtonSize, ButtonTarget, ButtonType, ButtonVariant, button, buttonFormenctype, buttonFormmethod, buttonFormtarget, buttonSize, buttonTarget, buttonType_, buttonVariant, buttonCaret, buttonCircle, buttonDisabled, buttonDownload, buttonForm, buttonFormnovalidate, buttonHref, buttonLoading, buttonName, buttonOutline, buttonPill, buttonRel, buttonTitle, buttonValue, buttonDefaultValue, buttonOnBlur, buttonOnFocus, buttonOnInvalid
+@docs ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonContent, ButtonChildAdmittedBy, ButtonFormenctype, ButtonFormmethod, ButtonFormtarget, ButtonSize, ButtonTarget, ButtonType, ButtonVariant, button, buttonFormenctype, buttonFormmethod, buttonFormtarget, buttonSize, buttonTarget, buttonType_, buttonVariant, buttonCaret, buttonCircle, buttonDisabled, buttonDownload, buttonForm, buttonFormnovalidate, buttonHref, buttonLoading, buttonName, buttonOutline, buttonPill, buttonRel, buttonTitle, buttonValue, buttonDefaultValue, buttonOnBlur, buttonOnFocus, buttonOnInvalid, buttonChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Button as Button_
 -}
 button :
     List (Attr ButtonAttrs msg)
-    -> List (Element childAccepts (ButtonChildAdmittedBy childAdm) msg)
+    -> List (Element ButtonContent (ButtonChildAdmittedBy childAdm) msg)
     -> Element (ButtonIs s) admittedBy msg
 button =
     Button_.component
@@ -61,6 +61,12 @@ type alias ButtonAttrCaps =
 -}
 type alias ButtonSlotCaps =
     Button_.SlotCaps
+
+
+{-| See [`Sl.Element.Button.Content`](Sl.Element.Button#Content).
+-}
+type alias ButtonContent =
+    Button_.Content
 
 
 {-| See [`Sl.Element.Button.ChildAdmittedBy`](Sl.Element.Button#ChildAdmittedBy).
@@ -284,3 +290,10 @@ buttonOnFocus =
 buttonOnInvalid : msg -> Attr { c | onInvalid : Supported } msg
 buttonOnInvalid =
     Button_.onInvalid
+
+
+{-| See [`Sl.Element.Button.child`](Sl.Element.Button#child).
+-}
+buttonChild : Element ButtonContent admittedBy msg -> Element free freeAdmittedBy msg
+buttonChild =
+    Button_.child

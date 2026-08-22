@@ -1,4 +1,4 @@
-module Sl.Component.Option exposing (OptionIs, OptionAttrs, OptionBuilder, OptionAttrCaps, OptionSlotCaps, OptionChildAdmittedBy, option, optionDisabled, optionValue, optionDefaultValue)
+module Sl.Component.Option exposing (OptionIs, OptionAttrs, OptionBuilder, OptionAttrCaps, OptionSlotCaps, OptionContent, OptionChildAdmittedBy, option, optionDisabled, optionValue, optionDefaultValue, optionChild)
 
 {-| The **Option** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs OptionIs, OptionAttrs, OptionBuilder, OptionAttrCaps, OptionSlotCaps, OptionChildAdmittedBy, option, optionDisabled, optionValue, optionDefaultValue
+@docs OptionIs, OptionAttrs, OptionBuilder, OptionAttrCaps, OptionSlotCaps, OptionContent, OptionChildAdmittedBy, option, optionDisabled, optionValue, optionDefaultValue, optionChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.Option as Option_
 -}
 option :
     List (Attr OptionAttrs msg)
-    -> List (Element childAccepts (OptionChildAdmittedBy childAdm) msg)
+    -> List (Element OptionContent (OptionChildAdmittedBy childAdm) msg)
     -> Element (OptionIs s) admittedBy msg
 option =
     Option_.component
@@ -62,6 +62,12 @@ type alias OptionSlotCaps =
     Option_.SlotCaps
 
 
+{-| See [`Sl.Element.Option.Content`](Sl.Element.Option#Content).
+-}
+type alias OptionContent =
+    Option_.Content
+
+
 {-| See [`Sl.Element.Option.ChildAdmittedBy`](Sl.Element.Option#ChildAdmittedBy).
 -}
 type alias OptionChildAdmittedBy childAdm =
@@ -87,3 +93,10 @@ optionValue =
 optionDefaultValue : String -> Attr { c | value : Supported } msg
 optionDefaultValue =
     Option_.defaultValue
+
+
+{-| See [`Sl.Element.Option.child`](Sl.Element.Option#child).
+-}
+optionChild : Element OptionContent admittedBy msg -> Element free freeAdmittedBy msg
+optionChild =
+    Option_.child

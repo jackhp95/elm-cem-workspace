@@ -126,8 +126,12 @@
     "universally admitted (SVG-AAM: every element may carry a title/desc name/description).",
     "",
     "  svgContainerContent = the shared g/svg/defs/symbol/a model (animation+descriptive+paint-server",
-    "    +shape+structural + a/clipPath/image/marker/mask/switch/text), brand-restricted, minus",
-    "    title/desc. This is what was `any` before — now a CLOSED allow-list.",
+    "    +shape+structural + a/clipPath/filter/foreignObject/image/marker/mask/metadata/switch/text/view),",
+    "    brand-restricted, minus title/desc. This is what was `any` before — now a CLOSED allow-list.",
+    "    filter + foreignObject + metadata + view added post-merge (2026-08-22): all four landed on the",
+    "    svg-audit branch (Tasks 4/5) after this set was originally authored on the families branch, so",
+    "    the initial admits list predated them. All four are real SVG-2 container children",
+    "    (defs/svg/g all admit them per spec; RenderTest.elm exercises exactly these as direct svg children).",
     "  svgSwitchContent = switch's narrower model: shapes + a/g/image/svg/switch/text/use. A switch",
     "    may NOT contain a gradient, pattern, defs, symbol, marker, mask, clipPath or stop.",
     "  svgClipContent = clipPath's model: shapes + text + use ONLY. No g/defs/image/gradient/svg/a/etc."
@@ -137,9 +141,9 @@
     "svgStructural": ["defs", "g", "svg", "symbol", "use"],
     "svgPaintServer": ["linearGradient", "radialGradient", "pattern"],
     "svgContainerContent": [
-      "a", "circle", "clipPath", "defs", "ellipse", "g", "image", "line",
-      "linearGradient", "marker", "mask", "path", "pattern", "polygon",
-      "polyline", "radialGradient", "rect", "svg", "switch", "symbol", "text", "use"
+      "a", "circle", "clipPath", "defs", "ellipse", "filter", "foreignObject", "g", "image", "line",
+      "linearGradient", "marker", "mask", "metadata", "path", "pattern", "polygon",
+      "polyline", "radialGradient", "rect", "svg", "switch", "symbol", "text", "use", "view"
     ],
     "svgSwitchContent": [
       "a", "circle", "ellipse", "g", "image", "line", "path", "polygon",

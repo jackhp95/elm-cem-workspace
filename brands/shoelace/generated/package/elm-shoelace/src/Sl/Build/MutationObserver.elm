@@ -1,4 +1,4 @@
-module Sl.Build.MutationObserver exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAttr, withAttrOldValue, withCharData, withCharDataOldValue, withChildList, withClass, withDisabled, withId, withOnMutation, withSlot, withStyle)
+module Sl.Build.MutationObserver exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAttr, withAttrOldValue, withCharData, withCharDataOldValue, withChildList, withClass, withDisabled, withId, withOnMutation, withSlot, withStyle, withChild)
 
 {-| The **MutationObserver** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.MutationObserver`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAttr, withAttrOldValue, withCharData, withCharDataOldValue, withChildList, withClass, withDisabled, withId, withOnMutation, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAttr, withAttrOldValue, withCharData, withCharDataOldValue, withChildList, withClass, withDisabled, withId, withOnMutation, withSlot, withStyle, withChild
 
 -}
 
@@ -58,6 +58,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.MutationObserverIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

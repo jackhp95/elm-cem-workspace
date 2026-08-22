@@ -1,4 +1,4 @@
-module Sl.Component.Tree exposing (TreeIs, TreeAttrs, TreeBuilder, TreeAttrCaps, TreeSlotCaps, TreeChildAdmittedBy, TreeSelection, tree, treeSelection, treeOnSelectionChange)
+module Sl.Component.Tree exposing (TreeIs, TreeAttrs, TreeBuilder, TreeAttrCaps, TreeSlotCaps, TreeContent, TreeChildAdmittedBy, TreeSelection, tree, treeSelection, treeOnSelectionChange, treeChild)
 
 {-| The **Tree** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TreeIs, TreeAttrs, TreeBuilder, TreeAttrCaps, TreeSlotCaps, TreeChildAdmittedBy, TreeSelection, tree, treeSelection, treeOnSelectionChange
+@docs TreeIs, TreeAttrs, TreeBuilder, TreeAttrCaps, TreeSlotCaps, TreeContent, TreeChildAdmittedBy, TreeSelection, tree, treeSelection, treeOnSelectionChange, treeChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.Tree as Tree_
 -}
 tree :
     List (Attr TreeAttrs msg)
-    -> List (Element childAccepts (TreeChildAdmittedBy childAdm) msg)
+    -> List (Element TreeContent (TreeChildAdmittedBy childAdm) msg)
     -> Element (TreeIs s) admittedBy msg
 tree =
     Tree_.component
@@ -63,6 +63,12 @@ type alias TreeSlotCaps =
     Tree_.SlotCaps
 
 
+{-| See [`Sl.Element.Tree.Content`](Sl.Element.Tree#Content).
+-}
+type alias TreeContent =
+    Tree_.Content
+
+
 {-| See [`Sl.Element.Tree.ChildAdmittedBy`](Sl.Element.Tree#ChildAdmittedBy).
 -}
 type alias TreeChildAdmittedBy childAdm =
@@ -87,3 +93,10 @@ treeSelection =
 treeOnSelectionChange : msg -> Attr { c | onSelectionChange : Supported } msg
 treeOnSelectionChange =
     Tree_.onSelectionChange
+
+
+{-| See [`Sl.Element.Tree.child`](Sl.Element.Tree#child).
+-}
+treeChild : Element TreeContent admittedBy msg -> Element free freeAdmittedBy msg
+treeChild =
+    Tree_.child

@@ -1,4 +1,4 @@
-module Sl.Component.RadioGroup exposing (RadioGroupIs, RadioGroupAttrs, RadioGroupBuilder, RadioGroupAttrCaps, RadioGroupSlotCaps, RadioGroupChildAdmittedBy, RadioGroupSize, radioGroup, radioGroupSize, radioGroupForm, radioGroupHelpText, radioGroupLabel, radioGroupName, radioGroupRequired, radioGroupValue, radioGroupDefaultValue, radioGroupOnChange, radioGroupOnInput, radioGroupOnInvalid)
+module Sl.Component.RadioGroup exposing (RadioGroupIs, RadioGroupAttrs, RadioGroupBuilder, RadioGroupAttrCaps, RadioGroupSlotCaps, RadioGroupContent, RadioGroupChildAdmittedBy, RadioGroupSize, radioGroup, radioGroupSize, radioGroupForm, radioGroupHelpText, radioGroupLabel, radioGroupName, radioGroupRequired, radioGroupValue, radioGroupDefaultValue, radioGroupOnChange, radioGroupOnInput, radioGroupOnInvalid, radioGroupChild)
 
 {-| The **RadioGroup** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs RadioGroupIs, RadioGroupAttrs, RadioGroupBuilder, RadioGroupAttrCaps, RadioGroupSlotCaps, RadioGroupChildAdmittedBy, RadioGroupSize, radioGroup, radioGroupSize, radioGroupForm, radioGroupHelpText, radioGroupLabel, radioGroupName, radioGroupRequired, radioGroupValue, radioGroupDefaultValue, radioGroupOnChange, radioGroupOnInput, radioGroupOnInvalid
+@docs RadioGroupIs, RadioGroupAttrs, RadioGroupBuilder, RadioGroupAttrCaps, RadioGroupSlotCaps, RadioGroupContent, RadioGroupChildAdmittedBy, RadioGroupSize, radioGroup, radioGroupSize, radioGroupForm, radioGroupHelpText, radioGroupLabel, radioGroupName, radioGroupRequired, radioGroupValue, radioGroupDefaultValue, radioGroupOnChange, radioGroupOnInput, radioGroupOnInvalid, radioGroupChild
 
 -}
 
@@ -27,7 +27,7 @@ import Sl.Element.RadioGroup as RadioGroup_
 -}
 radioGroup :
     List (Attr RadioGroupAttrs msg)
-    -> List (Element childAccepts (RadioGroupChildAdmittedBy childAdm) msg)
+    -> List (Element RadioGroupContent (RadioGroupChildAdmittedBy childAdm) msg)
     -> Element (RadioGroupIs s) admittedBy msg
 radioGroup =
     RadioGroup_.component
@@ -61,6 +61,12 @@ type alias RadioGroupAttrCaps =
 -}
 type alias RadioGroupSlotCaps =
     RadioGroup_.SlotCaps
+
+
+{-| See [`Sl.Element.RadioGroup.Content`](Sl.Element.RadioGroup#Content).
+-}
+type alias RadioGroupContent =
+    RadioGroup_.Content
 
 
 {-| See [`Sl.Element.RadioGroup.ChildAdmittedBy`](Sl.Element.RadioGroup#ChildAdmittedBy).
@@ -150,3 +156,10 @@ radioGroupOnInput =
 radioGroupOnInvalid : msg -> Attr { c | onInvalid : Supported } msg
 radioGroupOnInvalid =
     RadioGroup_.onInvalid
+
+
+{-| See [`Sl.Element.RadioGroup.child`](Sl.Element.RadioGroup#child).
+-}
+radioGroupChild : Element RadioGroupContent admittedBy msg -> Element free freeAdmittedBy msg
+radioGroupChild =
+    RadioGroup_.child

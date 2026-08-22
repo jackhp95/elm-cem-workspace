@@ -1,11 +1,11 @@
-module Sl.Internal.Types.Dropdown exposing (Is, Attrs, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps)
+module Sl.Internal.Types.Dropdown exposing (Is, Attrs, Content, TriggerSlot, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps, SlotCaps)
 
 {-| Type definitions for Dropdown. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.Dropdown` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps
+@docs Is, Attrs, Content, TriggerSlot, ChildAdmittedBy, Placement, Sync, Builder, AttrCaps, SlotCaps
 
 -}
 
@@ -40,6 +40,22 @@ type alias Attrs =
     , stayOpenOnSelect : Supported
     , style : Supported
     , sync : Supported
+    }
+
+
+{-| The `Content` type row for Dropdown (generated).
+-}
+type alias Content =
+    { card : Brand
+    , menu : Brand
+    }
+
+
+{-| The `TriggerSlot` type row for Dropdown (generated).
+-}
+type alias TriggerSlot =
+    { button : Brand
+    , iconButton : Brand
     }
 
 
@@ -101,4 +117,11 @@ type alias AttrCaps =
     , stayOpenOnSelect : Available
     , style : Available
     , sync : Available
+    }
+
+
+{-| The `SlotCaps` type row for Dropdown (generated).
+-}
+type alias SlotCaps =
+    { trigger : Available
     }

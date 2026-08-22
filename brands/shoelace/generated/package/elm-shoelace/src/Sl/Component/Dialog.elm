@@ -1,4 +1,4 @@
-module Sl.Component.Dialog exposing (DialogIs, DialogAttrs, DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogChildAdmittedBy, dialog, dialogLabel, dialogNoHeader, dialogOpen, dialogOnShow, dialogOnAfterShow, dialogOnHide, dialogOnAfterHide, dialogOnInitialFocus, dialogOnRequestClose)
+module Sl.Component.Dialog exposing (DialogIs, DialogAttrs, DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogChildAdmittedBy, dialog, dialogLabel, dialogNoHeader, dialogOpen, dialogOnShow, dialogOnAfterShow, dialogOnHide, dialogOnAfterHide, dialogOnInitialFocus, dialogOnRequestClose, dialogChild)
 
 {-| The **Dialog** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs DialogIs, DialogAttrs, DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogChildAdmittedBy, dialog, dialogLabel, dialogNoHeader, dialogOpen, dialogOnShow, dialogOnAfterShow, dialogOnHide, dialogOnAfterHide, dialogOnInitialFocus, dialogOnRequestClose
+@docs DialogIs, DialogAttrs, DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogChildAdmittedBy, dialog, dialogLabel, dialogNoHeader, dialogOpen, dialogOnShow, dialogOnAfterShow, dialogOnHide, dialogOnAfterHide, dialogOnInitialFocus, dialogOnRequestClose, dialogChild
 
 -}
 
@@ -129,3 +129,10 @@ dialogOnInitialFocus =
 dialogOnRequestClose : msg -> Attr { c | onRequestClose : Supported } msg
 dialogOnRequestClose =
     Dialog_.onRequestClose
+
+
+{-| See [`Sl.Element.Dialog.child`](Sl.Element.Dialog#child).
+-}
+dialogChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+dialogChild =
+    Dialog_.child

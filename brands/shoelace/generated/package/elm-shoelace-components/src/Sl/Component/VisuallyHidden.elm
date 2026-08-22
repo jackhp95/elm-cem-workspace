@@ -1,4 +1,4 @@
-module Sl.Component.VisuallyHidden exposing (VisuallyHiddenIs, VisuallyHiddenAttrs, VisuallyHiddenBuilder, VisuallyHiddenAttrCaps, VisuallyHiddenSlotCaps, VisuallyHiddenChildAdmittedBy, visuallyHidden)
+module Sl.Component.VisuallyHidden exposing (VisuallyHiddenIs, VisuallyHiddenAttrs, VisuallyHiddenBuilder, VisuallyHiddenAttrCaps, VisuallyHiddenSlotCaps, VisuallyHiddenChildAdmittedBy, visuallyHidden, visuallyHiddenChild)
 
 {-| The **VisuallyHidden** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs VisuallyHiddenIs, VisuallyHiddenAttrs, VisuallyHiddenBuilder, VisuallyHiddenAttrCaps, VisuallyHiddenSlotCaps, VisuallyHiddenChildAdmittedBy, visuallyHidden
+@docs VisuallyHiddenIs, VisuallyHiddenAttrs, VisuallyHiddenBuilder, VisuallyHiddenAttrCaps, VisuallyHiddenSlotCaps, VisuallyHiddenChildAdmittedBy, visuallyHidden, visuallyHiddenChild
 
 -}
 
@@ -65,3 +65,10 @@ type alias VisuallyHiddenSlotCaps =
 -}
 type alias VisuallyHiddenChildAdmittedBy childAdm =
     VisuallyHidden_.ChildAdmittedBy childAdm
+
+
+{-| See [`Sl.Element.VisuallyHidden.child`](Sl.Element.VisuallyHidden#child).
+-}
+visuallyHiddenChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+visuallyHiddenChild =
+    VisuallyHidden_.child

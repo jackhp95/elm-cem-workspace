@@ -1,4 +1,4 @@
-module Sl.Build.TabGroup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle)
+module Sl.Build.TabGroup exposing (Builder, AttrCaps, SlotCaps, Is, Content, NavSlot, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle, nav, withNav, withChild)
 
 {-| The **TabGroup** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.TabGroup`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, Content, NavSlot, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle, nav, withNav, withChild
 
 -}
 
@@ -49,6 +49,16 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.TabGroupContent
+
+
+{-| -}
+type alias NavSlot =
+    Component.TabGroupNavSlot
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-tab-group" [] []
@@ -58,6 +68,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TabGroupIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+nav :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TabGroupNavSlot msg
+    -> Element free freeAdmittedBy msg
+nav builder =
+    Component.tabGroupNav (B.toElement builder)
+
+
+{-| -}
+withNav :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TabGroupNavSlot msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withNav slotBuilder builder_ =
+    B.withChild (El.toNode (Component.tabGroupNav (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

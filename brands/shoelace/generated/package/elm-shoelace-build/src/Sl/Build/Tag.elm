@@ -1,4 +1,4 @@
-module Sl.Build.Tag exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnRemove, withPill, withRemovable, withSize, withSlot, withStyle, withVariant)
+module Sl.Build.Tag exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnRemove, withPill, withRemovable, withSize, withSlot, withStyle, withVariant, withChild)
 
 {-| The **Tag** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Tag`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnRemove, withPill, withRemovable, withSize, withSlot, withStyle, withVariant
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnRemove, withPill, withRemovable, withSize, withSlot, withStyle, withVariant, withChild
 
 -}
 
@@ -58,6 +58,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TagIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

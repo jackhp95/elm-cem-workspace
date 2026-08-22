@@ -1,4 +1,4 @@
-module Sl.Component.Tooltip exposing (TooltipIs, TooltipAttrs, TooltipBuilder, TooltipAttrCaps, TooltipSlotCaps, TooltipChildAdmittedBy, TooltipPlacement, tooltip, tooltipPlacement, tooltipContent, tooltipDisabled, tooltipDistance, tooltipHoist, tooltipOpen, tooltipSkidding, tooltipTrigger, tooltipOnShow, tooltipOnAfterShow, tooltipOnHide, tooltipOnAfterHide)
+module Sl.Component.Tooltip exposing (TooltipIs, TooltipAttrs, TooltipBuilder, TooltipAttrCaps, TooltipSlotCaps, TooltipChildAdmittedBy, TooltipPlacement, tooltip, tooltipPlacement, tooltipContent, tooltipDisabled, tooltipDistance, tooltipHoist, tooltipOpen, tooltipSkidding, tooltipTrigger, tooltipOnShow, tooltipOnAfterShow, tooltipOnHide, tooltipOnAfterHide, tooltipChild)
 
 {-| The **Tooltip** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs TooltipIs, TooltipAttrs, TooltipBuilder, TooltipAttrCaps, TooltipSlotCaps, TooltipChildAdmittedBy, TooltipPlacement, tooltip, tooltipPlacement, tooltipContent, tooltipDisabled, tooltipDistance, tooltipHoist, tooltipOpen, tooltipSkidding, tooltipTrigger, tooltipOnShow, tooltipOnAfterShow, tooltipOnHide, tooltipOnAfterHide
+@docs TooltipIs, TooltipAttrs, TooltipBuilder, TooltipAttrCaps, TooltipSlotCaps, TooltipChildAdmittedBy, TooltipPlacement, tooltip, tooltipPlacement, tooltipContent, tooltipDisabled, tooltipDistance, tooltipHoist, tooltipOpen, tooltipSkidding, tooltipTrigger, tooltipOnShow, tooltipOnAfterShow, tooltipOnHide, tooltipOnAfterHide, tooltipChild
 
 -}
 
@@ -157,3 +157,10 @@ tooltipOnHide =
 tooltipOnAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 tooltipOnAfterHide =
     Tooltip_.onAfterHide
+
+
+{-| See [`Sl.Element.Tooltip.child`](Sl.Element.Tooltip#child).
+-}
+tooltipChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+tooltipChild =
+    Tooltip_.child

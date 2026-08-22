@@ -1,4 +1,4 @@
-module Sl.Component.Menu exposing (MenuIs, MenuAttrs, MenuBuilder, MenuAttrCaps, MenuSlotCaps, MenuChildAdmittedBy, menu, menuOnSelect)
+module Sl.Component.Menu exposing (MenuIs, MenuAttrs, MenuBuilder, MenuAttrCaps, MenuSlotCaps, MenuContent, MenuChildAdmittedBy, menu, menuOnSelect, menuChild)
 
 {-| The **Menu** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs MenuIs, MenuAttrs, MenuBuilder, MenuAttrCaps, MenuSlotCaps, MenuChildAdmittedBy, menu, menuOnSelect
+@docs MenuIs, MenuAttrs, MenuBuilder, MenuAttrCaps, MenuSlotCaps, MenuContent, MenuChildAdmittedBy, menu, menuOnSelect, menuChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.Menu as Menu_
 -}
 menu :
     List (Attr MenuAttrs msg)
-    -> List (Element childAccepts (MenuChildAdmittedBy childAdm) msg)
+    -> List (Element MenuContent (MenuChildAdmittedBy childAdm) msg)
     -> Element (MenuIs s) admittedBy msg
 menu =
     Menu_.component
@@ -62,6 +62,12 @@ type alias MenuSlotCaps =
     Menu_.SlotCaps
 
 
+{-| See [`Sl.Element.Menu.Content`](Sl.Element.Menu#Content).
+-}
+type alias MenuContent =
+    Menu_.Content
+
+
 {-| See [`Sl.Element.Menu.ChildAdmittedBy`](Sl.Element.Menu#ChildAdmittedBy).
 -}
 type alias MenuChildAdmittedBy childAdm =
@@ -73,3 +79,10 @@ type alias MenuChildAdmittedBy childAdm =
 menuOnSelect : msg -> Attr { c | onSelect : Supported } msg
 menuOnSelect =
     Menu_.onSelect
+
+
+{-| See [`Sl.Element.Menu.child`](Sl.Element.Menu#child).
+-}
+menuChild : Element MenuContent admittedBy msg -> Element free freeAdmittedBy msg
+menuChild =
+    Menu_.child

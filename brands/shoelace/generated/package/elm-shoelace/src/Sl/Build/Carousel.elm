@@ -1,4 +1,4 @@
-module Sl.Build.Carousel exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutoplay, withAutoplayInterval, withClass, withId, withLoop, withMouseDragging, withNavigation, withOnSlideChange, withOrientation, withPagination, withSlidesPerMove, withSlidesPerPage, withSlot, withStyle)
+module Sl.Build.Carousel exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withAutoplay, withAutoplayInterval, withClass, withId, withLoop, withMouseDragging, withNavigation, withOnSlideChange, withOrientation, withPagination, withSlidesPerMove, withSlidesPerPage, withSlot, withStyle, withChild)
 
 {-| The **Carousel** family — the COMPOSED builder tier.
 
@@ -7,7 +7,7 @@ builder surface, sourced through `Sl.Component.Carousel`
 — the one real Components-driven builder implementation (DAG
 `Build → Components → Elements → Core`), never `Sl.Element.*`.
 
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutoplay, withAutoplayInterval, withClass, withId, withLoop, withMouseDragging, withNavigation, withOnSlideChange, withOrientation, withPagination, withSlidesPerMove, withSlidesPerPage, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withAutoplay, withAutoplayInterval, withClass, withId, withLoop, withMouseDragging, withNavigation, withOnSlideChange, withOrientation, withPagination, withSlidesPerMove, withSlidesPerPage, withSlot, withStyle, withChild
 
 -}
 
@@ -49,6 +49,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.CarouselContent
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-carousel" [] []
@@ -58,6 +63,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.CarouselIs kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

@@ -1,4 +1,4 @@
-module Sl.Component.Details exposing (DetailsIs, DetailsAttrs, DetailsBuilder, DetailsAttrCaps, DetailsSlotCaps, DetailsChildAdmittedBy, details, detailsDisabled, detailsOpen, detailsSummary, detailsOnShow, detailsOnAfterShow, detailsOnHide, detailsOnAfterHide)
+module Sl.Component.Details exposing (DetailsIs, DetailsAttrs, DetailsBuilder, DetailsAttrCaps, DetailsSlotCaps, DetailsChildAdmittedBy, details, detailsDisabled, detailsOpen, detailsSummary, detailsOnShow, detailsOnAfterShow, detailsOnHide, detailsOnAfterHide, detailsChild)
 
 {-| The **Details** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs DetailsIs, DetailsAttrs, DetailsBuilder, DetailsAttrCaps, DetailsSlotCaps, DetailsChildAdmittedBy, details, detailsDisabled, detailsOpen, detailsSummary, detailsOnShow, detailsOnAfterShow, detailsOnHide, detailsOnAfterHide
+@docs DetailsIs, DetailsAttrs, DetailsBuilder, DetailsAttrCaps, DetailsSlotCaps, DetailsChildAdmittedBy, details, detailsDisabled, detailsOpen, detailsSummary, detailsOnShow, detailsOnAfterShow, detailsOnHide, detailsOnAfterHide, detailsChild
 
 -}
 
@@ -115,3 +115,10 @@ detailsOnHide =
 detailsOnAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 detailsOnAfterHide =
     Details_.onAfterHide
+
+
+{-| See [`Sl.Element.Details.child`](Sl.Element.Details#child).
+-}
+detailsChild : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+detailsChild =
+    Details_.child

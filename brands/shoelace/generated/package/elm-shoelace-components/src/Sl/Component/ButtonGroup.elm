@@ -1,4 +1,4 @@
-module Sl.Component.ButtonGroup exposing (ButtonGroupIs, ButtonGroupAttrs, ButtonGroupBuilder, ButtonGroupAttrCaps, ButtonGroupSlotCaps, ButtonGroupChildAdmittedBy, buttonGroup, buttonGroupLabel)
+module Sl.Component.ButtonGroup exposing (ButtonGroupIs, ButtonGroupAttrs, ButtonGroupBuilder, ButtonGroupAttrCaps, ButtonGroupSlotCaps, ButtonGroupContent, ButtonGroupChildAdmittedBy, buttonGroup, buttonGroupLabel, buttonGroupChild)
 
 {-| The **ButtonGroup** element — degenerate single-member family façade.
 
@@ -12,7 +12,7 @@ typed helpers so members never collide. It re-exports:
 Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
-@docs ButtonGroupIs, ButtonGroupAttrs, ButtonGroupBuilder, ButtonGroupAttrCaps, ButtonGroupSlotCaps, ButtonGroupChildAdmittedBy, buttonGroup, buttonGroupLabel
+@docs ButtonGroupIs, ButtonGroupAttrs, ButtonGroupBuilder, ButtonGroupAttrCaps, ButtonGroupSlotCaps, ButtonGroupContent, ButtonGroupChildAdmittedBy, buttonGroup, buttonGroupLabel, buttonGroupChild
 
 -}
 
@@ -26,7 +26,7 @@ import Sl.Element.ButtonGroup as ButtonGroup_
 -}
 buttonGroup :
     List (Attr ButtonGroupAttrs msg)
-    -> List (Element childAccepts (ButtonGroupChildAdmittedBy childAdm) msg)
+    -> List (Element ButtonGroupContent (ButtonGroupChildAdmittedBy childAdm) msg)
     -> Element (ButtonGroupIs s) admittedBy msg
 buttonGroup =
     ButtonGroup_.component
@@ -62,6 +62,12 @@ type alias ButtonGroupSlotCaps =
     ButtonGroup_.SlotCaps
 
 
+{-| See [`Sl.Element.ButtonGroup.Content`](Sl.Element.ButtonGroup#Content).
+-}
+type alias ButtonGroupContent =
+    ButtonGroup_.Content
+
+
 {-| See [`Sl.Element.ButtonGroup.ChildAdmittedBy`](Sl.Element.ButtonGroup#ChildAdmittedBy).
 -}
 type alias ButtonGroupChildAdmittedBy childAdm =
@@ -73,3 +79,10 @@ type alias ButtonGroupChildAdmittedBy childAdm =
 buttonGroupLabel : String -> Attr { c | label : Supported } msg
 buttonGroupLabel =
     ButtonGroup_.label
+
+
+{-| See [`Sl.Element.ButtonGroup.child`](Sl.Element.ButtonGroup#child).
+-}
+buttonGroupChild : Element ButtonGroupContent admittedBy msg -> Element free freeAdmittedBy msg
+buttonGroupChild =
+    ButtonGroup_.child

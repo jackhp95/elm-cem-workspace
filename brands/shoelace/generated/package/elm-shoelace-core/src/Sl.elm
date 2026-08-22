@@ -1,6 +1,7 @@
 module Sl exposing
     ( alert, animatedImage, animation, avatar, badge, breadcrumb, breadcrumbItem, button, buttonGroup, card, carousel, carouselItem, checkbox, colorPicker, copyButton, details, dialog, divider, drawer, dropdown, formatBytes, formatDate, formatNumber, icon, iconButton, imageComparer, include, input, menu, menuItem, menuLabel, mutationObserver, option, popup, progressBar, progressRing, qrCode, radio, radioButton, radioGroup, range, rating, relativeTime, resizeObserver, select, skeleton, spinner, splitPanel, switch, tab, tabGroup, tabPanel, tag, textarea, tooltip, tree, treeItem, visuallyHidden
     , text
+    , slotNav, slotSubmenu, slotTrigger
     , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
 
@@ -18,6 +19,7 @@ placements are caught by `Cem.ValidSlotKind` (elm-review).
 
 @docs alert, animatedImage, animation, avatar, badge, breadcrumb, breadcrumbItem, button, buttonGroup, card, carousel, carouselItem, checkbox, colorPicker, copyButton, details, dialog, divider, drawer, dropdown, formatBytes, formatDate, formatNumber, icon, iconButton, imageComparer, include, input, menu, menuItem, menuLabel, mutationObserver, option, popup, progressBar, progressRing, qrCode, radio, radioButton, radioGroup, range, rating, relativeTime, resizeObserver, select, skeleton, spinner, splitPanel, switch, tab, tabGroup, tabPanel, tag, textarea, tooltip, tree, treeItem, visuallyHidden
 @docs text
+@docs slotNav, slotSubmenu, slotTrigger
 @docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
 -}
@@ -142,7 +144,7 @@ badge attrs children =
 -}
 breadcrumb :
     List (Attr Sl.Internal.Types.Breadcrumb.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Breadcrumb.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Breadcrumb.Content (Sl.Internal.Types.Breadcrumb.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Breadcrumb.Is s) admittedBy msg
 breadcrumb attrs children =
     Ir.fromNode (Ir.node "sl-breadcrumb" attrs (List.map HtmlIr.Element.toNode children))
@@ -162,7 +164,7 @@ breadcrumbItem attrs children =
 -}
 button :
     List (Attr Sl.Internal.Types.Button.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Button.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Button.Content (Sl.Internal.Types.Button.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Button.Is s) admittedBy msg
 button attrs children =
     Ir.fromNode (Ir.node "sl-button" attrs (List.map HtmlIr.Element.toNode children))
@@ -172,7 +174,7 @@ button attrs children =
 -}
 buttonGroup :
     List (Attr Sl.Internal.Types.ButtonGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.ButtonGroup.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.ButtonGroup.Content (Sl.Internal.Types.ButtonGroup.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.ButtonGroup.Is s) admittedBy msg
 buttonGroup attrs children =
     Ir.fromNode (Ir.node "sl-button-group" attrs (List.map HtmlIr.Element.toNode children))
@@ -192,7 +194,7 @@ card attrs children =
 -}
 carousel :
     List (Attr Sl.Internal.Types.Carousel.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Carousel.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Carousel.Content (Sl.Internal.Types.Carousel.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Carousel.Is s) admittedBy msg
 carousel attrs children =
     Ir.fromNode (Ir.node "sl-carousel" attrs (List.map HtmlIr.Element.toNode children))
@@ -212,7 +214,7 @@ carouselItem attrs children =
 -}
 checkbox :
     List (Attr Sl.Internal.Types.Checkbox.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Checkbox.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Checkbox.Content (Sl.Internal.Types.Checkbox.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Checkbox.Is s) admittedBy msg
 checkbox attrs children =
     Ir.fromNode (Ir.node "sl-checkbox" attrs (List.map HtmlIr.Element.toNode children))
@@ -282,7 +284,7 @@ drawer attrs children =
 -}
 dropdown :
     List (Attr Sl.Internal.Types.Dropdown.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Dropdown.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Dropdown.Content (Sl.Internal.Types.Dropdown.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Dropdown.Is s) admittedBy msg
 dropdown attrs children =
     Ir.fromNode (Ir.node "sl-dropdown" attrs (List.map HtmlIr.Element.toNode children))
@@ -372,7 +374,7 @@ input attrs children =
 -}
 menu :
     List (Attr Sl.Internal.Types.Menu.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Menu.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Menu.Content (Sl.Internal.Types.Menu.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Menu.Is s) admittedBy msg
 menu attrs children =
     Ir.fromNode (Ir.node "sl-menu" attrs (List.map HtmlIr.Element.toNode children))
@@ -412,7 +414,7 @@ mutationObserver attrs children =
 -}
 option :
     List (Attr Sl.Internal.Types.Option.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Option.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Option.Content (Sl.Internal.Types.Option.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Option.Is s) admittedBy msg
 option attrs children =
     Ir.fromNode (Ir.node "sl-option" attrs (List.map HtmlIr.Element.toNode children))
@@ -432,7 +434,7 @@ popup attrs children =
 -}
 progressBar :
     List (Attr Sl.Internal.Types.ProgressBar.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.ProgressBar.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.ProgressBar.Content (Sl.Internal.Types.ProgressBar.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.ProgressBar.Is s) admittedBy msg
 progressBar attrs children =
     Ir.fromNode (Ir.node "sl-progress-bar" attrs (List.map HtmlIr.Element.toNode children))
@@ -442,7 +444,7 @@ progressBar attrs children =
 -}
 progressRing :
     List (Attr Sl.Internal.Types.ProgressRing.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.ProgressRing.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.ProgressRing.Content (Sl.Internal.Types.ProgressRing.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.ProgressRing.Is s) admittedBy msg
 progressRing attrs children =
     Ir.fromNode (Ir.node "sl-progress-ring" attrs (List.map HtmlIr.Element.toNode children))
@@ -462,7 +464,7 @@ qrCode attrs children =
 -}
 radio :
     List (Attr Sl.Internal.Types.Radio.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Radio.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Radio.Content (Sl.Internal.Types.Radio.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Radio.Is s) admittedBy msg
 radio attrs children =
     Ir.fromNode (Ir.node "sl-radio" attrs (List.map HtmlIr.Element.toNode children))
@@ -472,7 +474,7 @@ radio attrs children =
 -}
 radioButton :
     List (Attr Sl.Internal.Types.RadioButton.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.RadioButton.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.RadioButton.Content (Sl.Internal.Types.RadioButton.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.RadioButton.Is s) admittedBy msg
 radioButton attrs children =
     Ir.fromNode (Ir.node "sl-radio-button" attrs (List.map HtmlIr.Element.toNode children))
@@ -482,7 +484,7 @@ radioButton attrs children =
 -}
 radioGroup :
     List (Attr Sl.Internal.Types.RadioGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.RadioGroup.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.RadioGroup.Content (Sl.Internal.Types.RadioGroup.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.RadioGroup.Is s) admittedBy msg
 radioGroup attrs children =
     Ir.fromNode (Ir.node "sl-radio-group" attrs (List.map HtmlIr.Element.toNode children))
@@ -532,7 +534,7 @@ resizeObserver attrs children =
 -}
 select :
     List (Attr Sl.Internal.Types.Select.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Select.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Select.Content (Sl.Internal.Types.Select.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Select.Is s) admittedBy msg
 select attrs children =
     Ir.fromNode (Ir.node "sl-select" attrs (List.map HtmlIr.Element.toNode children))
@@ -572,7 +574,7 @@ splitPanel attrs children =
 -}
 switch :
     List (Attr Sl.Internal.Types.Switch.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Switch.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Switch.Content (Sl.Internal.Types.Switch.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Switch.Is s) admittedBy msg
 switch attrs children =
     Ir.fromNode (Ir.node "sl-switch" attrs (List.map HtmlIr.Element.toNode children))
@@ -582,7 +584,7 @@ switch attrs children =
 -}
 tab :
     List (Attr Sl.Internal.Types.Tab.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Tab.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Tab.Content (Sl.Internal.Types.Tab.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Tab.Is s) admittedBy msg
 tab attrs children =
     Ir.fromNode (Ir.node "sl-tab" attrs (List.map HtmlIr.Element.toNode children))
@@ -592,7 +594,7 @@ tab attrs children =
 -}
 tabGroup :
     List (Attr Sl.Internal.Types.TabGroup.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.TabGroup.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.TabGroup.Content (Sl.Internal.Types.TabGroup.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.TabGroup.Is s) admittedBy msg
 tabGroup attrs children =
     Ir.fromNode (Ir.node "sl-tab-group" attrs (List.map HtmlIr.Element.toNode children))
@@ -642,7 +644,7 @@ tooltip attrs children =
 -}
 tree :
     List (Attr Sl.Internal.Types.Tree.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.Tree.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.Tree.Content (Sl.Internal.Types.Tree.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.Tree.Is s) admittedBy msg
 tree attrs children =
     Ir.fromNode (Ir.node "sl-tree" attrs (List.map HtmlIr.Element.toNode children))
@@ -652,7 +654,7 @@ tree attrs children =
 -}
 treeItem :
     List (Attr Sl.Internal.Types.TreeItem.Attrs msg)
-    -> List (Element childAccepts (Sl.Internal.Types.TreeItem.ChildAdmittedBy childAdm) msg)
+    -> List (Element Sl.Internal.Types.TreeItem.Content (Sl.Internal.Types.TreeItem.ChildAdmittedBy childAdm) msg)
     -> Element (Sl.Internal.Types.TreeItem.Is s) admittedBy msg
 treeItem attrs children =
     Ir.fromNode (Ir.node "sl-tree-item" attrs (List.map HtmlIr.Element.toNode children))
@@ -673,6 +675,27 @@ visuallyHidden attrs children =
 text : String -> Element { s | sharedText : Shared } admittedBy msg
 text value_ =
     Ir.fromNode (Ir.text value_)
+
+
+{-| Place a child element into the `"nav"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotNav : Element accepts admittedBy msg -> Element free freeAdm msg
+slotNav el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "nav") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"submenu"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotSubmenu : Element accepts admittedBy msg -> Element free freeAdm msg
+slotSubmenu el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "submenu") (HtmlIr.Element.toNode el_))
+
+
+{-| Place a child element into the `"trigger"` named slot. Broad admittance by design — wrong-kind placements are flagged by the `Cem.ValidSlotKind` elm-review rule.
+-}
+slotTrigger : Element accepts admittedBy msg -> Element free freeAdm msg
+slotTrigger el_ =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trigger") (HtmlIr.Element.toNode el_))
 
 
 {-| The typed IR element every constructor here produces. Re-exported so callers never import `HtmlIr.Element` directly.
