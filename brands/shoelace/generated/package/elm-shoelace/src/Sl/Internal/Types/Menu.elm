@@ -1,11 +1,11 @@
-module Sl.Internal.Types.Menu exposing (Is, Attrs, ChildAdmittedBy, Builder, AttrCaps)
+module Sl.Internal.Types.Menu exposing (Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps)
 
 {-| Type definitions for Menu. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.Menu` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps
 
 -}
 
@@ -28,6 +28,15 @@ type alias Attrs =
     , onSelect : Supported
     , slot : Supported
     , style : Supported
+    }
+
+
+{-| The `Content` type row for Menu (generated).
+-}
+type alias Content =
+    { divider : Brand
+    , menuItem : Brand
+    , menuLabel : Brand
     }
 
 

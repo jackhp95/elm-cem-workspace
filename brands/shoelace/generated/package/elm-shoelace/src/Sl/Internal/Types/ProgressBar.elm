@@ -1,15 +1,15 @@
-module Sl.Internal.Types.ProgressBar exposing (Is, Attrs, ChildAdmittedBy, Builder, AttrCaps)
+module Sl.Internal.Types.ProgressBar exposing (Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps)
 
 {-| Type definitions for ProgressBar. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.ProgressBar` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Builder, AttrCaps
 
 -}
 
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 
@@ -30,6 +30,23 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     , value : Supported
+    }
+
+
+{-| The `Content` type row for ProgressBar (generated).
+-}
+type alias Content =
+    { avatar : Brand
+    , badge : Brand
+    , formatBytes : Brand
+    , formatDate : Brand
+    , formatNumber : Brand
+    , icon : Brand
+    , relativeTime : Brand
+    , sharedText : Shared
+    , spinner : Brand
+    , tag : Brand
+    , visuallyHidden : Brand
     }
 
 

@@ -1,16 +1,18 @@
 module Sl.Element.Tree exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Selection, selection
     , onSelectionChange
+    , child
     )
 
 {-| The `sl-tree` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Selection, selection
 @docs onSelectionChange
+@docs child
 
 -}
 
@@ -36,6 +38,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.Tree.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.Tree.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -72,7 +80,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.tree
@@ -91,3 +99,12 @@ selection value_ =
 onSelectionChange : msg -> Attr { c | onSelectionChange : Supported } msg
 onSelectionChange =
     Ev.onSelectionChange
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

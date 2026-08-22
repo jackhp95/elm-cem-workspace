@@ -140,7 +140,7 @@ form attrs children =
 {-| The kind row `label` produces.
 -}
 type alias LabelIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `label`'s closed attribute-capability row.
@@ -179,7 +179,6 @@ type alias LabelAttrs =
 -}
 type alias LabelContent =
     { area : Brand
-    , img : Brand
     , link : Brand
     , meta : Brand
     , noscript : Brand
@@ -253,6 +252,7 @@ type alias LegendContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -332,6 +332,7 @@ type alias OutputContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand

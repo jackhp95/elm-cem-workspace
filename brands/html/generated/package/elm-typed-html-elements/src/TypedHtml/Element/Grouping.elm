@@ -121,6 +121,7 @@ type alias DdContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -388,6 +389,7 @@ type alias DtContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -463,6 +465,7 @@ type alias FigcaptionContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -643,6 +646,7 @@ type alias LiContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -835,6 +839,7 @@ type alias PContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -903,6 +908,7 @@ type alias PreContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand

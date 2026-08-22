@@ -112,21 +112,61 @@
     { "name": "color-interpolation-filters", "type": ["auto", "sRGB", "linearRGB"], "row": "open" }
   ],
 
+  "_comment_sets": [
+    "SVG-2 content-model categories, restricted to the elements this brand actually models (the 27",
+    "in ../generated/package/elm-typed-svg/manifest/svg.cem.json — no filter `fe*`/animation elements",
+    "here yet; those arrive with the svg-audit branch's filter family). Derived from the SVG-2 spec",
+    "content-model tables (struct.html) cross-checked against MDN element pages, NOT hand-guessed:",
+    "  https://www.w3.org/TR/SVG2/struct.html + per-element MDN 'Permitted content'.",
+    "Source-of-truth element inventory: docs/svg-audit/spec-index.json (svg-api-audit-plan Task 1),",
+    "the real live-verified 69-element index — this config's `_sets` are that index's content model",
+    "made explicit. Each `@set` token expands to its members' produced kinds; mixing a `@set` with the",
+    "literal `title`/`desc` kinds flattens to a plain allow-list (facts stay flat; ValidSlotKind",
+    "unchanged). title/desc are NOT in the sets — they are appended per-container so they stay",
+    "universally admitted (SVG-AAM: every element may carry a title/desc name/description).",
+    "",
+    "  svgContainerContent = the shared g/svg/defs/symbol/a model (animation+descriptive+paint-server",
+    "    +shape+structural + a/clipPath/image/marker/mask/switch/text), brand-restricted, minus",
+    "    title/desc. This is what was `any` before — now a CLOSED allow-list.",
+    "  svgSwitchContent = switch's narrower model: shapes + a/g/image/svg/switch/text/use. A switch",
+    "    may NOT contain a gradient, pattern, defs, symbol, marker, mask, clipPath or stop.",
+    "  svgClipContent = clipPath's model: shapes + text + use ONLY. No g/defs/image/gradient/svg/a/etc."
+  ],
+  "_sets": {
+    "svgShape": ["circle", "ellipse", "line", "path", "polygon", "polyline", "rect"],
+    "svgStructural": ["defs", "g", "svg", "symbol", "use"],
+    "svgPaintServer": ["linearGradient", "radialGradient", "pattern"],
+    "svgContainerContent": [
+      "a", "circle", "clipPath", "defs", "ellipse", "g", "image", "line",
+      "linearGradient", "marker", "mask", "path", "pattern", "polygon",
+      "polyline", "radialGradient", "rect", "svg", "switch", "symbol", "text", "use"
+    ],
+    "svgSwitchContent": [
+      "a", "circle", "ellipse", "g", "image", "line", "path", "polygon",
+      "polyline", "rect", "svg", "switch", "text", "use"
+    ],
+    "svgClipContent": [
+      "circle", "ellipse", "line", "path", "polygon", "polyline", "rect", "text", "use"
+    ]
+  },
+
   "_comment_nesting": [
-    "SVG's content model is deliberately permissive: container elements (svg, g, defs, symbol, a, switch,",
-    "pattern, mask, clipPath, marker) accept essentially any SVG content, so they admit `any`. Leaf shapes",
-    "admit only the accessibility descriptors title/desc. Gradients admit their `stop` children. Text",
-    "admits tspan/textPath runs plus the shared `text` content atom. Produced kinds default to the tag",
-    "name (a `stop` produces kind `stop`, admitted by a gradient's `[\"stop\"]` slot), so most elements need",
-    "no explicit `kind` — only their `home` module grouping and `admits`."
+    "SVG's content model is permissive but NOT `any`: each container admits a spec-defined child set,",
+    "now authored from the SVG-2 content model (see `_comment_sets`) rather than the old blanket `any`.",
+    "Containers admit their `@svg*Content` set PLUS `title`/`desc` (universally admitted a11y",
+    "descriptors). Leaf shapes admit only title/desc. Gradients admit their `stop` children + title/desc.",
+    "Text admits tspan/textPath runs plus the shared `text` content atom. Produced kinds default to the",
+    "tag name (a `stop` produces kind `stop`), so most elements need no explicit `kind` — only their",
+    "`home` grouping and `admits`. A spec-invalid child (e.g. a `g` inside a `clipPath`, or a gradient",
+    "inside a `switch`) is now a `Cem.ValidSlotKind` error instead of silently accepted."
   ],
 
-  "Svg": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "G": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "Defs": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "Symbol": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "A": { "home": "Structure", "transparent": true, "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "Switch": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Svg": { "home": "Structure", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "G": { "home": "Structure", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "Defs": { "home": "Structure", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "Symbol": { "home": "Structure", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "A": { "home": "Structure", "transparent": true, "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "Switch": { "home": "Structure", "admits": { "unnamed": { "kinds": ["@svgSwitchContent", "title", "desc"], "multi": true } } },
   "Use": { "home": "Structure", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
   "View": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
 
@@ -159,11 +199,11 @@
   "LinearGradient": { "home": "Paint", "admits": { "unnamed": { "kinds": ["stop", "title", "desc"], "multi": true } } },
   "RadialGradient": { "home": "Paint", "admits": { "unnamed": { "kinds": ["stop", "title", "desc"], "multi": true } } },
   "Stop": { "home": "Paint" },
-  "Pattern": { "home": "Paint", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "Pattern": { "home": "Paint", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
 
-  "ClipPath": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "Mask": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
-  "Marker": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "ClipPath": { "home": "Clip", "admits": { "unnamed": { "kinds": ["@svgClipContent", "title", "desc"], "multi": true } } },
+  "Mask": { "home": "Clip", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
+  "Marker": { "home": "Clip", "admits": { "unnamed": { "kinds": ["@svgContainerContent", "title", "desc"], "multi": true } } },
 
   "Image": { "home": "Image", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
 

@@ -2,6 +2,7 @@ module Sl.Kind exposing
     ( Brand, Ctx
     , Available, Used
     , Supported, Shared
+    , Interactive, PhrasingLike
     )
 
 {-| The library's private phantom markers and named kind/context sets.
@@ -20,6 +21,7 @@ opted-in slot.
 @docs Brand, Ctx
 @docs Available, Used
 @docs Supported, Shared
+@docs Interactive, PhrasingLike
 
 -}
 
@@ -60,3 +62,44 @@ type Available
 -}
 type Used
     = Used_
+
+
+{-| The `interactive` kind set.
+-}
+type alias Interactive =
+    { button : Brand
+    , checkbox : Brand
+    , colorPicker : Brand
+    , copyButton : Brand
+    , details : Brand
+    , dropdown : Brand
+    , iconButton : Brand
+    , input : Brand
+    , menuItem : Brand
+    , option : Brand
+    , radio : Brand
+    , radioButton : Brand
+    , range : Brand
+    , rating : Brand
+    , select : Brand
+    , switch : Brand
+    , tab : Brand
+    , textarea : Brand
+    , treeItem : Brand
+    }
+
+
+{-| The `phrasingLike` kind set.
+-}
+type alias PhrasingLike =
+    { avatar : Brand
+    , badge : Brand
+    , formatBytes : Brand
+    , formatDate : Brand
+    , formatNumber : Brand
+    , icon : Brand
+    , relativeTime : Brand
+    , spinner : Brand
+    , tag : Brand
+    , visuallyHidden : Brand
+    }

@@ -1,16 +1,18 @@
 module Sl.Element.Select exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , Placement, placement, Size, size
     , clearable, disabled, filled, form, gettag, helpText, hoist, label, maxOptionsVisible, multiple, name, open, pill, placeholder, required, value, defaultValue, onChange, onClear, onInput, onFocus, onBlur, onShow, onAfterShow, onHide, onAfterHide, onInvalid
+    , child
     )
 
 {-| The `sl-select` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs Placement, placement, Size, size
 @docs clearable, disabled, filled, form, gettag, helpText, hoist, label, maxOptionsVisible, multiple, name, open, pill, placeholder, required, value, defaultValue, onChange, onClear, onInput, onFocus, onBlur, onShow, onAfterShow, onHide, onAfterHide, onInvalid
+@docs child
 
 -}
 
@@ -36,6 +38,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.Select.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.Select.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -78,7 +86,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.select
@@ -286,3 +294,12 @@ onAfterHide =
 onInvalid : msg -> Attr { c | onInvalid : Supported } msg
 onInvalid =
     Ev.onInvalid
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

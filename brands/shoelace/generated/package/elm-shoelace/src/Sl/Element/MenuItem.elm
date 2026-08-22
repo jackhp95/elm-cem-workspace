@@ -1,16 +1,18 @@
 module Sl.Element.MenuItem exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, SubmenuSlot, ChildAdmittedBy
     , Type, type_
     , checked, disabled, loading, value, defaultChecked, defaultValue
+    , submenu, child
     )
 
 {-| The `sl-menu-item` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, SubmenuSlot, ChildAdmittedBy
 @docs Type, type_
 @docs checked, disabled, loading, value, defaultChecked, defaultValue
+@docs submenu, child
 
 -}
 
@@ -36,6 +38,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.MenuItem.Attrs
+
+
+{-| The kinds the `submenu` slot admits.
+-}
+type alias SubmenuSlot =
+    Sl.Internal.Types.MenuItem.SubmenuSlot
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -65,10 +73,13 @@ type alias AttrCaps =
 {-| The singular-slot capabilities this component's builder admits.
 -}
 type alias SlotCaps =
-    {}
+    Sl.Internal.Types.MenuItem.SlotCaps
 
 
-{-| Standard constructor: `[attributes] [children]`.
+{-| Standard constructor: `[attributes] [children]`. The default slot is
+kind-permissive (`any`): children of any kind compose, but each child's OWN
+admittedBy must still admit this context — a restricted-parent element is
+rejected here at compile time.
 -}
 component :
     List (Attr Attrs msg)
@@ -129,3 +140,20 @@ defaultChecked =
 defaultValue : String -> Attr { c | value : Supported } msg
 defaultValue =
     A.defaultValue
+
+
+{-| Place an element into the named `submenu` slot (input constrained to the
+slot's kinds; output row free so it composes into the child list).
+-}
+submenu : Element SubmenuSlot admittedBy msg -> Element free freeAdmittedBy msg
+submenu element =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "submenu") (El.toNode element))
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

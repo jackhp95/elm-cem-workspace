@@ -1,11 +1,11 @@
-module Sl.Internal.Types.Select exposing (Is, Attrs, ChildAdmittedBy, Placement, Size, Builder, AttrCaps)
+module Sl.Internal.Types.Select exposing (Is, Attrs, Content, ChildAdmittedBy, Placement, Size, Builder, AttrCaps)
 
 {-| Type definitions for Select. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.Select` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Placement, Size, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Placement, Size, Builder, AttrCaps
 
 -}
 
@@ -56,6 +56,14 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     , value : Supported
+    }
+
+
+{-| The `Content` type row for Select (generated).
+-}
+type alias Content =
+    { divider : Brand
+    , option : Brand
     }
 
 

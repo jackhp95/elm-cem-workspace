@@ -1,4 +1,4 @@
-module Good exposing (categories, controls, escapes, page, view)
+module Good exposing (a11yBenignInButton, a11yPositives, categories, controls, escapes, page, view)
 
 {-| The /tmp/htmlia good-case ports, on the GENERATED TypedHtml: composition
 families (Table / Select+Form / Media) with zero inner annotations, transparent
@@ -293,6 +293,68 @@ categories =
         , H.head [] [ H.title [] [ H.text "t" ], H.script [] [] ]
         , H.span [] [ H.script [] [], H.template [] [] ]
         ]
+
+
+{-| families/a11y-composition plan, Task 3 positive control: `button`, `a`,
+`label`, and `summary` all gained `!@interactive` on their `admits` (WHATWG
+"phrasing content, but no interactive content descendant" for
+button/label/summary; "no interactive content descendant, a element
+descendant, or tabindex descendant" for `a`, via `!a` on top). A `shared:text`
+child is UNCHANGED by that subtraction — it is admitted by its own explicit
+`"shared:text"` kind entry, not through `@phrasing` — so `H.text` stays legal
+in all four. See bad/InteractiveContentInButton.elm, bad/SelectInLabel.elm,
+bad/ButtonInSummary.elm for three of the four negative controls.
+
+The fourth (`button` containing `a`) is NOT an acid (compile) fixture: `a` is
+`transparent` (its produced kind row IS its children's accepts row — see
+TypedHtml.Element.A's doc), so `H.a […] […]` type-checks against ANY row a
+caller unifies it with, including `Button`'s. That is true both BEFORE and
+AFTER this task — `a`-as-a-child has never been, and still is not, checked by
+the Elm compiler. Only the facts-driven `Cem.ValidSlotKind` (elm-review) rule
+catches it, because it matches the child's own NOUN ("a") against the parent's
+`slotKinds` list rather than relying on row unification. See `../spike/` for a
+reproducible `elm-review` run proving `button > a` now trips `ValidSlotKind`
+(it did not before this task's `admits` edit).
+
+Benign phrasing content nests FINE (this is the Task 3.5 fix): a `<span>`,
+`<del>`, `<ins>`, `<em>` — anything whose produced kind is `sharedPhrasing` —
+still composes inside all four. The Task 3 subtraction used to drop the whole
+`sharedPhrasing` field because the interactive elements (`button`/`a`/`input`/
+…) collapsed onto it, taking `<span>` down with `<button>`. That collapse is
+now split: interactive elements produce `sharedInteractive` (a distinct
+cross-library atom), so `!@interactive` subtracts only THAT field. `button`'s
+slot keeps `sharedPhrasing` and loses `sharedInteractive` — see
+`a11yBenignInButton` below (compiles, no recast) and bad/InteractiveInSpan is
+NOT a fixture because `<span>` legitimately admits both. The still-rejected
+half is unchanged: bad/InteractiveContentInButton.elm (button>button),
+bad/InputInButton.elm (button>input), bad/SelectInLabel.elm, bad/ButtonInSummary.elm.
+
+-}
+a11yPositives : List (HtmlIr.Element.Element {} {} Msg)
+a11yPositives =
+    Unsafe.recastAll
+        [ H.button [] [ H.text "Go" ]
+        , H.a [ At.href "/x" ] [ H.text "Read more" ]
+        , H.label [] [ H.text "Pick" ]
+        , H.summary [] [ H.text "Details" ]
+        ]
+
+
+{-| Task 3.5 regression proof, WITHOUT `Unsafe.recastAll`: benign phrasing
+content (`<span>`, `<del>`, `<ins>`) nests inside `button`/`label`/`summary`/`a`
+and type-checks by ordinary row unification. Before the `sharedPhrasing` /
+`sharedInteractive` split this did not compile — the whole `sharedPhrasing`
+field had been subtracted by `!@interactive`, so `<span>` (a `sharedPhrasing`
+producer) was collateral damage. Each element keeps its own closed row here (no
+homogenising recast and no type annotation to launder it), so a re-collapse
+would surface as a real compile error in THIS binding rather than be masked.
+-}
+a11yBenignInButton =
+    { btn = H.button [] [ H.span [] [ H.text "icon" ] ]
+    , lbl = H.label [] [ H.del [] [ H.text "old" ] ]
+    , sum = H.summary [] [ H.ins [] [ H.text "new" ] ]
+    , lnk = H.a [ At.href "/x" ] [ H.span [] [ H.text "more" ] ]
+    }
 
 
 view : Html.Html Msg

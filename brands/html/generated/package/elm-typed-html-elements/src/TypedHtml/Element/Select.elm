@@ -198,6 +198,7 @@ type alias OptionContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -229,7 +230,7 @@ option attrs children =
 {-| The kind row `select` produces.
 -}
 type alias SelectIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `select`'s closed attribute-capability row.

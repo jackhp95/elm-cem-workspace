@@ -1,21 +1,23 @@
 module Sl.Element.Option exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, value, defaultValue
+    , child
     )
 
 {-| The `sl-option` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, value, defaultValue
+@docs child
 
 -}
 
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import Sl.Attributes as A
 import Sl.Html as H
 import Sl.Internal.Types.Option
@@ -32,6 +34,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.Option.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.Option.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -62,7 +70,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.option
@@ -87,3 +95,12 @@ value =
 defaultValue : String -> Attr { c | value : Supported } msg
 defaultValue =
     A.defaultValue
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

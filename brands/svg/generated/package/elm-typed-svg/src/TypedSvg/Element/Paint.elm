@@ -1,6 +1,6 @@
 module TypedSvg.Element.Paint exposing
     ( linearGradient, pattern, radialGradient, stop
-    , LinearGradientIs, LinearGradientAttrs, LinearGradientContent, LinearGradientChildAdmittedBy, PatternIs, PatternAttrs, PatternChildAdmittedBy, RadialGradientIs, RadialGradientAttrs, RadialGradientContent, RadialGradientChildAdmittedBy, StopIs, StopAttrs, StopChildAdmittedBy
+    , LinearGradientIs, LinearGradientAttrs, LinearGradientContent, LinearGradientChildAdmittedBy, PatternIs, PatternAttrs, PatternContent, PatternChildAdmittedBy, RadialGradientIs, RadialGradientAttrs, RadialGradientContent, RadialGradientChildAdmittedBy, StopIs, StopAttrs, StopChildAdmittedBy
     , cx, cy, fr, fx, fy, gradientTransform, gradientUnits, height, href, offset, patternContentUnits, patternTransform, patternUnits, preserveAspectRatio, r, spreadMethod, stopColor, stopOpacity, viewBox, width, x, x1, x2, y, y1, y2
     )
 
@@ -8,7 +8,7 @@ module TypedSvg.Element.Paint exposing
 co-located re-exports of the shared attributes its elements admit.
 
 @docs linearGradient, pattern, radialGradient, stop
-@docs LinearGradientIs, LinearGradientAttrs, LinearGradientContent, LinearGradientChildAdmittedBy, PatternIs, PatternAttrs, PatternChildAdmittedBy, RadialGradientIs, RadialGradientAttrs, RadialGradientContent, RadialGradientChildAdmittedBy, StopIs, StopAttrs, StopChildAdmittedBy
+@docs LinearGradientIs, LinearGradientAttrs, LinearGradientContent, LinearGradientChildAdmittedBy, PatternIs, PatternAttrs, PatternContent, PatternChildAdmittedBy, RadialGradientIs, RadialGradientAttrs, RadialGradientContent, RadialGradientChildAdmittedBy, StopIs, StopAttrs, StopChildAdmittedBy
 @docs cx, cy, fr, fx, fy, gradientTransform, gradientUnits, height, href, offset, patternContentUnits, patternTransform, patternUnits, preserveAspectRatio, r, spreadMethod, stopColor, stopOpacity, viewBox, width, x, x1, x2, y, y1, y2
 
 -}
@@ -94,6 +94,36 @@ type alias PatternAttrs =
     }
 
 
+{-| The kinds `pattern` admits.
+-}
+type alias PatternContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `pattern` injects into its children.
 -}
 type alias PatternChildAdmittedBy childAdm =
@@ -104,7 +134,7 @@ type alias PatternChildAdmittedBy childAdm =
 -}
 pattern :
     List (Attr PatternAttrs msg)
-    -> List (Element childAccepts (PatternChildAdmittedBy childAdm) msg)
+    -> List (Element PatternContent (PatternChildAdmittedBy childAdm) msg)
     -> Element (PatternIs s) admittedBy msg
 pattern attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "pattern" attrs (List.map HtmlIr.Element.toNode children))

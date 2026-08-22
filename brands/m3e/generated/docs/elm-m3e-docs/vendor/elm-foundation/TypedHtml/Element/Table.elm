@@ -68,6 +68,7 @@ type alias CaptionContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -397,6 +398,7 @@ type alias TdContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -541,6 +543,7 @@ type alias ThContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand

@@ -1,16 +1,18 @@
 module Sl.Element.Dropdown exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, TriggerSlot, ChildAdmittedBy
     , Placement, placement, Sync, sync
     , disabled, distance, hoist, open, skidding, stayOpenOnSelect, onShow, onAfterShow, onHide, onAfterHide
+    , trigger, child
     )
 
 {-| The `sl-dropdown` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, TriggerSlot, ChildAdmittedBy
 @docs Placement, placement, Sync, sync
 @docs disabled, distance, hoist, open, skidding, stayOpenOnSelect, onShow, onAfterShow, onHide, onAfterHide
+@docs trigger, child
 
 -}
 
@@ -36,6 +38,18 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.Dropdown.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.Dropdown.Content
+
+
+{-| The kinds the `trigger` slot admits.
+-}
+type alias TriggerSlot =
+    Sl.Internal.Types.Dropdown.TriggerSlot
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -71,14 +85,14 @@ type alias AttrCaps =
 {-| The singular-slot capabilities this component's builder admits.
 -}
 type alias SlotCaps =
-    {}
+    Sl.Internal.Types.Dropdown.SlotCaps
 
 
 {-| Standard constructor: `[attributes] [children]`.
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.dropdown
@@ -167,3 +181,20 @@ onHide =
 onAfterHide : msg -> Attr { c | onAfterHide : Supported } msg
 onAfterHide =
     Ev.onAfterHide
+
+
+{-| Place an element into the named `trigger` slot (input constrained to the
+slot's kinds; output row free so it composes into the child list).
+-}
+trigger : Element TriggerSlot admittedBy msg -> Element free freeAdmittedBy msg
+trigger element =
+    Ir.fromNode (Ir.addAttribute (Ir.attribute "slot" "trigger") (El.toNode element))
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

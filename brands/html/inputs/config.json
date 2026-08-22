@@ -791,7 +791,7 @@
     ]
   },
   "A": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "A",
     "transparent": true,
     "roles": [
@@ -808,7 +808,19 @@
       "switch",
       "tab",
       "treeitem"
-    ]
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon",
+          "!@interactive",
+          "!a"
+        ],
+        "multi": true
+      }
+    }
   },
   "Abbr": {
     "kind": "shared:phrasing",
@@ -864,7 +876,7 @@
     }
   },
   "Audio": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Media",
     "admits": {
       "unnamed": {
@@ -950,7 +962,7 @@
     "home": "Text"
   },
   "Button": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Button",
     "roles": [
       "checkbox",
@@ -971,7 +983,8 @@
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }
@@ -1210,7 +1223,7 @@
     }
   },
   "Embed": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Embedded"
   },
   "Fieldset": {
@@ -1415,14 +1428,14 @@
     }
   },
   "Iframe": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Embedded"
   },
   "Img": {
     "home": "Img"
   },
   "Input": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Input",
     "eventPayloads": {
       "input": {
@@ -1455,14 +1468,15 @@
     }
   },
   "Label": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Form",
     "admits": {
       "unnamed": {
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }
@@ -1615,7 +1629,7 @@
     }
   },
   "Object": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Embedded",
     "transparent": true
   },
@@ -1886,7 +1900,7 @@
     }
   },
   "Select": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Select",
     "eventPayloads": {
       "change": {
@@ -2002,7 +2016,8 @@
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }
@@ -2072,7 +2087,7 @@
     "home": "Scripting"
   },
   "Textarea": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Textarea",
     "eventPayloads": {
       "input": {
@@ -2223,7 +2238,7 @@
     }
   },
   "Video": {
-    "kind": "shared:phrasing",
+    "kind": "shared:interactive",
     "home": "Media",
     "admits": {
       "unnamed": {

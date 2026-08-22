@@ -1,0 +1,190 @@
+{
+  "$schema": "./composition-rules.schema.json",
+  "meta": {
+    "artifact": "a11y-composition-foundation",
+    "version": "1.0.0",
+    "authored": "2026-08-22",
+    "plan": "docs/plans/2026-08-21-families-a11y-composition-plan.md",
+    "notExecutedByAuthor": false,
+    "notes": "Task 1 of the families/composition plan. Brand-agnostic foundation feeding html + shoelace admits/slotKinds (WHATWG + ARIA) and the svg a11y overlay (SVG-AAM). All quotes re-verified live against the cited specs on the fetched date in each provenance entry; several verbatim quotes were re-fetched rather than copied from the plan, and the button content model was found to have gained a `selectedcontent` clause since the plan was written (see whatwgContentModels[button].contentModelQuote)."
+  },
+  "provenance": {
+    "whatwg-dom-categories": {
+      "spec": "WHATWG HTML Standard — Kinds of content (Interactive content)",
+      "url": "https://html.spec.whatwg.org/multipage/dom.html#interactive-content",
+      "fetched": "2026-08-22"
+    },
+    "whatwg-button": {
+      "spec": "WHATWG HTML Standard — The button element",
+      "url": "https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element",
+      "fetched": "2026-08-22"
+    },
+    "whatwg-a": {
+      "spec": "WHATWG HTML Standard — The a element",
+      "url": "https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element",
+      "fetched": "2026-08-22"
+    },
+    "whatwg-label": {
+      "spec": "WHATWG HTML Standard — The label element",
+      "url": "https://html.spec.whatwg.org/multipage/forms.html#the-label-element",
+      "fetched": "2026-08-22"
+    },
+    "whatwg-form": {
+      "spec": "WHATWG HTML Standard — The form element",
+      "url": "https://html.spec.whatwg.org/multipage/forms.html#the-form-element",
+      "fetched": "2026-08-22"
+    },
+    "whatwg-summary": {
+      "spec": "WHATWG HTML Standard — The summary element",
+      "url": "https://html.spec.whatwg.org/multipage/interactive-elements.html#the-summary-element",
+      "fetched": "2026-08-22"
+    },
+    "aria-required-owned": {
+      "spec": "WAI-ARIA 1.2 — Required Owned Elements (role characteristics)",
+      "url": "https://www.w3.org/TR/wai-aria-1.2/#mustContain",
+      "fetched": "2026-08-22"
+    },
+    "aria-required-context": {
+      "spec": "WAI-ARIA 1.2 — Required Context Role (role characteristics)",
+      "url": "https://www.w3.org/TR/wai-aria-1.2/#scope",
+      "fetched": "2026-08-22"
+    },
+    "aria-presentational-children": {
+      "spec": "WAI-ARIA 1.2 — Presentational Children; cross-checked against W3C ACT rule 307n5z (Element with presentational children has no focusable content)",
+      "url": "https://www.w3.org/WAI/standards-guidelines/act/rules/307n5z/",
+      "fetched": "2026-08-22"
+    },
+    "svg-aam": {
+      "spec": "SVG Accessibility API Mappings 1.0 — element role mappings, Name and Description mapping",
+      "url": "https://www.w3.org/TR/svg-aam-1.0/",
+      "fetched": "2026-08-22"
+    }
+  },
+
+  "interactiveContent": {
+    "provenanceRef": "whatwg-dom-categories",
+    "categoryQuote": "a (if the href attribute is present), audio (if the controls attribute is present), button, details, embed, iframe, img (if the usemap attribute is present), input (if the type attribute is not in the Hidden state), label, select, textarea, video (if the controls attribute is present)",
+    "members": [
+      { "element": "a", "conditional": true, "condition": "if the href attribute is present" },
+      { "element": "audio", "conditional": true, "condition": "if the controls attribute is present" },
+      { "element": "button", "conditional": false },
+      { "element": "details", "conditional": false },
+      { "element": "embed", "conditional": false },
+      { "element": "iframe", "conditional": false },
+      { "element": "img", "conditional": true, "condition": "if the usemap attribute is present" },
+      { "element": "input", "conditional": true, "condition": "if the type attribute is not in the Hidden state" },
+      { "element": "label", "conditional": false },
+      { "element": "select", "conditional": false },
+      { "element": "textarea", "conditional": false },
+      { "element": "video", "conditional": true, "condition": "if the controls attribute is present" }
+    ]
+  },
+
+  "whatwgContentModels": [
+    {
+      "element": "button",
+      "contentModelQuote": "Phrasing content, but there must be no interactive content descendant and no descendant with the tabindex attribute specified. If the element is the first child of a select element, then it may also have one descendant selectedcontent element.",
+      "constraints": ["phrasing-content", "no-interactive-content-descendant", "no-tabindex-descendant"],
+      "enforcedBy": "ValidComposition",
+      "provenanceRef": "whatwg-button"
+    },
+    {
+      "element": "a",
+      "contentModelQuote": "Transparent, but there must be no interactive content descendant, a element descendant, or descendant with the tabindex attribute specified.",
+      "constraints": ["transparent", "no-interactive-content-descendant", "no-a-descendant", "no-tabindex-descendant"],
+      "enforcedBy": "ValidComposition",
+      "provenanceRef": "whatwg-a"
+    },
+    {
+      "element": "label",
+      "contentModelQuote": "Phrasing content, but with no descendant labelable elements unless it is the element's labeled control, and no descendant label elements.",
+      "constraints": ["phrasing-content", "no-labelable-descendant-except-labeled-control", "no-label-descendant"],
+      "enforcedBy": "ValidComposition",
+      "provenanceRef": "whatwg-label"
+    },
+    {
+      "element": "summary",
+      "contentModelQuote": "Phrasing content, optionally intermixed with heading content.",
+      "constraints": ["phrasing-content", "heading-content-allowed", "no-interactive-content-descendant"],
+      "enforcedBy": "ValidComposition",
+      "provenanceRef": "whatwg-summary"
+    },
+    {
+      "element": "form",
+      "contentModelQuote": "Flow content, but with no form element descendants.",
+      "constraints": ["flow-content", "no-form-descendant"],
+      "enforcedBy": "ValidComposition",
+      "provenanceRef": "whatwg-form"
+    }
+  ],
+
+  "ariaRequiredOwned": [
+    { "containerRole": "listbox", "requiredOwned": ["option", "group"], "enforcedBy": "advisory", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "menu", "requiredOwned": ["menuitem", "menuitemcheckbox", "menuitemradio", "group"], "enforcedBy": "advisory", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "menubar", "requiredOwned": ["menuitem", "menuitemcheckbox", "menuitemradio", "group"], "enforcedBy": "advisory", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "tablist", "requiredOwned": ["tab"], "enforcedBy": "admits/slotKinds", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "tree", "requiredOwned": ["treeitem", "group"], "enforcedBy": "advisory", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "grid", "requiredOwned": ["row", "rowgroup"], "enforcedBy": "advisory", "provenanceRef": "aria-required-owned" },
+    { "containerRole": "radiogroup", "requiredOwned": ["radio"], "enforcedBy": "admits/slotKinds", "provenanceRef": "aria-required-owned" }
+  ],
+
+  "ariaRequiredContext": [
+    { "childRole": "option", "requiredContext": ["listbox", "group"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "menuitem", "requiredContext": ["group", "menu", "menubar"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "menuitemcheckbox", "requiredContext": ["group", "menu", "menubar"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "menuitemradio", "requiredContext": ["group", "menu", "menubar"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "tab", "requiredContext": ["tablist"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "treeitem", "requiredContext": ["group", "tree"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "row", "requiredContext": ["grid", "rowgroup", "table", "treegrid"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "gridcell", "requiredContext": ["row"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "columnheader", "requiredContext": ["row"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "rowheader", "requiredContext": ["row"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "radio", "requiredContext": ["radiogroup"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" },
+    { "childRole": "listitem", "requiredContext": ["group", "list"], "enforcedBy": "ValidComposition", "provenanceRef": "aria-required-context" }
+  ],
+
+  "ariaPresentationalChildren": {
+    "provenanceRef": "aria-presentational-children",
+    "quote": "The DOM descendants are presentational. User agents SHOULD NOT expose descendants of this element through the platform accessibility API. Roles with presentational children (per WAI-ARIA 1.2, cross-checked against ACT rule 307n5z): button, checkbox, img, menuitemcheckbox, menuitemradio, meter, option, progressbar, radio, scrollbar, separator, slider, switch, and tab.",
+    "roles": [
+      "button",
+      "checkbox",
+      "img",
+      "menuitemcheckbox",
+      "menuitemradio",
+      "meter",
+      "option",
+      "progressbar",
+      "radio",
+      "scrollbar",
+      "separator",
+      "slider",
+      "switch",
+      "tab"
+    ],
+    "enforcedBy": "ValidComposition"
+  },
+
+  "svgAamOverlay": {
+    "provenanceRef": "svg-aam",
+    "titleDesc": {
+      "elements": ["title", "desc"],
+      "quote": "no accessible object created; see Name and Description mapping",
+      "effect": "title/desc create no accessible object; they are name/description sources for their PARENT (precedence: aria-labelledby > aria-label > child title > text). This is why svg's admits already special-cases title/desc as universally-admitted children."
+    },
+    "nonRendered": {
+      "elements": ["animate", "animateMotion", "animateTransform", "clipPath", "defs", "filter", "mask", "pattern", "set"],
+      "quote": "no role may be applied. Elements for which no accessible object is created and no role may be applied ... have no implicit role. The 'aria-roledescription' attribute MUST NOT be exposed on these elements.",
+      "effect": "role / aria-roledescription on a non-rendered SVG element is an SVG-AAM violation. Complements (does not replace) the SVG spec content model that already makes defs/filter/etc. structural, not content, containers."
+    },
+    "defaultRoles": [
+      { "selector": "svg", "role": "graphics-document" },
+      { "selector": "rect|circle|ellipse|line|polyline|polygon|path", "role": "graphics-symbol" },
+      { "selector": "g|foreignObject", "role": "group" },
+      { "selector": "image", "role": "img" },
+      { "selector": "a[href]", "role": "link" },
+      { "selector": "symbol|use", "role": "graphics-object" }
+    ],
+    "enforcedBy": "ValidComposition"
+  }
+}

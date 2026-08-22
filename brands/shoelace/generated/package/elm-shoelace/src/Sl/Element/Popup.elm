@@ -3,6 +3,7 @@ module Sl.Element.Popup exposing
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , ArrowPlacement, arrowPlacement, AutoSize, autoSize, FlipFallbackStrategy, flipFallbackStrategy, Placement, placement, Strategy, strategy, Sync, sync
     , active, anchor, arrow, arrowPadding, autoSizePadding, autosizeboundary, distance, flip, flipFallbackPlacements, flipPadding, flipboundary, hoverBridge, shift, shiftPadding, shiftboundary, skidding, onReposition
+    , child
     )
 
 {-| The `sl-popup` component — strict per-component surface.
@@ -11,6 +12,7 @@ module Sl.Element.Popup exposing
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs ArrowPlacement, arrowPlacement, AutoSize, autoSize, FlipFallbackStrategy, flipFallbackStrategy, Placement, placement, Strategy, strategy, Sync, sync
 @docs active, anchor, arrow, arrowPadding, autoSizePadding, autosizeboundary, distance, flip, flipFallbackPlacements, flipPadding, flipboundary, hoverBridge, shift, shiftPadding, shiftboundary, skidding, onReposition
+@docs child
 
 -}
 
@@ -98,7 +100,10 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
+{-| Standard constructor: `[attributes] [children]`. The default slot is
+kind-permissive (`any`): children of any kind compose, but each child's OWN
+admittedBy must still admit this context — a restricted-parent element is
+rejected here at compile time.
 -}
 component :
     List (Attr Attrs msg)
@@ -273,3 +278,12 @@ skidding =
 onReposition : msg -> Attr { c | onReposition : Supported } msg
 onReposition =
     Ev.onReposition
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

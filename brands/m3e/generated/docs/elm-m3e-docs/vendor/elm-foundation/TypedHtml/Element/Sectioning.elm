@@ -324,6 +324,7 @@ type alias H1Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -392,6 +393,7 @@ type alias H2Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -460,6 +462,7 @@ type alias H3Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -528,6 +531,7 @@ type alias H4Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -596,6 +600,7 @@ type alias H5Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -664,6 +669,7 @@ type alias H6Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand

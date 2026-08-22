@@ -24,7 +24,7 @@ import TypedHtml.Kind exposing (Brand, Ctx)
 {-| The kind row `audio` produces.
 -}
 type alias AudioIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `audio`'s closed attribute-capability row.
@@ -342,7 +342,7 @@ track attrs children =
 {-| The kind row `video` produces.
 -}
 type alias VideoIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `video`'s closed attribute-capability row.

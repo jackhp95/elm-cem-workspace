@@ -103,6 +103,14 @@ codegenAware =
     , Cem.missingRequiredSingularSlot facts
     , Cem.validSlotKindWith Cem.Lenient facts
 
+    -- Relational composition (families/a11y plan Task 6/7): the ancestor/
+    -- descendant complement to validSlotKind — interactive-content descendant at
+    -- ARBITRARY DEPTH + label single-labeled-control (HARD, WHATWG), and ARIA
+    -- required-context (WARN: a `menuItem` needs a `menu`/`menubar` ancestor, a
+    -- `tab` needs its `tabGroup`). The default config's camelCase noun keys
+    -- match the generated ctor nouns verbatim, so no brand-specific config.
+    , Cem.validComposition facts
+
     -- Barrel is the canonical surface family-wide: the one-import
     -- `Sl.button [ Sl.variant … ] …` form. `elm-review --fix` migrates either direction.
     , Cem.preferBarrel facts

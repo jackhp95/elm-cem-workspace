@@ -67,6 +67,7 @@ type alias AbbrContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -135,6 +136,7 @@ type alias BContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -203,6 +205,7 @@ type alias BdiContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -271,6 +274,7 @@ type alias BdoContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -391,6 +395,7 @@ type alias CiteContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -459,6 +464,7 @@ type alias CodeContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -528,6 +534,7 @@ type alias DataContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -645,6 +652,7 @@ type alias DfnContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -713,6 +721,7 @@ type alias EmContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -781,6 +790,7 @@ type alias IContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -898,6 +908,7 @@ type alias KbdContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -966,6 +977,7 @@ type alias MarkContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1040,6 +1052,7 @@ type alias MeterContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1110,6 +1123,7 @@ type alias ProgressContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1179,6 +1193,7 @@ type alias QContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1311,6 +1326,7 @@ type alias RtContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1387,6 +1403,7 @@ type alias RubyContent =
     , rt : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1455,6 +1472,7 @@ type alias SContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1523,6 +1541,7 @@ type alias SampContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1591,6 +1610,7 @@ type alias SmallContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1659,6 +1679,7 @@ type alias SpanContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1740,6 +1761,7 @@ type alias StrongContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1808,6 +1830,7 @@ type alias SubContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1876,6 +1899,7 @@ type alias SupContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -1945,6 +1969,7 @@ type alias TimeContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -2013,6 +2038,7 @@ type alias UContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
@@ -2081,6 +2107,7 @@ type alias VarContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand

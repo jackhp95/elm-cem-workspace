@@ -24,7 +24,7 @@ import TypedHtml.Kind exposing (Ctx)
 {-| The kind row `textarea` produces.
 -}
 type alias Is s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `textarea`'s closed attribute-capability row.
