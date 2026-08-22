@@ -1,0 +1,513 @@
+{
+  "_comment": "What the elm-typed-svg package actually generates (plan Task 2.1). AST/JSON read of the CURRENT package: manifest tagNames + per-element attrs, config _globals (with which carry a finite `type` enum), Attributes.elm exposing list, Values.elm enum type aliases. No API cost; no package mutation.",
+  "source": {
+    "manifest": "brands/svg/generated/package/elm-typed-svg/manifest/svg.cem.json",
+    "config": "brands/svg/inputs/config.json",
+    "attributesElm": "brands/svg/generated/package/elm-typed-svg/src/TypedSvg/Attributes.elm",
+    "valuesElm": "brands/svg/generated/package/elm-typed-svg/src/TypedSvg/Values.elm",
+    "extractedAt": "2026-08-21"
+  },
+  "counts": {
+    "elements": 27,
+    "globalAttributes": 38,
+    "typedGlobalEnums": 6,
+    "attributeSetters": 88,
+    "valuesEnumTypes": 6
+  },
+  "elements": [
+    "a",
+    "circle",
+    "clipPath",
+    "defs",
+    "desc",
+    "ellipse",
+    "g",
+    "image",
+    "line",
+    "linearGradient",
+    "marker",
+    "mask",
+    "path",
+    "pattern",
+    "polygon",
+    "polyline",
+    "radialGradient",
+    "rect",
+    "stop",
+    "svg",
+    "switch",
+    "symbol",
+    "text",
+    "textPath",
+    "title",
+    "tspan",
+    "use"
+  ],
+  "elementAttributes": {
+    "svg": [
+      "viewBox",
+      "width",
+      "height",
+      "x",
+      "y",
+      "preserveAspectRatio",
+      "xmlns"
+    ],
+    "g": [],
+    "defs": [],
+    "symbol": [
+      "viewBox",
+      "preserveAspectRatio",
+      "x",
+      "y",
+      "width",
+      "height"
+    ],
+    "use": [
+      "href",
+      "x",
+      "y",
+      "width",
+      "height"
+    ],
+    "a": [
+      "href",
+      "target"
+    ],
+    "switch": [],
+    "title": [],
+    "desc": [],
+    "rect": [
+      "x",
+      "y",
+      "width",
+      "height",
+      "rx",
+      "ry"
+    ],
+    "circle": [
+      "cx",
+      "cy",
+      "r"
+    ],
+    "ellipse": [
+      "cx",
+      "cy",
+      "rx",
+      "ry"
+    ],
+    "line": [
+      "x1",
+      "y1",
+      "x2",
+      "y2"
+    ],
+    "polyline": [
+      "points"
+    ],
+    "polygon": [
+      "points"
+    ],
+    "path": [
+      "d",
+      "pathLength"
+    ],
+    "text": [
+      "x",
+      "y",
+      "dx",
+      "dy",
+      "rotate",
+      "textLength",
+      "lengthAdjust"
+    ],
+    "tspan": [
+      "x",
+      "y",
+      "dx",
+      "dy",
+      "rotate"
+    ],
+    "textPath": [
+      "href",
+      "startOffset"
+    ],
+    "linearGradient": [
+      "x1",
+      "y1",
+      "x2",
+      "y2",
+      "gradientUnits",
+      "gradientTransform",
+      "spreadMethod",
+      "href"
+    ],
+    "radialGradient": [
+      "cx",
+      "cy",
+      "r",
+      "fx",
+      "fy",
+      "fr",
+      "gradientUnits",
+      "gradientTransform",
+      "spreadMethod",
+      "href"
+    ],
+    "stop": [
+      "offset",
+      "stop-color",
+      "stop-opacity"
+    ],
+    "pattern": [
+      "x",
+      "y",
+      "width",
+      "height",
+      "patternUnits",
+      "patternContentUnits",
+      "patternTransform",
+      "viewBox",
+      "preserveAspectRatio",
+      "href"
+    ],
+    "clipPath": [
+      "clipPathUnits"
+    ],
+    "mask": [
+      "x",
+      "y",
+      "width",
+      "height",
+      "maskUnits",
+      "maskContentUnits"
+    ],
+    "marker": [
+      "markerWidth",
+      "markerHeight",
+      "refX",
+      "refY",
+      "orient",
+      "markerUnits",
+      "viewBox",
+      "preserveAspectRatio"
+    ],
+    "image": [
+      "href",
+      "x",
+      "y",
+      "width",
+      "height",
+      "preserveAspectRatio"
+    ]
+  },
+  "globals": [
+    {
+      "name": "id",
+      "typed": false
+    },
+    {
+      "name": "class",
+      "typed": false
+    },
+    {
+      "name": "style",
+      "typed": false
+    },
+    {
+      "name": "fill",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "fill-opacity",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "fill-rule",
+      "typed": true,
+      "tokens": [
+        "nonzero",
+        "evenodd"
+      ]
+    },
+    {
+      "name": "stroke",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "stroke-width",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "stroke-linecap",
+      "typed": true,
+      "tokens": [
+        "butt",
+        "round",
+        "square"
+      ]
+    },
+    {
+      "name": "stroke-linejoin",
+      "typed": true,
+      "tokens": [
+        "miter",
+        "round",
+        "bevel"
+      ]
+    },
+    {
+      "name": "stroke-dasharray",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "stroke-dashoffset",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "stroke-opacity",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "stroke-miterlimit",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "opacity",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "color",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "transform",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "transform-origin",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "display",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "visibility",
+      "typed": true,
+      "tokens": [
+        "visible",
+        "hidden",
+        "collapse"
+      ]
+    },
+    {
+      "name": "pointer-events",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "paint-order",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "vector-effect",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "shape-rendering",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "clip-path",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "clip-rule",
+      "typed": true,
+      "tokens": [
+        "nonzero",
+        "evenodd"
+      ]
+    },
+    {
+      "name": "mask",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "filter",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "cursor",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "text-anchor",
+      "typed": true,
+      "tokens": [
+        "start",
+        "middle",
+        "end"
+      ]
+    },
+    {
+      "name": "dominant-baseline",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "font-family",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "font-size",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "font-weight",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "font-style",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "letter-spacing",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "word-spacing",
+      "typed": false,
+      "tokens": null
+    },
+    {
+      "name": "text-decoration",
+      "typed": false,
+      "tokens": null
+    }
+  ],
+  "attributeSetters": [
+    "class",
+    "id",
+    "style",
+    "clipPath",
+    "clipRule",
+    "color",
+    "cursor",
+    "display",
+    "dominantBaseline",
+    "fill",
+    "fillOpacity",
+    "fillRule",
+    "filter",
+    "fontFamily",
+    "fontSize",
+    "fontStyle",
+    "fontWeight",
+    "letterSpacing",
+    "mask",
+    "opacity",
+    "paintOrder",
+    "pointerEvents",
+    "shapeRendering",
+    "stroke",
+    "strokeDasharray",
+    "strokeDashoffset",
+    "strokeLinecap",
+    "strokeLinejoin",
+    "strokeMiterlimit",
+    "strokeOpacity",
+    "strokeWidth",
+    "textAnchor",
+    "textDecoration",
+    "transform",
+    "transformOrigin",
+    "vectorEffect",
+    "visibility",
+    "wordSpacing",
+    "classList",
+    "styleList",
+    "clipPathUnits",
+    "cx",
+    "cy",
+    "d",
+    "dx",
+    "dy",
+    "fr",
+    "fx",
+    "fy",
+    "gradientTransform",
+    "gradientUnits",
+    "height",
+    "href",
+    "lengthAdjust",
+    "markerHeight",
+    "markerUnits",
+    "markerWidth",
+    "maskContentUnits",
+    "maskUnits",
+    "offset",
+    "orient",
+    "pathLength",
+    "patternContentUnits",
+    "patternTransform",
+    "patternUnits",
+    "points",
+    "preserveAspectRatio",
+    "r",
+    "refX",
+    "refY",
+    "rotate",
+    "rx",
+    "ry",
+    "spreadMethod",
+    "startOffset",
+    "stopColor",
+    "stopOpacity",
+    "target",
+    "textLength",
+    "viewBox",
+    "width",
+    "x",
+    "x1",
+    "x2",
+    "xmlns",
+    "y",
+    "y1",
+    "y2"
+  ],
+  "valuesEnumTypes": [
+    "ClipRule",
+    "FillRule",
+    "StrokeLinecap",
+    "StrokeLinejoin",
+    "TextAnchor",
+    "Visibility"
+  ]
+}
