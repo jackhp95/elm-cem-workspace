@@ -1,8 +1,23 @@
 // golden.mjs — shared helper for byte-compare tests that regenerate
 // brands/m3e's REAL output (not a throwaway fixture brand) and diff specific
 // paths against golden reference files. Used by golden-icon-module.test.mjs
-// (G2) and golden-family-package.test.mjs (G3) so both stay in lockstep with
-// the same invocation.
+// (G2).
+//
+// golden-family-package.test.mjs (G3) used to share this helper too, but was
+// deleted 2026-08-22: the reconcile work of 2026-08-21 (74fad9d9 "land Side A
+// naming config onto Side B Elm generator") changed `_families.package.dir`
+// from a bare `"elm-m3e-families"` to `"../elm-m3e-components"` — a rename
+// AND a newly-doubled `../` escape (the emitter already prepends its own
+// `"../"`, so the fresh tree now lands TWO directory levels above `--output`
+// instead of one). That silently writes the fresh sibling package outside
+// the test's own `mkdtempSync` work dir entirely, onto the shared
+// `os.tmpdir()/elm-m3e-*` path — a real, separate latent bug (global tmp
+// pollution / directory-escape depth drift), not something a fixture
+// re-bless could paper over. The test was never wired into any `test:*`
+// script or CI gate; superseding coverage of `elm-m3e-components` byte
+// fidelity lives in brands/m3e's own `check:cem`/`check:families` gates
+// (`elm-cem regen-drift --nested-pkg=../elm-m3e-components`), which ARE wired
+// into that brand's real `gate`.
 //
 // IMPORTANT — the golden reference is NOT the committed
 // brands/m3e/outputs/elm-m3e/{src,elm-m3e-icons,elm-m3e-families} tree.
@@ -27,7 +42,6 @@ import { repo } from "./harness.mjs";
 
 export const fixturesDir = path.join(repo, "tests", "fixtures");
 export const goldenIconModuleDir = path.join(fixturesDir, "golden-icon-module");
-export const goldenFamilyPackageDir = path.join(fixturesDir, "golden-family-package");
 
 const cli = path.join(repo, "bin", "elm-cem.js");
 const elmM3e = path.join(repo, "..", "..", "brands", "m3e", "generated", "package", "elm-m3e");
