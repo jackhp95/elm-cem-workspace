@@ -1,14 +1,18 @@
 module Sl.Build.Dropdown exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, Content, TriggerSlot, ChildAdmittedBy
     , withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync
+    , trigger
+    , withTrigger, withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, Content, TriggerSlot, ChildAdmittedBy
 @docs withClass, withDisabled, withDistance, withHoist, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withPlacement, withSkidding, withSlot, withStayOpenOnSelect, withStyle, withSync
+@docs trigger
+@docs withTrigger, withChild
 
 -}
 
@@ -41,12 +45,22 @@ type alias AttrCaps =
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
     Component.ChildAdmittedBy childAdm
+
+
+{-| -}
+type alias Content =
+    Component.Content
+
+
+{-| -}
+type alias TriggerSlot =
+    Component.TriggerSlot
 
 
 {-| -}
@@ -59,6 +73,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+trigger :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TriggerSlot msg
+    -> Element free freeAdmittedBy msg
+trigger builder =
+    Component.trigger (B.toElement builder)
+
+
+{-| -}
+withTrigger :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TriggerSlot msg
+    -> Builder attrCaps { s | trigger : Available } msg kind
+    -> Builder attrCaps { s | trigger : Used } msg kind
+withTrigger slotBuilder builder_ =
+    B.withChild (El.toNode (Component.trigger (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

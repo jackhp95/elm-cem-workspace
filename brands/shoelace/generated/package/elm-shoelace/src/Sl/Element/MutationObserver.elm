@@ -2,6 +2,7 @@ module Sl.Element.MutationObserver exposing
     ( component
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , attr, attrOldValue, charData, charDataOldValue, childList, disabled, onMutation
+    , child
     )
 
 {-| The `sl-mutation-observer` component — strict per-component surface.
@@ -9,6 +10,7 @@ module Sl.Element.MutationObserver exposing
 @docs component
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs attr, attrOldValue, charData, charDataOldValue, childList, disabled, onMutation
+@docs child
 
 -}
 
@@ -59,7 +61,10 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
+{-| Standard constructor: `[attributes] [children]`. The default slot is
+kind-permissive (`any`): children of any kind compose, but each child's OWN
+admittedBy must still admit this context — a restricted-parent element is
+rejected here at compile time.
 -}
 component :
     List (Attr Attrs msg)
@@ -116,3 +121,12 @@ disabled =
 onMutation : msg -> Attr { c | onMutation : Supported } msg
 onMutation =
     Ev.onMutation
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

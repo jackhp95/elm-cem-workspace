@@ -2,6 +2,7 @@ module Sl.Build.Drawer exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
     , withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle
+    , withChild
     )
 
 {-|
@@ -9,6 +10,7 @@ module Sl.Build.Drawer exposing
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
 @docs withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle
+@docs withChild
 
 -}
 
@@ -59,6 +61,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

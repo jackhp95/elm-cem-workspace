@@ -1,14 +1,18 @@
 module Sl.Build.TabGroup exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, Content, NavSlot, ChildAdmittedBy
     , withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
+    , nav
+    , withNav, withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, Content, NavSlot, ChildAdmittedBy
 @docs withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
+@docs nav
+@docs withNav, withChild
 
 -}
 
@@ -50,6 +54,16 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.Content
+
+
+{-| -}
+type alias NavSlot =
+    Component.NavSlot
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-tab-group" [] []
@@ -59,6 +73,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+nav :
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavSlot msg
+    -> Element free freeAdmittedBy msg
+nav builder =
+    Component.nav (B.toElement builder)
+
+
+{-| -}
+withNav :
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavSlot msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withNav slotBuilder builder_ =
+    B.withChild (El.toNode (Component.nav (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

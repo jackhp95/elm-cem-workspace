@@ -1,14 +1,18 @@
 module Sl.Build.MenuItem exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, SubmenuSlot, ChildAdmittedBy
     , withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue
+    , submenu
+    , withSubmenu, withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, SubmenuSlot, ChildAdmittedBy
 @docs withChecked, withClass, withDisabled, withId, withLoading, withSlot, withStyle, withType, withValue
+@docs submenu
+@docs withSubmenu, withChild
 
 -}
 
@@ -41,12 +45,17 @@ type alias AttrCaps =
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
     Component.ChildAdmittedBy childAdm
+
+
+{-| -}
+type alias SubmenuSlot =
+    Component.SubmenuSlot
 
 
 {-| -}
@@ -59,6 +68,32 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+submenu :
+    B.Builder childRow childAttrCaps childSlotCaps Component.SubmenuSlot msg
+    -> Element free freeAdmittedBy msg
+submenu builder =
+    Component.submenu (B.toElement builder)
+
+
+{-| -}
+withSubmenu :
+    B.Builder childRow childAttrCaps childSlotCaps Component.SubmenuSlot msg
+    -> Builder attrCaps { s | submenu : Available } msg kind
+    -> Builder attrCaps { s | submenu : Used } msg kind
+withSubmenu slotBuilder builder_ =
+    B.withChild (El.toNode (Component.submenu (B.toElement slotBuilder))) builder_
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

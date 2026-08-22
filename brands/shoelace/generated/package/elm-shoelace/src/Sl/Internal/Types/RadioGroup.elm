@@ -1,11 +1,11 @@
-module Sl.Internal.Types.RadioGroup exposing (Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps)
+module Sl.Internal.Types.RadioGroup exposing (Is, Attrs, Content, ChildAdmittedBy, Size, Builder, AttrCaps)
 
 {-| Type definitions for RadioGroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.RadioGroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Size, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Size, Builder, AttrCaps
 
 -}
 
@@ -38,6 +38,14 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     , value : Supported
+    }
+
+
+{-| The `Content` type row for RadioGroup (generated).
+-}
+type alias Content =
+    { radio : Brand
+    , radioButton : Brand
     }
 
 

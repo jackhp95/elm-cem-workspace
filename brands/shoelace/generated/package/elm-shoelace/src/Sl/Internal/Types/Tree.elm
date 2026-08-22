@@ -1,11 +1,11 @@
-module Sl.Internal.Types.Tree exposing (Is, Attrs, ChildAdmittedBy, Selection, Builder, AttrCaps)
+module Sl.Internal.Types.Tree exposing (Is, Attrs, Content, ChildAdmittedBy, Selection, Builder, AttrCaps)
 
 {-| Type definitions for Tree. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.Tree` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Selection, Builder, AttrCaps
+@docs Is, Attrs, Content, ChildAdmittedBy, Selection, Builder, AttrCaps
 
 -}
 
@@ -31,6 +31,12 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     }
+
+
+{-| The `Content` type row for Tree (generated).
+-}
+type alias Content =
+    { treeItem : Brand }
 
 
 {-| The `ChildAdmittedBy` type row for Tree (generated).

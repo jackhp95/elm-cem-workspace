@@ -1,20 +1,22 @@
 module Sl.Build.Tab exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
     , withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
+    , withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
 @docs withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
+@docs withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import Sl.Attributes as A
 import Sl.Element.Tab as Component
 import Sl.Events as Ev
@@ -48,6 +50,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.Content
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-tab" [] []
@@ -57,6 +64,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

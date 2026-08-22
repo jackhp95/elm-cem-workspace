@@ -1,11 +1,11 @@
-module Sl.Internal.Types.MenuItem exposing (Is, Attrs, ChildAdmittedBy, Type, Builder, AttrCaps)
+module Sl.Internal.Types.MenuItem exposing (Is, Attrs, SubmenuSlot, ChildAdmittedBy, Type, Builder, AttrCaps, SlotCaps)
 
 {-| Type definitions for MenuItem. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.MenuItem` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Type, Builder, AttrCaps
+@docs Is, Attrs, SubmenuSlot, ChildAdmittedBy, Type, Builder, AttrCaps, SlotCaps
 
 -}
 
@@ -34,6 +34,12 @@ type alias Attrs =
     , type_ : Supported
     , value : Supported
     }
+
+
+{-| The `SubmenuSlot` type row for MenuItem (generated).
+-}
+type alias SubmenuSlot =
+    { menu : Brand }
 
 
 {-| The `ChildAdmittedBy` type row for MenuItem (generated).
@@ -68,4 +74,11 @@ type alias AttrCaps =
     , style : Available
     , type_ : Available
     , value : Available
+    }
+
+
+{-| The `SlotCaps` type row for MenuItem (generated).
+-}
+type alias SlotCaps =
+    { submenu : Available
     }

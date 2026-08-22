@@ -2,6 +2,7 @@ module Sl.Build.Popup exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
     , withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync
+    , withChild
     )
 
 {-|
@@ -9,6 +10,7 @@ module Sl.Build.Popup exposing
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
 @docs withActive, withAnchor, withArrow, withArrowPadding, withArrowPlacement, withAutoSize, withAutoSizePadding, withAutosizeboundary, withClass, withDistance, withFlip, withFlipFallbackPlacements, withFlipFallbackStrategy, withFlipPadding, withFlipboundary, withHoverBridge, withId, withOnReposition, withPlacement, withShift, withShiftPadding, withShiftboundary, withSkidding, withSlot, withStrategy, withStyle, withSync
+@docs withChild
 
 -}
 
@@ -59,6 +61,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

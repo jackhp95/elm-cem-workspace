@@ -1,20 +1,22 @@
 module Sl.Build.Button exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
     , withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
+    , withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
 @docs withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
+@docs withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import HtmlIr.Value as Val exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
@@ -51,6 +53,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.Content
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-button" [] []
@@ -60,6 +67,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

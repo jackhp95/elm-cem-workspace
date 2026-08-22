@@ -1,11 +1,11 @@
-module Sl.Internal.Types.TabGroup exposing (Is, Attrs, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps)
+module Sl.Internal.Types.TabGroup exposing (Is, Attrs, Content, NavSlot, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps)
 
 {-| Type definitions for TabGroup. The canonical home of this
 component's `Attrs`/`Is`/`Content`/… rows: the `Sl` barrel and the strict
 `Sl.Element.TabGroup` surface both re-export these, so they live in
 the shared `core` tier (design §3.2a).
 
-@docs Is, Attrs, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps
+@docs Is, Attrs, Content, NavSlot, ChildAdmittedBy, Activation, Placement, Builder, AttrCaps
 
 -}
 
@@ -35,6 +35,18 @@ type alias Attrs =
     , slot : Supported
     , style : Supported
     }
+
+
+{-| The `Content` type row for TabGroup (generated).
+-}
+type alias Content =
+    { tabPanel : Brand }
+
+
+{-| The `NavSlot` type row for TabGroup (generated).
+-}
+type alias NavSlot =
+    { tab : Brand }
 
 
 {-| The `ChildAdmittedBy` type row for TabGroup (generated).

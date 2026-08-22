@@ -1,14 +1,16 @@
 module Sl.Build.RadioGroup exposing
     ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
     , withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue
+    , withChild
     )
 
 {-|
 
 @docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
 @docs withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue
+@docs withChild
 
 -}
 
@@ -50,6 +52,11 @@ type alias ChildAdmittedBy childAdm =
 
 
 {-| -}
+type alias Content =
+    Component.Content
+
+
+{-| -}
 build : Builder AttrCaps SlotCaps msg kind
 build =
     B.init "sl-radio-group" [] []
@@ -59,6 +66,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

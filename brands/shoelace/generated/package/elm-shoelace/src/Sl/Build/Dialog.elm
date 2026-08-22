@@ -2,6 +2,7 @@ module Sl.Build.Dialog exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
     , withClass, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withSlot, withStyle
+    , withChild
     )
 
 {-|
@@ -9,6 +10,7 @@ module Sl.Build.Dialog exposing
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
 @docs withClass, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withSlot, withStyle
+@docs withChild
 
 -}
 
@@ -57,6 +59,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

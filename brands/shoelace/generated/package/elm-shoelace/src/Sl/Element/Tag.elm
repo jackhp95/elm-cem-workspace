@@ -3,6 +3,7 @@ module Sl.Element.Tag exposing
     , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
     , Size, size, Variant, variant
     , pill, removable, onRemove
+    , child
     )
 
 {-| The `sl-tag` component — strict per-component surface.
@@ -11,6 +12,7 @@ module Sl.Element.Tag exposing
 @docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
 @docs Size, size, Variant, variant
 @docs pill, removable, onRemove
+@docs child
 
 -}
 
@@ -74,7 +76,10 @@ type alias SlotCaps =
     {}
 
 
-{-| Standard constructor: `[attributes] [children]`.
+{-| Standard constructor: `[attributes] [children]`. The default slot is
+kind-permissive (`any`): children of any kind compose, but each child's OWN
+admittedBy must still admit this context — a restricted-parent element is
+rejected here at compile time.
 -}
 component :
     List (Attr Attrs msg)
@@ -117,3 +122,12 @@ removable =
 onRemove : msg -> Attr { c | onRemove : Supported } msg
 onRemove =
     Ev.onRemove
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element childAccepts admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)

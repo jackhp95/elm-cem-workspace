@@ -2,6 +2,7 @@ module Sl.Build.Animation exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
     , withClass, withDelay, withDirection, withDuration, withEasing, withEndDelay, withFill, withId, withIterationStart, withIterations, withName, withOnCancel, withOnFinish, withOnStart, withPlay, withPlaybackRate, withSlot, withStyle
+    , withChild
     )
 
 {-|
@@ -9,6 +10,7 @@ module Sl.Build.Animation exposing
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
 @docs withClass, withDelay, withDirection, withDuration, withEasing, withEndDelay, withFill, withId, withIterationStart, withIterations, withName, withOnCancel, withOnFinish, withOnStart, withPlay, withPlaybackRate, withSlot, withStyle
+@docs withChild
 
 -}
 
@@ -57,6 +59,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

@@ -2,6 +2,7 @@ module Sl.Build.Badge exposing
     ( build, toElement
     , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
     , withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant
+    , withChild
     )
 
 {-|
@@ -9,6 +10,7 @@ module Sl.Build.Badge exposing
 @docs build, toElement
 @docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
 @docs withClass, withId, withPill, withPulse, withSlot, withStyle, withVariant
+@docs withChild
 
 -}
 
@@ -58,6 +60,15 @@ build =
 toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
 toElement =
     B.toElement
+
+
+{-| -}
+withChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> Builder attrCaps slotCaps msg kind
+    -> Builder attrCaps slotCaps msg kind
+withChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}

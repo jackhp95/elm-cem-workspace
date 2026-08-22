@@ -1,21 +1,23 @@
 module Sl.Element.TreeItem exposing
     ( component
-    , Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+    , Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
     , disabled, expanded, lazy, selected, defaultSelected, onExpand, onAfterExpand, onCollapse, onAfterCollapse, onLazyChange, onLazyLoad
+    , child
     )
 
 {-| The `sl-tree-item` component — strict per-component surface.
 
 @docs component
-@docs Is, Attrs, Builder, AttrCaps, SlotCaps, ChildAdmittedBy
+@docs Is, Attrs, Builder, AttrCaps, SlotCaps, Content, ChildAdmittedBy
 @docs disabled, expanded, lazy, selected, defaultSelected, onExpand, onAfterExpand, onCollapse, onAfterCollapse, onLazyChange, onLazyLoad
+@docs child
 
 -}
 
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import Sl.Attributes as A
 import Sl.Events as Ev
 import Sl.Html as H
@@ -33,6 +35,12 @@ type alias Is s =
 -}
 type alias Attrs =
     Sl.Internal.Types.TreeItem.Attrs
+
+
+{-| The kinds the default slot admits.
+-}
+type alias Content =
+    Sl.Internal.Types.TreeItem.Content
 
 
 {-| The context demand this container injects into each child's admittedBy row.
@@ -63,7 +71,7 @@ type alias SlotCaps =
 -}
 component :
     List (Attr Attrs msg)
-    -> List (Element childAccepts (ChildAdmittedBy childAdm) msg)
+    -> List (Element Content (ChildAdmittedBy childAdm) msg)
     -> Element (Is s) admittedBy msg
 component =
     H.treeItem
@@ -144,3 +152,12 @@ onLazyChange =
 onLazyLoad : msg -> Attr { c | onLazyLoad : Supported } msg
 onLazyLoad =
     Ev.onLazyLoad
+
+
+{-| Place a pre-built element into the default (unnamed) slot (input
+constrained to the slot's kinds; output row free so it composes into the
+child list). The list-form sibling of the builder's `withChild`.
+-}
+child : Element Content admittedBy msg -> Element free freeAdmittedBy msg
+child element =
+    Ir.fromNode (El.toNode element)
