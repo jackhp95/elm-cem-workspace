@@ -4,6 +4,7 @@ module Cem exposing
     , validEnumValue, requireSlot, singularSlot, singularAttribute
     , missingRequiredAttribute, missingRequiredSingularSlot, preferComponentModules
     , validSlotKind, validSlotKindWith
+    , validComposition, validCompositionWith, CompositionConfig, defaultCompositionConfig
     , preferBarrel, preferBarrelWith, preferComponentSetters
     , translateToRecord, translateToBuild
     , redundantElementEscape
@@ -44,6 +45,16 @@ Each takes the generated facts and can be enabled on its own (or omitted from
 @docs validEnumValue, requireSlot, singularSlot, singularAttribute
 @docs missingRequiredAttribute, missingRequiredSingularSlot, preferComponentModules
 @docs validSlotKind, validSlotKindWith
+
+
+## Relational composition rule
+
+The ancestor/descendant complement to `validSlotKind`'s direct-slot membership:
+interactive-content-descendant at arbitrary depth, `label` single-labeled-control,
+ARIA required-context, and the SVG-AAM no-role-on-non-rendered overlay. HARD posture
+for the WHATWG content-model families, WARN for the ARIA/SVG-AAM ones.
+
+@docs validComposition, validCompositionWith, CompositionConfig, defaultCompositionConfig
 
 
 ## Opt-in barrel autofix
@@ -101,6 +112,7 @@ import Cem.SingularAttribute
 import Cem.SingularSlot
 import Cem.TranslateToBuild
 import Cem.TranslateToRecord
+import Cem.ValidComposition
 import Cem.ValidEnumValue
 import Cem.ValidSlotKind
 import NoFamilyMemberDrift
@@ -232,6 +244,43 @@ warns on children whose kind can't be resolved statically).
 validSlotKindWith : Unresolved -> List Fact -> Rule
 validSlotKindWith posture =
     Cem.ValidSlotKind.ruleWith (toRulePosture posture)
+
+
+{-| The relational-composition rule's config (interactive/label/required-context/
+SVG-AAM tables + per-family HARD/WARN posture). Re-exported so a review config can
+extend `defaultCompositionConfig` without importing `Cem.ValidComposition`.
+-}
+type alias CompositionConfig =
+    Cem.ValidComposition.Config
+
+
+{-| The WHATWG + WAI-ARIA + SVG-AAM composition tables with the resolved posture
+(interactive/label HARD, required-context/svg-aam WARN). A brand extends this with
+its own component nouns.
+-}
+defaultCompositionConfig : CompositionConfig
+defaultCompositionConfig =
+    Cem.ValidComposition.defaultConfig
+
+
+{-| Flag relational composition violations: an interactive-content descendant of a
+`button`/`a`/`summary` at any depth, a `label` with a nested label or more than one
+labelable control (both HARD, WHATWG); an ARIA required-context child with no
+required-container ancestor, and a role/aria-roledescription on a non-rendered SVG
+element (both WARN). Uses the default (WHATWG/ARIA/SVG-AAM) tables.
+-}
+validComposition : List Fact -> Rule
+validComposition =
+    Cem.ValidComposition.rule
+
+
+{-| Like `validComposition`, but with an explicit `CompositionConfig` (a brand
+extends `defaultCompositionConfig` with its own interactive nouns / required-context
+role-map / posture).
+-}
+validCompositionWith : CompositionConfig -> List Fact -> Rule
+validCompositionWith =
+    Cem.ValidComposition.ruleWith
 
 
 {-| Rewrite the strict component-module Standard layer to the flat barrel, with

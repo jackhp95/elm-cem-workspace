@@ -30,7 +30,8 @@
         "Cem.RequireFormFieldLabel",
         "Cem.MissingRequiredSingularSlot",
         "Cem.ValidEnumValue",
-        "Cem.ValidSlotKind"
+        "Cem.ValidSlotKind",
+        "Cem.ValidComposition"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
