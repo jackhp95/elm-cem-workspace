@@ -287,22 +287,22 @@ workers under opus orchestration (mechanical config regen + verify); Task 6 opus
   operators. (Large task — may be split into 5a shapes/5b lighting.)
 
 ### Task 6: Make it permanent — the spec-coverage gate (§2.2)
-- [ ] **6.1** Author `tools/check-svg-spec-coverage.mjs`: diff `spec-index.json` vs the generated SVG
+- [x] **6.1** Author `tools/check-svg-spec-coverage.mjs`: diff `spec-index.json` vs the generated SVG
       package; fail on any gap lacking an `exception{reason}`. Provenance-stamp check like
       `check-coverage-map`.
-- [ ] **6.2** Author `docs/svg-audit/coverage-map.json` recording every deferred/non-goal gap with its
+- [x] **6.2** Author `docs/svg-audit/coverage-map.json` recording every deferred/non-goal gap with its
       bucket (`smil-deferred`, `xlink-legacy`, `path-data-non-goal`, …).
-- [ ] **6.3** Add `tools/check-svg-spec-coverage.test.mjs` (mutation test: appending a fake spec element
+- [x] **6.3** Add `tools/check-svg-spec-coverage.test.mjs` (mutation test: appending a fake spec element
       with no exception turns the gate red — the honesty proof).
-- [ ] **6.4** Register in `tools/gate-all.mjs` + `tools/gate-all-expected-steps.json`.
+- [x] **6.4** Register in `tools/gate-all.mjs` + `tools/gate-all-expected-steps.json`.
 - **Acceptance:** gate green on the post-Task-5 tree; mutation test proves it can go red; `gate-all`
   step-membership tests pass. From here, any spec-index bump or package regen that opens an un-excepted
   gap fails CI — the drift protection html never had.
 
 ### Task 7: Close-out
-- [ ] **7.1** Update the SVG package README scope section to state the audited SVG-2 scope + the
+- [x] **7.1** Update the SVG package README scope section to state the audited SVG-2 scope + the
       documented deferrals (SMIL, xlink, path-DSL).
-- [ ] **7.2** Note in `MEMORY.md` that the SVG brand is now spec-audited + gated, with the coverage map
+- [x] **7.2** Note in `MEMORY.md` that the SVG brand is now spec-audited + gated, with the coverage map
       as source of truth.
 - **Acceptance:** `git status` clean except intended files; full `gate-all` green.
 
