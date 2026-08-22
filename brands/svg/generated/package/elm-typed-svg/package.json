@@ -11,6 +11,7 @@
     "format": "node_modules/.bin/elm-format verify/src tests/src --yes",
     "check:format": "node_modules/.bin/elm-format verify/src tests/src --validate",
     "check:compile": "cd verify && ../node_modules/.bin/elm make src/Sample.elm --output=/dev/null",
+    "check:review": "node_modules/.bin/elm-review --config review",
     "check:drift": "bash scripts/regen-diff-gate.sh",
     "check": "run-p \"check:*\"",
     "test": "cd tests && ELM_HOME=\"${ELM_HOME:-$HOME/.elm}\" ../node_modules/.bin/elm-test-rs --compiler ../node_modules/.bin/elm src/RenderTest.elm",
@@ -18,6 +19,7 @@
     "hooks:install": "node ../../../../../tools/hooks-install.mjs"
   },
   "devDependencies": {
+    "elm-review": "^2.13.5",
     "elm-tooling": "^1.20.0",
     "npm-run-all2": "^9.0.3"
   }

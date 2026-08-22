@@ -54,13 +54,14 @@ one of the above elements is given a `TypedSvg.Attributes.role _` (or
 `ariaRoledescription _`) attribute, report it — a `role`/`aria-roledescription`
 on a non-rendered SVG element is an SVG-AAM violation.
 
-> Prerequisite: this brand does **not** yet model `role` / `aria-*` attributes
-> (its `_globals` are presentation + core attributes only — no `role`,
-> `aria-roledescription`, etc.). So this overlay rule has nothing to fire on
-> until those attributes are added to `inputs/config.json` (likely alongside the
-> svg-audit branch's attribute-family work). Task 6 should either (a) gate this
-> rule on those attributes existing, or (b) coordinate adding them first. The
-> content-model half (below) is fully live regardless. This *complements* the
+> **Update (2026-08-22, Task 6 wiring):** `role` was already an open-row
+> `_globals` entry (`TypedSvg.Attributes.role : String -> Attr c msg`) by the
+> time Task 6 landed; `aria-roledescription` was added beside it the same way
+> (`TypedSvg.Attributes.ariaRoledescription : String -> Attr c msg`), so the
+> prerequisite this note originally flagged is now satisfied and the overlay
+> fires — see `pipeline/elm-review-cem/src/Cem/ValidComposition.elm`
+> (`svgAamCheck`) and this brand's `generated/package/elm-typed-svg/review/`.
+> The content-model half (below) is fully live regardless. This *complements* the
 content-model `admits` (it does not replace it): `defs`/`mask`/etc. are already
 constrained as structural containers by `slotKinds`; this catches the orthogonal
 *attribute* misuse.
