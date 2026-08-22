@@ -54,13 +54,27 @@ export async function buildBundle(profileName) {
   const hash = createHash("sha256").update(code).digest("hex").slice(0, 16);
 
   const cacheDir = path.join(repoRoot, "render-cache", "bundle");
+  // recursive mkdir is idempotent/concurrency-safe (Node retries past EEXIST
+  // on every path segment internally) — no race here even when multiple
+  // callers hit a cold cacheDir at once.
   await fs.mkdir(cacheDir, { recursive: true });
   const outPath = path.join(cacheDir, `${hash}.js`);
 
+  // Exclusive-create write, NOT the access()-then-writeFile() TOCTOU this
+  // used to be: any two concurrent buildBundle() calls for the SAME profile
+  // (e.g. two harness invocations sharing this content-addressed cache —
+  // `check:render`'s own selfcheck subprocesses, a manual dev script like
+  // render-batch.mjs running alongside a gate-all step, or two overlapping
+  // gate-all runs against the same worktree) compute the identical hash and
+  // could both see "not cached yet" before either had written. `wx` makes
+  // the write itself the atomic check, so only the first writer's open()
+  // succeeds; every later racer gets EEXIST (the cache is already correct,
+  // since outPath is content-addressed — same hash guarantees same bytes)
+  // and just moves on. Anything else re-throws.
   try {
-    await fs.access(outPath);
-  } catch {
-    await fs.writeFile(outPath, code);
+    await fs.writeFile(outPath, code, { flag: "wx" });
+  } catch (err) {
+    if (err.code !== "EEXIST") throw err;
   }
 
   return { path: outPath, hash, code };
