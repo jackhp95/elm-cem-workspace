@@ -191,6 +191,9 @@ importers:
 
   brands/svg/generated/package/elm-typed-svg:
     devDependencies:
+      elm-review:
+        specifier: ^2.13.5
+        version: 2.13.5
       elm-tooling:
         specifier: ^1.20.0
         version: 1.20.0

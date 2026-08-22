@@ -45,7 +45,17 @@
     "A handful of small, closed-vocabulary presentation attributes are typed as enums (stroke-linecap,",
     "stroke-linejoin, fill-rule, clip-rule, visibility, text-anchor) so a wrong token is a compile error;",
     "the open lengths/colours/paints stay free strings (an SVG length is `10`, `50%`, or `10px`, and a",
-    "paint is a colour, `url(#id)`, `currentColor`, `none`, ... — no finite token set)."
+    "paint is a colour, `url(#id)`, `currentColor`, `none`, ... — no finite token set).",
+    "",
+    "`aria-roledescription` sits beside `role` as an open-row free string, NOT under html's separate",
+    "`_aria` closed-vocabulary block: html's `_aria` models a CLOSED, per-element `role` enum plus its",
+    "state/property vocabulary, which this brand does not have (svg's `role` is an open free string, per",
+    "SVG-AAM, not a closed WAI-ARIA role enum). `aria-roledescription` is a WAI-ARIA global state/property",
+    "usable on any element carrying an explicit or implicit role, so it follows `role`'s own shape here —",
+    "not html's `_aria` pattern, which this config does not use at all. This is also what the",
+    "`Cem.ValidComposition` SVG-AAM overlay (pipeline/elm-review-cem) expects: it flags a `role`/",
+    "`ariaRoledescription` setter found on a non-rendered element (`defs`, `clipPath`, `mask`, `pattern`,",
+    "`filter`, `animate*`, `set`, `discard`)."
   ],
   "_globals": [
     "id",
@@ -53,6 +63,7 @@
     "style",
     { "name": "lang", "row": "open" },
     { "name": "role", "row": "open" },
+    { "name": "aria-roledescription", "row": "open" },
     { "name": "tabindex", "row": "open" },
     { "name": "xml:space", "type": ["default", "preserve"], "row": "open" },
     { "name": "fill", "row": "open" },
