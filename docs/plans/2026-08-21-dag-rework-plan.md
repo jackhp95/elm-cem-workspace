@@ -471,10 +471,10 @@ Task 8.
 Per memory `generator-change-d046-rebaseline`: shared-emitter changes need a bundle re-baseline + all-brand
 regen + phantom re-bless, NOT in `gate-all`.
 
-- [ ] **Step 8.1** Re-baseline `tools/snapshots/elm-cem-generator.bundle` from the final emitter.
-- [ ] **Step 8.2** All-brand regen (m3e, shoelace, html, svg) — confirm html/svg unchanged (exempt).
-- [ ] **Step 8.3** Phantom re-bless where the builder surface moved.
-- [ ] **Step 8.4** Commit. Identity guard first.
+- [x] **Step 8.1** Re-baseline `tools/snapshots/elm-cem-generator.bundle` from the final emitter.
+- [x] **Step 8.2** All-brand regen (m3e, shoelace, html, svg) — confirm html/svg unchanged (exempt).
+- [x] **Step 8.3** Phantom re-bless where the builder surface moved.
+- [x] **Step 8.4** Commit. Identity guard first.
 
 **Acceptance:** bundle + phantom expectations match final emitter. **Verify:** re-run emits zero diff.
 **Blocks:** Task 10.
@@ -494,10 +494,10 @@ regen + phantom re-bless, NOT in `gate-all`.
 
 ### Task 10: Final gate + verification
 
-- [ ] **Step 10.1** Full `npm run gate:all` green.
-- [ ] **Step 10.2** Re-assert P1–P5 are now FALSE (the parallel-siblings problem is gone): Build imports
+- [x] **Step 10.1** Full `npm run gate:all` green.
+- [x] **Step 10.2** Re-assert P1–P5 are now FALSE (the parallel-siblings problem is gone): Build imports
       Components, Components between Elements and Builders, package DAG linear.
-- [ ] **Step 10.3** Identity guard, final commit.
+- [x] **Step 10.3** Identity guard, final commit.
 
 **Acceptance:** DAG rework complete and gate-green; the Task 5 DAG gate + Task 0 baseline diff prove it.
 
