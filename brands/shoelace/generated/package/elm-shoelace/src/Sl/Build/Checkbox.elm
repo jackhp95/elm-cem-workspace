@@ -1,23 +1,22 @@
-module Sl.Build.Checkbox exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withForm, withHelpText, withId, withIndeterminate, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
-    )
+module Sl.Build.Checkbox exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withIndeterminate, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue)
 
-{-|
+{-| The **Checkbox** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withForm, withHelpText, withId, withIndeterminate, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Checkbox`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withIndeterminate, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Checkbox as Component
+import Sl.Component.Checkbox as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.CheckboxIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.CheckboxBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.CheckboxAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.CheckboxSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.CheckboxChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.CheckboxIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -128,9 +127,9 @@ withRequired value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.CheckboxSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.checkboxSize value_)
 
 
 {-| -}

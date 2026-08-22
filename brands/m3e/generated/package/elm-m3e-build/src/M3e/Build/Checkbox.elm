@@ -1,51 +1,52 @@
-module M3e.Build.Checkbox exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withId, withIndeterminate, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOnInvalid, withRequired, withSlot, withStyle, withValidationmessages, withValue
-    )
+module M3e.Build.Checkbox exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withIndeterminate, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOnInvalid, withRequired, withSlot, withStyle, withValidationmessages, withValue)
 
-{-|
+{-| The **Checkbox** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withId, withIndeterminate, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOnInvalid, withRequired, withSlot, withStyle, withValidationmessages, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Checkbox`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withIndeterminate, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOnInvalid, withRequired, withSlot, withStyle, withValidationmessages, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.Checkbox as Component
+import M3e.Component.Checkbox as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.CheckboxIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.CheckboxBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.CheckboxAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.CheckboxSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.CheckboxChildAdmittedBy childAdm
 
 
 {-| -}
@@ -55,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.CheckboxIs kind) admittedBy msg
 toElement =
     B.toElement
 

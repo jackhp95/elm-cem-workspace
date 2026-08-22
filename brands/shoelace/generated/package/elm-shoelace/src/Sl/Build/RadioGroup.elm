@@ -1,23 +1,22 @@
-module Sl.Build.RadioGroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue
-    )
+module Sl.Build.RadioGroup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue)
 
-{-|
+{-| The **RadioGroup** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.RadioGroup`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withForm, withHelpText, withId, withLabel, withName, withOnChange, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.RadioGroup as Component
+import Sl.Component.RadioGroup as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.RadioGroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.RadioGroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.RadioGroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.RadioGroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.RadioGroupChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RadioGroupIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -116,9 +115,9 @@ withRequired value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.RadioGroupSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.radioGroupSize value_)
 
 
 {-| -}

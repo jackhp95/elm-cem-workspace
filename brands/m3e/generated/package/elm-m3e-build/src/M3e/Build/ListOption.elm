@@ -1,79 +1,75 @@
-module M3e.Build.ListOption exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-    , withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSelected, withSlot, withStyle, withValue
-    , leading, overline, supportingText, trailing
-    , withLeading, withOverline, withSupportingText, withTrailing, withChild
-    )
+module M3e.Build.ListOption exposing (Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSelected, withSlot, withStyle, withValue, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild)
 
-{-|
+{-| The **ListOption** element — the flat per-element builder surface,
+sourced through the **List** family façade
+(`M3e.Component.List`). This module and the aggregated
+`M3e.Build.List` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSelected, withSlot, withStyle, withValue
-@docs leading, overline, supportingText, trailing
-@docs withLeading, withOverline, withSupportingText, withTrailing, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSelected, withSlot, withStyle, withValue, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ListOption as Component
+import M3e.Component.List as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.OptionIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.OptionBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.OptionAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.OptionSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.OptionChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.OptionContent
 
 
 {-| -}
 type alias LeadingSlot =
-    Component.LeadingSlot
+    Component.OptionLeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    Component.OverlineSlot
+    Component.OptionOverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    Component.SupportingTextSlot
+    Component.OptionSupportingTextSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    Component.TrailingSlot
+    Component.OptionTrailingSlot
 
 
 {-| -}
@@ -83,77 +79,77 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.OptionIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 leading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionLeadingSlot msg
     -> Element free freeAdmittedBy msg
 leading builder =
-    Component.leading (B.toElement builder)
+    Component.optionLeading (B.toElement builder)
 
 
 {-| -}
 overline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionOverlineSlot msg
     -> Element free freeAdmittedBy msg
 overline builder =
-    Component.overline (B.toElement builder)
+    Component.optionOverline (B.toElement builder)
 
 
 {-| -}
 supportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionSupportingTextSlot msg
     -> Element free freeAdmittedBy msg
 supportingText builder =
-    Component.supportingText (B.toElement builder)
+    Component.optionSupportingText (B.toElement builder)
 
 
 {-| -}
 trailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionTrailingSlot msg
     -> Element free freeAdmittedBy msg
 trailing builder =
-    Component.trailing (B.toElement builder)
+    Component.optionTrailing (B.toElement builder)
 
 
 {-| -}
 withLeading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionLeadingSlot msg
     -> Builder attrCaps { s | leading : Available } msg kind
     -> Builder attrCaps { s | leading : Used } msg kind
 withLeading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionLeading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withOverline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionOverlineSlot msg
     -> Builder attrCaps { s | overline : Available } msg kind
     -> Builder attrCaps { s | overline : Used } msg kind
 withOverline slotBuilder builder_ =
-    B.withChild (El.toNode (Component.overline (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionOverline (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSupportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionSupportingTextSlot msg
     -> Builder attrCaps { s | supportingText : Available } msg kind
     -> Builder attrCaps { s | supportingText : Used } msg kind
 withSupportingText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.supportingText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionSupportingText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionTrailingSlot msg
     -> Builder attrCaps { s | trailing : Available } msg kind
     -> Builder attrCaps { s | trailing : Used } msg kind
 withTrailing slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailing (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionTrailing (B.toElement slotBuilder))) builder_
 
 
 {-| -}

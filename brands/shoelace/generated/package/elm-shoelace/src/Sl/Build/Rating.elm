@@ -1,51 +1,52 @@
-module Sl.Build.Rating exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withGetsymbol, withId, withLabel, withMax, withOnChange, withOnHover, withPrecision, withReadonly, withSlot, withStyle, withValue
-    )
+module Sl.Build.Rating exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withGetsymbol, withId, withLabel, withMax, withOnChange, withOnHover, withPrecision, withReadonly, withSlot, withStyle, withValue)
 
-{-|
+{-| The **Rating** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withGetsymbol, withId, withLabel, withMax, withOnChange, withOnHover, withPrecision, withReadonly, withSlot, withStyle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Rating`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withGetsymbol, withId, withLabel, withMax, withOnChange, withOnHover, withPrecision, withReadonly, withSlot, withStyle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.Rating as Component
+import Sl.Component.Rating as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
+import Sl.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.RatingIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.RatingBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.RatingAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.RatingSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.RatingChildAdmittedBy childAdm
 
 
 {-| -}
@@ -55,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RatingIs kind) admittedBy msg
 toElement =
     B.toElement
 

@@ -1,95 +1,92 @@
-module M3e.Build.Snackbar exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy
-    , withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle
-    , closeIcon
-    , withCloseIcon, withChild
-    )
+module M3e.Build.Snackbar exposing (Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy, build, toElement, withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle, closeIcon, withCloseIcon, withChild)
 
-{-|
+{-| The **Snackbar** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy
-@docs withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle
-@docs closeIcon
-@docs withCloseIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Snackbar`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, ChildAdmittedBy, build, toElement, withAction, withClass, withCloseLabel, withDismissible, withDuration, withId, withOnBeforetoggle, withOnToggle, withOpen, withSlot, withStyle, closeIcon, withCloseIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Snackbar as Component
+import M3e.Component.Snackbar as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SnackbarIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SnackbarBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SnackbarAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SnackbarSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SnackbarChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.SnackbarContent
 
 
 {-| -}
 type alias CloseIconSlot =
-    Component.CloseIconSlot
+    Component.SnackbarCloseIconSlot
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element Component.SnackbarContent (Component.SnackbarChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-snackbar" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SnackbarIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 closeIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SnackbarCloseIconSlot msg
     -> Element free freeAdmittedBy msg
 closeIcon builder =
-    Component.closeIcon (B.toElement builder)
+    Component.snackbarCloseIcon (B.toElement builder)
 
 
 {-| -}
 withCloseIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SnackbarCloseIconSlot msg
     -> Builder attrCaps { s | closeIcon : Available } msg kind
     -> Builder attrCaps { s | closeIcon : Used } msg kind
 withCloseIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.closeIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.snackbarCloseIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}

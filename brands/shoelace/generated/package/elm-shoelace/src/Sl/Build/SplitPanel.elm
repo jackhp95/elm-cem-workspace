@@ -1,23 +1,22 @@
-module Sl.Build.SplitPanel exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withId, withOnReposition, withPosition, withPositionInPixels, withPrimary, withSlot, withSnap, withSnapThreshold, withStyle, withVertical
-    )
+module Sl.Build.SplitPanel exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnReposition, withPosition, withPositionInPixels, withPrimary, withSlot, withSnap, withSnapThreshold, withStyle, withVertical)
 
-{-|
+{-| The **SplitPanel** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withOnReposition, withPosition, withPositionInPixels, withPrimary, withSlot, withSnap, withSnapThreshold, withStyle, withVertical
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.SplitPanel`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnReposition, withPosition, withPositionInPixels, withPrimary, withSlot, withSnap, withSnapThreshold, withStyle, withVertical
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.SplitPanel as Component
+import Sl.Component.SplitPanel as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SplitPanelIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SplitPanelBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SplitPanelAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SplitPanelSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SplitPanelChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SplitPanelIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -104,9 +103,9 @@ withPositionInPixels value_ =
 
 
 {-| -}
-withPrimary : Value Component.Primary -> Builder { a | primary : Available } slotCaps msg kind -> Builder { a | primary : Used } slotCaps msg kind
+withPrimary : Value Component.SplitPanelPrimary -> Builder { a | primary : Available } slotCaps msg kind -> Builder { a | primary : Used } slotCaps msg kind
 withPrimary value_ =
-    B.withAttribute (Component.primary value_)
+    B.withAttribute (Component.splitPanelPrimary value_)
 
 
 {-| -}

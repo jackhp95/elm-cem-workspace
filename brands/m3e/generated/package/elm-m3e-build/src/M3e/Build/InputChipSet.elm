@@ -1,60 +1,56 @@
-module M3e.Build.InputChipSet exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
-    , input
-    , withInput, withChild
-    )
+module M3e.Build.InputChipSet exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical, input, withInput, withChild)
 
-{-|
+{-| The **InputChipSet** element — the flat per-element builder surface,
+sourced through the **Chip** family façade
+(`M3e.Component.Chip`). This module and the aggregated
+`M3e.Build.Chip` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical
-@docs input
-@docs withInput, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withMaxChips, withName, withOnChange, withRequired, withSlot, withStyle, withValidationmessages, withVertical, input, withInput, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.InputChipSet as Component
+import M3e.Component.Chip as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.InputSetIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.InputSetBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.InputSetAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.InputSetSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.InputSetChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.InputSetContent
 
 
 {-| -}
@@ -64,7 +60,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.InputSetIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -74,7 +70,7 @@ input :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 input builder =
-    Component.input (B.toElement builder)
+    Component.inputSetInput (B.toElement builder)
 
 
 {-| -}
@@ -83,7 +79,7 @@ withInput :
     -> Builder attrCaps { s | input : Available } msg kind
     -> Builder attrCaps { s | input : Used } msg kind
 withInput slotBuilder builder_ =
-    B.withChild (El.toNode (Component.input (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.inputSetInput (B.toElement slotBuilder))) builder_
 
 
 {-| -}

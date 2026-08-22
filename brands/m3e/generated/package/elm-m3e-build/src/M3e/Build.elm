@@ -170,7 +170,7 @@ toElement =
 {-| The `Accordion` kind phantom — annotate with `List (Element (AccordionIs s) admittedBy msg)`.
 -}
 type alias AccordionIs s =
-    M3e.Build.Accordion.Is s
+    M3e.Build.Accordion.AccordionIs s
 
 
 {-| The `ActionList` kind phantom — annotate with `List (Element (ActionListIs s) admittedBy msg)`.
@@ -212,7 +212,7 @@ type alias BadgeIs s =
 {-| The `BottomSheet` kind phantom — annotate with `List (Element (BottomSheetIs s) admittedBy msg)`.
 -}
 type alias BottomSheetIs s =
-    M3e.Build.BottomSheet.Is s
+    M3e.Build.BottomSheet.BottomSheetIs s
 
 
 {-| The `BottomSheetAction` kind phantom — annotate with `List (Element (BottomSheetActionIs s) admittedBy msg)`.
@@ -230,7 +230,7 @@ type alias BottomSheetTriggerIs s =
 {-| The `Breadcrumb` kind phantom — annotate with `List (Element (BreadcrumbIs s) admittedBy msg)`.
 -}
 type alias BreadcrumbIs s =
-    M3e.Build.Breadcrumb.Is s
+    M3e.Build.Breadcrumb.BreadcrumbIs s
 
 
 {-| The `BreadcrumbItem` kind phantom — annotate with `List (Element (BreadcrumbItemIs s) admittedBy msg)`.
@@ -266,7 +266,7 @@ type alias ButtonSegmentIs s =
 {-| The `Calendar` kind phantom — annotate with `List (Element (CalendarIs s) admittedBy msg)`.
 -}
 type alias CalendarIs s =
-    M3e.Build.Calendar.Is s
+    M3e.Build.Calendar.CalendarIs s
 
 
 {-| The `Card` kind phantom — annotate with `List (Element (CardIs s) admittedBy msg)`.
@@ -284,7 +284,7 @@ type alias CheckboxIs s =
 {-| The `Chip` kind phantom — annotate with `List (Element (ChipIs s) admittedBy msg)`.
 -}
 type alias ChipIs s =
-    M3e.Build.Chip.Is s
+    M3e.Build.Chip.ChipIs s
 
 
 {-| The `ChipSet` kind phantom — annotate with `List (Element (ChipSetIs s) admittedBy msg)`.
@@ -320,7 +320,7 @@ type alias DateInputIs s =
 {-| The `Datepicker` kind phantom — annotate with `List (Element (DatepickerIs s) admittedBy msg)`.
 -}
 type alias DatepickerIs s =
-    M3e.Build.Datepicker.Is s
+    M3e.Build.Datepicker.DatepickerIs s
 
 
 {-| The `DatepickerToggle` kind phantom — annotate with `List (Element (DatepickerToggleIs s) admittedBy msg)`.
@@ -332,7 +332,7 @@ type alias DatepickerToggleIs s =
 {-| The `Dialog` kind phantom — annotate with `List (Element (DialogIs s) admittedBy msg)`.
 -}
 type alias DialogIs s =
-    M3e.Build.Dialog.Is s
+    M3e.Build.Dialog.DialogIs s
 
 
 {-| The `DialogAction` kind phantom — annotate with `List (Element (DialogActionIs s) admittedBy msg)`.
@@ -356,7 +356,7 @@ type alias DividerIs s =
 {-| The `DrawerContainer` kind phantom — annotate with `List (Element (DrawerContainerIs s) admittedBy msg)`.
 -}
 type alias DrawerContainerIs s =
-    M3e.Build.DrawerContainer.Is s
+    M3e.Build.DrawerContainer.DrawerContainerIs s
 
 
 {-| The `DrawerToggle` kind phantom — annotate with `List (Element (DrawerToggleIs s) admittedBy msg)`.
@@ -398,7 +398,7 @@ type alias FabIs s =
 {-| The `FabMenu` kind phantom — annotate with `List (Element (FabMenuIs s) admittedBy msg)`.
 -}
 type alias FabMenuIs s =
-    M3e.Build.FabMenu.Is s
+    M3e.Build.FabMenu.FabMenuIs s
 
 
 {-| The `FabMenuItem` kind phantom — annotate with `List (Element (FabMenuItemIs s) admittedBy msg)`.
@@ -488,7 +488,7 @@ type alias LinearProgressIndicatorIs s =
 {-| The `List` kind phantom — annotate with `List (Element (ListIs s) admittedBy msg)`.
 -}
 type alias ListIs s =
-    M3e.Build.List.Is s
+    M3e.Build.List.ListIs s
 
 
 {-| The `ListAction` kind phantom — annotate with `List (Element (ListActionIs s) admittedBy msg)`.
@@ -524,7 +524,7 @@ type alias LoadingIndicatorIs s =
 {-| The `Menu` kind phantom — annotate with `List (Element (MenuIs s) admittedBy msg)`.
 -}
 type alias MenuIs s =
-    M3e.Build.Menu.Is s
+    M3e.Build.Menu.MenuIs s
 
 
 {-| The `MenuItem` kind phantom — annotate with `List (Element (MenuItemIs s) admittedBy msg)`.
@@ -584,7 +584,7 @@ type alias NavItemIs s =
 {-| The `NavMenu` kind phantom — annotate with `List (Element (NavMenuIs s) admittedBy msg)`.
 -}
 type alias NavMenuIs s =
-    M3e.Build.NavMenu.Is s
+    M3e.Build.NavMenu.NavMenuIs s
 
 
 {-| The `NavMenuItem` kind phantom — annotate with `List (Element (NavMenuItemIs s) admittedBy msg)`.
@@ -602,7 +602,7 @@ type alias NavMenuItemGroupIs s =
 {-| The `NavRail` kind phantom — annotate with `List (Element (NavRailIs s) admittedBy msg)`.
 -}
 type alias NavRailIs s =
-    M3e.Build.NavRail.Is s
+    M3e.Build.NavRail.NavRailIs s
 
 
 {-| The `NavRailToggle` kind phantom — annotate with `List (Element (NavRailToggleIs s) admittedBy msg)`.
@@ -662,7 +662,7 @@ type alias RadioGroupIs s =
 {-| The `RichTooltip` kind phantom — annotate with `List (Element (RichTooltipIs s) admittedBy msg)`.
 -}
 type alias RichTooltipIs s =
-    M3e.Build.RichTooltip.Is s
+    M3e.Build.RichTooltip.RichTooltipIs s
 
 
 {-| The `RichTooltipAction` kind phantom — annotate with `List (Element (RichTooltipActionIs s) admittedBy msg)`.
@@ -698,7 +698,7 @@ type alias SearchViewIs s =
 {-| The `SegmentedButton` kind phantom — annotate with `List (Element (SegmentedButtonIs s) admittedBy msg)`.
 -}
 type alias SegmentedButtonIs s =
-    M3e.Build.SegmentedButton.Is s
+    M3e.Build.SegmentedButton.SegmentedButtonIs s
 
 
 {-| The `Select` kind phantom — annotate with `List (Element (SelectIs s) admittedBy msg)`.
@@ -794,7 +794,7 @@ type alias StepPanelIs s =
 {-| The `Stepper` kind phantom — annotate with `List (Element (StepperIs s) admittedBy msg)`.
 -}
 type alias StepperIs s =
-    M3e.Build.Stepper.Is s
+    M3e.Build.Stepper.StepperIs s
 
 
 {-| The `StepperNext` kind phantom — annotate with `List (Element (StepperNextIs s) admittedBy msg)`.
@@ -842,7 +842,7 @@ type alias TabPanelIs s =
 {-| The `Tabs` kind phantom — annotate with `List (Element (TabsIs s) admittedBy msg)`.
 -}
 type alias TabsIs s =
-    M3e.Build.Tabs.Is s
+    M3e.Build.Tabs.TabsIs s
 
 
 {-| The `TextHighlight` kind phantom — annotate with `List (Element (TextHighlightIs s) admittedBy msg)`.
@@ -878,7 +878,7 @@ type alias ThemeIconIs s =
 {-| The `Timepicker` kind phantom — annotate with `List (Element (TimepickerIs s) admittedBy msg)`.
 -}
 type alias TimepickerIs s =
-    M3e.Build.Timepicker.Is s
+    M3e.Build.Timepicker.TimepickerIs s
 
 
 {-| The `TimepickerDial` kind phantom — annotate with `List (Element (TimepickerDialIs s) admittedBy msg)`.
@@ -908,7 +908,7 @@ type alias TimepickerToggleIs s =
 {-| The `Toc` kind phantom — annotate with `List (Element (TocIs s) admittedBy msg)`.
 -}
 type alias TocIs s =
-    M3e.Build.Toc.Is s
+    M3e.Build.Toc.TocIs s
 
 
 {-| The `TocItem` kind phantom — annotate with `List (Element (TocItemIs s) admittedBy msg)`.
@@ -932,7 +932,7 @@ type alias TooltipIs s =
 {-| The `Tree` kind phantom — annotate with `List (Element (TreeIs s) admittedBy msg)`.
 -}
 type alias TreeIs s =
-    M3e.Build.Tree.Is s
+    M3e.Build.Tree.TreeIs s
 
 
 {-| The `TreeItem` kind phantom — annotate with `List (Element (TreeItemIs s) admittedBy msg)`.

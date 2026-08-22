@@ -1,23 +1,21 @@
-module M3e.Build.TimepickerDial exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withFormat, withHour, withId, withMaxTime, withMinTime, withMinute, withOnChange, withOnInput, withOnViewChange, withPeriod, withSecond, withShowSeconds, withSlot, withStyle, withViewAttr
-    )
+module M3e.Build.TimepickerDial exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFormat, withHour, withId, withMaxTime, withMinTime, withMinute, withOnChange, withOnInput, withOnViewChange, withPeriod, withSecond, withShowSeconds, withSlot, withStyle, withViewAttr)
 
-{-|
+{-| The **TimepickerDial** element — the flat per-element builder surface,
+sourced through the **Timepicker** family façade
+(`M3e.Component.Timepicker`). This module and the aggregated
+`M3e.Build.Timepicker` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withFormat, withHour, withId, withMaxTime, withMinTime, withMinute, withOnChange, withOnInput, withOnViewChange, withPeriod, withSecond, withShowSeconds, withSlot, withStyle, withViewAttr
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFormat, withHour, withId, withMaxTime, withMinTime, withMinute, withOnChange, withOnInput, withOnViewChange, withPeriod, withSecond, withShowSeconds, withSlot, withStyle, withViewAttr
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.TimepickerDial as Component
+import M3e.Component.Timepicker as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.DialIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.DialBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.DialAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.DialSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.DialChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.DialIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -86,9 +84,9 @@ withStyle property value_ =
 
 
 {-| -}
-withFormat : Value Component.Format -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
+withFormat : Value Component.DialFormat -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
 withFormat value_ =
-    B.withAttribute (Component.format value_)
+    B.withAttribute (Component.dialFormat value_)
 
 
 {-| -}
@@ -116,9 +114,9 @@ withMinute value_ =
 
 
 {-| -}
-withPeriod : Value Component.Period -> Builder { a | period : Available } slotCaps msg kind -> Builder { a | period : Used } slotCaps msg kind
+withPeriod : Value Component.DialPeriod -> Builder { a | period : Available } slotCaps msg kind -> Builder { a | period : Used } slotCaps msg kind
 withPeriod value_ =
-    B.withAttribute (Component.period value_)
+    B.withAttribute (Component.dialPeriod value_)
 
 
 {-| -}
@@ -134,9 +132,9 @@ withShowSeconds value_ =
 
 
 {-| -}
-withViewAttr : Value Component.ViewAttr -> Builder { a | viewAttr : Available } slotCaps msg kind -> Builder { a | viewAttr : Used } slotCaps msg kind
+withViewAttr : Value Component.DialViewAttr -> Builder { a | viewAttr : Available } slotCaps msg kind -> Builder { a | viewAttr : Used } slotCaps msg kind
 withViewAttr value_ =
-    B.withAttribute (Component.viewAttr value_)
+    B.withAttribute (Component.dialViewAttr value_)
 
 
 {-| -}

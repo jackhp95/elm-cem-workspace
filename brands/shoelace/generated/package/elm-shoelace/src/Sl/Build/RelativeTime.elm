@@ -1,24 +1,23 @@
-module Sl.Build.RelativeTime exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDate, withFormat, withId, withNumeric, withSlot, withStyle, withSync
-    )
+module Sl.Build.RelativeTime exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDate, withFormat, withId, withNumeric, withSlot, withStyle, withSync)
 
-{-|
+{-| The **RelativeTime** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDate, withFormat, withId, withNumeric, withSlot, withStyle, withSync
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.RelativeTime`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDate, withFormat, withId, withNumeric, withSlot, withStyle, withSync
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.RelativeTime as Component
+import Sl.Component.RelativeTime as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.RelativeTimeIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.RelativeTimeBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.RelativeTimeAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.RelativeTimeSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.RelativeTimeChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RelativeTimeIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -92,15 +91,15 @@ withDate value_ =
 
 
 {-| -}
-withFormat : Value Component.Format -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
+withFormat : Value Component.RelativeTimeFormat -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
 withFormat value_ =
-    B.withAttribute (Component.format value_)
+    B.withAttribute (Component.relativeTimeFormat value_)
 
 
 {-| -}
-withNumeric : Value Component.Numeric -> Builder { a | numeric : Available } slotCaps msg kind -> Builder { a | numeric : Used } slotCaps msg kind
+withNumeric : Value Component.RelativeTimeNumeric -> Builder { a | numeric : Available } slotCaps msg kind -> Builder { a | numeric : Used } slotCaps msg kind
 withNumeric value_ =
-    B.withAttribute (Component.numeric value_)
+    B.withAttribute (Component.relativeTimeNumeric value_)
 
 
 {-| -}

@@ -1,23 +1,22 @@
-module Sl.Build.Input exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withClearable, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMax, withMaxlength, withMin, withMinlength, withName, withNoSpinButtons, withOnBlur, withOnChange, withOnClear, withOnFocus, withOnInput, withOnInvalid, withPasswordToggle, withPasswordVisible, withPattern, withPill, withPlaceholder, withReadonly, withRequired, withSize, withSlot, withSpellcheck, withStep, withStyle, withTitle, withType, withValue
-    )
+module Sl.Build.Input exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withClearable, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMax, withMaxlength, withMin, withMinlength, withName, withNoSpinButtons, withOnBlur, withOnChange, withOnClear, withOnFocus, withOnInput, withOnInvalid, withPasswordToggle, withPasswordVisible, withPattern, withPill, withPlaceholder, withReadonly, withRequired, withSize, withSlot, withSpellcheck, withStep, withStyle, withTitle, withType, withValue)
 
-{-|
+{-| The **Input** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withClearable, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMax, withMaxlength, withMin, withMinlength, withName, withNoSpinButtons, withOnBlur, withOnChange, withOnClear, withOnFocus, withOnInput, withOnInvalid, withPasswordToggle, withPasswordVisible, withPattern, withPill, withPlaceholder, withReadonly, withRequired, withSize, withSlot, withSpellcheck, withStep, withStyle, withTitle, withType, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Input`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withClearable, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMax, withMaxlength, withMin, withMinlength, withName, withNoSpinButtons, withOnBlur, withOnChange, withOnClear, withOnFocus, withOnInput, withOnInvalid, withPasswordToggle, withPasswordVisible, withPattern, withPill, withPlaceholder, withReadonly, withRequired, withSize, withSlot, withSpellcheck, withStep, withStyle, withTitle, withType, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Input as Component
+import Sl.Component.Input as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.InputIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.InputBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.InputAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.InputSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.InputChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.InputIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -86,9 +85,9 @@ withStyle property value_ =
 
 
 {-| -}
-withAutocapitalize : Value Component.Autocapitalize -> Builder { a | autocapitalize : Available } slotCaps msg kind -> Builder { a | autocapitalize : Used } slotCaps msg kind
+withAutocapitalize : Value Component.InputAutocapitalize -> Builder { a | autocapitalize : Available } slotCaps msg kind -> Builder { a | autocapitalize : Used } slotCaps msg kind
 withAutocapitalize value_ =
-    B.withAttribute (Component.autocapitalize value_)
+    B.withAttribute (Component.inputAutocapitalize value_)
 
 
 {-| -}
@@ -98,9 +97,9 @@ withAutocomplete value_ =
 
 
 {-| -}
-withAutocorrect : Value Component.Autocorrect -> Builder { a | autocorrect : Available } slotCaps msg kind -> Builder { a | autocorrect : Used } slotCaps msg kind
+withAutocorrect : Value Component.InputAutocorrect -> Builder { a | autocorrect : Available } slotCaps msg kind -> Builder { a | autocorrect : Used } slotCaps msg kind
 withAutocorrect value_ =
-    B.withAttribute (Component.autocorrect value_)
+    B.withAttribute (Component.inputAutocorrect value_)
 
 
 {-| -}
@@ -122,9 +121,9 @@ withDisabled value_ =
 
 
 {-| -}
-withEnterkeyhint : Value Component.Enterkeyhint -> Builder { a | enterkeyhint : Available } slotCaps msg kind -> Builder { a | enterkeyhint : Used } slotCaps msg kind
+withEnterkeyhint : Value Component.InputEnterkeyhint -> Builder { a | enterkeyhint : Available } slotCaps msg kind -> Builder { a | enterkeyhint : Used } slotCaps msg kind
 withEnterkeyhint value_ =
-    B.withAttribute (Component.enterkeyhint value_)
+    B.withAttribute (Component.inputEnterkeyhint value_)
 
 
 {-| -}
@@ -146,9 +145,9 @@ withHelpText value_ =
 
 
 {-| -}
-withInputmode : Value Component.Inputmode -> Builder { a | inputmode : Available } slotCaps msg kind -> Builder { a | inputmode : Used } slotCaps msg kind
+withInputmode : Value Component.InputInputmode -> Builder { a | inputmode : Available } slotCaps msg kind -> Builder { a | inputmode : Used } slotCaps msg kind
 withInputmode value_ =
-    B.withAttribute (Component.inputmode value_)
+    B.withAttribute (Component.inputInputmode value_)
 
 
 {-| -}
@@ -236,9 +235,9 @@ withRequired value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.InputSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.inputSize value_)
 
 
 {-| -}
@@ -260,9 +259,9 @@ withTitle value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.InputType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.inputType_ value_)
 
 
 {-| -}

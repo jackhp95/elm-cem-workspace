@@ -1,23 +1,22 @@
-module Sl.Build.Alert exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withClosable, withCountdown, withDuration, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withSlot, withStyle, withVariant
-    )
+module Sl.Build.Alert exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withClosable, withCountdown, withDuration, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withSlot, withStyle, withVariant)
 
-{-|
+{-| The **Alert** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withClosable, withCountdown, withDuration, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withSlot, withStyle, withVariant
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Alert`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withClosable, withCountdown, withDuration, withId, withOnAfterHide, withOnAfterShow, withOnHide, withOnShow, withOpen, withSlot, withStyle, withVariant
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Alert as Component
+import Sl.Component.Alert as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.AlertIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.AlertBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.AlertAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.AlertSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.AlertChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.AlertIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -92,9 +91,9 @@ withClosable value_ =
 
 
 {-| -}
-withCountdown : Value Component.Countdown -> Builder { a | countdown : Available } slotCaps msg kind -> Builder { a | countdown : Used } slotCaps msg kind
+withCountdown : Value Component.AlertCountdown -> Builder { a | countdown : Available } slotCaps msg kind -> Builder { a | countdown : Used } slotCaps msg kind
 withCountdown value_ =
-    B.withAttribute (Component.countdown value_)
+    B.withAttribute (Component.alertCountdown value_)
 
 
 {-| -}
@@ -110,9 +109,9 @@ withOpen value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.AlertVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.alertVariant value_)
 
 
 {-| -}

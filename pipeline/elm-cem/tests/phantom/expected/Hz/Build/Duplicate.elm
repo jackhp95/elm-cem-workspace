@@ -1,56 +1,55 @@
-module Hz.Build.Duplicate exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withId, withSlot, withStyle, withValue
-    , withChild
-    )
+module Hz.Build.Duplicate exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withValue, withChild)
 
-{-|
+{-| The **Duplicate** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withId, withSlot, withStyle, withValue
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Hz.Component.Duplicate`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Hz.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withValue, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Hz.Attributes as A
-import Hz.Element.Duplicate as Component
+import Hz.Component.Duplicate as Component
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
+import Hz.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.DuplicateIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.DuplicateBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.DuplicateAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.DuplicateSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.DuplicateChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.DuplicateContent
 
 
 {-| -}
@@ -60,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.DuplicateIs kind) admittedBy msg
 toElement =
     B.toElement
 

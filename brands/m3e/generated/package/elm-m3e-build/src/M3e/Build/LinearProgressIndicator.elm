@@ -1,24 +1,22 @@
-module M3e.Build.LinearProgressIndicator exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withBufferValue, withClass, withId, withMax, withMode, withSlot, withStyle, withValue, withVariant
-    )
+module M3e.Build.LinearProgressIndicator exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBufferValue, withClass, withId, withMax, withMode, withSlot, withStyle, withValue, withVariant)
 
-{-|
+{-| The **LinearProgressIndicator** element — the flat per-element builder surface,
+sourced through the **Progress** family façade
+(`M3e.Component.Progress`). This module and the aggregated
+`M3e.Build.Progress` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withBufferValue, withClass, withId, withMax, withMode, withSlot, withStyle, withValue, withVariant
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBufferValue, withClass, withId, withMax, withMode, withSlot, withStyle, withValue, withVariant
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.LinearProgressIndicator as Component
+import M3e.Component.Progress as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -26,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.LinearIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.LinearBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.LinearAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.LinearSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.LinearChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.LinearIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -98,9 +96,9 @@ withMax value_ =
 
 
 {-| -}
-withMode : Value Component.Mode -> Builder { a | mode : Available } slotCaps msg kind -> Builder { a | mode : Used } slotCaps msg kind
+withMode : Value Component.LinearMode -> Builder { a | mode : Available } slotCaps msg kind -> Builder { a | mode : Used } slotCaps msg kind
 withMode value_ =
-    B.withAttribute (Component.mode value_)
+    B.withAttribute (Component.linearMode value_)
 
 
 {-| -}
@@ -110,6 +108,6 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.LinearVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.linearVariant value_)

@@ -1,26 +1,22 @@
-module M3e.Build.CircularProgressIndicator exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withId, withIndeterminate, withMax, withSlot, withStyle, withValue, withVariant
-    , withChild
-    )
+module M3e.Build.CircularProgressIndicator exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withIndeterminate, withMax, withSlot, withStyle, withValue, withVariant, withChild)
 
-{-|
+{-| The **CircularProgressIndicator** element — the flat per-element builder surface,
+sourced through the **Progress** family façade
+(`M3e.Component.Progress`). This module and the aggregated
+`M3e.Build.Progress` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withId, withIndeterminate, withMax, withSlot, withStyle, withValue, withVariant
-@docs withChild
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withIndeterminate, withMax, withSlot, withStyle, withValue, withVariant, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.CircularProgressIndicator as Component
+import M3e.Component.Progress as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -28,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.CircularIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.CircularBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.CircularAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.CircularSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.CircularChildAdmittedBy childAdm
 
 
 {-| -}
@@ -58,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.CircularIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -115,6 +111,6 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.CircularVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.circularVariant value_)

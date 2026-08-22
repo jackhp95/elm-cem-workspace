@@ -1,24 +1,23 @@
-module Sl.Build.Textarea exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMaxlength, withMinlength, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withPlaceholder, withReadonly, withRequired, withResize, withRows, withSize, withSlot, withSpellcheck, withStyle, withTitle, withValue
-    )
+module Sl.Build.Textarea exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMaxlength, withMinlength, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withPlaceholder, withReadonly, withRequired, withResize, withRows, withSize, withSlot, withSpellcheck, withStyle, withTitle, withValue)
 
-{-|
+{-| The **Textarea** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMaxlength, withMinlength, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withPlaceholder, withReadonly, withRequired, withResize, withRows, withSize, withSlot, withSpellcheck, withStyle, withTitle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Textarea`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAutocapitalize, withAutocomplete, withAutocorrect, withAutofocus, withClass, withDisabled, withEnterkeyhint, withFilled, withForm, withHelpText, withId, withInputmode, withLabel, withMaxlength, withMinlength, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withPlaceholder, withReadonly, withRequired, withResize, withRows, withSize, withSlot, withSpellcheck, withStyle, withTitle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.Textarea as Component
+import Sl.Component.Textarea as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -27,27 +26,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TextareaIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TextareaBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TextareaAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TextareaSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TextareaChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TextareaIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -87,9 +86,9 @@ withStyle property value_ =
 
 
 {-| -}
-withAutocapitalize : Value Component.Autocapitalize -> Builder { a | autocapitalize : Available } slotCaps msg kind -> Builder { a | autocapitalize : Used } slotCaps msg kind
+withAutocapitalize : Value Component.TextareaAutocapitalize -> Builder { a | autocapitalize : Available } slotCaps msg kind -> Builder { a | autocapitalize : Used } slotCaps msg kind
 withAutocapitalize value_ =
-    B.withAttribute (Component.autocapitalize value_)
+    B.withAttribute (Component.textareaAutocapitalize value_)
 
 
 {-| -}
@@ -117,9 +116,9 @@ withDisabled value_ =
 
 
 {-| -}
-withEnterkeyhint : Value Component.Enterkeyhint -> Builder { a | enterkeyhint : Available } slotCaps msg kind -> Builder { a | enterkeyhint : Used } slotCaps msg kind
+withEnterkeyhint : Value Component.TextareaEnterkeyhint -> Builder { a | enterkeyhint : Available } slotCaps msg kind -> Builder { a | enterkeyhint : Used } slotCaps msg kind
 withEnterkeyhint value_ =
-    B.withAttribute (Component.enterkeyhint value_)
+    B.withAttribute (Component.textareaEnterkeyhint value_)
 
 
 {-| -}
@@ -141,9 +140,9 @@ withHelpText value_ =
 
 
 {-| -}
-withInputmode : Value Component.Inputmode -> Builder { a | inputmode : Available } slotCaps msg kind -> Builder { a | inputmode : Used } slotCaps msg kind
+withInputmode : Value Component.TextareaInputmode -> Builder { a | inputmode : Available } slotCaps msg kind -> Builder { a | inputmode : Used } slotCaps msg kind
 withInputmode value_ =
-    B.withAttribute (Component.inputmode value_)
+    B.withAttribute (Component.textareaInputmode value_)
 
 
 {-| -}
@@ -189,9 +188,9 @@ withRequired value_ =
 
 
 {-| -}
-withResize : Value Component.Resize -> Builder { a | resize : Available } slotCaps msg kind -> Builder { a | resize : Used } slotCaps msg kind
+withResize : Value Component.TextareaResize -> Builder { a | resize : Available } slotCaps msg kind -> Builder { a | resize : Used } slotCaps msg kind
 withResize value_ =
-    B.withAttribute (Component.resize value_)
+    B.withAttribute (Component.textareaResize value_)
 
 
 {-| -}
@@ -201,9 +200,9 @@ withRows value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.TextareaSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.textareaSize value_)
 
 
 {-| -}

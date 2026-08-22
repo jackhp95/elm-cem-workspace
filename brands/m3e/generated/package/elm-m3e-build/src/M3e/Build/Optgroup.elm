@@ -1,63 +1,60 @@
-module M3e.Build.Optgroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy
-    , withClass, withId, withSlot, withStyle
-    , label
-    , withLabel, withChild
-    )
+module M3e.Build.Optgroup exposing (Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, label, withLabel, withChild)
 
-{-|
+{-| The **Optgroup** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy
-@docs withClass, withId, withSlot, withStyle
-@docs label
-@docs withLabel, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Optgroup`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, label, withLabel, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Optgroup as Component
+import M3e.Component.Optgroup as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.OptgroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.OptgroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.OptgroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.OptgroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.OptgroupChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.OptgroupContent
 
 
 {-| -}
 type alias LabelSlot =
-    Component.LabelSlot
+    Component.OptgroupLabelSlot
 
 
 {-| -}
@@ -67,26 +64,26 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.OptgroupIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 label :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptgroupLabelSlot msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.optgroupLabel (B.toElement builder)
 
 
 {-| -}
 withLabel :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptgroupLabelSlot msg
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabel slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optgroupLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}

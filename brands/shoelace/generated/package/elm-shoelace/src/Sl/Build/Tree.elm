@@ -1,23 +1,22 @@
-module Sl.Build.Tree exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withId, withOnSelectionChange, withSelection, withSlot, withStyle
-    )
+module Sl.Build.Tree exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnSelectionChange, withSelection, withSlot, withStyle)
 
-{-|
+{-| The **Tree** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withId, withOnSelectionChange, withSelection, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Tree`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnSelectionChange, withSelection, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Tree as Component
+import Sl.Component.Tree as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TreeIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TreeBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TreeAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TreeSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TreeChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TreeIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -86,9 +85,9 @@ withStyle property value_ =
 
 
 {-| -}
-withSelection : Value Component.Selection -> Builder { a | selection : Available } slotCaps msg kind -> Builder { a | selection : Used } slotCaps msg kind
+withSelection : Value Component.TreeSelection -> Builder { a | selection : Available } slotCaps msg kind -> Builder { a | selection : Used } slotCaps msg kind
 withSelection value_ =
-    B.withAttribute (Component.selection value_)
+    B.withAttribute (Component.treeSelection value_)
 
 
 {-| -}

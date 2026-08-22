@@ -1,49 +1,50 @@
-module M3e.Build.SelectionIndicator exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withBounce, withCentered, withClass, withDisabled, withFor, withId, withSelected, withSlot, withStyle
-    )
+module M3e.Build.SelectionIndicator exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBounce, withCentered, withClass, withDisabled, withFor, withId, withSelected, withSlot, withStyle)
 
-{-|
+{-| The **SelectionIndicator** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withBounce, withCentered, withClass, withDisabled, withFor, withId, withSelected, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.SelectionIndicator`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBounce, withCentered, withClass, withDisabled, withFor, withId, withSelected, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.SelectionIndicator as Component
+import M3e.Component.SelectionIndicator as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SelectionIndicatorIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SelectionIndicatorBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SelectionIndicatorAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SelectionIndicatorSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SelectionIndicatorChildAdmittedBy childAdm
 
 
 {-| -}
@@ -53,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SelectionIndicatorIs kind) admittedBy msg
 toElement =
     B.toElement
 

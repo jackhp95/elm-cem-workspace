@@ -1,183 +1,179 @@
-module M3e.Build.TreeItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withId, withIndeterminate, withOnClick, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSelected, withSlot, withStyle
-    , icon, label, openToggleIcon, selectedIcon, toggleIcon
-    , withIcon, withLabel, withOpenToggleIcon, withSelectedIcon, withToggleIcon, withChild
-    )
+module M3e.Build.TreeItem exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withIndeterminate, withOnClick, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSelected, withSlot, withStyle, icon, label, openToggleIcon, selectedIcon, toggleIcon, withIcon, withLabel, withOpenToggleIcon, withSelectedIcon, withToggleIcon, withChild)
 
-{-|
+{-| The **TreeItem** element — the flat per-element builder surface,
+sourced through the **Tree** family façade
+(`M3e.Component.Tree`). This module and the aggregated
+`M3e.Build.Tree` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withIndeterminate, withOnClick, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSelected, withSlot, withStyle
-@docs icon, label, openToggleIcon, selectedIcon, toggleIcon
-@docs withIcon, withLabel, withOpenToggleIcon, withSelectedIcon, withToggleIcon, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, LabelSlot, OpenToggleIconSlot, SelectedIconSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withIndeterminate, withOnClick, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSelected, withSlot, withStyle, icon, label, openToggleIcon, selectedIcon, toggleIcon, withIcon, withLabel, withOpenToggleIcon, withSelectedIcon, withToggleIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.TreeItem as Component
+import M3e.Component.Tree as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ItemChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ItemContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.ItemIconSlot
 
 
 {-| -}
 type alias LabelSlot =
-    Component.LabelSlot
+    Component.ItemLabelSlot
 
 
 {-| -}
 type alias OpenToggleIconSlot =
-    Component.OpenToggleIconSlot
+    Component.ItemOpenToggleIconSlot
 
 
 {-| -}
 type alias SelectedIconSlot =
-    Component.SelectedIconSlot
+    Component.ItemSelectedIconSlot
 
 
 {-| -}
 type alias ToggleIconSlot =
-    Component.ToggleIconSlot
+    Component.ItemToggleIconSlot
 
 
 {-| -}
 build :
-    { label : Element Component.LabelSlot (Component.ChildAdmittedBy childAdm) msg }
+    { label : Element Component.ItemLabelSlot (Component.ItemChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
-    B.init "m3e-tree-item" [] [ El.toNode (Component.label required_.label) ]
+    B.init "m3e-tree-item" [] [ El.toNode (Component.itemLabel required_.label) ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ItemIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.itemIcon (B.toElement builder)
 
 
 {-| -}
 label :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemLabelSlot msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.itemLabel (B.toElement builder)
 
 
 {-| -}
 openToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OpenToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemOpenToggleIconSlot msg
     -> Element free freeAdmittedBy msg
 openToggleIcon builder =
-    Component.openToggleIcon (B.toElement builder)
+    Component.itemOpenToggleIcon (B.toElement builder)
 
 
 {-| -}
 selectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemSelectedIconSlot msg
     -> Element free freeAdmittedBy msg
 selectedIcon builder =
-    Component.selectedIcon (B.toElement builder)
+    Component.itemSelectedIcon (B.toElement builder)
 
 
 {-| -}
 toggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemToggleIconSlot msg
     -> Element free freeAdmittedBy msg
 toggleIcon builder =
-    Component.toggleIcon (B.toElement builder)
+    Component.itemToggleIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLabel :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemLabelSlot msg
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabel slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withOpenToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OpenToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemOpenToggleIconSlot msg
     -> Builder attrCaps { s | openToggleIcon : Available } msg kind
     -> Builder attrCaps { s | openToggleIcon : Used } msg kind
 withOpenToggleIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.openToggleIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemOpenToggleIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSelectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemSelectedIconSlot msg
     -> Builder attrCaps { s | selectedIcon : Available } msg kind
     -> Builder attrCaps { s | selectedIcon : Used } msg kind
 withSelectedIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.selectedIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemSelectedIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemToggleIconSlot msg
     -> Builder attrCaps { s | toggleIcon : Available } msg kind
     -> Builder attrCaps { s | toggleIcon : Used } msg kind
 withToggleIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.toggleIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemToggleIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}

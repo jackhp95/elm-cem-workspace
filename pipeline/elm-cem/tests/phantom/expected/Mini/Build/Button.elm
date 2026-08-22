@@ -1,27 +1,22 @@
-module Mini.Build.Button exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy
-    , withClass, withDir, withDisabled, withId, withInert, withOnClick, withSlot, withStyle, withTabindex, withVariant, withWeight
-    , icon
-    , withIcon, withChild
-    )
+module Mini.Build.Button exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, build, toElement, withClass, withDir, withDisabled, withId, withInert, withOnClick, withSlot, withStyle, withTabindex, withVariant, withWeight, icon, withIcon, withChild)
 
-{-|
+{-| The **Button** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy
-@docs withClass, withDir, withDisabled, withId, withInert, withOnClick, withSlot, withStyle, withTabindex, withVariant, withWeight
-@docs icon
-@docs withIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Mini.Component.Button`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Mini.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, build, toElement, withClass, withDir, withDisabled, withId, withInert, withOnClick, withSlot, withStyle, withTabindex, withVariant, withWeight, icon, withIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Mini.Attributes as A
-import Mini.Element.Button as Component
+import Mini.Component.Button as Component
 import Mini.Events as Ev
 import Mini.Forge.Internal as B
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,68 +25,68 @@ import Mini.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ButtonContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.ButtonIconSlot
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element Component.ButtonContent (Component.ButtonChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "mini-button" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.buttonIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.buttonIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -152,9 +147,9 @@ withDisabled value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.ButtonVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.buttonVariant value_)
 
 
 {-| -}

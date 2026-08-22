@@ -1,10 +1,10 @@
 {
   "name": "elm-m3e-build",
   "version": "1.0.0",
-  "description": "elm-m3e per-component phantom builder API (M3e.Build.*). Committed split sibling of the elm-m3e staging root (jackhp95/elm-m3e-build).",
+  "description": "elm-m3e composed phantom builder API (M3e.Build.*). Family-generated sibling of the elm-m3e staging root (jackhp95/elm-m3e-build) — since the DAG rework it consumes M3e.Component.* (elm-m3e-components), not M3e.Element.* directly.",
   "license": "BSD-3-Clause",
   "private": true,
   "scripts": {
-    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-m3e/node_modules/.bin/elm --dep-src=jackhp95/elm-m3e-core=../elm-m3e-core/src --dep-src=jackhp95/elm-m3e-elements=../elm-m3e-elements/src"
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-m3e/node_modules/.bin/elm --dep-src=jackhp95/elm-m3e-core=../elm-m3e-core/src --dep-src=jackhp95/elm-m3e-components=../elm-m3e-components/src --dep-src=jackhp95/elm-m3e-elements=../elm-m3e-elements/src"
   }
 }

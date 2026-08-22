@@ -1,23 +1,22 @@
-module Sl.Build.BreadcrumbItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withHref, withId, withRel, withSlot, withStyle, withTarget
-    )
+module Sl.Build.BreadcrumbItem exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withHref, withId, withRel, withSlot, withStyle, withTarget)
 
-{-|
+{-| The **BreadcrumbItem** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withHref, withId, withRel, withSlot, withStyle, withTarget
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.BreadcrumbItem`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withHref, withId, withRel, withSlot, withStyle, withTarget
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.BreadcrumbItem as Component
+import Sl.Component.BreadcrumbItem as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values
@@ -25,27 +24,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.BreadcrumbItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.BreadcrumbItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.BreadcrumbItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.BreadcrumbItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.BreadcrumbItemChildAdmittedBy childAdm
 
 
 {-| -}
@@ -55,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BreadcrumbItemIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -97,6 +96,6 @@ withRel value_ =
 
 
 {-| -}
-withTarget : Value Component.Target -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
+withTarget : Value Component.BreadcrumbItemTarget -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
 withTarget value_ =
-    B.withAttribute (Component.target value_)
+    B.withAttribute (Component.breadcrumbItemTarget value_)

@@ -1,197 +1,362 @@
-module M3e.Build.BottomSheet exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDetent, withDetents, withHandle, withHandleLabel, withHideFriction, withHideable, withId, withModal, withOnCancel, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withOvershootLimit, withSlot, withStyle
-    , header
-    , withHeader, withChild
-    )
+module M3e.Build.BottomSheet exposing (BottomSheetBuilder, BottomSheetAttrCaps, BottomSheetSlotCaps, BottomSheetIs, BottomSheetChildAdmittedBy, bottomSheetBuild, bottomSheetToElement, bottomSheetWithClass, bottomSheetWithDetent, bottomSheetWithDetents, bottomSheetWithHandle, bottomSheetWithHandleLabel, bottomSheetWithHideFriction, bottomSheetWithHideable, bottomSheetWithId, bottomSheetWithModal, bottomSheetWithOnCancel, bottomSheetWithOnClosed, bottomSheetWithOnClosing, bottomSheetWithOnOpened, bottomSheetWithOnOpening, bottomSheetWithOpen, bottomSheetWithOvershootLimit, bottomSheetWithSlot, bottomSheetWithStyle, bottomSheetHeader, bottomSheetWithHeader, bottomSheetWithChild, ActionBuilder, ActionAttrCaps, ActionSlotCaps, ActionIs, ActionContent, ActionChildAdmittedBy, actionBuild, actionToElement, actionWithClass, actionWithId, actionWithSlot, actionWithStyle, actionWithChild, TriggerBuilder, TriggerAttrCaps, TriggerSlotCaps, TriggerIs, TriggerContent, TriggerChildAdmittedBy, triggerBuild, triggerToElement, triggerWithClass, triggerWithDetent, triggerWithFor, triggerWithId, triggerWithSecondary, triggerWithSlot, triggerWithStyle, triggerWithChild)
 
-{-|
+{-| The **BottomSheet** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDetent, withDetents, withHandle, withHandleLabel, withHideFriction, withHideable, withId, withModal, withOnCancel, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withOvershootLimit, withSlot, withStyle
-@docs header
-@docs withHeader, withChild
+One module carrying every member's builder surface, member-prefixed
+(the per-element flat surface lives at `M3e.Build.<Element>`), sourced through `M3e.Component.BottomSheet`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs BottomSheetBuilder, BottomSheetAttrCaps, BottomSheetSlotCaps, BottomSheetIs, BottomSheetChildAdmittedBy, bottomSheetBuild, bottomSheetToElement, bottomSheetWithClass, bottomSheetWithDetent, bottomSheetWithDetents, bottomSheetWithHandle, bottomSheetWithHandleLabel, bottomSheetWithHideFriction, bottomSheetWithHideable, bottomSheetWithId, bottomSheetWithModal, bottomSheetWithOnCancel, bottomSheetWithOnClosed, bottomSheetWithOnClosing, bottomSheetWithOnOpened, bottomSheetWithOnOpening, bottomSheetWithOpen, bottomSheetWithOvershootLimit, bottomSheetWithSlot, bottomSheetWithStyle, bottomSheetHeader, bottomSheetWithHeader, bottomSheetWithChild, ActionBuilder, ActionAttrCaps, ActionSlotCaps, ActionIs, ActionContent, ActionChildAdmittedBy, actionBuild, actionToElement, actionWithClass, actionWithId, actionWithSlot, actionWithStyle, actionWithChild, TriggerBuilder, TriggerAttrCaps, TriggerSlotCaps, TriggerIs, TriggerContent, TriggerChildAdmittedBy, triggerBuild, triggerToElement, triggerWithClass, triggerWithDetent, triggerWithFor, triggerWithId, triggerWithSecondary, triggerWithSlot, triggerWithStyle, triggerWithChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.BottomSheet as Component
+import M3e.Component.BottomSheet as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
-type alias Is s =
-    Component.Is s
+type alias BottomSheetIs s =
+    Component.BottomSheetIs s
 
 
 {-| -}
-type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+type alias BottomSheetBuilder attrCaps slotCaps msg kind =
+    Component.BottomSheetBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
-type alias AttrCaps =
-    Component.AttrCaps
+type alias BottomSheetAttrCaps =
+    Component.BottomSheetAttrCaps
 
 
 {-| -}
-type alias SlotCaps =
-    Component.SlotCaps
+type alias BottomSheetSlotCaps =
+    Component.BottomSheetSlotCaps
 
 
 {-| -}
-type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+type alias BottomSheetChildAdmittedBy childAdm =
+    Component.BottomSheetChildAdmittedBy childAdm
 
 
 {-| -}
-build : Builder AttrCaps SlotCaps msg kind
-build =
+bottomSheetBuild : BottomSheetBuilder BottomSheetAttrCaps BottomSheetSlotCaps msg kind
+bottomSheetBuild =
     B.init "m3e-bottom-sheet" [] []
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
-toElement =
+bottomSheetToElement : BottomSheetBuilder attrCaps slotCaps msg kind -> Element (Component.BottomSheetIs kind) admittedBy msg
+bottomSheetToElement =
     B.toElement
 
 
 {-| -}
-header :
+bottomSheetHeader :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
-header builder =
-    Component.header (B.toElement builder)
+bottomSheetHeader builder =
+    Component.bottomSheetHeader (B.toElement builder)
 
 
 {-| -}
-withHeader :
+bottomSheetWithHeader :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
-    -> Builder attrCaps { s | header : Available } msg kind
-    -> Builder attrCaps { s | header : Used } msg kind
-withHeader slotBuilder builder_ =
-    B.withChild (El.toNode (Component.header (B.toElement slotBuilder))) builder_
+    -> BottomSheetBuilder attrCaps { s | header : Available } msg kind
+    -> BottomSheetBuilder attrCaps { s | header : Used } msg kind
+bottomSheetWithHeader slotBuilder builder_ =
+    B.withChild (El.toNode (Component.bottomSheetHeader (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withChild :
+bottomSheetWithChild :
     B.Builder childRow childAttrCaps childSlotCaps accepts msg
-    -> Builder attrCaps slotCaps msg kind
-    -> Builder attrCaps slotCaps msg kind
-withChild childBuilder builder_ =
+    -> BottomSheetBuilder attrCaps slotCaps msg kind
+    -> BottomSheetBuilder attrCaps slotCaps msg kind
+bottomSheetWithChild childBuilder builder_ =
     B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}
-withClass : String -> Builder { a | class : Available } slotCaps msg kind -> Builder { a | class : Used } slotCaps msg kind
-withClass value_ =
+bottomSheetWithClass : String -> BottomSheetBuilder { a | class : Available } slotCaps msg kind -> BottomSheetBuilder { a | class : Used } slotCaps msg kind
+bottomSheetWithClass value_ =
     B.withAttribute (A.class value_)
 
 
 {-| -}
-withId : String -> Builder { a | id : Available } slotCaps msg kind -> Builder { a | id : Used } slotCaps msg kind
-withId value_ =
+bottomSheetWithId : String -> BottomSheetBuilder { a | id : Available } slotCaps msg kind -> BottomSheetBuilder { a | id : Used } slotCaps msg kind
+bottomSheetWithId value_ =
     B.withAttribute (A.id value_)
 
 
 {-| -}
-withSlot : String -> Builder { a | slot : Available } slotCaps msg kind -> Builder { a | slot : Used } slotCaps msg kind
-withSlot value_ =
+bottomSheetWithSlot : String -> BottomSheetBuilder { a | slot : Available } slotCaps msg kind -> BottomSheetBuilder { a | slot : Used } slotCaps msg kind
+bottomSheetWithSlot value_ =
     B.withAttribute (A.slot value_)
 
 
 {-| -}
-withStyle : String -> String -> Builder { a | style : Available } slotCaps msg kind -> Builder { a | style : Used } slotCaps msg kind
-withStyle property value_ =
+bottomSheetWithStyle : String -> String -> BottomSheetBuilder { a | style : Available } slotCaps msg kind -> BottomSheetBuilder { a | style : Used } slotCaps msg kind
+bottomSheetWithStyle property value_ =
     B.withAttribute (A.style property value_)
 
 
 {-| -}
-withDetent : Float -> Builder { a | detent : Available } slotCaps msg kind -> Builder { a | detent : Used } slotCaps msg kind
-withDetent value_ =
+bottomSheetWithDetent : Float -> BottomSheetBuilder { a | detent : Available } slotCaps msg kind -> BottomSheetBuilder { a | detent : Used } slotCaps msg kind
+bottomSheetWithDetent value_ =
     B.withAttribute (A.detent value_)
 
 
 {-| -}
-withDetents : String -> Builder { a | detents : Available } slotCaps msg kind -> Builder { a | detents : Used } slotCaps msg kind
-withDetents value_ =
+bottomSheetWithDetents : String -> BottomSheetBuilder { a | detents : Available } slotCaps msg kind -> BottomSheetBuilder { a | detents : Used } slotCaps msg kind
+bottomSheetWithDetents value_ =
     B.withAttribute (A.detents value_)
 
 
 {-| -}
-withHandle : Bool -> Builder { a | handle : Available } slotCaps msg kind -> Builder { a | handle : Used } slotCaps msg kind
-withHandle value_ =
+bottomSheetWithHandle : Bool -> BottomSheetBuilder { a | handle : Available } slotCaps msg kind -> BottomSheetBuilder { a | handle : Used } slotCaps msg kind
+bottomSheetWithHandle value_ =
     B.withAttribute (A.handle value_)
 
 
 {-| -}
-withHandleLabel : String -> Builder { a | handleLabel : Available } slotCaps msg kind -> Builder { a | handleLabel : Used } slotCaps msg kind
-withHandleLabel value_ =
+bottomSheetWithHandleLabel : String -> BottomSheetBuilder { a | handleLabel : Available } slotCaps msg kind -> BottomSheetBuilder { a | handleLabel : Used } slotCaps msg kind
+bottomSheetWithHandleLabel value_ =
     B.withAttribute (A.handleLabel value_)
 
 
 {-| -}
-withHideFriction : Float -> Builder { a | hideFriction : Available } slotCaps msg kind -> Builder { a | hideFriction : Used } slotCaps msg kind
-withHideFriction value_ =
+bottomSheetWithHideFriction : Float -> BottomSheetBuilder { a | hideFriction : Available } slotCaps msg kind -> BottomSheetBuilder { a | hideFriction : Used } slotCaps msg kind
+bottomSheetWithHideFriction value_ =
     B.withAttribute (A.hideFriction value_)
 
 
 {-| -}
-withHideable : Bool -> Builder { a | hideable : Available } slotCaps msg kind -> Builder { a | hideable : Used } slotCaps msg kind
-withHideable value_ =
+bottomSheetWithHideable : Bool -> BottomSheetBuilder { a | hideable : Available } slotCaps msg kind -> BottomSheetBuilder { a | hideable : Used } slotCaps msg kind
+bottomSheetWithHideable value_ =
     B.withAttribute (A.hideable value_)
 
 
 {-| -}
-withModal : Bool -> Builder { a | modal : Available } slotCaps msg kind -> Builder { a | modal : Used } slotCaps msg kind
-withModal value_ =
+bottomSheetWithModal : Bool -> BottomSheetBuilder { a | modal : Available } slotCaps msg kind -> BottomSheetBuilder { a | modal : Used } slotCaps msg kind
+bottomSheetWithModal value_ =
     B.withAttribute (A.modal value_)
 
 
 {-| -}
-withOpen : Bool -> Builder { a | open : Available } slotCaps msg kind -> Builder { a | open : Used } slotCaps msg kind
-withOpen value_ =
+bottomSheetWithOpen : Bool -> BottomSheetBuilder { a | open : Available } slotCaps msg kind -> BottomSheetBuilder { a | open : Used } slotCaps msg kind
+bottomSheetWithOpen value_ =
     B.withAttribute (A.open value_)
 
 
 {-| -}
-withOvershootLimit : Float -> Builder { a | overshootLimit : Available } slotCaps msg kind -> Builder { a | overshootLimit : Used } slotCaps msg kind
-withOvershootLimit value_ =
+bottomSheetWithOvershootLimit : Float -> BottomSheetBuilder { a | overshootLimit : Available } slotCaps msg kind -> BottomSheetBuilder { a | overshootLimit : Used } slotCaps msg kind
+bottomSheetWithOvershootLimit value_ =
     B.withAttribute (A.overshootLimit value_)
 
 
 {-| -}
-withOnOpening : msg -> Builder { a | onOpening : Available } slotCaps msg kind -> Builder { a | onOpening : Used } slotCaps msg kind
-withOnOpening value_ =
+bottomSheetWithOnOpening : msg -> BottomSheetBuilder { a | onOpening : Available } slotCaps msg kind -> BottomSheetBuilder { a | onOpening : Used } slotCaps msg kind
+bottomSheetWithOnOpening value_ =
     B.withAttribute (Ev.onOpening value_)
 
 
 {-| -}
-withOnClosing : msg -> Builder { a | onClosing : Available } slotCaps msg kind -> Builder { a | onClosing : Used } slotCaps msg kind
-withOnClosing value_ =
+bottomSheetWithOnClosing : msg -> BottomSheetBuilder { a | onClosing : Available } slotCaps msg kind -> BottomSheetBuilder { a | onClosing : Used } slotCaps msg kind
+bottomSheetWithOnClosing value_ =
     B.withAttribute (Ev.onClosing value_)
 
 
 {-| -}
-withOnCancel : msg -> Builder { a | onCancel : Available } slotCaps msg kind -> Builder { a | onCancel : Used } slotCaps msg kind
-withOnCancel value_ =
+bottomSheetWithOnCancel : msg -> BottomSheetBuilder { a | onCancel : Available } slotCaps msg kind -> BottomSheetBuilder { a | onCancel : Used } slotCaps msg kind
+bottomSheetWithOnCancel value_ =
     B.withAttribute (Ev.onCancel value_)
 
 
 {-| -}
-withOnOpened : msg -> Builder { a | onOpened : Available } slotCaps msg kind -> Builder { a | onOpened : Used } slotCaps msg kind
-withOnOpened value_ =
+bottomSheetWithOnOpened : msg -> BottomSheetBuilder { a | onOpened : Available } slotCaps msg kind -> BottomSheetBuilder { a | onOpened : Used } slotCaps msg kind
+bottomSheetWithOnOpened value_ =
     B.withAttribute (Ev.onOpened value_)
 
 
 {-| -}
-withOnClosed : msg -> Builder { a | onClosed : Available } slotCaps msg kind -> Builder { a | onClosed : Used } slotCaps msg kind
-withOnClosed value_ =
+bottomSheetWithOnClosed : msg -> BottomSheetBuilder { a | onClosed : Available } slotCaps msg kind -> BottomSheetBuilder { a | onClosed : Used } slotCaps msg kind
+bottomSheetWithOnClosed value_ =
     B.withAttribute (Ev.onClosed value_)
+
+
+{-| -}
+type alias ActionIs s =
+    Component.ActionIs s
+
+
+{-| -}
+type alias ActionBuilder attrCaps slotCaps msg kind =
+    Component.ActionBuilder attrCaps slotCaps msg kind
+
+
+{-| -}
+type alias ActionAttrCaps =
+    Component.ActionAttrCaps
+
+
+{-| -}
+type alias ActionSlotCaps =
+    Component.ActionSlotCaps
+
+
+{-| -}
+type alias ActionChildAdmittedBy childAdm =
+    Component.ActionChildAdmittedBy childAdm
+
+
+{-| -}
+type alias ActionContent =
+    Component.ActionContent
+
+
+{-| -}
+actionBuild : ActionBuilder ActionAttrCaps ActionSlotCaps msg kind
+actionBuild =
+    B.init "m3e-bottom-sheet-action" [] []
+
+
+{-| -}
+actionToElement : ActionBuilder attrCaps slotCaps msg kind -> Element (Component.ActionIs kind) admittedBy msg
+actionToElement =
+    B.toElement
+
+
+{-| -}
+actionWithChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> ActionBuilder attrCaps slotCaps msg kind
+    -> ActionBuilder attrCaps slotCaps msg kind
+actionWithChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
+
+
+{-| -}
+actionWithClass : String -> ActionBuilder { a | class : Available } slotCaps msg kind -> ActionBuilder { a | class : Used } slotCaps msg kind
+actionWithClass value_ =
+    B.withAttribute (A.class value_)
+
+
+{-| -}
+actionWithId : String -> ActionBuilder { a | id : Available } slotCaps msg kind -> ActionBuilder { a | id : Used } slotCaps msg kind
+actionWithId value_ =
+    B.withAttribute (A.id value_)
+
+
+{-| -}
+actionWithSlot : String -> ActionBuilder { a | slot : Available } slotCaps msg kind -> ActionBuilder { a | slot : Used } slotCaps msg kind
+actionWithSlot value_ =
+    B.withAttribute (A.slot value_)
+
+
+{-| -}
+actionWithStyle : String -> String -> ActionBuilder { a | style : Available } slotCaps msg kind -> ActionBuilder { a | style : Used } slotCaps msg kind
+actionWithStyle property value_ =
+    B.withAttribute (A.style property value_)
+
+
+{-| -}
+type alias TriggerIs s =
+    Component.TriggerIs s
+
+
+{-| -}
+type alias TriggerBuilder attrCaps slotCaps msg kind =
+    Component.TriggerBuilder attrCaps slotCaps msg kind
+
+
+{-| -}
+type alias TriggerAttrCaps =
+    Component.TriggerAttrCaps
+
+
+{-| -}
+type alias TriggerSlotCaps =
+    Component.TriggerSlotCaps
+
+
+{-| -}
+type alias TriggerChildAdmittedBy childAdm =
+    Component.TriggerChildAdmittedBy childAdm
+
+
+{-| -}
+type alias TriggerContent =
+    Component.TriggerContent
+
+
+{-| -}
+triggerBuild : TriggerBuilder TriggerAttrCaps TriggerSlotCaps msg kind
+triggerBuild =
+    B.init "m3e-bottom-sheet-trigger" [] []
+
+
+{-| -}
+triggerToElement : TriggerBuilder attrCaps slotCaps msg kind -> Element (Component.TriggerIs kind) admittedBy msg
+triggerToElement =
+    B.toElement
+
+
+{-| -}
+triggerWithChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> TriggerBuilder attrCaps slotCaps msg kind
+    -> TriggerBuilder attrCaps slotCaps msg kind
+triggerWithChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
+
+
+{-| -}
+triggerWithClass : String -> TriggerBuilder { a | class : Available } slotCaps msg kind -> TriggerBuilder { a | class : Used } slotCaps msg kind
+triggerWithClass value_ =
+    B.withAttribute (A.class value_)
+
+
+{-| -}
+triggerWithId : String -> TriggerBuilder { a | id : Available } slotCaps msg kind -> TriggerBuilder { a | id : Used } slotCaps msg kind
+triggerWithId value_ =
+    B.withAttribute (A.id value_)
+
+
+{-| -}
+triggerWithSlot : String -> TriggerBuilder { a | slot : Available } slotCaps msg kind -> TriggerBuilder { a | slot : Used } slotCaps msg kind
+triggerWithSlot value_ =
+    B.withAttribute (A.slot value_)
+
+
+{-| -}
+triggerWithStyle : String -> String -> TriggerBuilder { a | style : Available } slotCaps msg kind -> TriggerBuilder { a | style : Used } slotCaps msg kind
+triggerWithStyle property value_ =
+    B.withAttribute (A.style property value_)
+
+
+{-| -}
+triggerWithDetent : Float -> TriggerBuilder { a | detent : Available } slotCaps msg kind -> TriggerBuilder { a | detent : Used } slotCaps msg kind
+triggerWithDetent value_ =
+    B.withAttribute (A.detent value_)
+
+
+{-| -}
+triggerWithFor : String -> TriggerBuilder { a | for : Available } slotCaps msg kind -> TriggerBuilder { a | for : Used } slotCaps msg kind
+triggerWithFor value_ =
+    B.withAttribute (A.for value_)
+
+
+{-| -}
+triggerWithSecondary : Bool -> TriggerBuilder { a | secondary : Available } slotCaps msg kind -> TriggerBuilder { a | secondary : Used } slotCaps msg kind
+triggerWithSecondary value_ =
+    B.withAttribute (A.secondary value_)

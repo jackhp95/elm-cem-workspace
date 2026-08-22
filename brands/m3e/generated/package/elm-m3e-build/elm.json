@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "jackhp95/elm-m3e-build",
-    "summary": "elm-m3e per-component phantom builder API (M3e.Build.*).",
+    "summary": "Composed phantom builder API (M3e.Build.*) for M3e.",
     "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
@@ -84,6 +84,7 @@
         "M3e.Build.Option",
         "M3e.Build.OptionPanel",
         "M3e.Build.Paginator",
+        "M3e.Build.Progress",
         "M3e.Build.PseudoCheckbox",
         "M3e.Build.PseudoRadio",
         "M3e.Build.Radio",
@@ -145,7 +146,7 @@
         "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
         "jackhp95/elm-m3e-core": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e-elements": "1.0.0 <= v < 2.0.0"
+        "jackhp95/elm-m3e-components": "1.0.0 <= v < 2.0.0"
     },
     "test-dependencies": {}
 }

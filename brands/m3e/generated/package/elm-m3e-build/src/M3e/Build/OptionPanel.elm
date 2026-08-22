@@ -1,27 +1,22 @@
-module M3e.Build.OptionPanel exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy
-    , withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
-    , loading, noData
-    , withNoData, withLoading, withChild
-    )
+module M3e.Build.OptionPanel exposing (Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy, build, toElement, withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle, loading, noData, withNoData, withLoading, withChild)
 
-{-|
+{-| The **OptionPanel** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy
-@docs withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
-@docs loading, noData
-@docs withNoData, withLoading, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.OptionPanel`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LoadingSlot, ChildAdmittedBy, build, toElement, withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle, loading, noData, withNoData, withLoading, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.OptionPanel as Component
+import M3e.Component.OptionPanel as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,37 +25,37 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.OptionPanelIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.OptionPanelBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.OptionPanelAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.OptionPanelSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.OptionPanelChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.OptionPanelContent
 
 
 {-| -}
 type alias LoadingSlot =
-    Component.LoadingSlot
+    Component.OptionPanelLoadingSlot
 
 
 {-| -}
@@ -70,17 +65,17 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.OptionPanelIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 loading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LoadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionPanelLoadingSlot msg
     -> Element free freeAdmittedBy msg
 loading builder =
-    Component.loading (B.toElement builder)
+    Component.optionPanelLoading (B.toElement builder)
 
 
 {-| -}
@@ -88,7 +83,7 @@ noData :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 noData builder =
-    Component.noData (B.toElement builder)
+    Component.optionPanelNoData (B.toElement builder)
 
 
 {-| -}
@@ -97,16 +92,16 @@ withNoData :
     -> Builder attrCaps { s | noData : Available } msg kind
     -> Builder attrCaps { s | noData : Used } msg kind
 withNoData slotBuilder builder_ =
-    B.withChild (El.toNode (Component.noData (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionPanelNoData (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLoading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LoadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.OptionPanelLoadingSlot msg
     -> Builder attrCaps slotCaps msg kind
     -> Builder attrCaps slotCaps msg kind
 withLoading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.loading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.optionPanelLoading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -155,9 +150,9 @@ withFitAnchorWidth value_ =
 
 
 {-| -}
-withScrollStrategy : Value Component.ScrollStrategy -> Builder { a | scrollStrategy : Available } slotCaps msg kind -> Builder { a | scrollStrategy : Used } slotCaps msg kind
+withScrollStrategy : Value Component.OptionPanelScrollStrategy -> Builder { a | scrollStrategy : Available } slotCaps msg kind -> Builder { a | scrollStrategy : Used } slotCaps msg kind
 withScrollStrategy value_ =
-    B.withAttribute (Component.scrollStrategy value_)
+    B.withAttribute (Component.optionPanelScrollStrategy value_)
 
 
 {-| -}

@@ -1,23 +1,22 @@
-module Sl.Build.TabGroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
-    )
+module Sl.Build.TabGroup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle)
 
-{-|
+{-| The **TabGroup** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.TabGroup`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActivation, withClass, withFixedScrollControls, withId, withNoScrollControls, withOnTabHide, withOnTabShow, withPlacement, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.TabGroup as Component
+import Sl.Component.TabGroup as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TabGroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TabGroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TabGroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TabGroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TabGroupChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TabGroupIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -86,9 +85,9 @@ withStyle property value_ =
 
 
 {-| -}
-withActivation : Value Component.Activation -> Builder { a | activation : Available } slotCaps msg kind -> Builder { a | activation : Used } slotCaps msg kind
+withActivation : Value Component.TabGroupActivation -> Builder { a | activation : Available } slotCaps msg kind -> Builder { a | activation : Used } slotCaps msg kind
 withActivation value_ =
-    B.withAttribute (Component.activation value_)
+    B.withAttribute (Component.tabGroupActivation value_)
 
 
 {-| -}
@@ -104,9 +103,9 @@ withNoScrollControls value_ =
 
 
 {-| -}
-withPlacement : Value Component.Placement -> Builder { a | placement : Available } slotCaps msg kind -> Builder { a | placement : Used } slotCaps msg kind
+withPlacement : Value Component.TabGroupPlacement -> Builder { a | placement : Available } slotCaps msg kind -> Builder { a | placement : Used } slotCaps msg kind
 withPlacement value_ =
-    B.withAttribute (Component.placement value_)
+    B.withAttribute (Component.tabGroupPlacement value_)
 
 
 {-| -}

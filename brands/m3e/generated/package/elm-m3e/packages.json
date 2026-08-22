@@ -103,29 +103,6 @@
           "prefix": "M3e.Element."
         }
       ]
-    },
-    {
-      "name": "jackhp95/elm-m3e-build",
-      "summary": "elm-m3e per-component phantom builder API (M3e.Build.*).",
-      "version": "1.0.0",
-      "elmVersion": "0.19.0 <= v < 0.20.0",
-      "deps": {
-        "elm/core": "1.0.0 <= v < 2.0.0",
-        "elm/html": "1.0.0 <= v < 2.0.0",
-        "elm/json": "1.0.0 <= v < 2.0.0",
-        "elm/virtual-dom": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-virtual-dom-intermediate-representation": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e-core": "1.0.0 <= v < 2.0.0",
-        "jackhp95/elm-m3e-elements": "1.0.0 <= v < 2.0.0"
-      },
-      "buckets": [
-        {
-          "exact": "M3e.Build"
-        },
-        {
-          "prefix": "M3e.Build."
-        }
-      ]
     }
   ]
 }

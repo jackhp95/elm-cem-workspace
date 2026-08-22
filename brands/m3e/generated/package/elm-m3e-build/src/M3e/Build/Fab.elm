@@ -1,29 +1,24 @@
-module M3e.Build.Fab exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
-    , withClass, withDisabled, withDisabledInteractive, withDownload, withExtended, withHref, withId, withLowered, withName, withOnClick, withRel, withSize, withSlot, withStyle, withTarget, withType, withValue, withVariant
-    , closeIcon, label
-    , withCloseIcon, withLabel, withChild
-    )
+module M3e.Build.Fab exposing (Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withExtended, withHref, withId, withLowered, withName, withOnClick, withRel, withSize, withSlot, withStyle, withTarget, withType, withValue, withVariant, closeIcon, label, withCloseIcon, withLabel, withChild)
 
-{-|
+{-| The **Fab** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps
-@docs withClass, withDisabled, withDisabledInteractive, withDownload, withExtended, withHref, withId, withLowered, withName, withOnClick, withRel, withSize, withSlot, withStyle, withTarget, withType, withValue, withVariant
-@docs closeIcon, label
-@docs withCloseIcon, withLabel, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Fab`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, CloseIconSlot, LabelSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withExtended, withHref, withId, withLowered, withName, withOnClick, withRel, withSize, withSlot, withStyle, withTarget, withType, withValue, withVariant, closeIcon, label, withCloseIcon, withLabel, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Action as Ac
 import M3e.Attributes as A
-import M3e.Element.Fab as Component
+import M3e.Component.Fab as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -32,53 +27,53 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FabIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FabBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FabAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.FabSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
-
-
-{-| -}
-type alias ActionCaps =
-    Component.ActionCaps
+    Component.FabChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.FabContent
 
 
 {-| -}
 type alias CloseIconSlot =
-    Component.CloseIconSlot
+    Component.FabCloseIconSlot
 
 
 {-| -}
 type alias LabelSlot =
-    Component.LabelSlot
+    Component.FabLabelSlot
+
+
+{-| -}
+type alias ActionCaps =
+    Component.FabActionCaps
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg
-    , action : Ac.Action Component.ActionCaps msg
+    { content : Element Component.FabContent (Component.FabChildAdmittedBy childAdm) msg
+    , action : Ac.Action Component.FabActionCaps msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
@@ -86,43 +81,43 @@ build required_ =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FabIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 closeIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.FabCloseIconSlot msg
     -> Element free freeAdmittedBy msg
 closeIcon builder =
-    Component.closeIcon (B.toElement builder)
+    Component.fabCloseIcon (B.toElement builder)
 
 
 {-| -}
 label :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.FabLabelSlot msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.fabLabel (B.toElement builder)
 
 
 {-| -}
 withCloseIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.FabCloseIconSlot msg
     -> Builder attrCaps { s | closeIcon : Available } msg kind
     -> Builder attrCaps { s | closeIcon : Used } msg kind
 withCloseIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.closeIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.fabCloseIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLabel :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.FabLabelSlot msg
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabel slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.fabLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -207,9 +202,9 @@ withRel value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.FabSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.fabSize value_)
 
 
 {-| -}
@@ -219,9 +214,9 @@ withTarget value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.FabType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.fabType_ value_)
 
 
 {-| -}
@@ -231,9 +226,9 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.FabVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.fabVariant value_)
 
 
 {-| -}

@@ -1,23 +1,22 @@
-module Sl.Build.Drawer exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle
-    )
+module Sl.Build.Drawer exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle)
 
-{-|
+{-| The **Drawer** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Drawer`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withContained, withId, withLabel, withNoHeader, withOnAfterHide, withOnAfterShow, withOnHide, withOnInitialFocus, withOnRequestClose, withOnShow, withOpen, withPlacement, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Drawer as Component
+import Sl.Component.Drawer as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.DrawerIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.DrawerBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.DrawerAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.DrawerSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.DrawerChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.DrawerIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -110,9 +109,9 @@ withOpen value_ =
 
 
 {-| -}
-withPlacement : Value Component.Placement -> Builder { a | placement : Available } slotCaps msg kind -> Builder { a | placement : Used } slotCaps msg kind
+withPlacement : Value Component.DrawerPlacement -> Builder { a | placement : Available } slotCaps msg kind -> Builder { a | placement : Used } slotCaps msg kind
 withPlacement value_ =
-    B.withAttribute (Component.placement value_)
+    B.withAttribute (Component.drawerPlacement value_)
 
 
 {-| -}

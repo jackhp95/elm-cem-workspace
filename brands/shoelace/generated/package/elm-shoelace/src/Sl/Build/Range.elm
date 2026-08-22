@@ -1,24 +1,23 @@
-module Sl.Build.Range exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withForm, withHelpText, withId, withLabel, withMax, withMin, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withSlot, withStep, withStyle, withTitle, withTooltip, withValue
-    )
+module Sl.Build.Range exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withForm, withHelpText, withId, withLabel, withMax, withMin, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withSlot, withStep, withStyle, withTitle, withTooltip, withValue)
 
-{-|
+{-| The **Range** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withForm, withHelpText, withId, withLabel, withMax, withMin, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withSlot, withStep, withStyle, withTitle, withTooltip, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Range`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withForm, withHelpText, withId, withLabel, withMax, withMin, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withSlot, withStep, withStyle, withTitle, withTooltip, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.Range as Component
+import Sl.Component.Range as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -27,27 +26,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.RangeIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.RangeBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.RangeAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.RangeSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.RangeChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RangeIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -141,9 +140,9 @@ withTitle value_ =
 
 
 {-| -}
-withTooltip : Value Component.Tooltip -> Builder { a | tooltip : Available } slotCaps msg kind -> Builder { a | tooltip : Used } slotCaps msg kind
+withTooltip : Value Component.RangeTooltip -> Builder { a | tooltip : Available } slotCaps msg kind -> Builder { a | tooltip : Used } slotCaps msg kind
 withTooltip value_ =
-    B.withAttribute (Component.tooltip value_)
+    B.withAttribute (Component.rangeTooltip value_)
 
 
 {-| -}

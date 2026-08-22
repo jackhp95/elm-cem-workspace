@@ -1,28 +1,23 @@
-module M3e.Build.Card exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withActionable, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withInline, withName, withOnClick, withOrientation, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant
-    , actions, content, footer, header
-    , withActions, withContent, withFooter, withHeader, withChild
-    )
+module M3e.Build.Card exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActionable, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withInline, withName, withOnClick, withOrientation, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant, actions, content, footer, header, withActions, withContent, withFooter, withHeader, withChild)
 
-{-|
+{-| The **Card** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withActionable, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withInline, withName, withOnClick, withOrientation, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant
-@docs actions, content, footer, header
-@docs withActions, withContent, withFooter, withHeader, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Card`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActionable, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withInline, withName, withOnClick, withOrientation, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant, actions, content, footer, header, withActions, withContent, withFooter, withHeader, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.Card as Component
+import M3e.Component.Card as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -31,27 +26,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.CardIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.CardBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.CardAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.CardSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.CardChildAdmittedBy childAdm
 
 
 {-| -}
@@ -61,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.CardIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -71,7 +66,7 @@ actions :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 actions builder =
-    Component.actions (B.toElement builder)
+    Component.cardActions (B.toElement builder)
 
 
 {-| -}
@@ -79,7 +74,7 @@ content :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 content builder =
-    Component.content (B.toElement builder)
+    Component.cardContent (B.toElement builder)
 
 
 {-| -}
@@ -87,7 +82,7 @@ footer :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 footer builder =
-    Component.footer (B.toElement builder)
+    Component.cardFooter (B.toElement builder)
 
 
 {-| -}
@@ -95,7 +90,7 @@ header :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 header builder =
-    Component.header (B.toElement builder)
+    Component.cardHeader (B.toElement builder)
 
 
 {-| -}
@@ -104,7 +99,7 @@ withActions :
     -> Builder attrCaps { s | actions : Available } msg kind
     -> Builder attrCaps { s | actions : Used } msg kind
 withActions slotBuilder builder_ =
-    B.withChild (El.toNode (Component.actions (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.cardActions (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -113,7 +108,7 @@ withContent :
     -> Builder attrCaps { s | content : Available } msg kind
     -> Builder attrCaps { s | content : Used } msg kind
 withContent slotBuilder builder_ =
-    B.withChild (El.toNode (Component.content (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.cardContent (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -122,7 +117,7 @@ withFooter :
     -> Builder attrCaps { s | footer : Available } msg kind
     -> Builder attrCaps { s | footer : Used } msg kind
 withFooter slotBuilder builder_ =
-    B.withChild (El.toNode (Component.footer (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.cardFooter (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -131,7 +126,7 @@ withHeader :
     -> Builder attrCaps { s | header : Available } msg kind
     -> Builder attrCaps { s | header : Used } msg kind
 withHeader slotBuilder builder_ =
-    B.withChild (El.toNode (Component.header (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.cardHeader (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -210,9 +205,9 @@ withName value_ =
 
 
 {-| -}
-withOrientation : Value Component.Orientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
+withOrientation : Value Component.CardOrientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
 withOrientation value_ =
-    B.withAttribute (Component.orientation value_)
+    B.withAttribute (Component.cardOrientation value_)
 
 
 {-| -}
@@ -228,9 +223,9 @@ withTarget value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.CardType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.cardType_ value_)
 
 
 {-| -}
@@ -240,9 +235,9 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.CardVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.cardVariant value_)
 
 
 {-| -}

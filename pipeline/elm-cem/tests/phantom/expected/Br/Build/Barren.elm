@@ -1,56 +1,55 @@
-module Br.Build.Barren exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withCount, withId, withLabel, withSlot, withStyle
-    , withChild
-    )
+module Br.Build.Barren exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withCount, withId, withLabel, withSlot, withStyle, withChild)
 
-{-|
+{-| The **Barren** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withCount, withId, withLabel, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Br.Component.Barren`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Br.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withCount, withId, withLabel, withSlot, withStyle, withChild
 
 -}
 
 import Br.Attributes as A
-import Br.Element.Barren as Component
+import Br.Component.Barren as Component
 import Br.Forge.Internal as B
 import Br.Kind exposing (Available, Brand, Ctx, Used)
+import Br.Values
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.BarrenIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.BarrenBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.BarrenAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.BarrenSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.BarrenChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.BarrenContent
 
 
 {-| -}
@@ -60,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BarrenIs kind) admittedBy msg
 toElement =
     B.toElement
 

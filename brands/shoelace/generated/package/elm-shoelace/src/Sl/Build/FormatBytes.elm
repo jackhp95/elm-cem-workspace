@@ -1,24 +1,23 @@
-module Sl.Build.FormatBytes exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisplay, withId, withSlot, withStyle, withUnit, withValue
-    )
+module Sl.Build.FormatBytes exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisplay, withId, withSlot, withStyle, withUnit, withValue)
 
-{-|
+{-| The **FormatBytes** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisplay, withId, withSlot, withStyle, withUnit, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.FormatBytes`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisplay, withId, withSlot, withStyle, withUnit, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.FormatBytes as Component
+import Sl.Component.FormatBytes as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FormatBytesIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FormatBytesBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FormatBytesAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.FormatBytesSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.FormatBytesChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FormatBytesIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -86,15 +85,15 @@ withStyle property value_ =
 
 
 {-| -}
-withDisplay : Value Component.Display -> Builder { a | display : Available } slotCaps msg kind -> Builder { a | display : Used } slotCaps msg kind
+withDisplay : Value Component.FormatBytesDisplay -> Builder { a | display : Available } slotCaps msg kind -> Builder { a | display : Used } slotCaps msg kind
 withDisplay value_ =
-    B.withAttribute (Component.display value_)
+    B.withAttribute (Component.formatBytesDisplay value_)
 
 
 {-| -}
-withUnit : Value Component.Unit -> Builder { a | unit : Available } slotCaps msg kind -> Builder { a | unit : Used } slotCaps msg kind
+withUnit : Value Component.FormatBytesUnit -> Builder { a | unit : Available } slotCaps msg kind -> Builder { a | unit : Used } slotCaps msg kind
 withUnit value_ =
-    B.withAttribute (Component.unit value_)
+    B.withAttribute (Component.formatBytesUnit value_)
 
 
 {-| -}

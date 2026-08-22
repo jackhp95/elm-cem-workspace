@@ -1,25 +1,22 @@
-module Or.Build.Widget exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withCdir, withCflag, withClass, withLabel
-    , withChild
-    )
+module Or.Build.Widget exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCdir, withCflag, withClass, withLabel, withChild)
 
-{-|
+{-| The **Widget** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withCdir, withCflag, withClass, withLabel
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Or.Component.Widget`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Or.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCdir, withCflag, withClass, withLabel, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Or.Attributes as A
-import Or.Element.Widget as Component
+import Or.Component.Widget as Component
 import Or.Forge.Internal as B
 import Or.Kind exposing (Available, Brand, Ctx, Used)
 import Or.Values
@@ -27,32 +24,32 @@ import Or.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.WidgetIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.WidgetBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.WidgetAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.WidgetSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.WidgetChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.WidgetContent
 
 
 {-| -}
@@ -62,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.WidgetIs kind) admittedBy msg
 toElement =
     B.toElement
 

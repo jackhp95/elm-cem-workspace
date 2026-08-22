@@ -1,79 +1,76 @@
-module M3e.Build.ListItemButton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-    , withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-    , leading, overline, supportingText, trailing
-    , withLeading, withOverline, withSupportingText, withTrailing, withChild
-    )
+module M3e.Build.ListItemButton exposing (Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild)
 
-{-|
+{-| The **ListItemButton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-@docs leading, overline, supportingText, trailing
-@docs withLeading, withOverline, withSupportingText, withTrailing, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.ListItemButton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ListItemButton as Component
+import M3e.Component.ListItemButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ListItemButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ListItemButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ListItemButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ListItemButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ListItemButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ListItemButtonContent
 
 
 {-| -}
 type alias LeadingSlot =
-    Component.LeadingSlot
+    Component.ListItemButtonLeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    Component.OverlineSlot
+    Component.ListItemButtonOverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    Component.SupportingTextSlot
+    Component.ListItemButtonSupportingTextSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    Component.TrailingSlot
+    Component.ListItemButtonTrailingSlot
 
 
 {-| -}
@@ -83,77 +80,77 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ListItemButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 leading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonLeadingSlot msg
     -> Element free freeAdmittedBy msg
 leading builder =
-    Component.leading (B.toElement builder)
+    Component.listItemButtonLeading (B.toElement builder)
 
 
 {-| -}
 overline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonOverlineSlot msg
     -> Element free freeAdmittedBy msg
 overline builder =
-    Component.overline (B.toElement builder)
+    Component.listItemButtonOverline (B.toElement builder)
 
 
 {-| -}
 supportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonSupportingTextSlot msg
     -> Element free freeAdmittedBy msg
 supportingText builder =
-    Component.supportingText (B.toElement builder)
+    Component.listItemButtonSupportingText (B.toElement builder)
 
 
 {-| -}
 trailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonTrailingSlot msg
     -> Element free freeAdmittedBy msg
 trailing builder =
-    Component.trailing (B.toElement builder)
+    Component.listItemButtonTrailing (B.toElement builder)
 
 
 {-| -}
 withLeading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonLeadingSlot msg
     -> Builder attrCaps { s | leading : Available } msg kind
     -> Builder attrCaps { s | leading : Used } msg kind
 withLeading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.listItemButtonLeading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withOverline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonOverlineSlot msg
     -> Builder attrCaps { s | overline : Available } msg kind
     -> Builder attrCaps { s | overline : Used } msg kind
 withOverline slotBuilder builder_ =
-    B.withChild (El.toNode (Component.overline (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.listItemButtonOverline (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSupportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonSupportingTextSlot msg
     -> Builder attrCaps { s | supportingText : Available } msg kind
     -> Builder attrCaps { s | supportingText : Used } msg kind
 withSupportingText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.supportingText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.listItemButtonSupportingText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ListItemButtonTrailingSlot msg
     -> Builder attrCaps { s | trailing : Available } msg kind
     -> Builder attrCaps { s | trailing : Used } msg kind
 withTrailing slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailing (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.listItemButtonTrailing (B.toElement slotBuilder))) builder_
 
 
 {-| -}

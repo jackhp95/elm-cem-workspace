@@ -115,20 +115,29 @@ files brand iconModule families =
                 ++ [ factsModule brand ]
                 ++ unsafeModule brand
                 ++ actionModule brand
-                -- R3: the shared pipe-builder mechanics live once per brand.
-                -- Only emitted when at least one rich per-component module
-                -- exists (native/home-only brands have no `Builder`).
+                -- R3: the shared pipe-builder mechanics (`<lib>.Forge.Internal`,
+                -- in core) live once per brand. Only emitted when at least one
+                -- rich per-component module exists (native/home-only brands have
+                -- no `Builder`). NOTE (DAG-rework Task 4): the `<lib>.Build`
+                -- BARREL and the per-element `<lib>.Build.<Element>` modules are
+                -- NO LONGER emitted here — the whole Build tier is now a
+                -- family-generated package (`Generate.Phantom.Emit.BuildPackage`,
+                -- wired below), sourced through Components. Only `Forge.Internal`
+                -- stays in the flat `src/` (it is a core, not a Build, module).
                 ++ (if List.isEmpty own then
                         []
 
                     else
-                        [ buildInternalModule brand, buildModule brand own ]
+                        [ buildInternalModule brand ]
                    )
                 -- R2: the loose elm/html-like producer layer (owns `Ir.node`),
                 -- emitted only when a rich per-component shape exists.
                 ++ htmlModule brand
-                -- Per-component modules: the internal-types, component surface, and builder module.
-                ++ List.concatMap (\comp -> [ internalTypesModule brand comp, compModule brand comp, compBuildModule brand comp ]) own
+                -- Per-component modules: the internal-types + component surface.
+                -- (DAG-rework Task 4: `compBuildModule` — the per-CEM-element
+                -- builder — is removed; builders now derive from the composition
+                -- config in `BuildPackage`, consuming Components.)
+                ++ List.concatMap (\comp -> [ internalTypesModule brand comp, compModule brand comp ]) own
                 ++ List.map (homeModule brand) homeGroups
 
         guardErrors =
@@ -140,12 +149,12 @@ files brand iconModule families =
         familyResult =
             Generate.Phantom.Emit.FamilyPackage.files brand families
 
-        -- DAG-rework Task 1 (dual-emit PoC): the composed `<lib>.Build2.<Family>`
-        -- builders, sourced through the Component façade. Emitted ALONGSIDE the
-        -- per-element `compBuildModule` output above (which is NOT removed) under
-        -- a temporary `Build2` namespace, so nothing shipped changes and the whole
-        -- thing is reversible by unwiring this one call. See BuildPackage.elm.
-        build2Result =
+        -- DAG-rework Task 4 (MATERIALIZE): the composed `<lib>.Build.<Family>` +
+        -- flat `<lib>.Build.<Element>` builders + the `<lib>.Build` barrel, all
+        -- sourced through the Components façade — the whole Build tier as a
+        -- family-generated package (`elm-m3e-build`), replacing the old
+        -- per-CEM-element `compBuildModule` (removed above). See BuildPackage.elm.
+        buildResult =
             Generate.Phantom.Emit.BuildPackage.files brand families
     in
     case ( iconResult, familyResult ) of
@@ -156,13 +165,13 @@ files brand iconModule families =
             Err [ e ]
 
         ( Ok iconFiles, Ok familyFiles ) ->
-            case build2Result of
+            case buildResult of
                 Err es ->
                     Err es
 
-                Ok build2Files ->
+                Ok buildFiles ->
                     if List.isEmpty guardErrors then
-                        Ok (allFiles ++ iconFiles ++ familyFiles ++ build2Files)
+                        Ok (allFiles ++ iconFiles ++ familyFiles ++ buildFiles)
 
                     else
                         Err guardErrors

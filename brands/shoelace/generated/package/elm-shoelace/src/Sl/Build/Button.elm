@@ -1,24 +1,23 @@
-module Sl.Build.Button exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
-    )
+module Sl.Build.Button exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant)
 
-{-|
+{-| The **Button** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Button`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaret, withCircle, withClass, withDisabled, withDownload, withForm, withFormenctype, withFormmethod, withFormnovalidate, withFormtarget, withHref, withId, withLoading, withName, withOnBlur, withOnFocus, withOnInvalid, withOutline, withPill, withRel, withSize, withSlot, withStyle, withTarget, withTitle, withType, withValue, withVariant
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.Button as Component
+import Sl.Component.Button as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -27,27 +26,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.ButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ButtonChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -117,15 +116,15 @@ withForm value_ =
 
 
 {-| -}
-withFormenctype : Value Component.Formenctype -> Builder { a | formenctype : Available } slotCaps msg kind -> Builder { a | formenctype : Used } slotCaps msg kind
+withFormenctype : Value Component.ButtonFormenctype -> Builder { a | formenctype : Available } slotCaps msg kind -> Builder { a | formenctype : Used } slotCaps msg kind
 withFormenctype value_ =
-    B.withAttribute (Component.formenctype value_)
+    B.withAttribute (Component.buttonFormenctype value_)
 
 
 {-| -}
-withFormmethod : Value Component.Formmethod -> Builder { a | formmethod : Available } slotCaps msg kind -> Builder { a | formmethod : Used } slotCaps msg kind
+withFormmethod : Value Component.ButtonFormmethod -> Builder { a | formmethod : Available } slotCaps msg kind -> Builder { a | formmethod : Used } slotCaps msg kind
 withFormmethod value_ =
-    B.withAttribute (Component.formmethod value_)
+    B.withAttribute (Component.buttonFormmethod value_)
 
 
 {-| -}
@@ -135,9 +134,9 @@ withFormnovalidate value_ =
 
 
 {-| -}
-withFormtarget : Value Component.Formtarget -> Builder { a | formtarget : Available } slotCaps msg kind -> Builder { a | formtarget : Used } slotCaps msg kind
+withFormtarget : Value Component.ButtonFormtarget -> Builder { a | formtarget : Available } slotCaps msg kind -> Builder { a | formtarget : Used } slotCaps msg kind
 withFormtarget value_ =
-    B.withAttribute (Component.formtarget value_)
+    B.withAttribute (Component.buttonFormtarget value_)
 
 
 {-| -}
@@ -183,15 +182,15 @@ withRel value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.ButtonSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.buttonSize value_)
 
 
 {-| -}
-withTarget : Value Component.Target -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
+withTarget : Value Component.ButtonTarget -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
 withTarget value_ =
-    B.withAttribute (Component.target value_)
+    B.withAttribute (Component.buttonTarget value_)
 
 
 {-| -}
@@ -201,9 +200,9 @@ withTitle value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.ButtonType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.buttonType_ value_)
 
 
 {-| -}
@@ -213,9 +212,9 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.ButtonVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.buttonVariant value_)
 
 
 {-| -}

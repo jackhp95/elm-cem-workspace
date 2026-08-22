@@ -1,63 +1,59 @@
-module M3e.Build.NavMenuItemGroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy
-    , withClass, withId, withSlot, withStyle
-    , label
-    , withLabel, withChild
-    )
+module M3e.Build.NavMenuItemGroup exposing (Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, label, withLabel, withChild)
 
-{-|
+{-| The **NavMenuItemGroup** element — the flat per-element builder surface,
+sourced through the **NavMenu** family façade
+(`M3e.Component.NavMenu`). This module and the aggregated
+`M3e.Build.NavMenu` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy
-@docs withClass, withId, withSlot, withStyle
-@docs label
-@docs withLabel, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, label, withLabel, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.NavMenuItemGroup as Component
+import M3e.Component.NavMenu as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ItemGroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ItemGroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ItemGroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ItemGroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ItemGroupChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ItemGroupContent
 
 
 {-| -}
 type alias LabelSlot =
-    Component.LabelSlot
+    Component.ItemGroupLabelSlot
 
 
 {-| -}
@@ -67,26 +63,26 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ItemGroupIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 label :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemGroupLabelSlot msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.itemGroupLabel (B.toElement builder)
 
 
 {-| -}
 withLabel :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemGroupLabelSlot msg
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabel slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemGroupLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}

@@ -1,23 +1,22 @@
-module Sl.Build.Switch exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
-    )
+module Sl.Build.Switch exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue)
 
-{-|
+{-| The **Switch** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Switch`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withForm, withHelpText, withId, withName, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withRequired, withSize, withSlot, withStyle, withTitle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Switch as Component
+import Sl.Component.Switch as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SwitchIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SwitchBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SwitchAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SwitchSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SwitchChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SwitchIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -122,9 +121,9 @@ withRequired value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.SwitchSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.switchSize value_)
 
 
 {-| -}

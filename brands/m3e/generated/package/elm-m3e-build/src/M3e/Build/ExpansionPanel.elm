@@ -1,27 +1,21 @@
-module M3e.Build.ExpansionPanel exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition
-    , actions, header, toggleIcon
-    , withHeader, withToggleIcon, withActions, withChild
-    )
+module M3e.Build.ExpansionPanel exposing (Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition, actions, header, toggleIcon, withHeader, withToggleIcon, withActions, withChild)
 
-{-|
+{-| The **ExpansionPanel** element — the flat per-element builder surface,
+sourced through the **Accordion** family façade
+(`M3e.Component.Accordion`). This module and the aggregated
+`M3e.Build.Accordion` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition
-@docs actions, header, toggleIcon
-@docs withHeader, withToggleIcon, withActions, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, HeaderSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideToggle, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, withToggleDirection, withTogglePosition, actions, header, toggleIcon, withHeader, withToggleIcon, withActions, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ExpansionPanel as Component
+import M3e.Component.Accordion as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,49 +24,49 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.PanelIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.PanelBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.PanelAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.PanelSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.PanelChildAdmittedBy childAdm
 
 
 {-| -}
 type alias HeaderSlot =
-    Component.HeaderSlot
+    Component.PanelHeaderSlot
 
 
 {-| -}
 type alias ToggleIconSlot =
-    Component.ToggleIconSlot
+    Component.PanelToggleIconSlot
 
 
 {-| -}
 build :
-    { header : Element Component.HeaderSlot (Component.ChildAdmittedBy childAdm) msg }
+    { header : Element Component.PanelHeaderSlot (Component.PanelChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
-    B.init "m3e-expansion-panel" [] [ El.toNode (Component.header required_.header) ]
+    B.init "m3e-expansion-panel" [] [ El.toNode (Component.panelHeader required_.header) ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PanelIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -82,41 +76,41 @@ actions :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 actions builder =
-    Component.actions (B.toElement builder)
+    Component.panelActions (B.toElement builder)
 
 
 {-| -}
 header :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PanelHeaderSlot msg
     -> Element free freeAdmittedBy msg
 header builder =
-    Component.header (B.toElement builder)
+    Component.panelHeader (B.toElement builder)
 
 
 {-| -}
 toggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PanelToggleIconSlot msg
     -> Element free freeAdmittedBy msg
 toggleIcon builder =
-    Component.toggleIcon (B.toElement builder)
+    Component.panelToggleIcon (B.toElement builder)
 
 
 {-| -}
 withHeader :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PanelHeaderSlot msg
     -> Builder attrCaps { s | header : Available } msg kind
     -> Builder attrCaps { s | header : Used } msg kind
 withHeader slotBuilder builder_ =
-    B.withChild (El.toNode (Component.header (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.panelHeader (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PanelToggleIconSlot msg
     -> Builder attrCaps { s | toggleIcon : Available } msg kind
     -> Builder attrCaps { s | toggleIcon : Used } msg kind
 withToggleIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.toggleIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.panelToggleIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -125,7 +119,7 @@ withActions :
     -> Builder attrCaps slotCaps msg kind
     -> Builder attrCaps slotCaps msg kind
 withActions slotBuilder builder_ =
-    B.withChild (El.toNode (Component.actions (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.panelActions (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -180,15 +174,15 @@ withOpen value_ =
 
 
 {-| -}
-withToggleDirection : Value Component.ToggleDirection -> Builder { a | toggleDirection : Available } slotCaps msg kind -> Builder { a | toggleDirection : Used } slotCaps msg kind
+withToggleDirection : Value Component.PanelToggleDirection -> Builder { a | toggleDirection : Available } slotCaps msg kind -> Builder { a | toggleDirection : Used } slotCaps msg kind
 withToggleDirection value_ =
-    B.withAttribute (Component.toggleDirection value_)
+    B.withAttribute (Component.panelToggleDirection value_)
 
 
 {-| -}
-withTogglePosition : Value Component.TogglePosition -> Builder { a | togglePosition : Available } slotCaps msg kind -> Builder { a | togglePosition : Used } slotCaps msg kind
+withTogglePosition : Value Component.PanelTogglePosition -> Builder { a | togglePosition : Available } slotCaps msg kind -> Builder { a | togglePosition : Used } slotCaps msg kind
 withTogglePosition value_ =
-    B.withAttribute (Component.togglePosition value_)
+    B.withAttribute (Component.panelTogglePosition value_)
 
 
 {-| -}

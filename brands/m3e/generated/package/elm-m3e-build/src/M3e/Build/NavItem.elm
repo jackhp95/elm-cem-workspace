@@ -1,27 +1,22 @@
-module M3e.Build.NavItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOrientation, withRel, withSelected, withSlot, withStyle, withTarget
-    , icon, selectedIcon
-    , withIcon, withSelectedIcon, withChild
-    )
+module M3e.Build.NavItem exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOrientation, withRel, withSelected, withSlot, withStyle, withTarget, icon, selectedIcon, withIcon, withSelectedIcon, withChild)
 
-{-|
+{-| The **NavItem** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOrientation, withRel, withSelected, withSlot, withStyle, withTarget
-@docs icon, selectedIcon
-@docs withIcon, withSelectedIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.NavItem`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withOrientation, withRel, withSelected, withSlot, withStyle, withTarget, icon, selectedIcon, withIcon, withSelectedIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.NavItem as Component
+import M3e.Component.NavItem as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,42 +25,42 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.NavItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.NavItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.NavItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.NavItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.NavItemChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.NavItemContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.NavItemIconSlot
 
 
 {-| -}
 type alias SelectedIconSlot =
-    Component.SelectedIconSlot
+    Component.NavItemSelectedIconSlot
 
 
 {-| -}
@@ -75,43 +70,43 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.NavItemIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavItemIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.navItemIcon (B.toElement builder)
 
 
 {-| -}
 selectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavItemSelectedIconSlot msg
     -> Element free freeAdmittedBy msg
 selectedIcon builder =
-    Component.selectedIcon (B.toElement builder)
+    Component.navItemSelectedIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavItemIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.navItemIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSelectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.NavItemSelectedIconSlot msg
     -> Builder attrCaps { s | selectedIcon : Available } msg kind
     -> Builder attrCaps { s | selectedIcon : Used } msg kind
 withSelectedIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.selectedIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.navItemSelectedIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -172,9 +167,9 @@ withHref value_ =
 
 
 {-| -}
-withOrientation : Value Component.Orientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
+withOrientation : Value Component.NavItemOrientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
 withOrientation value_ =
-    B.withAttribute (Component.orientation value_)
+    B.withAttribute (Component.navItemOrientation value_)
 
 
 {-| -}

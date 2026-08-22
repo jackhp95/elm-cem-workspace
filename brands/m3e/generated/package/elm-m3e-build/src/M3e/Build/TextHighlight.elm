@@ -1,25 +1,22 @@
-module M3e.Build.TextHighlight exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withCaseSensitive, withClass, withDisabled, withId, withMode, withOnHighlight, withSlot, withStyle, withTerm
-    , withChild
-    )
+module M3e.Build.TextHighlight exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaseSensitive, withClass, withDisabled, withId, withMode, withOnHighlight, withSlot, withStyle, withTerm, withChild)
 
-{-|
+{-| The **TextHighlight** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withCaseSensitive, withClass, withDisabled, withId, withMode, withOnHighlight, withSlot, withStyle, withTerm
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.TextHighlight`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withCaseSensitive, withClass, withDisabled, withId, withMode, withOnHighlight, withSlot, withStyle, withTerm, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.TextHighlight as Component
+import M3e.Component.TextHighlight as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -28,27 +25,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TextHighlightIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TextHighlightBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TextHighlightAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TextHighlightSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TextHighlightChildAdmittedBy childAdm
 
 
 {-| -}
@@ -58,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TextHighlightIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -109,9 +106,9 @@ withDisabled value_ =
 
 
 {-| -}
-withMode : Value Component.Mode -> Builder { a | mode : Available } slotCaps msg kind -> Builder { a | mode : Used } slotCaps msg kind
+withMode : Value Component.TextHighlightMode -> Builder { a | mode : Available } slotCaps msg kind -> Builder { a | mode : Used } slotCaps msg kind
 withMode value_ =
-    B.withAttribute (Component.mode value_)
+    B.withAttribute (Component.textHighlightMode value_)
 
 
 {-| -}

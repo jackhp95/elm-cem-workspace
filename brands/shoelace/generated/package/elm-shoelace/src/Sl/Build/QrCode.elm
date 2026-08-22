@@ -1,24 +1,23 @@
-module Sl.Build.QrCode exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withBackground, withClass, withErrorCorrection, withFill, withId, withLabel, withRadius, withSize, withSlot, withStyle, withValue
-    )
+module Sl.Build.QrCode exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBackground, withClass, withErrorCorrection, withFill, withId, withLabel, withRadius, withSize, withSlot, withStyle, withValue)
 
-{-|
+{-| The **QrCode** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withBackground, withClass, withErrorCorrection, withFill, withId, withLabel, withRadius, withSize, withSlot, withStyle, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.QrCode`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withBackground, withClass, withErrorCorrection, withFill, withId, withLabel, withRadius, withSize, withSlot, withStyle, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import Sl.Attributes as A
-import Sl.Element.QrCode as Component
+import Sl.Component.QrCode as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.QrCodeIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.QrCodeBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.QrCodeAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.QrCodeSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.QrCodeChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.QrCodeIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -92,9 +91,9 @@ withBackground value_ =
 
 
 {-| -}
-withErrorCorrection : Value Component.ErrorCorrection -> Builder { a | errorCorrection : Available } slotCaps msg kind -> Builder { a | errorCorrection : Used } slotCaps msg kind
+withErrorCorrection : Value Component.QrCodeErrorCorrection -> Builder { a | errorCorrection : Available } slotCaps msg kind -> Builder { a | errorCorrection : Used } slotCaps msg kind
 withErrorCorrection value_ =
-    B.withAttribute (Component.errorCorrection value_)
+    B.withAttribute (Component.qrCodeErrorCorrection value_)
 
 
 {-| -}

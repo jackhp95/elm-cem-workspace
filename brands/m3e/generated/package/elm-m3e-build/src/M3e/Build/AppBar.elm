@@ -1,27 +1,22 @@
-module M3e.Build.AppBar exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy
-    , withCentered, withClass, withFor, withId, withSize, withSlot, withStyle
-    , leading, leadingIcon, subtitle, title, trailing, trailingIcon
-    , withLeadingIcon, withSubtitle, withTitle, withTrailingIcon, withLeading, withTrailing
-    )
+module M3e.Build.AppBar exposing (Builder, AttrCaps, SlotCaps, Is, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withCentered, withClass, withFor, withId, withSize, withSlot, withStyle, leading, leadingIcon, subtitle, title, trailing, trailingIcon, withLeadingIcon, withSubtitle, withTitle, withTrailingIcon, withLeading, withTrailing)
 
-{-|
+{-| The **AppBar** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy
-@docs withCentered, withClass, withFor, withId, withSize, withSlot, withStyle
-@docs leading, leadingIcon, subtitle, title, trailing, trailingIcon
-@docs withLeadingIcon, withSubtitle, withTitle, withTrailingIcon, withLeading, withTrailing
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.AppBar`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, LeadingSlot, SubtitleSlot, TitleSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withCentered, withClass, withFor, withId, withSize, withSlot, withStyle, leading, leadingIcon, subtitle, title, trailing, trailingIcon, withLeadingIcon, withSubtitle, withTitle, withTrailingIcon, withLeading, withTrailing
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.AppBar as Component
+import M3e.Component.AppBar as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -29,47 +24,47 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.AppBarIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.AppBarBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.AppBarAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.AppBarSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.AppBarChildAdmittedBy childAdm
 
 
 {-| -}
 type alias LeadingSlot =
-    Component.LeadingSlot
+    Component.AppBarLeadingSlot
 
 
 {-| -}
 type alias SubtitleSlot =
-    Component.SubtitleSlot
+    Component.AppBarSubtitleSlot
 
 
 {-| -}
 type alias TitleSlot =
-    Component.TitleSlot
+    Component.AppBarTitleSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    Component.TrailingSlot
+    Component.AppBarTrailingSlot
 
 
 {-| -}
@@ -79,17 +74,17 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.AppBarIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 leading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarLeadingSlot msg
     -> Element free freeAdmittedBy msg
 leading builder =
-    Component.leading (B.toElement builder)
+    Component.appBarLeading (B.toElement builder)
 
 
 {-| -}
@@ -97,31 +92,31 @@ leadingIcon :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 leadingIcon builder =
-    Component.leadingIcon (B.toElement builder)
+    Component.appBarLeadingIcon (B.toElement builder)
 
 
 {-| -}
 subtitle :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SubtitleSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarSubtitleSlot msg
     -> Element free freeAdmittedBy msg
 subtitle builder =
-    Component.subtitle (B.toElement builder)
+    Component.appBarSubtitle (B.toElement builder)
 
 
 {-| -}
 title :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TitleSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarTitleSlot msg
     -> Element free freeAdmittedBy msg
 title builder =
-    Component.title (B.toElement builder)
+    Component.appBarTitle (B.toElement builder)
 
 
 {-| -}
 trailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarTrailingSlot msg
     -> Element free freeAdmittedBy msg
 trailing builder =
-    Component.trailing (B.toElement builder)
+    Component.appBarTrailing (B.toElement builder)
 
 
 {-| -}
@@ -129,7 +124,7 @@ trailingIcon :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 trailingIcon builder =
-    Component.trailingIcon (B.toElement builder)
+    Component.appBarTrailingIcon (B.toElement builder)
 
 
 {-| -}
@@ -138,25 +133,25 @@ withLeadingIcon :
     -> Builder attrCaps { s | leadingIcon : Available } msg kind
     -> Builder attrCaps { s | leadingIcon : Used } msg kind
 withLeadingIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leadingIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarLeadingIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSubtitle :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SubtitleSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarSubtitleSlot msg
     -> Builder attrCaps { s | subtitle : Available } msg kind
     -> Builder attrCaps { s | subtitle : Used } msg kind
 withSubtitle slotBuilder builder_ =
-    B.withChild (El.toNode (Component.subtitle (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarSubtitle (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTitle :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TitleSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarTitleSlot msg
     -> Builder attrCaps { s | title : Available } msg kind
     -> Builder attrCaps { s | title : Used } msg kind
 withTitle slotBuilder builder_ =
-    B.withChild (El.toNode (Component.title (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarTitle (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -165,25 +160,25 @@ withTrailingIcon :
     -> Builder attrCaps { s | trailingIcon : Available } msg kind
     -> Builder attrCaps { s | trailingIcon : Used } msg kind
 withTrailingIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailingIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarTrailingIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLeading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarLeadingSlot msg
     -> Builder attrCaps slotCaps msg kind
     -> Builder attrCaps slotCaps msg kind
 withLeading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarLeading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AppBarTrailingSlot msg
     -> Builder attrCaps slotCaps msg kind
     -> Builder attrCaps slotCaps msg kind
 withTrailing slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailing (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.appBarTrailing (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -223,6 +218,6 @@ withFor value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.AppBarSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.appBarSize value_)

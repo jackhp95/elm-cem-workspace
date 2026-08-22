@@ -1,29 +1,24 @@
-module M3e.Build.Button exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
-    , withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant
-    , icon, selected, selectedIcon, trailingIcon
-    , withIcon, withSelectedSlot, withSelectedIcon, withTrailingIcon, withChild
-    )
+module M3e.Build.Button exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, icon, selected, selectedIcon, trailingIcon, withIcon, withSelectedSlot, withSelectedIcon, withTrailingIcon, withChild)
 
-{-|
+{-| The **Button** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps
-@docs withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant
-@docs icon, selected, selectedIcon, trailingIcon
-@docs withIcon, withSelectedSlot, withSelectedIcon, withTrailingIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Button`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, SelectedSlot, SelectedIconSlot, TrailingIconSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, icon, selected, selectedIcon, trailingIcon, withIcon, withSelectedSlot, withSelectedIcon, withTrailingIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Action as Ac
 import M3e.Attributes as A
-import M3e.Element.Button as Component
+import M3e.Component.Button as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -32,63 +27,63 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
-
-
-{-| -}
-type alias ActionCaps =
-    Component.ActionCaps
+    Component.ButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ButtonContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.ButtonIconSlot
 
 
 {-| -}
 type alias SelectedSlot =
-    Component.SelectedSlot
+    Component.ButtonSelectedSlot
 
 
 {-| -}
 type alias SelectedIconSlot =
-    Component.SelectedIconSlot
+    Component.ButtonSelectedIconSlot
 
 
 {-| -}
 type alias TrailingIconSlot =
-    Component.TrailingIconSlot
+    Component.ButtonTrailingIconSlot
+
+
+{-| -}
+type alias ActionCaps =
+    Component.ButtonActionCaps
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg
-    , action : Ac.Action Component.ActionCaps msg
+    { content : Element Component.ButtonContent (Component.ButtonChildAdmittedBy childAdm) msg
+    , action : Ac.Action Component.ButtonActionCaps msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
@@ -96,77 +91,77 @@ build required_ =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.buttonIcon (B.toElement builder)
 
 
 {-| -}
 selected :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonSelectedSlot msg
     -> Element free freeAdmittedBy msg
 selected builder =
-    Component.selected (B.toElement builder)
+    Component.buttonSelected (B.toElement builder)
 
 
 {-| -}
 selectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonSelectedIconSlot msg
     -> Element free freeAdmittedBy msg
 selectedIcon builder =
-    Component.selectedIcon (B.toElement builder)
+    Component.buttonSelectedIcon (B.toElement builder)
 
 
 {-| -}
 trailingIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonTrailingIconSlot msg
     -> Element free freeAdmittedBy msg
 trailingIcon builder =
-    Component.trailingIcon (B.toElement builder)
+    Component.buttonTrailingIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.buttonIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSelectedSlot :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonSelectedSlot msg
     -> Builder attrCaps { s | selected : Available } msg kind
     -> Builder attrCaps { s | selected : Used } msg kind
 withSelectedSlot slotBuilder builder_ =
-    B.withChild (El.toNode (Component.selected (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.buttonSelected (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSelectedIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonSelectedIconSlot msg
     -> Builder attrCaps { s | selectedIcon : Available } msg kind
     -> Builder attrCaps { s | selectedIcon : Used } msg kind
 withSelectedIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.selectedIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.buttonSelectedIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailingIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ButtonTrailingIconSlot msg
     -> Builder attrCaps { s | trailingIcon : Available } msg kind
     -> Builder attrCaps { s | trailingIcon : Used } msg kind
 withTrailingIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailingIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.buttonTrailingIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -245,15 +240,15 @@ withSelected value_ =
 
 
 {-| -}
-withShape : Value Component.Shape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
+withShape : Value Component.ButtonShape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
 withShape value_ =
-    B.withAttribute (Component.shape value_)
+    B.withAttribute (Component.buttonShape value_)
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.ButtonSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.buttonSize value_)
 
 
 {-| -}
@@ -269,9 +264,9 @@ withToggle value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.ButtonType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.buttonType_ value_)
 
 
 {-| -}
@@ -281,9 +276,9 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.ButtonVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.buttonVariant value_)
 
 
 {-| -}

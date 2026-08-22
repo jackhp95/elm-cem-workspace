@@ -1,56 +1,54 @@
-module M3e.Build.BottomSheetTrigger exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDetent, withFor, withId, withSecondary, withSlot, withStyle
-    , withChild
-    )
+module M3e.Build.BottomSheetTrigger exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDetent, withFor, withId, withSecondary, withSlot, withStyle, withChild)
 
-{-|
+{-| The **BottomSheetTrigger** element — the flat per-element builder surface,
+sourced through the **BottomSheet** family façade
+(`M3e.Component.BottomSheet`). This module and the aggregated
+`M3e.Build.BottomSheet` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDetent, withFor, withId, withSecondary, withSlot, withStyle
-@docs withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDetent, withFor, withId, withSecondary, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.BottomSheetTrigger as Component
+import M3e.Component.BottomSheet as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TriggerIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TriggerBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TriggerAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TriggerSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TriggerChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.TriggerContent
 
 
 {-| -}
@@ -60,7 +58,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TriggerIs kind) admittedBy msg
 toElement =
     B.toElement
 

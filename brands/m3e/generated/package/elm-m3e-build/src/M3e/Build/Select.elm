@@ -1,87 +1,84 @@
-module M3e.Build.Select exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ArrowSlot, ChildAdmittedBy
-    , withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withOnToggle, withPanelClass, withRequired, withSlot, withStyle, withValidationmessages
-    , arrow, value
-    , withArrow, withValue, withChild
-    )
+module M3e.Build.Select exposing (Builder, AttrCaps, SlotCaps, Is, Content, ArrowSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withOnToggle, withPanelClass, withRequired, withSlot, withStyle, withValidationmessages, arrow, value, withArrow, withValue, withChild)
 
-{-|
+{-| The **Select** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ArrowSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withOnToggle, withPanelClass, withRequired, withSlot, withStyle, withValidationmessages
-@docs arrow, value
-@docs withArrow, withValue, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Select`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ArrowSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withOnToggle, withPanelClass, withRequired, withSlot, withStyle, withValidationmessages, arrow, value, withArrow, withValue, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.Select as Component
+import M3e.Component.Select as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SelectIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SelectBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SelectAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SelectSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SelectChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.SelectContent
 
 
 {-| -}
 type alias ArrowSlot =
-    Component.ArrowSlot
+    Component.SelectArrowSlot
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element Component.SelectContent (Component.SelectChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-select" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SelectIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 arrow :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ArrowSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SelectArrowSlot msg
     -> Element free freeAdmittedBy msg
 arrow builder =
-    Component.arrow (B.toElement builder)
+    Component.selectArrow (B.toElement builder)
 
 
 {-| -}
@@ -89,16 +86,16 @@ value :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 value builder =
-    Component.value (B.toElement builder)
+    Component.selectValue (B.toElement builder)
 
 
 {-| -}
 withArrow :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ArrowSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SelectArrowSlot msg
     -> Builder attrCaps { s | arrow : Available } msg kind
     -> Builder attrCaps { s | arrow : Used } msg kind
 withArrow slotBuilder builder_ =
-    B.withChild (El.toNode (Component.arrow (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.selectArrow (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -107,7 +104,7 @@ withValue :
     -> Builder attrCaps { s | value : Available } msg kind
     -> Builder attrCaps { s | value : Used } msg kind
 withValue slotBuilder builder_ =
-    B.withChild (El.toNode (Component.value (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.selectValue (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -194,7 +191,7 @@ withOnChange value_ =
 {-| -}
 withOnToggle : (String -> msg) -> Builder { a | onToggle : Available } slotCaps msg kind -> Builder { a | onToggle : Used } slotCaps msg kind
 withOnToggle value_ =
-    B.withAttribute (Component.onToggle value_)
+    B.withAttribute (Component.selectOnToggle value_)
 
 
 {-| -}

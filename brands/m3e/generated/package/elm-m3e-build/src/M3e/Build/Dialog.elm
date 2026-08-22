@@ -1,223 +1,363 @@
-module M3e.Build.Dialog exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, CloseIconSlot, HeaderSlot, ChildAdmittedBy
-    , withAlert, withClass, withCloseLabel, withDisableClose, withDismissible, withId, withNoFocusTrap, withOnCancel, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle
-    , actions, closeIcon, header
-    , withActions, withCloseIcon, withHeader, withChild
-    )
+module M3e.Build.Dialog exposing (DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogIs, DialogCloseIconSlot, DialogHeaderSlot, DialogChildAdmittedBy, dialogBuild, dialogToElement, dialogWithAlert, dialogWithClass, dialogWithCloseLabel, dialogWithDisableClose, dialogWithDismissible, dialogWithId, dialogWithNoFocusTrap, dialogWithOnCancel, dialogWithOnClosed, dialogWithOnClosing, dialogWithOnOpened, dialogWithOnOpening, dialogWithOpen, dialogWithSlot, dialogWithStyle, dialogActions, dialogCloseIcon, dialogHeader, dialogWithActions, dialogWithCloseIcon, dialogWithHeader, dialogWithChild, ActionBuilder, ActionAttrCaps, ActionSlotCaps, ActionIs, ActionChildAdmittedBy, actionBuild, actionToElement, actionWithClass, actionWithId, actionWithReturnValue, actionWithSlot, actionWithStyle, actionWithChild, TriggerBuilder, TriggerAttrCaps, TriggerSlotCaps, TriggerIs, TriggerChildAdmittedBy, triggerBuild, triggerToElement, triggerWithClass, triggerWithFor, triggerWithId, triggerWithSlot, triggerWithStyle)
 
-{-|
+{-| The **Dialog** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, CloseIconSlot, HeaderSlot, ChildAdmittedBy
-@docs withAlert, withClass, withCloseLabel, withDisableClose, withDismissible, withId, withNoFocusTrap, withOnCancel, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle
-@docs actions, closeIcon, header
-@docs withActions, withCloseIcon, withHeader, withChild
+One module carrying every member's builder surface, member-prefixed
+(the per-element flat surface lives at `M3e.Build.<Element>`), sourced through `M3e.Component.Dialog`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs DialogBuilder, DialogAttrCaps, DialogSlotCaps, DialogIs, DialogCloseIconSlot, DialogHeaderSlot, DialogChildAdmittedBy, dialogBuild, dialogToElement, dialogWithAlert, dialogWithClass, dialogWithCloseLabel, dialogWithDisableClose, dialogWithDismissible, dialogWithId, dialogWithNoFocusTrap, dialogWithOnCancel, dialogWithOnClosed, dialogWithOnClosing, dialogWithOnOpened, dialogWithOnOpening, dialogWithOpen, dialogWithSlot, dialogWithStyle, dialogActions, dialogCloseIcon, dialogHeader, dialogWithActions, dialogWithCloseIcon, dialogWithHeader, dialogWithChild, ActionBuilder, ActionAttrCaps, ActionSlotCaps, ActionIs, ActionChildAdmittedBy, actionBuild, actionToElement, actionWithClass, actionWithId, actionWithReturnValue, actionWithSlot, actionWithStyle, actionWithChild, TriggerBuilder, TriggerAttrCaps, TriggerSlotCaps, TriggerIs, TriggerChildAdmittedBy, triggerBuild, triggerToElement, triggerWithClass, triggerWithFor, triggerWithId, triggerWithSlot, triggerWithStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Dialog as Component
+import M3e.Component.Dialog as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
-type alias Is s =
-    Component.Is s
+type alias DialogIs s =
+    Component.DialogIs s
 
 
 {-| -}
-type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+type alias DialogBuilder attrCaps slotCaps msg kind =
+    Component.DialogBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
-type alias AttrCaps =
-    Component.AttrCaps
+type alias DialogAttrCaps =
+    Component.DialogAttrCaps
 
 
 {-| -}
-type alias SlotCaps =
-    Component.SlotCaps
+type alias DialogSlotCaps =
+    Component.DialogSlotCaps
 
 
 {-| -}
-type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+type alias DialogChildAdmittedBy childAdm =
+    Component.DialogChildAdmittedBy childAdm
 
 
 {-| -}
-type alias CloseIconSlot =
-    Component.CloseIconSlot
+type alias DialogCloseIconSlot =
+    Component.DialogCloseIconSlot
 
 
 {-| -}
-type alias HeaderSlot =
-    Component.HeaderSlot
+type alias DialogHeaderSlot =
+    Component.DialogHeaderSlot
 
 
 {-| -}
-build : Builder AttrCaps SlotCaps msg kind
-build =
+dialogBuild : DialogBuilder DialogAttrCaps DialogSlotCaps msg kind
+dialogBuild =
     B.init "m3e-dialog" [] []
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
-toElement =
+dialogToElement : DialogBuilder attrCaps slotCaps msg kind -> Element (Component.DialogIs kind) admittedBy msg
+dialogToElement =
     B.toElement
 
 
 {-| -}
-actions :
+dialogActions :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
-actions builder =
-    Component.actions (B.toElement builder)
+dialogActions builder =
+    Component.dialogActions (B.toElement builder)
 
 
 {-| -}
-closeIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
+dialogCloseIcon :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DialogCloseIconSlot msg
     -> Element free freeAdmittedBy msg
-closeIcon builder =
-    Component.closeIcon (B.toElement builder)
+dialogCloseIcon builder =
+    Component.dialogCloseIcon (B.toElement builder)
 
 
 {-| -}
-header :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
+dialogHeader :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DialogHeaderSlot msg
     -> Element free freeAdmittedBy msg
-header builder =
-    Component.header (B.toElement builder)
+dialogHeader builder =
+    Component.dialogHeader (B.toElement builder)
 
 
 {-| -}
-withActions :
+dialogWithActions :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
-    -> Builder attrCaps { s | actions : Available } msg kind
-    -> Builder attrCaps { s | actions : Used } msg kind
-withActions slotBuilder builder_ =
-    B.withChild (El.toNode (Component.actions (B.toElement slotBuilder))) builder_
+    -> DialogBuilder attrCaps { s | actions : Available } msg kind
+    -> DialogBuilder attrCaps { s | actions : Used } msg kind
+dialogWithActions slotBuilder builder_ =
+    B.withChild (El.toNode (Component.dialogActions (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withCloseIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.CloseIconSlot msg
-    -> Builder attrCaps { s | closeIcon : Available } msg kind
-    -> Builder attrCaps { s | closeIcon : Used } msg kind
-withCloseIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.closeIcon (B.toElement slotBuilder))) builder_
+dialogWithCloseIcon :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DialogCloseIconSlot msg
+    -> DialogBuilder attrCaps { s | closeIcon : Available } msg kind
+    -> DialogBuilder attrCaps { s | closeIcon : Used } msg kind
+dialogWithCloseIcon slotBuilder builder_ =
+    B.withChild (El.toNode (Component.dialogCloseIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withHeader :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HeaderSlot msg
-    -> Builder attrCaps { s | header : Available } msg kind
-    -> Builder attrCaps { s | header : Used } msg kind
-withHeader slotBuilder builder_ =
-    B.withChild (El.toNode (Component.header (B.toElement slotBuilder))) builder_
+dialogWithHeader :
+    B.Builder childRow childAttrCaps childSlotCaps Component.DialogHeaderSlot msg
+    -> DialogBuilder attrCaps { s | header : Available } msg kind
+    -> DialogBuilder attrCaps { s | header : Used } msg kind
+dialogWithHeader slotBuilder builder_ =
+    B.withChild (El.toNode (Component.dialogHeader (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withChild :
+dialogWithChild :
     B.Builder childRow childAttrCaps childSlotCaps accepts msg
-    -> Builder attrCaps slotCaps msg kind
-    -> Builder attrCaps slotCaps msg kind
-withChild childBuilder builder_ =
+    -> DialogBuilder attrCaps slotCaps msg kind
+    -> DialogBuilder attrCaps slotCaps msg kind
+dialogWithChild childBuilder builder_ =
     B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}
-withClass : String -> Builder { a | class : Available } slotCaps msg kind -> Builder { a | class : Used } slotCaps msg kind
-withClass value_ =
+dialogWithClass : String -> DialogBuilder { a | class : Available } slotCaps msg kind -> DialogBuilder { a | class : Used } slotCaps msg kind
+dialogWithClass value_ =
     B.withAttribute (A.class value_)
 
 
 {-| -}
-withId : String -> Builder { a | id : Available } slotCaps msg kind -> Builder { a | id : Used } slotCaps msg kind
-withId value_ =
+dialogWithId : String -> DialogBuilder { a | id : Available } slotCaps msg kind -> DialogBuilder { a | id : Used } slotCaps msg kind
+dialogWithId value_ =
     B.withAttribute (A.id value_)
 
 
 {-| -}
-withSlot : String -> Builder { a | slot : Available } slotCaps msg kind -> Builder { a | slot : Used } slotCaps msg kind
-withSlot value_ =
+dialogWithSlot : String -> DialogBuilder { a | slot : Available } slotCaps msg kind -> DialogBuilder { a | slot : Used } slotCaps msg kind
+dialogWithSlot value_ =
     B.withAttribute (A.slot value_)
 
 
 {-| -}
-withStyle : String -> String -> Builder { a | style : Available } slotCaps msg kind -> Builder { a | style : Used } slotCaps msg kind
-withStyle property value_ =
+dialogWithStyle : String -> String -> DialogBuilder { a | style : Available } slotCaps msg kind -> DialogBuilder { a | style : Used } slotCaps msg kind
+dialogWithStyle property value_ =
     B.withAttribute (A.style property value_)
 
 
 {-| -}
-withAlert : Bool -> Builder { a | alert : Available } slotCaps msg kind -> Builder { a | alert : Used } slotCaps msg kind
-withAlert value_ =
+dialogWithAlert : Bool -> DialogBuilder { a | alert : Available } slotCaps msg kind -> DialogBuilder { a | alert : Used } slotCaps msg kind
+dialogWithAlert value_ =
     B.withAttribute (A.alert value_)
 
 
 {-| -}
-withCloseLabel : String -> Builder { a | closeLabel : Available } slotCaps msg kind -> Builder { a | closeLabel : Used } slotCaps msg kind
-withCloseLabel value_ =
+dialogWithCloseLabel : String -> DialogBuilder { a | closeLabel : Available } slotCaps msg kind -> DialogBuilder { a | closeLabel : Used } slotCaps msg kind
+dialogWithCloseLabel value_ =
     B.withAttribute (A.closeLabel value_)
 
 
 {-| -}
-withDisableClose : Bool -> Builder { a | disableClose : Available } slotCaps msg kind -> Builder { a | disableClose : Used } slotCaps msg kind
-withDisableClose value_ =
+dialogWithDisableClose : Bool -> DialogBuilder { a | disableClose : Available } slotCaps msg kind -> DialogBuilder { a | disableClose : Used } slotCaps msg kind
+dialogWithDisableClose value_ =
     B.withAttribute (A.disableClose value_)
 
 
 {-| -}
-withDismissible : Bool -> Builder { a | dismissible : Available } slotCaps msg kind -> Builder { a | dismissible : Used } slotCaps msg kind
-withDismissible value_ =
+dialogWithDismissible : Bool -> DialogBuilder { a | dismissible : Available } slotCaps msg kind -> DialogBuilder { a | dismissible : Used } slotCaps msg kind
+dialogWithDismissible value_ =
     B.withAttribute (A.dismissible value_)
 
 
 {-| -}
-withNoFocusTrap : Bool -> Builder { a | noFocusTrap : Available } slotCaps msg kind -> Builder { a | noFocusTrap : Used } slotCaps msg kind
-withNoFocusTrap value_ =
+dialogWithNoFocusTrap : Bool -> DialogBuilder { a | noFocusTrap : Available } slotCaps msg kind -> DialogBuilder { a | noFocusTrap : Used } slotCaps msg kind
+dialogWithNoFocusTrap value_ =
     B.withAttribute (A.noFocusTrap value_)
 
 
 {-| -}
-withOpen : Bool -> Builder { a | open : Available } slotCaps msg kind -> Builder { a | open : Used } slotCaps msg kind
-withOpen value_ =
+dialogWithOpen : Bool -> DialogBuilder { a | open : Available } slotCaps msg kind -> DialogBuilder { a | open : Used } slotCaps msg kind
+dialogWithOpen value_ =
     B.withAttribute (A.open value_)
 
 
 {-| -}
-withOnOpening : msg -> Builder { a | onOpening : Available } slotCaps msg kind -> Builder { a | onOpening : Used } slotCaps msg kind
-withOnOpening value_ =
+dialogWithOnOpening : msg -> DialogBuilder { a | onOpening : Available } slotCaps msg kind -> DialogBuilder { a | onOpening : Used } slotCaps msg kind
+dialogWithOnOpening value_ =
     B.withAttribute (Ev.onOpening value_)
 
 
 {-| -}
-withOnOpened : msg -> Builder { a | onOpened : Available } slotCaps msg kind -> Builder { a | onOpened : Used } slotCaps msg kind
-withOnOpened value_ =
+dialogWithOnOpened : msg -> DialogBuilder { a | onOpened : Available } slotCaps msg kind -> DialogBuilder { a | onOpened : Used } slotCaps msg kind
+dialogWithOnOpened value_ =
     B.withAttribute (Ev.onOpened value_)
 
 
 {-| -}
-withOnClosing : msg -> Builder { a | onClosing : Available } slotCaps msg kind -> Builder { a | onClosing : Used } slotCaps msg kind
-withOnClosing value_ =
+dialogWithOnClosing : msg -> DialogBuilder { a | onClosing : Available } slotCaps msg kind -> DialogBuilder { a | onClosing : Used } slotCaps msg kind
+dialogWithOnClosing value_ =
     B.withAttribute (Ev.onClosing value_)
 
 
 {-| -}
-withOnClosed : msg -> Builder { a | onClosed : Available } slotCaps msg kind -> Builder { a | onClosed : Used } slotCaps msg kind
-withOnClosed value_ =
+dialogWithOnClosed : msg -> DialogBuilder { a | onClosed : Available } slotCaps msg kind -> DialogBuilder { a | onClosed : Used } slotCaps msg kind
+dialogWithOnClosed value_ =
     B.withAttribute (Ev.onClosed value_)
 
 
 {-| -}
-withOnCancel : msg -> Builder { a | onCancel : Available } slotCaps msg kind -> Builder { a | onCancel : Used } slotCaps msg kind
-withOnCancel value_ =
+dialogWithOnCancel : msg -> DialogBuilder { a | onCancel : Available } slotCaps msg kind -> DialogBuilder { a | onCancel : Used } slotCaps msg kind
+dialogWithOnCancel value_ =
     B.withAttribute (Ev.onCancel value_)
+
+
+{-| -}
+type alias ActionIs s =
+    Component.ActionIs s
+
+
+{-| -}
+type alias ActionBuilder attrCaps slotCaps msg kind =
+    Component.ActionBuilder attrCaps slotCaps msg kind
+
+
+{-| -}
+type alias ActionAttrCaps =
+    Component.ActionAttrCaps
+
+
+{-| -}
+type alias ActionSlotCaps =
+    Component.ActionSlotCaps
+
+
+{-| -}
+type alias ActionChildAdmittedBy childAdm =
+    Component.ActionChildAdmittedBy childAdm
+
+
+{-| -}
+actionBuild : ActionBuilder ActionAttrCaps ActionSlotCaps msg kind
+actionBuild =
+    B.init "m3e-dialog-action" [] []
+
+
+{-| -}
+actionToElement : ActionBuilder attrCaps slotCaps msg kind -> Element (Component.ActionIs kind) admittedBy msg
+actionToElement =
+    B.toElement
+
+
+{-| -}
+actionWithChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> ActionBuilder attrCaps slotCaps msg kind
+    -> ActionBuilder attrCaps slotCaps msg kind
+actionWithChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
+
+
+{-| -}
+actionWithClass : String -> ActionBuilder { a | class : Available } slotCaps msg kind -> ActionBuilder { a | class : Used } slotCaps msg kind
+actionWithClass value_ =
+    B.withAttribute (A.class value_)
+
+
+{-| -}
+actionWithId : String -> ActionBuilder { a | id : Available } slotCaps msg kind -> ActionBuilder { a | id : Used } slotCaps msg kind
+actionWithId value_ =
+    B.withAttribute (A.id value_)
+
+
+{-| -}
+actionWithSlot : String -> ActionBuilder { a | slot : Available } slotCaps msg kind -> ActionBuilder { a | slot : Used } slotCaps msg kind
+actionWithSlot value_ =
+    B.withAttribute (A.slot value_)
+
+
+{-| -}
+actionWithStyle : String -> String -> ActionBuilder { a | style : Available } slotCaps msg kind -> ActionBuilder { a | style : Used } slotCaps msg kind
+actionWithStyle property value_ =
+    B.withAttribute (A.style property value_)
+
+
+{-| -}
+actionWithReturnValue : String -> ActionBuilder { a | returnValue : Available } slotCaps msg kind -> ActionBuilder { a | returnValue : Used } slotCaps msg kind
+actionWithReturnValue value_ =
+    B.withAttribute (A.returnValue value_)
+
+
+{-| -}
+type alias TriggerIs s =
+    Component.TriggerIs s
+
+
+{-| -}
+type alias TriggerBuilder attrCaps slotCaps msg kind =
+    Component.TriggerBuilder attrCaps slotCaps msg kind
+
+
+{-| -}
+type alias TriggerAttrCaps =
+    Component.TriggerAttrCaps
+
+
+{-| -}
+type alias TriggerSlotCaps =
+    Component.TriggerSlotCaps
+
+
+{-| -}
+type alias TriggerChildAdmittedBy childAdm =
+    Component.TriggerChildAdmittedBy childAdm
+
+
+{-| -}
+triggerBuild : TriggerBuilder TriggerAttrCaps TriggerSlotCaps msg kind
+triggerBuild =
+    B.init "m3e-dialog-trigger" [] []
+
+
+{-| -}
+triggerToElement : TriggerBuilder attrCaps slotCaps msg kind -> Element (Component.TriggerIs kind) admittedBy msg
+triggerToElement =
+    B.toElement
+
+
+{-| -}
+triggerWithClass : String -> TriggerBuilder { a | class : Available } slotCaps msg kind -> TriggerBuilder { a | class : Used } slotCaps msg kind
+triggerWithClass value_ =
+    B.withAttribute (A.class value_)
+
+
+{-| -}
+triggerWithId : String -> TriggerBuilder { a | id : Available } slotCaps msg kind -> TriggerBuilder { a | id : Used } slotCaps msg kind
+triggerWithId value_ =
+    B.withAttribute (A.id value_)
+
+
+{-| -}
+triggerWithSlot : String -> TriggerBuilder { a | slot : Available } slotCaps msg kind -> TriggerBuilder { a | slot : Used } slotCaps msg kind
+triggerWithSlot value_ =
+    B.withAttribute (A.slot value_)
+
+
+{-| -}
+triggerWithStyle : String -> String -> TriggerBuilder { a | style : Available } slotCaps msg kind -> TriggerBuilder { a | style : Used } slotCaps msg kind
+triggerWithStyle property value_ =
+    B.withAttribute (A.style property value_)
+
+
+{-| -}
+triggerWithFor : String -> TriggerBuilder { a | for : Available } slotCaps msg kind -> TriggerBuilder { a | for : Used } slotCaps msg kind
+triggerWithFor value_ =
+    B.withAttribute (A.for value_)

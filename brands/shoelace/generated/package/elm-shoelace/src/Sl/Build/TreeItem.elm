@@ -1,50 +1,51 @@
-module Sl.Build.TreeItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle
-    )
+module Sl.Build.TreeItem exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle)
 
-{-|
+{-| The **TreeItem** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.TreeItem`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withExpanded, withId, withLazy, withOnAfterCollapse, withOnAfterExpand, withOnCollapse, withOnExpand, withOnLazyChange, withOnLazyLoad, withSelected, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.TreeItem as Component
+import Sl.Component.TreeItem as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
+import Sl.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TreeItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TreeItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TreeItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TreeItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TreeItemChildAdmittedBy childAdm
 
 
 {-| -}
@@ -54,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TreeItemIs kind) admittedBy msg
 toElement =
     B.toElement
 

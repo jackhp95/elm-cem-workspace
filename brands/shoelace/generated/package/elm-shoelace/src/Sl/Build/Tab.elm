@@ -1,50 +1,51 @@
-module Sl.Build.Tab exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
-    )
+module Sl.Build.Tab exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle)
 
-{-|
+{-| The **Tab** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Tab`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withActive, withClass, withClosable, withDisabled, withId, withOnClose, withPanel, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Tab as Component
+import Sl.Component.Tab as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
+import Sl.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TabIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TabBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TabAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TabSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TabChildAdmittedBy childAdm
 
 
 {-| -}
@@ -54,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TabIs kind) admittedBy msg
 toElement =
     B.toElement
 

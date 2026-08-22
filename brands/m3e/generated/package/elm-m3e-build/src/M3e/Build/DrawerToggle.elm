@@ -1,49 +1,49 @@
-module M3e.Build.DrawerToggle exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withFor, withId, withSlot, withStyle
-    )
+module M3e.Build.DrawerToggle exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFor, withId, withSlot, withStyle)
 
-{-|
+{-| The **DrawerToggle** element — the flat per-element builder surface,
+sourced through the **DrawerContainer** family façade
+(`M3e.Component.DrawerContainer`). This module and the aggregated
+`M3e.Build.DrawerContainer` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withFor, withId, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFor, withId, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.DrawerToggle as Component
+import M3e.Component.DrawerContainer as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ToggleIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ToggleBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ToggleAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.ToggleSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ToggleChildAdmittedBy childAdm
 
 
 {-| -}
@@ -53,7 +53,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ToggleIs kind) admittedBy msg
 toElement =
     B.toElement
 

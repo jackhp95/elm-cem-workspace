@@ -1,25 +1,22 @@
-module Or.Build.Plain exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withCdir, withCflag, withClass
-    , withChild
-    )
+module Or.Build.Plain exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCdir, withCflag, withClass, withChild)
 
-{-|
+{-| The **Plain** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withCdir, withCflag, withClass
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Or.Component.Plain`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Or.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withCdir, withCflag, withClass, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Or.Attributes as A
-import Or.Element.Plain as Component
+import Or.Component.Plain as Component
 import Or.Forge.Internal as B
 import Or.Kind exposing (Available, Brand, Ctx, Used)
 import Or.Values
@@ -27,32 +24,32 @@ import Or.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.PlainIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.PlainBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.PlainAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.PlainSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.PlainChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.PlainContent
 
 
 {-| -}
@@ -62,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PlainIs kind) admittedBy msg
 toElement =
     B.toElement
 

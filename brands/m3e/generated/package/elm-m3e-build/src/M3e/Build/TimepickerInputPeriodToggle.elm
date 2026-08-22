@@ -1,24 +1,22 @@
-module M3e.Build.TimepickerInputPeriodToggle exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withId, withOnChange, withOrientation, withPeriod, withSlot, withStyle
-    )
+module M3e.Build.TimepickerInputPeriodToggle exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnChange, withOrientation, withPeriod, withSlot, withStyle)
 
-{-|
+{-| The **TimepickerInputPeriodToggle** element — the flat per-element builder surface,
+sourced through the **Timepicker** family façade
+(`M3e.Component.Timepicker`). This module and the aggregated
+`M3e.Build.Timepicker` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withId, withOnChange, withOrientation, withPeriod, withSlot, withStyle
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withOnChange, withOrientation, withPeriod, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.TimepickerInputPeriodToggle as Component
+import M3e.Component.Timepicker as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -27,27 +25,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.InputPeriodToggleIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.InputPeriodToggleBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.InputPeriodToggleAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.InputPeriodToggleSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.InputPeriodToggleChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.InputPeriodToggleIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -93,9 +91,9 @@ withOrientation value_ =
 
 
 {-| -}
-withPeriod : Value Component.Period -> Builder { a | period : Available } slotCaps msg kind -> Builder { a | period : Used } slotCaps msg kind
+withPeriod : Value Component.InputPeriodTogglePeriod -> Builder { a | period : Available } slotCaps msg kind -> Builder { a | period : Used } slotCaps msg kind
 withPeriod value_ =
-    B.withAttribute (Component.period value_)
+    B.withAttribute (Component.inputPeriodTogglePeriod value_)
 
 
 {-| -}

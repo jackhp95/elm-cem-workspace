@@ -1,23 +1,22 @@
-module Sl.Build.ColorPicker exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withForm, withFormat, withHoist, withId, withInline, withLabel, withName, withNoFormatToggle, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withOpacity, withRequired, withSize, withSlot, withStyle, withSwatches, withUppercase, withValue
-    )
+module Sl.Build.ColorPicker exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withForm, withFormat, withHoist, withId, withInline, withLabel, withName, withNoFormatToggle, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withOpacity, withRequired, withSize, withSlot, withStyle, withSwatches, withUppercase, withValue)
 
-{-|
+{-| The **ColorPicker** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withForm, withFormat, withHoist, withId, withInline, withLabel, withName, withNoFormatToggle, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withOpacity, withRequired, withSize, withSlot, withStyle, withSwatches, withUppercase, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.ColorPicker`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withForm, withFormat, withHoist, withId, withInline, withLabel, withName, withNoFormatToggle, withOnBlur, withOnChange, withOnFocus, withOnInput, withOnInvalid, withOpacity, withRequired, withSize, withSlot, withStyle, withSwatches, withUppercase, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.ColorPicker as Component
+import Sl.Component.ColorPicker as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ColorPickerIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ColorPickerBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ColorPickerAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.ColorPickerSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ColorPickerChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ColorPickerIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -98,9 +97,9 @@ withForm value_ =
 
 
 {-| -}
-withFormat : Value Component.Format -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
+withFormat : Value Component.ColorPickerFormat -> Builder { a | format : Available } slotCaps msg kind -> Builder { a | format : Used } slotCaps msg kind
 withFormat value_ =
-    B.withAttribute (Component.format value_)
+    B.withAttribute (Component.colorPickerFormat value_)
 
 
 {-| -}
@@ -146,9 +145,9 @@ withRequired value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.ColorPickerSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.colorPickerSize value_)
 
 
 {-| -}

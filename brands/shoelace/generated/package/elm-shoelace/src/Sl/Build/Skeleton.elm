@@ -1,23 +1,22 @@
-module Sl.Build.Skeleton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withEffect, withId, withSlot, withStyle
-    )
+module Sl.Build.Skeleton exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withEffect, withId, withSlot, withStyle)
 
-{-|
+{-| The **Skeleton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withEffect, withId, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.Skeleton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withEffect, withId, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.Skeleton as Component
+import Sl.Component.Skeleton as Component
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
 import Sl.Values
@@ -25,27 +24,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SkeletonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SkeletonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SkeletonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SkeletonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SkeletonChildAdmittedBy childAdm
 
 
 {-| -}
@@ -55,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SkeletonIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -85,6 +84,6 @@ withStyle property value_ =
 
 
 {-| -}
-withEffect : Value Component.Effect -> Builder { a | effect_ : Available } slotCaps msg kind -> Builder { a | effect_ : Used } slotCaps msg kind
+withEffect : Value Component.SkeletonEffect -> Builder { a | effect_ : Available } slotCaps msg kind -> Builder { a | effect_ : Used } slotCaps msg kind
 withEffect value_ =
-    B.withAttribute (Component.effect_ value_)
+    B.withAttribute (Component.skeletonEffect_ value_)

@@ -1,23 +1,22 @@
-module Sl.Build.IconButton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withDownload, withHref, withId, withLabel, withLibrary, withName, withOnBlur, withOnFocus, withSlot, withSrc, withStyle, withTarget
-    )
+module Sl.Build.IconButton exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withLabel, withLibrary, withName, withOnBlur, withOnFocus, withSlot, withSrc, withStyle, withTarget)
 
-{-|
+{-| The **IconButton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withDownload, withHref, withId, withLabel, withLibrary, withName, withOnBlur, withOnFocus, withSlot, withSrc, withStyle, withTarget
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Sl.Component.IconButton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Sl.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withLabel, withLibrary, withName, withOnBlur, withOnFocus, withSlot, withSrc, withStyle, withTarget
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Sl.Attributes as A
-import Sl.Element.IconButton as Component
+import Sl.Component.IconButton as Component
 import Sl.Events as Ev
 import Sl.Forge.Internal as B
 import Sl.Kind exposing (Available, Brand, Ctx, Used)
@@ -26,27 +25,27 @@ import Sl.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.IconButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.IconButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.IconButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.IconButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.IconButtonChildAdmittedBy childAdm
 
 
 {-| -}
@@ -56,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.IconButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -128,9 +127,9 @@ withSrc value_ =
 
 
 {-| -}
-withTarget : Value Component.Target -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
+withTarget : Value Component.IconButtonTarget -> Builder { a | target : Available } slotCaps msg kind -> Builder { a | target : Used } slotCaps msg kind
 withTarget value_ =
-    B.withAttribute (Component.target value_)
+    B.withAttribute (Component.iconButtonTarget value_)
 
 
 {-| -}

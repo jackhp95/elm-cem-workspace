@@ -1,27 +1,22 @@
-module M3e.Build.Paginator exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, FirstPageIconSlot, LastPageIconSlot, NextPageIconSlot, PreviousPageIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withFirstPageLabel, withHidePageSize, withId, withItemsPerPageLabel, withLastPageLabel, withLength, withNextPageLabel, withOnPage, withPageIndex, withPageSize, withPageSizeVariant, withPageSizes, withPreviousPageLabel, withShowFirstLastButtons, withSlot, withStyle
-    , firstPageIcon, lastPageIcon, nextPageIcon, previousPageIcon
-    , withFirstPageIcon, withLastPageIcon, withNextPageIcon, withPreviousPageIcon
-    )
+module M3e.Build.Paginator exposing (Builder, AttrCaps, SlotCaps, Is, FirstPageIconSlot, LastPageIconSlot, NextPageIconSlot, PreviousPageIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withFirstPageLabel, withHidePageSize, withId, withItemsPerPageLabel, withLastPageLabel, withLength, withNextPageLabel, withOnPage, withPageIndex, withPageSize, withPageSizeVariant, withPageSizes, withPreviousPageLabel, withShowFirstLastButtons, withSlot, withStyle, firstPageIcon, lastPageIcon, nextPageIcon, previousPageIcon, withFirstPageIcon, withLastPageIcon, withNextPageIcon, withPreviousPageIcon)
 
-{-|
+{-| The **Paginator** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, FirstPageIconSlot, LastPageIconSlot, NextPageIconSlot, PreviousPageIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withFirstPageLabel, withHidePageSize, withId, withItemsPerPageLabel, withLastPageLabel, withLength, withNextPageLabel, withOnPage, withPageIndex, withPageSize, withPageSizeVariant, withPageSizes, withPreviousPageLabel, withShowFirstLastButtons, withSlot, withStyle
-@docs firstPageIcon, lastPageIcon, nextPageIcon, previousPageIcon
-@docs withFirstPageIcon, withLastPageIcon, withNextPageIcon, withPreviousPageIcon
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Paginator`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, FirstPageIconSlot, LastPageIconSlot, NextPageIconSlot, PreviousPageIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withFirstPageLabel, withHidePageSize, withId, withItemsPerPageLabel, withLastPageLabel, withLength, withNextPageLabel, withOnPage, withPageIndex, withPageSize, withPageSizeVariant, withPageSizes, withPreviousPageLabel, withShowFirstLastButtons, withSlot, withStyle, firstPageIcon, lastPageIcon, nextPageIcon, previousPageIcon, withFirstPageIcon, withLastPageIcon, withNextPageIcon, withPreviousPageIcon
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Paginator as Component
+import M3e.Component.Paginator as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,47 +25,47 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.PaginatorIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.PaginatorBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.PaginatorAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.PaginatorSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.PaginatorChildAdmittedBy childAdm
 
 
 {-| -}
 type alias FirstPageIconSlot =
-    Component.FirstPageIconSlot
+    Component.PaginatorFirstPageIconSlot
 
 
 {-| -}
 type alias LastPageIconSlot =
-    Component.LastPageIconSlot
+    Component.PaginatorLastPageIconSlot
 
 
 {-| -}
 type alias NextPageIconSlot =
-    Component.NextPageIconSlot
+    Component.PaginatorNextPageIconSlot
 
 
 {-| -}
 type alias PreviousPageIconSlot =
-    Component.PreviousPageIconSlot
+    Component.PaginatorPreviousPageIconSlot
 
 
 {-| -}
@@ -80,77 +75,77 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PaginatorIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 firstPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.FirstPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorFirstPageIconSlot msg
     -> Element free freeAdmittedBy msg
 firstPageIcon builder =
-    Component.firstPageIcon (B.toElement builder)
+    Component.paginatorFirstPageIcon (B.toElement builder)
 
 
 {-| -}
 lastPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LastPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorLastPageIconSlot msg
     -> Element free freeAdmittedBy msg
 lastPageIcon builder =
-    Component.lastPageIcon (B.toElement builder)
+    Component.paginatorLastPageIcon (B.toElement builder)
 
 
 {-| -}
 nextPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.NextPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorNextPageIconSlot msg
     -> Element free freeAdmittedBy msg
 nextPageIcon builder =
-    Component.nextPageIcon (B.toElement builder)
+    Component.paginatorNextPageIcon (B.toElement builder)
 
 
 {-| -}
 previousPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.PreviousPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorPreviousPageIconSlot msg
     -> Element free freeAdmittedBy msg
 previousPageIcon builder =
-    Component.previousPageIcon (B.toElement builder)
+    Component.paginatorPreviousPageIcon (B.toElement builder)
 
 
 {-| -}
 withFirstPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.FirstPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorFirstPageIconSlot msg
     -> Builder attrCaps { s | firstPageIcon : Available } msg kind
     -> Builder attrCaps { s | firstPageIcon : Used } msg kind
 withFirstPageIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.firstPageIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.paginatorFirstPageIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLastPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LastPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorLastPageIconSlot msg
     -> Builder attrCaps { s | lastPageIcon : Available } msg kind
     -> Builder attrCaps { s | lastPageIcon : Used } msg kind
 withLastPageIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.lastPageIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.paginatorLastPageIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withNextPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.NextPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorNextPageIconSlot msg
     -> Builder attrCaps { s | nextPageIcon : Available } msg kind
     -> Builder attrCaps { s | nextPageIcon : Used } msg kind
 withNextPageIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.nextPageIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.paginatorNextPageIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withPreviousPageIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.PreviousPageIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.PaginatorPreviousPageIconSlot msg
     -> Builder attrCaps { s | previousPageIcon : Available } msg kind
     -> Builder attrCaps { s | previousPageIcon : Used } msg kind
 withPreviousPageIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.previousPageIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.paginatorPreviousPageIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -232,9 +227,9 @@ withPageSize value_ =
 
 
 {-| -}
-withPageSizeVariant : Value Component.PageSizeVariant -> Builder { a | pageSizeVariant : Available } slotCaps msg kind -> Builder { a | pageSizeVariant : Used } slotCaps msg kind
+withPageSizeVariant : Value Component.PaginatorPageSizeVariant -> Builder { a | pageSizeVariant : Available } slotCaps msg kind -> Builder { a | pageSizeVariant : Used } slotCaps msg kind
 withPageSizeVariant value_ =
-    B.withAttribute (Component.pageSizeVariant value_)
+    B.withAttribute (Component.paginatorPageSizeVariant value_)
 
 
 {-| -}
@@ -258,4 +253,4 @@ withShowFirstLastButtons value_ =
 {-| -}
 withOnPage : (String -> msg) -> Builder { a | onPage : Available } slotCaps msg kind -> Builder { a | onPage : Used } slotCaps msg kind
 withOnPage value_ =
-    B.withAttribute (Component.onPage value_)
+    B.withAttribute (Component.paginatorOnPage value_)
