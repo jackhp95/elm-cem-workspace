@@ -36,8 +36,9 @@ import Docs
 import Elm
 import Generate.Phantom.Emit.Action exposing (..)
 import Generate.Phantom.Emit.Aria exposing (..)
-import Generate.Phantom.Emit.AttrsRow exposing (..)
 import Generate.Phantom.Emit.Attributes exposing (..)
+import Generate.Phantom.Emit.AttrsRow exposing (..)
+import Generate.Phantom.Emit.BuildPackage
 import Generate.Phantom.Emit.Component exposing (..)
 import Generate.Phantom.Emit.Events exposing (..)
 import Generate.Phantom.Emit.Facts exposing (..)
@@ -138,6 +139,14 @@ files brand iconModule families =
 
         familyResult =
             Generate.Phantom.Emit.FamilyPackage.files brand families
+
+        -- DAG-rework Task 1 (dual-emit PoC): the composed `<lib>.Build2.<Family>`
+        -- builders, sourced through the Component façade. Emitted ALONGSIDE the
+        -- per-element `compBuildModule` output above (which is NOT removed) under
+        -- a temporary `Build2` namespace, so nothing shipped changes and the whole
+        -- thing is reversible by unwiring this one call. See BuildPackage.elm.
+        build2Result =
+            Generate.Phantom.Emit.BuildPackage.files brand families
     in
     case ( iconResult, familyResult ) of
         ( Err e, _ ) ->
@@ -147,11 +156,16 @@ files brand iconModule families =
             Err [ e ]
 
         ( Ok iconFiles, Ok familyFiles ) ->
-            if List.isEmpty guardErrors then
-                Ok (allFiles ++ iconFiles ++ familyFiles)
+            case build2Result of
+                Err es ->
+                    Err es
 
-            else
-                Err guardErrors
+                Ok build2Files ->
+                    if List.isEmpty guardErrors then
+                        Ok (allFiles ++ iconFiles ++ familyFiles ++ build2Files)
+
+                    else
+                        Err guardErrors
 
 
 {-| The M1.c facts-bundle Face C emitter. Delegates to
