@@ -47,6 +47,41 @@ nest inside `TypedHtml`/`M3e` content) is inherited unchanged from the IR.
   enum attributes (`stroke-linecap`, `text-anchor`, `fill-rule`, …).
 - `TypedSvg.Events`, `TypedSvg.Kind`, `TypedSvg.Review.Facts` — as every brand.
 
+## Scope — audited against SVG 2
+
+The element and attribute vocabulary is **audited against the W3C SVG 2 spec**
+and that coverage is **mechanically gated** — a spec-index bump or a package
+regen that opens an un-annotated gap fails CI. See
+[`docs/svg-audit/`](../../../../../docs/svg-audit/) for the full audit
+(`2026-08-21-svg-coverage-audit.md`), the machine-readable spec vocabulary
+(`spec-index.json`, 69 elements), and the deferral/non-goal ledger
+(`coverage-map.json`, enforced by `tools/check-svg-spec-coverage.mjs`).
+
+**In scope (SVG 2 static render surface):** the classic shapes, structure,
+gradients, paint, clip/mask/marker, text, `image`, plus `foreignObject` (the
+bridge back into `TypedHtml`), `view`, `metadata`, the conditional-processing
+selectors on `switch`, and the **full 26-element filter family** (`filter` +
+every `fe*` primitive, with typed filter enums). Presentation properties are
+modeled with type fidelity: **30 typed enum value-domains** (up from 6),
+covering the baseline, rendering-hint, text-layout, and filter families.
+
+**Documented deferrals / non-goals:**
+
+- **SMIL animation** (`animate*`, `set`, `mpath`, `discard`) — deferred
+  (`smil-deferred`): a distinct declarative-timeline model with perennial
+  Chromium deprecation risk; a modeled seam is left for a later pass.
+- **`xlink:` namespace** (`xlink:href`, `xlink:title`) — non-goal
+  (`xlink-legacy`): superseded by the bare `href` attribute, which **is**
+  modeled — the SVG-2-preferred form.
+- **Path-data DSL** — non-goal (`path-data-non-goal`): the `d` attribute is
+  modeled as a `String`; a fully-typed path-command DSL is a large surface and a
+  real ergonomic loss.
+- **HTML-embed elements in the SVG namespace** (`audio`/`canvas`/`iframe`/
+  `video`), raw-text carriers (`script`/`style`), `unknown`, and the deprecated
+  `zoomAndPan` — non-goals, each bucketed in `coverage-map.json`.
+- **ARIA and events** are handled by design through a future `Aria` surface and
+  `TypedSvg.Events` respectively, not as attribute setters.
+
 ## Regenerate
 
 ```

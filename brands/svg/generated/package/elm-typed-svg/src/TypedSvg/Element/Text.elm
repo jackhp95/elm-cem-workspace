@@ -1,7 +1,7 @@
 module TypedSvg.Element.Text exposing
     ( text, textPath, tspan
     , TextIs, TextAttrs, TextContent, TextChildAdmittedBy, TextPathIs, TextPathAttrs, TextPathContent, TextPathChildAdmittedBy, TspanIs, TspanAttrs, TspanContent, TspanChildAdmittedBy
-    , dx, dy, href, lengthAdjust, rotate, startOffset, textLength, x, y
+    , dx, dy, href, lengthAdjust, method, rotate, side, spacing, startOffset, textLength, x, y
     )
 
 {-| The `Text` element home: constructors, per-element rows, and
@@ -9,7 +9,7 @@ co-located re-exports of the shared attributes its elements admit.
 
 @docs text, textPath, tspan
 @docs TextIs, TextAttrs, TextContent, TextChildAdmittedBy, TextPathIs, TextPathAttrs, TextPathContent, TextPathChildAdmittedBy, TspanIs, TspanAttrs, TspanContent, TspanChildAdmittedBy
-@docs dx, dy, href, lengthAdjust, rotate, startOffset, textLength, x, y
+@docs dx, dy, href, lengthAdjust, method, rotate, side, spacing, startOffset, textLength, x, y
 
 -}
 
@@ -80,6 +80,9 @@ type alias TextPathAttrs =
     { class : Supported
     , href : Supported
     , id : Supported
+    , method : Supported
+    , side : Supported
+    , spacing : Supported
     , startOffset : Supported
     , style : Supported
     }
@@ -181,11 +184,32 @@ lengthAdjust =
     TypedSvg.Attributes.lengthAdjust
 
 
+{-| See `TypedSvg.Attributes.method`.
+-}
+method : String -> Attr { c | method : Supported } msg
+method =
+    TypedSvg.Attributes.method
+
+
 {-| See `TypedSvg.Attributes.rotate`.
 -}
 rotate : String -> Attr { c | rotate : Supported } msg
 rotate =
     TypedSvg.Attributes.rotate
+
+
+{-| See `TypedSvg.Attributes.side`.
+-}
+side : String -> Attr { c | side : Supported } msg
+side =
+    TypedSvg.Attributes.side
+
+
+{-| See `TypedSvg.Attributes.spacing`.
+-}
+spacing : String -> Attr { c | spacing : Supported } msg
+spacing =
+    TypedSvg.Attributes.spacing
 
 
 {-| See `TypedSvg.Attributes.startOffset`.

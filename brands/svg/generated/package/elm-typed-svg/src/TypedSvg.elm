@@ -1,5 +1,5 @@
 module TypedSvg exposing
-    ( a, circle, clipPath, defs, desc, ellipse, g, image, line, linearGradient, marker, mask, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use
+    ( a, circle, clipPath, defs, desc, ellipse, feBlend, feColorMatrix, feComponentTransfer, feComposite, feConvolveMatrix, feDiffuseLighting, feDisplacementMap, feDistantLight, feDropShadow, feFlood, feFuncA, feFuncB, feFuncG, feFuncR, feGaussianBlur, feImage, feMerge, feMergeNode, feMorphology, feOffset, fePointLight, feSpecularLighting, feSpotLight, feTile, feTurbulence, filter, foreignObject, g, image, line, linearGradient, marker, mask, metadata, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use, view
     , text
     , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
@@ -16,7 +16,7 @@ The `slot<Name>` placers assign a child element to a named slot in any
 component that accepts it. Admittance is open (broad row) — wrong-kind
 placements are caught by `Cem.ValidSlotKind` (elm-review).
 
-@docs a, circle, clipPath, defs, desc, ellipse, g, image, line, linearGradient, marker, mask, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use
+@docs a, circle, clipPath, defs, desc, ellipse, feBlend, feColorMatrix, feComponentTransfer, feComposite, feConvolveMatrix, feDiffuseLighting, feDisplacementMap, feDistantLight, feDropShadow, feFlood, feFuncA, feFuncB, feFuncG, feFuncR, feGaussianBlur, feImage, feMerge, feMergeNode, feMorphology, feOffset, fePointLight, feSpecularLighting, feSpotLight, feTile, feTurbulence, filter, foreignObject, g, image, line, linearGradient, marker, mask, metadata, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use, view
 @docs text
 @docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
@@ -30,6 +30,7 @@ import HtmlIr.Kind exposing (Shared)
 import HtmlIr.Node
 import TypedSvg.Element.Clip
 import TypedSvg.Element.Descriptive
+import TypedSvg.Element.Filter
 import TypedSvg.Element.Image
 import TypedSvg.Element.Paint
 import TypedSvg.Element.Shape
@@ -97,6 +98,276 @@ ellipse =
     TypedSvg.Element.Shape.ellipse
 
 
+{-| See `TypedSvg.Element.Filter.feBlend`.
+-}
+feBlend :
+    List (Attr TypedSvg.Element.Filter.FeBlendAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeBlendChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeBlendIs s) admittedBy msg
+feBlend =
+    TypedSvg.Element.Filter.feBlend
+
+
+{-| See `TypedSvg.Element.Filter.feColorMatrix`.
+-}
+feColorMatrix :
+    List (Attr TypedSvg.Element.Filter.FeColorMatrixAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeColorMatrixChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeColorMatrixIs s) admittedBy msg
+feColorMatrix =
+    TypedSvg.Element.Filter.feColorMatrix
+
+
+{-| See `TypedSvg.Element.Filter.feComponentTransfer`.
+-}
+feComponentTransfer :
+    List (Attr TypedSvg.Element.Filter.FeComponentTransferAttrs msg)
+    -> List (Element TypedSvg.Element.Filter.FeComponentTransferContent (TypedSvg.Element.Filter.FeComponentTransferChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeComponentTransferIs s) admittedBy msg
+feComponentTransfer =
+    TypedSvg.Element.Filter.feComponentTransfer
+
+
+{-| See `TypedSvg.Element.Filter.feComposite`.
+-}
+feComposite :
+    List (Attr TypedSvg.Element.Filter.FeCompositeAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeCompositeChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeCompositeIs s) admittedBy msg
+feComposite =
+    TypedSvg.Element.Filter.feComposite
+
+
+{-| See `TypedSvg.Element.Filter.feConvolveMatrix`.
+-}
+feConvolveMatrix :
+    List (Attr TypedSvg.Element.Filter.FeConvolveMatrixAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeConvolveMatrixChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeConvolveMatrixIs s) admittedBy msg
+feConvolveMatrix =
+    TypedSvg.Element.Filter.feConvolveMatrix
+
+
+{-| See `TypedSvg.Element.Filter.feDiffuseLighting`.
+-}
+feDiffuseLighting :
+    List (Attr TypedSvg.Element.Filter.FeDiffuseLightingAttrs msg)
+    -> List (Element TypedSvg.Element.Filter.FeDiffuseLightingContent (TypedSvg.Element.Filter.FeDiffuseLightingChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeDiffuseLightingIs s) admittedBy msg
+feDiffuseLighting =
+    TypedSvg.Element.Filter.feDiffuseLighting
+
+
+{-| See `TypedSvg.Element.Filter.feDisplacementMap`.
+-}
+feDisplacementMap :
+    List (Attr TypedSvg.Element.Filter.FeDisplacementMapAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeDisplacementMapChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeDisplacementMapIs s) admittedBy msg
+feDisplacementMap =
+    TypedSvg.Element.Filter.feDisplacementMap
+
+
+{-| See `TypedSvg.Element.Filter.feDistantLight`.
+-}
+feDistantLight :
+    List (Attr TypedSvg.Element.Filter.FeDistantLightAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeDistantLightChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeDistantLightIs s) admittedBy msg
+feDistantLight =
+    TypedSvg.Element.Filter.feDistantLight
+
+
+{-| See `TypedSvg.Element.Filter.feDropShadow`.
+-}
+feDropShadow :
+    List (Attr TypedSvg.Element.Filter.FeDropShadowAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeDropShadowChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeDropShadowIs s) admittedBy msg
+feDropShadow =
+    TypedSvg.Element.Filter.feDropShadow
+
+
+{-| See `TypedSvg.Element.Filter.feFlood`.
+-}
+feFlood :
+    List (Attr TypedSvg.Element.Filter.FeFloodAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeFloodChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeFloodIs s) admittedBy msg
+feFlood =
+    TypedSvg.Element.Filter.feFlood
+
+
+{-| See `TypedSvg.Element.Filter.feFuncA`.
+-}
+feFuncA :
+    List (Attr TypedSvg.Element.Filter.FeFuncAAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeFuncAChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeFuncAIs s) admittedBy msg
+feFuncA =
+    TypedSvg.Element.Filter.feFuncA
+
+
+{-| See `TypedSvg.Element.Filter.feFuncB`.
+-}
+feFuncB :
+    List (Attr TypedSvg.Element.Filter.FeFuncBAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeFuncBChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeFuncBIs s) admittedBy msg
+feFuncB =
+    TypedSvg.Element.Filter.feFuncB
+
+
+{-| See `TypedSvg.Element.Filter.feFuncG`.
+-}
+feFuncG :
+    List (Attr TypedSvg.Element.Filter.FeFuncGAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeFuncGChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeFuncGIs s) admittedBy msg
+feFuncG =
+    TypedSvg.Element.Filter.feFuncG
+
+
+{-| See `TypedSvg.Element.Filter.feFuncR`.
+-}
+feFuncR :
+    List (Attr TypedSvg.Element.Filter.FeFuncRAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeFuncRChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeFuncRIs s) admittedBy msg
+feFuncR =
+    TypedSvg.Element.Filter.feFuncR
+
+
+{-| See `TypedSvg.Element.Filter.feGaussianBlur`.
+-}
+feGaussianBlur :
+    List (Attr TypedSvg.Element.Filter.FeGaussianBlurAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeGaussianBlurChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeGaussianBlurIs s) admittedBy msg
+feGaussianBlur =
+    TypedSvg.Element.Filter.feGaussianBlur
+
+
+{-| See `TypedSvg.Element.Filter.feImage`.
+-}
+feImage :
+    List (Attr TypedSvg.Element.Filter.FeImageAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeImageChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeImageIs s) admittedBy msg
+feImage =
+    TypedSvg.Element.Filter.feImage
+
+
+{-| See `TypedSvg.Element.Filter.feMerge`.
+-}
+feMerge :
+    List (Attr TypedSvg.Element.Filter.FeMergeAttrs msg)
+    -> List (Element TypedSvg.Element.Filter.FeMergeContent (TypedSvg.Element.Filter.FeMergeChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeMergeIs s) admittedBy msg
+feMerge =
+    TypedSvg.Element.Filter.feMerge
+
+
+{-| See `TypedSvg.Element.Filter.feMergeNode`.
+-}
+feMergeNode :
+    List (Attr TypedSvg.Element.Filter.FeMergeNodeAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeMergeNodeChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeMergeNodeIs s) admittedBy msg
+feMergeNode =
+    TypedSvg.Element.Filter.feMergeNode
+
+
+{-| See `TypedSvg.Element.Filter.feMorphology`.
+-}
+feMorphology :
+    List (Attr TypedSvg.Element.Filter.FeMorphologyAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeMorphologyChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeMorphologyIs s) admittedBy msg
+feMorphology =
+    TypedSvg.Element.Filter.feMorphology
+
+
+{-| See `TypedSvg.Element.Filter.feOffset`.
+-}
+feOffset :
+    List (Attr TypedSvg.Element.Filter.FeOffsetAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeOffsetChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeOffsetIs s) admittedBy msg
+feOffset =
+    TypedSvg.Element.Filter.feOffset
+
+
+{-| See `TypedSvg.Element.Filter.fePointLight`.
+-}
+fePointLight :
+    List (Attr TypedSvg.Element.Filter.FePointLightAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FePointLightChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FePointLightIs s) admittedBy msg
+fePointLight =
+    TypedSvg.Element.Filter.fePointLight
+
+
+{-| See `TypedSvg.Element.Filter.feSpecularLighting`.
+-}
+feSpecularLighting :
+    List (Attr TypedSvg.Element.Filter.FeSpecularLightingAttrs msg)
+    -> List (Element TypedSvg.Element.Filter.FeSpecularLightingContent (TypedSvg.Element.Filter.FeSpecularLightingChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeSpecularLightingIs s) admittedBy msg
+feSpecularLighting =
+    TypedSvg.Element.Filter.feSpecularLighting
+
+
+{-| See `TypedSvg.Element.Filter.feSpotLight`.
+-}
+feSpotLight :
+    List (Attr TypedSvg.Element.Filter.FeSpotLightAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeSpotLightChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeSpotLightIs s) admittedBy msg
+feSpotLight =
+    TypedSvg.Element.Filter.feSpotLight
+
+
+{-| See `TypedSvg.Element.Filter.feTile`.
+-}
+feTile :
+    List (Attr TypedSvg.Element.Filter.FeTileAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeTileChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeTileIs s) admittedBy msg
+feTile =
+    TypedSvg.Element.Filter.feTile
+
+
+{-| See `TypedSvg.Element.Filter.feTurbulence`.
+-}
+feTurbulence :
+    List (Attr TypedSvg.Element.Filter.FeTurbulenceAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FeTurbulenceChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FeTurbulenceIs s) admittedBy msg
+feTurbulence =
+    TypedSvg.Element.Filter.feTurbulence
+
+
+{-| See `TypedSvg.Element.Filter.filter`.
+-}
+filter :
+    List (Attr TypedSvg.Element.Filter.FilterAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Filter.FilterChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Filter.FilterIs s) admittedBy msg
+filter =
+    TypedSvg.Element.Filter.filter
+
+
+{-| See `TypedSvg.Element.Structure.foreignObject`.
+-}
+foreignObject :
+    List (Attr TypedSvg.Element.Structure.ForeignObjectAttrs msg)
+    -> List (Element TypedSvg.Element.Structure.ForeignObjectContent (TypedSvg.Element.Structure.ForeignObjectChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.ForeignObjectIs s) admittedBy msg
+foreignObject =
+    TypedSvg.Element.Structure.foreignObject
+
+
 {-| See `TypedSvg.Element.Structure.g`.
 -}
 g :
@@ -155,6 +426,16 @@ mask :
     -> Element (TypedSvg.Element.Clip.MaskIs s) admittedBy msg
 mask =
     TypedSvg.Element.Clip.mask
+
+
+{-| See `TypedSvg.Element.Descriptive.metadata`.
+-}
+metadata :
+    List (Attr TypedSvg.Element.Descriptive.MetadataAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Descriptive.MetadataChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Descriptive.MetadataIs s) admittedBy msg
+metadata =
+    TypedSvg.Element.Descriptive.metadata
 
 
 {-| See `TypedSvg.Element.Shape.path`.
@@ -305,6 +586,16 @@ use :
     -> Element (TypedSvg.Element.Structure.UseIs s) admittedBy msg
 use =
     TypedSvg.Element.Structure.use
+
+
+{-| See `TypedSvg.Element.Structure.view`.
+-}
+view :
+    List (Attr TypedSvg.Element.Structure.ViewAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.ViewChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.ViewIs s) admittedBy msg
+view =
+    TypedSvg.Element.Structure.view
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

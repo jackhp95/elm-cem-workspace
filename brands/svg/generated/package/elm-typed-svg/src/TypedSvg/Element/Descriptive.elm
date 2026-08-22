@@ -1,13 +1,13 @@
 module TypedSvg.Element.Descriptive exposing
-    ( desc, title
-    , DescIs, DescAttrs, DescContent, DescChildAdmittedBy, TitleIs, TitleAttrs, TitleContent, TitleChildAdmittedBy
+    ( desc, metadata, title
+    , DescIs, DescAttrs, DescContent, DescChildAdmittedBy, MetadataIs, MetadataAttrs, MetadataChildAdmittedBy, TitleIs, TitleAttrs, TitleContent, TitleChildAdmittedBy
     )
 
 {-| The `Descriptive` element home: constructors, per-element rows, and
 co-located re-exports of the shared attributes its elements admit.
 
-@docs desc, title
-@docs DescIs, DescAttrs, DescContent, DescChildAdmittedBy, TitleIs, TitleAttrs, TitleContent, TitleChildAdmittedBy
+@docs desc, metadata, title
+@docs DescIs, DescAttrs, DescContent, DescChildAdmittedBy, MetadataIs, MetadataAttrs, MetadataChildAdmittedBy, TitleIs, TitleAttrs, TitleContent, TitleChildAdmittedBy
 
 -}
 
@@ -53,6 +53,37 @@ desc :
     -> Element (DescIs s) admittedBy msg
 desc attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "desc" attrs (List.map HtmlIr.Element.toNode children))
+
+
+{-| The kind row `metadata` produces.
+-}
+type alias MetadataIs s =
+    { s | metadata : Brand }
+
+
+{-| `metadata`'s closed attribute-capability row.
+-}
+type alias MetadataAttrs =
+    { class : Supported
+    , id : Supported
+    , style : Supported
+    }
+
+
+{-| The context demand `metadata` injects into its children.
+-}
+type alias MetadataChildAdmittedBy childAdm =
+    { childAdm | metadata : Ctx }
+
+
+{-| The `metadata` element.
+-}
+metadata :
+    List (Attr MetadataAttrs msg)
+    -> List (Element childAccepts (MetadataChildAdmittedBy childAdm) msg)
+    -> Element (MetadataIs s) admittedBy msg
+metadata attrs children =
+    Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "metadata" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The kind row `title` produces.

@@ -1,0 +1,6327 @@
+{
+  "_comment": "Machine-readable SVG 2 vocabulary for the elm-typed-svg API-vs-spec audit (Task 1). elements from eltindex.html; presentation properties from propidx.html (+ marker sub-props and 4 filter-scoped props from the Filter Effects chapter); element-specific structural/geometry/animation/event/aria attributes from attindex.html. Parsed by regex over the raw W3C HTML, not hand-transcribed.",
+  "provenance": {
+    "specUrls": [
+      "https://www.w3.org/TR/SVG2/eltindex.html",
+      "https://www.w3.org/TR/SVG2/attindex.html",
+      "https://www.w3.org/TR/SVG2/propidx.html"
+    ],
+    "crossCheckedAgainst": [
+      "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element",
+      "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute"
+    ],
+    "fetchedAt": "2026-08-21",
+    "specStatus": "SVG 2 W3C Candidate Recommendation (living target)"
+  },
+  "counts": {
+    "elements": 69,
+    "presentationProperties": 45,
+    "finiteEnumPresentationProperties": 21,
+    "attributesTotal": 306
+  },
+  "elements": [
+    {
+      "name": "a",
+      "family": "static-render",
+      "specHref": "linking.html#AElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "animate",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#AnimateElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "animateMotion",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#AnimateMotionElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "animateTransform",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#AnimateTransformElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "audio",
+      "family": "html-embed",
+      "specHref": "embedded.html#HTMLElements",
+      "inMdnReference": false
+    },
+    {
+      "name": "canvas",
+      "family": "html-embed",
+      "specHref": "embedded.html#HTMLElements",
+      "inMdnReference": false
+    },
+    {
+      "name": "circle",
+      "family": "static-render",
+      "specHref": "shapes.html#CircleElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "clipPath",
+      "family": "static-render",
+      "specHref": "https://drafts.fxtf.org/css-masking-1/#ClipPathElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "defs",
+      "family": "static-render",
+      "specHref": "struct.html#DefsElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "desc",
+      "family": "static-render",
+      "specHref": "struct.html#DescElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "discard",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#DiscardElement",
+      "inMdnReference": false
+    },
+    {
+      "name": "ellipse",
+      "family": "static-render",
+      "specHref": "shapes.html#EllipseElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feBlend",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feBlendElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feColorMatrix",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feColorMatrixElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feComponentTransfer",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feComponentTransferElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feComposite",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feCompositeElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feConvolveMatrix",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feConvolveMatrixElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feDiffuseLighting",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feDiffuseLightingElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feDisplacementMap",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feDisplacementMapElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feDistantLight",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feDistantLightElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feDropShadow",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feDropShadowElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feFlood",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feFloodElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feFuncA",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feFuncAElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feFuncB",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feFuncBElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feFuncG",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feFuncGElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feFuncR",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feFuncRElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feGaussianBlur",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feGaussianBlurElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feImage",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feImageElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feMerge",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feMergeElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feMergeNode",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feMergeElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feMorphology",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feMorphologyElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feOffset",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feOffsetElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "fePointLight",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#fePointLightElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feSpecularLighting",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feSpecularLightingElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feSpotLight",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feSpotLightElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feTile",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feTileElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "feTurbulence",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#feTurbulenceElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "filter",
+      "family": "filter",
+      "specHref": "https://drafts.fxtf.org/filter-effects/#FilterElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "foreignObject",
+      "family": "static-render",
+      "specHref": "embedded.html#ForeignObjectElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "g",
+      "family": "static-render",
+      "specHref": "struct.html#GElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "iframe",
+      "family": "html-embed",
+      "specHref": "embedded.html#HTMLElements",
+      "inMdnReference": false
+    },
+    {
+      "name": "image",
+      "family": "static-render",
+      "specHref": "embedded.html#ImageElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "line",
+      "family": "static-render",
+      "specHref": "shapes.html#LineElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "linearGradient",
+      "family": "static-render",
+      "specHref": "pservers.html#LinearGradientElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "marker",
+      "family": "static-render",
+      "specHref": "painting.html#MarkerElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "mask",
+      "family": "static-render",
+      "specHref": "https://drafts.fxtf.org/css-masking-1/#MaskElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "metadata",
+      "family": "non-rendering-metadata",
+      "specHref": "struct.html#MetadataElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "mpath",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#MPathElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "path",
+      "family": "static-render",
+      "specHref": "paths.html#PathElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "pattern",
+      "family": "static-render",
+      "specHref": "pservers.html#PatternElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "polygon",
+      "family": "static-render",
+      "specHref": "shapes.html#PolygonElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "polyline",
+      "family": "static-render",
+      "specHref": "shapes.html#PolylineElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "radialGradient",
+      "family": "static-render",
+      "specHref": "pservers.html#RadialGradientElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "rect",
+      "family": "static-render",
+      "specHref": "shapes.html#RectElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "script",
+      "family": "non-rendering-metadata",
+      "specHref": "interact.html#ScriptElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "set",
+      "family": "smil-animation",
+      "specHref": "https://svgwg.org/specs/animations/#SetElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "stop",
+      "family": "static-render",
+      "specHref": "pservers.html#StopElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "style",
+      "family": "non-rendering-metadata",
+      "specHref": "styling.html#StyleElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "svg",
+      "family": "static-render",
+      "specHref": "struct.html#SVGElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "switch",
+      "family": "static-render",
+      "specHref": "struct.html#SwitchElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "symbol",
+      "family": "static-render",
+      "specHref": "struct.html#SymbolElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "text",
+      "family": "static-render",
+      "specHref": "text.html#TextElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "textPath",
+      "family": "static-render",
+      "specHref": "text.html#TextPathElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "title",
+      "family": "static-render",
+      "specHref": "struct.html#TitleElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "tspan",
+      "family": "static-render",
+      "specHref": "text.html#TextElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "unknown",
+      "family": "non-rendering-metadata",
+      "specHref": "struct.html#UnknownElement",
+      "inMdnReference": false
+    },
+    {
+      "name": "use",
+      "family": "static-render",
+      "specHref": "struct.html#UseElement",
+      "inMdnReference": true
+    },
+    {
+      "name": "video",
+      "family": "html-embed",
+      "specHref": "embedded.html#HTMLElements",
+      "inMdnReference": false
+    },
+    {
+      "name": "view",
+      "family": "static-render",
+      "specHref": "linking.html#ViewElement",
+      "inMdnReference": true
+    }
+  ],
+  "attributes": [
+    {
+      "name": "alignment-baseline",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018tspan\u2019, \u2018textPath\u2019 elements"
+      ],
+      "valueGrammar": "auto | baseline | before-edge | text-before-edge | middle | central | after-edge | text-after-edge | ideographic | alphabetic | hanging | mathematical",
+      "finiteEnum": true
+    },
+    {
+      "name": "baseline-shift",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018tspan\u2019, \u2018textPath\u2019 elements"
+      ],
+      "valueGrammar": "baseline | sub | super | <percentage> | <length>",
+      "finiteEnum": false
+    },
+    {
+      "name": "color",
+      "family": "presentation",
+      "appliesTo": [
+        "elements to which properties fill, stroke, stop-color, flood-color, lighting-color apply"
+      ],
+      "valueGrammar": "<color>",
+      "finiteEnum": false
+    },
+    {
+      "name": "color-interpolation",
+      "family": "presentation",
+      "appliesTo": [
+        "container elements, graphics elements, gradient elements, \u2018use\u2019 and \u2018animate\u2019"
+      ],
+      "valueGrammar": "auto | sRGB | linearRGB",
+      "finiteEnum": true
+    },
+    {
+      "name": "color-interpolation-filters",
+      "family": "filter-presentation",
+      "appliesTo": [
+        "filter primitives"
+      ],
+      "valueGrammar": "auto | sRGB | linearRGB",
+      "finiteEnum": true
+    },
+    {
+      "name": "color-rendering",
+      "family": "presentation",
+      "appliesTo": [
+        "container elements, graphics elements, gradient elements, \u2018use\u2019 and \u2018animate\u2019"
+      ],
+      "valueGrammar": "auto | optimizeSpeed | optimizeQuality",
+      "finiteEnum": true
+    },
+    {
+      "name": "direction",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "ltr | rtl",
+      "finiteEnum": true
+    },
+    {
+      "name": "display",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018svg\u2019, \u2018g\u2019, \u2018switch\u2019, \u2018a\u2019, \u2018foreignObject\u2019, \u2018use\u2019 and graphics elements"
+      ],
+      "valueGrammar": "inline | block | list-item | run-in | compact | marker | table | inline-table | table-row-group | table-header-group | table-footer-group | table-row | table-column-group | table-column | table-cell | table-caption | none",
+      "finiteEnum": true
+    },
+    {
+      "name": "dominant-baseline",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "auto | use-script | no-change | reset-size | ideographic | alphabetic | hanging | mathematical | central | middle | text-after-edge | text-before-edge",
+      "finiteEnum": true
+    },
+    {
+      "name": "fill",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<paint> (See Specifying paint)",
+      "finiteEnum": false
+    },
+    {
+      "name": "fill-opacity",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<alpha-value>",
+      "finiteEnum": false
+    },
+    {
+      "name": "fill-rule",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "nonzero | evenodd",
+      "finiteEnum": true
+    },
+    {
+      "name": "flood-color",
+      "family": "filter-presentation",
+      "appliesTo": [
+        "filter primitives"
+      ],
+      "valueGrammar": "currentColor | <color>",
+      "finiteEnum": false
+    },
+    {
+      "name": "flood-opacity",
+      "family": "filter-presentation",
+      "appliesTo": [
+        "filter primitives"
+      ],
+      "valueGrammar": "<alpha-value>",
+      "finiteEnum": false
+    },
+    {
+      "name": "font-variant",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "normal | small-caps",
+      "finiteEnum": true
+    },
+    {
+      "name": "glyph-orientation-vertical",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "auto | <angle> | <number>",
+      "finiteEnum": false
+    },
+    {
+      "name": "image-rendering",
+      "family": "presentation",
+      "appliesTo": [
+        "images"
+      ],
+      "valueGrammar": "auto | optimizeSpeed | optimizeQuality",
+      "finiteEnum": true
+    },
+    {
+      "name": "lighting-color",
+      "family": "filter-presentation",
+      "appliesTo": [
+        "filter primitives"
+      ],
+      "valueGrammar": "currentColor | <color>",
+      "finiteEnum": false
+    },
+    {
+      "name": "line-height",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018text\u2019 elements"
+      ],
+      "valueGrammar": "normal | <number> | <length-percentage>",
+      "finiteEnum": false
+    },
+    {
+      "name": "marker",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes"
+      ],
+      "valueGrammar": "see individual properties",
+      "finiteEnum": false
+    },
+    {
+      "name": "marker-end",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes"
+      ],
+      "valueGrammar": "none | <url>",
+      "finiteEnum": false
+    },
+    {
+      "name": "marker-mid",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes"
+      ],
+      "valueGrammar": "none | <url>",
+      "finiteEnum": false
+    },
+    {
+      "name": "marker-start",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes"
+      ],
+      "valueGrammar": "none | <url>",
+      "finiteEnum": false
+    },
+    {
+      "name": "opacity",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018svg\u2019, \u2018g\u2019, \u2018symbol\u2019, \u2018marker\u2019, \u2018a\u2019, \u2018switch\u2019, \u2018use\u2019, \u2018unknown\u2019 elements and graphics elements"
+      ],
+      "valueGrammar": "<alpha-value>",
+      "finiteEnum": false
+    },
+    {
+      "name": "overflow",
+      "family": "presentation",
+      "appliesTo": [
+        "elements which establish a new SVG viewport, \u2018pattern\u2019 elements and \u2018marker\u2019 elements"
+      ],
+      "valueGrammar": "visible | hidden | scroll | auto",
+      "finiteEnum": true
+    },
+    {
+      "name": "paint-order",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "normal | [ fill || stroke || markers ]",
+      "finiteEnum": false
+    },
+    {
+      "name": "pointer-events",
+      "family": "presentation",
+      "appliesTo": [
+        "container elements, graphics elements and \u2018use\u2019"
+      ],
+      "valueGrammar": "bounding-box | visiblePainted | visibleFill | visibleStroke | visible | painted | fill | stroke | all | none",
+      "finiteEnum": true
+    },
+    {
+      "name": "shape-rendering",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes"
+      ],
+      "valueGrammar": "auto | optimizeSpeed | crispEdges | geometricPrecision",
+      "finiteEnum": true
+    },
+    {
+      "name": "stop-color",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018stop\u2019 elements"
+      ],
+      "valueGrammar": "currentColor | <color> [<icccolor>]",
+      "finiteEnum": false
+    },
+    {
+      "name": "stop-opacity",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018stop\u2019 elements"
+      ],
+      "valueGrammar": "<alpha-value>",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<paint> (See Specifying paint)",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke-dasharray",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "none | <dasharray>",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke-dashoffset",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<length-percentage>",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke-linecap",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "butt | round | square",
+      "finiteEnum": true
+    },
+    {
+      "name": "stroke-linejoin",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "miter | round | bevel",
+      "finiteEnum": true
+    },
+    {
+      "name": "stroke-miterlimit",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<number> (non-negative)",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke-opacity",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<alpha-value>",
+      "finiteEnum": false
+    },
+    {
+      "name": "stroke-width",
+      "family": "presentation",
+      "appliesTo": [
+        "shapes and text content elements"
+      ],
+      "valueGrammar": "<length-percentage>",
+      "finiteEnum": false
+    },
+    {
+      "name": "text-anchor",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "start | middle | end",
+      "finiteEnum": true
+    },
+    {
+      "name": "text-decoration",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "none | [ underline || overline || line-through || blink ]",
+      "finiteEnum": false
+    },
+    {
+      "name": "text-rendering",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018text\u2019 elements"
+      ],
+      "valueGrammar": "auto | optimizeSpeed | optimizeLegibility | geometricPrecision",
+      "finiteEnum": true
+    },
+    {
+      "name": "vector-effect",
+      "family": "presentation",
+      "appliesTo": [
+        "graphics elements and \u2018use\u2019"
+      ],
+      "valueGrammar": "non-scaling-stroke | none",
+      "finiteEnum": true
+    },
+    {
+      "name": "visibility",
+      "family": "presentation",
+      "appliesTo": [
+        "graphics elements, \u2018use\u2019 and the \u2018a\u2019 element when it is a child of a text content element"
+      ],
+      "valueGrammar": "visible | hidden | collapse",
+      "finiteEnum": true
+    },
+    {
+      "name": "white-space",
+      "family": "presentation",
+      "appliesTo": [
+        "text content elements"
+      ],
+      "valueGrammar": "normal | pre | nowrap | pre-wrap | pre-line",
+      "finiteEnum": true
+    },
+    {
+      "name": "writing-mode",
+      "family": "presentation",
+      "appliesTo": [
+        "\u2018text\u2019 elements"
+      ],
+      "valueGrammar": "lr-tb | rl-tb | tb-rl | lr | rl | tb",
+      "finiteEnum": true
+    },
+    {
+      "name": "accumulate",
+      "family": "animation-addition",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "additive",
+      "family": "animation-addition",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "amplitude",
+      "family": "filter",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "attributeName",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "azimuth",
+      "family": "filter",
+      "appliesTo": [
+        "feDistantLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "baseFrequency",
+      "family": "filter",
+      "appliesTo": [
+        "feTurbulence"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "begin",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "discard",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "bias",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "by",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "calcMode",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "class",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "clipPathUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "clipPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "crossorigin",
+      "family": "core",
+      "appliesTo": [
+        "feImage",
+        "image",
+        "script"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "cx",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "cy",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "diffuseConstant",
+      "family": "filter",
+      "appliesTo": [
+        "feDiffuseLighting"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "divisor",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "download",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "dur",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "dx",
+      "family": "geometry",
+      "appliesTo": [
+        "feDropShadow",
+        "feOffset",
+        "text",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "dy",
+      "family": "geometry",
+      "appliesTo": [
+        "feDropShadow",
+        "feOffset",
+        "text",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "edgeMode",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix",
+        "feGaussianBlur"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "elevation",
+      "family": "filter",
+      "appliesTo": [
+        "feDistantLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "end",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "exponent",
+      "family": "filter",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "fill",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "filterUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "filter"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "fr",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "from",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "fx",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "fy",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "gradientTransform",
+      "family": "geometry",
+      "appliesTo": [
+        "linearGradient",
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "gradientUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "linearGradient",
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "height",
+      "family": "geometry",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "feSpecularLighting",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "mask",
+        "pattern"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "href",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "discard",
+        "feImage",
+        "image",
+        "linearGradient",
+        "mpath",
+        "pattern",
+        "radialGradient",
+        "script",
+        "set",
+        "textPath",
+        "use"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "hreflang",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "id",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "in",
+      "family": "filter",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feGaussianBlur",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "feSpecularLighting",
+        "feTile"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "in2",
+      "family": "filter",
+      "appliesTo": [
+        "feBlend",
+        "feComposite",
+        "feDisplacementMap"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "intercept",
+      "family": "filter",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "k1",
+      "family": "filter",
+      "appliesTo": [
+        "feComposite"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "k2",
+      "family": "filter",
+      "appliesTo": [
+        "feComposite"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "k3",
+      "family": "filter",
+      "appliesTo": [
+        "feComposite"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "k4",
+      "family": "filter",
+      "appliesTo": [
+        "feComposite"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "kernelMatrix",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "kernelUnitLength",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feSpecularLighting"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "keyPoints",
+      "family": "animation-value",
+      "appliesTo": [
+        "animateMotion"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "keySplines",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "keyTimes",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "lang",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "lengthAdjust",
+      "family": "geometry",
+      "appliesTo": [
+        "text",
+        "textPath",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "limitingConeAngle",
+      "family": "filter",
+      "appliesTo": [
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "markerHeight",
+      "family": "geometry",
+      "appliesTo": [
+        "marker"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "markerUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "marker"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "markerWidth",
+      "family": "geometry",
+      "appliesTo": [
+        "marker"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "maskContentUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "mask"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "maskUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "mask"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "max",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "media",
+      "family": "core",
+      "appliesTo": [
+        "style"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "method",
+      "family": "geometry",
+      "appliesTo": [
+        "textPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "min",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "mode",
+      "family": "filter",
+      "appliesTo": [
+        "feBlend"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "numOctaves",
+      "family": "filter",
+      "appliesTo": [
+        "feTurbulence"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "offset",
+      "family": "geometry",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "stop"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onabort",
+      "family": "event",
+      "appliesTo": [
+        "svg"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onafterprint",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onbeforeprint",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onbegin",
+      "family": "event",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncancel",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncanplay",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncanplaythrough",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onchange",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onclick",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onclose",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncopy",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncuechange",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oncut",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondblclick",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondrag",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragend",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragenter",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragexit",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragleave",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragover",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondragstart",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondrop",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ondurationchange",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onemptied",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onend",
+      "family": "event",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onended",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onerror",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onfocus",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onfocusin",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "path",
+        "polygon",
+        "polyline",
+        "rect",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "tspan",
+        "unknown",
+        "use",
+        "video"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onfocusout",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "path",
+        "polygon",
+        "polyline",
+        "rect",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "tspan",
+        "unknown",
+        "use",
+        "video"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onhashchange",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oninput",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "oninvalid",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onkeydown",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onkeypress",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onkeyup",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onload",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onloadeddata",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onloadedmetadata",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onloadstart",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmessage",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmousedown",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmouseenter",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmouseleave",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmousemove",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmouseout",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmouseover",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmouseup",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onmousewheel",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onoffline",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ononline",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onpagehide",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onpageshow",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onpaste",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onpause",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onplay",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onplaying",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onpopstate",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onprogress",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onratechange",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onrepeat",
+      "family": "event",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onreset",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onresize",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onscroll",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onseeked",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onseeking",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onselect",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onshow",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onstalled",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onstorage",
+      "family": "event",
+      "appliesTo": [],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onsubmit",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onsuspend",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ontimeupdate",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ontoggle",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onunload",
+      "family": "event",
+      "appliesTo": [
+        "svg"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onvolumechange",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "onwaiting",
+      "family": "event",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "defs",
+        "desc",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "operator",
+      "family": "filter",
+      "appliesTo": [
+        "feComposite",
+        "feMorphology"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "order",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "orient",
+      "family": "geometry",
+      "appliesTo": [
+        "marker"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "origin",
+      "family": "animation-value",
+      "appliesTo": [
+        "animateMotion"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "path",
+      "family": "geometry",
+      "appliesTo": [
+        "animateMotion",
+        "textPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "pathLength",
+      "family": "geometry",
+      "appliesTo": [
+        "circle",
+        "ellipse",
+        "line",
+        "path",
+        "polygon",
+        "polyline",
+        "rect"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "patternContentUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "pattern"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "patternTransform",
+      "family": "geometry",
+      "appliesTo": [
+        "pattern"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "patternUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "pattern"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "ping",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "playbackorder",
+      "family": "geometry",
+      "appliesTo": [
+        "svg"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "points",
+      "family": "geometry",
+      "appliesTo": [
+        "polygon",
+        "polyline"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "pointsAtX",
+      "family": "filter",
+      "appliesTo": [
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "pointsAtY",
+      "family": "filter",
+      "appliesTo": [
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "pointsAtZ",
+      "family": "filter",
+      "appliesTo": [
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "preserveAlpha",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "preserveAspectRatio",
+      "family": "geometry",
+      "appliesTo": [
+        "canvas",
+        "feImage",
+        "image",
+        "marker",
+        "pattern",
+        "svg",
+        "symbol",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "primitiveUnits",
+      "family": "geometry",
+      "appliesTo": [
+        "filter"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "r",
+      "family": "geometry",
+      "appliesTo": [
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "radius",
+      "family": "filter",
+      "appliesTo": [
+        "feMorphology"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "refX",
+      "family": "geometry",
+      "appliesTo": [
+        "marker",
+        "symbol"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "refY",
+      "family": "geometry",
+      "appliesTo": [
+        "marker",
+        "symbol"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "referrerpolicy",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "rel",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "repeatCount",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "repeatDur",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "requiredExtensions",
+      "family": "conditional-processing",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "discard",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "mask",
+        "path",
+        "polygon",
+        "polyline",
+        "rect",
+        "set",
+        "svg",
+        "switch",
+        "text",
+        "textPath",
+        "tspan",
+        "unknown",
+        "use",
+        "video"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "restart",
+      "family": "animation-timing",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "result",
+      "family": "filter",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "feSpecularLighting",
+        "feTile",
+        "feTurbulence"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "role",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "audio",
+        "canvas",
+        "circle",
+        "discard",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "path",
+        "polygon",
+        "polyline",
+        "rect",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "rotate",
+      "family": "geometry",
+      "appliesTo": [
+        "animateMotion",
+        "text",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "scale",
+      "family": "filter",
+      "appliesTo": [
+        "feDisplacementMap"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "seed",
+      "family": "filter",
+      "appliesTo": [
+        "feTurbulence"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "side",
+      "family": "geometry",
+      "appliesTo": [
+        "textPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "slope",
+      "family": "filter",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "spacing",
+      "family": "geometry",
+      "appliesTo": [
+        "textPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "specularConstant",
+      "family": "filter",
+      "appliesTo": [
+        "feSpecularLighting"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "specularExponent",
+      "family": "filter",
+      "appliesTo": [
+        "feSpecularLighting",
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "spreadMethod",
+      "family": "geometry",
+      "appliesTo": [
+        "linearGradient",
+        "radialGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "startOffset",
+      "family": "geometry",
+      "appliesTo": [
+        "textPath"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "stdDeviation",
+      "family": "filter",
+      "appliesTo": [
+        "feDropShadow",
+        "feGaussianBlur"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "stitchTiles",
+      "family": "filter",
+      "appliesTo": [
+        "feTurbulence"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "style",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "surfaceScale",
+      "family": "filter",
+      "appliesTo": [
+        "feDiffuseLighting",
+        "feSpecularLighting"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "systemLanguage",
+      "family": "conditional-processing",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "discard",
+        "ellipse",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "mask",
+        "path",
+        "polygon",
+        "polyline",
+        "rect",
+        "set",
+        "svg",
+        "switch",
+        "text",
+        "textPath",
+        "tspan",
+        "unknown",
+        "use",
+        "video"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "tabindex",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "tableValues",
+      "family": "filter",
+      "appliesTo": [
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "target",
+      "family": "core",
+      "appliesTo": [
+        "a"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "targetX",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "targetY",
+      "family": "filter",
+      "appliesTo": [
+        "feConvolveMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "textLength",
+      "family": "geometry",
+      "appliesTo": [
+        "text",
+        "textPath",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "timelinebegin",
+      "family": "geometry",
+      "appliesTo": [
+        "svg"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "title",
+      "family": "core",
+      "appliesTo": [
+        "style"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "to",
+      "family": "animation-value",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "set"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "transform",
+      "family": "geometry",
+      "appliesTo": [
+        "svg"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "type",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animateTransform",
+        "feColorMatrix",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feTurbulence",
+        "script",
+        "style"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "values",
+      "family": "geometry",
+      "appliesTo": [
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "feColorMatrix"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "viewBox",
+      "family": "geometry",
+      "appliesTo": [
+        "marker",
+        "pattern",
+        "svg",
+        "symbol",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "width",
+      "family": "geometry",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "feSpecularLighting",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "mask",
+        "pattern"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "x",
+      "family": "geometry",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "mask",
+        "pattern",
+        "text",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "x1",
+      "family": "geometry",
+      "appliesTo": [
+        "line",
+        "linearGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "x2",
+      "family": "geometry",
+      "appliesTo": [
+        "line",
+        "linearGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "xChannelSelector",
+      "family": "filter",
+      "appliesTo": [
+        "feDisplacementMap"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "xlink:href",
+      "family": "xlink",
+      "appliesTo": [
+        "a",
+        "feImage",
+        "image",
+        "linearGradient",
+        "pattern",
+        "radialGradient",
+        "script",
+        "textPath",
+        "use"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "xlink:title",
+      "family": "xlink",
+      "appliesTo": [
+        "a",
+        "image",
+        "linearGradient",
+        "pattern",
+        "radialGradient",
+        "script",
+        "textPath",
+        "use"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "xml:space",
+      "family": "core",
+      "appliesTo": [
+        "a",
+        "animate",
+        "animateMotion",
+        "animateTransform",
+        "audio",
+        "canvas",
+        "circle",
+        "clipPath",
+        "defs",
+        "desc",
+        "discard",
+        "ellipse",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDistantLight",
+        "feDropShadow",
+        "feFlood",
+        "feFuncA",
+        "feFuncB",
+        "feFuncG",
+        "feFuncR",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMergeNode",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "foreignObject",
+        "g",
+        "iframe",
+        "image",
+        "line",
+        "linearGradient",
+        "marker",
+        "mask",
+        "metadata",
+        "mpath",
+        "path",
+        "pattern",
+        "polygon",
+        "polyline",
+        "radialGradient",
+        "rect",
+        "script",
+        "set",
+        "stop",
+        "style",
+        "svg",
+        "switch",
+        "symbol",
+        "text",
+        "textPath",
+        "title",
+        "tspan",
+        "unknown",
+        "use",
+        "video",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "y",
+      "family": "geometry",
+      "appliesTo": [
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feDropShadow",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "fePointLight",
+        "feSpecularLighting",
+        "feSpotLight",
+        "feTile",
+        "feTurbulence",
+        "filter",
+        "mask",
+        "pattern",
+        "text",
+        "tspan"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "y1",
+      "family": "geometry",
+      "appliesTo": [
+        "line",
+        "linearGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "y2",
+      "family": "geometry",
+      "appliesTo": [
+        "line",
+        "linearGradient"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "yChannelSelector",
+      "family": "filter",
+      "appliesTo": [
+        "feDisplacementMap"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "z",
+      "family": "filter",
+      "appliesTo": [
+        "fePointLight",
+        "feSpotLight"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "zoomAndPan",
+      "family": "geometry",
+      "appliesTo": [
+        "svg",
+        "view"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-activedescendant",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-atomic",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-autocomplete",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-busy",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-checked",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-colcount",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-colindex",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-colspan",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-controls",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-current",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-describedby",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-details",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-disabled",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-dropeffect",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-errormessage",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-expanded",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-flowto",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-grabbed",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-haspopup",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-hidden",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-invalid",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-keyshortcuts",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-label",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-labelledby",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-level",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-live",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-modal",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-multiline",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-multiselectable",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-orientation",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-owns",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-placeholder",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-posinset",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-pressed",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-readonly",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-relevant",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-required",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-roledescription",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-rowcount",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-rowindex",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-rowspan",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-selected",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-setsize",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-sort",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-valuemax",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-valuemin",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-valuenow",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    },
+    {
+      "name": "aria-valuetext",
+      "family": "aria",
+      "appliesTo": [
+        "(most rendered elements)"
+      ],
+      "valueGrammar": null,
+      "finiteEnum": false
+    }
+  ]
+}

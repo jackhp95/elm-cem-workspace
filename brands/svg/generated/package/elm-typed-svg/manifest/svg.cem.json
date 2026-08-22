@@ -106,6 +106,47 @@
           "description": "Renders the first of its direct children whose feature/requirement test attributes evaluate true.",
           "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
           "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "requiredExtensions", "type": { "text": "string" }, "description": "A list of extension-namespace IRIs a child requires; a `switch` selects the first child whose required extensions are all supported." },
+            { "name": "systemLanguage", "type": { "text": "string" }, "description": "A comma-separated list of BCP-47 language tags; a `switch` selects the first child whose systemLanguage matches the user's preferences." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "ForeignObject",
+          "tagName": "foreignObject",
+          "customElement": true,
+          "description": "A viewport into which content from another XML namespace (typically HTML flow content) is rendered. The single typed bridge from an SVG subtree into TypedHtml: it admits shared flow/phrasing content, so an HTML `div` may nest inside SVG only here.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the foreignObject's viewport." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the foreignObject's viewport." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the foreignObject's viewport." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the foreignObject's viewport." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "View",
+          "tagName": "view",
+          "customElement": true,
+          "description": "A named viewport definition, targeted by a URL fragment (`file.svg#viewId`) to establish a specific view of the document. Not rendered directly.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "viewBox", "type": { "text": "string" }, "description": "The viewBox this named view establishes when targeted." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the viewBox to the viewport when this view is targeted." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Metadata",
+          "tagName": "metadata",
+          "customElement": true,
+          "description": "A container for document metadata (RDF, Dublin Core, etc.). Not rendered as graphics.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
           "attributes": []
         },
         {
@@ -270,7 +311,10 @@
           "slots": [{ "name": "unnamed" }],
           "attributes": [
             { "name": "href", "type": { "text": "string" }, "description": "Reference to the path the text is laid out along." },
-            { "name": "startOffset", "type": { "text": "string" }, "description": "Offset from the start of the path where the text begins." }
+            { "name": "startOffset", "type": { "text": "string" }, "description": "Offset from the start of the path where the text begins." },
+            { "name": "method", "type": { "text": "string" }, "description": "How glyphs are rendered along the path (`align` or `stretch`)." },
+            { "name": "side", "type": { "text": "string" }, "description": "Which side of the path the text is placed on (`left` or `right`)." },
+            { "name": "spacing", "type": { "text": "string" }, "description": "How space between glyphs is handled along the path (`auto` or `exact`)." }
           ]
         },
         {
@@ -411,6 +455,485 @@
             { "name": "width", "type": { "text": "string" }, "description": "Width of the image rectangle." },
             { "name": "height", "type": { "text": "string" }, "description": "Height of the image rectangle." },
             { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the image to fit its rectangle." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Filter",
+          "tagName": "filter",
+          "customElement": true,
+          "description": "Defines a filter effect (a graph of filter primitives) referenced by the `filter` presentation property.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the filter region." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the filter region." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the filter region." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the filter region." },
+            { "name": "filterUnits", "type": { "text": "string" }, "description": "Coordinate system for the filter region (`userSpaceOnUse` or `objectBoundingBox`)." },
+            { "name": "primitiveUnits", "type": { "text": "string" }, "description": "Coordinate system for the filter primitives' subregions and length values." },
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to another filter whose attributes/primitives are inherited." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeBlend",
+          "tagName": "feBlend",
+          "customElement": true,
+          "description": "Filter primitive: blends two input images together using a blend mode.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "First input for the primitive (a result name or a source keyword like `SourceGraphic`)." },
+            { "name": "in2", "type": { "text": "string" }, "description": "Second input for the primitive." },
+            { "name": "mode", "type": { "text": "'normal' | 'multiply' | 'screen' | 'overlay' | 'darken' | 'lighten' | 'color-dodge' | 'color-burn' | 'hard-light' | 'soft-light' | 'difference' | 'exclusion' | 'hue' | 'saturation' | 'color' | 'luminosity'" }, "description": "The blend mode." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output for use as another primitive's `in`." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeColorMatrix",
+          "tagName": "feColorMatrix",
+          "customElement": true,
+          "description": "Filter primitive: applies a matrix transformation to the RGBA channels of its input.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "type", "type": { "text": "'matrix' | 'saturate' | 'hueRotate' | 'luminanceToAlpha'" }, "description": "The kind of matrix operation." },
+            { "name": "values", "type": { "text": "string" }, "description": "The matrix values (meaning depends on `type`)." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeComponentTransfer",
+          "tagName": "feComponentTransfer",
+          "customElement": true,
+          "description": "Filter primitive: performs per-channel remapping of its input via feFunc* children.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeComposite",
+          "tagName": "feComposite",
+          "customElement": true,
+          "description": "Filter primitive: combines two inputs using Porter-Duff compositing or arithmetic.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "First input for the primitive." },
+            { "name": "in2", "type": { "text": "string" }, "description": "Second input for the primitive." },
+            { "name": "operator", "type": { "text": "'over' | 'in' | 'out' | 'atop' | 'xor' | 'arithmetic'" }, "description": "The compositing operator." },
+            { "name": "k1", "type": { "text": "string" }, "description": "Arithmetic coefficient k1 (used when operator is `arithmetic`)." },
+            { "name": "k2", "type": { "text": "string" }, "description": "Arithmetic coefficient k2." },
+            { "name": "k3", "type": { "text": "string" }, "description": "Arithmetic coefficient k3." },
+            { "name": "k4", "type": { "text": "string" }, "description": "Arithmetic coefficient k4." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeConvolveMatrix",
+          "tagName": "feConvolveMatrix",
+          "customElement": true,
+          "description": "Filter primitive: applies a convolution kernel to its input (blur, sharpen, edge-detect, emboss).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "order", "type": { "text": "string" }, "description": "The size of the kernel matrix (`orderX orderY`)." },
+            { "name": "kernelMatrix", "type": { "text": "string" }, "description": "The list of kernel values, row-major." },
+            { "name": "divisor", "type": { "text": "string" }, "description": "Value each convolved pixel is divided by." },
+            { "name": "bias", "type": { "text": "string" }, "description": "Value added to each convolved pixel." },
+            { "name": "targetX", "type": { "text": "string" }, "description": "X position of the kernel target cell." },
+            { "name": "targetY", "type": { "text": "string" }, "description": "Y position of the kernel target cell." },
+            { "name": "edgeMode", "type": { "text": "'duplicate' | 'wrap' | 'none'" }, "description": "How the kernel behaves at the input edges." },
+            { "name": "kernelUnitLength", "type": { "text": "string" }, "description": "Intended distance between kernel cells." },
+            { "name": "preserveAlpha", "type": { "text": "string" }, "description": "Whether the alpha channel is convolved (`false`) or preserved (`true`)." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeDiffuseLighting",
+          "tagName": "feDiffuseLighting",
+          "customElement": true,
+          "description": "Filter primitive: lights an image using its alpha channel as a bump map (diffuse reflection).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "surfaceScale", "type": { "text": "string" }, "description": "Height of the surface for the alpha bump map." },
+            { "name": "diffuseConstant", "type": { "text": "string" }, "description": "The diffuse reflection constant kd." },
+            { "name": "kernelUnitLength", "type": { "text": "string" }, "description": "Intended distance for the surface normal calculation." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeDisplacementMap",
+          "tagName": "feDisplacementMap",
+          "customElement": true,
+          "description": "Filter primitive: displaces the pixels of one input using the channel values of another.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "The image to be displaced." },
+            { "name": "in2", "type": { "text": "string" }, "description": "The displacement map image." },
+            { "name": "scale", "type": { "text": "string" }, "description": "Displacement scale factor." },
+            { "name": "xChannelSelector", "type": { "text": "'R' | 'G' | 'B' | 'A'" }, "description": "Which channel of in2 drives X displacement." },
+            { "name": "yChannelSelector", "type": { "text": "'R' | 'G' | 'B' | 'A'" }, "description": "Which channel of in2 drives Y displacement." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeDropShadow",
+          "tagName": "feDropShadow",
+          "customElement": true,
+          "description": "Filter primitive: a convenience shorthand producing a blurred, offset, coloured drop shadow of the alpha channel, composited under the input.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "dx", "type": { "text": "string" }, "description": "X offset of the shadow." },
+            { "name": "dy", "type": { "text": "string" }, "description": "Y offset of the shadow." },
+            { "name": "stdDeviation", "type": { "text": "string" }, "description": "Standard deviation of the shadow's Gaussian blur." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeFlood",
+          "tagName": "feFlood",
+          "customElement": true,
+          "description": "Filter primitive: fills the primitive subregion with a solid colour and opacity (flood-color / flood-opacity).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeGaussianBlur",
+          "tagName": "feGaussianBlur",
+          "customElement": true,
+          "description": "Filter primitive: applies a Gaussian blur to its input.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "stdDeviation", "type": { "text": "string" }, "description": "Standard deviation of the blur (`stdDeviationX` or `stdDeviationX stdDeviationY`)." },
+            { "name": "edgeMode", "type": { "text": "'duplicate' | 'wrap' | 'none'" }, "description": "How the blur behaves at the input edges." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeImage",
+          "tagName": "feImage",
+          "customElement": true,
+          "description": "Filter primitive: refers to an external image or another element as a filter input.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "href", "type": { "text": "string" }, "description": "Reference to the image resource or element." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the referenced image into the subregion." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeMerge",
+          "tagName": "feMerge",
+          "customElement": true,
+          "description": "Filter primitive: composites its feMergeNode children in order, stacking the results.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeMergeNode",
+          "tagName": "feMergeNode",
+          "customElement": true,
+          "description": "A single input layer inside an feMerge, naming a result to composite.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "The result name to composite at this layer." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeMorphology",
+          "tagName": "feMorphology",
+          "customElement": true,
+          "description": "Filter primitive: fattens (dilate) or thins (erode) the shapes in its input.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "operator", "type": { "text": "'erode' | 'dilate'" }, "description": "Whether to erode or dilate." },
+            { "name": "radius", "type": { "text": "string" }, "description": "The morphology radius (`radiusX` or `radiusX radiusY`)." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeOffset",
+          "tagName": "feOffset",
+          "customElement": true,
+          "description": "Filter primitive: offsets its input image by (dx, dy).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "dx", "type": { "text": "string" }, "description": "Amount to offset in X." },
+            { "name": "dy", "type": { "text": "string" }, "description": "Amount to offset in Y." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeSpecularLighting",
+          "tagName": "feSpecularLighting",
+          "customElement": true,
+          "description": "Filter primitive: lights an image using its alpha channel as a bump map (specular reflection).",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "surfaceScale", "type": { "text": "string" }, "description": "Height of the surface for the alpha bump map." },
+            { "name": "specularConstant", "type": { "text": "string" }, "description": "The specular reflection constant ks." },
+            { "name": "specularExponent", "type": { "text": "string" }, "description": "The specular exponent (shininess)." },
+            { "name": "kernelUnitLength", "type": { "text": "string" }, "description": "Intended distance for the surface normal calculation." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeTile",
+          "tagName": "feTile",
+          "customElement": true,
+          "description": "Filter primitive: tiles its input across the primitive subregion.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "in", "type": { "text": "string" }, "description": "Input for the primitive." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeTurbulence",
+          "tagName": "feTurbulence",
+          "customElement": true,
+          "description": "Filter primitive: generates Perlin turbulence / fractal noise, used for textures.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "baseFrequency", "type": { "text": "string" }, "description": "Base frequency of the noise (`fX` or `fX fY`)." },
+            { "name": "numOctaves", "type": { "text": "string" }, "description": "Number of octaves of noise." },
+            { "name": "seed", "type": { "text": "string" }, "description": "Starting seed for the pseudo-random generator." },
+            { "name": "stitchTiles", "type": { "text": "'stitch' | 'noStitch'" }, "description": "Whether tile edges are stitched to avoid seams." },
+            { "name": "type", "type": { "text": "'fractalNoise' | 'turbulence'" }, "description": "Fractal noise or turbulence." },
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the primitive subregion." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the primitive subregion." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the primitive subregion." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the primitive subregion." },
+            { "name": "result", "type": { "text": "string" }, "description": "Name assigned to this primitive's output." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeFuncR",
+          "tagName": "feFuncR",
+          "customElement": true,
+          "description": "The red-channel transfer function of an feComponentTransfer.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "type", "type": { "text": "'identity' | 'table' | 'discrete' | 'linear' | 'gamma'" }, "description": "The kind of transfer function." },
+            { "name": "tableValues", "type": { "text": "string" }, "description": "The lookup-table values (for `table`/`discrete`)." },
+            { "name": "slope", "type": { "text": "string" }, "description": "Slope of the linear function." },
+            { "name": "intercept", "type": { "text": "string" }, "description": "Intercept of the linear function." },
+            { "name": "amplitude", "type": { "text": "string" }, "description": "Amplitude of the gamma function." },
+            { "name": "exponent", "type": { "text": "string" }, "description": "Exponent of the gamma function." },
+            { "name": "offset", "type": { "text": "string" }, "description": "Offset of the gamma function." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeFuncG",
+          "tagName": "feFuncG",
+          "customElement": true,
+          "description": "The green-channel transfer function of an feComponentTransfer.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "type", "type": { "text": "'identity' | 'table' | 'discrete' | 'linear' | 'gamma'" }, "description": "The kind of transfer function." },
+            { "name": "tableValues", "type": { "text": "string" }, "description": "The lookup-table values (for `table`/`discrete`)." },
+            { "name": "slope", "type": { "text": "string" }, "description": "Slope of the linear function." },
+            { "name": "intercept", "type": { "text": "string" }, "description": "Intercept of the linear function." },
+            { "name": "amplitude", "type": { "text": "string" }, "description": "Amplitude of the gamma function." },
+            { "name": "exponent", "type": { "text": "string" }, "description": "Exponent of the gamma function." },
+            { "name": "offset", "type": { "text": "string" }, "description": "Offset of the gamma function." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeFuncB",
+          "tagName": "feFuncB",
+          "customElement": true,
+          "description": "The blue-channel transfer function of an feComponentTransfer.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "type", "type": { "text": "'identity' | 'table' | 'discrete' | 'linear' | 'gamma'" }, "description": "The kind of transfer function." },
+            { "name": "tableValues", "type": { "text": "string" }, "description": "The lookup-table values (for `table`/`discrete`)." },
+            { "name": "slope", "type": { "text": "string" }, "description": "Slope of the linear function." },
+            { "name": "intercept", "type": { "text": "string" }, "description": "Intercept of the linear function." },
+            { "name": "amplitude", "type": { "text": "string" }, "description": "Amplitude of the gamma function." },
+            { "name": "exponent", "type": { "text": "string" }, "description": "Exponent of the gamma function." },
+            { "name": "offset", "type": { "text": "string" }, "description": "Offset of the gamma function." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeFuncA",
+          "tagName": "feFuncA",
+          "customElement": true,
+          "description": "The alpha-channel transfer function of an feComponentTransfer.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "type", "type": { "text": "'identity' | 'table' | 'discrete' | 'linear' | 'gamma'" }, "description": "The kind of transfer function." },
+            { "name": "tableValues", "type": { "text": "string" }, "description": "The lookup-table values (for `table`/`discrete`)." },
+            { "name": "slope", "type": { "text": "string" }, "description": "Slope of the linear function." },
+            { "name": "intercept", "type": { "text": "string" }, "description": "Intercept of the linear function." },
+            { "name": "amplitude", "type": { "text": "string" }, "description": "Amplitude of the gamma function." },
+            { "name": "exponent", "type": { "text": "string" }, "description": "Exponent of the gamma function." },
+            { "name": "offset", "type": { "text": "string" }, "description": "Offset of the gamma function." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeDistantLight",
+          "tagName": "feDistantLight",
+          "customElement": true,
+          "description": "A distant (directional) light source for feDiffuseLighting / feSpecularLighting.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "azimuth", "type": { "text": "string" }, "description": "Direction angle in the XY plane, in degrees." },
+            { "name": "elevation", "type": { "text": "string" }, "description": "Direction angle out of the XY plane, in degrees." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FePointLight",
+          "tagName": "fePointLight",
+          "customElement": true,
+          "description": "A point light source for feDiffuseLighting / feSpecularLighting.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X location of the light source." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y location of the light source." },
+            { "name": "z", "type": { "text": "string" }, "description": "Z location of the light source." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "FeSpotLight",
+          "tagName": "feSpotLight",
+          "customElement": true,
+          "description": "A spot light source for feDiffuseLighting / feSpecularLighting.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X location of the light source." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y location of the light source." },
+            { "name": "z", "type": { "text": "string" }, "description": "Z location of the light source." },
+            { "name": "pointsAtX", "type": { "text": "string" }, "description": "X of the point the light points at." },
+            { "name": "pointsAtY", "type": { "text": "string" }, "description": "Y of the point the light points at." },
+            { "name": "pointsAtZ", "type": { "text": "string" }, "description": "Z of the point the light points at." },
+            { "name": "specularExponent", "type": { "text": "string" }, "description": "Focus of the light source." },
+            { "name": "limitingConeAngle", "type": { "text": "string" }, "description": "Half-angle of the light cone, in degrees." }
           ]
         }
       ]

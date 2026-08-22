@@ -571,6 +571,15 @@ function buildSteps() {
     }
 
     steps.push(step("workspace: check-coverage-map", process.execPath, [path.join(repoRoot, "tools", "check-coverage-map.mjs")]));
+    // The SVG API-vs-spec coverage gate (docs/plans/2026-08-21-svg-api-spec-audit-plan.md
+    // Task 6): diffs docs/svg-audit/spec-index.json against what elm-typed-svg
+    // actually generates and fails on any un-excepted gap. Same mapped/exception
+    // honesty contract as check-coverage-map above, brand-scoped to SVG.
+    steps.push(
+        step("workspace: check-svg-spec-coverage (SVG API-vs-spec gate)", process.execPath, [
+            path.join(repoRoot, "tools", "check-svg-spec-coverage.mjs"),
+        ]),
+    );
     steps.push(
         step("workspace: check-single-cem-facts", process.execPath, [path.join(repoRoot, "tools", "check-single-cem-facts.mjs")]),
     );
