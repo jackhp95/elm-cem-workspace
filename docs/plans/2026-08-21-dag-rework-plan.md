@@ -483,10 +483,10 @@ regen + phantom re-bless, NOT in `gate-all`.
 
 ### Task 9: html 5-tier follow-up hand-off (record only — OQ-5)
 
-- [ ] **Step 9.1** Write a one-paragraph hand-off note (in this plan's follow-ups section or a new stub
+- [x] **Step 9.1** Write a one-paragraph hand-off note (in this plan's follow-ups section or a new stub
       plan) recording that html's 5-tier target (reconciliation §2.4 / OQ-5) is now *unblocked* by the
       landed DAG and needs its own plan (html has no families/Build today; standing up its Components +
-      Builders tiers is a separate design).
+      Builders tiers is a separate design). **Done 2026-08-21 — see § Follow-ups / FU-1 below.**
 
 **Acceptance:** hand-off recorded. **No code.**
 
@@ -534,3 +534,52 @@ on ancestor branch `spec/explosion-research`, which is also absent from this wor
 verbatim quote of Jack's redirect and its re-statement of the current-vs-target gap were sufficient, and
 the brief separately instructed re-derivation from live source — which is what this plan is built on. The
 missing tracker is logged as a friction; nothing in this plan depends on it.
+
+---
+
+## Follow-ups
+
+### FU-1 — html 5-tier target is now UNBLOCKED, needs its own plan (Task 9 hand-off — OQ-5)
+
+**Recorded 2026-08-21, DAG-rework Task 9 (doc-only, no code).**
+
+With this plan landed, the linear `IR → Core → Elements → Components → Builders` DAG is materialized
+and gate-enforced for **m3e**, and the composition-driven builder emitter
+(`codegen/Generate/Phantom/Emit/BuildPackage.elm`) is now a general, brand-agnostic capability rather
+than an m3e special case — shoelace already rides it (its 59 builders emit as degenerate single-member
+families through the same emitter). **This was the precondition the reconciliation plan called out**
+(reconciliation §2.4 / §11-OQ5, and its own note at lines ~216-221: html's 3-tier split
+`elm-typed-html-{core,elements,facts}` is a *ceiling for that pass only*, not permanent, "because html
+is a home-only brand and no Build/components tier existed to split — deferred to that rework").
+
+**html's target is 5 tiers** (`core → elements → components → build`, + `facts` off to the side), the
+same shape m3e now ships. Today html has **no Build tier and no families/composition config** at all —
+verified: `brands/html/generated/package/` holds only `elm-typed-html{,-core,-elements,-facts}`, there
+is no `TypedHtml.Build.*` tree, and html's CEM config carries no `_families`. So html is **not** merely
+a regen away from 5 tiers; standing up its Components + Builders tiers is a genuine design task:
+
+- **What the landed DAG gives html for free:** the emitter path exists. If html gains a `_families`
+  composition config (or relies purely on the degenerate single-member-family expansion that
+  `BuildPackage.elm` already computes from `brand.comps`), the same emitter that produces m3e's and
+  shoelace's builders will produce `TypedHtml.Build.*` with no new generator code.
+- **What still needs designing (the follow-up plan's real scope):**
+  1. **Does html even want a family/composition tier?** html elements are the raw HTML element set;
+     whether there are meaningful *families* (composite widgets) to author, or whether html stays
+     degenerate-single-member-only (a Build tier that is a thin composed façade over Elements, like
+     shoelace's), is a product decision — not settled here.
+  2. **The `packages.json` split.** html would move from a 3-package split to a 4-or-5-package split
+     (`+elm-typed-html-components`, `+elm-typed-html-build`), following the m3e materialization recipe
+     (Task 4 here): Build + Components become `FamilyPackage`/`BuildPackage`-generated packages (not
+     `split.js` buckets), with deps auto-derived by `family-deps.js` and the DAG asserted by the Task-5
+     `check-package-dag.mjs` gate (which is already brand-agnostic and would cover html the moment it
+     grows a Build tier).
+  3. **Consumer blast radius.** Whatever html consumers (docs/examples) import today; a new Build tier
+     is additive, so this is smaller than m3e's rename was — but still its own migration step.
+  4. **The published mirror** (`jackhp95/elm-typed-html*`) gains new packages — a publish/versioning
+     decision mirroring m3e's.
+
+**Action:** this is deliberately **not folded into this plan** (OQ-5 resolution: 5 is the future
+target, delivered separately). A dedicated plan doc — suggested `docs/plans/YYYY-MM-DD-html-5-tier-plan.md`
+— should own the html Components/Builders standup, reusing this plan's Task-4 materialization recipe and
+the reconciliation plan's atomic-remap discipline. **svg is separately exempt** (home-only, no Build
+tier and no near-term 5-tier target — see Blast-radius table; svg is not part of this follow-up).
