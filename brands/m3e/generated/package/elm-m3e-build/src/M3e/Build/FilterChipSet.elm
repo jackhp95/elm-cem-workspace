@@ -1,58 +1,56 @@
-module M3e.Build.FilterChipSet exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withSlot, withStyle, withVertical
-    , withChild
-    )
+module M3e.Build.FilterChipSet exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withSlot, withStyle, withVertical, withChild)
 
-{-|
+{-| The **FilterChipSet** element — the flat per-element builder surface,
+sourced through the **Chip** family façade
+(`M3e.Component.Chip`). This module and the aggregated
+`M3e.Build.Chip` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withSlot, withStyle, withVertical
-@docs withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideSelectionIndicator, withId, withMulti, withName, withOnBeforeinput, withOnChange, withOnInput, withSlot, withStyle, withVertical, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.FilterChipSet as Component
+import M3e.Component.Chip as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FilterSetIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FilterSetBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FilterSetAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.FilterSetSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.FilterSetChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.FilterSetContent
 
 
 {-| -}
@@ -62,7 +60,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FilterSetIs kind) admittedBy msg
 toElement =
     B.toElement
 

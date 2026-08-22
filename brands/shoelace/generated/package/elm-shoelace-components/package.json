@@ -1,0 +1,10 @@
+{
+  "name": "elm-shoelace-components",
+  "version": "1.0.0",
+  "description": "elm-shoelace family-grouped component surfaces (Sl.Component.*). Committed split sibling of the elm-shoelace staging root (jackhp95/elm-shoelace-components).",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-shoelace/node_modules/.bin/elm --dep-src=jackhp95/elm-shoelace-core=../elm-shoelace-core/src --dep-src=jackhp95/elm-shoelace-elements=../elm-shoelace-elements/src"
+  }
+}

@@ -1,57 +1,56 @@
-module Hz.Build.EventClash exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withId, withOnError, withOnHzError, withOnHzLoad, withOnLoad, withSlot, withStyle
-    , withChild
-    )
+module Hz.Build.EventClash exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withOnError, withOnHzError, withOnHzLoad, withOnLoad, withSlot, withStyle, withChild)
 
-{-|
+{-| The **EventClash** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withId, withOnError, withOnHzError, withOnHzLoad, withOnLoad, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Hz.Component.EventClash`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Hz.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withOnError, withOnHzError, withOnHzLoad, withOnLoad, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Hz.Attributes as A
-import Hz.Element.EventClash as Component
+import Hz.Component.EventClash as Component
 import Hz.Events as Ev
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
+import Hz.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.EventClashIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.EventClashBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.EventClashAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.EventClashSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.EventClashChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.EventClashContent
 
 
 {-| -}
@@ -61,7 +60,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.EventClashIs kind) admittedBy msg
 toElement =
     B.toElement
 

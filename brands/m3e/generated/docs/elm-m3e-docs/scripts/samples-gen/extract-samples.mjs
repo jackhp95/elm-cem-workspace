@@ -60,9 +60,22 @@ const ELM_FORMAT = firstExisting([
   path.join(REPO, "node_modules", ".bin", "elm-format"),
 ]);
 
-// Where a sample's modules may resolve from. Mirrors docs/samples/elm.json.
+// Where a sample's modules may resolve from. Mirrors docs/samples/elm.json's
+// source-directories. After the m3e package split (and the DAG rework that made
+// Build/Components their own sibling packages), the `M3e.Build.*` and
+// `M3e.Component.*` modules no longer live under `elm-m3e/src` — they are emitted
+// into the sibling `elm-m3e-{build,components,elements,core,facts,icons}` packages.
+// `resolves()` below drops any qualified import it cannot find here (on purpose —
+// see its call site), so a sibling package missing from this list silently strips
+// a real, used import (e.g. `import M3e.Build.Button`) out of the derived sample,
+// producing a sample that no longer compiles. Keep this list in lockstep with
+// docs/samples/elm.json.
+const SPLIT_SIBLINGS = ["core", "elements", "components", "build", "facts", "icons"].map((p) =>
+  path.join(REPO, "..", `elm-m3e-${p}`, "src"),
+);
 const SRC_DIRS = [
   path.join(REPO, "src"),
+  ...SPLIT_SIBLINGS,
   path.join(DOCS, "vendor", "elm-foundation"),
   path.join(SAMPLES, "support"),
 ];

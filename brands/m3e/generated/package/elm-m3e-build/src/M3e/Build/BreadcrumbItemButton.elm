@@ -1,25 +1,22 @@
-module M3e.Build.BreadcrumbItemButton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withCurrent, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-    , withChild
-    )
+module M3e.Build.BreadcrumbItemButton exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withCurrent, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, withChild)
 
-{-|
+{-| The **BreadcrumbItemButton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withCurrent, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.BreadcrumbItemButton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withCurrent, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.BreadcrumbItemButton as Component
+import M3e.Component.BreadcrumbItemButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -28,32 +25,32 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.BreadcrumbItemButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.BreadcrumbItemButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.BreadcrumbItemButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.BreadcrumbItemButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.BreadcrumbItemButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.BreadcrumbItemButtonContent
 
 
 {-| -}
@@ -63,7 +60,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BreadcrumbItemButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -102,9 +99,9 @@ withStyle property value_ =
 
 
 {-| -}
-withCurrent : Value Component.Current -> Builder { a | current : Available } slotCaps msg kind -> Builder { a | current : Used } slotCaps msg kind
+withCurrent : Value Component.BreadcrumbItemButtonCurrent -> Builder { a | current : Available } slotCaps msg kind -> Builder { a | current : Used } slotCaps msg kind
 withCurrent value_ =
-    B.withAttribute (Component.current value_)
+    B.withAttribute (Component.breadcrumbItemButtonCurrent value_)
 
 
 {-| -}

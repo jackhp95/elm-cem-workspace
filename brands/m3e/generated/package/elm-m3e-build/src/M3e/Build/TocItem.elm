@@ -1,69 +1,67 @@
-module M3e.Build.TocItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDisabled, withId, withOnClick, withSelected, withSlot, withStyle
-    , withChild
-    )
+module M3e.Build.TocItem exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnClick, withSelected, withSlot, withStyle, withChild)
 
-{-|
+{-| The **TocItem** element — the flat per-element builder surface,
+sourced through the **Toc** family façade
+(`M3e.Component.Toc`). This module and the aggregated
+`M3e.Build.Toc` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withOnClick, withSelected, withSlot, withStyle
-@docs withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnClick, withSelected, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.TocItem as Component
+import M3e.Component.Toc as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.ItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ItemChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ItemContent
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element Component.ItemContent (Component.ItemChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-toc-item" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ItemIs kind) admittedBy msg
 toElement =
     B.toElement
 

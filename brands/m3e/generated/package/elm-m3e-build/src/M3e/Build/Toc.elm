@@ -1,151 +1,244 @@
-module M3e.Build.Toc exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, OverlineSlot, TitleSlot, ChildAdmittedBy
-    , withClass, withFor, withId, withMaxDepth, withSlot, withStyle
-    , overline, title
-    , withOverline, withTitle, withChild
-    )
+module M3e.Build.Toc exposing (TocBuilder, TocAttrCaps, TocSlotCaps, TocIs, TocOverlineSlot, TocTitleSlot, TocChildAdmittedBy, tocBuild, tocToElement, tocWithClass, tocWithFor, tocWithId, tocWithMaxDepth, tocWithSlot, tocWithStyle, tocOverline, tocTitle, tocWithOverline, tocWithTitle, tocWithChild, ItemBuilder, ItemAttrCaps, ItemSlotCaps, ItemIs, ItemContent, ItemChildAdmittedBy, itemBuild, itemToElement, itemWithClass, itemWithDisabled, itemWithId, itemWithOnClick, itemWithSelected, itemWithSlot, itemWithStyle, itemWithChild)
 
-{-|
+{-| The **Toc** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, OverlineSlot, TitleSlot, ChildAdmittedBy
-@docs withClass, withFor, withId, withMaxDepth, withSlot, withStyle
-@docs overline, title
-@docs withOverline, withTitle, withChild
+One module carrying every member's builder surface, member-prefixed
+(the per-element flat surface lives at `M3e.Build.<Element>`), sourced through `M3e.Component.Toc`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs TocBuilder, TocAttrCaps, TocSlotCaps, TocIs, TocOverlineSlot, TocTitleSlot, TocChildAdmittedBy, tocBuild, tocToElement, tocWithClass, tocWithFor, tocWithId, tocWithMaxDepth, tocWithSlot, tocWithStyle, tocOverline, tocTitle, tocWithOverline, tocWithTitle, tocWithChild, ItemBuilder, ItemAttrCaps, ItemSlotCaps, ItemIs, ItemContent, ItemChildAdmittedBy, itemBuild, itemToElement, itemWithClass, itemWithDisabled, itemWithId, itemWithOnClick, itemWithSelected, itemWithSlot, itemWithStyle, itemWithChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Toc as Component
+import M3e.Component.Toc as Component
+import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
-type alias Is s =
-    Component.Is s
+type alias TocIs s =
+    Component.TocIs s
 
 
 {-| -}
-type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+type alias TocBuilder attrCaps slotCaps msg kind =
+    Component.TocBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
-type alias AttrCaps =
-    Component.AttrCaps
+type alias TocAttrCaps =
+    Component.TocAttrCaps
 
 
 {-| -}
-type alias SlotCaps =
-    Component.SlotCaps
+type alias TocSlotCaps =
+    Component.TocSlotCaps
 
 
 {-| -}
-type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+type alias TocChildAdmittedBy childAdm =
+    Component.TocChildAdmittedBy childAdm
 
 
 {-| -}
-type alias OverlineSlot =
-    Component.OverlineSlot
+type alias TocOverlineSlot =
+    Component.TocOverlineSlot
 
 
 {-| -}
-type alias TitleSlot =
-    Component.TitleSlot
+type alias TocTitleSlot =
+    Component.TocTitleSlot
 
 
 {-| -}
-build : Builder AttrCaps SlotCaps msg kind
-build =
+tocBuild : TocBuilder TocAttrCaps TocSlotCaps msg kind
+tocBuild =
     B.init "m3e-toc" [] []
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
-toElement =
+tocToElement : TocBuilder attrCaps slotCaps msg kind -> Element (Component.TocIs kind) admittedBy msg
+tocToElement =
     B.toElement
 
 
 {-| -}
-overline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+tocOverline :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TocOverlineSlot msg
     -> Element free freeAdmittedBy msg
-overline builder =
-    Component.overline (B.toElement builder)
+tocOverline builder =
+    Component.tocOverline (B.toElement builder)
 
 
 {-| -}
-title :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TitleSlot msg
+tocTitle :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TocTitleSlot msg
     -> Element free freeAdmittedBy msg
-title builder =
-    Component.title (B.toElement builder)
+tocTitle builder =
+    Component.tocTitle (B.toElement builder)
 
 
 {-| -}
-withOverline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
-    -> Builder attrCaps { s | overline : Available } msg kind
-    -> Builder attrCaps { s | overline : Used } msg kind
-withOverline slotBuilder builder_ =
-    B.withChild (El.toNode (Component.overline (B.toElement slotBuilder))) builder_
+tocWithOverline :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TocOverlineSlot msg
+    -> TocBuilder attrCaps { s | overline : Available } msg kind
+    -> TocBuilder attrCaps { s | overline : Used } msg kind
+tocWithOverline slotBuilder builder_ =
+    B.withChild (El.toNode (Component.tocOverline (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withTitle :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TitleSlot msg
-    -> Builder attrCaps { s | title : Available } msg kind
-    -> Builder attrCaps { s | title : Used } msg kind
-withTitle slotBuilder builder_ =
-    B.withChild (El.toNode (Component.title (B.toElement slotBuilder))) builder_
+tocWithTitle :
+    B.Builder childRow childAttrCaps childSlotCaps Component.TocTitleSlot msg
+    -> TocBuilder attrCaps { s | title : Available } msg kind
+    -> TocBuilder attrCaps { s | title : Used } msg kind
+tocWithTitle slotBuilder builder_ =
+    B.withChild (El.toNode (Component.tocTitle (B.toElement slotBuilder))) builder_
 
 
 {-| -}
-withChild :
+tocWithChild :
     B.Builder childRow childAttrCaps childSlotCaps accepts msg
-    -> Builder attrCaps slotCaps msg kind
-    -> Builder attrCaps slotCaps msg kind
-withChild childBuilder builder_ =
+    -> TocBuilder attrCaps slotCaps msg kind
+    -> TocBuilder attrCaps slotCaps msg kind
+tocWithChild childBuilder builder_ =
     B.withChild (El.toNode (B.toElement childBuilder)) builder_
 
 
 {-| -}
-withClass : String -> Builder { a | class : Available } slotCaps msg kind -> Builder { a | class : Used } slotCaps msg kind
-withClass value_ =
+tocWithClass : String -> TocBuilder { a | class : Available } slotCaps msg kind -> TocBuilder { a | class : Used } slotCaps msg kind
+tocWithClass value_ =
     B.withAttribute (A.class value_)
 
 
 {-| -}
-withId : String -> Builder { a | id : Available } slotCaps msg kind -> Builder { a | id : Used } slotCaps msg kind
-withId value_ =
+tocWithId : String -> TocBuilder { a | id : Available } slotCaps msg kind -> TocBuilder { a | id : Used } slotCaps msg kind
+tocWithId value_ =
     B.withAttribute (A.id value_)
 
 
 {-| -}
-withSlot : String -> Builder { a | slot : Available } slotCaps msg kind -> Builder { a | slot : Used } slotCaps msg kind
-withSlot value_ =
+tocWithSlot : String -> TocBuilder { a | slot : Available } slotCaps msg kind -> TocBuilder { a | slot : Used } slotCaps msg kind
+tocWithSlot value_ =
     B.withAttribute (A.slot value_)
 
 
 {-| -}
-withStyle : String -> String -> Builder { a | style : Available } slotCaps msg kind -> Builder { a | style : Used } slotCaps msg kind
-withStyle property value_ =
+tocWithStyle : String -> String -> TocBuilder { a | style : Available } slotCaps msg kind -> TocBuilder { a | style : Used } slotCaps msg kind
+tocWithStyle property value_ =
     B.withAttribute (A.style property value_)
 
 
 {-| -}
-withFor : String -> Builder { a | for : Available } slotCaps msg kind -> Builder { a | for : Used } slotCaps msg kind
-withFor value_ =
+tocWithFor : String -> TocBuilder { a | for : Available } slotCaps msg kind -> TocBuilder { a | for : Used } slotCaps msg kind
+tocWithFor value_ =
     B.withAttribute (A.for value_)
 
 
 {-| -}
-withMaxDepth : Float -> Builder { a | maxDepth : Available } slotCaps msg kind -> Builder { a | maxDepth : Used } slotCaps msg kind
-withMaxDepth value_ =
+tocWithMaxDepth : Float -> TocBuilder { a | maxDepth : Available } slotCaps msg kind -> TocBuilder { a | maxDepth : Used } slotCaps msg kind
+tocWithMaxDepth value_ =
     B.withAttribute (A.maxDepth value_)
+
+
+{-| -}
+type alias ItemIs s =
+    Component.ItemIs s
+
+
+{-| -}
+type alias ItemBuilder attrCaps slotCaps msg kind =
+    Component.ItemBuilder attrCaps slotCaps msg kind
+
+
+{-| -}
+type alias ItemAttrCaps =
+    Component.ItemAttrCaps
+
+
+{-| -}
+type alias ItemSlotCaps =
+    Component.ItemSlotCaps
+
+
+{-| -}
+type alias ItemChildAdmittedBy childAdm =
+    Component.ItemChildAdmittedBy childAdm
+
+
+{-| -}
+type alias ItemContent =
+    Component.ItemContent
+
+
+{-| -}
+itemBuild :
+    { content : Element Component.ItemContent (Component.ItemChildAdmittedBy childAdm) msg }
+    -> ItemBuilder ItemAttrCaps ItemSlotCaps msg kind
+itemBuild required_ =
+    B.init "m3e-toc-item" [] [ El.toNode required_.content ]
+
+
+{-| -}
+itemToElement : ItemBuilder attrCaps slotCaps msg kind -> Element (Component.ItemIs kind) admittedBy msg
+itemToElement =
+    B.toElement
+
+
+{-| -}
+itemWithChild :
+    B.Builder childRow childAttrCaps childSlotCaps accepts msg
+    -> ItemBuilder attrCaps slotCaps msg kind
+    -> ItemBuilder attrCaps slotCaps msg kind
+itemWithChild childBuilder builder_ =
+    B.withChild (El.toNode (B.toElement childBuilder)) builder_
+
+
+{-| -}
+itemWithClass : String -> ItemBuilder { a | class : Available } slotCaps msg kind -> ItemBuilder { a | class : Used } slotCaps msg kind
+itemWithClass value_ =
+    B.withAttribute (A.class value_)
+
+
+{-| -}
+itemWithId : String -> ItemBuilder { a | id : Available } slotCaps msg kind -> ItemBuilder { a | id : Used } slotCaps msg kind
+itemWithId value_ =
+    B.withAttribute (A.id value_)
+
+
+{-| -}
+itemWithSlot : String -> ItemBuilder { a | slot : Available } slotCaps msg kind -> ItemBuilder { a | slot : Used } slotCaps msg kind
+itemWithSlot value_ =
+    B.withAttribute (A.slot value_)
+
+
+{-| -}
+itemWithStyle : String -> String -> ItemBuilder { a | style : Available } slotCaps msg kind -> ItemBuilder { a | style : Used } slotCaps msg kind
+itemWithStyle property value_ =
+    B.withAttribute (A.style property value_)
+
+
+{-| -}
+itemWithDisabled : Bool -> ItemBuilder { a | disabled : Available } slotCaps msg kind -> ItemBuilder { a | disabled : Used } slotCaps msg kind
+itemWithDisabled value_ =
+    B.withAttribute (A.disabled value_)
+
+
+{-| -}
+itemWithSelected : Bool -> ItemBuilder { a | selected : Available } slotCaps msg kind -> ItemBuilder { a | selected : Used } slotCaps msg kind
+itemWithSelected value_ =
+    B.withAttribute (A.selected value_)
+
+
+{-| -}
+itemWithOnClick : msg -> ItemBuilder { a | onClick : Available } slotCaps msg kind -> ItemBuilder { a | onClick : Used } slotCaps msg kind
+itemWithOnClick value_ =
+    B.withAttribute (Ev.onClick value_)

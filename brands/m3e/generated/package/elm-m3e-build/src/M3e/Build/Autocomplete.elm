@@ -1,27 +1,22 @@
-module M3e.Build.Autocomplete exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withAutoActivate, withCaseSensitive, withClass, withFilter, withFor, withHideLoading, withHideNoData, withHideSelectionIndicator, withId, withLoading, withLoadingLabel, withNoDataLabel, withOnChange, withOnQuery, withOnToggle, withPanelClass, withRequired, withResultsLabel, withSlot, withStyle
-    , loading, noData
-    , withLoadingSlot, withNoData, withChild
-    )
+module M3e.Build.Autocomplete exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withAutoActivate, withCaseSensitive, withClass, withFilter, withFor, withHideLoading, withHideNoData, withHideSelectionIndicator, withId, withLoading, withLoadingLabel, withNoDataLabel, withOnChange, withOnQuery, withOnToggle, withPanelClass, withRequired, withResultsLabel, withSlot, withStyle, loading, noData, withLoadingSlot, withNoData, withChild)
 
-{-|
+{-| The **Autocomplete** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withAutoActivate, withCaseSensitive, withClass, withFilter, withFor, withHideLoading, withHideNoData, withHideSelectionIndicator, withId, withLoading, withLoadingLabel, withNoDataLabel, withOnChange, withOnQuery, withOnToggle, withPanelClass, withRequired, withResultsLabel, withSlot, withStyle
-@docs loading, noData
-@docs withLoadingSlot, withNoData, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Autocomplete`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withAutoActivate, withCaseSensitive, withClass, withFilter, withFor, withHideLoading, withHideNoData, withHideSelectionIndicator, withId, withLoading, withLoadingLabel, withNoDataLabel, withOnChange, withOnQuery, withOnToggle, withPanelClass, withRequired, withResultsLabel, withSlot, withStyle, loading, noData, withLoadingSlot, withNoData, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Autocomplete as Component
+import M3e.Component.Autocomplete as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,32 +25,32 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.AutocompleteIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.AutocompleteBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.AutocompleteAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.AutocompleteSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.AutocompleteChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.AutocompleteContent
 
 
 {-| -}
@@ -65,7 +60,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.AutocompleteIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -75,7 +70,7 @@ loading :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 loading builder =
-    Component.loading (B.toElement builder)
+    Component.autocompleteLoading (B.toElement builder)
 
 
 {-| -}
@@ -83,7 +78,7 @@ noData :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 noData builder =
-    Component.noData (B.toElement builder)
+    Component.autocompleteNoData (B.toElement builder)
 
 
 {-| -}
@@ -92,7 +87,7 @@ withLoadingSlot :
     -> Builder attrCaps { s | loading : Available } msg kind
     -> Builder attrCaps { s | loading : Used } msg kind
 withLoadingSlot slotBuilder builder_ =
-    B.withChild (El.toNode (Component.loading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.autocompleteLoading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -101,7 +96,7 @@ withNoData :
     -> Builder attrCaps { s | noData : Available } msg kind
     -> Builder attrCaps { s | noData : Used } msg kind
 withNoData slotBuilder builder_ =
-    B.withChild (El.toNode (Component.noData (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.autocompleteNoData (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -150,9 +145,9 @@ withCaseSensitive value_ =
 
 
 {-| -}
-withFilter : Value Component.Filter -> Builder { a | filter : Available } slotCaps msg kind -> Builder { a | filter : Used } slotCaps msg kind
+withFilter : Value Component.AutocompleteFilter -> Builder { a | filter : Available } slotCaps msg kind -> Builder { a | filter : Used } slotCaps msg kind
 withFilter value_ =
-    B.withAttribute (Component.filter value_)
+    B.withAttribute (Component.autocompleteFilter value_)
 
 
 {-| -}

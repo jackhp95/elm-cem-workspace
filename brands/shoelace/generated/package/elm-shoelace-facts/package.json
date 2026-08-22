@@ -1,0 +1,10 @@
+{
+  "name": "elm-shoelace-facts",
+  "version": "1.0.0",
+  "description": "elm-shoelace facts contract module (Sl.Review.Facts) for elm-review-cem rules. Committed split sibling of the elm-shoelace staging root (jackhp95/elm-shoelace-facts).",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "check": "node \"${ELM_CEM_BIN:-../../../../../pipeline/elm-cem/bin/elm-cem.js}\" registry-check --elm=../elm-shoelace/node_modules/.bin/elm"
+  }
+}

@@ -687,6 +687,20 @@ function buildSteps() {
     steps.push(
         step("workspace: check-m3e-5pkg (D-037 5-package split shape)", process.execPath, [path.join(repoRoot, "tools", "check-m3e-5pkg.mjs")]),
     );
+    // DAG-rework Task 5: check-m3e-5pkg above asserts the packages.json SHAPE of
+    // the m3e split; this asserts the DAG EDGES + the source-level
+    // no-Element-shortcut, brand-agnostically (m3e split + shoelace monolith).
+    // It is the discriminating guard that the parallel-siblings shape (Builders
+    // hanging off Elements) can never silently return: Build declares Components
+    // (not Elements), Components never declares Build (no cycle), and no
+    // `<Ns>.Build.*` module imports `<Ns>.Element.*` directly. Proven to fail on
+    // the reconstructed pre-rework tree and pass on the current one — see
+    // docs/plans/2026-08-21-dag-rework-plan.md Task 5.
+    steps.push(
+        step("workspace: check-package-dag (Task 5 linear Build→Components DAG)", process.execPath, [
+            path.join(repoRoot, "tools", "check-package-dag.mjs"),
+        ]),
+    );
     // check-m3e-5pkg above verifies the split's SHAPE (packages.json vs the
     // emitted trees); this verifies the split's SUBSTANCE — that each of the 5
     // emitted packages compiles registry-faithfully (`elm-cem split` +

@@ -211,16 +211,40 @@ function checkPackage(elmJsonPath, label, o) {
   // siblings expose.
   const baseNames = new Set(Object.keys(family.BASE_ELM_DEPS));
   const stagedDeps = [];
-  for (const depPkg of Object.keys(declared)) {
-    if (baseNames.has(depPkg)) continue; // elm/* stay as declared base deps
-    const depSrc = o.depSrcs[depPkg] || resolveFamilySrc(depPkg, o.depSrcs);
-    if (!depSrc) {
-      fail1(
-        `elm.json declares ${depPkg} but its local src/ was not found — pass --dep-src=${depPkg}=<dir> (or set IR_SRC/FACTS_SRC for the known family deps).`
-      );
+  const stagedSeen = new Set();
+  // TRANSITIVELY stage every DECLARED unpublished dep, AND each staged dep's own
+  // declared unpublished deps. A split family with a >2-level DAG (e.g. the
+  // DAG-rework `build <- components <- elements <- core`) means a directly-staged
+  // dep (components) itself imports a deeper sibling (elements); compiling this
+  // package fails unless that deeper sibling is staged too. The transitive walk
+  // reads each staged dep's OWN elm.json (conventionally at <src>/../elm.json)
+  // and follows its dependency block. Staging is still gated by DECLARATION (at
+  // each level), so an undeclared import anywhere in the chain stays unresolvable
+  // — the NB1 guarantee is preserved.
+  const enqueueDeps = (depsObj, contextPkg) => {
+    for (const depPkg of Object.keys(depsObj || {})) {
+      if (baseNames.has(depPkg)) continue; // elm/* stay as declared base deps
+      if (stagedSeen.has(depPkg)) continue;
+      const depSrc = o.depSrcs[depPkg] || resolveFamilySrc(depPkg, o.depSrcs);
+      if (!depSrc) {
+        fail1(
+          `${contextPkg} declares ${depPkg} but its local src/ was not found — pass --dep-src=${depPkg}=<dir> (or set IR_SRC/FACTS_SRC for the known family deps).`
+        );
+      }
+      stagedSeen.add(depPkg);
+      stagedDeps.push({ package: depPkg, src: depSrc });
+      // Follow this dep's OWN declared deps (its elm.json sits next to its src/).
+      try {
+        const depElmJson = JSON.parse(fs.readFileSync(path.join(path.dirname(depSrc), "elm.json"), "utf8"));
+        enqueueDeps(depElmJson.dependencies, depPkg);
+      } catch (_e) {
+        /* dep elm.json unreadable — its transitive deps can't be followed; a
+           genuinely-needed deeper sibling will surface as a compile MODULE NOT
+           FOUND, which is still a loud, correct failure. */
+      }
     }
-    stagedDeps.push({ package: depPkg, src: depSrc });
-  }
+  };
+  enqueueDeps(declared, elmJson.name || pkgDir);
 
   // Module names exposed by each staged dep (read from the dep's own elm.json,
   // conventionally at <src>/../elm.json). Feeds the audit so imports of a sibling

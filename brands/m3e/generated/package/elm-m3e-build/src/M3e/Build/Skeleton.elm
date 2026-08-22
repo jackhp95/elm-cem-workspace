@@ -1,25 +1,22 @@
-module M3e.Build.Skeleton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withAnimation, withClass, withId, withLoaded, withShape, withSlot, withStyle
-    , withChild
-    )
+module M3e.Build.Skeleton exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAnimation, withClass, withId, withLoaded, withShape, withSlot, withStyle, withChild)
 
-{-|
+{-| The **Skeleton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withAnimation, withClass, withId, withLoaded, withShape, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Skeleton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAnimation, withClass, withId, withLoaded, withShape, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Skeleton as Component
+import M3e.Component.Skeleton as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -27,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SkeletonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SkeletonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SkeletonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SkeletonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SkeletonChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SkeletonIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -96,9 +93,9 @@ withStyle property value_ =
 
 
 {-| -}
-withAnimation : Value Component.Animation -> Builder { a | animation : Available } slotCaps msg kind -> Builder { a | animation : Used } slotCaps msg kind
+withAnimation : Value Component.SkeletonAnimation -> Builder { a | animation : Available } slotCaps msg kind -> Builder { a | animation : Used } slotCaps msg kind
 withAnimation value_ =
-    B.withAttribute (Component.animation value_)
+    B.withAttribute (Component.skeletonAnimation value_)
 
 
 {-| -}
@@ -108,6 +105,6 @@ withLoaded value_ =
 
 
 {-| -}
-withShape : Value Component.Shape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
+withShape : Value Component.SkeletonShape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
 withShape value_ =
-    B.withAttribute (Component.shape value_)
+    B.withAttribute (Component.skeletonShape value_)

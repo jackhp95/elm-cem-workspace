@@ -6,6 +6,7 @@
         "support",
         "../../../package/elm-m3e-core/src",
         "../../../package/elm-m3e-elements/src",
+        "../../../package/elm-m3e-components/src",
         "../../../package/elm-m3e-build/src",
         "../../../package/elm-m3e-facts/src",
         "../../../package/elm-m3e-icons/src",

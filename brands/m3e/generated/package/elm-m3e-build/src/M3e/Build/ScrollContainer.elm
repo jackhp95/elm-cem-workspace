@@ -1,25 +1,22 @@
-module M3e.Build.ScrollContainer exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDividers, withId, withSlot, withStyle, withThin
-    , withChild
-    )
+module M3e.Build.ScrollContainer exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDividers, withId, withSlot, withStyle, withThin, withChild)
 
-{-|
+{-| The **ScrollContainer** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDividers, withId, withSlot, withStyle, withThin
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.ScrollContainer`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDividers, withId, withSlot, withStyle, withThin, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ScrollContainer as Component
+import M3e.Component.ScrollContainer as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -27,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ScrollContainerIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ScrollContainerBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ScrollContainerAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.ScrollContainerSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ScrollContainerChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ScrollContainerIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -96,9 +93,9 @@ withStyle property value_ =
 
 
 {-| -}
-withDividers : Value Component.Dividers -> Builder { a | dividers : Available } slotCaps msg kind -> Builder { a | dividers : Used } slotCaps msg kind
+withDividers : Value Component.ScrollContainerDividers -> Builder { a | dividers : Available } slotCaps msg kind -> Builder { a | dividers : Used } slotCaps msg kind
 withDividers value_ =
-    B.withAttribute (Component.dividers value_)
+    B.withAttribute (Component.scrollContainerDividers value_)
 
 
 {-| -}

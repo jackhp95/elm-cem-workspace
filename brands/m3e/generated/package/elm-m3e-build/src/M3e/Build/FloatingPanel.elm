@@ -1,25 +1,22 @@
-module M3e.Build.FloatingPanel exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
-    , withChild
-    )
+module M3e.Build.FloatingPanel exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle, withChild)
 
-{-|
+{-| The **FloatingPanel** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.FloatingPanel`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAnchorOffset, withClass, withFitAnchorWidth, withId, withOnBeforetoggle, withOnToggle, withScrollStrategy, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.FloatingPanel as Component
+import M3e.Component.FloatingPanel as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -28,27 +25,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FloatingPanelIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FloatingPanelBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FloatingPanelAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.FloatingPanelSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.FloatingPanelChildAdmittedBy childAdm
 
 
 {-| -}
@@ -58,7 +55,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FloatingPanelIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -109,9 +106,9 @@ withFitAnchorWidth value_ =
 
 
 {-| -}
-withScrollStrategy : Value Component.ScrollStrategy -> Builder { a | scrollStrategy : Available } slotCaps msg kind -> Builder { a | scrollStrategy : Used } slotCaps msg kind
+withScrollStrategy : Value Component.FloatingPanelScrollStrategy -> Builder { a | scrollStrategy : Available } slotCaps msg kind -> Builder { a | scrollStrategy : Used } slotCaps msg kind
 withScrollStrategy value_ =
-    B.withAttribute (Component.scrollStrategy value_)
+    B.withAttribute (Component.floatingPanelScrollStrategy value_)
 
 
 {-| -}

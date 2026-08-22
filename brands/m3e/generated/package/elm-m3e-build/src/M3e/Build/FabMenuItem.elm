@@ -1,59 +1,55 @@
-module M3e.Build.FabMenuItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, IconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-    , icon
-    , withIcon, withChild
-    )
+module M3e.Build.FabMenuItem exposing (Builder, AttrCaps, SlotCaps, Is, IconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, icon, withIcon, withChild)
 
-{-|
+{-| The **FabMenuItem** element — the flat per-element builder surface,
+sourced through the **FabMenu** family façade
+(`M3e.Component.FabMenu`). This module and the aggregated
+`M3e.Build.FabMenu` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, IconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-@docs icon
-@docs withIcon, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, IconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, icon, withIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.FabMenuItem as Component
+import M3e.Component.FabMenu as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ItemChildAdmittedBy childAdm
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.ItemIconSlot
 
 
 {-| -}
@@ -63,26 +59,26 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ItemIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.itemIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ItemIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.itemIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}

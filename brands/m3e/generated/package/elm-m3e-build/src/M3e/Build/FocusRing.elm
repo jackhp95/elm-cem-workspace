@@ -1,49 +1,50 @@
-module M3e.Build.FocusRing exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDisabled, withFor, withId, withInward, withSlot, withStyle
-    )
+module M3e.Build.FocusRing exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withFor, withId, withInward, withSlot, withStyle)
 
-{-|
+{-| The **FocusRing** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDisabled, withFor, withId, withInward, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.FocusRing`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDisabled, withFor, withId, withInward, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.FocusRing as Component
+import M3e.Component.FocusRing as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FocusRingIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FocusRingBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FocusRingAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.FocusRingSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.FocusRingChildAdmittedBy childAdm
 
 
 {-| -}
@@ -53,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FocusRingIs kind) admittedBy msg
 toElement =
     B.toElement
 

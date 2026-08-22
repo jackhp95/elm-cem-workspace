@@ -1,29 +1,24 @@
-module M3e.Build.IconButton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, SelectedSlot, ChildAdmittedBy, ActionCaps
-    , withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, withWidth
-    , selected
-    , withSelectedSlot, withChild
-    )
+module M3e.Build.IconButton exposing (Builder, AttrCaps, SlotCaps, Is, Content, SelectedSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, withWidth, selected, withSelectedSlot, withChild)
 
-{-|
+{-| The **IconButton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, SelectedSlot, ChildAdmittedBy, ActionCaps
-@docs withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, withWidth
-@docs selected
-@docs withSelectedSlot, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.IconButton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, SelectedSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withRel, withSelected, withShape, withSize, withSlot, withStyle, withTarget, withToggle, withType, withValue, withVariant, withWidth, selected, withSelectedSlot, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Action as Ac
 import M3e.Attributes as A
-import M3e.Element.IconButton as Component
+import M3e.Component.IconButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -32,49 +27,49 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.IconButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.IconButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.IconButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.IconButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
-
-
-{-| -}
-type alias ActionCaps =
-    Component.ActionCaps
+    Component.IconButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.IconButtonContent
 
 
 {-| -}
 type alias SelectedSlot =
-    Component.SelectedSlot
+    Component.IconButtonSelectedSlot
+
+
+{-| -}
+type alias ActionCaps =
+    Component.IconButtonActionCaps
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg
+    { content : Element Component.IconButtonContent (Component.IconButtonChildAdmittedBy childAdm) msg
     , ariaLabel : String
-    , action : Ac.Action Component.ActionCaps msg
+    , action : Ac.Action Component.IconButtonActionCaps msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
@@ -82,26 +77,26 @@ build required_ =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.IconButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 selected :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.IconButtonSelectedSlot msg
     -> Element free freeAdmittedBy msg
 selected builder =
-    Component.selected (B.toElement builder)
+    Component.iconButtonSelected (B.toElement builder)
 
 
 {-| -}
 withSelectedSlot :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SelectedSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.IconButtonSelectedSlot msg
     -> Builder attrCaps { s | selected : Available } msg kind
     -> Builder attrCaps { s | selected : Used } msg kind
 withSelectedSlot slotBuilder builder_ =
-    B.withChild (El.toNode (Component.selected (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.iconButtonSelected (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -180,15 +175,15 @@ withSelected value_ =
 
 
 {-| -}
-withShape : Value Component.Shape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
+withShape : Value Component.IconButtonShape -> Builder { a | shape : Available } slotCaps msg kind -> Builder { a | shape : Used } slotCaps msg kind
 withShape value_ =
-    B.withAttribute (Component.shape value_)
+    B.withAttribute (Component.iconButtonShape value_)
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.IconButtonSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.iconButtonSize value_)
 
 
 {-| -}
@@ -204,9 +199,9 @@ withToggle value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.IconButtonType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.iconButtonType_ value_)
 
 
 {-| -}
@@ -216,15 +211,15 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.IconButtonVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.iconButtonVariant value_)
 
 
 {-| -}
-withWidth : Value Component.Width -> Builder { a | width : Available } slotCaps msg kind -> Builder { a | width : Used } slotCaps msg kind
+withWidth : Value Component.IconButtonWidth -> Builder { a | width : Available } slotCaps msg kind -> Builder { a | width : Used } slotCaps msg kind
 withWidth value_ =
-    B.withAttribute (Component.width value_)
+    B.withAttribute (Component.iconButtonWidth value_)
 
 
 {-| -}

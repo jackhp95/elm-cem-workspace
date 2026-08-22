@@ -1,65 +1,64 @@
-module M3e.Build.RadioGroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withAriaInvalid, withClass, withDisabled, withId, withName, withOnBeforeinput, withOnChange, withOnInput, withRequired, withSlot, withStyle, withValidationmessages
-    , withChild
-    )
+module M3e.Build.RadioGroup exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAriaInvalid, withClass, withDisabled, withId, withName, withOnBeforeinput, withOnChange, withOnInput, withRequired, withSlot, withStyle, withValidationmessages, withChild)
 
-{-|
+{-| The **RadioGroup** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withAriaInvalid, withClass, withDisabled, withId, withName, withOnBeforeinput, withOnChange, withOnInput, withRequired, withSlot, withStyle, withValidationmessages
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.RadioGroup`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withAriaInvalid, withClass, withDisabled, withId, withName, withOnBeforeinput, withOnChange, withOnInput, withRequired, withSlot, withStyle, withValidationmessages, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.RadioGroup as Component
+import M3e.Component.RadioGroup as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.RadioGroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.RadioGroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.RadioGroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.RadioGroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.RadioGroupChildAdmittedBy childAdm
 
 
 {-| -}
 build :
-    { content : Element childAccepts (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element childAccepts (Component.RadioGroupChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-radio-group" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.RadioGroupIs kind) admittedBy msg
 toElement =
     B.toElement
 

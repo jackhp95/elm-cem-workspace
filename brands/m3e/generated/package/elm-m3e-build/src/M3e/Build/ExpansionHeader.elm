@@ -1,27 +1,22 @@
-module M3e.Build.ExpansionHeader exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ToggleIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withHideToggle, withId, withOnClick, withSlot, withStyle, withToggleDirection, withTogglePosition
-    , toggleIcon
-    , withToggleIcon, withChild
-    )
+module M3e.Build.ExpansionHeader exposing (Builder, AttrCaps, SlotCaps, Is, Content, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideToggle, withId, withOnClick, withSlot, withStyle, withToggleDirection, withTogglePosition, toggleIcon, withToggleIcon, withChild)
 
-{-|
+{-| The **ExpansionHeader** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ToggleIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withHideToggle, withId, withOnClick, withSlot, withStyle, withToggleDirection, withTogglePosition
-@docs toggleIcon
-@docs withToggleIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.ExpansionHeader`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withHideToggle, withId, withOnClick, withSlot, withStyle, withToggleDirection, withTogglePosition, toggleIcon, withToggleIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ExpansionHeader as Component
+import M3e.Component.ExpansionHeader as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -30,37 +25,37 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ExpansionHeaderIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ExpansionHeaderBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ExpansionHeaderAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ExpansionHeaderSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ExpansionHeaderChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ExpansionHeaderContent
 
 
 {-| -}
 type alias ToggleIconSlot =
-    Component.ToggleIconSlot
+    Component.ExpansionHeaderToggleIconSlot
 
 
 {-| -}
@@ -70,26 +65,26 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ExpansionHeaderIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 toggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpansionHeaderToggleIconSlot msg
     -> Element free freeAdmittedBy msg
 toggleIcon builder =
-    Component.toggleIcon (B.toElement builder)
+    Component.expansionHeaderToggleIcon (B.toElement builder)
 
 
 {-| -}
 withToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpansionHeaderToggleIconSlot msg
     -> Builder attrCaps { s | toggleIcon : Available } msg kind
     -> Builder attrCaps { s | toggleIcon : Used } msg kind
 withToggleIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.toggleIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expansionHeaderToggleIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -138,15 +133,15 @@ withHideToggle value_ =
 
 
 {-| -}
-withToggleDirection : Value Component.ToggleDirection -> Builder { a | toggleDirection : Available } slotCaps msg kind -> Builder { a | toggleDirection : Used } slotCaps msg kind
+withToggleDirection : Value Component.ExpansionHeaderToggleDirection -> Builder { a | toggleDirection : Available } slotCaps msg kind -> Builder { a | toggleDirection : Used } slotCaps msg kind
 withToggleDirection value_ =
-    B.withAttribute (Component.toggleDirection value_)
+    B.withAttribute (Component.expansionHeaderToggleDirection value_)
 
 
 {-| -}
-withTogglePosition : Value Component.TogglePosition -> Builder { a | togglePosition : Available } slotCaps msg kind -> Builder { a | togglePosition : Used } slotCaps msg kind
+withTogglePosition : Value Component.ExpansionHeaderTogglePosition -> Builder { a | togglePosition : Available } slotCaps msg kind -> Builder { a | togglePosition : Used } slotCaps msg kind
 withTogglePosition value_ =
-    B.withAttribute (Component.togglePosition value_)
+    B.withAttribute (Component.expansionHeaderTogglePosition value_)
 
 
 {-| -}

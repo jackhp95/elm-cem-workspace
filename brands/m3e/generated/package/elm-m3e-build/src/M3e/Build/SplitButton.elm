@@ -1,27 +1,22 @@
-module M3e.Build.SplitButton exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
-    , withClass, withId, withSize, withSlot, withStyle, withVariant
-    , leadingButton, trailingButton
-    , withLeadingButton, withTrailingButton
-    )
+module M3e.Build.SplitButton exposing (Builder, AttrCaps, SlotCaps, Is, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSize, withSlot, withStyle, withVariant, leadingButton, trailingButton, withLeadingButton, withTrailingButton)
 
-{-|
+{-| The **SplitButton** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy
-@docs withClass, withId, withSize, withSlot, withStyle, withVariant
-@docs leadingButton, trailingButton
-@docs withLeadingButton, withTrailingButton
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.SplitButton`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, LeadingButtonSlot, TrailingButtonSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSize, withSlot, withStyle, withVariant, leadingButton, trailingButton, withLeadingButton, withTrailingButton
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.SplitButton as Component
+import M3e.Component.SplitButton as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -29,87 +24,87 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SplitButtonIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SplitButtonBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SplitButtonAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SplitButtonSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SplitButtonChildAdmittedBy childAdm
 
 
 {-| -}
 type alias LeadingButtonSlot =
-    Component.LeadingButtonSlot
+    Component.SplitButtonLeadingButtonSlot
 
 
 {-| -}
 type alias TrailingButtonSlot =
-    Component.TrailingButtonSlot
+    Component.SplitButtonTrailingButtonSlot
 
 
 {-| -}
 build :
-    { leadingButton : Element Component.LeadingButtonSlot (Component.ChildAdmittedBy childAdm) msg
-    , trailingButton : Element Component.TrailingButtonSlot (Component.ChildAdmittedBy childAdm) msg
+    { leadingButton : Element Component.SplitButtonLeadingButtonSlot (Component.SplitButtonChildAdmittedBy childAdm) msg
+    , trailingButton : Element Component.SplitButtonTrailingButtonSlot (Component.SplitButtonChildAdmittedBy childAdm) msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
-    B.init "m3e-split-button" [] [ El.toNode (Component.leadingButton required_.leadingButton), El.toNode (Component.trailingButton required_.trailingButton) ]
+    B.init "m3e-split-button" [] [ El.toNode (Component.splitButtonLeadingButton required_.leadingButton), El.toNode (Component.splitButtonTrailingButton required_.trailingButton) ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SplitButtonIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 leadingButton :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingButtonSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SplitButtonLeadingButtonSlot msg
     -> Element free freeAdmittedBy msg
 leadingButton builder =
-    Component.leadingButton (B.toElement builder)
+    Component.splitButtonLeadingButton (B.toElement builder)
 
 
 {-| -}
 trailingButton :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingButtonSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SplitButtonTrailingButtonSlot msg
     -> Element free freeAdmittedBy msg
 trailingButton builder =
-    Component.trailingButton (B.toElement builder)
+    Component.splitButtonTrailingButton (B.toElement builder)
 
 
 {-| -}
 withLeadingButton :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingButtonSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SplitButtonLeadingButtonSlot msg
     -> Builder attrCaps { s | leadingButton : Available } msg kind
     -> Builder attrCaps { s | leadingButton : Used } msg kind
 withLeadingButton slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leadingButton (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.splitButtonLeadingButton (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailingButton :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingButtonSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SplitButtonTrailingButtonSlot msg
     -> Builder attrCaps { s | trailingButton : Available } msg kind
     -> Builder attrCaps { s | trailingButton : Used } msg kind
 withTrailingButton slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailingButton (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.splitButtonTrailingButton (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -137,12 +132,12 @@ withStyle property value_ =
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.SplitButtonSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.splitButtonSize value_)
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.SplitButtonVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.splitButtonVariant value_)

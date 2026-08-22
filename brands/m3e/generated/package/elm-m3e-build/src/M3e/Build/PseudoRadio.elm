@@ -1,49 +1,50 @@
-module M3e.Build.PseudoRadio exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withId, withSlot, withStyle
-    )
+module M3e.Build.PseudoRadio exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withSlot, withStyle)
 
-{-|
+{-| The **PseudoRadio** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withId, withSlot, withStyle
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.PseudoRadio`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withSlot, withStyle
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.PseudoRadio as Component
+import M3e.Component.PseudoRadio as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.PseudoRadioIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.PseudoRadioBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.PseudoRadioAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.PseudoRadioSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.PseudoRadioChildAdmittedBy childAdm
 
 
 {-| -}
@@ -53,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PseudoRadioIs kind) admittedBy msg
 toElement =
     B.toElement
 

@@ -38,6 +38,17 @@ const REPO = path.resolve(DOCS, "..", "..", "package", "elm-m3e");
 // gen:install-facts. Copied into the scratch so those generators can re-derive
 // their data files there, same as REPO/DOCS.
 const TAILWIND = path.resolve(DOCS, "..", "..", "style", "elm-m3e-tailwind");
+// The m3e package split's sibling packages (post-DAG-rework: Build and
+// Components are their own packages, not subtrees of elm-m3e/src). gen:samples'
+// SRC_DIRS resolves qualified sample imports (e.g. `M3e.Build.Button`) against
+// these trees; a qualified import that does not resolve is silently dropped
+// from the derived sample (see extract-samples.mjs `resolves()`), which would
+// make the scratch regen strip a used import and report a spurious "stale"
+// drift. They must therefore be present in the scratch at their real
+// repo-relative depth, exactly like REPO/DOCS/TAILWIND.
+const SPLIT_SIBLINGS = ["core", "elements", "components", "build", "facts", "icons"].map((p) =>
+  path.resolve(REPO, "..", `elm-m3e-${p}`),
+);
 
 // Portability guard (R-023): data/reference.json is a GENERATED, gitignored
 // artifact absent from a fresh `pnpm install` clone. This gate regenerates it
@@ -185,6 +196,16 @@ try {
   // here. Only its committed source is needed (no node_modules — these
   // generators use node builtins only), so it is not symlinked below.
   fs.cpSync(TAILWIND, scratchTailwind, { recursive: true, filter: heavyDirFilter(TAILWIND) });
+  // The split siblings gen:samples resolves qualified imports against. Only
+  // their committed src is needed (no node_modules — resolves() just stats
+  // files), copied at real repo-relative depth so the OUT-of-package
+  // path.relative math in extract-samples.mjs lands on them in the scratch.
+  for (const sib of SPLIT_SIBLINGS) {
+    if (!fs.existsSync(sib)) continue;
+    const scratchSib = path.join(scratch, path.relative(REPO_ROOT, sib));
+    fs.mkdirSync(path.dirname(scratchSib), { recursive: true });
+    fs.cpSync(sib, scratchSib, { recursive: true, filter: heavyDirFilter(sib) });
+  }
 
   for (const [scratchPkgDir, target] of [
     [scratchRepo, path.join(REPO, "node_modules")],

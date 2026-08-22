@@ -1,28 +1,23 @@
-module M3e.Build.SplitPane exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDetents, withDisabled, withId, withLabel, withMax, withMin, withName, withOnBeforeinput, withOnChange, withOnInput, withOrientation, withOvershootLimit, withSlot, withStep, withStyle, withValue, withWrapDetents
-    , end, start
-    , withEnd, withStart
-    )
+module M3e.Build.SplitPane exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDetents, withDisabled, withId, withLabel, withMax, withMin, withName, withOnBeforeinput, withOnChange, withOnInput, withOrientation, withOvershootLimit, withSlot, withStep, withStyle, withValue, withWrapDetents, end, start, withEnd, withStart)
 
-{-|
+{-| The **SplitPane** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDetents, withDisabled, withId, withLabel, withMax, withMin, withName, withOnBeforeinput, withOnChange, withOnInput, withOrientation, withOvershootLimit, withSlot, withStep, withStyle, withValue, withWrapDetents
-@docs end, start
-@docs withEnd, withStart
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.SplitPane`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDetents, withDisabled, withId, withLabel, withMax, withMin, withName, withOnBeforeinput, withOnChange, withOnInput, withOrientation, withOvershootLimit, withSlot, withStep, withStyle, withValue, withWrapDetents, end, start, withEnd, withStart
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.SplitPane as Component
+import M3e.Component.SplitPane as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -31,41 +26,41 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SplitPaneIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SplitPaneBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SplitPaneAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SplitPaneSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SplitPaneChildAdmittedBy childAdm
 
 
 {-| -}
 build :
-    { end : Element childAccepts (Component.ChildAdmittedBy childAdm) msg
-    , start : Element childAccepts (Component.ChildAdmittedBy childAdm) msg
+    { end : Element childAccepts (Component.SplitPaneChildAdmittedBy childAdm) msg
+    , start : Element childAccepts (Component.SplitPaneChildAdmittedBy childAdm) msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
-    B.init "m3e-split-pane" [] [ El.toNode (Component.end required_.end), El.toNode (Component.start required_.start) ]
+    B.init "m3e-split-pane" [] [ El.toNode (Component.splitPaneEnd required_.end), El.toNode (Component.splitPaneStart required_.start) ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SplitPaneIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -75,7 +70,7 @@ end :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 end builder =
-    Component.end (B.toElement builder)
+    Component.splitPaneEnd (B.toElement builder)
 
 
 {-| -}
@@ -83,7 +78,7 @@ start :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 start builder =
-    Component.start (B.toElement builder)
+    Component.splitPaneStart (B.toElement builder)
 
 
 {-| -}
@@ -92,7 +87,7 @@ withEnd :
     -> Builder attrCaps { s | end : Available } msg kind
     -> Builder attrCaps { s | end : Used } msg kind
 withEnd slotBuilder builder_ =
-    B.withChild (El.toNode (Component.end (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.splitPaneEnd (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -101,7 +96,7 @@ withStart :
     -> Builder attrCaps { s | start : Available } msg kind
     -> Builder attrCaps { s | start : Used } msg kind
 withStart slotBuilder builder_ =
-    B.withChild (El.toNode (Component.start (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.splitPaneStart (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -165,9 +160,9 @@ withName value_ =
 
 
 {-| -}
-withOrientation : Value Component.Orientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
+withOrientation : Value Component.SplitPaneOrientation -> Builder { a | orientation : Available } slotCaps msg kind -> Builder { a | orientation : Used } slotCaps msg kind
 withOrientation value_ =
-    B.withAttribute (Component.orientation value_)
+    B.withAttribute (Component.splitPaneOrientation value_)
 
 
 {-| -}

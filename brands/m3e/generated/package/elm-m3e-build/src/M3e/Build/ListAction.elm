@@ -1,79 +1,75 @@
-module M3e.Build.ListAction exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-    , withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-    , leading, overline, supportingText, trailing
-    , withLeading, withOverline, withSupportingText, withTrailing, withChild
-    )
+module M3e.Build.ListAction exposing (Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild)
 
-{-|
+{-| The **ListAction** element — the flat per-element builder surface,
+sourced through the **List** family façade
+(`M3e.Component.List`). This module and the aggregated
+`M3e.Build.List` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget
-@docs leading, overline, supportingText, trailing
-@docs withLeading, withOverline, withSupportingText, withTrailing, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, TrailingSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withDownload, withHref, withId, withOnClick, withRel, withSlot, withStyle, withTarget, leading, overline, supportingText, trailing, withLeading, withOverline, withSupportingText, withTrailing, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ListAction as Component
+import M3e.Component.List as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ActionIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ActionBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ActionAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ActionSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ActionChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ActionContent
 
 
 {-| -}
 type alias LeadingSlot =
-    Component.LeadingSlot
+    Component.ActionLeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    Component.OverlineSlot
+    Component.ActionOverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    Component.SupportingTextSlot
+    Component.ActionSupportingTextSlot
 
 
 {-| -}
 type alias TrailingSlot =
-    Component.TrailingSlot
+    Component.ActionTrailingSlot
 
 
 {-| -}
@@ -83,77 +79,77 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ActionIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 leading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionLeadingSlot msg
     -> Element free freeAdmittedBy msg
 leading builder =
-    Component.leading (B.toElement builder)
+    Component.actionLeading (B.toElement builder)
 
 
 {-| -}
 overline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionOverlineSlot msg
     -> Element free freeAdmittedBy msg
 overline builder =
-    Component.overline (B.toElement builder)
+    Component.actionOverline (B.toElement builder)
 
 
 {-| -}
 supportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionSupportingTextSlot msg
     -> Element free freeAdmittedBy msg
 supportingText builder =
-    Component.supportingText (B.toElement builder)
+    Component.actionSupportingText (B.toElement builder)
 
 
 {-| -}
 trailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionTrailingSlot msg
     -> Element free freeAdmittedBy msg
 trailing builder =
-    Component.trailing (B.toElement builder)
+    Component.actionTrailing (B.toElement builder)
 
 
 {-| -}
 withLeading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionLeadingSlot msg
     -> Builder attrCaps { s | leading : Available } msg kind
     -> Builder attrCaps { s | leading : Used } msg kind
 withLeading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.actionLeading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withOverline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionOverlineSlot msg
     -> Builder attrCaps { s | overline : Available } msg kind
     -> Builder attrCaps { s | overline : Used } msg kind
 withOverline slotBuilder builder_ =
-    B.withChild (El.toNode (Component.overline (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.actionOverline (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSupportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionSupportingTextSlot msg
     -> Builder attrCaps { s | supportingText : Available } msg kind
     -> Builder attrCaps { s | supportingText : Used } msg kind
 withSupportingText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.supportingText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.actionSupportingText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withTrailing :
-    B.Builder childRow childAttrCaps childSlotCaps Component.TrailingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ActionTrailingSlot msg
     -> Builder attrCaps { s | trailing : Available } msg kind
     -> Builder attrCaps { s | trailing : Used } msg kind
 withTrailing slotBuilder builder_ =
-    B.withChild (El.toNode (Component.trailing (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.actionTrailing (B.toElement slotBuilder))) builder_
 
 
 {-| -}

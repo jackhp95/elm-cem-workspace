@@ -1,23 +1,21 @@
-module M3e.Build.LoadingIndicator exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withId, withSlot, withStyle, withVariant
-    )
+module M3e.Build.LoadingIndicator exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withVariant)
 
-{-|
+{-| The **LoadingIndicator** element — the flat per-element builder surface,
+sourced through the **Progress** family façade
+(`M3e.Component.Progress`). This module and the aggregated
+`M3e.Build.Progress` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withId, withSlot, withStyle, withVariant
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withVariant
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.LoadingIndicator as Component
+import M3e.Component.Progress as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -25,27 +23,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.LoadingIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.LoadingBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.LoadingAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.LoadingSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.LoadingChildAdmittedBy childAdm
 
 
 {-| -}
@@ -55,7 +53,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.LoadingIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -85,6 +83,6 @@ withStyle property value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.LoadingVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.loadingVariant value_)

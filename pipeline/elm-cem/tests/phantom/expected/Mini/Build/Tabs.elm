@@ -1,25 +1,22 @@
-module Mini.Build.Tabs exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDir, withId, withInert, withSlot, withStyle, withTabindex
-    , withChild
-    )
+module Mini.Build.Tabs exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDir, withId, withInert, withSlot, withStyle, withTabindex, withChild)
 
-{-|
+{-| The **Tabs** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDir, withId, withInert, withSlot, withStyle, withTabindex
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Mini.Component.Tabs`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Mini.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDir, withId, withInert, withSlot, withStyle, withTabindex, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Mini.Attributes as A
-import Mini.Element.Tabs as Component
+import Mini.Component.Tabs as Component
 import Mini.Forge.Internal as B
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
 import Mini.Values
@@ -27,32 +24,32 @@ import Mini.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.TabsIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.TabsBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.TabsAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.TabsSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.TabsChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.TabsContent
 
 
 {-| -}
@@ -62,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.TabsIs kind) admittedBy msg
 toElement =
     B.toElement
 

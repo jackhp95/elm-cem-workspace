@@ -1,63 +1,60 @@
-module M3e.Build.SlideGroup exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, NextIconSlot, PrevIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withId, withNextPageLabel, withPreviousPageLabel, withSlot, withStyle, withThreshold, withVertical
-    , nextIcon, prevIcon
-    , withNextIcon, withPrevIcon, withChild
-    )
+module M3e.Build.SlideGroup exposing (Builder, AttrCaps, SlotCaps, Is, NextIconSlot, PrevIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withNextPageLabel, withPreviousPageLabel, withSlot, withStyle, withThreshold, withVertical, nextIcon, prevIcon, withNextIcon, withPrevIcon, withChild)
 
-{-|
+{-| The **SlideGroup** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, NextIconSlot, PrevIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withNextPageLabel, withPreviousPageLabel, withSlot, withStyle, withThreshold, withVertical
-@docs nextIcon, prevIcon
-@docs withNextIcon, withPrevIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.SlideGroup`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, NextIconSlot, PrevIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withNextPageLabel, withPreviousPageLabel, withSlot, withStyle, withThreshold, withVertical, nextIcon, prevIcon, withNextIcon, withPrevIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.SlideGroup as Component
+import M3e.Component.SlideGroup as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SlideGroupIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SlideGroupBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SlideGroupAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SlideGroupSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SlideGroupChildAdmittedBy childAdm
 
 
 {-| -}
 type alias NextIconSlot =
-    Component.NextIconSlot
+    Component.SlideGroupNextIconSlot
 
 
 {-| -}
 type alias PrevIconSlot =
-    Component.PrevIconSlot
+    Component.SlideGroupPrevIconSlot
 
 
 {-| -}
@@ -67,43 +64,43 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SlideGroupIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 nextIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.NextIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SlideGroupNextIconSlot msg
     -> Element free freeAdmittedBy msg
 nextIcon builder =
-    Component.nextIcon (B.toElement builder)
+    Component.slideGroupNextIcon (B.toElement builder)
 
 
 {-| -}
 prevIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.PrevIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SlideGroupPrevIconSlot msg
     -> Element free freeAdmittedBy msg
 prevIcon builder =
-    Component.prevIcon (B.toElement builder)
+    Component.slideGroupPrevIcon (B.toElement builder)
 
 
 {-| -}
 withNextIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.NextIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SlideGroupNextIconSlot msg
     -> Builder attrCaps { s | nextIcon : Available } msg kind
     -> Builder attrCaps { s | nextIcon : Used } msg kind
 withNextIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.nextIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.slideGroupNextIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withPrevIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.PrevIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SlideGroupPrevIconSlot msg
     -> Builder attrCaps { s | prevIcon : Available } msg kind
     -> Builder attrCaps { s | prevIcon : Used } msg kind
 withPrevIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.prevIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.slideGroupPrevIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}

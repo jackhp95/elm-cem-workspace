@@ -1,63 +1,60 @@
-module Hz.Build.AttrSlot exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, HintSlot, LabelSlot, ChildAdmittedBy
-    , withClass, withId, withSlot, withStyle, withWithHint, withWithLabel
-    , hint, label
-    , withHintSlot, withLabelSlot
-    )
+module Hz.Build.AttrSlot exposing (Builder, AttrCaps, SlotCaps, Is, HintSlot, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withWithHint, withWithLabel, hint, label, withHintSlot, withLabelSlot)
 
-{-|
+{-| The **AttrSlot** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, HintSlot, LabelSlot, ChildAdmittedBy
-@docs withClass, withId, withSlot, withStyle, withWithHint, withWithLabel
-@docs hint, label
-@docs withHintSlot, withLabelSlot
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Hz.Component.AttrSlot`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Hz.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, HintSlot, LabelSlot, ChildAdmittedBy, build, toElement, withClass, withId, withSlot, withStyle, withWithHint, withWithLabel, hint, label, withHintSlot, withLabelSlot
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Hz.Attributes as A
-import Hz.Element.AttrSlot as Component
+import Hz.Component.AttrSlot as Component
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
+import Hz.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.AttrSlotIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.AttrSlotBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.AttrSlotAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.AttrSlotSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.AttrSlotChildAdmittedBy childAdm
 
 
 {-| -}
 type alias HintSlot =
-    Component.HintSlot
+    Component.AttrSlotHintSlot
 
 
 {-| -}
 type alias LabelSlot =
-    Component.LabelSlot
+    Component.AttrSlotLabelSlot
 
 
 {-| -}
@@ -67,43 +64,43 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.AttrSlotIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 hint :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HintSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AttrSlotHintSlot msg
     -> Element free freeAdmittedBy msg
 hint builder =
-    Component.hint (B.toElement builder)
+    Component.attrSlotHint (B.toElement builder)
 
 
 {-| -}
 label :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AttrSlotLabelSlot msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.attrSlotLabel (B.toElement builder)
 
 
 {-| -}
 withHintSlot :
-    B.Builder childRow childAttrCaps childSlotCaps Component.HintSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AttrSlotHintSlot msg
     -> Builder attrCaps { s | hint : Available } msg kind
     -> Builder attrCaps { s | hint : Used } msg kind
 withHintSlot slotBuilder builder_ =
-    B.withChild (El.toNode (Component.hint (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.attrSlotHint (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLabelSlot :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LabelSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.AttrSlotLabelSlot msg
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabelSlot slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.attrSlotLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}

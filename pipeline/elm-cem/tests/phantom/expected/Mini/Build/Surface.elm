@@ -1,25 +1,22 @@
-module Mini.Build.Surface exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withDir, withGrid, withId, withInert, withSlot, withStyle, withTabindex
-    , withChild
-    )
+module Mini.Build.Surface exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDir, withGrid, withId, withInert, withSlot, withStyle, withTabindex, withChild)
 
-{-|
+{-| The **Surface** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withDir, withGrid, withId, withInert, withSlot, withStyle, withTabindex
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Mini.Component.Surface`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Mini.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withDir, withGrid, withId, withInert, withSlot, withStyle, withTabindex, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Mini.Attributes as A
-import Mini.Element.Surface as Component
+import Mini.Component.Surface as Component
 import Mini.Forge.Internal as B
 import Mini.Kind exposing (Available, Brand, Ctx, Used)
 import Mini.Values
@@ -27,27 +24,27 @@ import Mini.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SurfaceIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SurfaceBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SurfaceAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SurfaceSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SurfaceChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SurfaceIs kind) admittedBy msg
 toElement =
     B.toElement
 

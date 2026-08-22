@@ -1,25 +1,22 @@
-module M3e.Build.Option exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withDisableHighlight, withDisabled, withHighlightMode, withId, withSelected, withSlot, withStyle, withTerm, withValue
-    , withChild
-    )
+module M3e.Build.Option exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisableHighlight, withDisabled, withHighlightMode, withId, withSelected, withSlot, withStyle, withTerm, withValue, withChild)
 
-{-|
+{-| The **Option** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withDisableHighlight, withDisabled, withHighlightMode, withId, withSelected, withSlot, withStyle, withTerm, withValue
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Option`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withDisableHighlight, withDisabled, withHighlightMode, withId, withSelected, withSlot, withStyle, withTerm, withValue, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Option as Component
+import M3e.Component.Option as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -27,44 +24,44 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.OptionIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.OptionBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.OptionAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.OptionSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.OptionChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.OptionContent
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg }
+    { content : Element Component.OptionContent (Component.OptionChildAdmittedBy childAdm) msg }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
     B.init "m3e-option" [] [ El.toNode required_.content ]
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.OptionIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -115,9 +112,9 @@ withDisabled value_ =
 
 
 {-| -}
-withHighlightMode : Value Component.HighlightMode -> Builder { a | highlightMode : Available } slotCaps msg kind -> Builder { a | highlightMode : Used } slotCaps msg kind
+withHighlightMode : Value Component.OptionHighlightMode -> Builder { a | highlightMode : Available } slotCaps msg kind -> Builder { a | highlightMode : Used } slotCaps msg kind
 withHighlightMode value_ =
-    B.withAttribute (Component.highlightMode value_)
+    B.withAttribute (Component.optionHighlightMode value_)
 
 
 {-| -}

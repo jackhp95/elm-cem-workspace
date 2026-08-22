@@ -1,29 +1,23 @@
-module M3e.Build.SuggestionChip exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, ActionCaps
-    , withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnClick, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant
-    , icon
-    , withIcon, withChild
-    )
+module M3e.Build.SuggestionChip exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnClick, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant, icon, withIcon, withChild)
 
-{-|
+{-| The **SuggestionChip** element — the flat per-element builder surface,
+sourced through the **Chip** family façade
+(`M3e.Component.Chip`). This module and the aggregated
+`M3e.Build.Chip` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, ActionCaps
-@docs withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnClick, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant
-@docs icon
-@docs withIcon, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, ActionCaps, build, toElement, withClass, withDisabled, withDisabledInteractive, withDownload, withHref, withId, withName, withOnClick, withRel, withSlot, withStyle, withTarget, withType, withValue, withVariant, icon, withIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Action as Ac
 import M3e.Attributes as A
-import M3e.Element.SuggestionChip as Component
+import M3e.Component.Chip as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -32,48 +26,48 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SuggestionIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SuggestionBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SuggestionAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SuggestionSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
-
-
-{-| -}
-type alias ActionCaps =
-    Component.ActionCaps
+    Component.SuggestionChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.SuggestionContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.SuggestionIconSlot
+
+
+{-| -}
+type alias ActionCaps =
+    Component.SuggestionActionCaps
 
 
 {-| -}
 build :
-    { content : Element Component.Content (Component.ChildAdmittedBy childAdm) msg
-    , action : Ac.Action Component.ActionCaps msg
+    { content : Element Component.SuggestionContent (Component.SuggestionChildAdmittedBy childAdm) msg
+    , action : Ac.Action Component.SuggestionActionCaps msg
     }
     -> Builder AttrCaps SlotCaps msg kind
 build required_ =
@@ -81,26 +75,26 @@ build required_ =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SuggestionIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SuggestionIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.suggestionIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SuggestionIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.suggestionIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -179,9 +173,9 @@ withTarget value_ =
 
 
 {-| -}
-withType : Value Component.Type -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
+withType : Value Component.SuggestionType -> Builder { a | type_ : Available } slotCaps msg kind -> Builder { a | type_ : Used } slotCaps msg kind
 withType value_ =
-    B.withAttribute (Component.type_ value_)
+    B.withAttribute (Component.suggestionType_ value_)
 
 
 {-| -}
@@ -191,9 +185,9 @@ withValue value_ =
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.SuggestionVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.suggestionVariant value_)
 
 
 {-| -}

@@ -1,25 +1,22 @@
-module Hz.Build.Placement exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withId, withPosition, withSlot, withStyle
-    , withChild
-    )
+module Hz.Build.Placement exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withPosition, withSlot, withStyle, withChild)
 
-{-|
+{-| The **Placement** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withId, withPosition, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `Hz.Component.Placement`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `Hz.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withId, withPosition, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Hz.Attributes as A
-import Hz.Element.Placement as Component
+import Hz.Component.Placement as Component
 import Hz.Forge.Internal as B
 import Hz.Kind exposing (Available, Brand, Ctx, Used)
 import Hz.Values
@@ -27,32 +24,32 @@ import Hz.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.PlacementIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.PlacementBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.PlacementAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.PlacementSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.PlacementChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.PlacementContent
 
 
 {-| -}
@@ -62,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.PlacementIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -101,6 +98,6 @@ withStyle property value_ =
 
 
 {-| -}
-withPosition : Value Component.Position -> Builder { a | position : Available } slotCaps msg kind -> Builder { a | position : Used } slotCaps msg kind
+withPosition : Value Component.PlacementPosition -> Builder { a | position : Available } slotCaps msg kind -> Builder { a | position : Used } slotCaps msg kind
 withPosition value_ =
-    B.withAttribute (Component.position value_)
+    B.withAttribute (Component.placementPosition value_)

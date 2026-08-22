@@ -1,25 +1,22 @@
-module M3e.Build.Badge exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-    , withClass, withFor, withId, withPosition, withSize, withSlot, withStyle
-    , withChild
-    )
+module M3e.Build.Badge exposing (Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withFor, withId, withPosition, withSize, withSlot, withStyle, withChild)
 
-{-|
+{-| The **Badge** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy
-@docs withClass, withFor, withId, withPosition, withSize, withSlot, withStyle
-@docs withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Badge`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, ChildAdmittedBy, build, toElement, withClass, withFor, withId, withPosition, withSize, withSlot, withStyle, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.Badge as Component
+import M3e.Component.Badge as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -27,32 +24,32 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.BadgeIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.BadgeBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.BadgeAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.BadgeSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.BadgeChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.BadgeContent
 
 
 {-| -}
@@ -62,7 +59,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.BadgeIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -107,12 +104,12 @@ withFor value_ =
 
 
 {-| -}
-withPosition : Value Component.Position -> Builder { a | position : Available } slotCaps msg kind -> Builder { a | position : Used } slotCaps msg kind
+withPosition : Value Component.BadgePosition -> Builder { a | position : Available } slotCaps msg kind -> Builder { a | position : Used } slotCaps msg kind
 withPosition value_ =
-    B.withAttribute (Component.position value_)
+    B.withAttribute (Component.badgePosition value_)
 
 
 {-| -}
-withSize : Value Component.Size -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
+withSize : Value Component.BadgeSize -> Builder { a | size : Available } slotCaps msg kind -> Builder { a | size : Used } slotCaps msg kind
 withSize value_ =
-    B.withAttribute (Component.size value_)
+    B.withAttribute (Component.badgeSize value_)

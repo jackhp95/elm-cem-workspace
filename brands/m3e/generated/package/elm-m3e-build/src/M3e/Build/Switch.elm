@@ -1,24 +1,23 @@
-module M3e.Build.Switch exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withIcons, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValidationmessages, withValue
-    )
+module M3e.Build.Switch exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withIcons, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValidationmessages, withValue)
 
-{-|
+{-| The **Switch** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withIcons, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValidationmessages, withValue
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.Switch`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withIcons, withId, withName, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValidationmessages, withValue
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import Json.Encode
 import M3e.Attributes as A
-import M3e.Element.Switch as Component
+import M3e.Component.Switch as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
@@ -27,27 +26,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SwitchIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SwitchBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SwitchAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    {}
+    Component.SwitchSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SwitchChildAdmittedBy childAdm
 
 
 {-| -}
@@ -57,7 +56,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SwitchIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -99,9 +98,9 @@ withDisabled value_ =
 
 
 {-| -}
-withIcons : Value Component.Icons -> Builder { a | icons : Available } slotCaps msg kind -> Builder { a | icons : Used } slotCaps msg kind
+withIcons : Value Component.SwitchIcons -> Builder { a | icons : Available } slotCaps msg kind -> Builder { a | icons : Used } slotCaps msg kind
 withIcons value_ =
-    B.withAttribute (Component.icons value_)
+    B.withAttribute (Component.switchIcons value_)
 
 
 {-| -}

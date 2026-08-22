@@ -1,27 +1,22 @@
-module M3e.Build.FormField exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-    , withClass, withFloatLabel, withHideRequiredMarker, withHideSubscript, withId, withSlot, withStyle, withVariant
-    , error, hint, label, prefix, prefixText, suffix, suffixText
-    , withError, withHint, withLabel, withPrefix, withPrefixText, withSuffix, withSuffixText, withChild
-    )
+module M3e.Build.FormField exposing (Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFloatLabel, withHideRequiredMarker, withHideSubscript, withId, withSlot, withStyle, withVariant, error, hint, label, prefix, prefixText, suffix, suffixText, withError, withHint, withLabel, withPrefix, withPrefixText, withSuffix, withSuffixText, withChild)
 
-{-|
+{-| The **FormField** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy
-@docs withClass, withFloatLabel, withHideRequiredMarker, withHideSubscript, withId, withSlot, withStyle, withVariant
-@docs error, hint, label, prefix, prefixText, suffix, suffixText
-@docs withError, withHint, withLabel, withPrefix, withPrefixText, withSuffix, withSuffixText, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.FormField`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, ChildAdmittedBy, build, toElement, withClass, withFloatLabel, withHideRequiredMarker, withHideSubscript, withId, withSlot, withStyle, withVariant, error, hint, label, prefix, prefixText, suffix, suffixText, withError, withHint, withLabel, withPrefix, withPrefixText, withSuffix, withSuffixText, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
-import HtmlIr.Value as Val exposing (Value)
+import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.FormField as Component
+import M3e.Component.FormField as Component
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
 import M3e.Values
@@ -29,27 +24,27 @@ import M3e.Values
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.FormFieldIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.FormFieldBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.FormFieldAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.FormFieldSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.FormFieldChildAdmittedBy childAdm
 
 
 {-| -}
@@ -59,7 +54,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.FormFieldIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -69,7 +64,7 @@ error :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 error builder =
-    Component.error (B.toElement builder)
+    Component.formFieldError (B.toElement builder)
 
 
 {-| -}
@@ -77,7 +72,7 @@ hint :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 hint builder =
-    Component.hint (B.toElement builder)
+    Component.formFieldHint (B.toElement builder)
 
 
 {-| -}
@@ -85,7 +80,7 @@ label :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 label builder =
-    Component.label (B.toElement builder)
+    Component.formFieldLabel (B.toElement builder)
 
 
 {-| -}
@@ -93,7 +88,7 @@ prefix :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 prefix builder =
-    Component.prefix (B.toElement builder)
+    Component.formFieldPrefix (B.toElement builder)
 
 
 {-| -}
@@ -101,7 +96,7 @@ prefixText :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 prefixText builder =
-    Component.prefixText (B.toElement builder)
+    Component.formFieldPrefixText (B.toElement builder)
 
 
 {-| -}
@@ -109,7 +104,7 @@ suffix :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 suffix builder =
-    Component.suffix (B.toElement builder)
+    Component.formFieldSuffix (B.toElement builder)
 
 
 {-| -}
@@ -117,7 +112,7 @@ suffixText :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 suffixText builder =
-    Component.suffixText (B.toElement builder)
+    Component.formFieldSuffixText (B.toElement builder)
 
 
 {-| -}
@@ -126,7 +121,7 @@ withError :
     -> Builder attrCaps { s | error : Available } msg kind
     -> Builder attrCaps { s | error : Used } msg kind
 withError slotBuilder builder_ =
-    B.withChild (El.toNode (Component.error (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldError (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -135,7 +130,7 @@ withHint :
     -> Builder attrCaps { s | hint : Available } msg kind
     -> Builder attrCaps { s | hint : Used } msg kind
 withHint slotBuilder builder_ =
-    B.withChild (El.toNode (Component.hint (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldHint (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -144,7 +139,7 @@ withLabel :
     -> Builder attrCaps { s | label : Available } msg kind
     -> Builder attrCaps { s | label : Used } msg kind
 withLabel slotBuilder builder_ =
-    B.withChild (El.toNode (Component.label (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldLabel (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -153,7 +148,7 @@ withPrefix :
     -> Builder attrCaps { s | prefix : Available } msg kind
     -> Builder attrCaps { s | prefix : Used } msg kind
 withPrefix slotBuilder builder_ =
-    B.withChild (El.toNode (Component.prefix (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldPrefix (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -162,7 +157,7 @@ withPrefixText :
     -> Builder attrCaps { s | prefixText : Available } msg kind
     -> Builder attrCaps { s | prefixText : Used } msg kind
 withPrefixText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.prefixText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldPrefixText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -171,7 +166,7 @@ withSuffix :
     -> Builder attrCaps { s | suffix : Available } msg kind
     -> Builder attrCaps { s | suffix : Used } msg kind
 withSuffix slotBuilder builder_ =
-    B.withChild (El.toNode (Component.suffix (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldSuffix (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -180,7 +175,7 @@ withSuffixText :
     -> Builder attrCaps { s | suffixText : Available } msg kind
     -> Builder attrCaps { s | suffixText : Used } msg kind
 withSuffixText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.suffixText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.formFieldSuffixText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
@@ -217,9 +212,9 @@ withStyle property value_ =
 
 
 {-| -}
-withFloatLabel : Value Component.FloatLabel -> Builder { a | floatLabel : Available } slotCaps msg kind -> Builder { a | floatLabel : Used } slotCaps msg kind
+withFloatLabel : Value Component.FormFieldFloatLabel -> Builder { a | floatLabel : Available } slotCaps msg kind -> Builder { a | floatLabel : Used } slotCaps msg kind
 withFloatLabel value_ =
-    B.withAttribute (Component.floatLabel value_)
+    B.withAttribute (Component.formFieldFloatLabel value_)
 
 
 {-| -}
@@ -229,12 +224,12 @@ withHideRequiredMarker value_ =
 
 
 {-| -}
-withHideSubscript : Value Component.HideSubscript -> Builder { a | hideSubscript : Available } slotCaps msg kind -> Builder { a | hideSubscript : Used } slotCaps msg kind
+withHideSubscript : Value Component.FormFieldHideSubscript -> Builder { a | hideSubscript : Available } slotCaps msg kind -> Builder { a | hideSubscript : Used } slotCaps msg kind
 withHideSubscript value_ =
-    B.withAttribute (Component.hideSubscript value_)
+    B.withAttribute (Component.formFieldHideSubscript value_)
 
 
 {-| -}
-withVariant : Value Component.Variant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
+withVariant : Value Component.FormFieldVariant -> Builder { a | variant : Available } slotCaps msg kind -> Builder { a | variant : Used } slotCaps msg kind
 withVariant value_ =
-    B.withAttribute (Component.variant value_)
+    B.withAttribute (Component.formFieldVariant value_)

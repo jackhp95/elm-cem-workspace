@@ -117,14 +117,41 @@ function run(argv) {
     fail("IR source not found — set IR_SRC or place elm-html-intermediate-representation as a sibling.");
   }
 
-  // Scratch application: lib/ holds the brand src + IR (structure preserved so
-  // HtmlIr.* resolves); probes/ holds every probe flattened to <Module>.elm.
+  // Split-package siblings. A SPLIT brand emits its tiers (per-element surface,
+  // family facades, composed builders, shared core, …) as separate sibling
+  // packages rather than a single flat src/. A probe that imports across the
+  // split (a module whose namespace now lives in a sibling `<brand>-<tier>/src`,
+  // NOT this package's own `src`) would otherwise fail MODULE NOT FOUND. Stage
+  // every immediate sibling `<brand>-*/src` too, so the acid app can resolve the
+  // whole family surface. A MONOLITH brand has no such siblings, so this is a
+  // no-op there (behaviour unchanged).
+  const brandPkgName = path.basename(cwd);
+  const siblingSrcDirs = [];
+  const parent = path.dirname(cwd);
+  try {
+    for (const entry of fs.readdirSync(parent, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name === brandPkgName) continue;
+      if (!entry.name.startsWith(brandPkgName + "-")) continue;
+      const sibSrc = path.join(parent, entry.name, "src");
+      if (fs.existsSync(sibSrc)) siblingSrcDirs.push(sibSrc);
+    }
+  } catch {
+    // parent unreadable — nothing to stage, monolith behaviour.
+  }
+
+  // Scratch application: lib/ holds the brand src (+ split siblings) + IR
+  // (structure preserved so HtmlIr.* resolves); probes/ holds every probe
+  // flattened to <Module>.elm.
   const scratch = fs.mkdtempSync(path.join(os.tmpdir(), "elm-cem-acid-"));
   const lib = path.join(scratch, "lib");
   const probeDir = path.join(scratch, "probes");
   fs.mkdirSync(lib, { recursive: true });
   fs.mkdirSync(probeDir, { recursive: true });
   shared.copyDir(srcDir, lib, (rel, isDir) => isDir || rel.endsWith(".elm"));
+  for (const sibSrc of siblingSrcDirs) {
+    shared.copyDir(sibSrc, lib, (rel, isDir) => isDir || rel.endsWith(".elm"));
+  }
   shared.copyDir(irSrc, lib, (rel, isDir) => isDir || rel.endsWith(".elm"));
 
   const staged = [];

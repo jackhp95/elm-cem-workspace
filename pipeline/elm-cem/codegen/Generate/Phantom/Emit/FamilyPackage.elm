@@ -1,4 +1,4 @@
-module Generate.Phantom.Emit.FamilyPackage exposing (files)
+module Generate.Phantom.Emit.FamilyPackage exposing (degenerateFacadeModule, familyElmJsonFile, familyLicenseFile, familyReadmeFile, files)
 
 {-| Port of bin/gen-family-package.js (G3, 2026-08-19 generator-consolidation
 research). Emits `<lib>.<namespace>.<Family>` flat family modules that
@@ -42,6 +42,7 @@ who might have relied on it.
 import Dict exposing (Dict)
 import Elm
 import Generate.Phantom.Emit.Component as Component exposing (ComponentSurface)
+import Generate.Phantom.Emit.Shared exposing (homeOf)
 import Generate.Phantom.Model exposing (Brand, Comp)
 import Generate.Types exposing (FamiliesConfig, FamilyPackageConfig, FamilySpec)
 import Set exposing (Set)
@@ -393,6 +394,12 @@ generateFamilyModule familyModuleName members familyBlurb =
         moduleLine =
             "module " ++ familyModuleName ++ " exposing\n    ( " ++ exposingList ++ "\n    )"
 
+        -- The brand's library root (`M3e`, `Sl`, `Hz`, …), taken from the module
+        -- name so doc prose stays brand-NEUTRAL (a hardcoded `M3e.Element.*` here
+        -- trips the neutrality gate on non-m3e brands' generated output).
+        lib =
+            familyModuleName |> String.split "." |> List.head |> Maybe.withDefault ""
+
         memberList =
             members
                 |> List.map (\mem -> "[`" ++ mem.origModuleName ++ "`](" ++ mem.origModuleName ++ ") as `" ++ mem.elementCamel ++ "`")
@@ -408,7 +415,7 @@ generateFamilyModule familyModuleName members familyBlurb =
             , ""
             , memberList ++ "."
             , ""
-            , "Prefer whichever import reads best — the flat `M3e.Element.*` modules and"
+            , "Prefer whichever import reads best — the flat `" ++ lib ++ ".Element.*` modules and"
             , "this family module are the same elements, same types."
             , ""
             , "@docs " ++ String.join ", " exposingAll
@@ -447,6 +454,40 @@ generateFamilyModule familyModuleName members familyBlurb =
         |> Result.map
             (\decls ->
                 String.join "\n\n\n" ([ moduleLine, docLines, imports ] ++ decls) ++ "\n"
+            )
+
+
+{-| DAG-rework Task 3: render a DEGENERATE single-member family façade for a
+STANDALONE element (one not in any declared `_families` family). The composed
+`BuildPackage` builder for every element must source its element-tier types +
+slot placers through a `<lib>.Component.<Family>` façade (Task 5's gate forbids
+`<lib>.Build.* → <lib>.Element.*`); a standalone element's family IS just that
+element, so it needs a 1:1 façade module — member label = element name — of the
+exact same shape `generateFamilyModule` builds for the declared families. This
+reuses `generateFamilyModule` verbatim so a degenerate façade can never drift
+from a declared one; the ONLY difference is the module name (caller-supplied,
+so Task 3 can emit under the temporary `Component2` namespace and Task 4 promote
+it to the real `Component` namespace) and the single-member membership.
+
+`fullModuleName` is the whole `<lib>.<ns>.<Element>` name; `element` is the
+element's Pascal component name (used as both the component lookup key and the
+member label). Returns the rendered module source, or an `Err` if the element
+is not found in `brand.comps`.
+-}
+degenerateFacadeModule : String -> Brand -> String -> String -> Result String String
+degenerateFacadeModule lib brand fullModuleName element =
+    resolveMember lib
+        brand
+        { component = element
+        , elementPascal = element
+        , elementCamel = lowerFirst element
+        , alias_ = element ++ "_"
+        }
+        |> Result.andThen
+            (\member ->
+                generateFamilyModule fullModuleName
+                    [ member ]
+                    ("The **" ++ element ++ "** element — degenerate single-member family façade.")
             )
 
 
@@ -755,10 +796,42 @@ familyLicenseFile pkg =
         |> Maybe.map (\text -> { path = "../" ++ pkg.dir ++ "/LICENSE", contents = text, warnings = [] })
 
 
-{-| Emit every `<lib>.<namespace>.<Family>` flat family module plus the
-standalone package's `elm.json`/`README.md`/`LICENSE`. `Nothing` config is a
-silent no-op, mirroring gen-family-package.js's own opt-in behavior when
-`_families` is absent.
+{-| DAG-rework Task 4: the STANDALONE (degenerate) elements — every
+builder-bearing element (`homeOf == Nothing`, mirroring `Emit.elm`'s `own`) that
+is not a member of any declared `_families` family. Each becomes a 1:1
+`<lib>.<ns>.<Element>` façade so the composed Build tier can route EVERY
+element's builder through Components (Task 5's gate forbids `Build → Element`),
+and so the Components tier and the per-element re-exports cover all 130 elements.
+Emitter-computed (OQ-2) — the brand author's `slots.json` surface is unchanged.
+-}
+degenerateElements : Brand -> FamiliesConfig -> List String
+degenerateElements brand cfg =
+    let
+        claimed =
+            cfg.families
+                |> List.concatMap
+                    (\( _, spec ) ->
+                        (case spec.root of
+                            Just root ->
+                                [ root ]
+
+                            Nothing ->
+                                []
+                        )
+                            ++ (spec.members |> List.map .component)
+                    )
+                |> Set.fromList
+    in
+    brand.comps
+        |> List.filter (\c -> homeOf c == Nothing && not (Set.member c.name claimed))
+        |> List.map .name
+
+
+{-| Emit every `<lib>.<namespace>.<Family>` flat family module — the declared
+`_families` families PLUS a degenerate single-member façade per standalone
+element (DAG-rework Task 4) — plus the standalone package's
+`elm.json`/`README.md`/`LICENSE`. `Nothing` config is a silent no-op, mirroring
+gen-family-package.js's own opt-in behavior when `_families` is absent.
 -}
 files : Brand -> Maybe FamiliesConfig -> Result String (List Elm.File)
 files brand maybeConfig =
@@ -767,14 +840,48 @@ files brand maybeConfig =
             Ok []
 
         Just cfg ->
-            planFamilies cfg.lib cfg.namespace cfg
-                |> Result.andThen
-                    (\plans ->
-                        plans
-                            |> List.foldr
-                                (\plan acc -> acc |> Result.andThen (\fs -> renderOneFamily cfg.package.dir cfg.lib brand plan |> Result.map (\f -> f :: fs)))
-                                (Ok [])
-                    )
+            let
+                ns =
+                    cfg.namespace
+
+                declaredResult =
+                    planFamilies cfg.lib ns cfg
+                        |> Result.andThen
+                            (\plans ->
+                                plans
+                                    |> List.foldr
+                                        (\plan acc -> acc |> Result.andThen (\fs -> renderOneFamily cfg.package.dir cfg.lib brand plan |> Result.map (\f -> f :: fs)))
+                                        (Ok [])
+                            )
+
+                degenerateResult =
+                    degenerateElements brand cfg
+                        |> List.foldr
+                            (\el acc ->
+                                acc
+                                    |> Result.andThen
+                                        (\rs ->
+                                            let
+                                                modName =
+                                                    cfg.lib ++ "." ++ ns ++ "." ++ el
+                                            in
+                                            degenerateFacadeModule cfg.lib brand modName el
+                                                |> Result.map
+                                                    (\src ->
+                                                        { moduleName = modName
+                                                        , elmFile =
+                                                            { path = "../" ++ cfg.package.dir ++ "/src/" ++ String.join "/" (String.split "." modName) ++ ".elm"
+                                                            , contents = src
+                                                            , warnings = []
+                                                            }
+                                                        }
+                                                            :: rs
+                                                    )
+                                        )
+                            )
+                            (Ok [])
+            in
+            Result.map2 (\declared degenerate -> declared ++ degenerate) declaredResult degenerateResult
                 |> Result.map
                     (\rendered ->
                         let

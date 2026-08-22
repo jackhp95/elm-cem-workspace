@@ -1,79 +1,76 @@
-module M3e.Build.ExpandableListItem exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
-    , withClass, withDisabled, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle
-    , items, leading, overline, supportingText, toggleIcon
-    , withItems, withLeading, withOverline, withSupportingText, withToggleIcon, withChild
-    )
+module M3e.Build.ExpandableListItem exposing (Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, items, leading, overline, supportingText, toggleIcon, withItems, withLeading, withOverline, withSupportingText, withToggleIcon, withChild)
 
-{-|
+{-| The **ExpandableListItem** family — the COMPOSED builder tier.
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy
-@docs withClass, withDisabled, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle
-@docs items, leading, overline, supportingText, toggleIcon
-@docs withItems, withLeading, withOverline, withSupportingText, withToggleIcon, withChild
+A degenerate single-member family: the flat, un-prefixed per-element
+builder surface, sourced through `M3e.Component.ExpandableListItem`
+— the one real Components-driven builder implementation (DAG
+`Build → Components → Elements → Core`), never `M3e.Element.*`.
+
+@docs Builder, AttrCaps, SlotCaps, Is, Content, LeadingSlot, OverlineSlot, SupportingTextSlot, ToggleIconSlot, ChildAdmittedBy, build, toElement, withClass, withDisabled, withId, withOnClosed, withOnClosing, withOnOpened, withOnOpening, withOpen, withSlot, withStyle, items, leading, overline, supportingText, toggleIcon, withItems, withLeading, withOverline, withSupportingText, withToggleIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ExpandableListItem as Component
+import M3e.Component.ExpandableListItem as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.ExpandableListItemIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.ExpandableListItemBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.ExpandableListItemAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.ExpandableListItemSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.ExpandableListItemChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.ExpandableListItemContent
 
 
 {-| -}
 type alias LeadingSlot =
-    Component.LeadingSlot
+    Component.ExpandableListItemLeadingSlot
 
 
 {-| -}
 type alias OverlineSlot =
-    Component.OverlineSlot
+    Component.ExpandableListItemOverlineSlot
 
 
 {-| -}
 type alias SupportingTextSlot =
-    Component.SupportingTextSlot
+    Component.ExpandableListItemSupportingTextSlot
 
 
 {-| -}
 type alias ToggleIconSlot =
-    Component.ToggleIconSlot
+    Component.ExpandableListItemToggleIconSlot
 
 
 {-| -}
@@ -83,7 +80,7 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.ExpandableListItemIs kind) admittedBy msg
 toElement =
     B.toElement
 
@@ -93,39 +90,39 @@ items :
     B.Builder childRow childAttrCaps childSlotCaps childAccepts msg
     -> Element free freeAdmittedBy msg
 items builder =
-    Component.items (B.toElement builder)
+    Component.expandableListItemItems (B.toElement builder)
 
 
 {-| -}
 leading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemLeadingSlot msg
     -> Element free freeAdmittedBy msg
 leading builder =
-    Component.leading (B.toElement builder)
+    Component.expandableListItemLeading (B.toElement builder)
 
 
 {-| -}
 overline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemOverlineSlot msg
     -> Element free freeAdmittedBy msg
 overline builder =
-    Component.overline (B.toElement builder)
+    Component.expandableListItemOverline (B.toElement builder)
 
 
 {-| -}
 supportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemSupportingTextSlot msg
     -> Element free freeAdmittedBy msg
 supportingText builder =
-    Component.supportingText (B.toElement builder)
+    Component.expandableListItemSupportingText (B.toElement builder)
 
 
 {-| -}
 toggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemToggleIconSlot msg
     -> Element free freeAdmittedBy msg
 toggleIcon builder =
-    Component.toggleIcon (B.toElement builder)
+    Component.expandableListItemToggleIcon (B.toElement builder)
 
 
 {-| -}
@@ -134,43 +131,43 @@ withItems :
     -> Builder attrCaps { s | items : Available } msg kind
     -> Builder attrCaps { s | items : Used } msg kind
 withItems slotBuilder builder_ =
-    B.withChild (El.toNode (Component.items (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expandableListItemItems (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withLeading :
-    B.Builder childRow childAttrCaps childSlotCaps Component.LeadingSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemLeadingSlot msg
     -> Builder attrCaps { s | leading : Available } msg kind
     -> Builder attrCaps { s | leading : Used } msg kind
 withLeading slotBuilder builder_ =
-    B.withChild (El.toNode (Component.leading (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expandableListItemLeading (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withOverline :
-    B.Builder childRow childAttrCaps childSlotCaps Component.OverlineSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemOverlineSlot msg
     -> Builder attrCaps { s | overline : Available } msg kind
     -> Builder attrCaps { s | overline : Used } msg kind
 withOverline slotBuilder builder_ =
-    B.withChild (El.toNode (Component.overline (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expandableListItemOverline (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withSupportingText :
-    B.Builder childRow childAttrCaps childSlotCaps Component.SupportingTextSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemSupportingTextSlot msg
     -> Builder attrCaps { s | supportingText : Available } msg kind
     -> Builder attrCaps { s | supportingText : Used } msg kind
 withSupportingText slotBuilder builder_ =
-    B.withChild (El.toNode (Component.supportingText (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expandableListItemSupportingText (B.toElement slotBuilder))) builder_
 
 
 {-| -}
 withToggleIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.ToggleIconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.ExpandableListItemToggleIconSlot msg
     -> Builder attrCaps { s | toggleIcon : Available } msg kind
     -> Builder attrCaps { s | toggleIcon : Used } msg kind
 withToggleIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.toggleIcon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.expandableListItemToggleIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}

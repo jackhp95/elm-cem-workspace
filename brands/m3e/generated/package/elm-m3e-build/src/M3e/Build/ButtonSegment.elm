@@ -1,64 +1,60 @@
-module M3e.Build.ButtonSegment exposing
-    ( build, toElement
-    , Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy
-    , withChecked, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValue
-    , icon
-    , withIcon, withChild
-    )
+module M3e.Build.ButtonSegment exposing (Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValue, icon, withIcon, withChild)
 
-{-|
+{-| The **ButtonSegment** element — the flat per-element builder surface,
+sourced through the **SegmentedButton** family façade
+(`M3e.Component.SegmentedButton`). This module and the aggregated
+`M3e.Build.SegmentedButton` are both first-class, permanent surfaces
+(DAG-rework OQ-3/OQ-4).
 
-@docs build, toElement
-@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy
-@docs withChecked, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValue
-@docs icon
-@docs withIcon, withChild
+@docs Builder, AttrCaps, SlotCaps, Is, Content, IconSlot, ChildAdmittedBy, build, toElement, withChecked, withClass, withDisabled, withId, withOnBeforeinput, withOnChange, withOnClick, withOnInput, withSlot, withStyle, withValue, icon, withIcon, withChild
 
 -}
 
 import HtmlIr.Element as El exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
+import HtmlIr.Value exposing (Value)
 import M3e.Attributes as A
-import M3e.Element.ButtonSegment as Component
+import M3e.Component.SegmentedButton as Component
 import M3e.Events as Ev
 import M3e.Forge.Internal as B
 import M3e.Kind exposing (Available, Brand, Ctx, Used)
+import M3e.Values
 
 
 {-| -}
 type alias Is s =
-    Component.Is s
+    Component.SegmentIs s
 
 
 {-| -}
 type alias Builder attrCaps slotCaps msg kind =
-    Component.Builder attrCaps slotCaps msg kind
+    Component.SegmentBuilder attrCaps slotCaps msg kind
 
 
 {-| -}
 type alias AttrCaps =
-    Component.AttrCaps
+    Component.SegmentAttrCaps
 
 
 {-| -}
 type alias SlotCaps =
-    Component.SlotCaps
+    Component.SegmentSlotCaps
 
 
 {-| -}
 type alias ChildAdmittedBy childAdm =
-    Component.ChildAdmittedBy childAdm
+    Component.SegmentChildAdmittedBy childAdm
 
 
 {-| -}
 type alias Content =
-    Component.Content
+    Component.SegmentContent
 
 
 {-| -}
 type alias IconSlot =
-    Component.IconSlot
+    Component.SegmentIconSlot
 
 
 {-| -}
@@ -68,26 +64,26 @@ build =
 
 
 {-| -}
-toElement : Builder attrCaps slotCaps msg kind -> Element (Component.Is kind) admittedBy msg
+toElement : Builder attrCaps slotCaps msg kind -> Element (Component.SegmentIs kind) admittedBy msg
 toElement =
     B.toElement
 
 
 {-| -}
 icon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SegmentIconSlot msg
     -> Element free freeAdmittedBy msg
 icon builder =
-    Component.icon (B.toElement builder)
+    Component.segmentIcon (B.toElement builder)
 
 
 {-| -}
 withIcon :
-    B.Builder childRow childAttrCaps childSlotCaps Component.IconSlot msg
+    B.Builder childRow childAttrCaps childSlotCaps Component.SegmentIconSlot msg
     -> Builder attrCaps { s | icon : Available } msg kind
     -> Builder attrCaps { s | icon : Used } msg kind
 withIcon slotBuilder builder_ =
-    B.withChild (El.toNode (Component.icon (B.toElement slotBuilder))) builder_
+    B.withChild (El.toNode (Component.segmentIcon (B.toElement slotBuilder))) builder_
 
 
 {-| -}
