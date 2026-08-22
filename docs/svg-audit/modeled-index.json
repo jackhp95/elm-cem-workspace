@@ -9,9 +9,9 @@
   },
   "counts": {
     "elements": 56,
-    "globalAttributes": 62,
+    "globalAttributes": 63,
     "typedGlobalEnums": 23,
-    "attributeSetters": 212,
+    "attributeSetters": 213,
     "valuesEnumTypes": 30
   },
   "elements": [
@@ -519,6 +519,11 @@
       "tokens": null
     },
     {
+      "name": "aria-roledescription",
+      "typed": false,
+      "tokens": null
+    },
+    {
       "name": "tabindex",
       "typed": false,
       "tokens": null
@@ -942,6 +947,7 @@
     "id",
     "style",
     "alignmentBaseline",
+    "ariaRoledescription",
     "baselineShift",
     "clipPath",
     "clipRule",
