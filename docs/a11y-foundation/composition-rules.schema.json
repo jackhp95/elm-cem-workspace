@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elm-cem-workspace/docs/a11y-foundation/composition-rules.schema.json",
+  "title": "a11y composition foundation",
+  "description": "Brand-agnostic a11y/HTML-content-model/ARIA foundation consumed by the families/composition tier (plan 2026-08-21-families-a11y-composition-plan.md, Task 1). Every semantic entry is provenance-stamped (D-FAM5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "meta",
+    "provenance",
+    "interactiveContent",
+    "whatwgContentModels",
+    "ariaRequiredOwned",
+    "ariaRequiredContext",
+    "ariaPresentationalChildren",
+    "svgAamOverlay"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "version", "authored", "plan", "notExecutedByAuthor"],
+      "properties": {
+        "artifact": { "const": "a11y-composition-foundation" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "authored": { "type": "string", "format": "date" },
+        "plan": { "type": "string" },
+        "notExecutedByAuthor": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Named sources referenced by each rule's provenanceRef. Every source has a stable key, a spec URL, and the UTC date it was fetched live.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z0-9-]+$": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["spec", "url", "fetched"],
+          "properties": {
+            "spec": { "type": "string" },
+            "url": { "type": "string", "format": "uri" },
+            "fetched": { "type": "string", "format": "date" }
+          }
+        }
+      }
+    },
+    "interactiveContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provenanceRef", "members"],
+      "properties": {
+        "provenanceRef": { "$ref": "#/$defs/provenanceRef" },
+        "categoryQuote": { "type": "string" },
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["element", "conditional"],
+            "properties": {
+              "element": { "type": "string" },
+              "conditional": { "type": "boolean" },
+              "condition": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "whatwgContentModels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["element", "contentModelQuote", "constraints", "provenanceRef"],
+        "properties": {
+          "element": { "type": "string" },
+          "contentModelQuote": { "type": "string" },
+          "constraints": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "no-interactive-content-descendant",
+                "no-tabindex-descendant",
+                "no-a-descendant",
+                "no-labelable-descendant-except-labeled-control",
+                "no-label-descendant",
+                "no-form-descendant",
+                "transparent",
+                "phrasing-content",
+                "flow-content",
+                "heading-content-allowed"
+              ]
+            }
+          },
+          "enforcedBy": { "$ref": "#/$defs/enforcedBy" },
+          "provenanceRef": { "$ref": "#/$defs/provenanceRef" }
+        }
+      }
+    },
+    "ariaRequiredOwned": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["containerRole", "requiredOwned", "provenanceRef"],
+        "properties": {
+          "containerRole": { "type": "string" },
+          "requiredOwned": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "enforcedBy": { "$ref": "#/$defs/enforcedBy" },
+          "provenanceRef": { "$ref": "#/$defs/provenanceRef" }
+        }
+      }
+    },
+    "ariaRequiredContext": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["childRole", "requiredContext", "provenanceRef"],
+        "properties": {
+          "childRole": { "type": "string" },
+          "requiredContext": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "enforcedBy": { "$ref": "#/$defs/enforcedBy" },
+          "provenanceRef": { "$ref": "#/$defs/provenanceRef" }
+        }
+      }
+    },
+    "ariaPresentationalChildren": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provenanceRef", "quote", "roles"],
+      "properties": {
+        "provenanceRef": { "$ref": "#/$defs/provenanceRef" },
+        "quote": { "type": "string" },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "enforcedBy": { "$ref": "#/$defs/enforcedBy" }
+      }
+    },
+    "svgAamOverlay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provenanceRef", "titleDesc", "nonRendered", "defaultRoles"],
+      "properties": {
+        "provenanceRef": { "$ref": "#/$defs/provenanceRef" },
+        "titleDesc": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["elements", "quote", "effect"],
+          "properties": {
+            "elements": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+            "quote": { "type": "string" },
+            "effect": { "type": "string" }
+          }
+        },
+        "nonRendered": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["elements", "quote", "effect"],
+          "properties": {
+            "elements": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+            "quote": { "type": "string" },
+            "effect": { "type": "string" }
+          }
+        },
+        "defaultRoles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["selector", "role"],
+            "properties": {
+              "selector": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          }
+        },
+        "enforcedBy": { "$ref": "#/$defs/enforcedBy" }
+      }
+    }
+  },
+  "$defs": {
+    "provenanceRef": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Key into the top-level `provenance` map."
+    },
+    "enforcedBy": {
+      "type": "string",
+      "enum": ["admits/slotKinds", "ValidComposition", "advisory", "none"],
+      "description": "Which config mechanism enforces this rule. admits/slotKinds = direct-slot flat allow-list (Cem.ValidSlotKind); ValidComposition = relational ancestor/descendant rule (new, plan Task 6); advisory = documented, not gated; none = informational overlay only."
+    }
+  }
+}
