@@ -433,7 +433,7 @@ an escape call site `content` on a `<meta>` is indistinguishable from
 -}
 globalAttributes : List String
 globalAttributes =
-    [ "class", "clip-path", "clip-rule", "color", "cursor", "display", "dominant-baseline", "fill", "fill-opacity", "fill-rule", "filter", "font-family", "font-size", "font-style", "font-weight", "id", "letter-spacing", "mask", "opacity", "paint-order", "pointer-events", "shape-rendering", "stroke", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "style", "text-anchor", "text-decoration", "transform", "transform-origin", "vector-effect", "visibility", "word-spacing" ]
+    [ "alignment-baseline", "baseline-shift", "class", "clip-path", "clip-rule", "color", "color-interpolation", "color-rendering", "cursor", "direction", "display", "dominant-baseline", "fill", "fill-opacity", "fill-rule", "filter", "font-family", "font-size", "font-style", "font-variant", "font-weight", "glyph-orientation-vertical", "id", "image-rendering", "letter-spacing", "line-height", "marker-end", "marker-mid", "marker-start", "mask", "opacity", "overflow", "paint-order", "pointer-events", "shape-rendering", "stroke", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "style", "text-anchor", "text-decoration", "text-rendering", "transform", "transform-origin", "vector-effect", "visibility", "white-space", "word-spacing", "writing-mode" ]
 
 
 {-| Kept for the PreferBarrel flatten class; inert on the phantom surface.

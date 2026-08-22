@@ -1,5 +1,5 @@
 module TypedSvg.Attributes exposing
-    ( class, id, style, clipPath, clipRule, color, cursor, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontWeight, letterSpacing, mask, opacity, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, transform, transformOrigin, vectorEffect, visibility, wordSpacing, classList, styleList
+    ( class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, classList, styleList
     , clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, rotate, rx, ry, spreadMethod, startOffset, stopColor, stopOpacity, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
     )
 
@@ -14,7 +14,7 @@ aliases that pre-apply one enum token. They exist for IDE discovery:
 type `variant` and autocomplete lists every value inline. Each claims
 the same capability row as its base enum setter, so admittance is identical.
 
-@docs class, id, style, clipPath, clipRule, color, cursor, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontWeight, letterSpacing, mask, opacity, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, transform, transformOrigin, vectorEffect, visibility, wordSpacing, classList, styleList
+@docs class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, classList, styleList
 @docs clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, rotate, rx, ry, spreadMethod, startOffset, stopColor, stopOpacity, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
 
 -}
@@ -61,6 +61,20 @@ styleList =
     Ir.styles
 
 
+{-| The global `alignment-baseline` attribute.
+-}
+alignmentBaseline : Value TypedSvg.Values.AlignmentBaseline -> Attr c msg
+alignmentBaseline value_ =
+    Ir.attribute "alignment-baseline" (HtmlIr.Value.toString value_)
+
+
+{-| The global `baseline-shift` attribute.
+-}
+baselineShift : String -> Attr c msg
+baselineShift =
+    Ir.attribute "baseline-shift"
+
+
 {-| The global `clip-path` attribute.
 -}
 clipPath : String -> Attr c msg
@@ -82,6 +96,20 @@ color =
     Ir.attribute "color"
 
 
+{-| The global `color-interpolation` attribute.
+-}
+colorInterpolation : Value TypedSvg.Values.ColorInterpolation -> Attr c msg
+colorInterpolation value_ =
+    Ir.attribute "color-interpolation" (HtmlIr.Value.toString value_)
+
+
+{-| The global `color-rendering` attribute.
+-}
+colorRendering : Value TypedSvg.Values.ColorRendering -> Attr c msg
+colorRendering value_ =
+    Ir.attribute "color-rendering" (HtmlIr.Value.toString value_)
+
+
 {-| The global `cursor` attribute.
 -}
 cursor : String -> Attr c msg
@@ -89,18 +117,25 @@ cursor =
     Ir.attribute "cursor"
 
 
+{-| The global `direction` attribute.
+-}
+direction : Value TypedSvg.Values.Direction -> Attr c msg
+direction value_ =
+    Ir.attribute "direction" (HtmlIr.Value.toString value_)
+
+
 {-| The global `display` attribute.
 -}
-display : String -> Attr c msg
-display =
-    Ir.attribute "display"
+display : Value TypedSvg.Values.Display -> Attr c msg
+display value_ =
+    Ir.attribute "display" (HtmlIr.Value.toString value_)
 
 
 {-| The global `dominant-baseline` attribute.
 -}
-dominantBaseline : String -> Attr c msg
-dominantBaseline =
-    Ir.attribute "dominant-baseline"
+dominantBaseline : Value TypedSvg.Values.DominantBaseline -> Attr c msg
+dominantBaseline value_ =
+    Ir.attribute "dominant-baseline" (HtmlIr.Value.toString value_)
 
 
 {-| The global `fill` attribute.
@@ -152,6 +187,13 @@ fontStyle =
     Ir.attribute "font-style"
 
 
+{-| The global `font-variant` attribute.
+-}
+fontVariant : Value TypedSvg.Values.FontVariant -> Attr c msg
+fontVariant value_ =
+    Ir.attribute "font-variant" (HtmlIr.Value.toString value_)
+
+
 {-| The global `font-weight` attribute.
 -}
 fontWeight : String -> Attr c msg
@@ -159,11 +201,53 @@ fontWeight =
     Ir.attribute "font-weight"
 
 
+{-| The global `glyph-orientation-vertical` attribute.
+-}
+glyphOrientationVertical : String -> Attr c msg
+glyphOrientationVertical =
+    Ir.attribute "glyph-orientation-vertical"
+
+
+{-| The global `image-rendering` attribute.
+-}
+imageRendering : Value TypedSvg.Values.ImageRendering -> Attr c msg
+imageRendering value_ =
+    Ir.attribute "image-rendering" (HtmlIr.Value.toString value_)
+
+
 {-| The global `letter-spacing` attribute.
 -}
 letterSpacing : String -> Attr c msg
 letterSpacing =
     Ir.attribute "letter-spacing"
+
+
+{-| The global `line-height` attribute.
+-}
+lineHeight : String -> Attr c msg
+lineHeight =
+    Ir.attribute "line-height"
+
+
+{-| The global `marker-end` attribute.
+-}
+markerEnd : String -> Attr c msg
+markerEnd =
+    Ir.attribute "marker-end"
+
+
+{-| The global `marker-mid` attribute.
+-}
+markerMid : String -> Attr c msg
+markerMid =
+    Ir.attribute "marker-mid"
+
+
+{-| The global `marker-start` attribute.
+-}
+markerStart : String -> Attr c msg
+markerStart =
+    Ir.attribute "marker-start"
 
 
 {-| The global `mask` attribute.
@@ -180,6 +264,13 @@ opacity =
     Ir.attribute "opacity"
 
 
+{-| The global `overflow` attribute.
+-}
+overflow : Value TypedSvg.Values.Overflow -> Attr c msg
+overflow value_ =
+    Ir.attribute "overflow" (HtmlIr.Value.toString value_)
+
+
 {-| The global `paint-order` attribute.
 -}
 paintOrder : String -> Attr c msg
@@ -189,16 +280,16 @@ paintOrder =
 
 {-| The global `pointer-events` attribute.
 -}
-pointerEvents : String -> Attr c msg
-pointerEvents =
-    Ir.attribute "pointer-events"
+pointerEvents : Value TypedSvg.Values.PointerEvents -> Attr c msg
+pointerEvents value_ =
+    Ir.attribute "pointer-events" (HtmlIr.Value.toString value_)
 
 
 {-| The global `shape-rendering` attribute.
 -}
-shapeRendering : String -> Attr c msg
-shapeRendering =
-    Ir.attribute "shape-rendering"
+shapeRendering : Value TypedSvg.Values.ShapeRendering -> Attr c msg
+shapeRendering value_ =
+    Ir.attribute "shape-rendering" (HtmlIr.Value.toString value_)
 
 
 {-| The global `stroke` attribute.
@@ -271,6 +362,13 @@ textDecoration =
     Ir.attribute "text-decoration"
 
 
+{-| The global `text-rendering` attribute.
+-}
+textRendering : Value TypedSvg.Values.TextRendering -> Attr c msg
+textRendering value_ =
+    Ir.attribute "text-rendering" (HtmlIr.Value.toString value_)
+
+
 {-| The global `transform` attribute.
 -}
 transform : String -> Attr c msg
@@ -287,9 +385,9 @@ transformOrigin =
 
 {-| The global `vector-effect` attribute.
 -}
-vectorEffect : String -> Attr c msg
-vectorEffect =
-    Ir.attribute "vector-effect"
+vectorEffect : Value TypedSvg.Values.VectorEffect -> Attr c msg
+vectorEffect value_ =
+    Ir.attribute "vector-effect" (HtmlIr.Value.toString value_)
 
 
 {-| The global `visibility` attribute.
@@ -299,11 +397,25 @@ visibility value_ =
     Ir.attribute "visibility" (HtmlIr.Value.toString value_)
 
 
+{-| The global `white-space` attribute.
+-}
+whiteSpace : Value TypedSvg.Values.WhiteSpace -> Attr c msg
+whiteSpace value_ =
+    Ir.attribute "white-space" (HtmlIr.Value.toString value_)
+
+
 {-| The global `word-spacing` attribute.
 -}
 wordSpacing : String -> Attr c msg
 wordSpacing =
     Ir.attribute "word-spacing"
+
+
+{-| The global `writing-mode` attribute.
+-}
+writingMode : Value TypedSvg.Values.WritingMode -> Attr c msg
+writingMode value_ =
+    Ir.attribute "writing-mode" (HtmlIr.Value.toString value_)
 
 
 {-| Coordinate system for the clip path contents.

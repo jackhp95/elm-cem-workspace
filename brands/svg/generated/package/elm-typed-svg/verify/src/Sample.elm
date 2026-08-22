@@ -1,4 +1,4 @@
-module Sample exposing (badge, main)
+module Sample exposing (badge, enumProof, main)
 
 {-| A real, hand-written TypedSvg document — the human-authored proof that the
 generated `TypedSvg` brand composes into a well-formed SVG tree and renders
@@ -19,7 +19,7 @@ emitted structure is well-formed.
 -}
 
 import Html exposing (Html)
-import TypedSvg exposing (circle, defs, linearGradient, path, rect, stop, svg, text, text_, toHtml)
+import TypedSvg exposing (circle, defs, g, linearGradient, path, rect, stop, svg, text, text_, toHtml)
 import TypedSvg.Attributes as A
 import TypedSvg.Values as V
 
@@ -62,6 +62,52 @@ badge =
             ]
 
 
+{-| Compile-time proof that every Task-3 presentation-enum win narrows to its
+finite token domain: each setter below is applied with a token drawn from the
+enum's own domain, so a token from the wrong enum (or a typo) is a COMPILE error.
+The 15 typed enums (`display`, `pointer-events`, `vector-effect`,
+`shape-rendering`, `dominant-baseline`, `alignment-baseline`,
+`color-interpolation`, `color-rendering`, `direction`, `font-variant`,
+`image-rendering`, `overflow`, `text-rendering`, `white-space`, `writing-mode`)
+plus the six bare-`String` presentation-gap props (`baseline-shift`,
+`glyph-orientation-vertical`, `line-height`, `marker-start`, `marker-mid`,
+`marker-end`) are all exercised here.
+-}
+enumProof : Html msg
+enumProof =
+    toHtml <|
+        svg
+            [ A.viewBox "0 0 10 10" ]
+            [ g
+                [ A.display V.displayBlock
+                , A.pointerEvents V.pointerEventsAll
+                , A.vectorEffect V.vectorEffectNonScalingStroke
+                , A.shapeRendering V.shapeRenderingCrispedges
+                , A.colorInterpolation V.colorInterpolationLinearrgb
+                , A.colorRendering V.colorRenderingOptimizequality
+                , A.imageRendering V.imageRenderingOptimizespeed
+                , A.overflow V.overflowHidden
+                , A.direction V.directionLtr
+                ]
+                [ text_
+                    [ A.dominantBaseline V.dominantBaselineCentral
+                    , A.alignmentBaseline V.alignmentBaselineBaseline
+                    , A.fontVariant V.fontVariantSmallCaps
+                    , A.textRendering V.textRenderingOptimizelegibility
+                    , A.whiteSpace V.whiteSpacePre
+                    , A.writingMode V.writingModeLrTb
+                    , A.baselineShift "super"
+                    , A.glyphOrientationVertical "auto"
+                    , A.lineHeight "1.4"
+                    , A.markerStart "url(#m)"
+                    , A.markerMid "none"
+                    , A.markerEnd "url(#m)"
+                    ]
+                    [ text "enums" ]
+                ]
+            ]
+
+
 main : Html msg
 main =
-    badge
+    Html.div [] [ badge, enumProof ]
