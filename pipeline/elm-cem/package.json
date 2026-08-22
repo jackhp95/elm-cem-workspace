@@ -50,6 +50,7 @@
     "test:phantom": "node tests/phantom/gate.mjs",
     "test:facts-bundle-schema": "node tests/facts-bundle-schema.test.mjs",
     "test:exclude-cli": "node tests/exclude-cli.test.mjs",
+    "test:admits-subtraction": "node tests/admits-subtraction.test.mjs",
     "test:renames-cli": "node tests/renames-cli.test.mjs",
     "test:split": "node tests/split.test.mjs",
     "test:depstamp": "node tests/depstamp.test.mjs",

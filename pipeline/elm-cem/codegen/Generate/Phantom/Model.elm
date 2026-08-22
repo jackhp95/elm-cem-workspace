@@ -468,6 +468,15 @@ type RawKindRef
     | RShared String
     | RSet String
     | RBrand String
+      -- Set-subtraction tokens (D-FAM2). `!@set` excludes a whole category and
+      -- `!kind` excludes a single kind from whatever the INCLUDE tokens admit.
+      -- These carry no fields of their own; `resolveSlot` computes
+      -- (union of includes) − (union of excludes) on the flattened field list,
+      -- so the generated `slotKinds` stays a flat allow-list and
+      -- `Cem.ValidSlotKind` is untouched. A `shared:*` role can also be
+      -- excluded (`RExcludeKind` reuses the same include resolvers).
+    | RExcludeSet String
+    | RExcludeKind RawKindRef
 
 
 type alias RawSlot =
@@ -658,19 +667,31 @@ decodeEmitFactsBundleFlag flags =
 
 kindRef : String -> RawKindRef
 kindRef s =
-    case sharedRoleOf s of
-        Just role ->
-            RShared role
+    -- Exclusion tokens are recognised BEFORE the shared/`@`/bare cases so a
+    -- `!`-prefixed token never collapses into an include. `!@set` excludes a
+    -- category; `!kind` excludes a single kind (delegating to `kindRef` on the
+    -- un-`!`-prefixed remainder so `!shared:*` and `!Foo` both resolve the same
+    -- way an include would).
+    if String.startsWith "!@" s then
+        RExcludeSet (String.dropLeft 2 s)
 
-        Nothing ->
-            if s == "any" then
-                RAny
+    else if String.startsWith "!" s then
+        RExcludeKind (kindRef (String.dropLeft 1 s))
 
-            else if String.startsWith "@" s then
-                RSet (String.dropLeft 1 s)
+    else
+        case sharedRoleOf s of
+            Just role ->
+                RShared role
 
-            else
-                RBrand s
+            Nothing ->
+                if s == "any" then
+                    RAny
+
+                else if String.startsWith "@" s then
+                    RSet (String.dropLeft 1 s)
+
+                else
+                    RBrand s
 
 
 rawSlotDecoder : String -> D.Decoder RawSlot
@@ -1704,6 +1725,15 @@ kindFieldOfRef ctx where_ ref =
                     else
                         Err (where_ ++ ": unknown kind '" ++ ctor ++ "' (no such component or _kinds entry)")
 
+        RExcludeSet setName ->
+            -- Resolve the EXCLUDED category to fields so `resolveSlot` can
+            -- subtract them; `!@set` is only meaningful as a subtrahend, never
+            -- as a standalone include.
+            kindFieldOfRef ctx where_ (RSet setName)
+
+        RExcludeKind inner ->
+            kindFieldOfRef ctx where_ inner
+
 
 {-| Resolve one `admits` slot entry to its `ResolvedSlot`.
 -}
@@ -1738,11 +1768,47 @@ resolveSlot ctx compName s =
                     Err [ where_ ++ ": unknown set '@" ++ setName ++ "'" ]
 
         refs ->
-            refs
-                |> List.map (kindFieldOfRef ctx where_)
-                |> combine
-                |> Result.map (List.concat >> sortFields)
-                |> Result.map (\fields -> { name = s.name, content = Fields fields, multi = s.multi, required = s.required })
+            let
+                isExclude ref =
+                    case ref of
+                        RExcludeSet _ ->
+                            True
+
+                        RExcludeKind _ ->
+                            True
+
+                        _ ->
+                            False
+
+                ( excludes, includes ) =
+                    List.partition isExclude refs
+
+                resolveAll rs =
+                    rs
+                        |> List.map (kindFieldOfRef ctx where_)
+                        |> combine
+                        |> Result.map List.concat
+            in
+            Result.map2
+                (\incFields excFields ->
+                    let
+                        excluded =
+                            excFields |> List.map .field
+
+                        -- Set difference computed on `.field` (the kind
+                        -- identity): (union of includes) − (union of excludes).
+                        -- `!@interactive` on a phrasing slot drops
+                        -- button/a/input/… so the flat allow-list is
+                        -- a11y-correct with zero change to `Cem.ValidSlotKind`.
+                        kept =
+                            incFields
+                                |> List.filter (\f -> not (List.member f.field excluded))
+                                |> sortFields
+                    in
+                    { name = s.name, content = Fields kept, multi = s.multi, required = s.required }
+                )
+                (resolveAll includes)
+                (resolveAll excludes)
                 |> Result.mapError List.singleton
 
 
