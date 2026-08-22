@@ -1,0 +1,44 @@
+{
+  "_comment": "Every SVG-2 spec entry that elm-typed-svg deliberately does NOT model, each with an exception bucket + a substantive reason. This is the honesty ledger the permanent gate (tools/check-svg-spec-coverage.mjs) enforces: for the two mechanically-diffable axes (elements, presentation properties) EVERY un-modeled spec entry MUST appear here or the gate goes red; and every entry here MUST correspond to a real spec-index.json entry (stale exceptions for a now-modeled entry also fail). `attribute` and `documentary` entries record the named-attribute and value-grammar deferrals/non-goals the plan's §1 buckets call out (xlink, zoomAndPan, path-data DSL) so they are tracked even though they are not part of the element/presentation diff. Dispositions trace to docs/svg-audit/2026-08-21-svg-coverage-audit.md §4–§6.",
+  "provenance": {
+    "specIndex": "docs/svg-audit/spec-index.json",
+    "auditReport": "docs/svg-audit/2026-08-21-svg-coverage-audit.md",
+    "modeledFrom": "brands/svg/generated/package/elm-typed-svg (extracted live by tools/lib/svg-modeled-extract.mjs)",
+    "authoredAt": "2026-08-21"
+  },
+  "buckets": {
+    "smil-deferred": "SMIL declarative-timeline elements/attributes; distinct animation model, perennial deprecation risk in Chromium. Deferred (OQ-2). Modeled seam left for a future pass.",
+    "html-embed-legacy": "audio/canvas/iframe/video in the SVG namespace were never broadly shipped; drive these from HTML instead.",
+    "raw-text-carrier": "script/style carry raw text/JS — not a typed surface a code-generator can meaningfully type.",
+    "not-real": "unknown is a placeholder for unrecognised elements; never authored by hand.",
+    "xlink-legacy": "xlink:* is superseded by the bare href attribute (already modeled) — the SVG-2-preferred form (OQ-4).",
+    "zoomAndPan-deprecated": "zoomAndPan is deprecated in SVG 2.",
+    "marker-shorthand": "the `marker` presentation property is a shorthand for marker-start/mid/end; the longhands are modeled instead.",
+    "path-data-non-goal": "the `d` attribute is modeled as a String; a fully-typed path-command DSL is a large surface and a legitimate ergonomic loss — explicit non-goal (plan §4.6).",
+    "requiredFeatures-legacy": "requiredFeatures was dropped from the SVG-2 attribute index (SVG-1.1 legacy); not part of the modeled surface."
+  },
+  "exceptions": [
+    { "kind": "element", "name": "animate", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "animateMotion", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "animateTransform", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "set", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "mpath", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "discard", "reason": "smil-deferred", "note": "SMIL animation element — distinct declarative-timeline model, deferred per OQ-2 (audit §4)." },
+    { "kind": "element", "name": "audio", "reason": "html-embed-legacy", "note": "HTML-embed in the SVG namespace; never broadly shipped — drive from HTML instead (audit §4)." },
+    { "kind": "element", "name": "canvas", "reason": "html-embed-legacy", "note": "HTML-embed in the SVG namespace; never broadly shipped — drive from HTML instead (audit §4)." },
+    { "kind": "element", "name": "iframe", "reason": "html-embed-legacy", "note": "HTML-embed in the SVG namespace; never broadly shipped — drive from HTML instead (audit §4)." },
+    { "kind": "element", "name": "video", "reason": "html-embed-legacy", "note": "HTML-embed in the SVG namespace; never broadly shipped — drive from HTML instead (audit §4)." },
+    { "kind": "element", "name": "script", "reason": "raw-text-carrier", "note": "Carries raw text/JS; not a typed surface a code-generator can type (audit §4)." },
+    { "kind": "element", "name": "style", "reason": "raw-text-carrier", "note": "Carries raw CSS text; not a typed surface a code-generator can type (audit §4)." },
+    { "kind": "element", "name": "unknown", "reason": "not-real", "note": "Placeholder for unrecognised elements; never authored by hand (audit §4)." },
+
+    { "kind": "presentation", "name": "marker", "reason": "marker-shorthand", "note": "Shorthand for marker-start/mid/end; the three longhands are modeled instead (audit §5)." },
+
+    { "kind": "attribute", "name": "xlink:href", "reason": "xlink-legacy", "note": "Superseded by the bare `href` attribute, which is modeled; SVG-2-preferred form (audit §6, OQ-4)." },
+    { "kind": "attribute", "name": "xlink:title", "reason": "xlink-legacy", "note": "xlink namespace legacy; superseded by SVG-2 native attributes (audit §6, OQ-4)." },
+    { "kind": "attribute", "name": "zoomAndPan", "reason": "zoomAndPan-deprecated", "note": "Deprecated in SVG 2; deliberately not modeled (audit §6 geometry family)." },
+
+    { "kind": "documentary", "name": "d (path-data grammar)", "reason": "path-data-non-goal", "note": "The `d` attribute IS modeled (as String); a fully-typed path-command DSL is an explicit non-goal — large surface, real ergonomic loss (plan §4.6)." },
+    { "kind": "documentary", "name": "requiredFeatures", "reason": "requiredFeatures-legacy", "note": "Dropped from the SVG-2 attribute index (SVG-1.1 legacy); correctly outside the modeled surface (audit §8, OQ-1)." }
+  ]
+}
