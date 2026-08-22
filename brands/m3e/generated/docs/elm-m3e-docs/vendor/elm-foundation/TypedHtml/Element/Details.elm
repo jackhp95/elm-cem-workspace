@@ -116,7 +116,6 @@ type alias SummaryAttrs =
 -}
 type alias SummaryContent =
     { area : Brand
-    , img : Brand
     , link : Brand
     , meta : Brand
     , noscript : Brand

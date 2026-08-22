@@ -1,6 +1,6 @@
 module TypedHtml.Element.A exposing
     ( a
-    , Attrs, ChildAdmittedBy, Roles
+    , Attrs, Content, ChildAdmittedBy, Roles
     , download, href, hreflang, ping, referrerpolicy, rel, target
     )
 
@@ -8,7 +8,7 @@ module TypedHtml.Element.A exposing
 co-located re-exports of the shared attributes its elements admit.
 
 @docs a
-@docs Attrs, ChildAdmittedBy, Roles
+@docs Attrs, Content, ChildAdmittedBy, Roles
 @docs download, href, hreflang, ping, referrerpolicy, rel, target
 
 -}
@@ -18,7 +18,7 @@ import HtmlIr.Element exposing (Element)
 import HtmlIr.Internal as Ir
 import HtmlIr.Kind exposing (Shared, Supported)
 import TypedHtml.Attributes
-import TypedHtml.Kind exposing (Ctx, Role)
+import TypedHtml.Kind exposing (Brand, Ctx, Role)
 
 
 {-| `a`'s closed attribute-capability row.
@@ -56,6 +56,21 @@ type alias Attrs =
     , target : Supported
     , translate : Supported
     , writingsuggestions : Supported
+    }
+
+
+{-| The kinds `a` admits.
+-}
+type alias Content =
+    { area : Brand
+    , link : Brand
+    , meta : Brand
+    , noscript : Brand
+    , script : Brand
+    , sharedIcon : Shared
+    , sharedPhrasing : Shared
+    , sharedText : Shared
+    , template : Brand
     }
 
 

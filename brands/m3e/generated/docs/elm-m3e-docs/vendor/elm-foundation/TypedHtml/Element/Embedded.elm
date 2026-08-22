@@ -134,7 +134,7 @@ canvas attrs children =
 {-| The kind row `embed` produces.
 -}
 type alias EmbedIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `embed`'s closed attribute-capability row.
@@ -189,7 +189,7 @@ embed attrs children =
 {-| The kind row `iframe` produces.
 -}
 type alias IframeIs s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `iframe`'s closed attribute-capability row.

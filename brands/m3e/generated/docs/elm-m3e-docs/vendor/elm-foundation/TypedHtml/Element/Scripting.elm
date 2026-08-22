@@ -68,6 +68,7 @@ type alias NoscriptContent =
     , script : Brand
     , sharedFlow : Shared
     , sharedIcon : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
