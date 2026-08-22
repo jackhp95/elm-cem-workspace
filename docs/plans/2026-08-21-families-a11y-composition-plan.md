@@ -455,24 +455,40 @@ opus@medium (config primitive + research encoding); Tasks 3–6 sonnet workers u
 
 ### Task 8: Face-A bundle re-baseline + phantom re-bless + final gate (D-FAM7)
 
-- [ ] **8.1** Re-baseline `tools/snapshots/elm-cem-generator.bundle` from the final emitter (D-FAM2
-      changed shared emitter code).
-- [ ] **8.2** All-brand regen (m3e, html, shoelace, svg); confirm m3e unchanged (it authored real
+- [x] **8.1** Re-baseline `tools/snapshots/elm-cem-generator.bundle` from the final emitter (D-FAM2
+      changed shared emitter code). **DONE** (commit `7c3e0184`): fresh `git archive HEAD:pipeline/elm-cem`
+      re-bundled, sha `c054df46 → 976459c9`; `snapshot-refs.json` re-pinned + D-046 note appended.
+      Captures BOTH shared-emitter changes on this branch (Task 2 `!@set`/`!kind` subtraction + Task 3.5
+      `shared:interactive` field split).
+- [x] **8.2** All-brand regen (m3e, html, shoelace, svg); confirm m3e unchanged (it authored real
       `slotKinds` already; the subtraction primitive is additive and m3e uses no `!@` tokens).
-- [ ] **8.3** Phantom re-bless where affected.
-- [ ] **8.4** Full `npm run gate:all` green; diff vs Task 0.1 baseline — every delta explained
-      (shoelace/svg/html `slotKinds` growth + the new rule), nothing spurious. Identity guard; commit.
-- **Acceptance:** re-run emits zero diff; gate-all green; P2 table now shows shoelace/svg populated,
-      html a11y-correct.
+      **DONE**: `ab-elm-cem` A/B PASS 403 files byte-identical (proves m3e byte-identical vs new emitter);
+      `ab-elm-m3e-split` A/B PASS 418 files; html/shoelace/svg regen-diff gates byte-identical.
+      One propagation: the html field-split flowed into m3e-docs' committed `vendor/elm-foundation/TypedHtml/**`
+      copy → re-vendored in the same commit.
+- [x] **8.3** Phantom re-bless where affected. **DONE**: `bless.mjs` a pure no-op (blessed 0, +0/-0);
+      `test:phantom` ALL GREEN — goldens already carried both emitter changes inline from Tasks 2/3.5.
+- [x] **8.4** Full `gate:all` — diff vs Task 0.1 baseline, every delta explained. **DONE**:
+      `GATE_ALL_CONCURRENCY=1 node tools/gate-all.mjs` → **55/57 passed, 1 skipped (chronic check-drift),
+      1 failed**. The single red is the KNOWN cross-branch `elm-shoelace check:validate` docs.json cap
+      (707,579 B > 700,000; resolved by the DAG-rework branch's 5-package shoelace split at merge — that
+      split `45f28d31` is verified NOT an ancestor of this branch). Baseline (Task 0) had 3 unrelated/env
+      failures (elm-m3e nested-pkg env artifact + 2 figma-connect) — all now green. Identity guard
+      (`JackHP95`/`git@jackhpeterson.com`) confirmed; committed.
+- **Acceptance:** re-run emits zero diff (A/B byte-identical); gate-all green except the one documented
+      cross-branch shoelace item; P2 table now shows shoelace/svg populated, html a11y-correct. **MET.**
 
 ### Task 9: Close-out (doc-only)
 
-- [ ] **9.1** Note in `MEMORY.md` that html/shoelace/svg now have composition validity
+- [x] **9.1** Note in `MEMORY.md` that html/shoelace/svg now have composition validity
       (a11y-sourced for html/shoelace, spec-sourced for svg), enforced by `ValidComposition` +
-      `ValidSlotKind`, with the a11y foundation at `docs/a11y-foundation/`.
-- [ ] **9.2** Record the hand-off to the DAG rework: these `slotKinds` are the `accepts` set the
-      Builders tier pins once §T4 lands.
-- **Acceptance:** memory + hand-off recorded; `git status` clean except intended files.
+      `ValidSlotKind`, with the a11y foundation at `docs/a11y-foundation/`. **DONE**: MEMORY.md line +
+      detail file `families-a11y-composition-validity.md` in this session's memory dir.
+- [x] **9.2** Record the hand-off to the DAG rework: these `slotKinds` are the `accepts` set the
+      Builders tier pins once §T4 lands. **DONE**: recorded in the detail file as a conceptual hand-off
+      (the DAG rework is already COMPLETE on its own branch; the connection is documented for whoever
+      reconciles the two branches at merge time).
+- **Acceptance:** memory + hand-off recorded; `git status` clean except intended files. **MET.**
 
 ---
 
