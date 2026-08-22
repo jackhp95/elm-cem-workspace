@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.ResizeObserver`](Sl.Element.ResizeObserver) as `resizeObserver`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ResizeObserverIs, ResizeObserverAttrs, ResizeObserverBuilder, ResizeObserverAttrCaps, ResizeObserverSlotCaps, ResizeObserverChildAdmittedBy, resizeObserver, resizeObserverDisabled, resizeObserverOnResize

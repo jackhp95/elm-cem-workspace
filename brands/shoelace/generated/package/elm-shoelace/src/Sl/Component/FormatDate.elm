@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.FormatDate`](Sl.Element.FormatDate) as `formatDate`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs FormatDateIs, FormatDateAttrs, FormatDateBuilder, FormatDateAttrCaps, FormatDateSlotCaps, FormatDateChildAdmittedBy, FormatDateDay, FormatDateEra, FormatDateHour, FormatDateHourFormat, FormatDateMinute, FormatDateMonth, FormatDateSecond, FormatDateTimeZoneName, FormatDateWeekday, FormatDateYear, formatDate, formatDateDay, formatDateEra, formatDateHour, formatDateHourFormat, formatDateMinute, formatDateMonth, formatDateSecond, formatDateTimeZoneName, formatDateWeekday, formatDateYear, formatDateDate, formatDateTimeZone

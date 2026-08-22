@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.FormatBytes`](Sl.Element.FormatBytes) as `formatBytes`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs FormatBytesIs, FormatBytesAttrs, FormatBytesBuilder, FormatBytesAttrCaps, FormatBytesSlotCaps, FormatBytesChildAdmittedBy, FormatBytesDisplay, FormatBytesUnit, formatBytes, formatBytesDisplay, formatBytesUnit, formatBytesValue, formatBytesDefaultValue

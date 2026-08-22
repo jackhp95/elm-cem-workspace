@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.CopyButton`](Sl.Element.CopyButton) as `copyButton`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs CopyButtonIs, CopyButtonAttrs, CopyButtonBuilder, CopyButtonAttrCaps, CopyButtonSlotCaps, CopyButtonChildAdmittedBy, CopyButtonTooltipPlacement, copyButton, copyButtonTooltipPlacement, copyButtonCopyLabel, copyButtonDisabled, copyButtonErrorLabel, copyButtonFeedbackDuration, copyButtonFrom, copyButtonHoist, copyButtonSuccessLabel, copyButtonValue, copyButtonDefaultValue, copyButtonOnCopy, copyButtonOnError

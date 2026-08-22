@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.FormatNumber`](Sl.Element.FormatNumber) as `formatNumber`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs FormatNumberIs, FormatNumberAttrs, FormatNumberBuilder, FormatNumberAttrCaps, FormatNumberSlotCaps, FormatNumberChildAdmittedBy, FormatNumberCurrencyDisplay, FormatNumberType, formatNumber, formatNumberCurrencyDisplay, formatNumberType_, formatNumberCurrency, formatNumberMaximumFractionDigits, formatNumberMaximumSignificantDigits, formatNumberMinimumFractionDigits, formatNumberMinimumIntegerDigits, formatNumberMinimumSignificantDigits, formatNumberNoGrouping, formatNumberValue, formatNumberDefaultValue

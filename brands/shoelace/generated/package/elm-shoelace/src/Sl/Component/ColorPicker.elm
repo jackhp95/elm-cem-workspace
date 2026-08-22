@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.ColorPicker`](Sl.Element.ColorPicker) as `colorPicker`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ColorPickerIs, ColorPickerAttrs, ColorPickerBuilder, ColorPickerAttrCaps, ColorPickerSlotCaps, ColorPickerChildAdmittedBy, ColorPickerFormat, ColorPickerSize, colorPicker, colorPickerFormat, colorPickerSize, colorPickerDisabled, colorPickerForm, colorPickerHoist, colorPickerInline, colorPickerLabel, colorPickerName, colorPickerNoFormatToggle, colorPickerOpacity, colorPickerRequired, colorPickerSwatches, colorPickerUppercase, colorPickerValue, colorPickerDefaultValue, colorPickerOnBlur, colorPickerOnChange, colorPickerOnFocus, colorPickerOnInput, colorPickerOnInvalid

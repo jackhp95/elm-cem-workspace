@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Card`](Sl.Element.Card) as `card`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs CardIs, CardAttrs, CardBuilder, CardAttrCaps, CardSlotCaps, CardChildAdmittedBy, card

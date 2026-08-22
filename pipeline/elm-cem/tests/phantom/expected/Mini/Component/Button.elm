@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Mini.Element.Button`](Mini.Element.Button) as `button`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Mini.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonContent, ButtonIconSlot, ButtonChildAdmittedBy, ButtonVariant, button, buttonVariant, buttonDisabled, buttonWeight, buttonWeightAsNumber, buttonOnClick, buttonIcon, buttonChild

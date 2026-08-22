@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Input`](Sl.Element.Input) as `input`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs InputIs, InputAttrs, InputBuilder, InputAttrCaps, InputSlotCaps, InputChildAdmittedBy, InputAutocapitalize, InputAutocorrect, InputEnterkeyhint, InputInputmode, InputSize, InputType, input, inputAutocapitalize, inputAutocorrect, inputEnterkeyhint, inputInputmode, inputSize, inputType_, inputAutocomplete, inputAutofocus, inputClearable, inputDisabled, inputFilled, inputForm, inputHelpText, inputLabel, inputMax, inputMaxlength, inputMin, inputMinlength, inputName, inputNoSpinButtons, inputPasswordToggle, inputPasswordVisible, inputPattern, inputPill, inputPlaceholder, inputReadonly, inputRequired, inputSpellcheck, inputStep, inputTitle, inputValue, inputDefaultValue, inputOnBlur, inputOnChange, inputOnClear, inputOnFocus, inputOnInput, inputOnInvalid

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Button`](Sl.Element.Button) as `button`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ButtonIs, ButtonAttrs, ButtonBuilder, ButtonAttrCaps, ButtonSlotCaps, ButtonChildAdmittedBy, ButtonFormenctype, ButtonFormmethod, ButtonFormtarget, ButtonSize, ButtonTarget, ButtonType, ButtonVariant, button, buttonFormenctype, buttonFormmethod, buttonFormtarget, buttonSize, buttonTarget, buttonType_, buttonVariant, buttonCaret, buttonCircle, buttonDisabled, buttonDownload, buttonForm, buttonFormnovalidate, buttonHref, buttonLoading, buttonName, buttonOutline, buttonPill, buttonRel, buttonTitle, buttonValue, buttonDefaultValue, buttonOnBlur, buttonOnFocus, buttonOnInvalid

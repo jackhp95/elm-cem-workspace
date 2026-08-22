@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Carousel`](Sl.Element.Carousel) as `carousel`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs CarouselIs, CarouselAttrs, CarouselBuilder, CarouselAttrCaps, CarouselSlotCaps, CarouselChildAdmittedBy, CarouselOrientation, carousel, carouselOrientation, carouselAutoplay, carouselAutoplayInterval, carouselLoop, carouselMouseDragging, carouselNavigation, carouselPagination, carouselSlidesPerMove, carouselSlidesPerPage, carouselOnSlideChange

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Mini.Element.Toolbar`](Mini.Element.Toolbar) as `toolbar`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Mini.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ToolbarIs, ToolbarAttrs, ToolbarBuilder, ToolbarAttrCaps, ToolbarSlotCaps, ToolbarChildAdmittedBy, toolbar, toolbarChild

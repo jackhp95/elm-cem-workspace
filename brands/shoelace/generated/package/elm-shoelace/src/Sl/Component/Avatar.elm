@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Avatar`](Sl.Element.Avatar) as `avatar`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs AvatarIs, AvatarAttrs, AvatarBuilder, AvatarAttrCaps, AvatarSlotCaps, AvatarChildAdmittedBy, AvatarLoading, AvatarShape, avatar, avatarLoading, avatarShape, avatarImage, avatarInitials, avatarLabel, avatarOnError

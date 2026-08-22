@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Checkbox`](Sl.Element.Checkbox) as `checkbox`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs CheckboxIs, CheckboxAttrs, CheckboxBuilder, CheckboxAttrCaps, CheckboxSlotCaps, CheckboxChildAdmittedBy, CheckboxSize, checkbox, checkboxSize, checkboxChecked, checkboxDisabled, checkboxForm, checkboxHelpText, checkboxIndeterminate, checkboxName, checkboxRequired, checkboxTitle, checkboxValue, checkboxDefaultChecked, checkboxDefaultValue, checkboxOnBlur, checkboxOnChange, checkboxOnFocus, checkboxOnInput, checkboxOnInvalid

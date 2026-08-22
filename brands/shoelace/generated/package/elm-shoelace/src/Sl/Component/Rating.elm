@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Rating`](Sl.Element.Rating) as `rating`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs RatingIs, RatingAttrs, RatingBuilder, RatingAttrCaps, RatingSlotCaps, RatingChildAdmittedBy, rating, ratingDisabled, ratingGetsymbol, ratingLabel, ratingMax, ratingPrecision, ratingReadonly, ratingValue, ratingDefaultValue, ratingOnChange, ratingOnHover

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Switch`](Sl.Element.Switch) as `switch`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs SwitchIs, SwitchAttrs, SwitchBuilder, SwitchAttrCaps, SwitchSlotCaps, SwitchChildAdmittedBy, SwitchSize, switch, switchSize, switchChecked, switchDisabled, switchForm, switchHelpText, switchName, switchRequired, switchTitle, switchValue, switchDefaultChecked, switchDefaultValue, switchOnBlur, switchOnChange, switchOnInput, switchOnFocus, switchOnInvalid

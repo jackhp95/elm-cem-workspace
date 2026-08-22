@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Or.Element.Plain`](Or.Element.Plain) as `plain`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Or.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs PlainIs, PlainAttrs, PlainBuilder, PlainAttrCaps, PlainSlotCaps, PlainContent, PlainChildAdmittedBy, plain, plainChild

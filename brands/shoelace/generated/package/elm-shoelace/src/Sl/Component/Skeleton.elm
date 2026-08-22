@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Skeleton`](Sl.Element.Skeleton) as `skeleton`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs SkeletonIs, SkeletonAttrs, SkeletonBuilder, SkeletonAttrCaps, SkeletonSlotCaps, SkeletonChildAdmittedBy, SkeletonEffect, skeleton, skeletonEffect_

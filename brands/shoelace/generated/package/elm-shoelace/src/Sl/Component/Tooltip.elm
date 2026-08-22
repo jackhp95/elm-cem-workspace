@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Tooltip`](Sl.Element.Tooltip) as `tooltip`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TooltipIs, TooltipAttrs, TooltipBuilder, TooltipAttrCaps, TooltipSlotCaps, TooltipChildAdmittedBy, TooltipPlacement, tooltip, tooltipPlacement, tooltipContent, tooltipDisabled, tooltipDistance, tooltipHoist, tooltipOpen, tooltipSkidding, tooltipTrigger, tooltipOnShow, tooltipOnAfterShow, tooltipOnHide, tooltipOnAfterHide

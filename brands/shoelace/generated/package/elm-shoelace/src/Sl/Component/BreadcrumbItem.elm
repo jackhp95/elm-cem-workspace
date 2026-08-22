@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.BreadcrumbItem`](Sl.Element.BreadcrumbItem) as `breadcrumbItem`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs BreadcrumbItemIs, BreadcrumbItemAttrs, BreadcrumbItemBuilder, BreadcrumbItemAttrCaps, BreadcrumbItemSlotCaps, BreadcrumbItemChildAdmittedBy, BreadcrumbItemTarget, breadcrumbItem, breadcrumbItemTarget, breadcrumbItemHref, breadcrumbItemRel

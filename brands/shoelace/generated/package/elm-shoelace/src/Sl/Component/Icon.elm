@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Icon`](Sl.Element.Icon) as `icon`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs IconIs, IconAttrs, IconBuilder, IconAttrCaps, IconSlotCaps, IconChildAdmittedBy, icon, iconLabel, iconLibrary, iconName, iconSrc, iconOnLoad, iconOnError

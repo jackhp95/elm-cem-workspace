@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Drawer`](Sl.Element.Drawer) as `drawer`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs DrawerIs, DrawerAttrs, DrawerBuilder, DrawerAttrCaps, DrawerSlotCaps, DrawerChildAdmittedBy, DrawerPlacement, drawer, drawerPlacement, drawerContained, drawerLabel, drawerNoHeader, drawerOpen, drawerOnShow, drawerOnAfterShow, drawerOnHide, drawerOnAfterHide, drawerOnInitialFocus, drawerOnRequestClose

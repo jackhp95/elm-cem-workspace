@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.SplitPanel`](Sl.Element.SplitPanel) as `splitPanel`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs SplitPanelIs, SplitPanelAttrs, SplitPanelBuilder, SplitPanelAttrCaps, SplitPanelSlotCaps, SplitPanelChildAdmittedBy, SplitPanelPrimary, splitPanel, splitPanelPrimary, splitPanelDisabled, splitPanelPosition, splitPanelPositionInPixels, splitPanelSnap, splitPanelSnapThreshold, splitPanelVertical, splitPanelOnReposition

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.RadioButton`](Sl.Element.RadioButton) as `radioButton`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs RadioButtonIs, RadioButtonAttrs, RadioButtonBuilder, RadioButtonAttrCaps, RadioButtonSlotCaps, RadioButtonChildAdmittedBy, RadioButtonSize, radioButton, radioButtonSize, radioButtonDisabled, radioButtonPill, radioButtonValue, radioButtonDefaultValue, radioButtonOnBlur, radioButtonOnFocus

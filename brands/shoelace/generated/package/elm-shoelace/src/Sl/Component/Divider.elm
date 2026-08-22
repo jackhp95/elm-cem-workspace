@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Divider`](Sl.Element.Divider) as `divider`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs DividerIs, DividerAttrs, DividerBuilder, DividerAttrCaps, DividerSlotCaps, DividerChildAdmittedBy, divider, dividerVertical

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Hz.Element.AttrSlot`](Hz.Element.AttrSlot) as `attrSlot`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Hz.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs AttrSlotIs, AttrSlotAttrs, AttrSlotBuilder, AttrSlotAttrCaps, AttrSlotSlotCaps, AttrSlotHintSlot, AttrSlotLabelSlot, AttrSlotChildAdmittedBy, attrSlot, attrSlotWithHint, attrSlotWithLabel, attrSlotHint, attrSlotLabel

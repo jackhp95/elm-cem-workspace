@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Hz.Element.EventClash`](Hz.Element.EventClash) as `eventClash`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Hz.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs EventClashIs, EventClashAttrs, EventClashBuilder, EventClashAttrCaps, EventClashSlotCaps, EventClashContent, EventClashChildAdmittedBy, eventClash, eventClashOnError, eventClashOnHzError, eventClashOnLoad, eventClashOnHzLoad, eventClashChild

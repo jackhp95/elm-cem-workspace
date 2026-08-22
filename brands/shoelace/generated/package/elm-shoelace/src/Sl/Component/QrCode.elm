@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.QrCode`](Sl.Element.QrCode) as `qrCode`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs QrCodeIs, QrCodeAttrs, QrCodeBuilder, QrCodeAttrCaps, QrCodeSlotCaps, QrCodeChildAdmittedBy, QrCodeErrorCorrection, qrCode, qrCodeErrorCorrection, qrCodeBackground, qrCodeFill, qrCodeLabel, qrCodeRadius, qrCodeSize, qrCodeValue, qrCodeDefaultValue

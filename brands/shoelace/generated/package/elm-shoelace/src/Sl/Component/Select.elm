@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Select`](Sl.Element.Select) as `select`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs SelectIs, SelectAttrs, SelectBuilder, SelectAttrCaps, SelectSlotCaps, SelectChildAdmittedBy, SelectPlacement, SelectSize, select, selectPlacement, selectSize, selectClearable, selectDisabled, selectFilled, selectForm, selectGettag, selectHelpText, selectHoist, selectLabel, selectMaxOptionsVisible, selectMultiple, selectName, selectOpen, selectPill, selectPlaceholder, selectRequired, selectValue, selectDefaultValue, selectOnChange, selectOnClear, selectOnInput, selectOnFocus, selectOnBlur, selectOnShow, selectOnAfterShow, selectOnHide, selectOnAfterHide, selectOnInvalid

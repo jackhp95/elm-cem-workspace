@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Hz.Element.Text`](Hz.Element.Text) as `text`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Hz.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TextIs, TextAttrs, TextBuilder, TextAttrCaps, TextSlotCaps, TextContent, TextChildAdmittedBy, text, textChild

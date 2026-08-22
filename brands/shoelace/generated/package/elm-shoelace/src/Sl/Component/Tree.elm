@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Tree`](Sl.Element.Tree) as `tree`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TreeIs, TreeAttrs, TreeBuilder, TreeAttrCaps, TreeSlotCaps, TreeChildAdmittedBy, TreeSelection, tree, treeSelection, treeOnSelectionChange

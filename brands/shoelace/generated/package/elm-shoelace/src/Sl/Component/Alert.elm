@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Alert`](Sl.Element.Alert) as `alert`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs AlertIs, AlertAttrs, AlertBuilder, AlertAttrCaps, AlertSlotCaps, AlertChildAdmittedBy, AlertCountdown, AlertVariant, alert, alertCountdown, alertVariant, alertClosable, alertDuration, alertOpen, alertOnShow, alertOnAfterShow, alertOnHide, alertOnAfterHide

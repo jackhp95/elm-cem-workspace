@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Tag`](Sl.Element.Tag) as `tag`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TagIs, TagAttrs, TagBuilder, TagAttrCaps, TagSlotCaps, TagChildAdmittedBy, TagSize, TagVariant, tag, tagSize, tagVariant, tagPill, tagRemovable, tagOnRemove

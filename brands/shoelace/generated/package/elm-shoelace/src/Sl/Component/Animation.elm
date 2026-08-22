@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Animation`](Sl.Element.Animation) as `animation`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs AnimationIs, AnimationAttrs, AnimationBuilder, AnimationAttrCaps, AnimationSlotCaps, AnimationChildAdmittedBy, animation, animationDelay, animationDirection, animationDuration, animationEasing, animationEndDelay, animationFill, animationIterationStart, animationIterations, animationName, animationPlay, animationPlaybackRate, animationOnCancel, animationOnFinish, animationOnStart

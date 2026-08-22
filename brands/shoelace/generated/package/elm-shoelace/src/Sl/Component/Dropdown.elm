@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Dropdown`](Sl.Element.Dropdown) as `dropdown`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs DropdownIs, DropdownAttrs, DropdownBuilder, DropdownAttrCaps, DropdownSlotCaps, DropdownChildAdmittedBy, DropdownPlacement, DropdownSync, dropdown, dropdownPlacement, dropdownSync, dropdownDisabled, dropdownDistance, dropdownHoist, dropdownOpen, dropdownSkidding, dropdownStayOpenOnSelect, dropdownOnShow, dropdownOnAfterShow, dropdownOnHide, dropdownOnAfterHide

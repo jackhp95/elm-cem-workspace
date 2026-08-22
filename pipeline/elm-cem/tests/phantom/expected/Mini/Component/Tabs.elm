@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Mini.Element.Tabs`](Mini.Element.Tabs) as `tabs`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Mini.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TabsIs, TabsAttrs, TabsBuilder, TabsAttrCaps, TabsSlotCaps, TabsContent, TabsChildAdmittedBy, tabs, tabsChild

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Textarea`](Sl.Element.Textarea) as `textarea`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TextareaIs, TextareaAttrs, TextareaBuilder, TextareaAttrCaps, TextareaSlotCaps, TextareaChildAdmittedBy, TextareaAutocapitalize, TextareaEnterkeyhint, TextareaInputmode, TextareaResize, TextareaSize, textarea, textareaAutocapitalize, textareaEnterkeyhint, textareaInputmode, textareaResize, textareaSize, textareaAutocomplete, textareaAutocorrect, textareaAutofocus, textareaDisabled, textareaFilled, textareaForm, textareaHelpText, textareaLabel, textareaMaxlength, textareaMinlength, textareaName, textareaPlaceholder, textareaReadonly, textareaRequired, textareaRows, textareaSpellcheck, textareaTitle, textareaValue, textareaDefaultValue, textareaOnBlur, textareaOnChange, textareaOnFocus, textareaOnInput, textareaOnInvalid

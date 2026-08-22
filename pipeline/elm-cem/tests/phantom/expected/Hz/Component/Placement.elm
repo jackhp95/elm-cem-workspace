@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Hz.Element.Placement`](Hz.Element.Placement) as `placement`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Hz.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs PlacementIs, PlacementAttrs, PlacementBuilder, PlacementAttrCaps, PlacementSlotCaps, PlacementContent, PlacementChildAdmittedBy, PlacementPosition, placement, placementPosition, placementChild

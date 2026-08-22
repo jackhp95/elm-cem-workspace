@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.ProgressRing`](Sl.Element.ProgressRing) as `progressRing`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs ProgressRingIs, ProgressRingAttrs, ProgressRingBuilder, ProgressRingAttrCaps, ProgressRingSlotCaps, ProgressRingChildAdmittedBy, progressRing, progressRingLabel, progressRingValue, progressRingDefaultValue

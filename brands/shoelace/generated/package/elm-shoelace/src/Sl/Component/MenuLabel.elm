@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.MenuLabel`](Sl.Element.MenuLabel) as `menuLabel`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs MenuLabelIs, MenuLabelAttrs, MenuLabelBuilder, MenuLabelAttrCaps, MenuLabelSlotCaps, MenuLabelChildAdmittedBy, menuLabel

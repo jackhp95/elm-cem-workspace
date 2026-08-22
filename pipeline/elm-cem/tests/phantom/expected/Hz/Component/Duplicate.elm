@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Hz.Element.Duplicate`](Hz.Element.Duplicate) as `duplicate`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Hz.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs DuplicateIs, DuplicateAttrs, DuplicateBuilder, DuplicateAttrCaps, DuplicateSlotCaps, DuplicateContent, DuplicateChildAdmittedBy, duplicate, duplicateValue, duplicateDefaultValue, duplicateChild

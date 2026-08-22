@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.TabPanel`](Sl.Element.TabPanel) as `tabPanel`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs TabPanelIs, TabPanelAttrs, TabPanelBuilder, TabPanelAttrCaps, TabPanelSlotCaps, TabPanelChildAdmittedBy, tabPanel, tabPanelActive, tabPanelName

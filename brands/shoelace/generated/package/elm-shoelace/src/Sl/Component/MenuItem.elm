@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.MenuItem`](Sl.Element.MenuItem) as `menuItem`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs MenuItemIs, MenuItemAttrs, MenuItemBuilder, MenuItemAttrCaps, MenuItemSlotCaps, MenuItemChildAdmittedBy, MenuItemType, menuItem, menuItemType_, menuItemChecked, menuItemDisabled, menuItemLoading, menuItemValue, menuItemDefaultChecked, menuItemDefaultValue

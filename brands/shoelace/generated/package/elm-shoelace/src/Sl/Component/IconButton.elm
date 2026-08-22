@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.IconButton`](Sl.Element.IconButton) as `iconButton`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs IconButtonIs, IconButtonAttrs, IconButtonBuilder, IconButtonAttrCaps, IconButtonSlotCaps, IconButtonChildAdmittedBy, IconButtonTarget, iconButton, iconButtonTarget, iconButtonDisabled, iconButtonDownload, iconButtonHref, iconButtonLabel, iconButtonLibrary, iconButtonName, iconButtonSrc, iconButtonOnBlur, iconButtonOnFocus

@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Br.Element.Barren`](Br.Element.Barren) as `barren`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Br.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs BarrenIs, BarrenAttrs, BarrenBuilder, BarrenAttrCaps, BarrenSlotCaps, BarrenContent, BarrenChildAdmittedBy, barren, barrenCount, barrenLabel, barrenChild

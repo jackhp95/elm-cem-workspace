@@ -394,6 +394,12 @@ generateFamilyModule familyModuleName members familyBlurb =
         moduleLine =
             "module " ++ familyModuleName ++ " exposing\n    ( " ++ exposingList ++ "\n    )"
 
+        -- The brand's library root (`M3e`, `Sl`, `Hz`, …), taken from the module
+        -- name so doc prose stays brand-NEUTRAL (a hardcoded `M3e.Element.*` here
+        -- trips the neutrality gate on non-m3e brands' generated output).
+        lib =
+            familyModuleName |> String.split "." |> List.head |> Maybe.withDefault ""
+
         memberList =
             members
                 |> List.map (\mem -> "[`" ++ mem.origModuleName ++ "`](" ++ mem.origModuleName ++ ") as `" ++ mem.elementCamel ++ "`")
@@ -409,7 +415,7 @@ generateFamilyModule familyModuleName members familyBlurb =
             , ""
             , memberList ++ "."
             , ""
-            , "Prefer whichever import reads best — the flat `M3e.Element.*` modules and"
+            , "Prefer whichever import reads best — the flat `" ++ lib ++ ".Element.*` modules and"
             , "this family module are the same elements, same types."
             , ""
             , "@docs " ++ String.join ", " exposingAll

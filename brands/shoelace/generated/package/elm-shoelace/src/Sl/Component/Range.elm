@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Range`](Sl.Element.Range) as `range`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs RangeIs, RangeAttrs, RangeBuilder, RangeAttrCaps, RangeSlotCaps, RangeChildAdmittedBy, RangeTooltip, range, rangeTooltip, rangeDisabled, rangeForm, rangeHelpText, rangeLabel, rangeMax, rangeMin, rangeName, rangeStep, rangeTitle, rangeValue, rangeDefaultValue, rangeOnBlur, rangeOnChange, rangeOnFocus, rangeOnInput, rangeOnInvalid

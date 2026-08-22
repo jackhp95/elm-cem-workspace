@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Sl.Element.Popup`](Sl.Element.Popup) as `popup`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Sl.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs PopupIs, PopupAttrs, PopupBuilder, PopupAttrCaps, PopupSlotCaps, PopupChildAdmittedBy, PopupArrowPlacement, PopupAutoSize, PopupFlipFallbackStrategy, PopupPlacement, PopupStrategy, PopupSync, popup, popupArrowPlacement, popupAutoSize, popupFlipFallbackStrategy, popupPlacement, popupStrategy, popupSync, popupActive, popupAnchor, popupArrow, popupArrowPadding, popupAutoSizePadding, popupAutosizeboundary, popupDistance, popupFlip, popupFlipFallbackPlacements, popupFlipPadding, popupFlipboundary, popupHoverBridge, popupShift, popupShiftPadding, popupShiftboundary, popupSkidding, popupOnReposition

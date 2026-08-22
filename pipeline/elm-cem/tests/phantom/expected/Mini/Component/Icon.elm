@@ -9,7 +9,7 @@ typed helpers so members never collide. It re-exports:
 
 [`Mini.Element.Icon`](Mini.Element.Icon) as `icon`.
 
-Prefer whichever import reads best — the flat `M3e.Element.*` modules and
+Prefer whichever import reads best — the flat `Mini.Element.*` modules and
 this family module are the same elements, same types.
 
 @docs IconIs, IconAttrs, IconBuilder, IconAttrCaps, IconSlotCaps, IconContent, IconChildAdmittedBy, icon, iconChild
