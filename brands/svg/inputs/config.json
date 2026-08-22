@@ -51,6 +51,10 @@
     "id",
     "class",
     "style",
+    { "name": "lang", "row": "open" },
+    { "name": "role", "row": "open" },
+    { "name": "tabindex", "row": "open" },
+    { "name": "xml:space", "type": ["default", "preserve"], "row": "open" },
     { "name": "fill", "row": "open" },
     { "name": "fill-opacity", "row": "open" },
     { "name": "fill-rule", "type": ["nonzero", "evenodd"], "row": "open" },
@@ -120,6 +124,18 @@
   "A": { "home": "Structure", "transparent": true, "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
   "Switch": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
   "Use": { "home": "Structure", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+  "View": { "home": "Structure", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+
+  "_comment_foreignObject": [
+    "`foreignObject` is the ONE typed bridge out of the SVG namespace into HTML. Its slot admits the",
+    "cross-library `shared:flow` / `shared:phrasing` content categories — the same roles every TypedHtml",
+    "flow/phrasing producer (`div`, `span`, ...) tags itself with — so an HTML subtree nests here by",
+    "structural unification, while a bare SVG shape (which produces its own tag kind, e.g. `circle`) is",
+    "rejected. That is the exact SVG-2 content-model boundary: HTML goes inside `foreignObject`, not inside",
+    "a `<circle>`. The element ctor itself is namespaced SVG (`createElementNS`), as every SVG element is."
+  ],
+  "ForeignObject": { "home": "Structure", "admits": { "unnamed": { "kinds": ["shared:flow", "shared:phrasing"], "multi": true } } },
+  "Metadata": { "home": "Descriptive", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
 
   "Title": { "home": "Descriptive", "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } } },
   "Desc": { "home": "Descriptive", "admits": { "unnamed": { "kinds": ["shared:text"], "multi": true } } },

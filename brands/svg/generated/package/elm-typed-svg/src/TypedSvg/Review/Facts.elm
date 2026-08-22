@@ -103,6 +103,21 @@ facts =
       , actionMap = []
       , usesAction = False
       }
+    , { component = "foreignObject"
+      , module_ = "TypedSvg.Element.Structure"
+      , enums = []
+      , requiredSlots = []
+      , multiSlots = [ "unnamed" ]
+      , attrRewrites = [ ( "height", "height" ), ( "width", "width" ), ( "x", "x" ), ( "y", "y" ) ]
+      , slotRewrites = []
+      , slotKinds = [ ( "unnamed", [ "shared:flow", "shared:phrasing" ] ) ]
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = False
+      }
     , { component = "g"
       , module_ = "TypedSvg.Element.Structure"
       , enums = []
@@ -184,6 +199,21 @@ facts =
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
       , attrRewrites = [ ( "height", "height" ), ( "maskContentUnits", "maskContentUnits" ), ( "maskUnits", "maskUnits" ), ( "width", "width" ), ( "x", "x" ), ( "y", "y" ) ]
+      , slotRewrites = []
+      , slotKinds = []
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = False
+      }
+    , { component = "metadata"
+      , module_ = "TypedSvg.Element.Descriptive"
+      , enums = []
+      , requiredSlots = []
+      , multiSlots = [ "unnamed" ]
+      , attrRewrites = []
       , slotRewrites = []
       , slotKinds = []
       , slotUpgrades = []
@@ -318,7 +348,7 @@ facts =
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
-      , attrRewrites = []
+      , attrRewrites = [ ( "requiredExtensions", "requiredExtensions" ), ( "systemLanguage", "systemLanguage" ) ]
       , slotRewrites = []
       , slotKinds = []
       , slotUpgrades = []
@@ -363,7 +393,7 @@ facts =
       , enums = []
       , requiredSlots = []
       , multiSlots = [ "unnamed" ]
-      , attrRewrites = [ ( "href", "href" ), ( "startOffset", "startOffset" ) ]
+      , attrRewrites = [ ( "href", "href" ), ( "method", "method" ), ( "side", "side" ), ( "spacing", "spacing" ), ( "startOffset", "startOffset" ) ]
       , slotRewrites = []
       , slotKinds = [ ( "unnamed", [ "shared:text", "tspan" ] ) ]
       , slotUpgrades = []
@@ -418,6 +448,21 @@ facts =
       , actionMap = []
       , usesAction = False
       }
+    , { component = "view"
+      , module_ = "TypedSvg.Element.Structure"
+      , enums = []
+      , requiredSlots = []
+      , multiSlots = [ "unnamed" ]
+      , attrRewrites = [ ( "preserveAspectRatio", "preserveAspectRatio" ), ( "viewBox", "viewBox" ) ]
+      , slotRewrites = []
+      , slotKinds = []
+      , slotUpgrades = []
+      , groupConstructors = []
+      , facets = [ Standard, Build ]
+      , requiredAttrs = []
+      , actionMap = []
+      , usesAction = False
+      }
     ]
 
 
@@ -433,7 +478,7 @@ an escape call site `content` on a `<meta>` is indistinguishable from
 -}
 globalAttributes : List String
 globalAttributes =
-    [ "alignment-baseline", "baseline-shift", "class", "clip-path", "clip-rule", "color", "color-interpolation", "color-rendering", "cursor", "direction", "display", "dominant-baseline", "fill", "fill-opacity", "fill-rule", "filter", "font-family", "font-size", "font-style", "font-variant", "font-weight", "glyph-orientation-vertical", "id", "image-rendering", "letter-spacing", "line-height", "marker-end", "marker-mid", "marker-start", "mask", "opacity", "overflow", "paint-order", "pointer-events", "shape-rendering", "stroke", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "style", "text-anchor", "text-decoration", "text-rendering", "transform", "transform-origin", "vector-effect", "visibility", "white-space", "word-spacing", "writing-mode" ]
+    [ "alignment-baseline", "baseline-shift", "class", "clip-path", "clip-rule", "color", "color-interpolation", "color-rendering", "cursor", "direction", "display", "dominant-baseline", "fill", "fill-opacity", "fill-rule", "filter", "font-family", "font-size", "font-style", "font-variant", "font-weight", "glyph-orientation-vertical", "id", "image-rendering", "lang", "letter-spacing", "line-height", "marker-end", "marker-mid", "marker-start", "mask", "opacity", "overflow", "paint-order", "pointer-events", "role", "shape-rendering", "stroke", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "style", "tabindex", "text-anchor", "text-decoration", "text-rendering", "transform", "transform-origin", "vector-effect", "visibility", "white-space", "word-spacing", "writing-mode", "xml:space" ]
 
 
 {-| Kept for the PreferBarrel flatten class; inert on the phantom surface.

@@ -1,5 +1,5 @@
 module TypedSvg exposing
-    ( a, circle, clipPath, defs, desc, ellipse, g, image, line, linearGradient, marker, mask, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use
+    ( a, circle, clipPath, defs, desc, ellipse, foreignObject, g, image, line, linearGradient, marker, mask, metadata, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use, view
     , text
     , Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
     )
@@ -16,7 +16,7 @@ The `slot<Name>` placers assign a child element to a named slot in any
 component that accepts it. Admittance is open (broad row) — wrong-kind
 placements are caught by `Cem.ValidSlotKind` (elm-review).
 
-@docs a, circle, clipPath, defs, desc, ellipse, g, image, line, linearGradient, marker, mask, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use
+@docs a, circle, clipPath, defs, desc, ellipse, foreignObject, g, image, line, linearGradient, marker, mask, metadata, path, pattern, polygon, polyline, radialGradient, rect, stop, svg, switch, symbol, text_, textPath, title, tspan, use, view
 @docs text
 @docs Element, Attr, Node, toHtml, toNode, mapMsg, mapNode, key, lazy, lazy2, lazy3, lazy4, lazy5, lazy6, lazy7, lazy8, addClass, attrIf, when, testId
 
@@ -97,6 +97,16 @@ ellipse =
     TypedSvg.Element.Shape.ellipse
 
 
+{-| See `TypedSvg.Element.Structure.foreignObject`.
+-}
+foreignObject :
+    List (Attr TypedSvg.Element.Structure.ForeignObjectAttrs msg)
+    -> List (Element TypedSvg.Element.Structure.ForeignObjectContent (TypedSvg.Element.Structure.ForeignObjectChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.ForeignObjectIs s) admittedBy msg
+foreignObject =
+    TypedSvg.Element.Structure.foreignObject
+
+
 {-| See `TypedSvg.Element.Structure.g`.
 -}
 g :
@@ -155,6 +165,16 @@ mask :
     -> Element (TypedSvg.Element.Clip.MaskIs s) admittedBy msg
 mask =
     TypedSvg.Element.Clip.mask
+
+
+{-| See `TypedSvg.Element.Descriptive.metadata`.
+-}
+metadata :
+    List (Attr TypedSvg.Element.Descriptive.MetadataAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Descriptive.MetadataChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Descriptive.MetadataIs s) admittedBy msg
+metadata =
+    TypedSvg.Element.Descriptive.metadata
 
 
 {-| See `TypedSvg.Element.Shape.path`.
@@ -305,6 +325,16 @@ use :
     -> Element (TypedSvg.Element.Structure.UseIs s) admittedBy msg
 use =
     TypedSvg.Element.Structure.use
+
+
+{-| See `TypedSvg.Element.Structure.view`.
+-}
+view :
+    List (Attr TypedSvg.Element.Structure.ViewAttrs msg)
+    -> List (Element childAccepts (TypedSvg.Element.Structure.ViewChildAdmittedBy childAdm) msg)
+    -> Element (TypedSvg.Element.Structure.ViewIs s) admittedBy msg
+view =
+    TypedSvg.Element.Structure.view
 
 
 {-| The shared text atom — admissible into any library's opted-in slot.

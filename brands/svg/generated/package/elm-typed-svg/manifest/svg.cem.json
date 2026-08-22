@@ -106,6 +106,47 @@
           "description": "Renders the first of its direct children whose feature/requirement test attributes evaluate true.",
           "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
           "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "requiredExtensions", "type": { "text": "string" }, "description": "A list of extension-namespace IRIs a child requires; a `switch` selects the first child whose required extensions are all supported." },
+            { "name": "systemLanguage", "type": { "text": "string" }, "description": "A comma-separated list of BCP-47 language tags; a `switch` selects the first child whose systemLanguage matches the user's preferences." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "ForeignObject",
+          "tagName": "foreignObject",
+          "customElement": true,
+          "description": "A viewport into which content from another XML namespace (typically HTML flow content) is rendered. The single typed bridge from an SVG subtree into TypedHtml: it admits shared flow/phrasing content, so an HTML `div` may nest inside SVG only here.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "x", "type": { "text": "string" }, "description": "X coordinate of the foreignObject's viewport." },
+            { "name": "y", "type": { "text": "string" }, "description": "Y coordinate of the foreignObject's viewport." },
+            { "name": "width", "type": { "text": "string" }, "description": "Width of the foreignObject's viewport." },
+            { "name": "height", "type": { "text": "string" }, "description": "Height of the foreignObject's viewport." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "View",
+          "tagName": "view",
+          "customElement": true,
+          "description": "A named viewport definition, targeted by a URL fragment (`file.svg#viewId`) to establish a specific view of the document. Not rendered directly.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
+          "attributes": [
+            { "name": "viewBox", "type": { "text": "string" }, "description": "The viewBox this named view establishes when targeted." },
+            { "name": "preserveAspectRatio", "type": { "text": "string" }, "description": "How to scale the viewBox to the viewport when this view is targeted." }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "Metadata",
+          "tagName": "metadata",
+          "customElement": true,
+          "description": "A container for document metadata (RDF, Dublin Core, etc.). Not rendered as graphics.",
+          "members": [], "events": [], "cssProperties": [], "cssParts": [], "cssStates": [],
+          "slots": [{ "name": "unnamed" }],
           "attributes": []
         },
         {
@@ -270,7 +311,10 @@
           "slots": [{ "name": "unnamed" }],
           "attributes": [
             { "name": "href", "type": { "text": "string" }, "description": "Reference to the path the text is laid out along." },
-            { "name": "startOffset", "type": { "text": "string" }, "description": "Offset from the start of the path where the text begins." }
+            { "name": "startOffset", "type": { "text": "string" }, "description": "Offset from the start of the path where the text begins." },
+            { "name": "method", "type": { "text": "string" }, "description": "How glyphs are rendered along the path (`align` or `stretch`)." },
+            { "name": "side", "type": { "text": "string" }, "description": "Which side of the path the text is placed on (`left` or `right`)." },
+            { "name": "spacing", "type": { "text": "string" }, "description": "How space between glyphs is handled along the path (`auto` or `exact`)." }
           ]
         },
         {

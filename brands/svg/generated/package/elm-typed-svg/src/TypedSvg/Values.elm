@@ -1,10 +1,10 @@
 module TypedSvg.Values exposing
     ( Value
     , toString
-    , AlignmentBaseline, ClipRule, ColorInterpolation, ColorRendering, Direction, Display, DominantBaseline, FillRule, FontVariant, ImageRendering, Overflow, PointerEvents, ShapeRendering, StrokeLinecap, StrokeLinejoin, TextAnchor, TextRendering, VectorEffect, Visibility, WhiteSpace, WritingMode
-    , alignmentBaselineFromString, alignmentBaselineValues, clipRuleFromString, clipRuleValues, colorInterpolationFromString, colorInterpolationValues, colorRenderingFromString, colorRenderingValues, directionFromString, directionValues, displayFromString, displayValues, dominantBaselineFromString, dominantBaselineValues, fillRuleFromString, fillRuleValues, fontVariantFromString, fontVariantValues, imageRenderingFromString, imageRenderingValues, overflowFromString, overflowValues, pointerEventsFromString, pointerEventsValues, shapeRenderingFromString, shapeRenderingValues, strokeLinecapFromString, strokeLinecapValues, strokeLinejoinFromString, strokeLinejoinValues, textAnchorFromString, textAnchorValues, textRenderingFromString, textRenderingValues, vectorEffectFromString, vectorEffectValues, visibilityFromString, visibilityValues, whiteSpaceFromString, whiteSpaceValues, writingModeFromString, writingModeValues
-    , afterEdge, all, alphabetic, auto, baseline, beforeEdge, bevel, block, boundingBox, butt, central, collapse, compact, crispedges, end, evenodd, fill, geometricprecision, hanging, hidden, ideographic, inline, inlineTable, linearrgb, listItem, lr, lrTb, ltr, marker, mathematical, middle, miter, noChange, nonScalingStroke, none, nonzero, normal, nowrap, optimizelegibility, optimizequality, optimizespeed, painted, pre, preLine, preWrap, resetSize, rl, rlTb, round, rtl, runIn, srgb, scroll, smallCaps, square, start, stroke, table, tableCaption, tableCell, tableColumn, tableColumnGroup, tableFooterGroup, tableHeaderGroup, tableRow, tableRowGroup, tb, tbRl, textAfterEdge, textBeforeEdge, useScript, visible, visiblefill, visiblepainted, visiblestroke
-    , alignmentBaselineAfterEdge, alignmentBaselineAlphabetic, alignmentBaselineAuto, alignmentBaselineBaseline, alignmentBaselineBeforeEdge, alignmentBaselineCentral, alignmentBaselineHanging, alignmentBaselineIdeographic, alignmentBaselineMathematical, alignmentBaselineMiddle, alignmentBaselineTextAfterEdge, alignmentBaselineTextBeforeEdge, clipRuleEvenodd, clipRuleNonzero, colorInterpolationAuto, colorInterpolationLinearrgb, colorInterpolationSrgb, colorRenderingAuto, colorRenderingOptimizequality, colorRenderingOptimizespeed, directionLtr, directionRtl, displayBlock, displayCompact, displayInline, displayInlineTable, displayListItem, displayMarker, displayNone, displayRunIn, displayTable, displayTableCaption, displayTableCell, displayTableColumn, displayTableColumnGroup, displayTableFooterGroup, displayTableHeaderGroup, displayTableRow, displayTableRowGroup, dominantBaselineAlphabetic, dominantBaselineAuto, dominantBaselineCentral, dominantBaselineHanging, dominantBaselineIdeographic, dominantBaselineMathematical, dominantBaselineMiddle, dominantBaselineNoChange, dominantBaselineResetSize, dominantBaselineTextAfterEdge, dominantBaselineTextBeforeEdge, dominantBaselineUseScript, fillRuleEvenodd, fillRuleNonzero, fontVariantNormal, fontVariantSmallCaps, imageRenderingAuto, imageRenderingOptimizequality, imageRenderingOptimizespeed, overflowAuto, overflowHidden, overflowScroll, overflowVisible, pointerEventsAll, pointerEventsBoundingBox, pointerEventsFill, pointerEventsNone, pointerEventsPainted, pointerEventsStroke, pointerEventsVisible, pointerEventsVisiblefill, pointerEventsVisiblepainted, pointerEventsVisiblestroke, shapeRenderingAuto, shapeRenderingCrispedges, shapeRenderingGeometricprecision, shapeRenderingOptimizespeed, strokeLinecapButt, strokeLinecapRound, strokeLinecapSquare, strokeLinejoinBevel, strokeLinejoinMiter, strokeLinejoinRound, textAnchorEnd, textAnchorMiddle, textAnchorStart, textRenderingAuto, textRenderingGeometricprecision, textRenderingOptimizelegibility, textRenderingOptimizespeed, vectorEffectNonScalingStroke, vectorEffectNone, visibilityCollapse, visibilityHidden, visibilityVisible, whiteSpaceNormal, whiteSpaceNowrap, whiteSpacePre, whiteSpacePreLine, whiteSpacePreWrap, writingModeLr, writingModeLrTb, writingModeRl, writingModeRlTb, writingModeTb, writingModeTbRl
+    , AlignmentBaseline, ClipRule, ColorInterpolation, ColorRendering, Direction, Display, DominantBaseline, FillRule, FontVariant, ImageRendering, Overflow, PointerEvents, ShapeRendering, StrokeLinecap, StrokeLinejoin, TextAnchor, TextRendering, VectorEffect, Visibility, WhiteSpace, WritingMode, XmlSpace
+    , alignmentBaselineFromString, alignmentBaselineValues, clipRuleFromString, clipRuleValues, colorInterpolationFromString, colorInterpolationValues, colorRenderingFromString, colorRenderingValues, directionFromString, directionValues, displayFromString, displayValues, dominantBaselineFromString, dominantBaselineValues, fillRuleFromString, fillRuleValues, fontVariantFromString, fontVariantValues, imageRenderingFromString, imageRenderingValues, overflowFromString, overflowValues, pointerEventsFromString, pointerEventsValues, shapeRenderingFromString, shapeRenderingValues, strokeLinecapFromString, strokeLinecapValues, strokeLinejoinFromString, strokeLinejoinValues, textAnchorFromString, textAnchorValues, textRenderingFromString, textRenderingValues, vectorEffectFromString, vectorEffectValues, visibilityFromString, visibilityValues, whiteSpaceFromString, whiteSpaceValues, writingModeFromString, writingModeValues, xmlSpaceFromString, xmlSpaceValues
+    , afterEdge, all, alphabetic, auto, baseline, beforeEdge, bevel, block, boundingBox, butt, central, collapse, compact, crispedges, default, end, evenodd, fill, geometricprecision, hanging, hidden, ideographic, inline, inlineTable, linearrgb, listItem, lr, lrTb, ltr, marker, mathematical, middle, miter, noChange, nonScalingStroke, none, nonzero, normal, nowrap, optimizelegibility, optimizequality, optimizespeed, painted, pre, preLine, preWrap, preserve, resetSize, rl, rlTb, round, rtl, runIn, srgb, scroll, smallCaps, square, start, stroke, table, tableCaption, tableCell, tableColumn, tableColumnGroup, tableFooterGroup, tableHeaderGroup, tableRow, tableRowGroup, tb, tbRl, textAfterEdge, textBeforeEdge, useScript, visible, visiblefill, visiblepainted, visiblestroke
+    , alignmentBaselineAfterEdge, alignmentBaselineAlphabetic, alignmentBaselineAuto, alignmentBaselineBaseline, alignmentBaselineBeforeEdge, alignmentBaselineCentral, alignmentBaselineHanging, alignmentBaselineIdeographic, alignmentBaselineMathematical, alignmentBaselineMiddle, alignmentBaselineTextAfterEdge, alignmentBaselineTextBeforeEdge, clipRuleEvenodd, clipRuleNonzero, colorInterpolationAuto, colorInterpolationLinearrgb, colorInterpolationSrgb, colorRenderingAuto, colorRenderingOptimizequality, colorRenderingOptimizespeed, directionLtr, directionRtl, displayBlock, displayCompact, displayInline, displayInlineTable, displayListItem, displayMarker, displayNone, displayRunIn, displayTable, displayTableCaption, displayTableCell, displayTableColumn, displayTableColumnGroup, displayTableFooterGroup, displayTableHeaderGroup, displayTableRow, displayTableRowGroup, dominantBaselineAlphabetic, dominantBaselineAuto, dominantBaselineCentral, dominantBaselineHanging, dominantBaselineIdeographic, dominantBaselineMathematical, dominantBaselineMiddle, dominantBaselineNoChange, dominantBaselineResetSize, dominantBaselineTextAfterEdge, dominantBaselineTextBeforeEdge, dominantBaselineUseScript, fillRuleEvenodd, fillRuleNonzero, fontVariantNormal, fontVariantSmallCaps, imageRenderingAuto, imageRenderingOptimizequality, imageRenderingOptimizespeed, overflowAuto, overflowHidden, overflowScroll, overflowVisible, pointerEventsAll, pointerEventsBoundingBox, pointerEventsFill, pointerEventsNone, pointerEventsPainted, pointerEventsStroke, pointerEventsVisible, pointerEventsVisiblefill, pointerEventsVisiblepainted, pointerEventsVisiblestroke, shapeRenderingAuto, shapeRenderingCrispedges, shapeRenderingGeometricprecision, shapeRenderingOptimizespeed, strokeLinecapButt, strokeLinecapRound, strokeLinecapSquare, strokeLinejoinBevel, strokeLinejoinMiter, strokeLinejoinRound, textAnchorEnd, textAnchorMiddle, textAnchorStart, textRenderingAuto, textRenderingGeometricprecision, textRenderingOptimizelegibility, textRenderingOptimizespeed, vectorEffectNonScalingStroke, vectorEffectNone, visibilityCollapse, visibilityHidden, visibilityVisible, whiteSpaceNormal, whiteSpaceNowrap, whiteSpacePre, whiteSpacePreLine, whiteSpacePreWrap, writingModeLr, writingModeLrTb, writingModeRl, writingModeRlTb, writingModeTb, writingModeTbRl, xmlSpaceDefault, xmlSpacePreserve
     )
 
 {-| The enum-value vocabulary: every token minted once (open row), plus the
@@ -18,10 +18,10 @@ are fed by these same tokens.
 
 @docs Value
 @docs toString
-@docs AlignmentBaseline, ClipRule, ColorInterpolation, ColorRendering, Direction, Display, DominantBaseline, FillRule, FontVariant, ImageRendering, Overflow, PointerEvents, ShapeRendering, StrokeLinecap, StrokeLinejoin, TextAnchor, TextRendering, VectorEffect, Visibility, WhiteSpace, WritingMode
-@docs alignmentBaselineFromString, alignmentBaselineValues, clipRuleFromString, clipRuleValues, colorInterpolationFromString, colorInterpolationValues, colorRenderingFromString, colorRenderingValues, directionFromString, directionValues, displayFromString, displayValues, dominantBaselineFromString, dominantBaselineValues, fillRuleFromString, fillRuleValues, fontVariantFromString, fontVariantValues, imageRenderingFromString, imageRenderingValues, overflowFromString, overflowValues, pointerEventsFromString, pointerEventsValues, shapeRenderingFromString, shapeRenderingValues, strokeLinecapFromString, strokeLinecapValues, strokeLinejoinFromString, strokeLinejoinValues, textAnchorFromString, textAnchorValues, textRenderingFromString, textRenderingValues, vectorEffectFromString, vectorEffectValues, visibilityFromString, visibilityValues, whiteSpaceFromString, whiteSpaceValues, writingModeFromString, writingModeValues
-@docs afterEdge, all, alphabetic, auto, baseline, beforeEdge, bevel, block, boundingBox, butt, central, collapse, compact, crispedges, end, evenodd, fill, geometricprecision, hanging, hidden, ideographic, inline, inlineTable, linearrgb, listItem, lr, lrTb, ltr, marker, mathematical, middle, miter, noChange, nonScalingStroke, none, nonzero, normal, nowrap, optimizelegibility, optimizequality, optimizespeed, painted, pre, preLine, preWrap, resetSize, rl, rlTb, round, rtl, runIn, srgb, scroll, smallCaps, square, start, stroke, table, tableCaption, tableCell, tableColumn, tableColumnGroup, tableFooterGroup, tableHeaderGroup, tableRow, tableRowGroup, tb, tbRl, textAfterEdge, textBeforeEdge, useScript, visible, visiblefill, visiblepainted, visiblestroke
-@docs alignmentBaselineAfterEdge, alignmentBaselineAlphabetic, alignmentBaselineAuto, alignmentBaselineBaseline, alignmentBaselineBeforeEdge, alignmentBaselineCentral, alignmentBaselineHanging, alignmentBaselineIdeographic, alignmentBaselineMathematical, alignmentBaselineMiddle, alignmentBaselineTextAfterEdge, alignmentBaselineTextBeforeEdge, clipRuleEvenodd, clipRuleNonzero, colorInterpolationAuto, colorInterpolationLinearrgb, colorInterpolationSrgb, colorRenderingAuto, colorRenderingOptimizequality, colorRenderingOptimizespeed, directionLtr, directionRtl, displayBlock, displayCompact, displayInline, displayInlineTable, displayListItem, displayMarker, displayNone, displayRunIn, displayTable, displayTableCaption, displayTableCell, displayTableColumn, displayTableColumnGroup, displayTableFooterGroup, displayTableHeaderGroup, displayTableRow, displayTableRowGroup, dominantBaselineAlphabetic, dominantBaselineAuto, dominantBaselineCentral, dominantBaselineHanging, dominantBaselineIdeographic, dominantBaselineMathematical, dominantBaselineMiddle, dominantBaselineNoChange, dominantBaselineResetSize, dominantBaselineTextAfterEdge, dominantBaselineTextBeforeEdge, dominantBaselineUseScript, fillRuleEvenodd, fillRuleNonzero, fontVariantNormal, fontVariantSmallCaps, imageRenderingAuto, imageRenderingOptimizequality, imageRenderingOptimizespeed, overflowAuto, overflowHidden, overflowScroll, overflowVisible, pointerEventsAll, pointerEventsBoundingBox, pointerEventsFill, pointerEventsNone, pointerEventsPainted, pointerEventsStroke, pointerEventsVisible, pointerEventsVisiblefill, pointerEventsVisiblepainted, pointerEventsVisiblestroke, shapeRenderingAuto, shapeRenderingCrispedges, shapeRenderingGeometricprecision, shapeRenderingOptimizespeed, strokeLinecapButt, strokeLinecapRound, strokeLinecapSquare, strokeLinejoinBevel, strokeLinejoinMiter, strokeLinejoinRound, textAnchorEnd, textAnchorMiddle, textAnchorStart, textRenderingAuto, textRenderingGeometricprecision, textRenderingOptimizelegibility, textRenderingOptimizespeed, vectorEffectNonScalingStroke, vectorEffectNone, visibilityCollapse, visibilityHidden, visibilityVisible, whiteSpaceNormal, whiteSpaceNowrap, whiteSpacePre, whiteSpacePreLine, whiteSpacePreWrap, writingModeLr, writingModeLrTb, writingModeRl, writingModeRlTb, writingModeTb, writingModeTbRl
+@docs AlignmentBaseline, ClipRule, ColorInterpolation, ColorRendering, Direction, Display, DominantBaseline, FillRule, FontVariant, ImageRendering, Overflow, PointerEvents, ShapeRendering, StrokeLinecap, StrokeLinejoin, TextAnchor, TextRendering, VectorEffect, Visibility, WhiteSpace, WritingMode, XmlSpace
+@docs alignmentBaselineFromString, alignmentBaselineValues, clipRuleFromString, clipRuleValues, colorInterpolationFromString, colorInterpolationValues, colorRenderingFromString, colorRenderingValues, directionFromString, directionValues, displayFromString, displayValues, dominantBaselineFromString, dominantBaselineValues, fillRuleFromString, fillRuleValues, fontVariantFromString, fontVariantValues, imageRenderingFromString, imageRenderingValues, overflowFromString, overflowValues, pointerEventsFromString, pointerEventsValues, shapeRenderingFromString, shapeRenderingValues, strokeLinecapFromString, strokeLinecapValues, strokeLinejoinFromString, strokeLinejoinValues, textAnchorFromString, textAnchorValues, textRenderingFromString, textRenderingValues, vectorEffectFromString, vectorEffectValues, visibilityFromString, visibilityValues, whiteSpaceFromString, whiteSpaceValues, writingModeFromString, writingModeValues, xmlSpaceFromString, xmlSpaceValues
+@docs afterEdge, all, alphabetic, auto, baseline, beforeEdge, bevel, block, boundingBox, butt, central, collapse, compact, crispedges, default, end, evenodd, fill, geometricprecision, hanging, hidden, ideographic, inline, inlineTable, linearrgb, listItem, lr, lrTb, ltr, marker, mathematical, middle, miter, noChange, nonScalingStroke, none, nonzero, normal, nowrap, optimizelegibility, optimizequality, optimizespeed, painted, pre, preLine, preWrap, preserve, resetSize, rl, rlTb, round, rtl, runIn, srgb, scroll, smallCaps, square, start, stroke, table, tableCaption, tableCell, tableColumn, tableColumnGroup, tableFooterGroup, tableHeaderGroup, tableRow, tableRowGroup, tb, tbRl, textAfterEdge, textBeforeEdge, useScript, visible, visiblefill, visiblepainted, visiblestroke
+@docs alignmentBaselineAfterEdge, alignmentBaselineAlphabetic, alignmentBaselineAuto, alignmentBaselineBaseline, alignmentBaselineBeforeEdge, alignmentBaselineCentral, alignmentBaselineHanging, alignmentBaselineIdeographic, alignmentBaselineMathematical, alignmentBaselineMiddle, alignmentBaselineTextAfterEdge, alignmentBaselineTextBeforeEdge, clipRuleEvenodd, clipRuleNonzero, colorInterpolationAuto, colorInterpolationLinearrgb, colorInterpolationSrgb, colorRenderingAuto, colorRenderingOptimizequality, colorRenderingOptimizespeed, directionLtr, directionRtl, displayBlock, displayCompact, displayInline, displayInlineTable, displayListItem, displayMarker, displayNone, displayRunIn, displayTable, displayTableCaption, displayTableCell, displayTableColumn, displayTableColumnGroup, displayTableFooterGroup, displayTableHeaderGroup, displayTableRow, displayTableRowGroup, dominantBaselineAlphabetic, dominantBaselineAuto, dominantBaselineCentral, dominantBaselineHanging, dominantBaselineIdeographic, dominantBaselineMathematical, dominantBaselineMiddle, dominantBaselineNoChange, dominantBaselineResetSize, dominantBaselineTextAfterEdge, dominantBaselineTextBeforeEdge, dominantBaselineUseScript, fillRuleEvenodd, fillRuleNonzero, fontVariantNormal, fontVariantSmallCaps, imageRenderingAuto, imageRenderingOptimizequality, imageRenderingOptimizespeed, overflowAuto, overflowHidden, overflowScroll, overflowVisible, pointerEventsAll, pointerEventsBoundingBox, pointerEventsFill, pointerEventsNone, pointerEventsPainted, pointerEventsStroke, pointerEventsVisible, pointerEventsVisiblefill, pointerEventsVisiblepainted, pointerEventsVisiblestroke, shapeRenderingAuto, shapeRenderingCrispedges, shapeRenderingGeometricprecision, shapeRenderingOptimizespeed, strokeLinecapButt, strokeLinecapRound, strokeLinecapSquare, strokeLinejoinBevel, strokeLinejoinMiter, strokeLinejoinRound, textAnchorEnd, textAnchorMiddle, textAnchorStart, textRenderingAuto, textRenderingGeometricprecision, textRenderingOptimizelegibility, textRenderingOptimizespeed, vectorEffectNonScalingStroke, vectorEffectNone, visibilityCollapse, visibilityHidden, visibilityVisible, whiteSpaceNormal, whiteSpaceNowrap, whiteSpacePre, whiteSpacePreLine, whiteSpacePreWrap, writingModeLr, writingModeLrTb, writingModeRl, writingModeRlTb, writingModeTb, writingModeTbRl, xmlSpaceDefault, xmlSpacePreserve
 
 -}
 
@@ -271,6 +271,14 @@ type alias WritingMode =
     , rlTb : Supported
     , tb : Supported
     , tbRl : Supported
+    }
+
+
+{-| The union row for `xmlSpace`.
+-}
+type alias XmlSpace =
+    { default : Supported
+    , preserve : Supported
     }
 
 
@@ -778,6 +786,21 @@ writingModeFromString s =
             Nothing
 
 
+{-| Parse a `xmlSpace` value from the string it writes to the DOM. The inverse of `toString`.
+-}
+xmlSpaceFromString : String -> Maybe (Value XmlSpace)
+xmlSpaceFromString s =
+    case s of
+        "default" ->
+            Just default
+
+        "preserve" ->
+            Just preserve
+
+        _ ->
+            Nothing
+
+
 {-| Every `alignmentBaseline` value. Map a UI over this and adding a value to the manifest cannot silently miss it.
 -}
 alignmentBaselineValues : List (Value AlignmentBaseline)
@@ -925,6 +948,13 @@ writingModeValues =
     [ lr, lrTb, rl, rlTb, tb, tbRl ]
 
 
+{-| Every `xmlSpace` value. Map a UI over this and adding a value to the manifest cannot silently miss it.
+-}
+xmlSpaceValues : List (Value XmlSpace)
+xmlSpaceValues =
+    [ default, preserve ]
+
+
 {-| The `after-edge` token.
 -}
 afterEdge : Value { v | afterEdge : Supported }
@@ -1021,6 +1051,13 @@ compact =
 crispedges : Value { v | crispedges : Supported }
 crispedges =
     Ir.token "crispEdges"
+
+
+{-| The `default` token.
+-}
+default : Value { v | default : Supported }
+default =
+    Ir.token "default"
 
 
 {-| The `end` token.
@@ -1238,6 +1275,13 @@ preLine =
 preWrap : Value { v | preWrap : Supported }
 preWrap =
     Ir.token "pre-wrap"
+
+
+{-| The `preserve` token.
+-}
+preserve : Value { v | preserve : Supported }
+preserve =
+    Ir.token "preserve"
 
 
 {-| The `reset-size` token.
@@ -2183,3 +2227,17 @@ writingModeTb =
 writingModeTbRl : Value { v | tbRl : Supported }
 writingModeTbRl =
     Ir.token "tb-rl"
+
+
+{-| The `default` value of the `xmlSpace` enum — same open row as `default`, prefixed for discovery.
+-}
+xmlSpaceDefault : Value { v | default : Supported }
+xmlSpaceDefault =
+    Ir.token "default"
+
+
+{-| The `preserve` value of the `xmlSpace` enum — same open row as `preserve`, prefixed for discovery.
+-}
+xmlSpacePreserve : Value { v | preserve : Supported }
+xmlSpacePreserve =
+    Ir.token "preserve"

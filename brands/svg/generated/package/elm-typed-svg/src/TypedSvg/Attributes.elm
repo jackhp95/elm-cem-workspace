@@ -1,6 +1,6 @@
 module TypedSvg.Attributes exposing
-    ( class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, classList, styleList
-    , clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, rotate, rx, ry, spreadMethod, startOffset, stopColor, stopOpacity, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
+    ( class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, lang, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, role, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, tabindex, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, xmlSpace, classList, styleList
+    , clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, method, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, requiredExtensions, rotate, rx, ry, side, spacing, spreadMethod, startOffset, stopColor, stopOpacity, systemLanguage, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
     )
 
 {-| The canonical shared attribute vocabulary. Every setter is an open
@@ -14,8 +14,8 @@ aliases that pre-apply one enum token. They exist for IDE discovery:
 type `variant` and autocomplete lists every value inline. Each claims
 the same capability row as its base enum setter, so admittance is identical.
 
-@docs class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, classList, styleList
-@docs clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, rotate, rx, ry, spreadMethod, startOffset, stopColor, stopOpacity, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
+@docs class, id, style, alignmentBaseline, baselineShift, clipPath, clipRule, color, colorInterpolation, colorRendering, cursor, direction, display, dominantBaseline, fill, fillOpacity, fillRule, filter, fontFamily, fontSize, fontStyle, fontVariant, fontWeight, glyphOrientationVertical, imageRendering, lang, letterSpacing, lineHeight, markerEnd, markerMid, markerStart, mask, opacity, overflow, paintOrder, pointerEvents, role, shapeRendering, stroke, strokeDasharray, strokeDashoffset, strokeLinecap, strokeLinejoin, strokeMiterlimit, strokeOpacity, strokeWidth, tabindex, textAnchor, textDecoration, textRendering, transform, transformOrigin, vectorEffect, visibility, whiteSpace, wordSpacing, writingMode, xmlSpace, classList, styleList
+@docs clipPathUnits, cx, cy, d, dx, dy, fr, fx, fy, gradientTransform, gradientUnits, height, href, lengthAdjust, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, method, offset, orient, pathLength, patternContentUnits, patternTransform, patternUnits, points, preserveAspectRatio, r, refX, refY, requiredExtensions, rotate, rx, ry, side, spacing, spreadMethod, startOffset, stopColor, stopOpacity, systemLanguage, target, textLength, viewBox, width, x, x1, x2, xmlns, y, y1, y2
 
 -}
 
@@ -215,6 +215,13 @@ imageRendering value_ =
     Ir.attribute "image-rendering" (HtmlIr.Value.toString value_)
 
 
+{-| The global `lang` attribute.
+-}
+lang : String -> Attr c msg
+lang =
+    Ir.attribute "lang"
+
+
 {-| The global `letter-spacing` attribute.
 -}
 letterSpacing : String -> Attr c msg
@@ -285,6 +292,13 @@ pointerEvents value_ =
     Ir.attribute "pointer-events" (HtmlIr.Value.toString value_)
 
 
+{-| The global `role` attribute.
+-}
+role : String -> Attr c msg
+role =
+    Ir.attribute "role"
+
+
 {-| The global `shape-rendering` attribute.
 -}
 shapeRendering : Value TypedSvg.Values.ShapeRendering -> Attr c msg
@@ -346,6 +360,13 @@ strokeOpacity =
 strokeWidth : String -> Attr c msg
 strokeWidth =
     Ir.attribute "stroke-width"
+
+
+{-| The global `tabindex` attribute.
+-}
+tabindex : String -> Attr c msg
+tabindex =
+    Ir.attribute "tabindex"
 
 
 {-| The global `text-anchor` attribute.
@@ -416,6 +437,13 @@ wordSpacing =
 writingMode : Value TypedSvg.Values.WritingMode -> Attr c msg
 writingMode value_ =
     Ir.attribute "writing-mode" (HtmlIr.Value.toString value_)
+
+
+{-| The global `xml:space` attribute.
+-}
+xmlSpace : Value TypedSvg.Values.XmlSpace -> Attr c msg
+xmlSpace value_ =
+    Ir.attribute "xml:space" (HtmlIr.Value.toString value_)
 
 
 {-| Coordinate system for the clip path contents.
@@ -495,7 +523,7 @@ gradientUnits =
     Ir.attribute "gradientUnits"
 
 
-{-| Height of the image rectangle.
+{-| Height of the foreignObject's viewport.
 -}
 height : String -> Attr { c | height : Supported } msg
 height =
@@ -549,6 +577,13 @@ maskContentUnits =
 maskUnits : String -> Attr { c | maskUnits : Supported } msg
 maskUnits =
     Ir.attribute "maskUnits"
+
+
+{-| How glyphs are rendered along the path (`align` or `stretch`).
+-}
+method : String -> Attr { c | method : Supported } msg
+method =
+    Ir.attribute "method"
 
 
 {-| Position of the stop along the gradient (0 to 1, or a percentage).
@@ -628,6 +663,13 @@ refY =
     Ir.attribute "refY"
 
 
+{-| A list of extension-namespace IRIs a child requires; a `switch` selects the first child whose required extensions are all supported.
+-}
+requiredExtensions : String -> Attr { c | requiredExtensions : Supported } msg
+requiredExtensions =
+    Ir.attribute "requiredExtensions"
+
+
 {-| Per-glyph rotation, in degrees.
 -}
 rotate : String -> Attr { c | rotate : Supported } msg
@@ -647,6 +689,20 @@ rx =
 ry : String -> Attr { c | ry : Supported } msg
 ry =
     Ir.attribute "ry"
+
+
+{-| Which side of the path the text is placed on (`left` or `right`).
+-}
+side : String -> Attr { c | side : Supported } msg
+side =
+    Ir.attribute "side"
+
+
+{-| How space between glyphs is handled along the path (`auto` or `exact`).
+-}
+spacing : String -> Attr { c | spacing : Supported } msg
+spacing =
+    Ir.attribute "spacing"
 
 
 {-| How the gradient repeats beyond its bounds (`pad`, `reflect`, `repeat`).
@@ -677,6 +733,13 @@ stopOpacity =
     Ir.attribute "stop-opacity"
 
 
+{-| A comma-separated list of BCP-47 language tags; a `switch` selects the first child whose systemLanguage matches the user's preferences.
+-}
+systemLanguage : String -> Attr { c | systemLanguage : Supported } msg
+systemLanguage =
+    Ir.attribute "systemLanguage"
+
+
 {-| Where to display the linked resource.
 -}
 target : String -> Attr { c | target : Supported } msg
@@ -698,14 +761,14 @@ viewBox =
     Ir.attribute "viewBox"
 
 
-{-| Width of the image rectangle.
+{-| Width of the foreignObject's viewport.
 -}
 width : String -> Attr { c | width : Supported } msg
 width =
     Ir.attribute "width"
 
 
-{-| X coordinate of the image rectangle.
+{-| X coordinate of the foreignObject's viewport.
 -}
 x : String -> Attr { c | x : Supported } msg
 x =
@@ -733,7 +796,7 @@ xmlns =
     Ir.attribute "xmlns"
 
 
-{-| Y coordinate of the image rectangle.
+{-| Y coordinate of the foreignObject's viewport.
 -}
 y : String -> Attr { c | y : Supported } msg
 y =

@@ -1,22 +1,22 @@
 module TypedSvg.Element.Structure exposing
-    ( a, defs, g, svg, switch, symbol, use
-    , AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
-    , height, href, preserveAspectRatio, target, viewBox, width, x, xmlns, y
+    ( a, defs, foreignObject, g, svg, switch, symbol, use, view
+    , AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, ForeignObjectIs, ForeignObjectAttrs, ForeignObjectContent, ForeignObjectChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy, ViewIs, ViewAttrs, ViewChildAdmittedBy
+    , height, href, preserveAspectRatio, requiredExtensions, systemLanguage, target, viewBox, width, x, xmlns, y
     )
 
 {-| The `Structure` element home: constructors, per-element rows, and
 co-located re-exports of the shared attributes its elements admit.
 
-@docs a, defs, g, svg, switch, symbol, use
-@docs AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
-@docs height, href, preserveAspectRatio, target, viewBox, width, x, xmlns, y
+@docs a, defs, foreignObject, g, svg, switch, symbol, use, view
+@docs AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, ForeignObjectIs, ForeignObjectAttrs, ForeignObjectContent, ForeignObjectChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy, ViewIs, ViewAttrs, ViewChildAdmittedBy
+@docs height, href, preserveAspectRatio, requiredExtensions, systemLanguage, target, viewBox, width, x, xmlns, y
 
 -}
 
 import HtmlIr.Attribute exposing (Attr)
 import HtmlIr.Element exposing (Element)
 import HtmlIr.Internal as Ir
-import HtmlIr.Kind exposing (Supported)
+import HtmlIr.Kind exposing (Shared, Supported)
 import TypedSvg.Attributes
 import TypedSvg.Kind exposing (Brand, Ctx)
 
@@ -78,6 +78,49 @@ defs :
     -> Element (DefsIs s) admittedBy msg
 defs attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "defs" attrs (List.map HtmlIr.Element.toNode children))
+
+
+{-| The kind row `foreignObject` produces.
+-}
+type alias ForeignObjectIs s =
+    { s | foreignObject : Brand }
+
+
+{-| `foreignObject`'s closed attribute-capability row.
+-}
+type alias ForeignObjectAttrs =
+    { class : Supported
+    , height : Supported
+    , id : Supported
+    , style : Supported
+    , width : Supported
+    , x : Supported
+    , y : Supported
+    }
+
+
+{-| The kinds `foreignObject` admits.
+-}
+type alias ForeignObjectContent =
+    { sharedFlow : Shared
+    , sharedPhrasing : Shared
+    }
+
+
+{-| The context demand `foreignObject` injects into its children.
+-}
+type alias ForeignObjectChildAdmittedBy childAdm =
+    { childAdm | foreignObject : Ctx }
+
+
+{-| The `foreignObject` element.
+-}
+foreignObject :
+    List (Attr ForeignObjectAttrs msg)
+    -> List (Element ForeignObjectContent (ForeignObjectChildAdmittedBy childAdm) msg)
+    -> Element (ForeignObjectIs s) admittedBy msg
+foreignObject attrs children =
+    Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "foreignObject" attrs (List.map HtmlIr.Element.toNode children))
 
 
 {-| The kind row `g` produces.
@@ -160,7 +203,9 @@ type alias SwitchIs s =
 type alias SwitchAttrs =
     { class : Supported
     , id : Supported
+    , requiredExtensions : Supported
     , style : Supported
+    , systemLanguage : Supported
     }
 
 
@@ -261,6 +306,39 @@ use attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "use" attrs (List.map HtmlIr.Element.toNode children))
 
 
+{-| The kind row `view` produces.
+-}
+type alias ViewIs s =
+    { s | view : Brand }
+
+
+{-| `view`'s closed attribute-capability row.
+-}
+type alias ViewAttrs =
+    { class : Supported
+    , id : Supported
+    , preserveAspectRatio : Supported
+    , style : Supported
+    , viewBox : Supported
+    }
+
+
+{-| The context demand `view` injects into its children.
+-}
+type alias ViewChildAdmittedBy childAdm =
+    { childAdm | view : Ctx }
+
+
+{-| The `view` element.
+-}
+view :
+    List (Attr ViewAttrs msg)
+    -> List (Element childAccepts (ViewChildAdmittedBy childAdm) msg)
+    -> Element (ViewIs s) admittedBy msg
+view attrs children =
+    Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "view" attrs (List.map HtmlIr.Element.toNode children))
+
+
 {-| See `TypedSvg.Attributes.height`.
 -}
 height : String -> Attr { c | height : Supported } msg
@@ -280,6 +358,20 @@ href =
 preserveAspectRatio : String -> Attr { c | preserveAspectRatio : Supported } msg
 preserveAspectRatio =
     TypedSvg.Attributes.preserveAspectRatio
+
+
+{-| See `TypedSvg.Attributes.requiredExtensions`.
+-}
+requiredExtensions : String -> Attr { c | requiredExtensions : Supported } msg
+requiredExtensions =
+    TypedSvg.Attributes.requiredExtensions
+
+
+{-| See `TypedSvg.Attributes.systemLanguage`.
+-}
+systemLanguage : String -> Attr { c | systemLanguage : Supported } msg
+systemLanguage =
+    TypedSvg.Attributes.systemLanguage
 
 
 {-| See `TypedSvg.Attributes.target`.
