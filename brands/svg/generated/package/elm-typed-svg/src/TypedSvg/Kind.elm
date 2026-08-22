@@ -2,6 +2,7 @@ module TypedSvg.Kind exposing
     ( Brand, Ctx
     , Available, Used
     , Supported, Shared
+    , SvgClipContent, SvgContainerContent, SvgPaintServer, SvgShape, SvgStructural, SvgSwitchContent
     )
 
 {-| The library's private phantom markers and named kind/context sets.
@@ -20,6 +21,7 @@ opted-in slot.
 @docs Brand, Ctx
 @docs Available, Used
 @docs Supported, Shared
+@docs SvgClipContent, SvgContainerContent, SvgPaintServer, SvgShape, SvgStructural, SvgSwitchContent
 
 -}
 
@@ -60,3 +62,99 @@ type Available
 -}
 type Used
     = Used_
+
+
+{-| The `svgClipContent` kind set.
+-}
+type alias SvgClipContent =
+    { circle : Brand
+    , ellipse : Brand
+    , line : Brand
+    , path : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , rect : Brand
+    , text : Brand
+    , use : Brand
+    }
+
+
+{-| The `svgContainerContent` kind set.
+-}
+type alias SvgContainerContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , use : Brand
+    }
+
+
+{-| The `svgPaintServer` kind set.
+-}
+type alias SvgPaintServer =
+    { linearGradient : Brand
+    , pattern : Brand
+    , radialGradient : Brand
+    }
+
+
+{-| The `svgShape` kind set.
+-}
+type alias SvgShape =
+    { circle : Brand
+    , ellipse : Brand
+    , line : Brand
+    , path : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , rect : Brand
+    }
+
+
+{-| The `svgStructural` kind set.
+-}
+type alias SvgStructural =
+    { defs : Brand
+    , g : Brand
+    , svg : Brand
+    , symbol : Brand
+    , use : Brand
+    }
+
+
+{-| The `svgSwitchContent` kind set.
+-}
+type alias SvgSwitchContent =
+    { a : Brand
+    , circle : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , path : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , text : Brand
+    , use : Brand
+    }

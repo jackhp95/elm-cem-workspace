@@ -61,7 +61,7 @@ circle =
 -}
 clipPath :
     List (Attr TypedSvg.Element.Clip.ClipPathAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Clip.ClipPathChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Clip.ClipPathContent (TypedSvg.Element.Clip.ClipPathChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Clip.ClipPathIs s) admittedBy msg
 clipPath =
     TypedSvg.Element.Clip.clipPath
@@ -71,7 +71,7 @@ clipPath =
 -}
 defs :
     List (Attr TypedSvg.Element.Structure.DefsAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Structure.DefsChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Structure.DefsContent (TypedSvg.Element.Structure.DefsChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Structure.DefsIs s) admittedBy msg
 defs =
     TypedSvg.Element.Structure.defs
@@ -101,7 +101,7 @@ ellipse =
 -}
 g :
     List (Attr TypedSvg.Element.Structure.GAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Structure.GChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Structure.GContent (TypedSvg.Element.Structure.GChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Structure.GIs s) admittedBy msg
 g =
     TypedSvg.Element.Structure.g
@@ -141,7 +141,7 @@ linearGradient =
 -}
 marker :
     List (Attr TypedSvg.Element.Clip.MarkerAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Clip.MarkerChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Clip.MarkerContent (TypedSvg.Element.Clip.MarkerChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Clip.MarkerIs s) admittedBy msg
 marker =
     TypedSvg.Element.Clip.marker
@@ -151,7 +151,7 @@ marker =
 -}
 mask :
     List (Attr TypedSvg.Element.Clip.MaskAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Clip.MaskChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Clip.MaskContent (TypedSvg.Element.Clip.MaskChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Clip.MaskIs s) admittedBy msg
 mask =
     TypedSvg.Element.Clip.mask
@@ -171,7 +171,7 @@ path =
 -}
 pattern :
     List (Attr TypedSvg.Element.Paint.PatternAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Paint.PatternChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Paint.PatternContent (TypedSvg.Element.Paint.PatternChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Paint.PatternIs s) admittedBy msg
 pattern =
     TypedSvg.Element.Paint.pattern
@@ -231,7 +231,7 @@ stop =
 -}
 svg :
     List (Attr TypedSvg.Element.Structure.SvgAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Structure.SvgChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Structure.SvgContent (TypedSvg.Element.Structure.SvgChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Structure.SvgIs s) admittedBy msg
 svg =
     TypedSvg.Element.Structure.svg
@@ -241,7 +241,7 @@ svg =
 -}
 switch :
     List (Attr TypedSvg.Element.Structure.SwitchAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Structure.SwitchChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Structure.SwitchContent (TypedSvg.Element.Structure.SwitchChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Structure.SwitchIs s) admittedBy msg
 switch =
     TypedSvg.Element.Structure.switch
@@ -251,7 +251,7 @@ switch =
 -}
 symbol :
     List (Attr TypedSvg.Element.Structure.SymbolAttrs msg)
-    -> List (Element childAccepts (TypedSvg.Element.Structure.SymbolChildAdmittedBy childAdm) msg)
+    -> List (Element TypedSvg.Element.Structure.SymbolContent (TypedSvg.Element.Structure.SymbolChildAdmittedBy childAdm) msg)
     -> Element (TypedSvg.Element.Structure.SymbolIs s) admittedBy msg
 symbol =
     TypedSvg.Element.Structure.symbol

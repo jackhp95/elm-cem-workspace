@@ -1,6 +1,6 @@
 module TypedSvg.Element.Clip exposing
     ( clipPath, marker, mask
-    , ClipPathIs, ClipPathAttrs, ClipPathChildAdmittedBy, MarkerIs, MarkerAttrs, MarkerChildAdmittedBy, MaskIs, MaskAttrs, MaskChildAdmittedBy
+    , ClipPathIs, ClipPathAttrs, ClipPathContent, ClipPathChildAdmittedBy, MarkerIs, MarkerAttrs, MarkerContent, MarkerChildAdmittedBy, MaskIs, MaskAttrs, MaskContent, MaskChildAdmittedBy
     , clipPathUnits, height, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, orient, preserveAspectRatio, refX, refY, viewBox, width, x, y
     )
 
@@ -8,7 +8,7 @@ module TypedSvg.Element.Clip exposing
 co-located re-exports of the shared attributes its elements admit.
 
 @docs clipPath, marker, mask
-@docs ClipPathIs, ClipPathAttrs, ClipPathChildAdmittedBy, MarkerIs, MarkerAttrs, MarkerChildAdmittedBy, MaskIs, MaskAttrs, MaskChildAdmittedBy
+@docs ClipPathIs, ClipPathAttrs, ClipPathContent, ClipPathChildAdmittedBy, MarkerIs, MarkerAttrs, MarkerContent, MarkerChildAdmittedBy, MaskIs, MaskAttrs, MaskContent, MaskChildAdmittedBy
 @docs clipPathUnits, height, markerHeight, markerUnits, markerWidth, maskContentUnits, maskUnits, orient, preserveAspectRatio, refX, refY, viewBox, width, x, y
 
 -}
@@ -37,6 +37,23 @@ type alias ClipPathAttrs =
     }
 
 
+{-| The kinds `clipPath` admits.
+-}
+type alias ClipPathContent =
+    { circle : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , line : Brand
+    , path : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , rect : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `clipPath` injects into its children.
 -}
 type alias ClipPathChildAdmittedBy childAdm =
@@ -47,7 +64,7 @@ type alias ClipPathChildAdmittedBy childAdm =
 -}
 clipPath :
     List (Attr ClipPathAttrs msg)
-    -> List (Element childAccepts (ClipPathChildAdmittedBy childAdm) msg)
+    -> List (Element ClipPathContent (ClipPathChildAdmittedBy childAdm) msg)
     -> Element (ClipPathIs s) admittedBy msg
 clipPath attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "clipPath" attrs (List.map HtmlIr.Element.toNode children))
@@ -76,6 +93,36 @@ type alias MarkerAttrs =
     }
 
 
+{-| The kinds `marker` admits.
+-}
+type alias MarkerContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `marker` injects into its children.
 -}
 type alias MarkerChildAdmittedBy childAdm =
@@ -86,7 +133,7 @@ type alias MarkerChildAdmittedBy childAdm =
 -}
 marker :
     List (Attr MarkerAttrs msg)
-    -> List (Element childAccepts (MarkerChildAdmittedBy childAdm) msg)
+    -> List (Element MarkerContent (MarkerChildAdmittedBy childAdm) msg)
     -> Element (MarkerIs s) admittedBy msg
 marker attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "marker" attrs (List.map HtmlIr.Element.toNode children))
@@ -113,6 +160,36 @@ type alias MaskAttrs =
     }
 
 
+{-| The kinds `mask` admits.
+-}
+type alias MaskContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `mask` injects into its children.
 -}
 type alias MaskChildAdmittedBy childAdm =
@@ -123,7 +200,7 @@ type alias MaskChildAdmittedBy childAdm =
 -}
 mask :
     List (Attr MaskAttrs msg)
-    -> List (Element childAccepts (MaskChildAdmittedBy childAdm) msg)
+    -> List (Element MaskContent (MaskChildAdmittedBy childAdm) msg)
     -> Element (MaskIs s) admittedBy msg
 mask attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "mask" attrs (List.map HtmlIr.Element.toNode children))

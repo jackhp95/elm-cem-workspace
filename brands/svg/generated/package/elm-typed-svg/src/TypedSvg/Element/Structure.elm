@@ -1,6 +1,6 @@
 module TypedSvg.Element.Structure exposing
     ( a, defs, g, svg, switch, symbol, use
-    , AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
+    , AAttrs, AContent, AChildAdmittedBy, DefsIs, DefsAttrs, DefsContent, DefsChildAdmittedBy, GIs, GAttrs, GContent, GChildAdmittedBy, SvgIs, SvgAttrs, SvgContent, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchContent, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolContent, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
     , height, href, preserveAspectRatio, target, viewBox, width, x, xmlns, y
     )
 
@@ -8,7 +8,7 @@ module TypedSvg.Element.Structure exposing
 co-located re-exports of the shared attributes its elements admit.
 
 @docs a, defs, g, svg, switch, symbol, use
-@docs AAttrs, AChildAdmittedBy, DefsIs, DefsAttrs, DefsChildAdmittedBy, GIs, GAttrs, GChildAdmittedBy, SvgIs, SvgAttrs, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
+@docs AAttrs, AContent, AChildAdmittedBy, DefsIs, DefsAttrs, DefsContent, DefsChildAdmittedBy, GIs, GAttrs, GContent, GChildAdmittedBy, SvgIs, SvgAttrs, SvgContent, SvgChildAdmittedBy, SwitchIs, SwitchAttrs, SwitchContent, SwitchChildAdmittedBy, SymbolIs, SymbolAttrs, SymbolContent, SymbolChildAdmittedBy, UseIs, UseAttrs, UseContent, UseChildAdmittedBy
 @docs height, href, preserveAspectRatio, target, viewBox, width, x, xmlns, y
 
 -}
@@ -29,6 +29,36 @@ type alias AAttrs =
     , id : Supported
     , style : Supported
     , target : Supported
+    }
+
+
+{-| The kinds `a` admits.
+-}
+type alias AContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
     }
 
 
@@ -64,6 +94,36 @@ type alias DefsAttrs =
     }
 
 
+{-| The kinds `defs` admits.
+-}
+type alias DefsContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `defs` injects into its children.
 -}
 type alias DefsChildAdmittedBy childAdm =
@@ -74,7 +134,7 @@ type alias DefsChildAdmittedBy childAdm =
 -}
 defs :
     List (Attr DefsAttrs msg)
-    -> List (Element childAccepts (DefsChildAdmittedBy childAdm) msg)
+    -> List (Element DefsContent (DefsChildAdmittedBy childAdm) msg)
     -> Element (DefsIs s) admittedBy msg
 defs attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "defs" attrs (List.map HtmlIr.Element.toNode children))
@@ -95,6 +155,36 @@ type alias GAttrs =
     }
 
 
+{-| The kinds `g` admits.
+-}
+type alias GContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `g` injects into its children.
 -}
 type alias GChildAdmittedBy childAdm =
@@ -105,7 +195,7 @@ type alias GChildAdmittedBy childAdm =
 -}
 g :
     List (Attr GAttrs msg)
-    -> List (Element childAccepts (GChildAdmittedBy childAdm) msg)
+    -> List (Element GContent (GChildAdmittedBy childAdm) msg)
     -> Element (GIs s) admittedBy msg
 g attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "g" attrs (List.map HtmlIr.Element.toNode children))
@@ -133,6 +223,36 @@ type alias SvgAttrs =
     }
 
 
+{-| The kinds `svg` admits.
+-}
+type alias SvgContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `svg` injects into its children.
 -}
 type alias SvgChildAdmittedBy childAdm =
@@ -143,7 +263,7 @@ type alias SvgChildAdmittedBy childAdm =
 -}
 svg :
     List (Attr SvgAttrs msg)
-    -> List (Element childAccepts (SvgChildAdmittedBy childAdm) msg)
+    -> List (Element SvgContent (SvgChildAdmittedBy childAdm) msg)
     -> Element (SvgIs s) admittedBy msg
 svg attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "svg" attrs (List.map HtmlIr.Element.toNode children))
@@ -164,6 +284,28 @@ type alias SwitchAttrs =
     }
 
 
+{-| The kinds `switch` admits.
+-}
+type alias SwitchContent =
+    { a : Brand
+    , circle : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , path : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `switch` injects into its children.
 -}
 type alias SwitchChildAdmittedBy childAdm =
@@ -174,7 +316,7 @@ type alias SwitchChildAdmittedBy childAdm =
 -}
 switch :
     List (Attr SwitchAttrs msg)
-    -> List (Element childAccepts (SwitchChildAdmittedBy childAdm) msg)
+    -> List (Element SwitchContent (SwitchChildAdmittedBy childAdm) msg)
     -> Element (SwitchIs s) admittedBy msg
 switch attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "switch" attrs (List.map HtmlIr.Element.toNode children))
@@ -201,6 +343,36 @@ type alias SymbolAttrs =
     }
 
 
+{-| The kinds `symbol` admits.
+-}
+type alias SymbolContent =
+    { a : Brand
+    , circle : Brand
+    , clipPath : Brand
+    , defs : Brand
+    , desc : Brand
+    , ellipse : Brand
+    , g : Brand
+    , image : Brand
+    , line : Brand
+    , linearGradient : Brand
+    , marker : Brand
+    , mask : Brand
+    , path : Brand
+    , pattern : Brand
+    , polygon : Brand
+    , polyline : Brand
+    , radialGradient : Brand
+    , rect : Brand
+    , svg : Brand
+    , switch : Brand
+    , symbol : Brand
+    , text : Brand
+    , title : Brand
+    , use : Brand
+    }
+
+
 {-| The context demand `symbol` injects into its children.
 -}
 type alias SymbolChildAdmittedBy childAdm =
@@ -211,7 +383,7 @@ type alias SymbolChildAdmittedBy childAdm =
 -}
 symbol :
     List (Attr SymbolAttrs msg)
-    -> List (Element childAccepts (SymbolChildAdmittedBy childAdm) msg)
+    -> List (Element SymbolContent (SymbolChildAdmittedBy childAdm) msg)
     -> Element (SymbolIs s) admittedBy msg
 symbol attrs children =
     Ir.fromNode (Ir.nodeNS "http://www.w3.org/2000/svg" "symbol" attrs (List.map HtmlIr.Element.toNode children))
