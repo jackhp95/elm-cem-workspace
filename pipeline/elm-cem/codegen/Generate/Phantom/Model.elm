@@ -55,11 +55,29 @@ release cycle to notice.
 
   - `text` / `icon` / `link` — CONTENT atoms. A leaf a brand contributes and any
     opted-in slot admits.
-  - `flow` / `phrasing` — HTML CONTENT CATEGORIES, per WHATWG. A producer names
-    its NARROWEST category (`span` → phrasing, `div` → flow); a slot names EVERY
-    category it admits (a flow slot names both, since phrasing ⊆ flow). This is
-    what lets a native element enter a design-system slot that means "arbitrary
-    HTML goes here" without an escape hatch.
+  - `flow` / `phrasing` / `interactive` — HTML CONTENT CATEGORIES, per WHATWG. A
+    producer names its NARROWEST category and a slot names EVERY category it
+    admits, so the containment `interactive ⊆ phrasing ⊆ flow` is materialised by
+    SET MEMBERSHIP (`_sets.flow`/`_sets.phrasing` both list every interactive
+    element), not by naming an umbrella. This is what lets a native element enter
+    a design-system slot that means "arbitrary HTML goes here" without an escape
+    hatch.
+
+    `interactive` is the third, narrowest leaf, and it exists to make WHATWG's
+    "phrasing content, but no interactive content descendant" (button/label/
+    summary) and "no interactive content descendant" (`a`) expressible WITHOUT
+    the collateral damage the earlier two-category collapse caused. Before it,
+    every interactive phrasing element (`a`/`audio`/`button`/`embed`/`iframe`/
+    `input`/`label`/`object`/`select`/`textarea`/`video`) produced the SAME
+    `phrasing` field as benign phrasing (`span`/`em`/`del`/…), so `!@interactive`
+    — which subtracts on the produced FIELD identity — could only drop the whole
+    `phrasing` field, taking `span` down with `button`. Giving the interactive
+    members their own `interactive` field lets the subtraction target exactly
+    them: `button`'s slot keeps `phrasing` (so `<button><span/></button>`
+    compiles) but loses `interactive` (so `<button><button/></button>` does not).
+    A slot that admits phrasing via `@phrasing` still admits interactive content
+    for free, because the interactive members are `@phrasing` members and the set
+    resolves to their `interactive` field.
 
 Adding a role here is a deliberate act: it widens the vocabulary every brand
 shares. Keep it sorted.
@@ -67,7 +85,7 @@ shares. Keep it sorted.
 -}
 sharedAtomVocabulary : List String
 sharedAtomVocabulary =
-    [ "flow", "icon", "link", "phrasing", "text" ]
+    [ "flow", "icon", "interactive", "link", "phrasing", "text" ]
 
 
 {-| The `shared:<role>` config spelling a `Shared` field name came from —

@@ -1,4 +1,4 @@
-module Good exposing (a11yPositives, categories, controls, escapes, page, view)
+module Good exposing (a11yBenignInButton, a11yPositives, categories, controls, escapes, page, view)
 
 {-| The /tmp/htmlia good-case ports, on the GENERATED TypedHtml: composition
 families (Table / Select+Form / Media) with zero inner annotations, transparent
@@ -316,16 +316,18 @@ catches it, because it matches the child's own NOUN ("a") against the parent's
 reproducible `elm-review` run proving `button > a` now trips `ValidSlotKind`
 (it did not before this task's `admits` edit).
 
-NOT covered here: a literal `<span>` (or any other element that shares
-`button`'s own produced kind, `sharedPhrasing` — canvas/del/ins/map/object/slot,
-and the interactive elements themselves) can no longer nest inside these four.
-`!@interactive` subtracts on the PRODUCED-KIND field, and every `@phrasing`
-member whose own `kind` is `"shared:phrasing"` (see RC5 / `categories` above)
-collapses onto that ONE field — so excluding the interactive members' field
-excludes every other element sharing it too. That is a real, compiler-verified
-restriction this task's admits-only mechanism cannot avoid (confirmed: `H.button
-[] [ H.span [] [] ]` compiled before this change and fails to compile after
-it) — flagged in the Task 3 report as a follow-up, not silently absorbed here.
+Benign phrasing content nests FINE (this is the Task 3.5 fix): a `<span>`,
+`<del>`, `<ins>`, `<em>` — anything whose produced kind is `sharedPhrasing` —
+still composes inside all four. The Task 3 subtraction used to drop the whole
+`sharedPhrasing` field because the interactive elements (`button`/`a`/`input`/
+…) collapsed onto it, taking `<span>` down with `<button>`. That collapse is
+now split: interactive elements produce `sharedInteractive` (a distinct
+cross-library atom), so `!@interactive` subtracts only THAT field. `button`'s
+slot keeps `sharedPhrasing` and loses `sharedInteractive` — see
+`a11yBenignInButton` below (compiles, no recast) and bad/InteractiveInSpan is
+NOT a fixture because `<span>` legitimately admits both. The still-rejected
+half is unchanged: bad/InteractiveContentInButton.elm (button>button),
+bad/InputInButton.elm (button>input), bad/SelectInLabel.elm, bad/ButtonInSummary.elm.
 
 -}
 a11yPositives : List (HtmlIr.Element.Element {} {} Msg)
@@ -336,6 +338,23 @@ a11yPositives =
         , H.label [] [ H.text "Pick" ]
         , H.summary [] [ H.text "Details" ]
         ]
+
+
+{-| Task 3.5 regression proof, WITHOUT `Unsafe.recastAll`: benign phrasing
+content (`<span>`, `<del>`, `<ins>`) nests inside `button`/`label`/`summary`/`a`
+and type-checks by ordinary row unification. Before the `sharedPhrasing` /
+`sharedInteractive` split this did not compile — the whole `sharedPhrasing`
+field had been subtracted by `!@interactive`, so `<span>` (a `sharedPhrasing`
+producer) was collateral damage. Each element keeps its own closed row here (no
+homogenising recast and no type annotation to launder it), so a re-collapse
+would surface as a real compile error in THIS binding rather than be masked.
+-}
+a11yBenignInButton =
+    { btn = H.button [] [ H.span [] [ H.text "icon" ] ]
+    , lbl = H.label [] [ H.del [] [ H.text "old" ] ]
+    , sum = H.summary [] [ H.ins [] [ H.text "new" ] ]
+    , lnk = H.a [ At.href "/x" ] [ H.span [] [ H.text "more" ] ]
+    }
 
 
 view : Html.Html Msg

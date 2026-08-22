@@ -121,6 +121,7 @@ type alias SummaryContent =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
     }

@@ -74,6 +74,7 @@ type Used
 -}
 type alias Embedded =
     { img : Brand
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     }
 
@@ -88,6 +89,7 @@ type alias Flow =
     , noscript : Brand
     , script : Brand
     , sharedFlow : Shared
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , template : Brand
     }
@@ -105,7 +107,7 @@ type alias Heading =
 type alias Interactive =
     { img : Brand
     , sharedFlow : Shared
-    , sharedPhrasing : Shared
+    , sharedInteractive : Shared
     , th : Brand
     }
 
@@ -133,6 +135,7 @@ type alias Phrasing =
     , meta : Brand
     , noscript : Brand
     , script : Brand
+    , sharedInteractive : Shared
     , sharedPhrasing : Shared
     , template : Brand
     }

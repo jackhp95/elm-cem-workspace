@@ -68,6 +68,7 @@ type alias Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
     }

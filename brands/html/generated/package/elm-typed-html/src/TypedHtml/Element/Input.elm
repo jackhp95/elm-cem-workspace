@@ -24,7 +24,7 @@ import TypedHtml.Kind exposing (Ctx)
 {-| The kind row `input` produces.
 -}
 type alias Is s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `input`'s closed attribute-capability row.

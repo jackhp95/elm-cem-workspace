@@ -24,7 +24,7 @@ import TypedHtml.Kind exposing (Brand, Ctx, Role)
 {-| The kind row `button` produces.
 -}
 type alias Is s =
-    { s | sharedPhrasing : Shared }
+    { s | sharedInteractive : Shared }
 
 
 {-| `button`'s closed attribute-capability row.
@@ -80,6 +80,7 @@ type alias Content =
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
+    , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
     }
