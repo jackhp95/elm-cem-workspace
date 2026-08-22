@@ -189,7 +189,14 @@ function runSplit(o, elm, cwd, packagesPath) {
   let anyOver = false;
   for (const p of packages) {
     const short = p.name.split("/")[1];
-    if (/review/i.test(p.name) || o.skip.has(p.name) || o.skip.has(short)) {
+    // Skip the review-facts contract package: its only module is `<Lib>.Review.Facts`,
+    // which measurePackage's copy filter strips (it drops every Review/ module), so the
+    // measurement elm.json would expose nothing and `elm make --docs` would fail with
+    // "NO INPUT". A single-module facts contract is trivially under the size cap; the
+    // gate that actually keeps it publishable is registry-check (check-split.mjs), not
+    // this docs-size measure. Match on `facts` too (some brands name it `<fam>-facts`
+    // rather than `<fam>-review-facts`).
+    if (/review|facts/i.test(p.name) || o.skip.has(p.name) || o.skip.has(short)) {
       console.log(`  SKIP  ${p.name} (review-facts or --skip)`);
       continue;
     }

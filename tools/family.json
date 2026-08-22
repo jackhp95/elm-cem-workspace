@@ -151,7 +151,28 @@
     },
     "elm-shoelace": {
       "srcDir": "brands/shoelace/generated/package/elm-shoelace",
-      "$note": "Second real third-party brand (Shoelace @shoelace-style/shoelace CEM -> Sl.* Elm). No copyFidelity block: newly stood up in-workspace, no published jackhp95/elm-shoelace mirror snapshot to compare against yet (same as elm-typed-html). Add one when the mirror is first published.",
+      "$note": "Second real third-party brand (Shoelace @shoelace-style/shoelace CEM -> Sl.* Elm). Now the generation-STAGING ROOT only: its published single-package identity is RETIRED (see PACKAGES-MOVED.md) — the five split siblings below are the product. No copyFidelity block: newly stood up in-workspace, no published jackhp95/elm-shoelace mirror snapshot to compare against yet (same as elm-typed-html). Add one when the mirror is first published.",
+      "mirror": { "auditedExclusions": false }
+    },
+    "$comment_elm_shoelace_split_siblings": "The five committed split siblings materialized by the shoelace-split task (docs/dag-rework-plan). Emitted by `elm-cem split --out=..` from elm-shoelace/packages.json, mirroring the m3e/html precedent. The monolith's docs.json blew the 700 KB registry cap (947,500 B / 135.4%) once the DAG rework added the 58-module degenerate Sl.Component.* facade tier; the split resolves it structurally. Shoelace's DAG is linear (core <- elements <- components <- build; facts standalone) and its namespaces already align with the tiers, so no namespace-rename was needed (unlike m3e Task 7). Five tiers (no -icons: shoelace has no Sl.Icon tier). No copyFidelity block yet: no published jackhp95/* mirror snapshot to compare against (same as elm-typed-html/elm-shoelace, OQ-6). Split-tier docs.json (validate --packages): core 245,939 B (35.1%), elements 193,949 B (27.7%), components 252,737 B (36.1%), build 254,878 B (36.4%) — all well under cap, with headroom for the families-a11y branch's composition admits/roles.json data (which lands on the components/build tiers and independently pushed the monolith to 706 KB on its own branch).",
+    "elm-shoelace-core": {
+      "srcDir": "brands/shoelace/generated/package/elm-shoelace-core",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-shoelace-elements": {
+      "srcDir": "brands/shoelace/generated/package/elm-shoelace-elements",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-shoelace-components": {
+      "srcDir": "brands/shoelace/generated/package/elm-shoelace-components",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-shoelace-build": {
+      "srcDir": "brands/shoelace/generated/package/elm-shoelace-build",
+      "mirror": { "auditedExclusions": false }
+    },
+    "elm-shoelace-facts": {
+      "srcDir": "brands/shoelace/generated/package/elm-shoelace-facts",
       "mirror": { "auditedExclusions": false }
     },
     "elm-m3e-okf": {

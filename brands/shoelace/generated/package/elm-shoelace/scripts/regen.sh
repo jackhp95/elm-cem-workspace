@@ -23,4 +23,17 @@ node "$ELM_CEM_BIN" \
 echo "Running elm-format..."
 "$ELM_FORMAT" "$ROOT/src" --yes
 
-echo "Done! src/ regenerated."
+# Re-emit the five split siblings (core/elements/components/build/facts) from the
+# freshly regenerated flat src/. The monolith is only the generation-staging root;
+# the published product is the siblings (see PACKAGES-MOVED.md). Mirrors m3e's
+# gen:src → split → format:{families,build} chain.
+if [ -f "$ROOT/packages.json" ]; then
+  echo "Re-splitting into sibling packages (packages.json)..."
+  node "$ELM_CEM_BIN" split --packages="$ROOT/packages.json" --src="$ROOT/src" --out="$ROOT/.."
+  echo "Formatting sibling src/ trees..."
+  for sib in elm-shoelace-core elm-shoelace-elements elm-shoelace-components elm-shoelace-build elm-shoelace-facts; do
+    [ -d "$ROOT/../$sib/src" ] && "$ELM_FORMAT" "$ROOT/../$sib/src" --yes
+  done
+fi
+
+echo "Done! src/ + split siblings regenerated."
