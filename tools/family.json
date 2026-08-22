@@ -20,7 +20,8 @@
           "pnpm-workspace.yaml",
           "docs/package-lock.json",
           "docs/pnpm-lock.yaml",
-          "docs/pnpm-workspace.yaml"
+          "docs/pnpm-workspace.yaml",
+          "src/M3e/Build.elm"
         ],
         "authorizedAbsentM6": [
           ".claude-memory/elm-m3e-cross-cem-branding.md",
@@ -50,8 +51,8 @@
           "specs/2026-08-05-remove-raw-html-element-design.md",
           "docs/samples/good/Sample/AccessibleByConstruction/NamelessCode.elm"
         ],
-        "authorizedAbsentPrefixes": ["elm-m3e-icons/", "elm-m3e-components/", "elm-m3e-families/", "src/M3e/Component/"],
-        "$authorizedAbsentPrefixesNote": "MIRROR-LAG (explosion Task 2, 2026-08-20): the pinned jackhp95/elm-m3e snapshot still carries elm-m3e-icons/ (and the pre-Task-1 elm-m3e-families/) NESTED under the package, but Task 2 promoted them to committed SIBLINGS under brands/m3e/generated/package/ (elm-m3e-icons/, elm-m3e-components/) — outside elm-m3e's srcDir. So the nested copies are legitimately absent from the workspace tree until the mirror is republished post-reshape (OQ-6). Same wave-1 tailwind/cfc mirror-lag pattern (see the elm-cem-figma-connect $mirrorLagNote). Remove these prefixes once jackhp95/elm-m3e is republished with the new sibling shape. (elm-m3e-components/ + elm-m3e-families/ are belt-and-suspenders: the current snapshot lacks them, but a re-pin between Task 1 and republish could carry either the old -families or the mid-move nested -components name.) NAMESPACE-RENAME MIRROR-LAG (reconciliation Task 7, 2026-08-21): the pinned mirror still emits the element-tier modules under the OLD `src/M3e/Component/*` namespace; Task 7 renamed them to `src/M3e/Element/*` (Component→Element) and family modules `M3e.Family.*`→`M3e.Component.*`. The 130 old `src/M3e/Component/*` files are legitimately absent until the mirror is republished post-rename (OQ-3/OQ-6). Remove `src/M3e/Component/` once jackhp95/elm-m3e is republished with the new namespaces.",
+        "authorizedAbsentPrefixes": ["elm-m3e-icons/", "elm-m3e-components/", "elm-m3e-families/", "src/M3e/Component/", "src/M3e/Build/"],
+        "$authorizedAbsentPrefixesNote": "MIRROR-LAG (explosion Task 2, 2026-08-20): the pinned jackhp95/elm-m3e snapshot still carries elm-m3e-icons/ (and the pre-Task-1 elm-m3e-families/) NESTED under the package, but Task 2 promoted them to committed SIBLINGS under brands/m3e/generated/package/ (elm-m3e-icons/, elm-m3e-components/) — outside elm-m3e's srcDir. So the nested copies are legitimately absent from the workspace tree until the mirror is republished post-reshape (OQ-6). Same wave-1 tailwind/cfc mirror-lag pattern (see the elm-cem-figma-connect $mirrorLagNote). Remove these prefixes once jackhp95/elm-m3e is republished with the new sibling shape. (elm-m3e-components/ + elm-m3e-families/ are belt-and-suspenders: the current snapshot lacks them, but a re-pin between Task 1 and republish could carry either the old -families or the mid-move nested -components name.) NAMESPACE-RENAME MIRROR-LAG (reconciliation Task 7, 2026-08-21): the pinned mirror still emits the element-tier modules under the OLD `src/M3e/Component/*` namespace; Task 7 renamed them to `src/M3e/Element/*` (Component→Element) and family modules `M3e.Family.*`→`M3e.Component.*`. The 130 old `src/M3e/Component/*` files are legitimately absent until the mirror is republished post-rename (OQ-3/OQ-6). Remove `src/M3e/Component/` once jackhp95/elm-m3e is republished with the new namespaces. DAG-REWORK MIRROR-LAG (2026-08-22): Build materialization moved from the monolith's flat `src/M3e/Build/*` into the separate `elm-m3e-build` family-generated sibling package (linear `Build->Components->Elements->Core` DAG). The 131 old `src/M3e/Build/*` files under the monolith are legitimately absent until the mirror is republished post-DAG-rework (OQ-3/OQ-6). Remove `src/M3e/Build/` once jackhp95/elm-m3e is republished with the new package shape.",
         "authorizedExtra": [
           "docs/scripts/fix-native-bins.mjs",
           "docs/scripts/browser-guard.mjs",
