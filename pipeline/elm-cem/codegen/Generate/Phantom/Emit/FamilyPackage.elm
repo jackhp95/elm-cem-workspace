@@ -1,4 +1,4 @@
-module Generate.Phantom.Emit.FamilyPackage exposing (files)
+module Generate.Phantom.Emit.FamilyPackage exposing (degenerateFacadeModule, files)
 
 {-| Port of bin/gen-family-package.js (G3, 2026-08-19 generator-consolidation
 research). Emits `<lib>.<namespace>.<Family>` flat family modules that
@@ -447,6 +447,40 @@ generateFamilyModule familyModuleName members familyBlurb =
         |> Result.map
             (\decls ->
                 String.join "\n\n\n" ([ moduleLine, docLines, imports ] ++ decls) ++ "\n"
+            )
+
+
+{-| DAG-rework Task 3: render a DEGENERATE single-member family façade for a
+STANDALONE element (one not in any declared `_families` family). The composed
+`BuildPackage` builder for every element must source its element-tier types +
+slot placers through a `<lib>.Component.<Family>` façade (Task 5's gate forbids
+`<lib>.Build.* → <lib>.Element.*`); a standalone element's family IS just that
+element, so it needs a 1:1 façade module — member label = element name — of the
+exact same shape `generateFamilyModule` builds for the declared families. This
+reuses `generateFamilyModule` verbatim so a degenerate façade can never drift
+from a declared one; the ONLY difference is the module name (caller-supplied,
+so Task 3 can emit under the temporary `Component2` namespace and Task 4 promote
+it to the real `Component` namespace) and the single-member membership.
+
+`fullModuleName` is the whole `<lib>.<ns>.<Element>` name; `element` is the
+element's Pascal component name (used as both the component lookup key and the
+member label). Returns the rendered module source, or an `Err` if the element
+is not found in `brand.comps`.
+-}
+degenerateFacadeModule : String -> Brand -> String -> String -> Result String String
+degenerateFacadeModule lib brand fullModuleName element =
+    resolveMember lib
+        brand
+        { component = element
+        , elementPascal = element
+        , elementCamel = lowerFirst element
+        , alias_ = element ++ "_"
+        }
+        |> Result.andThen
+            (\member ->
+                generateFamilyModule fullModuleName
+                    [ member ]
+                    ("The **" ++ element ++ "** element — degenerate single-member family façade.")
             )
 
 

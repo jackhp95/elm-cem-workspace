@@ -43,12 +43,14 @@ NOT exercised here (see `files`' doc comment).
 -}
 
 import Elm
-import Generate.Phantom.Emit.AttrsRow exposing (attrsFields, divergesFromCanonical, isEnumSpec, overrideTypes, setterExpr, unionFor)
+import Generate.Phantom.Emit.AttrsRow exposing (attrsFields, divergesFromCanonical, hasEnumGlobal, isEnumSpec, needsJsonEncodeImport, overrideTypes, setterExpr, unionFor)
 import Generate.Phantom.Emit.Component exposing (globalSetterInputType)
-import Generate.Phantom.Emit.Shared exposing (file, handlerName, payloadTypeAndDecoder, setterInputType)
+import Generate.Phantom.Emit.FamilyPackage as FamilyPackage
+import Generate.Phantom.Emit.Shared exposing (file, handlerName, homeOf, payloadTypeAndDecoder, setterInputType)
 import Generate.Phantom.Model exposing (Brand, Comp, ResolvedSlot, SlotContent(..))
 import Generate.Types exposing (FamiliesConfig, FamilySpec)
 import Naming
+import Set
 
 
 upperFirst : String -> String
@@ -80,8 +82,18 @@ type alias Member =
 
     -- element label WITHIN the family (`path` in _families; e.g. "Item",
     -- "ItemGroup", or the family name itself for the root). Pascal-cased; it
-    -- prefixes every emitted name AND the façade reference for this member.
+    -- prefixes the FAÇADE reference for this member (`Component.<label><T>`),
+    -- because the `FamilyPackage` façade always member-prefixes its re-exports.
     , label : String
+
+    -- The EXPOSED-name prefix for this member's builder decls in the composed
+    -- module. For a member of a real multi-member family this equals `label`
+    -- (so members never collide: `ItemBuilder`, `itemBuild`). For a DEGENERATE
+    -- single-member family (a standalone element) this is EMPTY, so the
+    -- composed module exposes the flat, un-prefixed surface (`Builder`,
+    -- `build`, `withClass`) byte-identical to today's per-element
+    -- `<lib>.Build.<Element>` — Jack's "degenerate re-export is 1:1/trivial".
+    , exposedPrefix : String
     }
 
 
@@ -104,18 +116,24 @@ valueRef member v =
     "Component." ++ lowerFirst member.label ++ upperFirst v
 
 
-{-| The member-prefixed EXPOSED name for one of this member's builder decls.
-Types Pascal-prefix (`ItemBuilder`), values camel-prefix
-(`itemBuild`, `itemWithClass`, `itemBadge`), matching `FamilyPackage`.
+{-| The EXPOSED name for one of this member's builder decls. For a real
+multi-member family, types Pascal-prefix (`ItemBuilder`), values camel-prefix
+(`itemBuild`), matching `FamilyPackage`. For a degenerate single-member family
+the prefix is empty, so the surface is flat (`Builder`, `build`) —
+byte-identical to today's per-element builder.
 -}
 expType : Member -> String -> String
 expType member t =
-    member.label ++ t
+    member.exposedPrefix ++ t
 
 
 expValue : Member -> String -> String
 expValue member v =
-    lowerFirst member.label ++ upperFirst v
+    if String.isEmpty member.exposedPrefix then
+        v
+
+    else
+        lowerFirst member.exposedPrefix ++ upperFirst v
 
 
 
@@ -696,6 +714,22 @@ memberExposed brand member =
 -- ── resolve a family into its members against Brand.comps ──────────────────
 
 
+{-| A resolved family ready to render: its module-suffix name (`<Family>` for
+declared families, `<Element>` for degenerate ones — both become
+`<lib>.Build.<name>`), its members, and whether it is degenerate (drives the
+per-element re-export decision in Task 4 and the `Component2` façade emission).
+-}
+type alias ResolvedFamily =
+    { name : String
+    , members : List Member
+    , degenerate : Bool
+    }
+
+
+{-| Resolve ONE declared family's members. Members keep `label` as both their
+façade-reference prefix and their exposed-name prefix (real multi-member
+families member-prefix so members never collide within the one module).
+-}
 resolveMembers : Brand -> String -> FamilySpec -> Result String (List Member)
 resolveMembers brand family spec =
     let
@@ -715,7 +749,7 @@ resolveMembers brand family spec =
                     Err ("BuildPackage: component not found for family member: " ++ compName ++ " (family " ++ family ++ ").")
 
                 Just comp ->
-                    Ok { comp = comp, label = label }
+                    Ok { comp = comp, label = label, exposedPrefix = label }
     in
     pairs
         |> List.foldr
@@ -723,18 +757,102 @@ resolveMembers brand family spec =
             (Ok [])
 
 
+{-| The FULL family list a brand's Build tier composes over: every declared
+`_families` family, PLUS a degenerate single-member family for every
+builder-bearing element (`homeOf == Nothing`, matching `Emit.elm`'s `own`) not
+already a declared-family member. This is the OQ-2 emitter-computed expansion —
+the brand author's `slots.json` surface is unchanged; standalone elements get a
+1:1 family so no element loses its builder, and every element's builder routes
+uniformly through a `<lib>.Component.<Family>` façade.
+-}
+resolveAllFamilies : Brand -> Maybe FamiliesConfig -> Result String (List ResolvedFamily)
+resolveAllFamilies brand maybeConfig =
+    let
+        declared =
+            case maybeConfig of
+                Nothing ->
+                    []
+
+                Just cfg ->
+                    cfg.families
+
+        declaredResult =
+            declared
+                |> List.foldr
+                    (\( family, spec ) acc ->
+                        acc
+                            |> Result.andThen
+                                (\fs ->
+                                    resolveMembers brand family spec
+                                        |> Result.map (\members -> { name = family, members = members, degenerate = False } :: fs)
+                                )
+                    )
+                    (Ok [])
+
+        -- Every component name already claimed by a declared family (root or member).
+        claimed =
+            declared
+                |> List.concatMap
+                    (\( family, spec ) ->
+                        (case spec.root of
+                            Just root ->
+                                [ root ]
+
+                            Nothing ->
+                                []
+                        )
+                            ++ (spec.members |> List.map .component)
+                    )
+                |> Set.fromList
+
+        -- Builder-bearing elements NOT in any declared family → degenerate
+        -- single-member families. `homeOf == Nothing` mirrors Emit.elm's `own`
+        -- filter exactly, so the degenerate set + declared members == every
+        -- element that has a per-element builder today.
+        degenerateFamilies =
+            brand.comps
+                |> List.filter (\c -> homeOf c == Nothing && not (Set.member c.name claimed))
+                |> List.map
+                    (\c ->
+                        { name = c.name
+                        , members = [ { comp = c, label = c.name, exposedPrefix = "" } ]
+                        , degenerate = True
+                        }
+                    )
+    in
+    declaredResult
+        |> Result.map (\fams -> fams ++ degenerateFamilies)
+
+
 
 -- ── render one composed <lib>.Build2.<Family> module ───────────────────────
 
 
-renderFamily : Brand -> String -> List Member -> Elm.File
-renderFamily brand family members =
+renderFamily : Brand -> ResolvedFamily -> Elm.File
+renderFamily brand fam =
     let
         lib =
             brand.lib
 
+        family =
+            fam.name
+
+        members =
+            fam.members
+
         modName =
             lib ++ ".Build2." ++ family
+
+        -- The façade this composed module imports as `Component`. Declared
+        -- families import the shipped `<lib>.Component.<Family>`; degenerate
+        -- ones import the Task-3 temporary `<lib>.Component2.<Element>` façade
+        -- (Task 4 promotes it to the real `<lib>.Component.<Element>`).
+        facadeModule =
+            if fam.degenerate then
+                lib ++ ".Component2." ++ family
+
+            else
+                lib ++ ".Component." ++ family
 
         exposedNames =
             members |> List.concatMap (memberExposed brand)
@@ -747,32 +865,76 @@ renderFamily brand family members =
 
         docLines =
             String.join "\n"
-                [ "{-| The **" ++ family ++ "** family — COMPOSED builders (DAG-rework Task 1 dual-emit PoC)."
+                [ "{-| The **" ++ family ++ "** family — COMPOSED builders (DAG-rework Task 3 dual-emit)."
                 , ""
-                , "One module carrying every member's builder surface, member-prefixed,"
-                , "sourced through `" ++ lib ++ ".Component." ++ family ++ "` (the family façade) rather"
+                , "One module carrying every member's builder surface"
+                , (if fam.degenerate then
+                    " (degenerate single-member family — flat, un-prefixed surface),"
+
+                   else
+                    ", member-prefixed,"
+                  )
+                , "sourced through `" ++ facadeModule ++ "` (the family façade) rather"
                 , "than the per-element `" ++ lib ++ ".Element.*` modules. This is the Shape A"
-                , "`Build2` scaffold; it emits ALONGSIDE the shipped per-element `" ++ lib ++ ".Build.*`"
-                , "surface and does not replace it."
+                , "`Build2` cutover; it emits ALONGSIDE the shipped per-element `" ++ lib ++ ".Build.*`"
+                , "surface and does not replace it (until Task 4 materialize)."
                 , ""
                 , "@docs " ++ String.join ", " exposedNames
                 , "-}"
                 ]
 
+        -- Conditional imports, computed as the UNION of the shipped per-element
+        -- emitter's conditions (`Component.elm`'s compBuildModule) over the
+        -- family's members — so a composed module never imports a namespace no
+        -- member uses (the `auditPackage`/NB1 gate flags undeclared foreign
+        -- namespaces, so an unconditional-but-unused `<lib>.Action` import would
+        -- force a spurious dep). A member's builder references:
+        --   * `Ac.*` only when it has actionCaps;
+        --   * `Ev.*` only when it has events;
+        --   * `Json.Encode.float` only when a float-property setter fires.
+        anyMember pred =
+            members |> List.any (\m -> pred m.comp)
+
+        needsAction =
+            anyMember (\c -> c.actionCaps /= Nothing)
+
+        needsEvents =
+            anyMember (\c -> not (List.isEmpty c.events))
+
+        needsJsonEncode =
+            anyMember (\c -> needsJsonEncodeImport brand c.attrs)
+
         imports =
-            String.join "\n"
-                [ "import HtmlIr.Element as El exposing (Element)"
-                , "import HtmlIr.Internal as Ir"
-                , "import HtmlIr.Kind exposing (Shared, Supported)"
-                , "import HtmlIr.Value exposing (Value)"
-                , "import " ++ lib ++ ".Action as Ac"
-                , "import " ++ lib ++ ".Attributes as A"
-                , "import " ++ lib ++ ".Component." ++ family ++ " as Component"
-                , "import " ++ lib ++ ".Events as Ev"
-                , "import " ++ lib ++ ".Forge.Internal as B"
-                , "import " ++ lib ++ ".Kind exposing (Available, Brand, Ctx, Used)"
-                , "import " ++ lib ++ ".Values"
+            List.concat
+                [ [ "import HtmlIr.Element as El exposing (Element)"
+                  , "import HtmlIr.Internal as Ir"
+                  , "import HtmlIr.Kind exposing (Shared, Supported)"
+                  , "import HtmlIr.Value exposing (Value)"
+                  ]
+                , if needsAction then
+                    [ "import " ++ lib ++ ".Action as Ac" ]
+
+                  else
+                    []
+                , [ "import " ++ lib ++ ".Attributes as A"
+                  , "import " ++ facadeModule ++ " as Component"
+                  ]
+                , if needsEvents then
+                    [ "import " ++ lib ++ ".Events as Ev" ]
+
+                  else
+                    []
+                , [ "import " ++ lib ++ ".Forge.Internal as B"
+                  , "import " ++ lib ++ ".Kind exposing (Available, Brand, Ctx, Used)"
+                  , "import " ++ lib ++ ".Values"
+                  ]
+                , if needsJsonEncode then
+                    [ "import Json.Encode" ]
+
+                  else
+                    []
                 ]
+                |> String.join "\n"
 
         body =
             members
@@ -793,33 +955,69 @@ renderFamily brand family members =
     file (String.split "." modName) contents
 
 
-{-| Emit every `<lib>.Build2.<Family>` composed-builder module.
+{-| Render the degenerate `<lib>.Component2.<Element>` façade for a standalone
+element — a 1:1 single-member family façade of the exact shape
+`FamilyPackage.generateFamilyModule` builds for declared families, reused
+verbatim (via `FamilyPackage.degenerateFacadeModule`) so it can never drift.
+Task 4 promotes this temporary `Component2` namespace to the real `Component`
+namespace.
+-}
+renderDegenerateFacade : Brand -> String -> Result String Elm.File
+renderDegenerateFacade brand element =
+    let
+        modName =
+            brand.lib ++ ".Component2." ++ element
+    in
+    FamilyPackage.degenerateFacadeModule brand.lib brand modName element
+        |> Result.map (\src -> file (String.split "." modName) src)
 
-`Nothing` config is a silent no-op (a brand with no `_families` — e.g. shoelace
-under the PoC — emits nothing here; its degenerate single-member families are
-the Task 3 whole-brand extension, out of scope for the PoC).
 
-DUAL-EMIT PoC scoping: this emits for EVERY declared family, under the
-temporary `Build2` namespace, alongside the shipped per-element `Build`
-tier — nothing shipped changes.
+{-| Emit the whole-brand composed Build tier under the temporary `Build2` /
+`Component2` namespaces (DAG-rework Task 3, dual-emit).
+
+For EVERY builder-bearing element — the 21 declared `_families` families PLUS a
+degenerate single-member family per standalone element — this emits:
+
+  - one `<lib>.Build2.<Family>` composed-builder module, sourced through a
+    `<lib>.Component.<Family>` (declared) or `<lib>.Component2.<Element>`
+    (degenerate) façade, never `<lib>.Element.*`; and
+  - for each degenerate family, the `<lib>.Component2.<Element>` façade itself
+    (the shipped 21 declared `<lib>.Component.<Family>` façades already exist).
+
+Emitted ALONGSIDE the shipped per-element `<lib>.Build.*` / `<lib>.Component.*`
+tiers under temporary namespaces, so nothing shipped changes until Task 4
+promotes `Build2 → Build` and `Component2 → Component`.
+
+A brand with no builder-bearing elements (`own == []`, e.g. a native/home-only
+brand) emits nothing. A brand with a Build tier but no `_families` (e.g.
+shoelace) emits every element as a degenerate family (Shape A).
 
 -}
 files : Brand -> Maybe FamiliesConfig -> Result (List String) (List Elm.File)
 files brand maybeConfig =
-    case maybeConfig of
-        Nothing ->
-            Ok []
+    resolveAllFamilies brand maybeConfig
+        |> Result.mapError List.singleton
+        |> Result.andThen
+            (\families ->
+                let
+                    composedFiles =
+                        families |> List.map (renderFamily brand)
 
-        Just cfg ->
-            cfg.families
-                |> List.foldr
-                    (\( family, spec ) acc ->
-                        acc
-                            |> Result.andThen
-                                (\fs ->
-                                    resolveMembers brand family spec
-                                        |> Result.map (\members -> renderFamily brand family members :: fs)
+                    facadeResult =
+                        families
+                            |> List.filter .degenerate
+                            |> List.foldr
+                                (\fam acc ->
+                                    acc
+                                        |> Result.andThen
+                                            (\fs ->
+                                                renderDegenerateFacade brand fam.name
+                                                    |> Result.map (\f -> f :: fs)
+                                            )
                                 )
-                    )
-                    (Ok [])
-                |> Result.mapError List.singleton
+                                (Ok [])
+                            |> Result.mapError List.singleton
+                in
+                facadeResult
+                    |> Result.map (\facadeFiles -> composedFiles ++ facadeFiles)
+            )
