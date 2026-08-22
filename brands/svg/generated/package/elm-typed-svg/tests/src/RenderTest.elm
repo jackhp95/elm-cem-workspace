@@ -14,7 +14,7 @@ import Html.Attributes as HtmlAttr
 import Test exposing (Test, describe, test)
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector
-import TypedSvg exposing (circle, defs, foreignObject, linearGradient, metadata, rect, stop, svg, switch, text, textPath, text_, toHtml, view)
+import TypedSvg exposing (circle, defs, feGaussianBlur, feMerge, feMergeNode, feOffset, filter, foreignObject, linearGradient, metadata, rect, stop, svg, switch, text, textPath, text_, toHtml, view)
 import TypedSvg.Attributes as A
 import TypedSvg.Values as V
 
@@ -57,6 +57,31 @@ task4Doc =
                     [ text "curve" ]
                 ]
             , foreignObject [ A.x "0", A.y "0", A.width "10", A.height "10" ] []
+            ]
+
+
+{-| A Task-5 filter graph (a drop-shadow skeleton): a `<filter>` in `<defs>`
+holding `feGaussianBlur` → `feOffset` → `feMerge`/`feMergeNode`, referenced by a
+shape via the `filter` presentation property. Proves the whole filter family
+collapses through the namespaced IR (`createElementNS`) with its enum
+(`edgeMode`) and geometry attributes intact.
+-}
+filterDoc : Html.Html msg
+filterDoc =
+    toHtml <|
+        svg
+            [ A.viewBox "0 0 100 100" ]
+            [ defs []
+                [ filter [ A.id "shadow" ]
+                    [ feGaussianBlur [ A.in_ "SourceAlpha", A.stdDeviation "3", A.edgeMode V.duplicate, A.result "blur" ] []
+                    , feOffset [ A.in_ "blur", A.dx "2", A.dy "2", A.result "off" ] []
+                    , feMerge []
+                        [ feMergeNode [ A.in_ "off" ] []
+                        , feMergeNode [ A.in_ "SourceGraphic" ] []
+                        ]
+                    ]
+                ]
+            , circle [ A.cx "50", A.cy "50", A.r "24", A.filter "url(#shadow)" ] []
             ]
 
 
@@ -121,4 +146,22 @@ suite =
                     |> Query.fromHtml
                     |> Query.find [ Selector.tag "textPath" ]
                     |> Query.has [ Selector.attribute (HtmlAttr.attribute "method" "align") ]
+        , test "Task 5: a <filter> graph renders feGaussianBlur with its typed edgeMode enum" <|
+            \_ ->
+                filterDoc
+                    |> Query.fromHtml
+                    |> Query.find [ Selector.tag "feGaussianBlur" ]
+                    |> Query.has [ Selector.attribute (HtmlAttr.attribute "edgeMode" "duplicate") ]
+        , test "Task 5: <feMerge> composites two <feMergeNode> layers" <|
+            \_ ->
+                filterDoc
+                    |> Query.fromHtml
+                    |> Query.findAll [ Selector.tag "feMergeNode" ]
+                    |> Query.count (Expect.equal 2)
+        , test "Task 5: a shape references the filter via the filter presentation property" <|
+            \_ ->
+                filterDoc
+                    |> Query.fromHtml
+                    |> Query.find [ Selector.tag "circle" ]
+                    |> Query.has [ Selector.attribute (HtmlAttr.attribute "filter" "url(#shadow)") ]
         ]

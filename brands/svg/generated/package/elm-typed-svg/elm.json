@@ -9,6 +9,7 @@
         "TypedSvg.Attributes",
         "TypedSvg.Element.Clip",
         "TypedSvg.Element.Descriptive",
+        "TypedSvg.Element.Filter",
         "TypedSvg.Element.Image",
         "TypedSvg.Element.Paint",
         "TypedSvg.Element.Shape",

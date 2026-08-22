@@ -105,7 +105,11 @@
     { "name": "font-style", "row": "open" },
     { "name": "letter-spacing", "row": "open" },
     { "name": "word-spacing", "row": "open" },
-    { "name": "text-decoration", "row": "open" }
+    { "name": "text-decoration", "row": "open" },
+    { "name": "flood-color", "row": "open" },
+    { "name": "flood-opacity", "row": "open" },
+    { "name": "lighting-color", "row": "open" },
+    { "name": "color-interpolation-filters", "type": ["auto", "sRGB", "linearRGB"], "row": "open" }
   ],
 
   "_comment_nesting": [
@@ -161,5 +165,50 @@
   "Mask": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
   "Marker": { "home": "Clip", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
 
-  "Image": { "home": "Image", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } }
+  "Image": { "home": "Image", "admits": { "unnamed": { "kinds": ["title", "desc"], "multi": true } } },
+
+  "_comment_filter": [
+    "The SVG filter family (Task 5 of the API-spec audit): a `<filter>` container holding a graph of",
+    "`fe*` primitives, each producing a named `result` another consumes via `in`. All 26 elements live in",
+    "a single `Filter` home module (TypedSvg/Element/Filter.elm). Content model:",
+    "  - `filter` admits `any` — SVG's filter content model accepts any filter primitive (plus desc/title),",
+    "    and enumerating all 16 primitive kinds would be a brittle restatement of the home module itself.",
+    "  - `feMerge` admits ONLY `feMergeNode` (its layer children); `feComponentTransfer` admits ONLY the",
+    "    four `feFunc*` channel-transfer children; the two lighting primitives admit ONLY a light source",
+    "    (`feDistantLight`/`fePointLight`/`feSpotLight`). These tight slots are the real content-model",
+    "    fidelity — a wrong child there is a compile error.",
+    "  - leaf primitives (blur/offset/flood/...) and the light sources are childless (no `admits`).",
+    "Filter presentation props (`flood-color`, `flood-opacity`, `lighting-color`,",
+    "`color-interpolation-filters`) are open-row _globals above, alongside the other presentation props.",
+    "Filter-value enums (`feBlend` mode, `feComposite` operator, `feColorMatrix`/`feFunc*`/`feTurbulence`",
+    "type, `feConvolveMatrix`/`feGaussianBlur` edgeMode, `feDisplacementMap` channel selectors,",
+    "`feMorphology` operator, `feTurbulence` stitchTiles) are typed in the manifest as pipe-delimited",
+    "attribute value domains, so a bad token is a compile error."
+  ],
+  "Filter": { "home": "Filter", "admits": { "unnamed": { "kinds": ["any"], "multi": true } } },
+  "FeBlend": { "home": "Filter" },
+  "FeColorMatrix": { "home": "Filter" },
+  "FeComponentTransfer": { "home": "Filter", "admits": { "unnamed": { "kinds": ["feFuncR", "feFuncG", "feFuncB", "feFuncA"], "multi": true } } },
+  "FeComposite": { "home": "Filter" },
+  "FeConvolveMatrix": { "home": "Filter" },
+  "FeDiffuseLighting": { "home": "Filter", "admits": { "unnamed": { "kinds": ["feDistantLight", "fePointLight", "feSpotLight"], "multi": false } } },
+  "FeDisplacementMap": { "home": "Filter" },
+  "FeDropShadow": { "home": "Filter" },
+  "FeFlood": { "home": "Filter" },
+  "FeGaussianBlur": { "home": "Filter" },
+  "FeImage": { "home": "Filter" },
+  "FeMerge": { "home": "Filter", "admits": { "unnamed": { "kinds": ["feMergeNode"], "multi": true } } },
+  "FeMergeNode": { "home": "Filter" },
+  "FeMorphology": { "home": "Filter" },
+  "FeOffset": { "home": "Filter" },
+  "FeSpecularLighting": { "home": "Filter", "admits": { "unnamed": { "kinds": ["feDistantLight", "fePointLight", "feSpotLight"], "multi": false } } },
+  "FeTile": { "home": "Filter" },
+  "FeTurbulence": { "home": "Filter" },
+  "FeFuncR": { "home": "Filter" },
+  "FeFuncG": { "home": "Filter" },
+  "FeFuncB": { "home": "Filter" },
+  "FeFuncA": { "home": "Filter" },
+  "FeDistantLight": { "home": "Filter" },
+  "FePointLight": { "home": "Filter" },
+  "FeSpotLight": { "home": "Filter" }
 }
