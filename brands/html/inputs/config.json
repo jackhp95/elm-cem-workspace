@@ -808,7 +808,19 @@
       "switch",
       "tab",
       "treeitem"
-    ]
+    ],
+    "admits": {
+      "unnamed": {
+        "kinds": [
+          "@phrasing",
+          "shared:text",
+          "shared:icon",
+          "!@interactive",
+          "!a"
+        ],
+        "multi": true
+      }
+    }
   },
   "Abbr": {
     "kind": "shared:phrasing",
@@ -971,7 +983,8 @@
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }
@@ -1462,7 +1475,8 @@
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }
@@ -2002,7 +2016,8 @@
         "kinds": [
           "@phrasing",
           "shared:text",
-          "shared:icon"
+          "shared:icon",
+          "!@interactive"
         ],
         "multi": true
       }

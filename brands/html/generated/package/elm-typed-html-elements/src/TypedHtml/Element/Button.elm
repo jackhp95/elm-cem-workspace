@@ -75,13 +75,11 @@ type alias Attrs =
 -}
 type alias Content =
     { area : Brand
-    , img : Brand
     , link : Brand
     , meta : Brand
     , noscript : Brand
     , script : Brand
     , sharedIcon : Shared
-    , sharedPhrasing : Shared
     , sharedText : Shared
     , template : Brand
     }

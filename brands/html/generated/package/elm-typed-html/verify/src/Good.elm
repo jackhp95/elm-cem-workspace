@@ -1,4 +1,4 @@
-module Good exposing (categories, controls, escapes, page, view)
+module Good exposing (a11yPositives, categories, controls, escapes, page, view)
 
 {-| The /tmp/htmlia good-case ports, on the GENERATED TypedHtml: composition
 families (Table / Select+Form / Media) with zero inner annotations, transparent
@@ -292,6 +292,49 @@ categories =
         -- legal in `<head>` AND nameable inside phrasing content.
         , H.head [] [ H.title [] [ H.text "t" ], H.script [] [] ]
         , H.span [] [ H.script [] [], H.template [] [] ]
+        ]
+
+
+{-| families/a11y-composition plan, Task 3 positive control: `button`, `a`,
+`label`, and `summary` all gained `!@interactive` on their `admits` (WHATWG
+"phrasing content, but no interactive content descendant" for
+button/label/summary; "no interactive content descendant, a element
+descendant, or tabindex descendant" for `a`, via `!a` on top). A `shared:text`
+child is UNCHANGED by that subtraction — it is admitted by its own explicit
+`"shared:text"` kind entry, not through `@phrasing` — so `H.text` stays legal
+in all four. See bad/InteractiveContentInButton.elm, bad/SelectInLabel.elm,
+bad/ButtonInSummary.elm for three of the four negative controls.
+
+The fourth (`button` containing `a`) is NOT an acid (compile) fixture: `a` is
+`transparent` (its produced kind row IS its children's accepts row — see
+TypedHtml.Element.A's doc), so `H.a […] […]` type-checks against ANY row a
+caller unifies it with, including `Button`'s. That is true both BEFORE and
+AFTER this task — `a`-as-a-child has never been, and still is not, checked by
+the Elm compiler. Only the facts-driven `Cem.ValidSlotKind` (elm-review) rule
+catches it, because it matches the child's own NOUN ("a") against the parent's
+`slotKinds` list rather than relying on row unification. See `../spike/` for a
+reproducible `elm-review` run proving `button > a` now trips `ValidSlotKind`
+(it did not before this task's `admits` edit).
+
+NOT covered here: a literal `<span>` (or any other element that shares
+`button`'s own produced kind, `sharedPhrasing` — canvas/del/ins/map/object/slot,
+and the interactive elements themselves) can no longer nest inside these four.
+`!@interactive` subtracts on the PRODUCED-KIND field, and every `@phrasing`
+member whose own `kind` is `"shared:phrasing"` (see RC5 / `categories` above)
+collapses onto that ONE field — so excluding the interactive members' field
+excludes every other element sharing it too. That is a real, compiler-verified
+restriction this task's admits-only mechanism cannot avoid (confirmed: `H.button
+[] [ H.span [] [] ]` compiled before this change and fails to compile after
+it) — flagged in the Task 3 report as a follow-up, not silently absorbed here.
+
+-}
+a11yPositives : List (HtmlIr.Element.Element {} {} Msg)
+a11yPositives =
+    Unsafe.recastAll
+        [ H.button [] [ H.text "Go" ]
+        , H.a [ At.href "/x" ] [ H.text "Read more" ]
+        , H.label [] [ H.text "Pick" ]
+        , H.summary [] [ H.text "Details" ]
         ]
 
 
