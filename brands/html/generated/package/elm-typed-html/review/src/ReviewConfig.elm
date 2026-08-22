@@ -99,6 +99,14 @@ codegenAware =
     , Cem.missingRequiredSingularSlot facts
     , Cem.validSlotKindWith Cem.Lenient facts
 
+    -- Relational composition (families/a11y plan Task 6/7): the ancestor/
+    -- descendant complement to validSlotKind — interactive-content descendant
+    -- at ARBITRARY DEPTH (HARD, the arbitrary-depth case the phantom types and
+    -- validSlotKind can't catch), label single-labeled-control (HARD), and ARIA
+    -- required-context (WARN). Uses the default WHATWG/ARIA tables, which are
+    -- keyed by the html tag nouns verbatim.
+    , Cem.validComposition facts
+
     -- Barrel is the canonical surface: `TypedHtml.div [ … ] [ … ]`.
     -- `elm-review --fix` migrates either direction.
     , Cem.preferBarrel facts

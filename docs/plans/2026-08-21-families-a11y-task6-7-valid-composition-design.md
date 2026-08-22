@@ -119,3 +119,41 @@ branch's attribute-family work, per the overlay note's own prerequisite clause).
   therefore does not add to `gate-all-expected-steps.json` (that file lists step NAMES, and no step
   name changes — the rule rides inside existing steps). This is confirmed against the step list.
 ```
+
+## 4. Task 7 outcome (measured, not asserted)
+
+**Step-list:** `node tools/gate-all.mjs --list-steps-only` is byte-identical to
+`tools/gate-all-expected-steps.json` (live==expected: True) — so the rule rides inside the existing
+`elm-typed-html: check`, `elm-shoelace: check`, `elm-review-cem: check`/`test` steps, no expected-
+steps change.
+
+**Registration:** `Cem.validComposition facts` added to html + shoelace `codegenAware` lists, and to
+the shared `pipeline/elm-cem/templates/ReviewConfig.elm` (shoelace's source-of-truth; `brand-sync
+--check` confirms the generated shoelace ReviewConfig is now byte-identical to the rendered
+template — zero new drift; the pre-existing `ci.yml` drift is unrelated).
+
+**Mutation proof (both directions, real `elm-review --config review <file>` runs):**
+
+- **html — `button` → `span` → `div` → `a` (interactive at depth 3), HARD:**
+  - mutation present → `ValidComposition :: \`a\` is interactive content and may not be a descendant
+    of \`button\`` (gate red).
+  - mutation removed (`button [] [ span [] [ div [] [] ] ]`) → no ValidComposition error (green).
+- **shoelace — `menuItem` outside `menu`, WARN:**
+  - `card [] [ menuItem [] [] ]` → `ValidComposition :: warning: \`menuItem\` requires an ancestor
+    of role one of \`menu\`, \`menubar\`, \`menuBar\`, \`group\`` (surfaced as advisory).
+  - `menu [] [ menuItem [] [] ]` → ValidComposition CLEAR (green).
+- **svg — `role` on `<defs>`, WARN:** svg has no `check:review` gate and does not model `role`/
+  `aria-*` attributes (verified against `brands/svg/A11Y-OVERLAY.md` §1 + `inputs/config.json`
+  `_globals`), so the overlay is INERT in the brand gate. Its red/green proof is therefore at the
+  unit-test level (`ValidCompositionTest` (d)): `role` on `g` → clean; `role` on `defs` → `warning:
+  \`role\` on a non-rendered SVG element \`defs\` is not allowed`. Wiring svg's review gate + role
+  attributes is follow-up, owned by the svg-audit attribute-family work per the overlay note.
+
+**Posture verified (not just asserted):** the html interactive violation prints a plain (un-prefixed)
+message and is a HARD gate failure; the shoelace required-context and svg role violations print
+`warning:`-prefixed advisories — the exact OQ-2 split, observed in the real elm-review output above.
+
+**Known-red baseline (pre-existing, not Task 6/7):** `elm-shoelace: check` fails at `check:validate`
+on a docs.json size cap (707,579 B > 700,000 B) grown by Task 4's shoelace admits — confirmed
+identical with this task's changes stashed. The composition rule's own gate signal, `check:review`,
+is green. Friction logged; needs a shoelace package-split follow-up.
