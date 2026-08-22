@@ -179,6 +179,16 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
 
+  brands/shoelace/generated/package/elm-shoelace-build: {}
+
+  brands/shoelace/generated/package/elm-shoelace-components: {}
+
+  brands/shoelace/generated/package/elm-shoelace-core: {}
+
+  brands/shoelace/generated/package/elm-shoelace-elements: {}
+
+  brands/shoelace/generated/package/elm-shoelace-facts: {}
+
   brands/svg/generated/package/elm-typed-svg:
     devDependencies:
       elm-tooling:
